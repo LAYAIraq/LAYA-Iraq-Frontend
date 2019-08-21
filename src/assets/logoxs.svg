@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="190.209"
+   height="75"
+   viewBox="0 0 190.209 75"
+   version="1.1"
+   id="svg4685"
+   sodipodi:docname="logoxs.svg"
+   inkscape:version="0.92.1 r">
+  <metadata
+     id="metadata4689">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>logo</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1055"
+     id="namedview4687"
+     showgrid="true"
+     inkscape:zoom="4.7567568"
+     inkscape:cx="95"
+     inkscape:cy="-0.45454374"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="Page-1"
+     showguides="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4821"
+       originx="15"
+       originy="-135" />
+  </sodipodi:namedview>
+  <!-- Generator: Sketch 3.7.2 (28276) - http://www.bohemiancoding.com/sketch -->
+  <title
+     id="title4669">logo</title>
+  <desc
+     id="desc4671">Created with Sketch.</desc>
+  <defs
+     id="defs4673" />
+  <g
+     id="g4683"
+     style="fill:none;fill-rule:evenodd;stroke:none;stroke-width:1"
+     transform="translate(15,25)">
+    <g
+       id="logo"
+       transform="translate(-36.579545,-15.085227)">
+      <g
+         id="Page-1"
+         transform="translate(25.017045,-0.63068182)">
+        <polygon
+           id="Fill-1"
+           points="95.209,150.881 95.209,74.064 0,74.064 0,150.881 "
+           style="fill:#fffa00"
+           transform="matrix(1,0,0,0.97634638,91.5625,-81.596209)" />
+        <polygon
+           id="Fill-2"
+           points="95.209,0.999 0,0.999 0,74.064 95.209,74.064 "
+           style="fill:#96be00"
+           transform="matrix(1,0,0,1.0264833,-3.4375,-10.309548)" />
+        <path
+           d="m 39.4775,55.704909 v -10.998 H 17.5605 V 0.71590882 H 6.5625 V 55.704909 Z m 41.241,0 -9.898,-54.98900018 h -16.496 l -9.82,54.98900018 h 11.077 l 1.571,-8.248 h 10.919 l 1.414,8.248 z m -14.611,-19.246 h -7.07 l 3.535,-19.56 z"
+           id="Fill-4"
+           inkscape:connector-curvature="0"
+           style="fill:#1d1c1b" />
+        <path
+           d="m 136.2055,0.71590882 h -11.548 l -5.813,18.69600018 -5.734,-18.69600018 h -11.548 l 11.783,37.94200018 v 17.047 h 10.998 v -17.047 z m 40.299,54.98900018 -9.898,-54.98900018 h -16.497 l -9.819,54.98900018 h 11.076 l 1.571,-8.249 h 10.919 l 1.414,8.249 z m -14.612,-19.246 h -7.07 l 3.535,-19.561 z"
+           id="Fill-5"
+           inkscape:connector-curvature="0"
+           style="fill:#1d1c1b" />
+      </g>
+    </g>
+  </g>
+</svg>

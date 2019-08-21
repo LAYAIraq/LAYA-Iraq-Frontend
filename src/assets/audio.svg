@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="24px" height="18px" viewBox="0 0 24 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.7.2 (28276) - http://www.bohemiancoding.com/sketch -->
+    <title>audio</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="audio" transform="translate(0.000000, -1.000000)" fill="#1D1C1B">
+            <g id="Page-1" transform="translate(0.224200, 0.000000)">
+                <polygon id="Fill-1" points="13.2111 1.0002 7.1471 5.0432 0.0001 5.0432 0.0001 14.4762 7.1471 14.4762 13.2111 18.5182"></polygon>
+                <g id="Group-6" transform="translate(15.000000, 0.518700)">
+                    <path d="M5.7577,0.9631 L3.9647,2.4111 C5.4827,4.3021 6.4477,6.6271 6.4477,9.2411 C6.4477,11.8551 5.4827,14.1791 3.9647,16.0701 L5.7577,17.5181 C7.5747,15.2511 8.6547,12.3721 8.6547,9.2411 C8.6547,6.1091 7.5747,3.2301 5.7577,0.9631" id="Fill-2"></path>
+                    <path d="M2.3087,3.7223 L0.5847,5.1023 C1.4917,6.2353 2.0327,7.6753 2.0327,9.2403 C2.0327,10.8063 1.4917,12.2463 0.5847,13.3793 L2.3087,14.7593 C3.5127,13.2503 4.2397,11.3213 4.2397,9.2403 C4.2397,7.1603 3.5127,5.2313 2.3087,3.7223" id="Fill-4"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

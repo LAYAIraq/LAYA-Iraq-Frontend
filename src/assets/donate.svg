@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="18px" height="16px" viewBox="0 0 18 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.7.2 (28276) - http://www.bohemiancoding.com/sketch -->
+    <title>spenden</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="8.77618544 15.2689 17.552 15.2689 17.552 0.000133401025 0.000370879221 0.000133401025 0.000370879221 15.2689"></polygon>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="spenden">
+            <g id="Page-1">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Clip-2"></g>
+                <path d="M8.776,15.2689 C9.468,14.6109 13.42,10.8499 15.89,8.5009 C18.104,6.3949 18.057,3.3259 16.044,1.4229 C14.032,-0.4811 10.778,-0.4731 8.776,1.4409 C6.774,-0.4731 3.52,-0.4811 1.508,1.4229 C-0.504,3.3259 -0.551,6.3949 1.662,8.5009 C4.132,10.8499 8.084,14.6109 8.776,15.2689" id="Fill-1" fill="#1D1C1B" mask="url(#mask-2)"></path>
+            </g>
+        </g>
+    </g>
+</svg>
