@@ -1,0 +1,116 @@
+<template>
+  <div class="laya-quiz-drap-drop">
+    <div class="container">
+
+      <div class="row mb-3">
+        <div class="col">
+          <h4>
+            {{title}}
+            <laya-audio-inline v-if="taskAudio" :src="taskAudio">
+            </laya-audio-inline>
+          </h4>
+          <p>{{task}}</p>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="row">
+        <div class="col">
+          <div v-for="(item,i) in items" :key="item.label" class="item">
+            <h4 class="text-center item-label">
+              {{ item.label }}
+              <i v-if="checked"
+                 class="fas"
+                 :class="{
+                 'fa-check text-success': eval[i],
+                 'fa-times text-danger': !eval[i]}">
+              </i>
+            </h4>
+
+            <div class="d-flex justify-content-between">
+              <b v-for="cat in categories" :key="cat">{{cat}}</b>
+            </div>
+            <input type="range"
+                   class="custom-range"
+                   min="0"
+                   :max="categories.length"
+                   :disabled="checked"
+                   v-model.number="solution[i]">
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <button type="button"
+                class="btn btn-primary btn-lg mt-3 ml-auto"
+                :disabled="checked"
+                @click="check">
+          Fertig!
+        </button>
+      </div>
+
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
+  name: "laya-quiz-drag-drop",
+  created () {
+    const mid = Math.floor((this.categories.length+1)/2)
+    let s = this.items.map(i => mid)
+    this.solution = [...s]
+  },
+  data () {
+    return {
+      checked: false,
+      solution: [], // users solution as index
+      eval: [], // list of booleans
+    }
+  },
+  props: {
+    title: String,
+    task: String,
+    taskAudio: String,
+    items: Array,
+    categories: Array,
+    onFinish: Array
+  },
+  computed: {
+  },
+  methods: {
+    check: function () {
+
+      for(let i=0; i<this.solution.length; i++) {
+        let solution = this.solution[i]
+        switch (this.solution[i]) {
+          case 0:
+            this.eval[i] = (this.items[i].category === 0)
+            break
+          case 1:
+            this.eval[i] = false
+            break
+          case 2:
+            this.eval[i] = (this.items[i].category === 1)
+            break
+        }
+      }
+      this.checked = true
+      this.$forceUpdate()
+      this.onFinish[0]()
+    }
+  }
+})
+</script>
+
+<style scoped>
+.item {
+  margin-bottom: 2rem;
+}
+.item:last-child {
+  margin-bottom: 0rem;
+}
+</style>

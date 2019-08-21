@@ -1,0 +1,13 @@
+export { default as LayaScMc } from "@/plugins/laya-la-scmc";
+export { default as LayaAbleplayer } from "@/plugins/laya-ableplayer"
+export { default as LayaPlyr } from "@/plugins/laya-plyr"
+export { default as LayaStepper } from "@/plugins/laya-stepper"
+export { default as LayaDialog } from "@/plugins/laya-dialog"
+export { default as LayaSingleChoice } from "@/plugins/laya-single-choice"
+export { default as LayaSingleMultiple } from "@/plugins/laya-multiple-choice"
+export { default as LayaQuizSort } from "@/plugins/laya-quiz-sort"
+export { default as LayaQuizDragDrop } from "@/plugins/laya-quiz-drag-drop"
+export { default as LayaQuizRelate } from "@/plugins/laya-quiz-relate"
+export { default as LayaAudioInline } from "@/plugins/laya-audio-inline"
+export { default as LayaHtml } from "@/plugins/laya-html"
+export { default as LayaCourseTable } from "@/plugins/laya-course-table"
