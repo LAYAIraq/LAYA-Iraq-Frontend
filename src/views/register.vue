@@ -51,6 +51,7 @@
           </div>
 
           <!-- profile pic -->
+          <!--
           <div style="height: 2rem"></div>
           <div class="position-relative">
             <div class="position-absolute">{{ msg.profilePic }}</div>
@@ -61,6 +62,7 @@
               <img src="../assets/hochladen.svg" alt="Profilbild wählen">
             </ly-input-img>
           </div>
+          -->
 
           <!-- submit -->
           <div style="height: 4rem"></div>
@@ -102,8 +104,6 @@
 </template>
 
 <script>
-import lyInputImg from '@/components/input-img'
-
 import http from 'axios'
 import * as i18n from '@/i18n/register'
 
@@ -231,7 +231,6 @@ export default {
     }
   },
   components: {
-    lyInputImg
   }
 }
 </script>

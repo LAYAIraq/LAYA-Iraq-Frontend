@@ -1,7 +1,7 @@
 <template>
   <div class="laya-course-table">
 
-    <h3 v-show="!filtered" class="text-center text-muted">
+    <h3 v-show="filtered.length === 0" class="text-center text-muted">
       Keine Kurse gefunden
     </h3>
 
@@ -34,7 +34,6 @@
               {{ shortDate(data.item.endDate) }}
               </span>
             -->
-            Left Column
           </div>
 
           <!-- course link -->
@@ -45,7 +44,6 @@
 
           <!-- right meta infos -->
           <div class="w-25 d-inline-flex flex-column justify-content-between align-items-end">
-            Right Column
           </div>
         </div>
       </b-collapse>
@@ -58,7 +56,7 @@ import bCollapse from "bootstrap-vue/es/components/collapse/collapse"
 import vBToggle from "bootstrap-vue/es/directives/toggle/toggle"
 
 export default {
-  name: "courses-view",
+  name: "laya-courses-table",
   data() {
     return {
       cats: {},
@@ -114,17 +112,19 @@ export default {
   color: black;
 }
 
-.category:last-child > .header.collapsed {
+._category:last-child > .header.collapsed {
   border-bottom: none;
 }
 
 .header.collapsed {
+  border-top: 2px solid black;
   border-bottom: 2px solid black;
 }
 
 .header {
   padding: 1rem 0rem;
   cursor: pointer;
+  border-top: 2px solid black;
   border-bottom: 2px dashed black;
 }
 

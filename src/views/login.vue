@@ -63,8 +63,6 @@
 </template>
 
 <script>
-import lyInput from "@/components/input";
-
 import http from "axios";
 import * as i18n from "@/i18n/login";
 
@@ -148,7 +146,6 @@ export default {
     }
   },
   components: {
-    lyInput
   }
 };
 </script>

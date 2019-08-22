@@ -1,5 +1,5 @@
 export default {
-  title: 'Meine Kurse',
+  title: 'Alle Kurse',
   searchPH: 'Suche nach Kursnamen',
   noCourses: 'Keine Kurse gefunden'
 }

@@ -1,6 +1,6 @@
 import Vue from "vue"
 import App from "./App.vue"
-import router from "./router"
+import router from "./router.js"
 import store from "./store"
 import "./registerServiceWorker"
 
@@ -34,9 +34,7 @@ Vue.config.productionTip = false;
 
 /* wayin kickoff even speciale */
 import LayaPlyrVimeo from "@/components/laya-plyr-vimeo"
-import LayaTimedMsg from "@/components/laya-timed-message"
 Vue.component("laya-plyr-vimeo", LayaPlyrVimeo)
-Vue.component("laya-timed-msg", LayaTimedMsg)
 
 new Vue({
   store,

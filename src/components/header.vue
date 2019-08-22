@@ -11,9 +11,6 @@
              alt="Laya - Learn as you are">
       </router-link>
 
-      <busy-note class="position-absolute"
-                 style="font-size: 2rem; left: 50%"></busy-note>
-
       <!-- nav toggler -->
       <button type="button"
               class="navbar-toggler"
@@ -83,9 +80,6 @@
 </template>
 
 <script>
-import lyLangDropdown from '@/components/lang-dd'
-import busyNote from '@/components/busy-note'
-
 import navItem from 'bootstrap-vue/es/components/nav/nav-item'
 import navItemDd from "bootstrap-vue/es/components/nav/nav-item-dropdown"
 import navItemDdBtn from "bootstrap-vue/es/components/dropdown/dropdown-item-button.js"
@@ -147,7 +141,6 @@ export default {
     navItem,
     navItemDd,
     navItemDdBtn,
-    busyNote,
   }
 }
 </script>

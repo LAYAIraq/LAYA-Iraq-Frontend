@@ -153,8 +153,6 @@
 </template>
 
 <script>
-import lyInputImg from "@/components/input-img";
-
 import http from "axios";
 import * as i18n from "@/i18n/profile";
 import api from "../backend-url.ts";
@@ -239,7 +237,6 @@ export default {
     }
   },
   components: {
-    lyInputImg
   }
 };
 </script>
