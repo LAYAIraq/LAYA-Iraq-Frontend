@@ -6,8 +6,8 @@ import _view from "./view.vue";
 
 export default {
   install(Vue: typeof _Vue, options?: any): void {
-    Vue.$laya.registerLA("laya-quiz-relate", "AssessmentScmc", {
-      de: "Single Choice / Multiple Choice",
+    Vue.$laya.registerLB("laya-quiz-relate", "AssessmentScmc", {
+      de: "Zuordnen",
     }, {
       new: _create,
       view: _edit,

@@ -145,7 +145,7 @@ export default {
     i18n: function() {
       return i18n[this.$store.state.profile.lang];
     }
-  },
+  ,
   methods: {
     ...utils,
 

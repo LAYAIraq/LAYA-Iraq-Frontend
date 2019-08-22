@@ -101,12 +101,12 @@
                 <b-button
                   class="col"
                   variant="success"
-                  :to="{name: 'new-block', params: { id: course.name}}"
+                  :to="{name: 'new-learning-block', params: { id: course.name}}"
                   >Lernbaustein hinzufügen</b-button>
                   <b-button
                     class="col"
                     variant="success"
-                    :to="{name: 'new-assessment', params: { id: course.name}}"
+                    :to="{name: 'new-learning-assessment', params: { id: course.name}}"
                     >Lernüberprüfung hinzufügen</b-button>
               </div>
             </div>
