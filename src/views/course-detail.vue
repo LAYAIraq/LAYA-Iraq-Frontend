@@ -1,130 +1,72 @@
 <template>
-  <div v-if="!note.busy">
+  <div v-if="!note.busy" class="course-detail-view">
+
     <!-- course header -->
-    <div class="nav-padding bg-dark">
-      <h1 class="text-center text-light">
-        <b>{{ course.name }}</b>
-      </h1>
-      <h6 class="text-center text-light">
-        <!-- <span>{{ course.category }}</span> -->
-        <!--
-        <span> / </span>
-        <span>{{ course.author.username }}</span>
-        -->
-      </h6>
+    <div class="container-fluid bg-dark">
+      <div class="row">
+        <div class="col">
+
+          <div style="height: 3rem"></div>
+          <h1 class="text-center text-light py-5"><b>{{ course.name }}</b></h1>
+          <h6 class="text-center text-light">
+            <!-- <span>{{ course.category }}</span> -->
+            <!--
+              <span> / </span>
+              <span>{{ course.author.username }}</span>
+            -->
+          </h6>
+          <div style="height: 2rem"></div>
+
+        </div>
+      </div>
     </div>
+
+    <!-- content -->
     <div class="container">
       <div class="row">
         <div class="col">
-          <!-- <div style="height: 1rem"></div> -->
-
-          <!--
-            <h5 role="navigation">
-            <a :href="'#'+backUrl" class="text-dark" tabindex="0">
-            <u>
-            <i class="fas fa-angle-left"></i>
-            zurück zu
-            {{ /my/.test(backUrl) ? 'meinen Kursen' : 'allen Kursen' }}
-            </u>
-            </a>
-            </h5>
-          -->
-
-          <!--
-          <div style="height: 1rem"></div>
-          <div class="course-meta d-flex justify-content-between pt-2">
-            <div>
-              <span v-if="course.locked" class="mr-2">
-                <i class="fas fa-lock fa-lg"></i>
-              </span>
-              <span v-if="course.endDate">
-                <i class="fas fa-stopwatch fa-lg"></i>
-              </span>
-              <div class="mt-3" v-if="course.endDate">
-                {{ shortDate(course.startDate) }} &mdash;
-                <br />
-                {{ shortDate(course.endDate) }}
-              </div>
-            </div>
-            <div class="text-right">
-              <span><b>Erstellt:</b> {{ locDate(course.createDate) }}</span>
-              <a
-                href
-                v-if="userEnrolled"
-                @click.prevent="unsubscribe"
-                class="d-block mt-2 text-dark"
-                >
-                <i class="fas fa-exclamation-circle mr-1"></i>
-                <u>Kurs verlassen</u>
-              </a>
-            </div>
-          </div>
-
-          <div style="height: 3rem"></div>
-
-          <div>
-            <b>Kursbeschreibung</b><br>
-            {{ course.abstract }}
-          </div>
-          -->
-
-          <!--
-          <div style="height: 3rem"></div>
-          <button v-if="!userEnrolled"
-                  type="button"
-                  @click="subscribe"
-                  class="btn btn-lg btn-block btn-outline-dark subscribe-btn">
-            Für diesen Kurs anmelden
-            <i class="fas fa-arrow-right"></i>
-          </button>
-          -->
-          <!-- <b-button @click="learn()">Lernen!</b-button> -->
 
           <!-- wayin august kickoff -->
           <div style="height: 3rem"></div>
           <laya-stepper :components="wayin_data">
           </laya-stepper>
+
         </div>
       </div>
-
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <!-- author: create new content -->
-            <div style="height: 3rem"></div>
-
-            <router-view></router-view>
-
-            <div class="container"
-                 v-if="isAuthor && this.$route.name === 'course-detail-view'">
-              <div class="row">
-                <b-button
-                  class="col"
-                  variant="success"
-                  :to="{name: 'new-learning-block', params: { id: course.name}}"
-                  >Lernbaustein hinzufügen</b-button>
-                  <b-button
-                    class="col"
-                    variant="success"
-                    :to="{name: 'new-learning-assessment', params: { id: course.name}}"
-                    >Lernüberprüfung hinzufügen</b-button>
-              </div>
-            </div>
-          </div>
-          <!-- col -->
-        </div>
-        <!-- row -->
-      </div>
-      <!-- container -->
     </div>
+
+    <div style="height: 4rem"></div>
+
+    <!-- author view -->
+    <div class="ly-bg-author py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <router-view></router-view>
+        </div>
+      </div>
+      <div class="row" v-if="isAuthor && $route.name === 'course-detail-view'">
+        <div class="col">
+          <b-button variant="primary" block
+                    :to="{name: 'new-learning-block', params: {id: course.name}}">
+            <i class="fas fa-puzzle-piece"></i> Lernbaustein hinzufügen
+          </b-button>
+        </div>
+        <div class="col">
+          <b-button variant="primary" block
+                    :to="{name: 'new-learning-assessment', params: {id: course.name}}">
+            <i class="fas fa-pencil-alt"></i> Lernüberprüfung hinzufügen
+          </b-button>
+        </div>
+      </div> <!-- row -->
+    </div> <!-- container -->
+    </div>
+
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from "vuex";
-
-//import bCollapse from "bootstrap-vue/es/components/collapse/collapse";
-//import vBToggle from "bootstrap-vue/es/directives/toggle/toggle";
 
 import http from "axios";
 import * as i18n from "../i18n/login";

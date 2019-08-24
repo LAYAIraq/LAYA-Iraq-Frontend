@@ -6,8 +6,8 @@ import _view from "./view.vue";
 
 export default {
   install(Vue: typeof _Vue, options?: any): void {
-    Vue.$laya.registerLB("laya-quiz-sort", "AssessmentScmc", {
-      de: "Sortieren",
+    Vue.$laya.registerLA("laya-quiz-relate", "AssessmentRelate", {
+      de: "Zuordnen",
     }, {
       new: _create,
       view: _edit,

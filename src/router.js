@@ -43,6 +43,16 @@ export default new Router({
       component: views.coursedetail,
       children: [
         {
+          path: "new-learning-block",
+          name: "new-learning-block",
+          component: views.newLearningBlock,
+        },
+        {
+          path: "new-learning-assessment",
+          name: "new-learning-assessment",
+          component: views.newLearningAssessment,
+        },
+        {
           path: "new-block",
           name: "new-block",
           component: views.newLearningBlock

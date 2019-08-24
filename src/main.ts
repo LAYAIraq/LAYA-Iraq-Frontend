@@ -32,10 +32,6 @@ Vue.use(Storage, { name: "ls", namespace: "vuejs__", storage: "local" });
 
 Vue.config.productionTip = false;
 
-/* wayin kickoff even speciale */
-import LayaPlyrVimeo from "@/components/laya-plyr-vimeo"
-Vue.component("laya-plyr-vimeo", LayaPlyrVimeo)
-
 new Vue({
   store,
   router,

@@ -6,7 +6,7 @@ import _view from "./view.vue";
 
 export default {
   install(Vue: typeof _Vue, options?: any): void {
-    Vue.$laya.registerLB("laya-quiz-drag-drop", "AssessmentScmc", {
+    Vue.$laya.registerLA("laya-quiz-drag-drop", "AssessmentDragDrop", {
       de: "Drag & Drop",
     }, {
       new: _create,

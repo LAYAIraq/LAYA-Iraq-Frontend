@@ -64,7 +64,7 @@ body {
 }
 
 .ly-bg-author {
-  background-color: lightblue;
+  background-color: #abd3ff;
 }
 
 .ly-author-hint {

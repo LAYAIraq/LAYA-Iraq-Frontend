@@ -7,7 +7,7 @@ import _view from "./view.vue";
 export default {
   install(Vue: typeof _Vue, options?: any): void {
     Vue.$laya.registerLA("laya-single-choice", "AssessmentScmc", {
-      de: "Single Choice / Multiple Choice",
+      de: "Single Choice",
     }, {
       new: _create,
       view: _edit,

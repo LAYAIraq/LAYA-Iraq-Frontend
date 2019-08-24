@@ -4,8 +4,15 @@
       <div class="container">
         <div class="row">
           <div class="col">
-            <laya-course-table :courses="courses">
-            </laya-course-table>
+
+            <div :is="$laya.la['laya-multiple-choice'].components['view']"
+              v-bind="cin">
+            </div>
+
+            <div :is="$laya.la['laya-multiple-choice'].components['edit']"
+              v-bind="cin" :onedit="updateInput">
+            </div>
+
           </div>
         </div>
       </div>
@@ -18,19 +25,25 @@ export default {
   name: "test-view",
   data() {
     return {
-      courses: [
-        {name: "Schwerhörigkeit", category: "Inclusion Journeys"},
-        {name: "Autismus", category: "Inclusion Journeys"},
-        {name: "Algebra", category: "Mathe"},
-        {name: "Analysis", category: "Mathe"},
-      ]
-    };
+
+      cin: {
+        title: "SMChoice",
+        task: "asdasda",
+        options: ['A', 'B', 'C'],
+        solutions: [0]
+      }
+
+    }
   },
   computed: {},
-  methods: {},
+  methods: {
+    updateInput: function(cin) {
+      this.cin = {...cin}
+    }
+  },
   components: {
   }
-};
+}
 </script>
 
 <style scoped></style>

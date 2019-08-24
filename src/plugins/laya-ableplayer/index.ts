@@ -6,12 +6,12 @@ import _view from "./view.vue";
 
 export default {
   install(Vue: typeof _Vue, options?: any): void {
-    Vue.$laya.registerLA("laya-ableplayer", "AssessmentScmc", {
-      de: "Single Choice / Multiple Choice",
+    Vue.$laya.registerLB("laya-ableplayer", "BlockAbleplayer", {
+      de: "Video (über Ableplayer)",
     }, {
       new: _create,
       view: _edit,
       edit: _view,
-    });
+    })
   },
 };

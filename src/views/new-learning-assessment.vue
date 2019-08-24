@@ -1,51 +1,56 @@
 <template>
-  <strong
-    v-if="Object.entries($laya.la).length === 0 && $laya.la.constructor === Object"
-  >Keine Lernüberprüfungen registriert!</strong>
-  <b-form v-else-if="showForm" @submit="addLA">
-    <h3>Bitte Lernüberprüfung auswählen.</h3>
-    <label>
-      Lernüberprüfung:
-      <b-select v-model="selected">
-        <option
-          name="assessment"
-          v-for="(la, id) in $laya.la"
-          :key="id"
-          :value="id"
-        >{{ la.i18n["de"] }}</option>
-      </b-select>
-      <b-button type="submit" variant="primary">Lernüberprüfung hinzufügen</b-button>
-    </label>
-  </b-form>
-  <!-- new view -->
-  <router-view v-else></router-view>
+  <div class="new-learning-block-view">
+    <strong v-if="noAssessmentsRegistered">
+      Keine Lernüberprüfungen registriert!
+    </strong>
+    <form v-if="!noAssessmentsRegistered && showForm">
+      <div class="form-group">
+        <label for="new-learn-ass">Bitte Lernüberprüfung auswählen:</label>
+        <select id="new-learn-ass" v-model="selected" class="custom-select">
+          <option v-for="(la, id) in $laya.la" :key="id" :value="id">
+          {{ la.i18n["de"] }}
+          </option>
+        </select>
+      </div>
+      <button type="submit"
+              class="btn btn-primary"
+              @click.prevent="selectLA"
+              :disabled="!formOk">
+        <i class="fas fa-plus"></i> Lernüberprüfung hinzufügen
+      </button>
+    </form>
+
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-import Vue from "vue";
-
-export default Vue.extend({
-  data: function() {
+export default {
+  name: "new-learn-assessment-view",
+  data() {
     return {
       selected: "",
       showForm: true
-    };
+    }
+  },
+  computed: {
+    noAssessmentsRegistered: function() {
+      return (Object.entries(this.$laya.la).length === 0) &&
+        (this.$laya.la.constructor === Object)
+    },
+    formOk: function() {
+      return (this.selected !== "")
+    }
   },
   methods: {
-    addLA(e) {
-      if (this.selected === "") {
-        // FIXME error notification would be nice
-        return false;
-      }
-      // console.log("selected: " + this.selected);
-      this.showForm = false;
+    selectLA() {
+      this.showForm = false
       this.$router.push({
         name: "assessment-create",
         params: { type: this.selected }
-      });
-      e.preventDefault();
+      })
     }
   }
-});
+}
 </script>
 
