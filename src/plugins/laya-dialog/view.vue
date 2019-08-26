@@ -1,6 +1,7 @@
 <template>
   <div class="laya-dialog">
-    <img class="bg" v-if="bg" :src="bg_" alt="">
+    <img v-if="bg" class="bg" :src="bg_" alt="">
+    <div v-else style="height: 1rem"></div>
 
     <div class="dialog-text">
       <div class="question">{{ question }}</div>

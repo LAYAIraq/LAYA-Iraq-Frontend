@@ -1,17 +1,11 @@
 <template>
   <div class="mt-5">
-    <div class="ly-bg-grey">
+    <div class="ly-bg-author p-3">
       <div class="container">
         <div class="row">
           <div class="col">
 
-            <div :is="$laya.la['laya-multiple-choice'].components['view']"
-              v-bind="cin">
-            </div>
-
-            <div :is="$laya.la['laya-multiple-choice'].components['edit']"
-              v-bind="cin" :onedit="updateInput">
-            </div>
+            <laya-wrapper cid="laya-dialog"></laya-wrapper>
 
           </div>
         </div>
@@ -21,6 +15,8 @@
 </template>
 
 <script>
+import layaWrapper from "@/components/laya-la-lb-wrapper"
+
 export default {
   name: "test-view",
   data() {
@@ -37,11 +33,9 @@ export default {
   },
   computed: {},
   methods: {
-    updateInput: function(cin) {
-      this.cin = {...cin}
-    }
   },
   components: {
+    layaWrapper
   }
 }
 </script>

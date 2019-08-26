@@ -56,7 +56,7 @@ import bCollapse from "bootstrap-vue/es/components/collapse/collapse"
 import vBToggle from "bootstrap-vue/es/directives/toggle/toggle"
 
 export default {
-  name: "laya-courses-table",
+  name: "laya-course-table",
   data() {
     return {
       cats: {},

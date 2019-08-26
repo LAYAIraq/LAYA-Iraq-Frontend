@@ -52,30 +52,44 @@
       </div>
 
       <hr>
-      <div class="form-group">
-        <p><b>Items</b></p>
-        <div class="form-check" v-for="(it, i) in items" :key="'item-'+i">
-            <input id="'item-text-'+i"
-                   class="form-check-input"
-                   type="text"
-                   v-model="items[i].caption">
-            <input id="'item-corr-'+i"
-                   class="form-check-input"
-                   type="checkbox"
-                   v-model="items[i].correct">
-            <span>richtig ?</span>
-            <button type="button"
-                    class="btn btn-outline-danger btn-sm"
-                    @click="removeItem(i)">
-              <i class="fas fa-times"></i>
-            </button>
+      <p><b>Items</b></p>
+      <div class="form-group row" v-for="(it, i) in items" :key="'item-'+i">
+
+        <!-- caption -->
+        <label class="col-form-label col-2" :for="'item-text-'+i">Text</label>
+        <div class="col-7">
+          <input :id="'item-text-'+i"
+                 class="form-control"
+                 type="text"
+                 v-model="items[i].caption">
         </div>
-        <button type="button"
-                class="btn btn-primary btn-sm"
-                @click="addItem">
-          <i class="fas fa-plus"></i> Item hinzufügen
-        </button>
+
+        <!-- correct -->
+        <div class="form-check form-check-inline">
+          <input :id="'item-corr-'+i"
+                 class="form-check-input"
+                 type="checkbox"
+                 v-model="items[i].correct">
+          <label class="form-check-label" :for="'item-corr-'+i">
+            richtig ?
+          </label>
+        </div>
+
+        <!-- delete -->
+        <div class="col-auto align-self-center">
+          <button type="button"
+                  class="btn btn-danger btn-sm"
+                  @click="delItem(i)">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
       </div>
+
+      <button type="button"
+              class="btn btn-primary btn-sm"
+              @click="addItem">
+        <i class="fas fa-plus"></i> Item hinzufügen
+      </button>
 
       <hr>
       <div class="d-flex justify-content-between">
@@ -93,8 +107,6 @@
 </template>
 
 <script>
-import {mapState, mapGetters} from 'vuex'
-
 export default {
   name: 'laya-la-scmc-edit',
   created () {
@@ -108,12 +120,25 @@ export default {
     }
   },
   props: {
+    onedit: Function
   },
   computed: {
   },
   methods: {
-    addItem() {},
-    save() {}
+    delItem(idx) {
+      this.items.splice(idx, 1)
+    },
+    addItem() {
+      this.items.push({ caption: "", correct: false });
+    },
+    save() {
+      this.onedit({
+        title: this.title, 
+        task: this.task,
+        items: [...this.items],
+        isMultiple: this.isMultiple,
+      })
+    }
   }
 }
 </script>
