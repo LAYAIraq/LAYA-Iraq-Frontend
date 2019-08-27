@@ -1,6 +1,6 @@
 <template>
   <div class="laya-dialog">
-    <img v-if="bg" class="bg" :src="bg_" alt="">
+    <img v-if="bg" class="bg" :src="bg" alt="">
     <div v-else style="height: 1rem"></div>
 
     <div class="dialog-text">
@@ -18,18 +18,14 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue"
-
-export default Vue.extend({
+<script>
+export default {
   name: "laya-dialog",
   data() {
     return {
-      bg_: ""
     }
   },
   mounted() {
-    this.bg_ = this.bg ? this.bg : "red"
   },
   props: {
     question: String,
@@ -38,10 +34,13 @@ export default Vue.extend({
     onFinish: Array
   },
   computed: {
+    background: function() {
+
+    }
   },
   methods: {
   },
-})
+}
 </script>
 
 <style scoped>

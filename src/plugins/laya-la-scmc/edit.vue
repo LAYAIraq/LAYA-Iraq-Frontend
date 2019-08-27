@@ -5,6 +5,31 @@
     <hr>
     <form>
 
+      <!-- type -->
+      <div class="form-group row">
+        <label for="smcs-type" class="col-2 col-form-label">Art</label>
+        <div class="col-10">
+          <div class="form-check form-check-inline align-text-top">
+            <input id="scms-sc"
+                   class="form-check-input"
+                   type="radio"
+                   :value="false"
+                   v-model="multiple">
+            <label for="scms-sc" class="form-check-label">Single Choice</label>
+          </div>
+          <div class="form-check form-check-inline align-text-top">
+            <input id="scms-mc"
+                   class="form-check-input"
+                   type="radio"
+                   name="multiple"
+                   :value="true"
+                   v-model="multiple">
+            <label for="scms-mc" class="form-check-label">Multiple Choice</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- title -->
       <div class="form-group row">
         <label for="scms-title" class="col-2 col-form-label">Titel</label>
         <div class="col-10">
@@ -15,30 +40,8 @@
         </div>
       </div>
 
-      <div class="form-group row">
-        <label for="smcs-type" class="col-2 col-form-label">Art</label>
-        <div class="col-10">
-          <div class="form-check form-check-inline">
-            <input id="scms-sc"
-                   class="form-check-input"
-                   type="radio"
-                   name="isMultiple"
-                   :value="false"
-                   v-model="isMultiple">
-            <label for="scms-sc" class="form-check-label">Single Choice</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input id="scms-mc"
-                   class="form-check-input"
-                   type="radio"
-                   name="isMultiple"
-                   :value="true"
-                   v-model="isMultiple">
-            <label for="scms-mc" class="form-check-label">Multiple Choice</label>
-          </div>
-        </div>
-      </div>
 
+      <!-- task -->
       <div class="form-group row">
         <label for="smcs-task" class="col-2 col-form-label">
           Frage / Aufgabe
@@ -51,26 +54,40 @@
         </div>
       </div>
 
-      <hr>
+      <!-- task audio -->
+      <div class="form-group row">
+        <label for="smcs-task-audio" class="col-2 col-form-label">
+          Offstimme
+        </label>
+        <div class="col-10">
+          <input id="scms-task-audio"
+                 type="text"
+                 v-model="taskAudio"
+                 class="form-control"
+                 placeholder="z.B. https://www.laya.de/offstimme.mp3">
+        </div>
+      </div>
+
       <p><b>Items</b></p>
-      <div class="form-group row" v-for="(it, i) in items" :key="'item-'+i">
+      <div class="form-group row" v-for="(option, i) in options" :key="'item-'+i">
 
         <!-- caption -->
-        <label class="col-form-label col-2" :for="'item-text-'+i">Text</label>
+        <label class="col-form-label col-2" :for="'option-text-'+i">Text</label>
         <div class="col-7">
-          <input :id="'item-text-'+i"
-                 class="form-control"
-                 type="text"
-                 v-model="items[i].caption">
+          <input :id="'option-text-'+i"
+            class="form-control"
+            type="text"
+            v-model="options[i]">
         </div>
 
         <!-- correct -->
         <div class="form-check form-check-inline">
-          <input :id="'item-corr-'+i"
-                 class="form-check-input"
-                 type="checkbox"
-                 v-model="items[i].correct">
-          <label class="form-check-label" :for="'item-corr-'+i">
+          <input :id="'option-corr-'+i"
+            class="form-check-input"
+            type="checkbox"
+            :true-value="i"
+            v-model="solutions[i]">
+          <label class="form-check-label" :for="'option-corr-'+i">
             richtig ?
           </label>
         </div>
@@ -79,7 +96,7 @@
         <div class="col-auto align-self-center">
           <button type="button"
                   class="btn btn-danger btn-sm"
-                  @click="delItem(i)">
+                  @click="_delItem(i)">
             <i class="fas fa-times"></i>
           </button>
         </div>
@@ -87,19 +104,9 @@
 
       <button type="button"
               class="btn btn-primary btn-sm"
-              @click="addItem">
+              @click="_addItem">
         <i class="fas fa-plus"></i> Item hinzufügen
       </button>
-
-      <hr>
-      <div class="d-flex justify-content-between">
-        <button type="button" class="btn btn-secondary">
-          Vorschau
-        </button>
-        <button type="button" class="btn btn-primary" @click="save">
-          <i class="fas fa-check"></i> Speichern
-        </button>
-      </div>
 
     </form>
 
@@ -113,32 +120,27 @@ export default {
   },
   data () {
     return {
-      title: "",
-      task: "",
-      items: [],
-      isMultiple: false
+      title: "::Übung 1::",
+      task: "::Aufgabe::",
+      taskAudio: "",
+      options: ["Antwort 1"],
+      solutions: [],
+      maxTries: 1,
+      multiple: false,
+      onFinish: []
     }
   },
   props: {
-    onedit: Function
   },
   computed: {
   },
   methods: {
-    delItem(idx) {
-      this.items.splice(idx, 1)
+    _delItem(idx) {
+      this.options.splice(idx, 1)
     },
-    addItem() {
-      this.items.push({ caption: "", correct: false });
+    _addItem() {
+      this.options.push("");
     },
-    save() {
-      this.onedit({
-        title: this.title, 
-        task: this.task,
-        items: [...this.items],
-        isMultiple: this.isMultiple,
-      })
-    }
   }
 }
 </script>

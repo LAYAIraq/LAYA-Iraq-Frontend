@@ -5,7 +5,7 @@
         <div class="row">
           <div class="col">
 
-            <laya-wrapper cid="laya-dialog"></laya-wrapper>
+            <laya-wrapper cid="laya-quiz-drag-drop"></laya-wrapper>
 
           </div>
         </div>
@@ -21,14 +21,6 @@ export default {
   name: "test-view",
   data() {
     return {
-
-      cin: {
-        title: "SMChoice",
-        task: "asdasda",
-        options: ['A', 'B', 'C'],
-        solutions: [0]
-      }
-
     }
   },
   computed: {},

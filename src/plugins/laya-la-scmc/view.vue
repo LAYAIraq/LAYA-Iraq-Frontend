@@ -1,5 +1,5 @@
 <template>
-  <fieldset class="ly-quiz-mchoice">
+  <fieldset class="laya-la-scmc">
 
 
     <!-- render task -->
@@ -15,12 +15,12 @@
     <!-- render options -->
     <div class="p-3 bg-light">
       <div v-for="(option,i) in options"
-           class="form-check"
+           class="form-check mb-3"
            :key="'mchoice-'+_uid+'-option-'+i">
         <input :id="'mchoice-in-'+_uid+'-'+i"
           class="form-check-input"
-          type="checkbox"
-          v-model="answers"
+          :type="multiple ? 'checkbox' : 'radio'"
+          v-model="multiple ? answers : answers[0]"
           :disabled="freeze"
           :value="i">
         <label :for="'mchoice-in-'+_uid+'-'+i" class="form-check-label">
@@ -32,10 +32,12 @@
     </div>
 
     <!-- check -->
+    <!--
     <div v-if="maxTries > 0" class="text-secondary my-2" tabindex="0">
       <span>Versuche übrig:</span>
       {{maxTries-tries}}
     </div>
+    -->
     <button type="button"
             class="btn btn-primary mt-3 float-right"
             @click="check"
@@ -65,6 +67,7 @@ export default Vue.extend({
     }
   },
   props: {
+    multiple: Boolean,
     title: String,
     task: String,
     taskAudio: String,
@@ -92,6 +95,9 @@ export default Vue.extend({
       })
     },
     check: function () {
+      this.onFinish[0]()
+      if(true) return 
+
       if (this.freeze) return
 
       // TODO: remove later
@@ -138,7 +144,15 @@ export default Vue.extend({
   outline-offset: 5px;
 }
 
+label {
+  user-select: none;
+}
+
 legend {
   font-size: 1rem;
+}
+
+.form-check:last-child {
+  margin-bottom: 0 !important;
 }
 </style>

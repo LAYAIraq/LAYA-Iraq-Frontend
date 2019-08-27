@@ -40,28 +40,15 @@
           <textarea :id="'answer-text-'+i"
             class="form-control"
             style="height: 6rem; font-size: 80%"
-            v-model="answers[i].text">
+            v-model="answers[i]">
           </textarea>
-        </div>
-
-        <!-- goto step -->
-        <div class="form-check form-check-inline col-auto">
-          <label class="form-check-label" :for="'answer-goto-'+i">
-            Sprungmarke
-          </label>
-          <input :id="'answer-goto-'+i"
-                 class="form-check-input m-0 ml-1"
-                 style="width: 3rem"
-                 min="1"
-                 type="number"
-                 v-model.number="answers[i].goto">
         </div>
 
         <!-- delete -->
         <div class="col-auto align-self-center">
           <button type="button"
                   class="btn btn-danger btn-sm"
-                  @click="delItem(i)">
+                  @click="_delItem(i)">
             <i class="fas fa-times"></i>
           </button>
         </div>
@@ -69,7 +56,7 @@
 
       <button type="button"
               class="btn btn-primary btn-sm"
-              @click="addItem">
+              @click="_addItem">
         <i class="fas fa-plus"></i> Antwort hinzufügen
       </button>
 
@@ -83,11 +70,10 @@ export default {
   name: "laya-lb-dialog-edit",
   data() {
     return {
-      question: "",
-      answers: [
-        {text: "", goto: 0}
-      ],
       bg: "",
+      question: "",
+      answers: [],
+      onFinish: []
     }
   },
   props: {
@@ -95,11 +81,11 @@ export default {
   computed: {
   },
   methods: {
-    delItem(idx) {
+    _delItem(idx) {
       this.answers.splice(idx, 1)
     },
-    addItem() {
-      this.answers.push({ text: "", goto: 0 });
+    _addItem() {
+      this.answers.push("")
     },
   },
 }

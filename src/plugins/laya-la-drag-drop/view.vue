@@ -43,7 +43,7 @@
 
       <div class="row">
         <button type="button"
-                class="btn btn-primary btn-lg mt-3 ml-auto"
+                class="btn btn-primary mt-3 ml-auto"
                 :disabled="checked"
                 @click="check">
           Fertig!
@@ -54,10 +54,9 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
+<script>
 
-export default Vue.extend({
+export default {
   name: "laya-quiz-drag-drop",
   created () {
     const mid = Math.floor((this.categories.length+1)/2)
@@ -103,7 +102,7 @@ export default Vue.extend({
       this.onFinish[0]()
     }
   }
-})
+}
 </script>
 
 <style scoped>
