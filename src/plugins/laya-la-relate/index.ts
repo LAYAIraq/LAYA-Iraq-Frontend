@@ -1,7 +1,7 @@
 import _Vue from "vue";
 
 import _create from "./view.vue";
-import _edit from "./view.vue";
+import _edit from "./edit.vue";
 import _view from "./view.vue";
 
 export default {
@@ -10,8 +10,8 @@ export default {
       de: "Zuordnen",
     }, {
       new: _create,
-      view: _edit,
-      edit: _view,
+      view: _view,
+      edit: _edit,
     });
   },
 };

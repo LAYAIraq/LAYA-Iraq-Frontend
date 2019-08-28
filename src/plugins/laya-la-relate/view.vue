@@ -49,7 +49,7 @@
         </button>
           
         <button type="button"
-                class="btn btn-primary btn-lg ml-auto"
+                class="btn btn-primary ml-auto"
                 @click="check">
           Fertig!
         </button>
