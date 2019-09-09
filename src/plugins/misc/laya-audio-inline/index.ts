@@ -6,6 +6,8 @@ import _view from "./view.vue";
 
 export default {
   install(Vue: typeof _Vue, options?: any): void {
+    Vue.component(_view.name, _view)
+    /*
     Vue.$laya.registerLB("laya-audio-inline", "BlockAudioInline", {
       de: "Audio inline",
     }, {
@@ -13,5 +15,6 @@ export default {
       view: _edit,
       edit: _view,
     });
+     */
   },
 };

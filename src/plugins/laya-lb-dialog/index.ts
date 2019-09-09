@@ -7,7 +7,7 @@ import _view from "./view.vue";
 export default {
   install(Vue: typeof _Vue, options?: any): void {
     Vue.$laya.registerLB("laya-dialog", "BlockDialog", {
-      de: "Dialog mit Sprungmarken",
+      de: "Dialog",
     }, {
       new: _create,
       view: _view,

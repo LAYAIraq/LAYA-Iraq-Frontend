@@ -1,6 +1,6 @@
 <template>
 
-  <div :class="name">
+  <div class="laya-lb-plyr-vimeo-edit">
 
     <form>
       <div class="form-group">
@@ -19,13 +19,11 @@
 </template>
 
 <script>
-const name = "laya-lb-plyr-vimeo-edit"
 
 export default {
-  name,
+  name: "laya-lb-plyr-vimeo-edit",
   data() {
     return {
-      name,
       url: ""
     }
   },

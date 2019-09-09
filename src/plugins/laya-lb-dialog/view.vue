@@ -1,7 +1,9 @@
 <template>
   <div class="laya-dialog">
     <img v-if="bg" class="bg" :src="bg" alt="">
-    <div v-else style="height: 1rem"></div>
+    <div v-else class="bg-fallback">
+      Wähle eine Antwort
+    </div>
 
     <div class="dialog-text">
       <div class="question">{{ question }}</div>
@@ -50,6 +52,13 @@ export default {
 
 .bg {
   width: 100%;
+}
+.bg-fallback {
+  min-height: 10rem;
+  border: 1px solid grey;
+  text-align: center;
+  padding-top: 1rem;
+  background: linear-gradient(#e66465, #9198e5);
 }
 
 .dialog-text {

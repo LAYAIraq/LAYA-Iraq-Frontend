@@ -12,7 +12,8 @@
         <div class="col-10">
           <textarea id="scms-question"
                     v-model="question"
-                    class="w-100">
+                    class="w-100"
+                    placeholder="Optional">
           </textarea>
         </div>
       </div>

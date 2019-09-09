@@ -38,10 +38,32 @@ export default new Router({
       component: views.courses
     },
     {
-      path: "/courses/:id",
+      path: "/courses/:name/:step",
       name: "course-detail-view",
-      component: views.coursedetail,
+      component: views.courseDetail,
+      props: true,
+
       children: [
+
+        {
+          path: "edit",
+          name: "edit-course-content-view",
+          component: views.editCourseContent,
+          props: true
+        },
+        {
+          path: "new/:type",
+          name: "new-course-content-view",
+          component: views.editCourseContent,
+          props: true
+        },
+        {
+          path: "editNav",
+          name: "edit-course-nav-view",
+          component: views.editCourseNav,
+        },
+
+        // TODO: review
         {
           path: "new-learning-block",
           name: "new-learning-block",
@@ -71,14 +93,16 @@ export default new Router({
           path: "assessment/:type/:assId",
           name: "assessment-view",
           component: views.assessment
-        }
+        },
       ]
     },
+    /*
     {
       path: "/mycourses",
       name: "mycourses-view",
       component: views.mycourses
     },
+    */
     {
       path: "/imprint",
       name: "imprint-view",

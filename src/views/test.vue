@@ -5,7 +5,7 @@
         <div class="row">
           <div class="col">
 
-            <laya-wrapper cid="laya-quiz-relate"></laya-wrapper>
+            <laya-wrapper :data="{asd:1}" cid="laya-quiz-relate"></laya-wrapper>
 
           </div>
         </div>
