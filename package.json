@@ -17,6 +17,7 @@
     "language-icons": "^0.2.0",
     "plyr": "^3.5.6",
     "register-service-worker": "^1.6.2",
+    "vis-network": "^5.4.1",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
     "vue-ls": "^3.2.1",

@@ -7,7 +7,7 @@
 
           <comp-edit-wrapper
             :cid="_type"
-            v-bind="content"
+            :init="content ? content.input : null"
             :onsave="onupdate">
           </comp-edit-wrapper>
 

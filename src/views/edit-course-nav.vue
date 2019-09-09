@@ -47,7 +47,7 @@
         </div>
 
         <div class="col-4">
-          <b>Nächster Inhalt</b>
+          <b>Folge-Inhalt-Nr.</b>
         </div>
 
       </div>
@@ -74,6 +74,17 @@
 
       <div class="row">
 
+        <!-- graph preview -->
+        <div class="col">
+          <button type="button"
+                  class="btn btn-secondary"
+                  :disabled="formInvalid"
+                  @click="renderNavGraph">
+            <i class="fas fa-project-diagram"></i> Grafische Vorschau erneuen
+          </button>
+        </div>
+
+        <!-- store -->
         <div class="col text-right">
           <button type="button"
                   class="btn btn-primary"
@@ -87,19 +98,38 @@
         </div>
 
       </div>
+
     </div>
+
+    <!-- graph -->
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          Grafische Vorschau:
+          <div :id="navGraphId" class="nav-graph"></div>
+        </div>
+      </div>
+    </div>
+
 
   </div>
 </template>
 
 <script>
+import vis from "vis-network"
 export default {
   name: "edit-course-nav-view",
   created() {
     this.content = [...this.course.content]
   },
+  mounted() {
+    if(!this.formInvalid)
+      this.renderNavGraph()
+  },
   data() {
     return {
+      graph: null,
+
       content: [{
         name: "",
         input: {},
@@ -113,12 +143,62 @@ export default {
   computed: {
     formInvalid: function() {
       return this.content.reduce((res, val) => !val.nextStep || res, false)
+    },
+    navGraphId() {
+      return "nav-graph"
     }
   },
   methods: {
+
     typeName(compName) {
       return {...this.$laya.la, ...this.$laya.lb}[compName].i18n.de
     },
+
+    renderNavGraph() {
+      const self = this
+
+      let _nodes = self.content.map(
+        (c,i) => ({id: i+1, label: `${i+1}. ${self.typeName(c.name)}`})
+      )
+
+      let _edges = []
+      for(let i=0; i<self.content.length; ++i) {
+        let c = self.content[i]
+        if(!c.nextStep) continue
+        let steps = c.nextStep.split(",").map(s => parseInt(s))
+        for(let s=0; s<steps.length; ++s) {
+          _edges.push({from: i+1, to: steps[s]})
+        }
+      }
+
+      self.graph = new vis.Network(document.getElementById(self.navGraphId), {
+        nodes: new vis.DataSet(_nodes),
+        edges: new vis.DataSet(_edges)
+      }, {
+        edges: {
+          arrows: "to"
+        },
+        nodes: {
+          shape: "box"
+        },
+        physics: {
+          enabled: true,
+          barnesHut: {
+            avoidOverlap: 0.5
+          }
+        },
+        /*
+        layout: {
+          hierarchical: {
+            enabled: true,
+            direction: "LR"
+          }
+        }
+        */
+      })
+
+    },
+
     save() {
       this.onnavupdate(this.content)
     }
@@ -144,5 +224,10 @@ p {
 }
 .table .row:last-child {
   border-top: 2px solid black;
+}
+
+.nav-graph {
+  height: 20rem;
+  border: 1px solid grey;
 }
 </style>

@@ -6,7 +6,7 @@
              static
              variant="success"
              auto-hide-delay="1500"
-             style="position: fixed; bottom: 5px; right: 5px">
+             class="author-toast">
       Speichern erfolgreich!
     </b-toast>
 
@@ -30,14 +30,14 @@
       <div class="row">
         <div class="col">
 
-          <component v-if="course.content.length > 0"
+          <component v-if="content()"
             :is="content().name"
             v-bind="content().input"
             :onFinish="nextStep(content().nextStep)">
           </component>
 
           <h2 v-else class="mt-5 text-center text-muted">
-            Dieser Kurs ist noch leer
+            Dieser Inhalt ist noch leer
           </h2>
 
         </div>
@@ -60,6 +60,23 @@
               exact>
               <i class="fas fa-tools"></i> Autor-Tools
             </router-link>
+
+            <span class="content-nav float-right" style="font-size: 120%">
+              aktueller Inhalt:
+              <router-link v-if="step > 1"
+                           :to="{name: 'course-detail-view', params: {name, step: step-1+''}}"
+                           class="px-2">
+                <i class="fas fa-chevron-left"></i>
+              </router-link>
+
+              <b>{{step}}</b>
+
+              <router-link v-if="step < course.content.length"
+                           :to="{name: 'course-detail-view', params: {name, step: 1*step+1+''}}"
+                           class="px-2">
+                <i class="fas fa-chevron-right"></i>
+              </router-link>
+            </span>
           </div>
         </div>
       </div>
@@ -134,7 +151,7 @@
 
           <div class="col text-dark">
             Damit kannst Du die Kursführung bearbeiten. Insgesamt hat der Kurs
-            {{course.content.length+1}} Inhalte.
+            {{course.content.length}} Inhalte.
             <p v-if="courseNavIncomplete()" class="bg-warning text-center">
               <i class="fas fa-exclamation-triangle"></i> Unvollständig
             </p>
@@ -221,10 +238,11 @@ export default {
     },
 
     storeCourse() {
-      http.patch(`courses/${this.name}`, {content: this.course.content})
+      const self = this
+      http.patch(`courses/${self.name}`, {content: self.course.content})
         .catch(err => console.error("Failed storing course content:", err))
         .finally(function() {
-          this.$bvToast.show("author-toast")
+          self.$bvToast.show("author-toast")
         })
     },
 
@@ -312,6 +330,14 @@ export default {
 .author-tools-active {
   border-bottom: 2px solid black;
   color: black !important;
+}
+
+.author-toast {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11002;
 }
 
 .subscribe-btn {

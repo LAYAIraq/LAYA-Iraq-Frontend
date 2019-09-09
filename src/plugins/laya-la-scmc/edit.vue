@@ -119,6 +119,8 @@ export default {
   created () {
   },
   data () {
+    if(Object.entries(this.$attrs).length > 0)
+      return {...this.$attrs}
     return {
       title: "::Übung 1::",
       task: "::Aufgabe::",
@@ -127,7 +129,6 @@ export default {
       solutions: [],
       maxTries: 1,
       multiple: false,
-      onFinish: []
     }
   },
   props: {

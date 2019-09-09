@@ -5,7 +5,7 @@
     <div v-if="preview" :is="comps.view" v-bind="dataFromEdit"></div>
 
     <!-- editing view -->
-    <div v-show="!preview" :is="comps.edit" ref="edit"></div>
+    <div v-show="!preview" :is="comps.edit" v-bind="init" ref="edit"></div>
 
     <hr>
 
@@ -34,6 +34,7 @@ export default {
   },
   props: {
     cid: String,
+    init: Object,
     onsave: Function
   },
   computed: {

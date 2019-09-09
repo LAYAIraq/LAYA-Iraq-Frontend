@@ -89,7 +89,7 @@
         <div class="col-3">
           <select class="custom-select" v-model="items[i].category">
             <option disabled :value="-1">Kategorie</option>
-            <option v-for="(cat,j) in categories" :value="j">
+            <option v-for="(cat,j) in categories" :value="j" :key="cat">
             {{ cat }}
             </option>
           </select>
@@ -125,6 +125,8 @@ export default {
   created () {
   },
   data () {
+    if(Object.entries(this.$attrs).length > 0)
+      return {...this.$attrs}
     return {
       title: "::Übung 1::",
       task: "::Aufgabe::",
@@ -133,7 +135,6 @@ export default {
         {label: "Antwort 1", category: -1}
       ],
       categories: ["Kategorie 1", "Kategorie 2"],
-      onFinish: []
     }
   },
   props: {

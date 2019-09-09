@@ -70,16 +70,13 @@
 export default {
   name: "laya-lb-dialog-edit",
   data() {
+    if(Object.entries(this.$attrs).length > 0)
+      return {...this.$attrs}
     return {
       bg: "",
       question: "",
       answers: [],
-      onFinish: []
     }
-  },
-  props: {
-  },
-  computed: {
   },
   methods: {
     _delItem(idx) {

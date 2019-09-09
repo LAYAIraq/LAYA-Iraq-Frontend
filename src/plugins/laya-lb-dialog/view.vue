@@ -12,7 +12,7 @@
                 :key="i"
                 type="button"
                 class="btn btn-info btn-lg"
-                @click="onFinish[i]">
+                @click="onFinish[i]() || dummy">
           {{ answer }}
         </button>
       </div>
@@ -35,12 +35,10 @@ export default {
     bg: String,
     onFinish: Array
   },
-  computed: {
-    background: function() {
-
-    }
-  },
   methods: {
+    dummy() {
+      // Do not delete
+    }
   },
 }
 </script>

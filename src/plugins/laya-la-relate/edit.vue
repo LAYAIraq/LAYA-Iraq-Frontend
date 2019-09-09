@@ -148,7 +148,6 @@ export default {
         }
       ],
       relations: ["Relation 1", "Relation 2"],
-      onFinish: []
     }
   },
   props: {
