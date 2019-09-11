@@ -2,6 +2,11 @@
   <div class="laya-lb-plyr-vimeo-view">
     <div :id="playerId" data-plyr-provider="vimeo" :data-plyr-embed-id="vimeoId">
     </div>
+    <button type="button"
+            class="btn btn-primary mt-3 float-right"
+            @click="onFinish[0]">
+      Weiter <i class="fas fa-arrow-right"></i>
+    </button>
   </div>
 </template>
 
@@ -19,7 +24,7 @@ export default {
   mounted() {
     const vue = this
     vue.plyr = new Plyr(`#${vue.playerId}`)
-    vue.plyr.on("ended", e => vue.onFinish[0]())
+    //vue.plyr.on("ended", e => vue.onFinish[0]())
   },
   props: {
     url: String,

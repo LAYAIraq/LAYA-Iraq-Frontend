@@ -46,8 +46,12 @@
           <b>Art des Inhalts</b>
         </div>
 
-        <div class="col-4">
+        <div class="col-3">
           <b>Folge-Inhalt-Nr.</b>
+        </div>
+
+        <div class="col-2">
+          <b>Tauschen</b>
         </div>
 
       </div>
@@ -62,12 +66,29 @@
           {{ typeName(step.name) }}
         </div>
 
-        <div class="col-4">
+        <div class="col-3">
           <input class="form-control"
                  :class="{'is-invalid': !step.nextStep}"
                  type="text"
                  v-model="step.nextStep"
                  placeholder="z.B. 1,2">
+        </div>
+
+        <div class="col-2">
+          <!-- swap up -->
+          <button v-if="i > 0"
+                  type="button"
+                  class="btn btn-primary btn-sm"
+                  @click="swapUp(i)">
+            <i class="fas fa-level-up-alt"></i>
+          </button>
+          <!-- swap down -->
+          <button v-if="i < content.length-1"
+                  type="button"
+                  class="btn btn-primary btn-sm float-right"
+                  @click="swapDown(i)">
+            <i class="fas fa-level-down-alt"></i>
+          </button>
         </div>
 
       </div>
@@ -80,7 +101,9 @@
                   class="btn btn-secondary"
                   :disabled="formInvalid"
                   @click="renderNavGraph">
-            <i class="fas fa-project-diagram"></i> Grafische Vorschau erneuen
+            <i v-if="graph" class="fas fa-project-diagram"></i>
+            <i v-else class="fas fa-spinner fa-spin"></i>
+            Grafische Vorschau erneuen
           </button>
         </div>
 
@@ -106,6 +129,9 @@
       <div class="row">
         <div class="col">
           Grafische Vorschau:
+          <span class="text-muted">
+            ( Du kannst die Grafik beliebig oft erneuern )
+          </span>
           <div :id="navGraphId" class="nav-graph"></div>
         </div>
       </div>
@@ -117,6 +143,9 @@
 
 <script>
 import vis from "vis-network"
+
+import BSpinner from "bootstrap-vue"
+
 export default {
   name: "edit-course-nav-view",
   created() {
@@ -150,12 +179,27 @@ export default {
   },
   methods: {
 
+    swapUp(i) {
+      [this.content[i-1], this.content[i]] =
+        [this.content[i], this.content[i-1]]
+      this.$forceUpdate()
+    },
+
+    swapDown(i) {
+      [this.content[i], this.content[i+1]] =
+        [this.content[i+1], this.content[i]]
+      this.$forceUpdate()
+    },
+
     typeName(compName) {
       return {...this.$laya.la, ...this.$laya.lb}[compName].i18n.de
     },
 
     renderNavGraph() {
       const self = this
+
+      self.graph = null
+      self.$forceUpdate()
 
       let _nodes = self.content.map(
         (c,i) => ({id: i+1, label: `${i+1}. ${self.typeName(c.name)}`})
@@ -171,7 +215,7 @@ export default {
         }
       }
 
-      self.graph = new vis.Network(document.getElementById(self.navGraphId), {
+      const graph = new vis.Network(document.getElementById(self.navGraphId), {
         nodes: new vis.DataSet(_nodes),
         edges: new vis.DataSet(_edges)
       }, {
@@ -184,9 +228,14 @@ export default {
         physics: {
           enabled: true,
           barnesHut: {
-            avoidOverlap: 0.5
+            avoidOverlap: 0.3,
+            damping: 1
           }
         },
+        interaction: {
+          dragNodes: false,
+          selectable: false,
+        }
         /*
         layout: {
           hierarchical: {
@@ -196,13 +245,19 @@ export default {
         }
         */
       })
+      graph.selectNodes([1])
 
+      self.graph = graph
+      self.$forceUpdate()
     },
 
     save() {
       this.onnavupdate(this.content)
     }
   },
+  components: {
+    BSpinner
+  }
 }
 </script>
 

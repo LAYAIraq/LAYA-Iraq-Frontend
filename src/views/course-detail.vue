@@ -150,11 +150,43 @@
           </div>
 
           <div class="col text-dark">
+            <span v-if="courseNavIncomplete()"
+                  class="bg-warning mr-1 rounded"
+                  style="padding: 2px 5px">
+              <i class="fas fa-exclamation-triangle"></i> Unvollständig
+            </span>
             Damit kannst Du die Kursführung bearbeiten. Insgesamt hat der Kurs
             {{course.content.length}} Inhalte.
-            <p v-if="courseNavIncomplete()" class="bg-warning text-center">
-              <i class="fas fa-exclamation-triangle"></i> Unvollständig
-            </p>
+          </div>
+        </div>
+
+        <div class="row mt-5" v-if="content()">
+          <div class="col">
+            <b-button size="sm"
+                      variant="danger"
+                      class="float-right"
+                      @click="delContent">
+              <i class="fas fa-exclamation-circle"></i> Inhalt löschen
+            </b-button>
+          </div>
+
+          <div class="col text-dark">
+            Der aktuelle Inhalt wird gelöscht.
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col">
+            <b-button size="sm"
+                      variant="danger"
+                      class="float-right"
+                      @click="delCourse">
+              <i class="fas fa-exclamation-circle"></i> Kurs löschen
+            </b-button>
+          </div>
+
+          <div class="col text-dark">
+            Der <u>gesamte Kurs</u> wird gelöscht.
           </div>
         </div>
 
@@ -235,6 +267,20 @@ export default {
       this.course.content = [...changedContent]
       this.storeCourse()
       this.$forceUpdate()
+    },
+
+    delContent: function() {
+      this.course.content.splice(this.step-1, 1) 
+      this.storeCourse()
+    },
+
+    delCourse() {
+      const self = this
+      http.delete(`courses/${self.name}`)
+        .then(function() {
+          self.$router.push("/courses")
+        })
+        .catch(err => console.error("Failed to delete course:", err))
     },
 
     storeCourse() {

@@ -1,12 +1,10 @@
 <template>
   <div class="laya-dialog">
     <img v-if="bg" class="bg" :src="bg" alt="">
-    <div v-else class="bg-fallback">
-      Wähle eine Antwort
-    </div>
+    <div v-else class="bg-fallback"></div>
 
     <div class="dialog-text">
-      <div class="question">{{ question }}</div>
+      <div v-if="question" class="question">{{ question }}</div>
       <div class="answers d-flex justify-content-around">
         <button v-for="(answer,i) in answers"
                 :key="i"
@@ -77,6 +75,8 @@ export default {
   margin-bottom: 1rem;
   padding: 5px;
   text-align: center;
+  background-color: #ffffff78;
+  border-radius: 3px;
 }
 
 .answers > button {

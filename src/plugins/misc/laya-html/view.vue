@@ -1,29 +1,44 @@
 <template>
-  <div class="laya-html">
-    <div v-html="html"></div>
+  <div class="laya-wysiwyg-view">
+    <div :id="editorId"></div>
   </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue"
+<script>
+import "quill/dist/quill.snow.css"
+import Quill from "quill"
 
-export default Vue.extend({
-  name: "laya-html",
+export default {
+  name: "laya-wysiwyg",
   data() {
     return {
     }
   },
   mounted() {
+    const quill = new Quill(`#${this.editorId}`, {
+      theme: "snow",
+      readOnly: true
+    })
+    quill.setContents(this.contents)
   },
   props: {
-    html: String,
+    contents: Object
   },
   computed: {
+    editorId() {
+      return `laya-wysiwyg-readonly-${Date.now()}`
+    }
   },
   methods: {
   },
-})
+}
 </script>
 
 <style>
+.laya-wysiwyg-view .ql-toolbar {
+  display: none;
+}
+.laya-wysiwyg-view .ql-container {
+  border: none;
+}
 </style>
