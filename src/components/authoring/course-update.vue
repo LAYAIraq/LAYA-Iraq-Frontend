@@ -1,6 +1,7 @@
 <template>
   <div class="laya-course-new-view">
     <h3>Neuen Kurs erstellen</h3>
+    <hr>
     <form class="mt-3">
       <div class="form-group row">
         <label for="new-course-name" class="col-3 col-form-label">

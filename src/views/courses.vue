@@ -1,6 +1,9 @@
 <template>
   <div class="courses-view">
     <div class="container">
+
+      <div style="height: 2rem"></div>
+
       <div class="row">
         <img class="mx-auto" src="../assets/kurse.svg" alt="Gerhirn">
       </div>
