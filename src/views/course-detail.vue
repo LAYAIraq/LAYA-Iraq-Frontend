@@ -31,9 +31,10 @@
         <div class="col">
 
           <component v-if="content()"
-            :is="content().name"
-            v-bind="content().input"
-            :onFinish="nextStep(content().nextStep)">
+                     :key="name+'-'+step"
+                     :is="content().name"
+                     v-bind="content().input"
+                     :onFinish="nextStep(content().nextStep)">
           </component>
 
           <h2 v-else class="mt-5 text-center text-muted">

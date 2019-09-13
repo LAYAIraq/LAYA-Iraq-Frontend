@@ -111,38 +111,34 @@ export default {
       this.busy = true;
       let ctx = this;
 
-      http
-        .post("accounts/login", {
-          email: ctx.email,
-          password: ctx.pwd
-        })
-        .then(({ data }) => {
-          /*
-           * set login state */
-          ctx.$store.commit("login", data);
+      http.post("accounts/login", {
+        email: ctx.email,
+        password: ctx.pwd
+      }).then(({ data }) => {
+        /*
+         * set login state */
+        ctx.$store.commit("login", data);
 
-          /* load profile */
-          ctx.$store.dispatch("fetchProfile");
-          ctx.$store.dispatch("fetchRole");
+        /* load profile */
+        ctx.$store.dispatch("fetchProfile");
+        ctx.$store.dispatch("fetchRole");
 
-          /* store auth for reloads */
-          const { id, userId, created, ttl } = data;
-          let expire = new Date(created);
-          expire.setSeconds(expire.getSeconds() + ttl);
-          console.log("Auth expires on", expire);
-          ctx.$ls.set("auth", { id: id, userId: userId }, expire.getTime());
+        /* store auth for reloads */
+        const { id, userId, created, ttl } = data;
+        let expire = new Date(created);
+        expire.setSeconds(expire.getSeconds() + ttl);
+        console.log("Auth expires on", expire);
+        ctx.$ls.set("auth", { id: id, userId: userId }, expire.getTime());
 
-          /* move to view */
-          ctx.$router.push("/mycourses");
-        })
-        .catch(err => {
-          console.log(err);
-          ctx.submitFailed = true;
-          ctx.errMsg = ctx.i18n.errMsg;
-        })
-        .then(() => {
-          ctx.busy = false;
-        });
+        /* move to view */
+        ctx.$router.push("/courses");
+      }).catch(err => {
+        console.log(err);
+        ctx.submitFailed = true;
+        ctx.errMsg = ctx.i18n.errMsg;
+      }).then(() => {
+        ctx.busy = false;
+      });
     }
   },
   components: {
