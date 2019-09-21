@@ -101,8 +101,7 @@
                   class="btn btn-secondary"
                   :disabled="formInvalid"
                   @click="renderNavGraph">
-            <i v-if="graph" class="fas fa-project-diagram"></i>
-            <i v-else class="fas fa-spinner fa-spin"></i>
+            <i class="fas fa-project-diagram"></i>
             Grafische Vorschau erneuen
           </button>
         </div>
@@ -198,9 +197,6 @@ export default {
     renderNavGraph() {
       const self = this
 
-      self.graph = null
-      self.$forceUpdate()
-
       let _nodes = self.content.map(
         (c,i) => ({id: i+1, label: `${i+1}. ${self.typeName(c.name)}`})
       )
@@ -246,9 +242,6 @@ export default {
         */
       })
       graph.selectNodes([1])
-
-      self.graph = graph
-      self.$forceUpdate()
     },
 
     save() {

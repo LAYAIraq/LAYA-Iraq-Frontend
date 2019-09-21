@@ -48,14 +48,12 @@
       </div> <!-- container -->
     </div>
 
-    <div style="height: 5rem"></div>
-
     <!-- author view -->
-    <div class="ly-bg-author py-4">
+    <div class="ly-bg-author py-3 mt-5" v-if="isAuthor">
       <div class="container">
         <div class="row">
           <div class="col">
-            <lyCourseEdit v-if="isAuthor"></lyCourseEdit>
+            <lyCourseEdit></lyCourseEdit>
           </div>
         </div>
       </div>

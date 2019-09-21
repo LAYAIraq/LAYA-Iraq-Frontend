@@ -39,7 +39,7 @@
             :to="'/courses/'+course.name+'/1'"
             class="text-dark px-2 py-1 d-inline-block text-center"
             style="border: 2px solid black">
-            Beginnen <i class="fas fa-arrow-right"></i>
+            Start <i class="fas fa-arrow-right"></i>
           </router-link>
         </div>
       </div>

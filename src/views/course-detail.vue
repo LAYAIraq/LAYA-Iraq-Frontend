@@ -1,6 +1,17 @@
 <template>
   <div v-if="!note.busy" class="course-detail-view">
 
+    <b-modal id="author-delCourse-confirm"
+             title="Kurs löschen"
+             header-bg-variant="danger"
+             ok-variant="danger"
+             ok-title="Löschen"
+             cancel-title="Abbrechen"
+             @ok="delCourse"
+             centered>
+      <p>Bist Du sicher das Du den <u>gesamten</u> Kurs löschen willst ?</p>
+    </b-modal>
+
     <b-toast id="author-toast"
              title="Autor-Tools"
              static
@@ -48,7 +59,7 @@
     <div style="height: 4rem"></div>
 
     <!-- author view -->
-    <div class="ly-bg-author py-4">
+    <div class="ly-bg-author py-4" v-if="isAuthor">
 
       <div class="container mb-4">
         <div class="row">
@@ -181,7 +192,7 @@
             <b-button size="sm"
                       variant="danger"
                       class="float-right"
-                      @click="delCourse">
+                      @click="$bvModal.show('author-delCourse-confirm')">
               <i class="fas fa-exclamation-circle"></i> Kurs löschen
             </b-button>
           </div>
@@ -205,7 +216,8 @@ import {
   BDropdownItem,
   BDropdownHeader,
   BDropdownDivider,
-  BToast, BvToast
+  BToast, BvToast,
+  BModal, BvModal
 } from "bootstrap-vue"
 
 import http from "axios";
@@ -364,7 +376,8 @@ export default {
     BDropdownItem,
     BDropdownHeader,
     BDropdownDivider,
-    BToast, BvToast
+    BToast, BvToast,
+    BModal, BvModal
   }
 };
 </script>
