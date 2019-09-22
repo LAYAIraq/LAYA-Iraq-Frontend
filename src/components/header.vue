@@ -47,9 +47,11 @@
 
 
         <ul class="navbar-nav">
+          <!--
           <nav-item to="/profile" v-if="auth.online">
             <span><i class="fas fa-user"></i> {{i18n.profile}}</span>
           </nav-item>
+          -->
           <nav-item @click="logout" right v-if="auth.online">
             <span><i class="fas fa-sign-out-alt"></i> {{i18n.logout}}</span>
           </nav-item>

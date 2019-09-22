@@ -257,6 +257,15 @@ export default {
   computed: {
     ...mapState(["auth", "note"]),
     ...mapGetters(["isAuthor"]),
+
+    /* returns empty function on every [] invocation */
+    onFinishDummy: function() {
+      return new Proxy({}, {
+        get: function(target, name) {
+          return function(){}
+        }
+      })
+    }
   },
   methods: {
     ...utils,
@@ -311,6 +320,7 @@ export default {
 
     nextStep(steps) { // string e.g. "1,2"
       if(!steps) return []
+
       const {name, $router} = this
       return steps.split(",").map(step => {
         return function() {

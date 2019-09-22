@@ -3,7 +3,7 @@
     <div :id="playerId" data-plyr-provider="vimeo" :data-plyr-embed-id="vimeoId">
     </div>
     <button type="button"
-            class="btn btn-primary mt-3 float-right"
+            class="btn btn-primary mt-3 d-block ml-auto"
             @click="onFinish[0]() || {}">
       Weiter <i class="fas fa-arrow-right"></i>
     </button>
