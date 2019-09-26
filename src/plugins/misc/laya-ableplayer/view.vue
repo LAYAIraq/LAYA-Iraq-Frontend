@@ -2,25 +2,23 @@
   <div class="ly-ableplayer">
 
     <video :id="playerId"
-      :data-vimeo-id="vimeo ? src : false"
       preload="auto"
       data-debug
       :data-lang="lang" data-force-lang>
 
-      <source v-if="!vimeo"
-              type="video/mp4"
+      <source type="video/mp4"
               :src="notEmpty(src)"
-              :data-sign-src="notEmpty(sign)">
+              :data-sign-src="notEmpty(sign)"/>
 
-        <track v-if="!vimeo" kind="captions" :src="notEmpty(sub)" default>
+        <track kind="captions" :src="notEmpty(sub)" default/>
     </video>
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import "ableplayer"
-import Vue from "vue"
-export default Vue.extend({
+
+export default {
   name: "laya-ableplayer",
   data() {
     return {
@@ -28,17 +26,16 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.ableplayer = new window["AblePlayer"](`#${this.playerId}`)
+    this.ableplayer = new window.AblePlayer(`#${this.playerId}`)
   },
   props: {
     src: String,
-    vimeo: Boolean,
     sign: String,
     sub: String,
   },
   computed: {
     playerId: function() {
-      return `ly-able-${Date.now()}`
+      return `laya-ableplayer-${Date.now()}`
     },
     lang: function() {
       return "de"
@@ -47,7 +44,7 @@ export default Vue.extend({
   methods: {
     notEmpty: (str) => (!!str && str.length > 0) ? str : false,
   },
-})
+}
 </script>
 
 <style>

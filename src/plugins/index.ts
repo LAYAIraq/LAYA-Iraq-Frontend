@@ -5,7 +5,7 @@ export { default as LayaQuizRelate } from "./laya-la-relate"
 
 export { default as LayaDialog } from "./laya-lb-dialog"
 export { default as LayaPlyrVimeo } from "./laya-lb-plyr-vimeo"
-//export { default as LayaAbleplayer } from "./misc/laya-ableplayer"
+export { default as LayaAbleplayer } from "./misc/laya-ableplayer"
 //export { default as LayaPlyr } from "./misc/laya-plyr"
 //export { default as LayaStepper } from "./misc/laya-stepper"
 export { default as LayaAudioInline } from "./misc/laya-audio-inline"
