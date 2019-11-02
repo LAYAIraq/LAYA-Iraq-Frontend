@@ -12,6 +12,14 @@
 
         <track kind="captions" :src="notEmpty(sub)" default/>
     </video>
+
+    <button type="button"
+            class="btn btn-primary mt-3 d-block ml-auto"
+            @click="onFinish[0]() || {}">
+      Weiter <i class="fas fa-arrow-right"></i>
+    </button>
+
+
   </div>
 </template>
 
@@ -32,6 +40,7 @@ export default {
     src: String,
     sign: String,
     sub: String,
+    onFinish: Array
   },
   computed: {
     playerId: function() {

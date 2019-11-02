@@ -11,6 +11,8 @@ import Quill from "quill"
 export default {
   name: "laya-wysiwyg-edit",
   data() {
+    if(Object.entries(this.$attrs).length > 0)
+      return {...this.$attrs}
     return {
       contents: null
     }
@@ -36,6 +38,7 @@ export default {
       if (source === "user")
         self.contents = quill.getContents()
     })
+    quill.setContents(self.contents)
   },
   computed: {
     editorId() {

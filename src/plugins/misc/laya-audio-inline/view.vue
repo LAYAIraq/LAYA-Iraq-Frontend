@@ -6,16 +6,13 @@
             @click="togglePlay">
       <i class="fas fa-volume-up"></i>
     </button>
-    <audio v-show="false" ref="player" @ended="playing = false">
-      <source :src="src" type="audio/mp3" />
+    <audio v-show="false" ref="player" @ended="playing = false" :src="src">
     </audio>
   </span>
 </template>
 
-<script lang="ts">
-import Vue from "vue"
-
-export default Vue.extend({
+<script>
+export default {
   name: "laya-audio-inline",
   data() {
     return {
@@ -38,7 +35,7 @@ export default Vue.extend({
       }
     }
   },
-})
+}
 </script>
 
 <style>

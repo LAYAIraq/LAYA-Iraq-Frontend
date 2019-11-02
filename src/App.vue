@@ -42,6 +42,9 @@ export default {
       /* target url is public */
       if (publicURLs.includes(location.hash)) return;
 
+      /* temporary allow public course access */
+      if (/courses/.test(location.hash)) return;
+
       /* auth first */
       this.$router.push("/login");
     }
