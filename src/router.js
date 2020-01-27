@@ -14,8 +14,9 @@ export default new Router({
     },
     {
       path: "/",
-      name: "root-view",
-      component: views.root
+      redirect: "/login",
+      //name: "root-view",
+      //component: views.root
     },
     {
       path: "/register",

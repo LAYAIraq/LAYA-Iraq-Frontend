@@ -57,7 +57,7 @@
         <div class="col-3 col-lg-2">
           <a href="http://www.wayin-inlkusion.de" target="_blank">
             <img
-              src="../assets/wayin-logo.png"
+              src="../assets/laya-logo-xs.png"
               alt="WayIn - der Inklusionswegweiser für Arbeitgeber"
               class="w-100"
             >

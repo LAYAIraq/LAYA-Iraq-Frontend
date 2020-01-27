@@ -7,7 +7,7 @@
       <!-- logo -->
       <router-link to="/" class="navbar-brand">
         <img id="logo"
-             src="../assets/wayin-logo.png"
+             src="../assets/laya-logo-xs.png"
              alt="Laya - Learn as you are">
       </router-link>
 
@@ -156,7 +156,7 @@ export default {
 }
 
 #logo {
-  width: 10rem;
+  height: 5rem;
 }
 
 #ly-header {
