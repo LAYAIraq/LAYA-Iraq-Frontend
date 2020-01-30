@@ -7,7 +7,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "rsync -a --delete dist/ root@laya.informatik.hu-berlin.de:/var/www/html/wayin"
+    "deploy": "rsync -a --delete dist/ root@laya.informatik.hu-berlin.de:/var/www/html/sandbox"
   },
   "dependencies": {
     "ableplayer": "git+https://github.com/ableplayer/ableplayer.git",
