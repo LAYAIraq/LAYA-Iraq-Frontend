@@ -145,6 +145,7 @@
                             text="Zum Inhalt springen"
                             size="sm"
                             variant="secondary"
+                            no-flip
                             right>
                   <b-dropdown-item v-for="(c,id) in course.content" :key="id"
                                    :to="{name: 'course-detail-view',
@@ -347,7 +348,7 @@ export default {
       userEnrolled: false,
       rename: "",
       copy: "",
-      changetype: ""
+      changetype: null
     }
   },
   created() {
@@ -382,7 +383,14 @@ export default {
     },
 
     plugins: function() {
-      return [...Object.keys(this.$laya.lb), ...Object.keys(this.$laya.la)]
+      const la = this.$laya.la
+      const lb = this.$laya.lb
+      let lalb = [{value: null, text: "Neuen Typ wählen", disabled: true}]
+      for(const id in lb)
+        lalb.push({value: id, text: lb[id].i18n.de})
+      for(const id in la)
+        lalb.push({value: id, text: la[id].i18n.de})
+      return lalb
     }
   },
   methods: {

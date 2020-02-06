@@ -12,7 +12,7 @@
   "dependencies": {
     "ableplayer": "git+https://github.com/ableplayer/ableplayer.git",
     "axios": "^0.19.0",
-    "bootstrap-vue": "^2.0.0-rc.27",
+    "bootstrap-vue": "^2.4.0",
     "core-js": "^2.6.5",
     "language-icons": "^0.2.0",
     "plyr": "^3.5.6",

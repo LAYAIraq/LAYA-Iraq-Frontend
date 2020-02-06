@@ -53,9 +53,6 @@
 </template>
 
 <script>
-import bCollapse from "bootstrap-vue/es/components/collapse/collapse"
-import vBToggle from "bootstrap-vue/es/directives/toggle/toggle"
-
 export default {
   name: "laya-course-table",
   data() {
@@ -96,8 +93,6 @@ export default {
     },
   },
   components: {
-    bCollapse,
-    vBToggle
   }
 };
 </script>
