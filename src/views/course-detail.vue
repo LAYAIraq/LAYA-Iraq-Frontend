@@ -92,20 +92,20 @@
       <div class="row">
         <div class="col">
 
-          <div style="height: 3rem"></div>
           <h1 class="text-center text-light py-5">
             <b>{{ course.name }}</b>
           </h1>
-          <div style="height: 2rem"></div>
 
         </div>
       </div>
     </div>
 
     <!-- content -->
-    <div class="container content mt-5">
+    <div class="container content">
       <div class="row">
         <div class="col">
+
+          <div id="main-content-anchor" style="height: 5rem"></div>
 
           <component v-if="content()"
                      :key="name+'-'+step"
@@ -351,9 +351,16 @@ export default {
       changetype: null
     }
   },
+  beforeRouteUpdate(to,from,next) {
+    document.getElementById("main-content-anchor").scrollIntoView()
+    next()
+  },
   created() {
     const ctx = this;
-    window.scrollTo(0, 0);
+
+    window.scrollTo(0,0)
+    document.title = `Laya - ${ctx.name}`
+
     ctx.$store.commit("setBusy", true);
     /*
      * fetch course */

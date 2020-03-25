@@ -120,12 +120,12 @@
                   <p>Die Personen auf dem Foto von links nach rechts:</p>
                   <ul>
                     <li>Prof. Dr. Niels Pinkwart, Humboldt-Universität zu Berlin</li>
-                    <li>Björn Schulz, ARBEIT UND LEBEN - DGB/VHS Berlin-Brandenburg</li>
                     <li>Stefanie Trzecinski, KOPF, HAND + FUSS gGmbH</li>
                     <li>Cornelia Scholz, ARBEIT UND LEBEN - DGB/VHS Berlin-Brandenburg</li>
-                    <li>Frank Wende,&nbsp;KOPF, HAND + FUSS gGmbH</li>
-                    <li>Yasmin Patzer,&nbsp;Humboldt-Universität zu Berlin</li>
-                    <li>Max Meisenheimer, ARBEIT UND LEBEN - DGB/VHS Berlin-Brandenburg (nicht auf dem Foto)</li>
+                    <li>Frank Wende, KOPF, HAND + FUSS gGmbH</li>
+                    <li>Kirsten Mengewein, ARBEIT UND LEBEN - DGB/VHS Berlin-Brandenburg (nicht auf dem Foto)</li>
+                    <li>Alexander Heuts, Humboldt-Universität zu Berlin (nicht auf dem Foto)</li>
+                    <li>Wera Schulz-Naue, ARBEIT UND LEBEN - DGB/VHS Berlin-Brandenburg (nicht auf dem Foto)</li>
                   </ul>
                 </div>
               </div>
@@ -186,23 +186,19 @@
 
             <div style="height: 2rem"></div>
             <p><strong>GEFÖRDERT DURCH:</strong></p>
-            <div class="">
+            <div class="sponsor d-flex justify-content-between">
                   <img src="../assets/wayin-esf.png"
                        title="Arbeit und Leben"
-                       alt="Arbeit und Leben"
-                       class="w-25">
+                       alt="Arbeit und Leben">
                   <img src="../assets/wayin-zukunft-gemeinsam.png"
                        title="Arbeit und Leben"
-                       alt="Arbeit und Leben"
-                       class="w-25">
+                       alt="Arbeit und Leben">
                   <img src="../assets/wayin-eu.png"
                        title="Arbeit und Leben"
-                       alt="Arbeit und Leben"
-                       class="w-25">
+                       alt="Arbeit und Leben">
                   <img src="../assets/wayin-bmbf.png"
                        title="Arbeit und Leben"
-                       alt="Arbeit und Leben"
-                       class="w-25">
+                       alt="Arbeit und Leben">
             </div>
 
             <div style="height: 8rem"></div>
@@ -241,5 +237,9 @@ export default {
 a {
   color: black;
   text-decoration: underline;
+}
+
+.sponsor img {
+  height: 8rem;
 }
 </style>

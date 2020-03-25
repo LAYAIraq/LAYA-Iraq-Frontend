@@ -78,6 +78,7 @@ export default {
     }
   },
   mounted: function () {
+    document.title = "Laya"
     this.checkCourse()
     this.$forceUpdate()
     let store = this.$store
