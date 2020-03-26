@@ -105,7 +105,7 @@
       <div class="row">
         <div class="col">
 
-          <div id="main-content-anchor" style="height: 5rem"></div>
+          <div id="main-content-anchor" style="height: 7rem"></div>
 
           <component v-if="content()"
                      :key="name+'-'+step"
