@@ -29,6 +29,7 @@
               <div class="col-sm-6">
                 <select :id="pair.label+uid"
                   v-model="solution[i]"
+                  :disabled="freeze"
                   class="custom-select">
                   <option disabled>{{default_option}}</option>
                   <option v-for="opt in options"
@@ -36,6 +37,9 @@
                   {{opt}}
                   </option>
                 </select>
+                <div class="d-inline-block pt-3 w-100 text-center">
+                  <i :class="eval[i]"></i>
+                </div>
               </div>
             </div>
           </form>
@@ -44,14 +48,18 @@
       </div>
 
       <div class="row pt-3">
+        <!--
         <button type="button" class="btn btn-link" @click="reset">
           <u>Eingabe löschen</u>
         </button>
+        -->
+        <button type="button" class="btn btn-link" @click="check" 
+          :disabled="freeze">
+          Lösung ergänzen
+        </button>
           
-        <button type="button"
-                class="btn btn-primary ml-auto"
-                @click="check">
-          Fertig!
+        <button type="button" class="btn btn-primary ml-auto" @click="done">
+          Nächster Inhalt <i class="fas fa-arrow-right"></i>
         </button>
       </div>
 
@@ -59,11 +67,9 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue"
-
+<script>
 const default_option = "Wähle aus"
-export default Vue.extend({
+export default {
   name: "laya-quiz-relate",
   created () {
     this.reset()
@@ -71,7 +77,9 @@ export default Vue.extend({
   data () {
     return {
       default_option,
-      solution: []
+      solution: [],
+      eval: [],
+      freeze: false
     }
   },
   props: {
@@ -90,14 +98,26 @@ export default Vue.extend({
     }
   },
   methods: {
-    reset: function() {
+    reset() {
       this.solution = this.pairs.map(p => default_option)
     },
-    check: function () {
+    done() {
       this.onFinish[0]()
+    },
+    check() {
+      for(let i=0; i<this.pairs.length; ++i) {
+        if(this.pairs[i].relation === this.solution[i]) {
+          this.eval[i] = {"fa fa-check fa-2x text-success": true}
+        } else {
+          this.solution[i] = this.pairs[i].relation 
+          this.eval[i] = {"fa fa-times fa-2x text-danger": true}
+        }
+      }
+      this.freeze = true
+      this.$forceUpdate()
     }
   }
-})
+}
 </script>
 
 <style scoped>
