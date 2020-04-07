@@ -43,10 +43,15 @@
 
       <div class="row">
         <button type="button"
-                class="btn btn-primary mt-3 ml-auto"
+                class="btn btn-link mt-3"
                 :disabled="checked"
                 @click="check">
-          Fertig!
+          Lösung ergänzen
+        </button>
+        <button type="button"
+                class="btn btn-primary mt-3 ml-auto"
+                @click="done">
+          Nächster Inhalt <i class="fas fa-arrow-right"></i>
         </button>
       </div>
 
@@ -81,7 +86,10 @@ export default {
   computed: {
   },
   methods: {
-    check: function () {
+    done() {
+      this.onFinish[0]()
+    },
+    check() {
 
       for(let i=0; i<this.solution.length; i++) {
         let solution = this.solution[i]
@@ -99,7 +107,6 @@ export default {
       }
       this.checked = true
       this.$forceUpdate()
-      this.onFinish[0]()
     }
   }
 }
