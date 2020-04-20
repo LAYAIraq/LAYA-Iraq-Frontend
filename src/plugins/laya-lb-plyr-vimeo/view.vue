@@ -5,7 +5,7 @@
     <button type="button"
             class="btn btn-primary mt-3 d-block ml-auto"
             @click="onFinish[0]() || {}">
-      Weiter <i class="fas fa-arrow-right"></i>
+      Nächster Inhalt <i class="fas fa-arrow-right"></i>
     </button>
   </div>
 </template>

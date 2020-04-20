@@ -54,7 +54,7 @@ export default {
   border: 1px solid grey;
   text-align: center;
   padding-top: 1rem;
-  background: linear-gradient(#e66465, #9198e5);
+  /* background: linear-gradient(#e66465, #9198e5); */
 }
 
 .dialog-text {

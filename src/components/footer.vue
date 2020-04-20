@@ -2,7 +2,7 @@
   <footer id="ly-footer">
     <div class="container" style="border-top: 0.2rem solid black; padding-top: 1rem;">
       <div class="row">
-        <div class="col-9 col-lg-10">
+        <div class="col-9 col-lg-9">
           <!-- socials row -->
           <div class="row no-gutters">
             <!-- social media links -->
@@ -54,10 +54,10 @@
         </div>
 
         <!-- partner logo -->
-        <div class="col-3 col-lg-2">
-          <a href="http://www.wayin-inlkusion.de" target="_blank">
+        <div class="col-3 col-lg-3">
+          <a href="http://www.wayin-inklusion.de/inclusion-journey" target="_blank">
             <img
-              src="../assets/laya-logo-xs.png"
+              src="../assets/logo.svg"
               alt="WayIn - der Inklusionswegweiser für Arbeitgeber"
               class="w-100"
             >

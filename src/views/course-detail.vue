@@ -1,6 +1,19 @@
 <template>
   <div v-if="!note.busy" class="course-detail-view">
 
+    <!-- content delete modal -->
+    <b-modal id="author-delContent-confirm"
+             title="Inhalt löschen"
+             header-bg-variant="danger"
+             ok-variant="danger"
+             ok-title="Löschen"
+             cancel-title="Abbrechen"
+             @ok="delContent"
+             centered>
+      <p>Bist Du sicher das Du diesen Inhalt löschen willst ?</p>
+    </b-modal>
+
+    <!-- course delete modal -->
     <b-modal id="author-delCourse-confirm"
              title="Kurs löschen"
              header-bg-variant="danger"
@@ -10,6 +23,59 @@
              @ok="delCourse"
              centered>
       <p>Bist Du sicher das Du den <u>gesamten</u> Kurs löschen willst ?</p>
+    </b-modal>
+
+    <!-- course rename modal -->
+    <b-modal id="author-renameCourse-confirm"
+             title="Kurs umbenennen"
+             header-bg-variant="warning"
+             ok-variant="warning"
+             ok-title="Umbenennen"
+             cancel-title="Abbrechen"
+             @ok="renameCourse"
+             centered>
+      <p>
+        Neuer Kursname*<input
+          type="text"
+          v-model="rename"
+          class="form-control"
+          placeholder="Neuer Kursname">
+      </p>
+    </b-modal>
+
+    <!-- course copy modal -->
+    <b-modal id="author-copyCourse-confirm"
+             title="Kurs kopieren"
+             header-bg-variant="warning"
+             ok-variant="warning"
+             ok-title="Mit neuem Namen kopieren"
+             cancel-title="Abbrechen"
+             @ok="copyCourse"
+             centered>
+      <p>
+        Neuer Kursname*<input
+          type="text"
+          v-model="copy"
+          class="form-control"
+          placeholder="Neuer Kursname">
+      </p>
+    </b-modal>
+
+    <!-- content change type modal -->
+    <b-modal id="author-changeContentType-confirm"
+             title="Inhalts-Typ ändern"
+             header-bg-variant="warning"
+             ok-variant="warning"
+             ok-title="Typ ändern"
+             cancel-title="Abbrechen"
+             @ok="changeContentType"
+             centered>
+      <p>
+        Neuer Typ*<b-form-select
+           v-model="changetype"
+           :options="plugins">
+        </b-form-select>
+      </p>
     </b-modal>
 
     <b-toast id="author-toast"
@@ -26,20 +92,20 @@
       <div class="row">
         <div class="col">
 
-          <div style="height: 3rem"></div>
           <h1 class="text-center text-light py-5">
             <b>{{ course.name }}</b>
           </h1>
-          <div style="height: 2rem"></div>
 
         </div>
       </div>
     </div>
 
     <!-- content -->
-    <div class="container content mt-5">
+    <div class="container content">
       <div class="row">
         <div class="col">
+
+          <div id="main-content-anchor" style="height: 7rem"></div>
 
           <component v-if="content()"
                      :key="name+'-'+step"
@@ -64,31 +130,31 @@
       <div class="container mb-4">
         <div class="row">
           <div class="col">
-            <router-link
+            <b-button
+              variant="outline-secondary"
+              size="sm"
+              active-class="active"
               :to="{name: 'course-detail-view', params: {name, step}}"
-              active-class="author-tools-active"
-              class="text-secondary text-decoration-none pb-1"
-              style="font-size: 120%"
               exact>
-              <i class="fas fa-tools"></i> Autor-Tools
-            </router-link>
+              <i class="fas fa-chevron-left"></i> Zur Autor-Tools Übersicht
+            </b-button>
 
-            <span class="content-nav float-right" style="font-size: 120%">
-              aktueller Inhalt:
-              <router-link v-if="step > 1"
-                           :to="{name: 'course-detail-view', params: {name, step: step-1+''}}"
-                           class="px-2">
-                <i class="fas fa-chevron-left"></i>
-              </router-link>
+              <!-- jump to content number -->
+              <span class="content-nav float-right" style="font-size: 120%">
+                <b-dropdown id="cid-dd"
+                            text="Zum Inhalt springen"
+                            size="sm"
+                            variant="secondary"
+                            no-flip
+                            right>
+                  <b-dropdown-item v-for="(c,id) in course.content" :key="id"
+                                   :to="{name: 'course-detail-view',
+                                   params: {name, step: id+1+''}}">
+                    Inhalt <b>{{ id+1 }}</b>
+                  </b-dropdown-item>
+                </b-dropdown>
+              </span>
 
-              <b>{{step}}</b>
-
-              <router-link v-if="step < course.content.length"
-                           :to="{name: 'course-detail-view', params: {name, step: 1*step+1+''}}"
-                           class="px-2">
-                <i class="fas fa-chevron-right"></i>
-              </router-link>
-            </span>
           </div>
         </div>
       </div>
@@ -114,6 +180,21 @@
           <div class="col text-dark">
             Damit kannst Du den oben angezeigten Inhalt ( Nr. <b>{{step}}</b> )
             bearbeiten.
+          </div>
+        </div>
+
+        <!-- change content type -->
+        <div class="row mb-2" v-if="content()">
+          <div class="col">
+            <b-button variant="warning" block
+                      @click="$bvModal.show('author-changeContentType-confirm')">
+              <i class="fas fa-edit"></i> Inhalts-Typ ändern
+            </b-button>
+          </div>
+
+          <div class="col text-dark">
+            Damit kannst Du den Typ des Inhalts permanent ändern.
+            <u>Achtung:</u> Dabei gehen die aktuellen Eingaben verloren.
           </div>
         </div>
 
@@ -172,12 +253,42 @@
           </div>
         </div>
 
+        <div class="row mt-3">
+          <div class="col">
+            <b-button size="sm"
+                      variant="warning"
+                      class="float-right"
+                      @click="$bvModal.show('author-renameCourse-confirm')">
+              <i class="fas fa-exclamation-circle"></i> Kurs umbenennen
+            </b-button>
+          </div>
+
+          <div class="col text-dark">
+            Der Kurs wird umbenannt.
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col">
+            <b-button size="sm"
+                      variant="warning"
+                      class="float-right"
+                      @click="$bvModal.show('author-copyCourse-confirm')">
+              <i class="fas fa-exclamation-circle"></i> Kurs kopieren
+            </b-button>
+          </div>
+
+          <div class="col text-dark">
+            Der Kurs wird mit einem neuen Namen dupliziert.
+          </div>
+        </div>
+
         <div class="row mt-5" v-if="content()">
           <div class="col">
             <b-button size="sm"
                       variant="danger"
                       class="float-right"
-                      @click="delContent">
+                      @click="$bvModal.show('author-delContent-confirm')">
               <i class="fas fa-exclamation-circle"></i> Inhalt löschen
             </b-button>
           </div>
@@ -201,6 +312,7 @@
             Der <u>gesamte Kurs</u> wird gelöscht.
           </div>
         </div>
+
 
       </div>
     </div>
@@ -234,11 +346,21 @@ export default {
     return {
       course: {},
       userEnrolled: false,
+      rename: "",
+      copy: "",
+      changetype: null
     }
+  },
+  beforeRouteUpdate(to,from,next) {
+    document.getElementById("main-content-anchor").scrollIntoView()
+    next()
   },
   created() {
     const ctx = this;
-    window.scrollTo(0, 0);
+
+    window.scrollTo(0,0)
+    document.title = `Laya - ${ctx.name}`
+
     ctx.$store.commit("setBusy", true);
     /*
      * fetch course */
@@ -265,6 +387,17 @@ export default {
           return function(){}
         }
       })
+    },
+
+    plugins: function() {
+      const la = this.$laya.la
+      const lb = this.$laya.lb
+      let lalb = [{value: null, text: "Neuen Typ wählen", disabled: true}]
+      for(const id in lb)
+        lalb.push({value: id, text: lb[id].i18n.de})
+      for(const id in la)
+        lalb.push({value: id, text: la[id].i18n.de})
+      return lalb
     }
   },
   methods: {
@@ -280,7 +413,9 @@ export default {
     },
 
     updateStep: function(changedStep) {
-      this.course.content[this.step-1] = {...changedStep}
+      this.course.content[this.step-1] = {
+        ...this.course.content[this.step-1], ...changedStep
+      }
       this.storeCourse()
       this.$forceUpdate()
     },
@@ -303,6 +438,50 @@ export default {
           self.$router.push("/courses")
         })
         .catch(err => console.error("Failed to delete course:", err))
+    },
+
+    copyCourse() {
+      const self = this
+      if(!self.copy) return
+      console.log("new copy", self.copy)
+      http.head(`courses/${self.copy}`)
+        .catch(function() {
+          // course name does not exists
+          let copied_course = {...self.course}
+          copied_course.name = self.copy
+          http.post(`courses`, copied_course)
+            .catch(err => console.error("Failed course copy:", err))
+            .finally(() => self.$bvToast.show("author-toast"))
+        })
+        .then(function() {
+          // course name already exists
+        })
+    },
+
+    renameCourse() {
+      const self = this
+      if(!self.rename) return
+      console.log("new name", self.rename)
+      http.delete(`courses/${self.name}`)
+        .then(function() {
+          let renamed_course = {...self.course}
+          renamed_course.name = self.rename
+          http.post(`courses`, renamed_course)
+            .catch(err => console.error("Failed course rename:", err))
+            .finally(() => {
+              self.$bvToast.show("author-toast")
+              self.$router.push("/courses")
+            })
+        })
+        .catch(function() {
+        })
+    },
+
+    changeContentType() {
+      const self = this
+      if(!self.changetype) return
+      console.log("Change type")
+      self.updateStep({name: self.changetype, input: null})
     },
 
     storeCourse() {

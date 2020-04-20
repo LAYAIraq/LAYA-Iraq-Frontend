@@ -17,17 +17,30 @@
       <div v-for="(option,i) in options"
            class="form-check mb-3"
            :key="'mchoice-'+_uid+'-option-'+i">
-        <input :id="'mchoice-in-'+_uid+'-'+i"
+
+        <input v-if="multiple"
+          :id="'mchoice-in-'+_uid+'-'+i"
           class="form-check-input"
-          :type="multiple ? 'checkbox' : 'radio'"
-          v-model="multiple ? answers : answers[0]"
+          type="checkbox"
+          v-model="answers"
           :disabled="freeze"
-          :value="i">
+          v-bind:value="i">
+        <input v-else
+          :id="'mchoice-in-'+_uid+'-'+i"
+          class="form-check-input"
+          type="radio"
+          v-model="answers[0]"
+          :disabled="freeze"
+          v-bind:value="i">
+
         <label :for="'mchoice-in-'+_uid+'-'+i" class="form-check-label">
           {{ option }}
         </label>
-        <i class="ml-2" :class="{'far fa-check-circle text-success': correct(i)}"></i>
-        <i class="ml-2" :class="{'far fa-times-circle text-danger': incorrect(i)}"></i>
+        <i class="ml-2" :class="eval[i]"></i>
+        <!--
+        <i class="ml-2" :class="{'far fa-check-circle text-success': true}"></i>
+        <i class="ml-2" :class="{'far fa-times-circle text-danger': true}"></i>
+        -->
       </div>
     </div>
 
@@ -39,21 +52,26 @@
     </div>
     -->
     <button type="button"
-            class="btn btn-primary mt-3 float-right"
-            @click="check"
+            class="btn btn-link mt-3"
+            @click="diffSolution"
             :disabled="freeze">
-      <span><i class="fas fa-check"></i> Fertig</span>
+      Lösung ergänzen
+    </button>
+    <button type="button"
+            class="btn btn-primary mt-3 float-right"
+            @click="onFinish[0]() || {}">
+      <span>Nächster Inhalt <i class="fas fa-arrow-right"></i> </span>
     </button>
     <span :id="feedbackId" class="ml-2" aria-live="polite">{{ feedback }}</span>
 
   </fieldset>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue"
 import {mapState, mapGetters} from 'vuex'
 
-export default Vue.extend({
+export default {
   name: 'laya-multiple-choice',
   created () {
   },
@@ -63,7 +81,8 @@ export default Vue.extend({
       answers: [],
       checked: [],
       feedback: '',
-      freeze: false
+      freeze: false,
+      eval: []
     }
   },
   props: {
@@ -94,20 +113,43 @@ export default Vue.extend({
         zis.checked[answer] = zis.solutions.includes(answer)
       })
     },
+    diffSolution: function() {
+
+      for(let i=0; i<this.options.length; ++i) {
+        // is solution ?
+        if(this.solutions.includes(i)) {
+          // is also answer ?
+          if(this.answers.includes(i)) {
+            this.eval[i] = {"far fa-check-circle text-success": true}
+          } else {
+            this.eval[i] = {"far fa-times-circle text-danger": true}
+          }
+        } else {
+          // but is answer ?
+          if(this.answers.includes(i)) {
+            this.eval[i] = {"far fa-times-circle text-danger": true}
+          } else {
+            this.eval[i] = {"far fa-check-circle text-success": true}
+          }
+        }
+      }
+      this.freeze = true
+      this.$forceUpdate()
+
+    },
     check: function () {
+
+      // NOTE: eval is currently not wanted so skip it
       this.onFinish[0]()
-      if(true) return 
+      if(true) return
 
       if (this.freeze) return
-
-      // TODO: remove later
-      this.onFinish[0]()
 
       this.tries++
       /*
        * check given answers */
       this.markAnwsers()
-
+      
       /*
        * check if solutions === answers */
       if (this.solutions.every(s => this.answers.includes(s)) &&
@@ -135,7 +177,7 @@ export default Vue.extend({
       this.freeze = true
     }
   }
-})
+}
 </script>
 
 <style scoped>

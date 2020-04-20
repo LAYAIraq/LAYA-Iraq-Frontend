@@ -38,4 +38,8 @@ a {
   color: black;
   text-decoration: underline;
 }
+
+.sponsor img {
+  height: 8rem;
+}
 </style>
