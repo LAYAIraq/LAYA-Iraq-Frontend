@@ -1,7 +1,6 @@
 <template>
 
   <div id="ly-header">
-
     <b-navbar toggleable="lg" type="light" variant="light">
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -10,7 +9,7 @@
 
         <b-navbar-brand to="/">
           <img style="height: inherit"
-               src="../assets/wayin-logo.png"
+               src="../assets/laya-logo-xs.png"
                alt="Laya - Learn as you are">
         </b-navbar-brand>
 
@@ -50,8 +49,8 @@
       </b-collapse>
 
     </b-navbar>
-
   </div>
+
 </template>
 
 <script>
