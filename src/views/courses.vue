@@ -5,7 +5,7 @@
       <div style="height: 2rem"></div>
 
       <div class="row">
-        <img class="mx-auto" src="../assets/kurse.svg" alt="Gerhirn">
+        <img class="mx-auto" src="../assets/kurse.svg" alt="Gehirn">
       </div>
 
       <div style="height: 2rem"></div>

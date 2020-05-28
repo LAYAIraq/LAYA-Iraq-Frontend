@@ -1,5 +1,5 @@
 <template>
-  <div class="laya-quiz-drap-drop">
+  <div class="laya-quiz-drag-drop">
     <div class="container">
 
       <div class="row mb-3">
