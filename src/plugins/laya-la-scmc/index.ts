@@ -11,6 +11,7 @@ export default {
       { de: "Single Choice / Multiple Choice" },
       {
         new: _create,
+        //@ts-ignore
         view: _view,
         edit: _edit,
       },

@@ -10,6 +10,7 @@ export default {
       de: "Externes Video (über Ableplayer)",
     }, {
       new: _create,
+      //@ts-ignore
       view: _view,
       edit: _edit,
     })

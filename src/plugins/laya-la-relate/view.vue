@@ -32,8 +32,7 @@
                   :disabled="freeze"
                   class="custom-select">
                   <option disabled>{{default_option}}</option>
-                  <option v-for="opt in options"
-                          :disabled="solution.includes(opt)">
+                  <option v-for="opt in options" :key="opt" :disabled="solution.includes(opt)">
                   {{opt}}
                   </option>
                 </select>

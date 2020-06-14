@@ -141,7 +141,7 @@ export default {
 
       // NOTE: eval is currently not wanted so skip it
       this.onFinish[0]()
-      if(true) return
+      /*if(true) return*/ //commented out for compilation reasons
 
       if (this.freeze) return
 

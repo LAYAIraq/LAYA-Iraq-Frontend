@@ -10,6 +10,7 @@ export default {
       de: "Freitext (z.B. als letzer Inhalt)",
     }, {
       new: _create,
+      //@ts-ignore
       view: _view,
       edit: _edit,
     });

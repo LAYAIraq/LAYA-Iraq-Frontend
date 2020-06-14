@@ -10,6 +10,7 @@ export default {
       de: "Dialog",
     }, {
       new: _create,
+      //@ts-ignore
       view: _view,
       edit: _edit,
     });

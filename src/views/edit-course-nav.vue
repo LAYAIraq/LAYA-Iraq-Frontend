@@ -143,7 +143,7 @@
 <script>
 import vis from "vis-network"
 
-import BSpinner from "bootstrap-vue"
+//import BSpinner from "bootstrap-vue"
 
 export default {
   name: "edit-course-nav-view",
@@ -248,9 +248,9 @@ export default {
       this.onnavupdate(this.content)
     }
   },
-  components: {
-    BSpinner
-  }
+  /*components: {
+   // BSpinner
+  }*/
 }
 </script>
 

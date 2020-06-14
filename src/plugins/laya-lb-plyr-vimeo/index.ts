@@ -10,6 +10,7 @@ export default {
       de: "Vimeo-Video",
     }, {
       new: _create,
+      //@ts-ignore
       view: _view,
       edit: _edit,
     });

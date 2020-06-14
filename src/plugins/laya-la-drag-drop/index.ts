@@ -10,6 +10,7 @@ export default {
       de: "Drag & Drop",
     }, {
       new: _create,
+      //@ts-ignore
       view: _view,
       edit: _edit,
     });
