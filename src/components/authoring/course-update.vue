@@ -85,7 +85,7 @@ export default {
             self.$router.push(`/courses/${newCourse.name}/1`)
           }).catch((err) => {
             console.log(err)
-            self.msg = "Beim Speicher ist ein Fehler aufgetreten"
+            self.msg = "Beim Speichern ist ein Fehler aufgetreten"
           })
 
           /* create storage */
