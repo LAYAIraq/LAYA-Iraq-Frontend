@@ -6,7 +6,7 @@
     </div>
 
     <div class="content">
-      <div v-for="(c, i) in comps" :key="step+20">
+      <div v-for="c in comps" v-bind:key="c"> <!--was "(c,i) in comps" and key="step+20"-->
         <component :is="c.name"
           :key="step"
           v-bind="c.input"

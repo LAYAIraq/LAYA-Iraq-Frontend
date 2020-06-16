@@ -28,13 +28,14 @@
           </div>
           <div class="sep"></div>
           <div id="filters" class="d-flex justify-content-start flex-wrap">
-            <a
+            <a 
               href
               v-for="cat in cats"
+              v-bind:key="cat"
               @click.prevent="cat.on = !cat.on"
               class="filter"
               :class="{active: cat.on}"
-            >
+            > <!-- was missing v-bind:key directive -->
               <u>{{ cat.label }}</u>
             </a>
           </div>

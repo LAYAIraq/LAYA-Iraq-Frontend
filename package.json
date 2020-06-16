@@ -7,7 +7,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "rsync -a --delete dist/ cm@laya.uni-vechta.de:/var/www/html/test"
+    "deploy": "rsync -a --delete dist/ cm@laya.uni-vechta.de:/home/cm/laya/www/frontend"
   },
   "dependencies": {
     "ableplayer": "git+https://github.com/ableplayer/ableplayer.git",

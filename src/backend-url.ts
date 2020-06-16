@@ -1,2 +1,2 @@
 export default /localhost/.test(location.host) ?
-  "http://localhost:3001/explorer" : "/explorer"
+  "http://localhost:3001/api" : "/api"
