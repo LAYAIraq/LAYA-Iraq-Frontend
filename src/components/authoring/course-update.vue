@@ -74,7 +74,7 @@ export default {
       /* check if course exists */
       http.head(`courses/${newCourse.name}`)
         .then(function() {
-          self.msg = "Ein Kurs mit diesem Name existiert bereits"
+          self.msg = "Ein Kurs mit diesem Namen existiert bereits"
         }).catch(function() {
 
           /* create course */

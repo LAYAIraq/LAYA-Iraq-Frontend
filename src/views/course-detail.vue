@@ -10,7 +10,7 @@
              cancel-title="Abbrechen"
              @ok="delContent"
              centered>
-      <p>Bist Du sicher das Du diesen Inhalt löschen willst ?</p>
+      <p>Bist Du sicher, dass Du diesen Inhalt löschen willst ?</p>
     </b-modal>
 
     <!-- course delete modal -->
@@ -22,7 +22,7 @@
              cancel-title="Abbrechen"
              @ok="delCourse"
              centered>
-      <p>Bist Du sicher das Du den <u>gesamten</u> Kurs löschen willst ?</p>
+      <p>Bist Du sicher, dass Du den <u>gesamten</u> Kurs löschen willst ?</p>
     </b-modal>
 
     <!-- course rename modal -->
@@ -446,7 +446,7 @@ export default {
       console.log("new copy", self.copy)
       http.head(`courses/${self.copy}`)
         .catch(function() {
-          // course name does not exists
+          // course name does not exist
           let copied_course = {...self.course}
           copied_course.name = self.copy
           http.post(`courses`, copied_course)
@@ -512,8 +512,8 @@ export default {
       return this.course.content.length+1
     }
 
-
     /*
+    
     subscribe: function() {
       const ctx = this;
       http
