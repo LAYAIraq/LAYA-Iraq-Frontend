@@ -21,7 +21,7 @@
             <b>4</b>
           </p>
           <p>
-            Beachte das Dialoge normalerweise zu verschiedenen Inhalten,
+            Beachte, dass Dialoge normalerweise zu verschiedenen Inhalten,
             abhängig von der gewählten Antwort, führen. Schreibe in diesem Fall
             die Nummern (plural) dieser Folge-Inhalte in Reihenfolge der Dialog-Antworten
             durch Kommas getrennt in das Textfeld:
