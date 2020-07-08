@@ -15,15 +15,10 @@
 
       <div class="row">
         <div class="col">
-          <div v-for="(item,i) in items" :key="item.label" class="item">
+          <div v-for="(item, i) in items" :key="item" class="item">
             <h4 class="text-center item-label">
-              {{ item.label }}
-              <i v-if="checked"
-                 class="fas"
-                 :class="{
-                 'fa-check text-success': eval[i],
-                 'fa-times text-danger': !eval[i]}">
-              </i>
+              {{ item }}
+              
             </h4>
 
             <div class="d-flex justify-content-between">
@@ -34,7 +29,7 @@
                    min="0"
                    :max="categories.length-1"
                    :disabled="checked"
-                   v-model.number="solution[i]">
+                   v-model.number="choice[i]">
           </div>
         </div>
       </div>
@@ -45,6 +40,7 @@
           <input type="text" class="idk" v-model="freetext">
         </div>
       </div>
+      
 
       <div class="row">
         <button type="button"
@@ -65,19 +61,18 @@
 </template>
 
 <script>
-
+//import layaWsyisyg from '../misc/laya-html'
 export default {
-  name: "laya-quiz-drag-drop",
+  name: "laya-feedback",
   created () {
-    const mid = Math.floor((this.categories.length+1)/2)
+    const mid = Math.floor((this.categories.length)/2)
     let s = this.items.map(i => mid)
-    this.solution = [...s]
+    this.choice = [...s]
   },
   data () {
     return {
       checked: false,
-      solution: [], // users solution as index
-      eval: [], // list of booleans
+      choice: [], // users choice as index
       freetext: ""
     }
   },
@@ -97,9 +92,9 @@ export default {
     },
     check() {
 
-      for(let i=0; i<this.solution.length; i++) {
-        let solution = this.solution[i]
-        switch (this.solution[i]) {
+      for(let i=0; i<this.choice.length; i++) {
+        let choice = this.choice[i]
+        switch (this.choice[i]) {
           case 0:
             this.eval[i] = (this.items[i].category === 0)
             break
