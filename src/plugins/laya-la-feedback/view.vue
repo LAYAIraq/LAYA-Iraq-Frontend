@@ -43,12 +43,7 @@
       
 
       <div class="row">
-        <button type="button"
-                class="btn btn-link mt-3"
-                :disabled="checked"
-                @click="check">
-          Lösung ergänzen
-        </button>
+       
         <button type="button"
                 class="btn btn-primary mt-3 ml-auto"
                 @click="done">
@@ -61,6 +56,10 @@
 </template>
 
 <script>
+
+import { mapState, mapGetters } from "vuex";
+import http from "axios";
+
 //import layaWsyisyg from '../misc/laya-html'
 export default {
   name: "laya-feedback",
@@ -69,9 +68,13 @@ export default {
     let s = this.items.map(i => mid)
     this.choice = [...s]
   },
+  beforeDestroy() {
+    //add saving feedback data
+    
+  },
   data () {
     return {
-      checked: false,
+      //checked: false,
       choice: [], // users choice as index
       freetext: ""
     }
@@ -82,32 +85,44 @@ export default {
     taskAudio: String,
     items: Array,
     categories: Array,
-    onFinish: Array
+    onFinish: Array,
+    //course: Object,
+    //name: String
   },
   computed: {
   },
   methods: {
     done() {
-      this.onFinish[0]()
+      storeNewFeedback();
+      this.onFinish[0]();
     },
-    check() {
+    
+    storeNewFeedback() {
+      
+    
+      /* check if course exists */
+      http.head(`courses/${newCourse.name}`)
+        .then(function() {
+          self.msg = "Ein Kurs mit diesem Namen existiert bereits"
+        }).catch(function() {
 
-      for(let i=0; i<this.choice.length; i++) {
-        let choice = this.choice[i]
-        switch (this.choice[i]) {
-          case 0:
-            this.eval[i] = (this.items[i].category === 0)
-            break
-          case 1:
-            this.eval[i] = false
-            break
-          case 2:
-            this.eval[i] = (this.items[i].category === 1)
-            break
-        }
-      }
-      this.checked = true
-      this.$forceUpdate()
+          /* create course */
+          http.post("courses", {
+            ...newCourse,
+            authorId: auth.userId,
+          }).then(function() {
+            self.$router.push(`/courses/${newCourse.name}/1`)
+          }).catch((err) => {
+            console.log(err)
+            self.msg = "Beim Speichern ist ein Fehler aufgetreten"
+          })
+
+          /* create storage */
+          http.post("storage", {
+            name: newCourse.name,
+          }).then(() => console.log(`New Storage: ${newCourse.name}`))
+            .catch((err) => console.error(err));
+        })
     }
   }
 }
