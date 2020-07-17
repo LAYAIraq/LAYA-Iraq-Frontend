@@ -1,6 +1,25 @@
 <template>
   <div class="laya-feedback">
-    <div class="container">
+
+    <b-toast id="feedback-new"
+            title="Kurs-Rückmeldung"
+            static
+            variant="success"
+            auto-hide-delay="1500"
+            class="feedback-toast">
+      Speichern erfolgreich!
+    </b-toast>
+
+    <b-toast id="feedback-updated"
+            title="Kurs-Rückmeldung"
+            static
+            variant="success"
+            auto-hide-delay="1500"
+            class="feedback-toast">
+      Kurs-Rückmeldung erfolgreich aktualisiert!
+    </b-toast>
+
+    <div class="feedback-container-main">
     
       <div class="row mb-3">
         <div class="col">
@@ -39,6 +58,9 @@
           <h4>Freitext hinzufügen</h4>
           <input type="text" class="idk" v-model="freetext">
         </div>
+        <button type="button" class="btn btn-primary" @click="storeFeedback">
+        <i class="fas fa-check"></i> Speichern
+      </button>
       </div>
       
 
@@ -50,13 +72,13 @@
           Nächster Inhalt <i class="fas fa-arrow-right"></i>
         </button>
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
 
+import { BToast, BvToast } from "bootstrap-vue";
 import { mapState, mapGetters } from "vuex";
 import http from "axios";
 
@@ -64,9 +86,31 @@ import http from "axios";
 export default {
   name: "laya-feedback",
   created () {
+    // const ctx = this;
+
+    // window.scrollTo(0,0)
+    // document.title = `Laya - ${ctx.name}`
+
+    // ctx.$store.commit("setBusy", true);
+    // /*
+    //  * fetch course */
+    // http.get(`courses/${ctx.name}`)
+    //   .then(function({ data }) {
+    //     ctx.course = data;
+    //   })
+    //   .catch(err => {
+    //     /*
+    //      * redirect off invalid course */
+    //     console.error(err);
+    //     this.$router.push("/courses");
+    //   })
+    //   .then(() => ctx.$store.commit("setBusy", false));
+
     const mid = Math.floor((this.categories.length)/2)
     let s = this.items.map(i => mid)
     this.choice = [...s]
+
+    this.getFeedback();
   },
   beforeDestroy() {
     //add saving feedback data
@@ -76,54 +120,54 @@ export default {
     return {
       //checked: false,
       choice: [], // users choice as index
-      freetext: ""
+      freetext: "",
+      answered: false,
     }
   },
+ 
   props: {
     title: String,
     task: String,
     taskAudio: String,
     items: Array,
     categories: Array,
+    feedback: Array,
     onFinish: Array,
-    //course: Object,
-    //name: String
-  },
-  computed: {
+    onupdate: Function,
   },
   methods: {
-    done() {
-      storeNewFeedback();
+    done: function() {
+      this.onupdate;
       this.onFinish[0]();
     },
-    
-    storeNewFeedback() {
+    storeFeedback: function() {
+      if(!this.answered) {
+        let newFeedback = {
+          id: this.feedback.length,
+          choice: this.choice,
+          freetext: this.freetext
+        }
+        this.feedback.push(newFeedback)
+        this.answered = true;
+        this.$forceUpdate();
+        this.$bvToast.show("feedback-new")
+      }
+      else {
+        let index = this.feedback.length-1;
+        let updatedFeedback = this.feedback[index];
+        updatedFeedback.choice = this.choice;
+        updatedFeedback.freetext = this.freetext;
+        this.$forceUpdate();
+        this.$bvToast.show("feedback-updated")
+
+      }
+    },
+
+    getFeedback: function() {
       
-    
-      /* check if course exists */
-      http.head(`courses/${newCourse.name}`)
-        .then(function() {
-          self.msg = "Ein Kurs mit diesem Namen existiert bereits"
-        }).catch(function() {
+    },
 
-          /* create course */
-          http.post("courses", {
-            ...newCourse,
-            authorId: auth.userId,
-          }).then(function() {
-            self.$router.push(`/courses/${newCourse.name}/1`)
-          }).catch((err) => {
-            console.log(err)
-            self.msg = "Beim Speichern ist ein Fehler aufgetreten"
-          })
 
-          /* create storage */
-          http.post("storage", {
-            name: newCourse.name,
-          }).then(() => console.log(`New Storage: ${newCourse.name}`))
-            .catch((err) => console.error(err));
-        })
-    }
   }
 }
 </script>
@@ -134,5 +178,13 @@ export default {
 }
 .item:last-child {
   margin-bottom: 0rem;
+}
+
+.feedback-toast {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11002;
 }
 </style>

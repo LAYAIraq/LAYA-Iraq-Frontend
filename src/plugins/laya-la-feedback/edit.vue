@@ -101,7 +101,7 @@
           <button type="button"
                   class="btn btn-primary btn-sm"
                   @click="_addItem">
-            <i class="fas fa-plus"></i> Antwortmöglichkeit hinzufügen
+            <i class="fas fa-plus"></i> Frage hinzufügen
           </button>
         </div>
       </div>
@@ -112,6 +112,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'laya-la-feedback-edit',
   created () {
@@ -136,9 +137,11 @@ export default {
         "Ich würde den Kurs weiterempfehlen."
       ],
       categories: ["Stimme nicht zu", "Stimme eher nicht zu", "Neutral", "Stimme eher zu", "Stimme zu"],
+      feedback: []
     }
   },
   props: {
+    
   },
   computed: {
   },

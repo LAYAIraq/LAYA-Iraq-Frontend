@@ -111,6 +111,8 @@
                      :key="name+'-'+step"
                      :is="content().name"
                      v-bind="content().input"
+                     :name="name"
+                     :courseFeedback="feedback()"
                      :onFinish="nextStep(content().nextStep)">
           </component>
 
@@ -410,6 +412,10 @@ export default {
 
     content: function() {
       return this.course.content[this.step-1]
+    },
+
+    feedback: function() {
+      return this.course.feedback
     },
 
     updateStep: function(changedStep) {
