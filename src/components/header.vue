@@ -72,11 +72,11 @@ export default {
   },
   computed: {
     ...mapState(['profile', 'auth', 'note']),
-    i18n: function () {
+    i18n () {
       return i18n[this.$store.state.profile.lang]
     }
   },
-  mounted: function () {
+  mounted () {
     document.title = "Laya"
     this.checkCourse()
     this.$forceUpdate()
@@ -101,6 +101,7 @@ export default {
     },
     setLang (lang) {
       this.$store.commit('setLang', lang)
+      this.$forceUpdate()
     },
     logout () {
       this.$ls.remove('auth')

@@ -3,75 +3,75 @@
 
     <!-- content delete modal -->
     <b-modal id="author-delContent-confirm"
-             title="Inhalt löschen"
+             :title="i18n.bModal.delContent.title"
              header-bg-variant="danger"
              ok-variant="danger"
-             ok-title="Löschen"
-             cancel-title="Abbrechen"
+             :ok-title="i18n.bModal.delContent.ok"
+             :cancel-title="i18n.bModal.cancel"
              @ok="delContent"
              centered>
-      <p>Bist Du sicher, dass Du diesen Inhalt löschen willst ?</p>
+      <p>{{ i18n.bModal.delContent.text }}</p>
     </b-modal>
 
     <!-- course delete modal -->
     <b-modal id="author-delCourse-confirm"
-             title="Kurs löschen"
+             :title="i18n.bModal.delCourse.title"
              header-bg-variant="danger"
              ok-variant="danger"
-             ok-title="Löschen"
-             cancel-title="Abbrechen"
+             :ok-title="i18n.bModal.delCourse.ok"
+             :cancel-title="i18n.bModal.cancel"
              @ok="delCourse"
              centered>
-      <p>Bist Du sicher, dass Du den <u>gesamten</u> Kurs löschen willst ?</p>
+      <p>{{ i18n.bModal.delCourse.text }}</p>
     </b-modal>
 
     <!-- course rename modal -->
     <b-modal id="author-renameCourse-confirm"
-             title="Kurs umbenennen"
+             :title="i18n.bModal.renameCourse.title"
              header-bg-variant="warning"
              ok-variant="warning"
-             ok-title="Umbenennen"
-             cancel-title="Abbrechen"
+             :ok-title="i18n.bModal.renameCourse.ok"
+             :cancel-title="i18n.bModal.cancel"
              @ok="renameCourse"
              centered>
       <p>
-        Neuer Kursname*<input
+        {{ i18n.bModal.renameCourse.text }}<input
           type="text"
           v-model="rename"
           class="form-control"
-          placeholder="Neuer Kursname">
+          :placeholder="i18n.bModal.renameCourse.placeholder">
       </p>
     </b-modal>
 
     <!-- course copy modal -->
     <b-modal id="author-copyCourse-confirm"
-             title="Kurs kopieren"
+             :title="i18n.bModal.copyCourse.title"
              header-bg-variant="warning"
              ok-variant="warning"
-             ok-title="Mit neuem Namen kopieren"
-             cancel-title="Abbrechen"
+             :ok-title="i18n.bModal.copyCourse.ok"
+             :cancel-title="i18n.bModal.cancel"
              @ok="copyCourse"
              centered>
       <p>
-        Neuer Kursname*<input
+        {{ i18n.bModal.copyCourse.text }}<input
           type="text"
           v-model="copy"
           class="form-control"
-          placeholder="Neuer Kursname">
+          :placeholder="i18n.bModal.copyCourse.placeholder">
       </p>
     </b-modal>
 
     <!-- content change type modal -->
     <b-modal id="author-changeContentType-confirm"
-             title="Inhalts-Typ ändern"
+             :title="i18n.bModal.changeType.title"
              header-bg-variant="warning"
              ok-variant="warning"
-             ok-title="Typ ändern"
-             cancel-title="Abbrechen"
+             :ok-title="i18n.bModal.changeType.ok"
+             :cancel-title="i18n.bModal.cancel"
              @ok="changeContentType"
              centered>
       <p>
-        Neuer Typ*<b-form-select
+        {{ i18n.bModal.changeType.text }}<b-form-select
            v-model="changetype"
            :options="plugins">
         </b-form-select>
@@ -79,12 +79,12 @@
     </b-modal>
 
     <b-toast id="author-toast"
-             title="Autor-Tools"
+             :title="i18n.bToast.title"
              static
              variant="success"
              auto-hide-delay="1500"
              class="author-toast">
-      Speichern erfolgreich!
+      {{ i18n.bToast.text }}
     </b-toast>
 
     <!-- course header -->
@@ -117,7 +117,7 @@
           </component>
 
           <h2 v-else class="mt-5 text-center text-muted">
-            Dieser Inhalt ist noch leer
+            {{ i18n.content }}
           </h2>
 
         </div>
@@ -138,13 +138,13 @@
               active-class="active"
               :to="{name: 'course-detail-view', params: {name, step}}"
               exact>
-              <i class="fas fa-chevron-left"></i> Zur Autor-Tools Übersicht
+              <i class="fas fa-chevron-left"></i> {{ i18n.toolsNav.overview }}
             </b-button>
 
               <!-- jump to content number -->
               <span class="content-nav float-right" style="font-size: 120%">
                 <b-dropdown id="cid-dd"
-                            text="Zum Inhalt springen"
+                            :text="i18n.toolsNav.jumpTo"
                             size="sm"
                             variant="secondary"
                             no-flip
@@ -152,7 +152,7 @@
                   <b-dropdown-item v-for="(c,id) in course.content" :key="id"
                                    :to="{name: 'course-detail-view',
                                    params: {name, step: id+1+''}}">
-                    Inhalt <b>{{ id+1 }}</b>
+                    {{ i18n.toolsNav.listContent }} <b>{{ id+1 }}</b>
                   </b-dropdown-item>
                 </b-dropdown>
               </span>
@@ -175,13 +175,13 @@
           <div class="col">
             <b-button variant="primary" block append
                       :to="{path: 'edit', params: {type: content.name}}">
-              <i class="fas fa-edit"></i> Inhalt bearbeiten
+              <i class="fas fa-edit"></i> {{ i18n.authTools.editContent }}
             </b-button>
           </div>
 
           <div class="col text-dark">
-            Damit kannst Du den oben angezeigten Inhalt ( Nr. <b>{{step}}</b> )
-            bearbeiten.
+            {{ i18n.authTools.editContentTip1 }} <b>{{step}}</b> 
+            {{ i18n.authTools.editContentTip2 }}
           </div>
         </div>
 
@@ -190,13 +190,13 @@
           <div class="col">
             <b-button variant="warning" block
                       @click="$bvModal.show('author-changeContentType-confirm')">
-              <i class="fas fa-edit"></i> Inhalts-Typ ändern
+              <i class="fas fa-edit"></i> {{ i18n.authTools.changeType }}
             </b-button>
           </div>
 
           <div class="col text-dark">
-            Damit kannst Du den Typ des Inhalts permanent ändern.
-            <u>Achtung:</u> Dabei gehen die aktuellen Eingaben verloren.
+            {{ i18n.authTools.changeTypeTip1 }}
+            <u>{{ i18n.authTools.changeTypeTip2 }}</u> {{ i18n.authTools.changeTypeTip3 }}
           </div>
         </div>
 
@@ -209,10 +209,10 @@
                         class="w-100"
                         dropright>
               <template slot="button-content">
-                <i class="fas fa-plus"></i> Neuen Inhalt hinzufügen
+                <i class="fas fa-plus"></i> {{ i18n.authTools.newContent }}
               </template>
 
-              <b-dropdown-header>Lernbausteine</b-dropdown-header>
+              <b-dropdown-header>{{ i18n.authTools.newContentBlock }}</b-dropdown-header>
               <b-dropdown-item v-for="block in $laya.lb"
                                :key="block.id"
                                :to="'/courses/'+name+'/'+nextId()+'/new/'+block.id">
@@ -221,7 +221,7 @@
 
               <b-dropdown-divider></b-dropdown-divider>
 
-              <b-dropdown-header>Lernüberprüfungen</b-dropdown-header>
+              <b-dropdown-header>{{ i18n.authTools.newContentAssmnt }}</b-dropdown-header>
               <b-dropdown-item v-for="ass in $laya.la"
                                :key="ass.id"
                                :to="'/courses/'+name+'/'+nextId()+'/new/'+ass.id">
@@ -232,15 +232,15 @@
           </div>
 
           <div class="col text-dark">
-            Damit kannst Du einen neuen Inhalt erstellen. Er wird die Nummer
-            <b>{{nextId()}}</b> haben.
+            {{ i18n.authTools.newContentTip }}
+            <b>{{nextId()}}</b>.
           </div>
         </div>
 
         <div class="row" v-if="course.content.length > 0">
           <div class="col">
             <b-button block variant="primary" append :to="{path: 'editNav'}">
-              <i class="fas fa-project-diagram"></i> Kursführung bearbeiten
+              <i class="fas fa-project-diagram"></i> {{ i18n.authTools.editNav }}
             </b-button>
           </div>
 
@@ -248,10 +248,10 @@
             <span v-if="courseNavIncomplete()"
                   class="bg-warning mr-1 rounded"
                   style="padding: 2px 5px">
-              <i class="fas fa-exclamation-triangle"></i> Unvollständig
+              <i class="fas fa-exclamation-triangle"></i> {{ i18n.authTools.editNavIncomplete }}
             </span>
-            Damit kannst Du die Kursführung bearbeiten. Insgesamt hat der Kurs
-            {{course.content.length}} Inhalte.
+            {{ i18n.authTools.editNavTip1 }}
+            {{course.content.length}} {{ i18n.authTools.editNavTip2 }}
           </div>
         </div>
 
@@ -261,12 +261,12 @@
                       variant="warning"
                       class="float-right"
                       @click="$bvModal.show('author-renameCourse-confirm')">
-              <i class="fas fa-exclamation-circle"></i> Kurs umbenennen
+              <i class="fas fa-exclamation-circle"></i> {{ i18n.authTools.renameCourse }}
             </b-button>
           </div>
 
           <div class="col text-dark">
-            Der Kurs wird umbenannt.
+            {{ i18n.authTools.renameCourseTip }}
           </div>
         </div>
 
@@ -276,12 +276,12 @@
                       variant="warning"
                       class="float-right"
                       @click="$bvModal.show('author-copyCourse-confirm')">
-              <i class="fas fa-exclamation-circle"></i> Kurs kopieren
+              <i class="fas fa-exclamation-circle"></i> {{ i18n.authTools.copyCourse }}
             </b-button>
           </div>
 
           <div class="col text-dark">
-            Der Kurs wird mit einem neuen Namen dupliziert.
+            {{ i18n.authTools.copyCourseTip }}
           </div>
         </div>
 
@@ -291,12 +291,12 @@
                       variant="danger"
                       class="float-right"
                       @click="$bvModal.show('author-delContent-confirm')">
-              <i class="fas fa-exclamation-circle"></i> Inhalt löschen
+              <i class="fas fa-exclamation-circle"></i> {{ i18n.authTools.deleteContent }}
             </b-button>
           </div>
 
           <div class="col text-dark">
-            Der aktuelle Inhalt wird gelöscht.
+            {{ i18n.authTools.deleteContentTip }}
           </div>
         </div>
 
@@ -306,12 +306,12 @@
                       variant="danger"
                       class="float-right"
                       @click="$bvModal.show('author-delCourse-confirm')">
-              <i class="fas fa-exclamation-circle"></i> Kurs löschen
+              <i class="fas fa-exclamation-circle"></i> {{ i18n.authTools.deleteCourse }}
             </b-button>
           </div>
 
           <div class="col text-dark">
-            Der <u>gesamte Kurs</u> wird gelöscht.
+            {{ i18n.authTools.deleteCourseTip1 }} <u>{{ i18n.authTools.deleteCourseTip2 }}</u> {{ i18n.authTools.deleteCourseTip3 }} 
           </div>
         </div>
 
@@ -335,7 +335,7 @@ import {
 } from "bootstrap-vue"
 
 import http from "axios";
-import * as i18n from "../i18n/login";
+import * as i18n from "@/i18n/course-detail";
 import utils from "../misc/utils.js";
 
 export default {
@@ -394,12 +394,16 @@ export default {
     plugins: function() {
       const la = this.$laya.la
       const lb = this.$laya.lb
-      let lalb = [{value: null, text: "Neuen Typ wählen", disabled: true}]
+      let lalb = [{value: null, text: this.i18n.changeTypeText, disabled: true}]
       for(const id in lb)
         lalb.push({value: id, text: lb[id].i18n.de})
       for(const id in la)
         lalb.push({value: id, text: la[id].i18n.de})
       return lalb
+    },
+
+    i18n () {
+      return i18n[this.$store.state.profile.lang]
     }
   },
   methods: {
