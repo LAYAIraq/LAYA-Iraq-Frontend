@@ -4,6 +4,15 @@
     <div class="container">
       <div class="row">
         <div class="col">
+          <h1> {{ i18n. title }} </h1>
+          <h2> {{ i18n.subtitle }} </h2>
+          <p> {{ i18n.promoText1 }} </p>
+          <p> {{ i18n.promoText2 }} </p>
+          <p> {{ i18n.promoText3 }} </p>
+          <p> {{ i18n.promoText4 }} </p>
+          <p> {{ i18n.promoText5 }} </p>
+
+          <b-link href="#/register">{{ i18n.register }}</b-link>
         </div>
       </div>
     </div>
@@ -20,7 +29,7 @@ export default {
     }
   },
   computed: {
-    msg: function () {
+    i18n () {
       return i18n[this.$store.state.profile.lang]
     }
   },
@@ -41,5 +50,9 @@ a {
 
 .sponsor img {
   height: 8rem;
+}
+
+h2 {
+  margin-bottom: 10vh;
 }
 </style>
