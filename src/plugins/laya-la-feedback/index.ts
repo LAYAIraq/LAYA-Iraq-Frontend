@@ -8,6 +8,7 @@ export default {
   install(Vue: typeof _Vue, options?: any): void {
     Vue.$laya.registerLA("laya-course-feedback", "CourseFeedback", {
       de: "Rückmeldung",
+      en: "Feedback"
     }, {
       new: _create,
       //@ts-ignore

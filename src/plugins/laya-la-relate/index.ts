@@ -8,6 +8,7 @@ export default {
   install(Vue: typeof _Vue, options?: any): void {
     Vue.$laya.registerLA("laya-quiz-relate", "AssessmentRelate", {
       de: "Zuordnen",
+      en: "Relate"
     }, {
       new: _create,
       //@ts-ignore
