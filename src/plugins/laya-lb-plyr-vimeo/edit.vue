@@ -4,12 +4,12 @@
 
     <form>
       <div class="form-group">
-        <label for="vimeo-vid-id">Vimeo Video</label>
+        <label for="vimeo-vid-id">{{ i18n.video }}</label>
         <input id="vimeo-vid-id"
                type="text"
                v-model="url"
                class="form-control"
-               placeholder="z.B. https://vimeo.com/346694402">
+               :placeholder="i18n.placeholder">
       </div>
 
     </form>
@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import * as i18n from "@/i18n/plugins/laya-lb-plyr-vimeo"
 
 export default {
   name: "laya-lb-plyr-vimeo-edit",
@@ -34,6 +35,9 @@ export default {
   props: {
   },
   computed: {
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
+    }
   },
   methods: {
   },

@@ -8,6 +8,7 @@ export default {
   install(Vue: typeof _Vue, options?: any): void {
     Vue.$laya.registerLB("laya-ableplayer", "BlockAbleplayer", {
       de: "Externes Video (über Ableplayer)",
+      en: "Video from external source (via AblePlayer)"
     }, {
       new: _create,
       //@ts-ignore

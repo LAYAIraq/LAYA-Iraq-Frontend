@@ -3,13 +3,13 @@
     <div class="container">
       <div class="row mb-3">
         <div>
-          <h4>Aufgabe</h4>
+          <h4>{{ i18n.task }}</h4>
           <p>{{task}}</p>
         </div>
       </div>
       <div class="row py-2 ly-bg-grey">
         <div class="col-5">
-          <h4>Unsortiert</h4>
+          <h4>{{ i18n.unsorted }}</h4>
           <div class="d-flex flex-column">
             <button
               v-for="(us,i) in unsorted"
@@ -21,7 +21,7 @@
           </div>
         </div>
         <div class="col-5">
-          <h4>Hier sortieren</h4>
+          <h4>{{ i18n.sortHere }}</h4>
           <div class="d-flex flex-column">
             <button
               v-for="(s,i) in solution"
@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="col-2">
-          <h4 style="color: transparent">E</h4>
+          <h4 style="color: transparent">{{ i18n.e }}</h4>
           <div class="d-flex flex-column">
             <i v-for="(r,i) in result"
                :key="i"
@@ -48,7 +48,7 @@
                 class="btn btn-primary btn-lg"
                 :disabled="unsorted.length !== 0"
                 @click="check">
-          Fertig!
+          {{ i18n.done }}
         </button>
       </div>
     </div>
@@ -57,6 +57,7 @@
 
 <script>
 import Vue from "vue";
+import * as i18n from "@/i18n/plugins/laya-la-sort";
 
 export default Vue.extend({
   name: "laya-quiz-sort",
@@ -82,6 +83,9 @@ export default Vue.extend({
     sorted: Array,
   },
   computed: {
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
+    }
   },
   methods: {
     moveToSorted: function(i) {

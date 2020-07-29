@@ -2,21 +2,21 @@
   <div class="laya-feedback">
 
     <b-toast id="feedback-new"
-            title="Kurs-Rückmeldung"
+            :title="i18n.bToast.title"
             static
             variant="success"
             auto-hide-delay="1500"
             class="feedback-toast">
-      Speichern erfolgreich!
+      {{ i18n.bToast.successfulSave }}
     </b-toast>
 
     <b-toast id="feedback-updated"
-            title="Kurs-Rückmeldung"
+            :title="i18n.bToast.title"
             static
             variant="success"
             auto-hide-delay="1500"
             class="feedback-toast">
-      Kurs-Rückmeldung erfolgreich aktualisiert!
+      {{ i18n.bToast.feedbackUpdated }}
     </b-toast>
 
     <div class="feedback-container-main">
@@ -47,7 +47,6 @@
                    class="custom-range"
                    min="0"
                    :max="categories.length-1"
-                   :disabled="checked"
                    v-model.number="choice[i]">
           </div>
         </div>
@@ -55,11 +54,11 @@
 
       <div class="row">
         <div class="column">
-          <h4>Freitext hinzufügen</h4>
+          <h4>{{ i18n.addFreetext }}</h4>
           <input type="text" class="idk" v-model="freetext">
         </div>
         <button type="button" class="btn btn-primary" @click="storeFeedback">
-        <i class="fas fa-check"></i> Speichern
+        <i class="fas fa-check"></i>{{ i18n.save }}
       </button>
       </div>
       
@@ -69,7 +68,7 @@
         <button type="button"
                 class="btn btn-primary mt-3 ml-auto"
                 @click="done">
-          Nächster Inhalt <i class="fas fa-arrow-right"></i>
+          {{ i18n.nextContent }}<i class="fas fa-arrow-right"></i>
         </button>
       </div>
     </div>
@@ -81,6 +80,7 @@
 import { BToast, BvToast } from "bootstrap-vue";
 import { mapState, mapGetters } from "vuex";
 import http from "axios";
+import * as i18n from "@/i18n/plugins/laya-la-feedback";
 
 //import layaWsyisyg from '../misc/laya-html'
 export default {
@@ -124,7 +124,11 @@ export default {
       answered: false,
     }
   },
- 
+  computed: {
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
+    }
+  },
   props: {
     title: String,
     task: String,

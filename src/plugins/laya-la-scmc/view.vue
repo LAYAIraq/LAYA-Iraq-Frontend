@@ -47,7 +47,7 @@
     <!-- check -->
     <!--
     <div v-if="maxTries > 0" class="text-secondary my-2" tabindex="0">
-      <span>Versuche übrig:</span>
+      <span>{{ i18n.triesLeft }}</span>
       {{maxTries-tries}}
     </div>
     -->
@@ -55,12 +55,12 @@
             class="btn btn-link mt-3"
             @click="diffSolution"
             :disabled="freeze">
-      Lösung ergänzen
+      {{ i18n.addSolution }}
     </button>
     <button type="button"
             class="btn btn-primary mt-3 float-right"
             @click="onFinish[0]() || {}">
-      <span>Nächster Inhalt <i class="fas fa-arrow-right"></i> </span>
+      <span>{{ i18n.nextContent }}<i class="fas fa-arrow-right"></i> </span>
     </button>
     <span :id="feedbackId" class="ml-2" aria-live="polite">{{ feedback }}</span>
 
@@ -70,6 +70,7 @@
 <script>
 import Vue from "vue"
 import {mapState, mapGetters} from 'vuex'
+import * as i18n from "@/i18n/plugins/laya-la-scmc"
 
 export default {
   name: 'laya-multiple-choice',
@@ -98,6 +99,9 @@ export default {
   computed: {
     feedbackId: function () {
       return `mchoice-feedback-${this._uid}`
+    },
+    i18n () {
+      return i18n[this.$store.state.profile.lang]
     }
   },
   methods: {

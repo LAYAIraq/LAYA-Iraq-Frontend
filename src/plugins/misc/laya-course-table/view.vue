@@ -2,7 +2,7 @@
   <div class="laya-course-table">
 
     <h3 v-show="filtered.length === 0" class="text-center text-muted">
-      Keine Kurse gefunden
+      {{ i18n.noCourses }}
     </h3>
 
     <div v-for="(courses, category) in categories" :key="category"
@@ -53,6 +53,8 @@
 </template>
 
 <script>
+import * as i18n from "@/i18n/plugins/misc/laya-course-table"
+
 export default {
   name: "laya-course-table",
   data() {
@@ -85,6 +87,9 @@ export default {
         cats[category].push(course)
       })
       return cats
+    },
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
     }
   },
   methods: {

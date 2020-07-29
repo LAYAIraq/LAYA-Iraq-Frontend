@@ -1,34 +1,34 @@
 <template>
   <div class="laya-ableplayer-edit">
 
-    <h3>Video über AblePlayer</h3>
+    <h3>{{ i18n.title }}</h3>
     <hr>
     <form>
       <div class="form-group">
-        <label for="able-src-id">Haupt-Video-URL:</label>
+        <label for="able-src-id">{{ i18n.vidURL }}</label>
         <input id="able-src-id"
                type="text"
                v-model="src"
                class="form-control"
-               placeholder="z.B. https://laya.de/video.mp4">
+               :placeholder="i18n.vidPlaceholder">
       </div>
 
       <div class="form-group">
-        <label for="able-sign-id">Gebärdensprache-Video-URL:</label>
+        <label for="able-sign-id">{{ i18n.signVidURL }} </label>
         <input id="able-sign-id"
                type="text"
                v-model="sign"
                class="form-control"
-               placeholder="z.B. https://laya.de/gebärdensprache.mp4">
+               :placeholder="i18n.signVidPlaceholder">
       </div>
 
       <div class="form-group">
-        <label for="able-sub-id">Untertitel-URL:</label>
+        <label for="able-sub-id">{{ i18n.subtitle }}</label>
         <input id="able-sub-id"
                type="text"
                v-model="sub"
                class="form-control"
-               placeholder="z.B. https://laya.de/untertitel.vtt">
+               :placeholder="i18n.subtitlePlaceholder">
       </div>
     </form>
 
@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import * as i18n from "@/i18n/plugins/misc/laya-ableplayer"
 
 export default {
   name: "laya-lb-plyr-vimeo-edit",
@@ -48,6 +49,11 @@ export default {
       sub: ""
     }
   },
+  computed: {
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
+    }
+  }
 }
 </script>
 

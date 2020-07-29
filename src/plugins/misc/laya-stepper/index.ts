@@ -8,6 +8,7 @@ export default {
   install(Vue: typeof _Vue, options?: any): void {
     Vue.$laya.registerLB("laya-stepper", "BlockStepper", {
       de: "Stepper",
+      en: "Stepper"
     }, {
       new: _create,
       view: _edit,

@@ -12,7 +12,7 @@
           <p> {{ i18n.promoText4 }} </p>
           <p> {{ i18n.promoText5 }} </p>
 
-          <b-link href="#/register">{{ i18n.register }}</b-link>
+          <b-link to="/register">{{ i18n.register }}</b-link>
         </div>
       </div>
     </div>

@@ -46,12 +46,12 @@
                 class="btn btn-link mt-3"
                 :disabled="checked"
                 @click="check">
-          Lösung ergänzen
+          {{ i18n.addSolution }}
         </button>
         <button type="button"
                 class="btn btn-primary mt-3 ml-auto"
                 @click="done">
-          Nächster Inhalt <i class="fas fa-arrow-right"></i>
+          {{ i18n.nextContent }} <i class="fas fa-arrow-right"></i>
         </button>
       </div>
 
@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import * as i18n from "@/i18n/plugins/laya-la-drag-drop";
 
 export default {
   name: "laya-quiz-drag-drop",
@@ -84,6 +85,9 @@ export default {
     onFinish: Array
   },
   computed: {
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
+    }
   },
   methods: {
     done() {

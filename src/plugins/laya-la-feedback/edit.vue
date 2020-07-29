@@ -5,7 +5,7 @@
 
       <!-- title -->
       <div class="form-group row">
-        <label for="feedback-title" class="col-2 col-form-label">Titel</label>
+        <label for="feedback-title" class="col-2 col-form-label">{{ i18n.edit.title }}</label>
         <div class="col-10">
           <input id="feedback-title"
                  type="text"
@@ -18,7 +18,7 @@
       <!-- task -->
       <div class="form-group row">
         <label for="feedback-task" class="col-2 col-form-label">
-          Beschreibung
+          {{ i18n.edit.desc }}
         </label>
         <div class="col-10">
           <textarea id="feedback-task"
@@ -44,11 +44,11 @@
       </div>
       -->
 
-      <p><b>Antwortmöglichkeiten</b></p>
+      <p><b>{{ i18n.edit.answers }}</b></p>
       <div class="form-group row" v-for="(cat, i) in categories" :key="'cat-'+i">
 
         <!-- text -->
-        <label class="col-form-label col-2" :for="'cat-text-'+i">Text</label>
+        <label class="col-form-label col-2" :for="'cat-text-'+i">{{ i18n.edit.text }}</label>
         <div class="col-7">
           <input :id="'cat-text-'+i"
             class="form-control"
@@ -70,16 +70,16 @@
           <button type="button"
                   class="btn btn-primary btn-sm"
                   @click="_addCategory">
-            <i class="fas fa-plus"></i> Antwortmöglichkeit hinzufügen
+            <i class="fas fa-plus"></i>{{ i18n.edit.addAnswer }}
           </button>
         </div>
       </div>
 
-      <p><b>Fragen</b></p>
+      <p><b>{{ i18n.edit.questions }}</b></p>
       <div class="form-group row" v-for="(item, i) in items" :key="'item-'+i">
 
         <!-- text -->
-        <label class="col-form-label col-2" :for="'item-text-'+i">Text</label>
+        <label class="col-form-label col-2" :for="'item-text-'+i">{{ i18n.edit.text }}</label>
         <div class="col-5">
           <input :id="item"
             class="form-control"
@@ -101,7 +101,7 @@
           <button type="button"
                   class="btn btn-primary btn-sm"
                   @click="_addItem">
-            <i class="fas fa-plus"></i> Frage hinzufügen
+            <i class="fas fa-plus"></i>{{ i18n.edit.addQuestion }}
           </button>
         </div>
       </div>
@@ -113,30 +113,28 @@
 
 <script>
 
+import * as i18n from "@/i18n/plugins/laya-la-feedback";
+
 export default {
   name: 'laya-la-feedback-edit',
   created () {
+    if (this.title == "") { //prefetch Data at creation
+      const prefData = this.i18n.prefetch
+      this.title = prefData.title
+      this.task = prefData.task
+      this.items = prefData.items
+      this.categories = prefData.categories
+    }
   },
   data () {
     if(Object.entries(this.$attrs).length > 0)
       return {...this.$attrs}
     return {
-      title: "Kurs-Rückmeldung",
-      task: "Dieser Kursbaustein dient dazu, Ihre Rückmeldung einzuholen. Wir arbeiten daran, unsere Kurse \
-      so verständlich und zugänglich wie möglich zu gestalten. Wir bitten Sie daher, Ihre Meinung zu unseren \
-      Inhalten und der Vermittlung mitzuteilen. Das Feedback ist anonym. Wenn Sie einverstanden sind, Rückfragen\
-      zu Ihrem Feedback zu erhalten, klicken Sie bitte den entsprechenden Button.",
+      title: "",
+      task: "",
       taskAudio: "",
-      items: [
-        "Der Kurs ist klar strukturiert",
-        "Der Kurs ist inhaltlich interessant.",
-        "Das Niveau des Kurses war angemessen.",
-        "Ich fühlte mich an keiner Stelle unterfordert.",
-        "Ich fühlte mich an keiner Stelle überfordert.",
-        "Die Lernüberprüfungen haben zum Verständnis beigetragen.",
-        "Ich würde den Kurs weiterempfehlen."
-      ],
-      categories: ["Stimme nicht zu", "Stimme eher nicht zu", "Neutral", "Stimme eher zu", "Stimme zu"],
+      items: [],
+      categories: [],
       feedback: []
     }
   },
@@ -144,6 +142,9 @@ export default {
     
   },
   computed: {
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
+    }
   },
   methods: {
     _delItem(idx) {
