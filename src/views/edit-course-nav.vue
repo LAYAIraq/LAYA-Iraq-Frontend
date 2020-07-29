@@ -185,7 +185,10 @@ export default {
     },
 
     typeName(compName) {
-      return {...this.$laya.la, ...this.$laya.lb}[compName].i18n.de
+      let lang = this.$store.state.profile.lang
+      if ({...this.$laya.la, ...this.$laya.lb}[compName].i18n.hasOwnProperty(lang))
+        return {...this.$laya.la, ...this.$laya.lb}[compName].i18n[lang]
+      else return {...this.$laya.la, ...this.$laya.lb}[compName].i18n.de
     },
 
     renderNavGraph() {

@@ -216,7 +216,7 @@
               <b-dropdown-item v-for="block in $laya.lb"
                                :key="block.id"
                                :to="'/courses/'+name+'/'+nextId()+'/new/'+block.id">
-                {{ block.i18n.de }}
+                {{ getLocale(block) }}
               </b-dropdown-item>
 
               <b-dropdown-divider></b-dropdown-divider>
@@ -225,7 +225,7 @@
               <b-dropdown-item v-for="ass in $laya.la"
                                :key="ass.id"
                                :to="'/courses/'+name+'/'+nextId()+'/new/'+ass.id">
-                {{ ass.i18n.de }}
+                {{ getLocale(ass) }}
               </b-dropdown-item>
             </b-dropdown>
 
@@ -395,10 +395,16 @@ export default {
       const la = this.$laya.la
       const lb = this.$laya.lb
       let lalb = [{value: null, text: this.i18n.changeTypeText, disabled: true}]
-      for(const id in lb)
-        lalb.push({value: id, text: lb[id].i18n.de})
+      let lang = this.$store.state.profile.lang
+      for(const id in lb) {
+        if (lb[id].i18n.hasOwnProperty(lang))
+          lalb.push({value: id, text: lb[id].i18n[lang]})
+        else lalb.push({value: id, text: lb[id].i18n.de})
+      }
       for(const id in la)
-        lalb.push({value: id, text: la[id].i18n.de})
+        if (la[id].i18n.hasOwnProperty(lang))
+          lalb.push({value: id, text: la[id].i18n[lang]})
+        else lalb.push({value: id, text: la[id].i18n.de})
       return lalb
     },
 
@@ -520,6 +526,12 @@ export default {
 
     nextId() {
       return this.course.content.length+1
+    },
+
+    getLocale(comp) {
+      let lang = this.$store.state.profile.lang
+      if(comp.i18n.hasOwnProperty(lang)) return comp.i18n[lang]
+      else return comp.i18n.de
     }
 
     /*
