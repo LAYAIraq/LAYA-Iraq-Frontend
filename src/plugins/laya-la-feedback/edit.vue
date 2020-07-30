@@ -118,7 +118,7 @@ import * as i18n from "@/i18n/plugins/laya-la-feedback";
 export default {
   name: 'laya-la-feedback-edit',
   created () {
-    if (this.title == "") { //prefetch Data at creation
+    if (this.title === "") { //prefetch Data at creation
       const prefData = this.i18n.prefetch
       this.title = prefData.title
       this.task = prefData.task
@@ -134,8 +134,7 @@ export default {
       task: "",
       taskAudio: "",
       items: [],
-      categories: [],
-      feedback: []
+      categories: []
     }
   },
   props: {

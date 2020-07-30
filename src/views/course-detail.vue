@@ -112,7 +112,8 @@
                      :is="content().name"
                      v-bind="content().input"
                      :name="name"
-                     :courseFeedback="feedback()"
+                     :init="feedback()"
+                     :onUpdate="saveFeedback"
                      :onFinish="nextStep(content().nextStep)">
           </component>
 
@@ -336,7 +337,7 @@ import {
 
 import http from "axios";
 import * as i18n from "@/i18n/course-detail";
-import utils from "../misc/utils.js";
+import utils from "@/misc/utils.js";
 
 export default {
   name: "course-detail-view",
@@ -424,8 +425,33 @@ export default {
       return this.course.content[this.step-1]
     },
 
-    feedback: function() {
-      return this.course.feedback
+    feedback() {
+      if(this.course.content[this.step-1].name == "laya-course-feedback") {
+        const fb = {
+          cid: this.course.authorId,
+          created: Date.parse(this.course.createDate),
+          feedback: this.course.feedback,
+          uid: this.auth.userId
+        }
+        return fb
+      }
+      return null
+    },
+
+     saveFeedback: function(feedback) {
+      if(this.course.feedback.hasOwnProperty(feedback.fid)) 
+        updateFeedback(feedback)
+      else {
+        this.course.feedback.push(feedback)
+        this.storeFeedback()
+      }
+    },
+
+    updateFeedback: function(updatedFeedback) {
+      this.course.feedback[updatedFeedback.fid] = {
+        ...this.course.feedback[updatedFeedback.fid], ...updatedFeedback
+      }
+      this.storeFeedback()
     },
 
     updateStep: function(changedStep) {
@@ -504,6 +530,15 @@ export default {
       const self = this
       http.patch(`courses/${self.name}`, {content: self.course.content})
         .catch(err => console.error("Failed storing course content:", err))
+        .finally(function() {
+          self.$bvToast.show("author-toast")
+        })
+    },
+
+    storeFeedback() {
+      const self = this
+      http.patch(`courses/${self.name}`, {feedback: self.course.feedback})
+        .catch(err => console.error("Failed storing course feedback:", err))
         .finally(function() {
           self.$bvToast.show("author-toast")
         })

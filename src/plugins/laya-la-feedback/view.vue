@@ -78,39 +78,20 @@
 <script>
 
 import { BToast, BvToast } from "bootstrap-vue";
-import { mapState, mapGetters } from "vuex";
-import http from "axios";
 import * as i18n from "@/i18n/plugins/laya-la-feedback";
 
 //import layaWsyisyg from '../misc/laya-html'
 export default {
   name: "laya-feedback",
   created () {
-    // const ctx = this;
-
-    // window.scrollTo(0,0)
-    // document.title = `Laya - ${ctx.name}`
-
-    // ctx.$store.commit("setBusy", true);
-    // /*
-    //  * fetch course */
-    // http.get(`courses/${ctx.name}`)
-    //   .then(function({ data }) {
-    //     ctx.course = data;
-    //   })
-    //   .catch(err => {
-    //     /*
-    //      * redirect off invalid course */
-    //     console.error(err);
-    //     this.$router.push("/courses");
-    //   })
-    //   .then(() => ctx.$store.commit("setBusy", false));
-
+    //console.log(Date.parse(this.feedback.created))
     const mid = Math.floor((this.categories.length)/2)
     let s = this.items.map(i => mid)
     this.choice = [...s]
-
-    this.getFeedback();
+    
+    this.getFid()
+    this.getPreviousFeedback()
+    
   },
   beforeDestroy() {
     //add saving feedback data
@@ -122,6 +103,7 @@ export default {
       choice: [], // users choice as index
       freetext: "",
       answered: false,
+      fid: 0
     }
   },
   computed: {
@@ -135,41 +117,55 @@ export default {
     taskAudio: String,
     items: Array,
     categories: Array,
-    feedback: Array,
+    init: Object,
     onFinish: Array,
-    onupdate: Function,
+    onUpdate: Function
   },
   methods: {
-    done: function() {
-      this.onupdate;
+    getFid() {
+      let uid = this.init.uid
+      let cid = this.init.cid
+      let slt = this.init.created
+      this.fid = uid ^ cid ^ slt
+    },
+    getPreviousFeedback() {
+      if(this.init.feedback.hasOwnProperty(this.fid)) {
+        this.answered = true
+        let tmp = this.init.feedback[this.fid]
+        this.freetext = tmp.freetext
+        this.choice = tmp.choice
+      } 
+    },
+    done() {
       this.onFinish[0]();
     },
-    storeFeedback: function() {
-      if(!this.answered) {
-        let newFeedback = {
-          id: this.feedback.length,
+    bundleFeedback() {
+      const newFeedback = {
+          fid: this.fid,
           choice: this.choice,
-          freetext: this.freetext
+          freetext: this.freetext,
+          options: {
+            questions: this.items,
+            answers: this.categories
+          }
         }
-        this.feedback.push(newFeedback)
-        this.answered = true;
+        return newFeedback
+    },
+    storeFeedback() {
+      if(!this.answered) {
+        const newFeedback = this.bundleFeedback()
+        this.onUpdate(newFeedback);
         this.$forceUpdate();
         this.$bvToast.show("feedback-new")
       }
       else {
-        let index = this.feedback.length-1;
-        let updatedFeedback = this.feedback[index];
-        updatedFeedback.choice = this.choice;
-        updatedFeedback.freetext = this.freetext;
+        const newFeedback = this.bundleFeedback()
+        this.onUpdate(newFeedback);
         this.$forceUpdate();
         this.$bvToast.show("feedback-updated")
 
       }
-    },
-
-    getFeedback: function() {
-      
-    },
+    }
 
 
   }
