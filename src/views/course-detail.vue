@@ -113,7 +113,7 @@
                      v-bind="content().input"
                      :name="name"
                      :init="feedback()"
-                     :onUpdate="saveFeedback"
+                     :onSave="saveFeedback"
                      :onFinish="nextStep(content().nextStep)">
           </component>
 
@@ -426,12 +426,13 @@ export default {
     },
 
     feedback() {
-      if(this.course.content[this.step-1].name == "laya-course-feedback") {
+      if(this.course.content[this.step-1].name === "laya-course-feedback") {
         const fb = {
           cid: this.course.authorId,
           created: Date.parse(this.course.createDate),
           feedback: this.course.feedback,
-          uid: this.auth.userId
+          uid: this.auth.userId,
+          fno: Number(this.step)
         }
         return fb
       }
@@ -439,18 +440,22 @@ export default {
     },
 
      saveFeedback: function(feedback) {
-      if(this.course.feedback.hasOwnProperty(feedback.fid)) 
-        updateFeedback(feedback)
-      else {
-        this.course.feedback.push(feedback)
-        this.storeFeedback()
+      var cfb = this.course.feedback
+      for (var i in cfb) {
+        if(cfb[i].fid === feedback.fid) {
+          this.updateFeedback(feedback, i)
+          return
+        }
       }
+      this.course.feedback.push(feedback)
+      this.storeFeedback()
     },
 
-    updateFeedback: function(updatedFeedback) {
-      this.course.feedback[updatedFeedback.fid] = {
-        ...this.course.feedback[updatedFeedback.fid], ...updatedFeedback
+    updateFeedback: function(updatedFeedback, index) {
+      this.course.feedback[index] = {
+        ...this.course.feedback[index], ...updatedFeedback
       }
+      //console.log("Feedback id "+ updatedFeedback.fid + " updated!")
       this.storeFeedback()
     },
 
@@ -540,7 +545,7 @@ export default {
       http.patch(`courses/${self.name}`, {feedback: self.course.feedback})
         .catch(err => console.error("Failed storing course feedback:", err))
         .finally(function() {
-          self.$bvToast.show("author-toast")
+          //self.$bvToast.show("author-toast")
         })
     },
 

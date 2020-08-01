@@ -52,14 +52,19 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="column">
+      <div class="row mt-5">
+        <div class="col">
           <h4>{{ i18n.addFreetext }}</h4>
-          <input type="text" class="idk" v-model="freetext">
+          <textarea class="w-100 mt-1" rows="5" v-model="freetext">
+          </textarea>
         </div>
-        <button type="button" class="btn btn-primary" @click="storeFeedback">
-        <i class="fas fa-check"></i>{{ i18n.save }}
-      </button>
+      </div>
+      <div class="row mt-1">
+        <div class="col">
+          <button type="button" class="btn btn-outline-success btn-block" @click="storeFeedback">
+          <i class="fas fa-check"></i>{{ i18n.save }}
+          </button>
+        </div>
       </div>
       
 
@@ -103,7 +108,8 @@ export default {
       choice: [], // users choice as index
       freetext: "",
       answered: false,
-      fid: 0
+      fid: 0,
+      created: 0
     }
   },
   computed: {
@@ -119,22 +125,39 @@ export default {
     categories: Array,
     init: Object,
     onFinish: Array,
-    onUpdate: Function
+    onSave: Function
   },
   methods: {
     getFid() {
       let uid = this.init.uid
       let cid = this.init.cid
+      let fno = this.init.fno
       let slt = this.init.created
-      this.fid = uid ^ cid ^ slt
+      let now = Date.now()
+      this.created = now
+      this.fid = uid ^ cid ^ fno ^ slt ^ now
     },
     getPreviousFeedback() {
-      if(this.init.feedback.hasOwnProperty(this.fid)) {
-        this.answered = true
-        let tmp = this.init.feedback[this.fid]
-        this.freetext = tmp.freetext
-        this.choice = tmp.choice
-      } 
+      for (let i in this.init.feedback) {
+        let tuid = this.calcUID(this.init.feedback[i])
+        if(tuid === this.init.uid) {
+          //console.log("Previous Feedback loaded!")
+          this.answered = true
+          let tmp = this.init.feedback[i]
+          this.freetext = tmp.freetext
+          this.choice = tmp.choice
+          this.created = tmp.created
+          this.fid = tmp.fid
+          return
+        } 
+      }
+      //console.log("No previous feedback found!")
+    },
+    calcUID(fb) {
+      
+      var tuid = fb.fid ^ fb.created ^ this.init.fno ^ this.init.cid ^ this.init.created
+      //console.log("Calculating UID... UID is " + tuid)
+      return tuid
     },
     done() {
       this.onFinish[0]();
@@ -142,6 +165,7 @@ export default {
     bundleFeedback() {
       const newFeedback = {
           fid: this.fid,
+          created: this.created,
           choice: this.choice,
           freetext: this.freetext,
           options: {
@@ -152,19 +176,10 @@ export default {
         return newFeedback
     },
     storeFeedback() {
-      if(!this.answered) {
-        const newFeedback = this.bundleFeedback()
-        this.onUpdate(newFeedback);
-        this.$forceUpdate();
-        this.$bvToast.show("feedback-new")
-      }
-      else {
-        const newFeedback = this.bundleFeedback()
-        this.onUpdate(newFeedback);
-        this.$forceUpdate();
-        this.$bvToast.show("feedback-updated")
-
-      }
+      const newFeedback = this.bundleFeedback()
+      this.onSave(newFeedback);
+      this.$forceUpdate();
+      !this.answered? this.$bvToast.show("feedback-new") : this.$bvToast.show("feedback-updated")
     }
 
 
@@ -173,6 +188,10 @@ export default {
 </script>
 
 <style scoped>
+*:focus {
+  outline: 2px dashed deepskyblue;
+}
+
 .item {
   margin-bottom: 2rem;
 }

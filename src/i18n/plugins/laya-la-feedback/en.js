@@ -5,7 +5,7 @@ export default {
         feedbackUpdated: 'Successfully updated Course Feedback!'
     },
     addFreetext: 'Add free text',
-    save: ' Save',
+    save: ' Save Feedback',
     nextContent: 'Next Content Block ',
     edit: {
         title: 'Title',

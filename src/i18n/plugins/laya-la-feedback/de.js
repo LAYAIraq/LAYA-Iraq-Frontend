@@ -5,7 +5,7 @@ export default {
         feedbackUpdated: 'Kurs-Rückmeldung erfolgreich aktualisiert!'
     },
     addFreetext: 'Freitext hinzufügen',
-    save: ' Speichern',
+    save: ' Feedback Speichern',
     nextContent: 'Nächster Inhalt ',
     edit: {
         title: 'Titel',
