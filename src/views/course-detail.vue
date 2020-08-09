@@ -1,6 +1,6 @@
 <template>
   <div v-if="!note.busy" class="course-detail-view">
-
+    <ly-scroll-to-top></ly-scroll-to-top>
     <!-- content delete modal -->
     <b-modal id="author-delContent-confirm"
              :title="i18n.bModal.delContent.title"
@@ -338,6 +338,7 @@ import {
 import http from "axios";
 import * as i18n from "@/i18n/course-detail";
 import utils from "@/misc/utils.js";
+import lyScrollToTop from "@/components/scroll-to-top.vue"
 
 export default {
   name: "course-detail-view",
@@ -627,8 +628,11 @@ export default {
     BDropdownItem,
     BDropdownHeader,
     BDropdownDivider,
-    BToast, BvToast,
-    BModal, BvModal
+    BToast, 
+    BvToast,
+    BModal, 
+    BvModal,
+    lyScrollToTop
   }
 };
 </script>
