@@ -37,7 +37,7 @@ export default {
       if (Object.keys(prefs).length > 0) {
         state.prefs = prefs;
       }
-      // state.lang = lang
+      state.lang = lang
       state.avatar = avatar;
     },
   },
