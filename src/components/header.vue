@@ -90,7 +90,7 @@ export default {
         store.commit('setLang', data)
       })
       .catch(function () {
-        store.commit('setLang', 'de')
+        store.commit('setLang', { lang: de })
       })
   },
   methods: {
@@ -102,7 +102,12 @@ export default {
       this.$forceUpdate()
     },
     setLang (lang) {
-      this.$store.commit('setLang', lang)
+      const data = {
+        spr: lang,
+        uid: this.$store.state.auth.userId,
+        email: this.$store.state.profile.email
+      }
+      this.$store.commit('setLang', data)
       this.$forceUpdate()
     },
     logout () {
@@ -113,6 +118,9 @@ export default {
   },
   components: {
     lyScrollToTop
+  },
+  beforeUpdate () {
+    console.log(this.$store.state.auth.userId)
   }
 }
 </script>

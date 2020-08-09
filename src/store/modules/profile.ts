@@ -17,8 +17,27 @@ export default {
     avatar: "",
   },
   mutations: {
-    setLang(state, lang) {
-      state.lang = (supportedLangs.includes(lang)) ? lang : supportedLangs[0];
+    setLang(state, data) {
+      let lang = data.spr
+      let uid = data.uid
+      let email = data.email
+      console.log(`Changing language to ${lang} at ${uid} ...`)
+      if (supportedLangs.includes(lang)) {
+        state.lang = lang
+        const newLang = {
+          lang: state.lang,
+          email: email,
+          password: ' '
+        }
+        console.log(newLang)
+        http.post(`/account/${uid}/change-language`, newLang)
+          .then( (newLang) => console.log(newLang))
+          .catch((err) => console.error(err))
+      }
+      else {
+        console.log("Setting language failed")
+        state.lang = supportedLangs[0]
+      }
     },
     toggleMedia(state, type) {
       state.prefs.media[type] = !state.prefs.media[type];

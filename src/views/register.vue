@@ -203,7 +203,7 @@ export default {
           username: ctx.name,
           password: ctx.pwd1,
           avatar: avatarFileName,
-          lang: this.$store.state.profile.lang
+          lang: ctx.$store.state.profile.lang
         })
       ]
 

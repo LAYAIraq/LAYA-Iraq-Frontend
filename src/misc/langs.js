@@ -10,5 +10,5 @@ export const icons = {
 }
 
 export const ids = [
-  'de', 'en', 'es', 'it', 'pl', 'nl'
+  'de', 'en' /*, 'es', 'it', 'pl', 'nl'*/
 ]
