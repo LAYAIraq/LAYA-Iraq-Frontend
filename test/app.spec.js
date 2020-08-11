@@ -1,61 +1,82 @@
-import courseFeedback from "@/plugins/laya-la-feedback/"
+//imports for full functionality
+
+import App from "../src/App.vue"
+import Laya from "../src/laya"
+import router from "../src/router.js"
+//import store from "../src/store"
+import Vuex from "vuex"
+import Storage from "vue-ls"
+import lyHeader from "@/components/header"
+import lyFooter from "@/components/footer"
+
+//imports for testing
 import { shallowMount, createLocalVue, mount } from "@vue/test-utils"
-import chai, { expect } from "chai"
+import chai, { expect, assert } from "chai"
 import sinon from "sinon"
 import sinonChai from "sinon-chai"
-import Vuex from "vuex"
+
 
 chai.use(sinonChai)
 const localVue = createLocalVue()
 localVue.use(Vuex)
+localVue.use(Laya)
+localVue.use(Storage, { name: "ls", namespace: "vuejs__", storage: "local" })
 
-describe("CourseFeedback ", () => {
-    let store;
-    const auth = {
-      online: false,
-      role: "student",
-      userId: 0
-    }
-    const note = {
-      busy: false,
-      myCourses: 0
-    }
-    const profile = {
+describe("App ", () => {
+
+    let wrapper
+    const mockMethod = sinon.spy()
+  
+    beforeEach(() => {
+      var store
+      const auth = {
+        online: false,
+        role: "student",
+        userId: 0
+      }
+      const note = {
+        busy: false,
+        myCourses: 0
+      }
+      const profile = {
         avatar: "",
         email: "",
         lang: "de",
         name: "",
         prefs: {
-            media: {
-                audio: false,
-                simple: false,
-                text: true,
-                video: true
-            }
+          media: {
+            audio: false,
+            simple: false,
+            text: true,
+            video: true
+          }
         }
-    }
-    
-
-    let component;
-    const mockMethod = sinon.spy();
-  
-    beforeEach(() => {
+      } 
       store = new Vuex.Store({
         auth,
         note,
         profile
-      });
+      })
   
-      component = mount(courseFeedback, {
-        store,
-        localVue
-      });
-    });
+      wrapper = shallowMount(App, {
+        store, 
+        localVue,
+        router
+      })
+    })
   
-    describe("Test... ", () => {
-        it("ist Vue-Instanz", () => {
-            expect(component.isVueInstance()).to.be.true
-        });
-    });
+    it("ist gültiges Element", () => {
+        assert.isOk(wrapper)
+    })
+
+    it("hat Header und Footer inkludiert", () => {
+      assert(wrapper.findComponent(lyHeader))
+      assert(wrapper.findComponent(lyFooter))
+    })
+
+    it("wird im Browser gerendert", () => {
+      assert(wrapper.find("#app"))
+    })
     
-  });
+    
+  })
