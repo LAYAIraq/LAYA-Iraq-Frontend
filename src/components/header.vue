@@ -1,7 +1,7 @@
 <template>
-
+  
   <div id="ly-header">
-
+    <ly-scroll-to-top></ly-scroll-to-top>
     <b-navbar toggleable="lg" type="light" variant="light">
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -10,14 +10,14 @@
 
         <b-navbar-brand to="/">
           <img style="height: inherit"
-               src="../assets/wayin-logo.png"
+               src="../assets/laya-logo-xs.png"
                alt="Laya - Learn as you are">
         </b-navbar-brand>
 
         <!-- left links -->
         <b-navbar-nav v-if="auth.online">
           <b-nav-item to="/courses">{{i18n.courses}}</b-nav-item>
-          <!-- <b-nav-item to="/mycourses">{{i18n.mycourses}}</b-nav-item> -->
+          <b-nav-item to="/mycourses">{{i18n.mycourses}}</b-nav-item>
         </b-navbar-nav>
 
         <!-- right links -->
@@ -50,8 +50,8 @@
       </b-collapse>
 
     </b-navbar>
-
   </div>
+
 </template>
 
 <script>
@@ -60,6 +60,7 @@ import { mapState } from 'vuex'
 import http from 'axios'
 import {icons} from '@/misc/langs.js'
 import * as i18n from '@/i18n/header'
+import lyScrollToTop from "@/components/scroll-to-top.vue"
 
 export default {
   name: 'ly-header',
@@ -73,11 +74,11 @@ export default {
   },
   computed: {
     ...mapState(['profile', 'auth', 'note']),
-    i18n: function () {
+    i18n () {
       return i18n[this.$store.state.profile.lang]
     }
   },
-  mounted: function () {
+  mounted () {
     document.title = "Laya"
     this.checkCourse()
     this.$forceUpdate()
@@ -89,7 +90,7 @@ export default {
         store.commit('setLang', data)
       })
       .catch(function () {
-        store.commit('setLang', 'de')
+        store.commit('setLang', { lang: de })
       })
   },
   methods: {
@@ -101,7 +102,13 @@ export default {
       this.$forceUpdate()
     },
     setLang (lang) {
-      this.$store.commit('setLang', lang)
+      const data = {
+        spr: lang,
+        uid: this.$store.state.auth.userId,
+        email: this.$store.state.profile.email
+      }
+      this.$store.commit('setLang', data)
+      this.$forceUpdate()
     },
     logout () {
       this.$ls.remove('auth')
@@ -110,6 +117,10 @@ export default {
     }
   },
   components: {
+    lyScrollToTop
+  },
+  beforeUpdate () {
+    console.log(this.$store.state.auth.userId)
   }
 }
 </script>

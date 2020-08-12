@@ -14,10 +14,11 @@
               class="btn btn-secondary"
               :class="{active: preview}"
               @click="preview = !preview">
-        {{ preview ? 'Bearbeiten' : 'Vorschau' }}
+        <span v-if="preview">{{ i18n.edit }}</span> 
+        <span v-else> {{ i18n.preview }} </span>
       </button>
       <button type="button" class="btn btn-primary" @click="save">
-        <i class="fas fa-check"></i> Speichern
+        <i class="fas fa-check"></i> {{ i18n.save }}
       </button>
     </div>
 
@@ -25,6 +26,8 @@
 </template>
 
 <script>
+import * as i18n from "@/i18n/course-wrapper";
+
 export default {
   name: "laya-la-lb-wrapper",
   data() {
@@ -51,6 +54,9 @@ export default {
         }
       }
       return input
+    },
+    i18n: function() {
+      return i18n[this.$store.state.profile.lang];
     }
   },
   methods: {

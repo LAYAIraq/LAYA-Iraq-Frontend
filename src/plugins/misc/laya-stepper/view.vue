@@ -2,11 +2,11 @@
   <div class="ly-stepper" :id="id">
 
     <div class="status text-center p-1 d-none">
-      Schritt {{step}} von {{components.length}}
+      {{ i18n.step }}{{step}}{{ i18n.of }}{{components.length}}
     </div>
 
     <div class="content">
-      <div v-for="(c, i) in comps" :key="step+20">
+      <div v-for="c in comps" v-bind:key="c"> <!--was "(c,i) in comps" and key="step+20"-->
         <component :is="c.name"
           :key="step"
           v-bind="c.input"
@@ -15,18 +15,18 @@
       </div>
     </div>
     <div v-if="!components" class="dev-error">
-      <h3>No components given</h3>
+      <h3>{{ i18n.noComps }}</h3>
     </div>
 
     <div class="controls d-none">
-      <button type="button" @click="back" class="btn btn-outline-primary m-1">Zurück</button>
+      <button type="button" @click="back" class="btn btn-outline-primary m-1">{{ i18n.back }}</button>
       <!--
       <button type="button" @click="next" class="btn btn-outline-primary m-1">
-        Kapitel überspringen
+        {{ i18n.skipChap }}
       </button>
       -->
       <button type="button" @click="next" class="btn btn-outline-primary m-1">
-        Schritt überspringen
+        {{ i18n.skipStep }}
       </button>
     </div>
   </div>
@@ -34,6 +34,7 @@
 
 <script lang="ts">
 import Vue from "vue"
+import * as i18n from "../../../i18n/plugins/misc/laya-stepper"
 
 export default Vue.extend({
   name: 'laya-stepper',
@@ -41,7 +42,7 @@ export default Vue.extend({
   },
   data () {
     return {
-      step: 1,
+      step: 1
     }
   },
   props: {
@@ -53,6 +54,9 @@ export default Vue.extend({
     },
     comps: function() {
       return [this.components[this.step-1]]
+    },
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
     }
   },
   methods: {

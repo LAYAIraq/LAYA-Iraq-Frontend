@@ -8,8 +8,10 @@ export default {
   install(Vue: typeof _Vue, options?: any): void {
     Vue.$laya.registerLB("laya-dialog", "BlockDialog", {
       de: "Dialog",
+      en: "Dialog"
     }, {
       new: _create,
+      //@ts-ignore
       view: _view,
       edit: _edit,
     });

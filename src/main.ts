@@ -32,8 +32,10 @@ Vue.use(Storage, { name: "ls", namespace: "vuejs__", storage: "local" });
 
 Vue.config.productionTip = false;
 
+
 new Vue({
   store,
+  //@ts-ignore
   router,
   render: (h) => h(App),
 }).$mount("#app");

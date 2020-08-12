@@ -14,6 +14,7 @@ export default new Router({
     },
     {
       path: "/",
+      //redirect: "/login", experimental starting page
       name: "root-view",
       component: views.root
     },

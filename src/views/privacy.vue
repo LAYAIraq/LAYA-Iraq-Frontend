@@ -5,7 +5,7 @@
       <div class="row">
         <div class="col">
 
-          <h1><b>Datenschutzbestimmungen</b></h1>
+          <h1><b>{{ i18n.title }}</b></h1>
 
           <div style="height: 1rem"></div>
 
@@ -170,10 +170,16 @@
 </template>
 
 <script>
+import * as i18n from "@/i18n/privacy";
 export default {
   name: 'privacy-view',
   mounted () {
     window.scroll(0, 0)
+  },
+  computed: {
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
+    }
   }
 }
 </script>

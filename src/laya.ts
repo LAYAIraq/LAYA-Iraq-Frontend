@@ -1,6 +1,25 @@
 import _Vue from "vue";
 import { VueConstructor } from "vue";
 
+// copied from laya.d.ts
+// 2. Specify a file with the types you want to augment
+//    Vue has the constructor type in types/vue.d.ts
+declare module "vue/types/vue" {
+  // 3. Declare augmentation for Vue
+  interface Vue {
+    $laya: Laya;
+  }
+}
+
+declare module "vue/types/vue" {
+  // Global properties can be declared
+  // on the `VueConstructor` interface
+  interface VueConstructor {
+    $laya: Laya;
+  }
+}
+
+
 /** this class takes care of laya specific frontend (Vue) concerns
  *   i.e. it implements the $laya behaviour
  */
@@ -74,6 +93,7 @@ export class Laya {
 export default {
   install(Vue: typeof _Vue, options?: any): void {
     const $laya = new Laya(Vue);
+    //@ts-ignore
     Vue.$laya = $laya; // important to make $laya available to other plugins.
     Vue.prototype.$laya = $laya;
 

@@ -6,17 +6,17 @@
       <div class="row">
         <div class="col">
           <h3 v-show="filtered.length === 0" class="text-center text-muted">
-            Keine Kurse gefunden
+            {{ i18n.noCourses }}
           </h3>
         </div>
       </div>
 
       <div class="row header" v-if="filtered.length > 0">
         <div class="col">
-          <h4>Name</h4>
+          <h4>{{ i18n.name }}</h4>
         </div>
         <div class="col">
-          <h4>Kategorie</h4>
+          <h4>{{ i18n.category }}</h4>
         </div>
         <div class="col-3">
         </div>
@@ -39,7 +39,7 @@
             :to="'/courses/'+course.name+'/1'"
             class="text-dark px-2 py-1 d-inline-block text-center"
             style="border: 2px solid black">
-            Start <i class="fas fa-arrow-right"></i>
+            {{ i18n.start }} <i class="fas fa-arrow-right"></i>
           </router-link>
         </div>
       </div>
@@ -49,6 +49,8 @@
 </template>
 
 <script>
+import * as i18n from "@/i18n/course-list";
+
 export default {
   name: "laya-course-list",
   data() {
@@ -65,6 +67,9 @@ export default {
 
       const filterByCourseName = new RegExp(this.filter, "i");
       return this.courses.filter(course => filterByCourseName.test(course.name))
+    },
+    i18n: function() {
+      return i18n[this.$store.state.profile.lang];
     }
   },
   methods: {

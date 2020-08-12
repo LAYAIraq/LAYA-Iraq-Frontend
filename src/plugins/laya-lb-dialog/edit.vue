@@ -1,19 +1,19 @@
 <template>
   <div class="laya-lb-dialog-edit">
 
-    <h4>Dialog mit Sprungmarken</h4>
+    <h4>{{ i18n.title }}</h4>
     <hr>
     <form>
 
       <div class="form-group row">
         <label for="smcs-question" class="col-2 col-form-label">
-          Frage / Aufgabe
+          {{ i18n.task }}
         </label>
         <div class="col-10">
           <textarea id="scms-question"
                     v-model="question"
                     class="w-100"
-                    placeholder="Optional">
+                    :placeholder="i18n.optional">
           </textarea>
         </div>
       </div>
@@ -21,22 +21,22 @@
       <div class="form-group row">
         <label for="dialog-bg" class="col-2 col-form-label"
           style="word-wrap: anywhere">
-          Hintergrundbild URL
+          {{ i18n.bgURL }}
         </label>
         <div class="col-10">
           <input id="dialog-bg"
                  type="text"
                  class="form-control"
                  v-model="bg"
-                 placeholder="z.B. https://www.laya.de/bild.jpg">
+                 :placeholder="i18n.bgPlaceholder">
         </div>
       </div>
 
-      <p><b>Antworten</b></p>
+      <p><b>{{ i18n.answers }}</b></p>
       <div class="form-group row" v-for="(it, i) in answers" :key="'answer-'+i">
 
         <!-- text -->
-        <label class="col-form-label col-2" :for="'answer-text-'+i">Text</label>
+        <label class="col-form-label col-2" :for="'answer-text-'+i">{{ i18n.text }}</label>
         <div class="col-5">
           <textarea :id="'answer-text-'+i"
             class="form-control"
@@ -58,7 +58,7 @@
       <button type="button"
               class="btn btn-primary btn-sm"
               @click="_addItem">
-        <i class="fas fa-plus"></i> Antwort hinzufügen
+        <i class="fas fa-plus"></i>{{ i18n.addAnswer }}
       </button>
 
     </form>
@@ -67,6 +67,8 @@
 </template>
 
 <script>
+import * as i18n from "@/i18n/plugins/laya-lb-dialog"
+
 export default {
   name: "laya-lb-dialog-edit",
   data() {
@@ -86,6 +88,11 @@ export default {
       this.answers.push("")
     },
   },
+  computed: {
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
+    }
+  }
 }
 </script>
 

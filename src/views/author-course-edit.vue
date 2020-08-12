@@ -14,12 +14,12 @@
 
           <b-button variant="primary" block
                     :to="{name: 'new-learning-block', params: {id: course.name}}">
-            <i class="fas fa-puzzle-piece"></i> Lernbaustein hinzufügen
+            <i class="fas fa-puzzle-piece"></i> {{ i18n.addBlock }}
           </b-button>
 
           <b-button variant="primary" block
                     :to="{name: 'new-learning-assessment', params: {id: course.name}}">
-            <i class="fas fa-pencil-alt"></i> Lernüberprüfung hinzufügen
+            <i class="fas fa-pencil-alt"></i> {{ i18n.addAssessment }}
           </b-button>
 
         </div>
@@ -28,7 +28,7 @@
           <b-button block
                     variant="primary"
                     :to="{name: 'edit-course-nav-view', params: {id: course.name}}">
-            <i class="fas fa-project-diagram"></i> Kursführung bearbeiten
+            <i class="fas fa-project-diagram"></i> {{ i18n.editCourseNav }}
           </b-button>
 
         </div>

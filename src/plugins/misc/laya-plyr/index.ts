@@ -8,6 +8,7 @@ export default {
   install(Vue: typeof _Vue, options?: any): void {
     Vue.$laya.registerLB("laya-plyr", "BlockPlyr", {
       de: "Video (über Plyr-Player)",
+      en: "Video (via Plyr)"
     }, {
       new: _create,
       view: _edit,

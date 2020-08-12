@@ -4,26 +4,26 @@
       <div class="row">
         <div class="col-9 col-lg-9">
           <!-- socials row -->
-          <div class="row no-gutters">
+         <div class="row no-gutters">
             <!-- social media links -->
             <div class="col" style="padding-bottom: 1rem">
               <a
-                href="https://www.facebook.com/KOPFHANDundFUSS"
+                href="#"
                 target="_blank"
                 class="social-link"
               >
                 <img src="../assets/facebook.svg" alt="Facebook Link">
               </a>
-              <a href="https://twitter.com/khuf_berlin" target="_blank" class="social-link">
+              <a href="#" target="_blank" class="social-link">
                 <img src="../assets/twitter.svg" alt="Twitter Link">
               </a>
-              <a href="mailto:info@kopfhandundfuss.de" target="_blank" class="social-link">
+              <a href="mailto:yesil.diren@uni-vechta.de" target="_blank" class="social-link">
                 <img src="../assets/email.svg" alt="Email">
               </a>
-              <a href="https://vimeo.com/khuf" target="_blank" class="social-link">
+              <a href="#" target="_blank" class="social-link">
                 <img src="../assets/vimeo.svg" alt="Vimeo Link">
               </a>
-              <a href="http://www.kopfhandundfuss.de/mitmachen" target="_blank" class="social-link">
+              <a href="#" target="_blank" class="social-link">
                 <i class="fas fa-heart" style="color: red"></i>
               </a>
             </div>
@@ -55,10 +55,10 @@
 
         <!-- partner logo -->
         <div class="col-3 col-lg-3">
-          <a href="http://www.wayin-inklusion.de/inclusion-journey" target="_blank">
+          <a href="#">
             <img
-              src="../assets/wayin-logo.png"
-              alt="WayIn - der Inklusionswegweiser für Arbeitgeber"
+              src="../assets/logo.svg"
+              alt=""
               class="w-100"
             >
           </a>

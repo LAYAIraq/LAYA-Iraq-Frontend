@@ -16,7 +16,7 @@
     <button type="button"
             class="btn btn-primary mt-3 d-block ml-auto"
             @click="onFinish[0]() || {}">
-      Nächster Inhalt <i class="fas fa-arrow-right"></i>
+      {{ i18n.nextContent }}<i class="fas fa-arrow-right"></i>
     </button>
 
 
@@ -25,6 +25,7 @@
 
 <script>
 import "ableplayer"
+import * as i18n from "@/i18n/plugins/misc/laya-ableplayer"
 
 export default {
   name: "laya-ableplayer",
@@ -48,6 +49,9 @@ export default {
     },
     lang: function() {
       return "de"
+    },
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
     }
   },
   methods: {

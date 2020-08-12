@@ -6,28 +6,18 @@
       <div class="row title">
         <div class="col">
 
-          <h4>Inhaltsliste</h4>
+          <h4>{{ i18n.title }}</h4>
           <p>
-            In der unten stehenden Tabelle siehst Du die von Dir erstellten
-            Inhalte. Du musst <u>jedem</u> Inhalt ( also jeder Zeile )
-            einen oder mehrere Folge-Inhalte zuordnen. Schreibe diese
-            Folge-Inhalte, ersetzt durch ihre Nummer ( siehe erste Spalte ),
-            in das Textfeld. So wird Reihenfolge der Anzeige der erstellten
-            Inhalte festgelegt.
+            {{ i18n.text.p1pt1 }}<u>{{ i18n.text.p1pt2 }}</u>{{ i18n.text.p1pt3 }}
           </p>
           <p>
-            Wenn Du z.B. dem <b>1</b>. Inhalt den <b>4</b>. folgen lassen
-            willst, schreibst Du in die <b>1</b>. Zeile, dritte Spalte eine
-            <b>4</b>
+            {{ i18n.text.p2pt1 }}<b>1</b>{{ i18n.text.p2pt2 }}<b>4</b>
+            {{ i18n.text.p2pt3 }}<b>1</b>{{ i18n.text.p2pt4 }}<b>4</b>.
           </p>
           <p>
-            Beachte das Dialoge normalerweise zu verschiedenen Inhalten,
-            abhängig von der gewählten Antwort, führen. Schreibe in diesem Fall
-            die Nummern (plural) dieser Folge-Inhalte in Reihenfolge der Dialog-Antworten
-            durch Kommas getrennt in das Textfeld:
-            <br> z.B. bedeutet <b class="bg-light rounded py-1 px-2">3, 4</b>
-            das die erste Antwort zum <b>3</b>. Inhalt und die zweite
-            Antwort zum <b>4</b>. Inhalt führt.
+            {{ i18n.text.p3pt1 }}
+            <br>{{ i18n.text.p3pt2 }}<b class="bg-light rounded py-1 px-2">3, 4</b>
+            {{ i18n.text.p3pt3 }}<b>3</b>{{ i18n.text.p3pt4 }}<b>4</b>{{ i18n.text.p3pt5 }}
           </p>
 
         </div>
@@ -39,19 +29,19 @@
       <div class="row">
 
         <div class="col-2">
-          <b>Inhalt-Nr.</b>
+          <b>{{ i18n.table.contentNo }}</b>
         </div>
 
         <div class="col">
-          <b>Art des Inhalts</b>
+          <b>{{ i18n.table.contentType }}</b>
         </div>
 
         <div class="col-3">
-          <b>Folge-Inhalt-Nr.</b>
+          <b>{{ i18n.table.succContent }}</b>
         </div>
 
         <div class="col-2">
-          <b>Tauschen</b>
+          <b>{{ i18n.table.swap }}</b>
         </div>
 
       </div>
@@ -71,7 +61,7 @@
                  :class="{'is-invalid': !step.nextStep}"
                  type="text"
                  v-model="step.nextStep"
-                 placeholder="z.B. 1,2">
+                 :placeholder="i18n.table.placeholder">
         </div>
 
         <div class="col-2">
@@ -102,7 +92,7 @@
                   :disabled="formInvalid"
                   @click="renderNavGraph">
             <i class="fas fa-project-diagram"></i>
-            Grafische Vorschau erneuen
+            {{ i18n.table.renewGraph }}
           </button>
         </div>
 
@@ -113,9 +103,9 @@
                   :disabled="formInvalid"
                   @click="save">
             <span v-if="formInvalid">
-              <i class="fas fa-exclamation-triangle"></i> Bitte fülle alle Felder aus!
+              <i class="fas fa-exclamation-triangle"></i> {{ i18n.table.missingInfo }}
             </span>
-            <span v-else><i class="fas fa-check"></i> Speichern</span>
+            <span v-else><i class="fas fa-check"></i> {{ i18n.table.save }}</span>
           </button>
         </div>
 
@@ -127,9 +117,9 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          Grafische Vorschau:
+          {{ i18n.graph }}
           <span class="text-muted">
-            ( Du kannst die Grafik beliebig oft erneuern )
+            {{ i18n.graphTip }}
           </span>
           <div :id="navGraphId" class="nav-graph"></div>
         </div>
@@ -142,8 +132,9 @@
 
 <script>
 import vis from "vis-network"
+import * as i18n from "@/i18n/course-nav-edit"
 
-import BSpinner from "bootstrap-vue"
+//import BSpinner from "bootstrap-vue"
 
 export default {
   name: "edit-course-nav-view",
@@ -174,6 +165,9 @@ export default {
     },
     navGraphId() {
       return "nav-graph"
+    },
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
     }
   },
   methods: {
@@ -191,7 +185,10 @@ export default {
     },
 
     typeName(compName) {
-      return {...this.$laya.la, ...this.$laya.lb}[compName].i18n.de
+      let lang = this.$store.state.profile.lang
+      if ({...this.$laya.la, ...this.$laya.lb}[compName].i18n.hasOwnProperty(lang))
+        return {...this.$laya.la, ...this.$laya.lb}[compName].i18n[lang]
+      else return {...this.$laya.la, ...this.$laya.lb}[compName].i18n.de
     },
 
     renderNavGraph() {
@@ -248,9 +245,9 @@ export default {
       this.onnavupdate(this.content)
     }
   },
-  components: {
-    BSpinner
-  }
+  /*components: {
+   // BSpinner
+  }*/
 }
 </script>
 

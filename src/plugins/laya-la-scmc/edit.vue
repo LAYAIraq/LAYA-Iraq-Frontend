@@ -1,7 +1,7 @@
 <template>
   <div class="laya-la-scms-edit ly-bg-author p-3">
 
-    <h4>Single Choice / Multiple Choice</h4>
+    <h4>{{ i18n.edit.scmc }}</h4>
     <hr>
     <form>
 
@@ -15,7 +15,7 @@
                    type="radio"
                    :value="false"
                    v-model="multiple">
-            <label for="scms-sc" class="form-check-label">Single Choice</label>
+            <label for="scms-sc" class="form-check-label">{{ i18n.edit.sc }}</label>
           </div>
           <div class="form-check form-check-inline align-text-top">
             <input id="scms-mc"
@@ -24,19 +24,20 @@
                    name="multiple"
                    :value="true"
                    v-model="multiple">
-            <label for="scms-mc" class="form-check-label">Multiple Choice</label>
+            <label for="scms-mc" class="form-check-label">{{ i18n.edit.mc }}</label>
           </div>
         </div>
       </div>
 
       <!-- title -->
       <div class="form-group row">
-        <label for="scms-title" class="col-2 col-form-label">Titel</label>
+        <label for="scms-title" class="col-2 col-form-label">{{ i18n.edit.title }}</label>
         <div class="col-10">
           <input id="scms-title"
                  type="text"
                  v-model="title"
-                 class="form-control">
+                 class="form-control"
+                 :placeholder="i18n.edit.titlePlaceholder">
         </div>
       </div>
 
@@ -44,12 +45,13 @@
       <!-- task -->
       <div class="form-group row">
         <label for="smcs-task" class="col-2 col-form-label">
-          Frage / Aufgabe
+          {{ i18n.edit.task }}
         </label>
         <div class="col-10">
           <textarea id="scms-task"
                     v-model="task"
-                    class="w-100">
+                    class="w-100"
+                    :placeholder="i18n.edit.taskPlaceholder">
           </textarea>
         </div>
       </div>
@@ -57,22 +59,22 @@
       <!-- task audio -->
       <div class="form-group row">
         <label for="smcs-task-audio" class="col-2 col-form-label">
-          Offstimme
+          {{ i18n.edit.taskAudio }}
         </label>
         <div class="col-10">
           <input id="scms-task-audio"
                  type="text"
                  v-model="taskAudio"
                  class="form-control"
-                 placeholder="z.B. https://www.laya.de/offstimme.mp3">
+                 :placeholder="i18n.edit.taskAudioPlaceholder">
         </div>
       </div>
 
-      <p><b>Items</b></p>
+      <p><b>{{ i18n.edit.items }}</b></p>
       <div class="form-group row" v-for="(option, i) in options" :key="'item-'+i">
 
         <!-- caption -->
-        <label class="col-form-label col-2" :for="'option-text-'+i">Text</label>
+        <label class="col-form-label col-2" :for="'option-text-'+i">{{ i18n.edit.text }}</label>
         <div class="col-7">
           <input :id="'option-text-'+i"
             class="form-control"
@@ -88,7 +90,7 @@
             :true-value="i"
             v-model="solutions[i]">
           <label class="form-check-label" :for="'option-corr-'+i">
-            richtig ?
+            {{ i18n.edit.correct }}
           </label>
         </div>
 
@@ -105,7 +107,7 @@
       <button type="button"
               class="btn btn-primary btn-sm"
               @click="_addItem">
-        <i class="fas fa-plus"></i> Item hinzufügen
+        <i class="fas fa-plus"></i>{{ i18n.edit.itemAdd }}
       </button>
 
     </form>
@@ -114,18 +116,21 @@
 </template>
 
 <script>
+import * as i18n from "@/i18n/plugins/laya-la-scmc"
+
 export default {
   name: 'laya-la-scmc-edit',
   created () {
+    if (this.options.length == 0) this.options.push(this.i18n.edit.sampleOption)
   },
   data () {
     if(Object.entries(this.$attrs).length > 0)
       return {...this.$attrs}
     return {
-      title: "::Übung 1::",
-      task: "::Aufgabe::",
+      title: "",
+      task: "",
       taskAudio: "",
-      options: ["Antwort 1"],
+      options: [],
       solutions: [],
       maxTries: 1,
       multiple: false,
@@ -134,6 +139,9 @@ export default {
   props: {
   },
   computed: {
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
+    }
   },
   methods: {
     _delItem(idx) {

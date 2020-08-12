@@ -32,8 +32,7 @@
                   :disabled="freeze"
                   class="custom-select">
                   <option disabled>{{default_option}}</option>
-                  <option v-for="opt in options"
-                          :disabled="solution.includes(opt)">
+                  <option v-for="opt in options" :key="opt" :disabled="solution.includes(opt)">
                   {{opt}}
                   </option>
                 </select>
@@ -43,7 +42,7 @@
               </div>
             </div>
           </form>
-
+          
         </div>
       </div>
 
@@ -55,11 +54,11 @@
         -->
         <button type="button" class="btn btn-link" @click="check" 
           :disabled="freeze">
-          Lösung ergänzen
+          {{ i18n.addSolution }}
         </button>
           
         <button type="button" class="btn btn-primary ml-auto" @click="done">
-          Nächster Inhalt <i class="fas fa-arrow-right"></i>
+          {{ i18n.nextContent }}<i class="fas fa-arrow-right"></i>
         </button>
       </div>
 
@@ -68,15 +67,18 @@
 </template>
 
 <script>
-const default_option = "Wähle aus"
+
+import * as i18n from "@/i18n/plugins/laya-la-relate"
+
 export default {
   name: "laya-quiz-relate",
   created () {
+    this.default_option = this.i18n.defaultOption
     this.reset()
   },
   data () {
     return {
-      default_option,
+      default_option: "",
       solution: [],
       eval: [],
       freeze: false
@@ -90,6 +92,9 @@ export default {
     onFinish: Array
   },
   computed: {
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
+    },
     uid: function() {
       return Date.now()
     },

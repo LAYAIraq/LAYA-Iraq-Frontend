@@ -8,6 +8,7 @@ export default {
   install(Vue: typeof _Vue, options?: any): void {
     Vue.$laya.registerLA("laya-quiz-sort", "AssessmentSort", {
       de: "Sortieren",
+      en: "Sort"
     }, {
       new: _create,
       view: _edit,
