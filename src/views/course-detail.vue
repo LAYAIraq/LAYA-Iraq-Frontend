@@ -22,7 +22,7 @@
              :cancel-title="i18n.bModal.cancel"
              @ok="delCourse"
              centered>
-      <p>{{ i18n.bModal.delCourse.text }}</p>
+      <p v-html="i18n.bModal.delCourse.text"></p>
     </b-modal>
 
     <!-- course rename modal -->
@@ -181,8 +181,7 @@
           </div>
 
           <div class="col text-dark">
-            {{ i18n.authTools.editContentTip1 }} <b>{{step}}</b> 
-            {{ i18n.authTools.editContentTip2 }}
+            {{ i18n.authTools.editContentTip.replace("{step}", this.step) }}
           </div>
         </div>
 
@@ -195,9 +194,7 @@
             </b-button>
           </div>
 
-          <div class="col text-dark">
-            {{ i18n.authTools.changeTypeTip1 }}
-            <u>{{ i18n.authTools.changeTypeTip2 }}</u> {{ i18n.authTools.changeTypeTip3 }}
+          <div class="col text-dark" v-html="i18n.authTools.changeTypeTip">
           </div>
         </div>
 
@@ -251,8 +248,7 @@
                   style="padding: 2px 5px">
               <i class="fas fa-exclamation-triangle"></i> {{ i18n.authTools.editNavIncomplete }}
             </span>
-            {{ i18n.authTools.editNavTip1 }}
-            {{course.content.length}} {{ i18n.authTools.editNavTip2 }}
+            {{ i18n.authTools.editNavTip.replace("{steps}", course.content.length ) }}
           </div>
         </div>
 
@@ -311,8 +307,8 @@
             </b-button>
           </div>
 
-          <div class="col text-dark">
-            {{ i18n.authTools.deleteCourseTip1 }} <u>{{ i18n.authTools.deleteCourseTip2 }}</u> {{ i18n.authTools.deleteCourseTip3 }} 
+          <div class="col text-dark" v-html="i18n.authTools.deleteCourseTip">
+            
           </div>
         </div>
 
@@ -331,14 +327,17 @@ import {
   BDropdownItem,
   BDropdownHeader,
   BDropdownDivider,
-  BToast, BvToast,
-  BModal, BvModal
+  BToast, 
+  //BvToast,
+  BModal, 
+  //BvModal
 } from "bootstrap-vue"
 
 import http from "axios";
 import * as i18n from "@/i18n/course-detail";
 import utils from "@/misc/utils.js";
 import lyScrollToTop from "@/components/scroll-to-top.vue"
+import VueI18n from "vue-i18n"
 
 export default {
   name: "course-detail-view",
@@ -385,15 +384,15 @@ export default {
     ...mapGetters(["isAuthor"]),
 
     /* returns empty function on every [] invocation */
-    onFinishDummy: function() {
+    onFinishDummy() {
       return new Proxy({}, {
-        get: function(target, name) {
-          return function(){}
+        get(target, name) {
+          return ()=>{}
         }
       })
     },
 
-    plugins: function() {
+    plugins() {
       const la = this.$laya.la
       const lb = this.$laya.lb
       let lalb = [{value: null, text: this.i18n.changeTypeText, disabled: true}]
@@ -416,13 +415,13 @@ export default {
   },
   methods: {
     ...utils,
-
-    compView: function(name) {
+    
+    compView(name) {
       const la = this.$laya.la[name]
       return la ? la.components.view : this.$laya.lb[name].components.view
     },
 
-    content: function() {
+    content() {
       return this.course.content[this.step-1]
     },
 
@@ -440,7 +439,7 @@ export default {
       return null
     },
 
-     saveFeedback: function(feedback) {
+     saveFeedback(feedback) {
       var cfb = this.course.feedback
       for (var i in cfb) {
         if(cfb[i].fid === feedback.fid) {
@@ -452,7 +451,7 @@ export default {
       this.storeFeedback()
     },
 
-    updateFeedback: function(updatedFeedback, index) {
+    updateFeedback(updatedFeedback, index) {
       this.course.feedback[index] = {
         ...this.course.feedback[index], ...updatedFeedback
       }
@@ -460,7 +459,7 @@ export default {
       this.storeFeedback()
     },
 
-    updateStep: function(changedStep) {
+    updateStep(changedStep) {
       this.course.content[this.step-1] = {
         ...this.course.content[this.step-1], ...changedStep
       }
@@ -468,38 +467,36 @@ export default {
       this.$forceUpdate()
     },
 
-    updateContent: function(changedContent) {
+    updateContent(changedContent) {
       this.course.content = [...changedContent]
       this.storeCourse()
       this.$forceUpdate()
     },
 
-    delContent: function() {
+    delContent() {
       this.course.content.splice(this.step-1, 1) 
       this.storeCourse()
     },
 
     delCourse() {
-      const self = this
-      http.delete(`courses/${self.name}`)
+      http.delete(`courses/${this.name}`)
         .then(function() {
-          self.$router.push("/courses")
+          this.$router.push("/courses")
         })
         .catch(err => console.error("Failed to delete course:", err))
     },
 
     copyCourse() {
-      const self = this
-      if(!self.copy) return
-      console.log("new copy", self.copy)
-      http.head(`courses/${self.copy}`)
+      if(!this.copy) return
+      console.log("new copy", this.copy)
+      http.head(`courses/${this.copy}`)
         .catch(function() {
           // course name does not exist
-          let copied_course = {...self.course}
-          copied_course.name = self.copy
+          let copied_course = {...this.course}
+          copied_course.name = this.copy
           http.post(`courses`, copied_course)
             .catch(err => console.error("Failed course copy:", err))
-            .finally(() => self.$bvToast.show("author-toast"))
+            .finally(() => this.$bvToast.show("author-toast"))
         })
         .then(function() {
           // course name already exists
@@ -507,18 +504,17 @@ export default {
     },
 
     renameCourse() {
-      const self = this
-      if(!self.rename) return
-      console.log("new name", self.rename)
-      http.delete(`courses/${self.name}`)
+      if(!this.rename) return
+      console.log("new name", this.rename)
+      http.delete(`courses/${this.name}`)
         .then(function() {
-          let renamed_course = {...self.course}
-          renamed_course.name = self.rename
+          let renamed_course = {...this.course}
+          renamed_course.name = this.rename
           http.post(`courses`, renamed_course)
             .catch(err => console.error("Failed course rename:", err))
             .finally(() => {
-              self.$bvToast.show("author-toast")
-              self.$router.push("/courses")
+              this.$bvToast.show("author-toast")
+              this.$router.push("/courses")
             })
         })
         .catch(function() {
@@ -526,31 +522,28 @@ export default {
     },
 
     changeContentType() {
-      const self = this
-      if(!self.changetype) return
+      if(!this.changetype) return
       console.log("Change type")
-      self.updateStep({name: self.changetype, input: null})
+      this.updateStep({name: this.changetype, input: null})
     },
 
     storeCourse() {
-      const self = this
-      http.patch(`courses/${self.name}`, {content: self.course.content})
+      http.patch(`courses/${this.name}`, {content: this.course.content})
         .catch(err => console.error("Failed storing course content:", err))
         .finally(function() {
-          self.$bvToast.show("author-toast")
+          this.$bvToast.show("author-toast")
         })
     },
 
     storeFeedback() {
-      const self = this
-      http.patch(`courses/${self.name}`, {feedback: self.course.feedback})
+      http.patch(`courses/${this.name}`, {feedback: this.course.feedback})
         .catch(err => console.error("Failed storing course feedback:", err))
         .finally(function() {
-          //self.$bvToast.show("author-toast")
+          //this.$bvToast.show("author-toast")
         })
     },
 
-    courseNavIncomplete: function() {
+    courseNavIncomplete() {
       return this.course.content.reduce((all, c) => (!c.nextStep || all), false)
     },
 
@@ -577,7 +570,7 @@ export default {
 
     /*
     
-    subscribe: function() {
+    subscribe() {
       const ctx = this;
       http
         .put(`accounts/${ctx.auth.userId}/mycourses/rel/${ctx.course.name}`)
@@ -588,7 +581,7 @@ export default {
         .catch(err => console.error(err));
     },
 
-    unsubscribe: function() {
+    unsubscribe() {
       const ctx = this;
       ctx.$store.commit("setBusy", true);
       http
@@ -629,9 +622,9 @@ export default {
     BDropdownHeader,
     BDropdownDivider,
     BToast, 
-    BvToast,
+    //BvToast,
     BModal, 
-    BvModal,
+    //BvModal,
     lyScrollToTop
   }
 };

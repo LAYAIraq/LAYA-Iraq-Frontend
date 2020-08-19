@@ -2,7 +2,7 @@
   <div class="ly-stepper" :id="id">
 
     <div class="status text-center p-1 d-none">
-      {{ i18n.step }}{{step}}{{ i18n.of }}{{components.length}}
+      {{ stepOfSteps }}
     </div>
 
     <div class="content">
@@ -34,7 +34,8 @@
 
 <script lang="ts">
 import Vue from "vue"
-import * as i18n from "../../../i18n/plugins/misc/laya-stepper"
+import * as messages from "../../../i18n/plugins/misc/laya-stepper"
+import VueI18n from "vue-cli-plugin-i18n"
 
 export default Vue.extend({
   name: 'laya-stepper',
@@ -56,10 +57,16 @@ export default Vue.extend({
       return [this.components[this.step-1]]
     },
     i18n() {
-      return i18n[this.$store.state.profile.lang]
+      return messages[this.$store.state.profile.lang]
     }
   },
   methods: {
+    stepOfSteps() {
+      let str = this.i18n.step
+      str.replace("{step}", this.step)
+      str.replace("{steps}", this.components.length)
+      return str
+    },
     next() {
       this.step = (this.step === this.components.length) ? this.step : this.step+1
       this.$forceUpdate()

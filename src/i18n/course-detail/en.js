@@ -9,7 +9,7 @@ export default {
         delCourse: {
             ok: 'Delete',
             title: 'Delete Course',
-            text: 'Are you sure that you want to delete the \u003c u\u003e entire\u003c/u\u003e course?'
+            text: 'Are you sure that you want to delete the <u>entire</u> course?'
         },
         renameCourse: {
             ok: 'Rename',
@@ -41,24 +41,18 @@ export default {
     },
     authTools: {
         changeType: 'Change Content Type',
-        changeTypeTip1: 'You can change the type of this content permanently.',
-        changeTypeTip2: 'Beware:',
-        changeTypeTip3: ' All data input will be lost.',
+        changeTypeTip: 'You can change the type of this content permanently. <u>Beware:</u> All data input will be lost.',
         copyCourse: 'Copy Course',
         copyCourseTip: 'Duplicate this course with a new name.',
         deleteContent: 'Delete Content',
         deleteContentTip: 'This content will be deleted.',
         deleteCourse: 'Delete Course',
-        deleteCourseTip1: 'The ',
-        deleteCourseTip2: 'entire course',
-        deleteCourseTip3: ' will be deleted.',
+        deleteCourseTip: 'The  <u>entire</u> course will be deleted.',
         editContent: 'Edit Content',
-        editContentTip1: 'You can modify the displayed content ( #',
-        editContentTip2: ' ).',
+        editContentTip: 'You can modify the displayed content ( #{step} ).',
         editNav: 'Edit Course Navigation',
         editNavIncomplete: 'Incomplete',
-        editNavTip1: 'You can edit the course nagivation. Altogether, the course has ',
-        editNavTip2: ' different content blocks.',
+        editNavTip: 'You can edit the course nagivation. Altogether, the course has {steps} different content blocks.',
         newContent: 'Add New Content',
         newContentBlock: 'Learning Blocks',
         newContentAssmnt: 'Learning Assessments',

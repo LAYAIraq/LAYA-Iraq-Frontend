@@ -1,6 +1,5 @@
 export default {
-    step: 'Step ',
-    of: ' of ',
+    step: 'Step {step} of {steps}',
     noComps: 'No components given',
     back: 'Back',
     skipChap: 'Skip Chapter',

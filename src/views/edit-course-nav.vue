@@ -7,17 +7,11 @@
         <div class="col">
 
           <h4>{{ i18n.title }}</h4>
-          <p>
-            {{ i18n.text.p1pt1 }}<u>{{ i18n.text.p1pt2 }}</u>{{ i18n.text.p1pt3 }}
+          <p v-html="i18n.text.p1">
           </p>
-          <p>
-            {{ i18n.text.p2pt1 }}<b>1</b>{{ i18n.text.p2pt2 }}<b>4</b>
-            {{ i18n.text.p2pt3 }}<b>1</b>{{ i18n.text.p2pt4 }}<b>4</b>.
+          <p v-html="i18n.text.p2">
           </p>
-          <p>
-            {{ i18n.text.p3pt1 }}
-            <br>{{ i18n.text.p3pt2 }}<b class="bg-light rounded py-1 px-2">3, 4</b>
-            {{ i18n.text.p3pt3 }}<b>3</b>{{ i18n.text.p3pt4 }}<b>4</b>{{ i18n.text.p3pt5 }}
+          <p v-html="i18n.text.p3">
           </p>
 
         </div>

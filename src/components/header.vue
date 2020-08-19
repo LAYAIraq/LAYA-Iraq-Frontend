@@ -86,11 +86,12 @@ export default {
     /*
      * get browser locale */
     http.get('lang')
-      .then(function ({data}) {
-        store.commit('setLang', data)
+      .then(({data}) => {
+        var lang = data.substring(0, data.indexOf('-'))
+        store.commit('setLang', lang)
       })
-      .catch(function () {
-        store.commit('setLang', { lang: de })
+      .catch(() => {
+        store.commit('setLang', 'de')
       })
   },
   methods: {
@@ -101,14 +102,17 @@ export default {
       this.isCourse = /courses[/]./.test(location.hash)
       this.$forceUpdate()
     },
-    setLang (lang) {
-      const data = {
-        spr: lang,
-        uid: this.$store.state.auth.userId,
-        email: this.$store.state.profile.email
+    setLang (newlang) {
+      if(!this.auth.online) this.$store.commit('setLang', newlang)
+      else {
+        const data = {
+          lang: newlang,
+          uid: this.$store.state.auth.userId,
+          //email: this.$store.state.profile.email
+        }
+        this.$store.commit('setUserLang', data)
+        this.$forceUpdate()
       }
-      this.$store.commit('setLang', data)
-      this.$forceUpdate()
     },
     logout () {
       this.$ls.remove('auth')
@@ -118,9 +122,6 @@ export default {
   },
   components: {
     lyScrollToTop
-  },
-  beforeUpdate () {
-    console.log(this.$store.state.auth.userId)
   }
 }
 </script>
@@ -128,6 +129,10 @@ export default {
 <style scoped>
 *:focus {
   outline: 2px dashed deepskyblue;
+}
+
+#rtl {
+  flex-direction: row-reverse !important;
 }
 
 .navbar-brand {
