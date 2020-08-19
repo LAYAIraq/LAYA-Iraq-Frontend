@@ -1,5 +1,5 @@
 import http from "axios";
-import { ids as supportedLangs } from "@/misc/langs.js";
+import { ids as supportedLangs } from "../../misc/langs.js";
 
 export default {
   state: {
@@ -17,21 +17,14 @@ export default {
     avatar: "",
   },
   mutations: {
-    setLang(state, data) {
-      let lang = data.spr
-      let uid = data.uid
-      let email = data.email
-      console.log(`Changing language to ${lang} at ${uid} ...`)
-      if (supportedLangs.includes(lang)) {
-        state.lang = lang
-        const newLang = {
-          lang: state.lang,
-          email: email,
-          password: ' '
-        }
-        console.log(newLang)
-        http.post(`/account/${uid}/change-language`, newLang)
-          .then( (newLang) => console.log(newLang))
+    setLang(state, lang) {
+      state.lang = (supportedLangs.includes(lang)) ? lang : supportedLangs[0];
+    },
+    setUserLang(state, data) { //save language choice in User's profile
+      if (supportedLangs.includes(data.lang)) {
+        state.lang = data.lang
+        http.post(`/accounts/${data.uid}/change-language`, data)
+          .then( (data) => console.log(data))
           .catch((err) => console.error(err))
       }
       else {

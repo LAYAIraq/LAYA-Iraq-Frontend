@@ -9,7 +9,7 @@ export default {
         delCourse: {
             ok: 'Löschen',
             title: 'Kurs löschen',
-            text: 'Bist Du sicher, dass Du den \u003c u\u003e gesamten\u003c/u\u003e Kurs löschen willst?'
+            text: 'Bist Du sicher, dass Du den <u>gesamten</u> Kurs löschen willst?'
         },
         renameCourse: {
             ok: 'Umbenennen',
@@ -41,24 +41,18 @@ export default {
     },
     authTools: {
         changeType: 'Inhalts-Typ ändern',
-        changeTypeTip1: 'Damit kannst Du den Typ des Inhalts permanent ändern.',
-        changeTypeTip2: 'Achtung:',
-        changeTypeTip3: ' Dabei gehen die aktuellen Eingaben verloren.',
+        changeTypeTip: 'Damit kannst Du den Typ des Inhalts permanent ändern. <u>Achtung:</u> Dabei gehen die aktuellen Eingaben verloren.',
         copyCourse: 'Kurs kopieren',
         copyCourseTip: 'Der Kurs wird mit einem neuen Namen dupliziert.',
         deleteContent: 'Inhalt löschen',
         deleteContentTip: 'Der aktuelle Inhalt wird gelöscht.',
         deleteCourse: 'Kurs löschen',
-        deleteCourseTip1: 'Der ',
-        deleteCourseTip2: 'gesamte Kurs',
-        deleteCourseTip3: ' wird gelöscht.',
+        deleteCourseTip: 'Der <u>gesamte Kurs</u> wird gelöscht.',
         editContent: 'Inhalt bearbeiten',
-        editContentTip1: 'Damit kannst Du den oben angezeigten Inhalt ( Nr. ',
-        editContentTip2: ' ) bearbeiten.',
+        editContentTip: 'Damit kannst Du den oben angezeigten Inhalt ( Nr. {step} ) bearbeiten.',
         editNav: 'Kursführung bearbeiten',
         editNavIncomplete: 'Unvollständig',
-        editNavTip1: 'Damit kannst Du die Kursführung bearbeiten. Insgesamt hat der Kurs ',
-        editNavTip2: ' Inhalte.',
+        editNavTip: 'Damit kannst Du die Kursführung bearbeiten. Insgesamt hat der Kurs {steps} Inhalte.',
         newContent: 'Neuen Inhalt hinzufügen',
         newContentBlock: 'Lernbausteine',
         newContentAssmnt: 'Lernüberprüfungen',
