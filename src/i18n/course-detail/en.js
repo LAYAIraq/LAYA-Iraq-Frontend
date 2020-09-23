@@ -27,6 +27,15 @@ export default {
             ok: 'Change Type',
             title: 'Change Content Type',
             text: 'New Type*'
+        },
+        courseStats: {
+            title: 'Course Statistics',
+            users: 'Users',
+            time: 'Average time until completion',
+            flags: 'set flags total',
+            stoppedAt: 'Stopped at ',
+            totalLosses: 'Total Users lost',
+            feedback: 'Average feedback'
         }
     },
     bToast: {
@@ -34,6 +43,7 @@ export default {
         text: 'Successfully Saved!'
     },
     content: 'There is no content yet',
+    noPermit: 'You are not allowed to see this content!',
     toolsNav: {
         overview: 'Go to Author Tools',
         jumpTo: 'Go to Content',
@@ -58,7 +68,9 @@ export default {
         newContentAssmnt: 'Learning Assessments',
         newContentTip: 'You can create a new content block. It will have number ',
         renameCourse: 'Rename Course',
-        renameCourseTip: 'The course will be renamed.'
+        renameCourseTip: 'The course will be renamed.',
+        seeStats: 'See Course Statistics',
+        statsTip: 'See Statistics for the Course, such as number of participants etc.'
     },
     changeTypeText: 'Choose New Type'
 }

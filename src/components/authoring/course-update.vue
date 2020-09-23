@@ -28,6 +28,18 @@
         </div>
       </div>
       <div class="form-group row">
+        <label for="new-course-enrollment" class="col-3 col-form-label">
+          {{ i18n.enrollment }}
+        </label>
+        <div class="col">
+          <input id="new-course-enrollment"
+                 type="checkbox"
+                 class="form-control"
+                 ref="enrollmentRequired"
+                 >
+        </div>
+      </div>
+      <div class="form-group row">
         <div class="col">
           <span class="text-danger form-control-plaintext text-right">
             {{msg}}
@@ -55,7 +67,10 @@ export default {
   data() {
     return {
       msg: "",
-      newCourse: {},
+      newCourse: {
+        name: "",
+        category: ""
+      },
     }
   },
   computed: {
@@ -67,11 +82,17 @@ export default {
 
     i18n () {
       return i18n[this.$store.state.profile.lang];
+    },
+
+    needsEnrollment() {
+      return this.$refs.enrollmentRequired.checked
     }
+
   },
   methods: {
-
+    
     storeNewCourse() {
+      
       const self = this
       const {$store, newCourse, auth} = this;
 
@@ -80,11 +101,12 @@ export default {
         .then(function() {
           self.msg = "Ein Kurs mit diesem Namen existiert bereits"
         }).catch(function() {
-
+          let enrBool = self.needsEnrollment
           /* create course */
           http.post("courses", {
             ...newCourse,
             authorId: auth.userId,
+            needsEnrollment: enrBool
           }).then(function() {
             self.$router.push(`/courses/${newCourse.name}/1`)
           }).catch((err) => {

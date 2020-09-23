@@ -94,9 +94,7 @@ export default {
     let s = this.items.map(i => mid)
     this.choice = [...s]
     
-    this.getFid()
     this.getPreviousFeedback()
-    
   },
   beforeDestroy() {
     //add saving feedback data
@@ -104,12 +102,10 @@ export default {
   },
   data () {
     return {
-      //checked: false,
       choice: [], // users choice as index
       freetext: "",
       answered: false,
-      fid: 0,
-      created: 0
+      step: this.init.fno
     }
   },
   computed: {
@@ -128,44 +124,27 @@ export default {
     onSave: Function
   },
   methods: {
-    getFid() {
-      let uid = this.init.uid
-      let cid = this.init.cid
-      let fno = this.init.fno
-      let slt = this.init.created
-      let now = Date.now()
-      this.created = now
-      this.fid = uid ^ cid ^ fno ^ slt ^ now
-    },
     getPreviousFeedback() {
-      for (let i in this.init.feedback) {
-        let tuid = this.calcUID(this.init.feedback[i])
-        if(tuid === this.init.uid) {
-          //console.log("Previous Feedback loaded!")
+      for (var i of this.init.feedback) {
+        if(i.step === this.step) {
           this.answered = true
-          let tmp = this.init.feedback[i]
+          let tmp = i
           this.freetext = tmp.freetext
           this.choice = tmp.choice
           this.created = tmp.created
-          this.fid = tmp.fid
+          this.step = tmp.step
           return
         } 
       }
-      //console.log("No previous feedback found!")
-    },
-    calcUID(fb) {
-      
-      var tuid = fb.fid ^ fb.created ^ this.init.fno ^ this.init.cid ^ this.init.created
-      //console.log("Calculating UID... UID is " + tuid)
-      return tuid
     },
     done() {
       this.onFinish[0]();
     },
     bundleFeedback() {
+      let now = Date.now()
       const newFeedback = {
-          fid: this.fid,
-          created: this.created,
+          step: this.step,
+          created: Date.now(),
           choice: this.choice,
           freetext: this.freetext,
           options: {

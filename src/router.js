@@ -62,48 +62,16 @@ export default new Router({
           path: "editNav",
           name: "edit-course-nav-view",
           component: views.editCourseNav,
-        },
-
-        // TODO: review
-        {
-          path: "new-learning-block",
-          name: "new-learning-block",
-          component: views.newLearningBlock,
-        },
-        {
-          path: "new-learning-assessment",
-          name: "new-learning-assessment",
-          component: views.newLearningAssessment,
-        },
-        {
-          path: "new-block",
-          name: "new-block",
-          component: views.newLearningBlock
-        },
-        {
-          path: "new-assessment",
-          name: "new-assessment",
-          component: views.newLearningAssessment
-        },
-        {
-          path: "assessment/:type/new",
-          name: "assessment-create",
-          component: views.assessment
-        },
-        {
-          path: "assessment/:type/:assId",
-          name: "assessment-view",
-          component: views.assessment
-        },
+        }
       ]
     },
-    /*
+    
     {
       path: "/mycourses",
       name: "mycourses-view",
       component: views.mycourses
     },
-    */
+    
     {
       path: "/imprint",
       name: "imprint-view",

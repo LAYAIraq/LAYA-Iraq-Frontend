@@ -27,6 +27,15 @@ export default {
             ok: 'Typ ändern',
             title: 'Inhalts-Typ ändern',
             text: 'Neuer Typ*'
+        },
+        courseStats: {
+            title: 'Kursstatistiken',
+            users: 'Nutzer*innen',
+            time: 'Durchschnittliche Zeit bis Abschluss',
+            flags: 'gesetzte Fähnchen total',
+            stoppedAt: 'Ausstiege bei ',
+            totalLosses: 'Ausstiege gesamt',
+            feedback: 'Durchschnittliches Feedback'
         }
     },
     bToast: {
@@ -34,6 +43,7 @@ export default {
         text: 'Speichern erfolgreich!'
     },
     content: 'Dieser Inhalt ist noch leer',
+    noPermit: 'Sie sind nicht berechtigt, diesen Inhalt zu betrachten!',
     toolsNav: {
         overview: 'Zur Autor-Tools Übersicht',
         jumpTo: 'Zum Inhalt springen',
@@ -58,7 +68,9 @@ export default {
         newContentAssmnt: 'Lernüberprüfungen',
         newContentTip: 'Damit kannst Du einen neuen Inhalt erstellen. Er erhält die Nummer ',
         renameCourse: 'Kurs umbenennen',
-        renameCourseTip: 'Der Kurs wird umbenannt.'
+        renameCourseTip: 'Der Kurs wird umbenannt.',
+        seeStats: 'Kursstatistiken ansehen',
+        statsTip: 'Statistiken zum Kurs anzeigen, wie Anzahl der Teilnehmenden usw.'
     },
     changeTypeText: 'Neuen Typ wählen'
 }
