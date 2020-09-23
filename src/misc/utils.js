@@ -27,5 +27,22 @@ export default {
       }
       target[category][key].push(data)
     })
+  },
+
+  verbalizeTime (time) {
+    var days = Math.floor(time/1000/60/60/24);
+    time -= days*1000*60*60*24
+
+    var hours = Math.floor(time/1000/60/60);
+    time -= hours*1000*60*60
+
+    var minutes = Math.floor(time/1000/60);
+    time -= minutes*1000*60
+
+    var seconds = Math.floor(time/1000);
+    return `${days}d ${hours}h ${minutes}m ${seconds}s`
+
   }
+
+
 }

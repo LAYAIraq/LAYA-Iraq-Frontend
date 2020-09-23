@@ -78,6 +78,21 @@
       </p>
     </b-modal>
 
+    <!-- course statistics modal -->
+    <b-modal ok-only id="author-courseStats"
+          :title="i18n.bModal.courseStats.title"
+          centered>
+      <p>  {{ i18n.bModal.courseStats.users }}: {{ courseStats.count }}</p>
+      <p>  {{ i18n.bModal.courseStats.time }}: {{ courseStats.averageTime }} </p>
+      <p>  {{ i18n.bModal.courseStats.flags }}: 0</p>
+      <p>  {{ i18n.bModal.courseStats.stoppedAt }}: {{courseStats.lostUsersAt}}</p>
+      <p>  {{ i18n.bModal.courseStats.totalLosses }}: {{ courseStats.usersLost}} </p>
+      <p>  {{ i18n.bModal.courseStats.feedback }}: {{ courseStats.feedbackAverage }} </p>
+     
+    </b-modal>
+
+
+    <!-- success toast-->
     <b-toast id="author-toast"
              :title="i18n.bToast.title"
              static
@@ -93,7 +108,7 @@
         <div class="col">
 
           <h1 class="text-center text-light py-5">
-            <b>{{ course.name }}</b>
+            <b>{{ name }}</b>
           </h1>
 
         </div>
@@ -107,7 +122,7 @@
 
           <div id="main-content-anchor" style="height: 7rem"></div>
 
-          <component v-if="content()"
+          <component v-if="viewPermit()"
                      :key="name+'-'+step"
                      :is="content().name"
                      v-bind="content().input"
@@ -116,11 +131,15 @@
                      :onSave="saveFeedback"
                      :onFinish="nextStep(content().nextStep)">
           </component>
-
-          <h2 v-else class="mt-5 text-center text-muted">
-            {{ i18n.content }}
-          </h2>
-
+          <!--<div v-else>-->
+          <div v-else>
+            <h2 v-if="!content()" class="mt-5 text-center text-muted">
+              {{ i18n.content }}
+            </h2>
+            <h2 v-else class="mt-5 text-center text-muted">
+              {{ i18n.noPermit }}
+            </h2>
+          </div>
         </div>
       </div>
     </div>
@@ -235,7 +254,8 @@
           </div>
         </div>
 
-        <div class="row" v-if="course.content.length > 0">
+        <!-- Edit Course Navigation -->
+        <div class="row mb-2" v-if="course.content.length > 0">
           <div class="col">
             <b-button block variant="primary" append :to="{path: 'editNav'}">
               <i class="fas fa-project-diagram"></i> {{ i18n.authTools.editNav }}
@@ -252,6 +272,7 @@
           </div>
         </div>
 
+        <!-- rename course -->
         <div class="row mt-3">
           <div class="col">
             <b-button size="sm"
@@ -267,6 +288,7 @@
           </div>
         </div>
 
+        <!-- Copy Course -->
         <div class="row mt-3">
           <div class="col">
             <b-button size="sm"
@@ -282,6 +304,7 @@
           </div>
         </div>
 
+        <!-- Delete content -->
         <div class="row mt-5" v-if="content()">
           <div class="col">
             <b-button size="sm"
@@ -297,6 +320,7 @@
           </div>
         </div>
 
+        <!-- delete course-->
         <div class="row mt-3">
           <div class="col">
             <b-button size="sm"
@@ -312,6 +336,18 @@
           </div>
         </div>
 
+        <!-- View Course Statistics -->
+        <div class="row mt-5">
+          <div class="col">
+            <b-button block variant="success" @click="$bvModal.show('author-courseStats')">
+              <i class="fas fa-info-circle"></i> {{ i18n.authTools.seeStats }}
+            </b-button>
+          </div>
+
+          <div class="col text-dark">
+            {{ i18n.authTools.statsTip }}
+          </div>
+        </div>
 
       </div>
     </div>
@@ -349,9 +385,11 @@ export default {
     return {
       course: {},
       userEnrolled: false,
+      enrollment: {},
       rename: "",
       copy: "",
-      changetype: null
+      changetype: null,
+      courseStats: {}
     }
   },
   beforeRouteUpdate(to,from,next) {
@@ -359,25 +397,12 @@ export default {
     next()
   },
   created() {
-    const ctx = this;
-
-    window.scrollTo(0,0)
-    document.title = `Laya - ${ctx.name}`
-
-    ctx.$store.commit("setBusy", true);
-    /*
-     * fetch course */
-    http.get(`courses/${ctx.name}`)
-      .then(function({ data }) {
-        ctx.course = data;
-      })
-      .catch(err => {
-        /*
-         * redirect off invalid course */
-        console.error(err);
-        this.$router.push("/courses");
-      })
-      .then(() => ctx.$store.commit("setBusy", false));
+    this.fetchCourse()
+    this.fetchEnrollment()
+    this.fetchCourseStats()
+  },
+  beforeDestroy(){
+    if(this.enrollment) this.updateEnrollment()
   },
   computed: {
     ...mapState(["auth", "note"]),
@@ -411,12 +436,147 @@ export default {
 
     i18n () {
       return i18n[this.$store.state.profile.lang]
-    }
+    },
+
   },
   methods: {
     ...utils,
-    
-    compView(name) {
+
+    fetchCourse() {
+      const ctx = this;
+
+      window.scrollTo(0,0)
+      document.title = `Laya - ${ctx.name}`
+
+      ctx.$store.commit("setBusy", true);
+      /*
+      * fetch course */
+      http.get(`courses/${ctx.name}`)
+        .then(({ data }) => {
+          ctx.course = data;
+        })
+        .catch(err => {
+          /*
+          * redirect off invalid course */
+          console.error(err);
+          this.$router.push("/courses");
+        })
+        .then(() => ctx.$store.commit("setBusy", false));
+    },
+
+    fetchEnrollment() {
+      // console.log("Getting Enrollment status...")
+      const self = this
+      let uid = self.auth.userId
+      let cid = self.name
+      // console.log(cid)
+      // const params = http.paramsSerializer({filter:{where: {studentId: uid, courseId: self.course.name}}})
+      // console.log(params)
+      http.get("enrollments/findOne", {params: {filter:{where: {studentId: uid, courseId: cid}}}})
+          .then(({data}) => {
+            // console.log("Enrollment exists!")
+            // console.log(data)
+            self.enrollment = data
+            self.userEnrolled = true
+          })
+          .catch(err => {
+            console.log('No enrollment found!')
+            // console.error(err)
+          })
+      
+    },
+
+    async fetchCourseStats() {
+      const ctx = this
+      var listEnr = []
+
+      //get data from enrollments
+      await http.get('enrollments/getAllByCourseId', {params: {courseId: this.name}})
+        .then(({data}) => {
+          console.log(data.subs)
+          listEnr = data.subs
+        })
+        .catch(err => {
+          console.error(err)
+        })
+
+      var stats = (Object)
+      stats = {...stats, count: listEnr.length} //all enrolled users 
+
+      //get avg time to completion
+      var timeSpent = 0
+      var finished = 0
+      var notFinished = 0
+      var lostAt = []
+      var now = Date.now()
+      var avgFeedback = []
+
+      for (const enrol of listEnr) {
+        console.log(enrol)
+        if (enrol.finished) {
+          let userTime = Date.parse(enrol.lastActivity) - Date.parse(enrol.created)
+          console.log(`User time: ${userTime} `)
+          timespent += userTime
+          finished ++
+        }
+        else { //count as lost if user didn't take action for more than a week
+          console.log(`User ${enrol.studentId} didn't finish!`)
+          notFinished++
+          let lastAct = Date.parse(enrol.lastActivity)
+          lastAct >= 604800000? lostAt.push(enrol.progress) : null
+        }
+
+        if (enrol.feedback) { // get average of feedback if applicable
+          for(let token of enrol.feedback) {
+            let highScore = token.options.answers.length
+            let avgScore = Number((token.choice.reduce((a,b) => (a+b)) / token.choice.length).toFixed(1))
+            console.log(`Score: ${avgScore} of ${highScore} `)
+            avgFeedback.push(avgScore)
+          }
+        }
+      }
+
+      console.log(`time spent: ${timeSpent} by ${finished} users who finished`)
+      var avgTime = (finished != 0)? this.verbalizeTime(timeSpent/finished): this.verbalizeTime(0)
+      
+      console.log(`${notFinished} users didn't finish`)
+      var lossCnt = Array(this.course.content.length).fill(0)
+      console.log(lostAt)
+      for (let p of lostAt) { //count where not finished users stopped
+        lossCnt[p]++
+      }
+      var bigLoss = lossCnt.indexOf(Math.max(...lossCnt)) + 1 // Index of Content that lost most users
+      console.log(`We lost most users at Content #${bigLoss}`)
+
+      var lostUsers = notFinished - lostAt.length //only count users that didn't do anythin for over a week
+      console.log(`We lost ${lostUsers} in total`)
+
+      var fbAvg = (avgFeedback.reduce((a,b) => (a+b)) / avgFeedback.length).toFixed(1) //calculate average of averages 
+
+      stats = {...stats, averageTime: avgTime, lostUsersAt: bigLoss, usersLost: lostUsers, feedbackAverage: fbAvg}
+      
+      
+
+      //TODO: get data for flags
+
+      console.log(stats)
+      this.courseStats = stats
+
+    },
+
+    updateEnrollment() {
+      const enrol = this.enrollment
+
+      http.patch(`enrollments/${enrol.id}`, enrol)
+          .then(resp => {
+            console.log("Enrollment updated!")
+          })
+          .catch(err => {
+            console.error(err)
+          })
+    },
+
+    compView: function(name) {
       const la = this.$laya.la[name]
       return la ? la.components.view : this.$laya.lb[name].components.view
     },
@@ -425,13 +585,19 @@ export default {
       return this.course.content[this.step-1]
     },
 
+    viewPermit() {
+      const crs = this.content()
+      if(crs) {
+        
+        return (this.isAuthor || this.userEnrolled)? true : false;
+      }
+      return false
+    },
+
     feedback() {
       if(this.course.content[this.step-1].name === "laya-course-feedback") {
         const fb = {
-          cid: this.course.authorId,
-          created: Date.parse(this.course.createDate),
-          feedback: this.course.feedback,
-          uid: this.auth.userId,
+          feedback: this.enrollment.feedback,
           fno: Number(this.step)
         }
         return fb
@@ -439,23 +605,23 @@ export default {
       return null
     },
 
-     saveFeedback(feedback) {
-      var cfb = this.course.feedback
+    saveFeedback(feedback) {
+      var cfb = this.enrollment.feedback
       for (var i in cfb) {
-        if(cfb[i].fid === feedback.fid) {
+        if(cfb[i].step == this.step) {
           this.updateFeedback(feedback, i)
           return
         }
       }
-      this.course.feedback.push(feedback)
+      this.enrollment.feedback.push(feedback)
       this.storeFeedback()
     },
 
     updateFeedback(updatedFeedback, index) {
-      this.course.feedback[index] = {
-        ...this.course.feedback[index], ...updatedFeedback
+      this.enrollment.feedback[index] = {
+        ...this.enrollment.feedback[index], ...updatedFeedback
       }
-      //console.log("Feedback id "+ updatedFeedback.fid + " updated!")
+      console.log("Feedback for step "+ updatedFeedback.step + " updated!")
       this.storeFeedback()
     },
 
@@ -536,7 +702,8 @@ export default {
     },
 
     storeFeedback() {
-      http.patch(`courses/${this.name}`, {feedback: this.course.feedback})
+      const self = this
+      http.patch(`enrollments/${self.enrollment.id}`, {feedback: self.enrollment.feedback})
         .catch(err => console.error("Failed storing course feedback:", err))
         .finally(function() {
           //this.$bvToast.show("author-toast")
@@ -552,7 +719,8 @@ export default {
 
       const {name, $router} = this
       return steps.split(",").map(step => {
-        return function() {
+        return () =>{
+          this.enrollment.progress = Number(step)
           $router.push({name: "course-detail-view", params: {name, step}})
         }
       })

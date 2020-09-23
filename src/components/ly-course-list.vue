@@ -38,9 +38,11 @@
           <router-link
             :to="'/courses/'+course.name+'/1'"
             class="text-dark px-2 py-1 d-inline-block text-center"
-            style="border: 2px solid black">
+            v-if="!enrollmentNeeded(course)" >
             {{ i18n.start }} <i class="fas fa-arrow-right"></i>
           </router-link>
+          <a class="text-dark px-2 py-1 d-inline-block text-center" 
+            v-else @click="subscribe(course)">{{ i18n.subscribe }}</a>
         </div>
       </div>
 
@@ -49,19 +51,30 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/course-list";
+import * as i18n from "@/i18n/course-list"
+import http from "axios"
+import { mapState, mapGetters } from "vuex"
 
 export default {
   name: "laya-course-list",
   data() {
     return {
-    };
+      enrolledIn: []
+    }
   },
   props: {
     courses: Array,
     filter: String,
   },
+  mounted() {
+    this.getSubs()
+  },
+  updated(){
+    this.getSubs
+  },
   computed: {
+    ...mapState(["note", "auth"]),
+
     filtered: function() {
       if (!this.filter) return this.courses;
 
@@ -73,6 +86,49 @@ export default {
     }
   },
   methods: {
+    getSubs() {
+      var self = this
+      var studentId = this.auth.userId
+     
+      http
+        .get(`enrollments/getAllByStudentId/?uid=${studentId}`)
+        .then(({ data }) => {
+          const list = data.sublist
+          for(var item of list) {
+            self.enrolledIn.push(item.courseId)
+          }
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    },
+    enrollmentNeeded(course) {
+      var needed = course.needsEnrollment
+      if (needed) {
+        return this.enrolledIn.find(x => x == course.name)? false : true
+      }
+      else {
+        return false
+      }
+    },
+    subscribe(course) {
+      const self = this
+      const newEnrollment = {
+        courseId: course.name,
+        studentId: this.auth.userId
+      }
+
+      /* create enrollment */
+      http.patch("enrollments", {
+        ...newEnrollment
+      }).then(() => {
+        
+      }).catch((err) => {
+        console.log(err)
+      })
+
+      self.getSubs()
+    }
   }
 }
 </script>
@@ -93,5 +149,9 @@ export default {
 
 .course > div {
   font-size: 120%;
+}
+
+.col-3 > a {
+  border: 2px solid black
 }
 </style>
