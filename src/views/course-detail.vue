@@ -233,7 +233,7 @@
               <b-dropdown-item v-for="block in $laya.lb"
                                :key="block.id"
                                :to="'/courses/'+name+'/'+nextId()+'/new/'+block.id">
-                {{ getLocale(block) }}
+                {{ getLocale(block).name }} | {{ getLocale(block).cpation }}
               </b-dropdown-item>
 
               <b-dropdown-divider></b-dropdown-divider>
