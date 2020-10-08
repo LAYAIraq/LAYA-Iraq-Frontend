@@ -36,5 +36,9 @@ export default {
             "Agree"
         ]
 
-    }
+    },
+    tooltip: {
+        name: "Course Feedback",
+        caption: "This component allows you to get feedback for your course."
+    } 
 }

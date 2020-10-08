@@ -6,13 +6,9 @@ export { default as courses } from "./courses.vue";
 export { default as mycourses } from "./mycourses.vue";
 
 export { default as courseDetail } from "./course-detail.vue";
+export { default as courseEdit } from "./course-edit.vue";
 export { default as profile } from "./profile.vue";
 
-/* deprecated 
-export { default as newLearningBlock } from "./new-learning-block.vue";
-export { default as newLearningAssessment } from "./new-learning-assessment.vue"
-export { default as assessment } from "./assessment.vue";
-*/
 
 export { default as editCourseNav } from "./edit-course-nav.vue";
 export { default as editCourseContent } from "./edit-course-content.vue";

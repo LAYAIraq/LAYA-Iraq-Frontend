@@ -35,7 +35,6 @@
 <script lang="ts">
 import Vue from "vue"
 import * as messages from "../../../i18n/plugins/misc/laya-stepper"
-import VueI18n from "vue-cli-plugin-i18n"
 
 export default Vue.extend({
   name: 'laya-stepper',

@@ -61,22 +61,7 @@
       </p>
     </b-modal>
 
-    <!-- content change type modal -->
-    <b-modal id="author-changeContentType-confirm"
-             :title="i18n.bModal.changeType.title"
-             header-bg-variant="warning"
-             ok-variant="warning"
-             :ok-title="i18n.bModal.changeType.ok"
-             :cancel-title="i18n.bModal.cancel"
-             @ok="changeContentType"
-             centered>
-      <p>
-        {{ i18n.bModal.changeType.text }}<b-form-select
-           v-model="changetype"
-           :options="plugins">
-        </b-form-select>
-      </p>
-    </b-modal>
+    
 
     <!-- course statistics modal -->
     <b-modal ok-only id="author-courseStats"
@@ -146,211 +131,12 @@
 
     <div style="height: 4rem"></div>
 
-    <!-- author view -->
-    <div class="ly-bg-author py-4" v-if="isAuthor">
-
-      <div class="container mb-4">
-        <div class="row">
-          <div class="col">
-            <b-button
-              variant="outline-secondary"
-              size="sm"
-              active-class="active"
-              :to="{name: 'course-detail-view', params: {name, step}}"
-              exact>
-              <i class="fas fa-chevron-left"></i> {{ i18n.toolsNav.overview }}
-            </b-button>
-
-              <!-- jump to content number -->
-              <span class="content-nav float-right" style="font-size: 120%">
-                <b-dropdown id="cid-dd"
-                            :text="i18n.toolsNav.jumpTo"
-                            size="sm"
-                            variant="secondary"
-                            no-flip
-                            right>
-                  <b-dropdown-item v-for="(c,id) in course.content" :key="id"
-                                   :to="{name: 'course-detail-view',
-                                   params: {name, step: id+1+''}}">
-                    {{ i18n.toolsNav.listContent }} <b>{{ id+1 }}</b>
-                  </b-dropdown-item>
-                </b-dropdown>
-              </span>
-
-          </div>
-        </div>
-      </div>
-
-      <router-view
-        :content="content()"
-        :onupdate="updateStep"
-        :course="course"
-        :onnavupdate="updateContent">
-      </router-view>
-
-      <div class="container" v-if="isAuthor && $route.name == 'course-detail-view'">
-
-        <!-- edit content -->
-        <div class="row mb-2" v-if="content()">
-          <div class="col">
-            <b-button variant="primary" block append
-                      :to="{path: 'edit', params: {type: content.name}}">
-              <i class="fas fa-edit"></i> {{ i18n.authTools.editContent }}
-            </b-button>
-          </div>
-
-          <div class="col text-dark">
-            {{ i18n.authTools.editContentTip.replace("{step}", this.step) }}
-          </div>
-        </div>
-
-        <!-- change content type -->
-        <div class="row mb-2" v-if="content()">
-          <div class="col">
-            <b-button variant="warning" block
-                      @click="$bvModal.show('author-changeContentType-confirm')">
-              <i class="fas fa-edit"></i> {{ i18n.authTools.changeType }}
-            </b-button>
-          </div>
-
-          <div class="col text-dark" v-html="i18n.authTools.changeTypeTip">
-          </div>
-        </div>
-
-        <!-- new content -->
-        <div class="row mb-2">
-          <div class="col">
-
-            <b-dropdown id="new-content-dd"
-                        variant="primary"
-                        class="w-100"
-                        dropright>
-              <template slot="button-content">
-                <i class="fas fa-plus"></i> {{ i18n.authTools.newContent }}
-              </template>
-
-              <b-dropdown-header>{{ i18n.authTools.newContentBlock }}</b-dropdown-header>
-              <b-dropdown-item v-for="block in $laya.lb"
-                               :key="block.id"
-                               :to="'/courses/'+name+'/'+nextId()+'/new/'+block.id">
-                {{ getLocale(block).name }} | {{ getLocale(block).cpation }}
-              </b-dropdown-item>
-
-              <b-dropdown-divider></b-dropdown-divider>
-
-              <b-dropdown-header>{{ i18n.authTools.newContentAssmnt }}</b-dropdown-header>
-              <b-dropdown-item v-for="ass in $laya.la"
-                               :key="ass.id"
-                               :to="'/courses/'+name+'/'+nextId()+'/new/'+ass.id">
-                {{ getLocale(ass) }}
-              </b-dropdown-item>
-            </b-dropdown>
-
-          </div>
-
-          <div class="col text-dark">
-            {{ i18n.authTools.newContentTip }}
-            <b>{{nextId()}}</b>.
-          </div>
-        </div>
-
-        <!-- Edit Course Navigation -->
-        <div class="row mb-2" v-if="course.content.length > 0">
-          <div class="col">
-            <b-button block variant="primary" append :to="{path: 'editNav'}">
-              <i class="fas fa-project-diagram"></i> {{ i18n.authTools.editNav }}
-            </b-button>
-          </div>
-
-          <div class="col text-dark">
-            <span v-if="courseNavIncomplete()"
-                  class="bg-warning mr-1 rounded"
-                  style="padding: 2px 5px">
-              <i class="fas fa-exclamation-triangle"></i> {{ i18n.authTools.editNavIncomplete }}
-            </span>
-            {{ i18n.authTools.editNavTip.replace("{steps}", course.content.length ) }}
-          </div>
-        </div>
-
-        <!-- rename course -->
-        <div class="row mt-3">
-          <div class="col">
-            <b-button size="sm"
-                      variant="warning"
-                      class="float-right"
-                      @click="$bvModal.show('author-renameCourse-confirm')">
-              <i class="fas fa-exclamation-circle"></i> {{ i18n.authTools.renameCourse }}
-            </b-button>
-          </div>
-
-          <div class="col text-dark">
-            {{ i18n.authTools.renameCourseTip }}
-          </div>
-        </div>
-
-        <!-- Copy Course -->
-        <div class="row mt-3">
-          <div class="col">
-            <b-button size="sm"
-                      variant="warning"
-                      class="float-right"
-                      @click="$bvModal.show('author-copyCourse-confirm')">
-              <i class="fas fa-exclamation-circle"></i> {{ i18n.authTools.copyCourse }}
-            </b-button>
-          </div>
-
-          <div class="col text-dark">
-            {{ i18n.authTools.copyCourseTip }}
-          </div>
-        </div>
-
-        <!-- Delete content -->
-        <div class="row mt-5" v-if="content()">
-          <div class="col">
-            <b-button size="sm"
-                      variant="danger"
-                      class="float-right"
-                      @click="$bvModal.show('author-delContent-confirm')">
-              <i class="fas fa-exclamation-circle"></i> {{ i18n.authTools.deleteContent }}
-            </b-button>
-          </div>
-
-          <div class="col text-dark">
-            {{ i18n.authTools.deleteContentTip }}
-          </div>
-        </div>
-
-        <!-- delete course-->
-        <div class="row mt-3">
-          <div class="col">
-            <b-button size="sm"
-                      variant="danger"
-                      class="float-right"
-                      @click="$bvModal.show('author-delCourse-confirm')">
-              <i class="fas fa-exclamation-circle"></i> {{ i18n.authTools.deleteCourse }}
-            </b-button>
-          </div>
-
-          <div class="col text-dark" v-html="i18n.authTools.deleteCourseTip">
-            
-          </div>
-        </div>
-
-        <!-- View Course Statistics -->
-        <div class="row mt-5">
-          <div class="col">
-            <b-button block variant="success" @click="$bvModal.show('author-courseStats')">
-              <i class="fas fa-info-circle"></i> {{ i18n.authTools.seeStats }}
-            </b-button>
-          </div>
-
-          <div class="col text-dark">
-            {{ i18n.authTools.statsTip }}
-          </div>
-        </div>
-
-      </div>
-    </div>
+    <courseEdit v-if="isAuthor" 
+      :name="name" 
+      :step="step" 
+      :course="course"
+      :userEnrolled="userEnrolled" 
+      :enrollment="enrollment"></courseEdit>
 
   </div>
 </template>
@@ -373,7 +159,7 @@ import http from "axios";
 import * as i18n from "@/i18n/course-detail";
 import utils from "@/misc/utils.js";
 import lyScrollToTop from "@/components/scroll-to-top.vue"
-import VueI18n from "vue-i18n"
+import courseEdit from "@/views/course-edit.vue"
 
 export default {
   name: "course-detail-view",
@@ -793,7 +579,8 @@ export default {
     //BvToast,
     BModal, 
     //BvModal,
-    lyScrollToTop
+    lyScrollToTop,
+    courseEdit
   }
 };
 </script>
