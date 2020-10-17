@@ -185,13 +185,13 @@ export default {
   created() {
     this.fetchCourse()
     this.fetchEnrollment()
-    this.fetchCourseStats()
+    // this.fetchCourseStats()
   },
   beforeDestroy(){
     if(this.enrollment) this.updateEnrollment()
   },
   computed: {
-    ...mapState(["auth", "note"]),
+    ...mapState(["auth", "note", "edit"]),
     ...mapGetters(["isAuthor"]),
 
     /* returns empty function on every [] invocation */
@@ -234,41 +234,29 @@ export default {
       window.scrollTo(0,0)
       document.title = `Laya - ${ctx.name}`
 
-      ctx.$store.commit("setBusy", true);
-      /*
-      * fetch course */
-      http.get(`courses/${ctx.name}`)
-        .then(({ data }) => {
-          ctx.course = data;
-        })
-        .catch(err => {
-          /*
-          * redirect off invalid course */
-          console.error(err);
-          this.$router.push("/courses");
-        })
-        .then(() => ctx.$store.commit("setBusy", false));
+      this.$store.dispatch("fetchCourse", ctx.name)
     },
 
     fetchEnrollment() {
-      // console.log("Getting Enrollment status...")
-      const self = this
-      let uid = self.auth.userId
-      let cid = self.name
-      // console.log(cid)
-      // const params = http.paramsSerializer({filter:{where: {studentId: uid, courseId: self.course.name}}})
-      // console.log(params)
-      http.get("enrollments/findOne", {params: {filter:{where: {studentId: uid, courseId: cid}}}})
-          .then(({data}) => {
-            // console.log("Enrollment exists!")
-            // console.log(data)
-            self.enrollment = data
-            self.userEnrolled = true
-          })
-          .catch(err => {
-            console.log('No enrollment found!')
-            // console.error(err)
-          })
+      // // console.log("Getting Enrollment status...")
+      // const self = this
+      // let uid = self.auth.userId
+      // let cid = self.name
+      // // console.log(cid)
+      // // const params = http.paramsSerializer({filter:{where: {studentId: uid, courseId: self.course.name}}})
+      // // console.log(params)
+      // http.get("enrollments/findOne", {params: {filter:{where: {studentId: uid, courseId: cid}}}})
+      //     .then(({data}) => {
+      //       // console.log("Enrollment exists!")
+      //       // console.log(data)
+      //       self.enrollment = data
+      //       self.userEnrolled = true
+      //     })
+      //     .catch(err => {
+      //       console.log('No enrollment found!')
+      //       // console.error(err)
+      //     })
+      this.$store.dispatch("fetchEnrollment", this.name)
       
     },
 
@@ -326,7 +314,7 @@ export default {
       var avgTime = (finished != 0)? this.verbalizeTime(timeSpent/finished): this.verbalizeTime(0)
       
       console.log(`${notFinished} users didn't finish`)
-      var lossCnt = Array(this.course.content.length).fill(0)
+      var lossCnt = Array(ctx.course.content.length).fill(0)
       console.log(lostAt)
       for (let p of lostAt) { //count where not finished users stopped
         lossCnt[p]++
@@ -337,7 +325,7 @@ export default {
       var lostUsers = notFinished - lostAt.length //only count users that didn't do anythin for over a week
       console.log(`We lost ${lostUsers} in total`)
 
-      var fbAvg = (avgFeedback.reduce((a,b) => (a+b)) / avgFeedback.length).toFixed(1) //calculate average of averages 
+      var fbAvg = avgFeedback? (avgFeedback.reduce((a,b) => (a+b)) / avgFeedback.length).toFixed(1) : null //calculate average of averages 
 
       stats = {...stats, averageTime: avgTime, lostUsersAt: bigLoss, usersLost: lostUsers, feedbackAverage: fbAvg}
       
@@ -351,15 +339,7 @@ export default {
     },
 
     updateEnrollment() {
-      const enrol = this.enrollment
-
-      http.patch(`enrollments/${enrol.id}`, enrol)
-          .then(resp => {
-            console.log("Enrollment updated!")
-          })
-          .catch(err => {
-            console.error(err)
-          })
+      this.$store.dispatch("updateEnrollment")
     },
 
     compView: function(name) {
@@ -368,7 +348,7 @@ export default {
     },
 
     content() {
-      return this.course.content[this.step-1]
+      return this.$store.state.edit.course[this.step-1]
     },
 
     viewPermit() {

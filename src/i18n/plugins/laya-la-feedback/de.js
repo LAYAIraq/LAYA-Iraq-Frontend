@@ -36,9 +36,5 @@ export default {
             "Stimme zu"
         ]
 
-    },
-    tooltip: {
-        name: "Kurs-Rückmeldung",
-        caption: "Diese Komponente erlaubt es Ihnen, Kursrückmeldungen einzuholen."
-    } 
+    }
 }

@@ -3,6 +3,7 @@ import Vuex from "vuex";
 
 /* modules */
 import auth from "./modules/auth";
+import edit from "./modules/edit";
 import note from "./modules/note";
 import profile from "./modules/profile";
 
@@ -14,6 +15,7 @@ console.log(debug ? "vuex in debug mode" : "");
 export default new Vuex.Store({
   modules: {
     auth,
+    edit,
     note,
     profile,
   },

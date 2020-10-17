@@ -1,7 +1,9 @@
 <template>
     <!-- author view -->
     <div class="ly-bg-author py-4">
-       <course-edit-header></course-edit-header> 
+        <course-edit-header
+        :name="name" :step="step" :course="course" :i18n="i18n">
+        </course-edit-header> 
 
         <router-view
             :content="content()"
@@ -26,45 +28,9 @@
                 </div>
             </div>
 
-            <course-edit-type></course-edit-type>
+            <course-edit-type :content="content()" :i18n="i18n"></course-edit-type>
             
-
-            <!-- new content -->
-            <div class="row mb-2">
-            <div class="col">
-
-                <b-dropdown id="new-content-dd"
-                            variant="primary"
-                            class="w-100"
-                            dropright>
-                <template slot="button-content">
-                    <i class="fas fa-plus"></i> {{ i18n.authTools.newContent }}
-                </template>
-
-                <b-dropdown-header>{{ i18n.authTools.newContentBlock }}</b-dropdown-header>
-                <b-dropdown-item v-for="block in $laya.lb"
-                                :key="block.id"
-                                :to="'/courses/'+name+'/'+nextId()+'/new/'+block.id">
-                    {{ getLocale(block).name }} | {{ getLocale(block).cpation }}
-                </b-dropdown-item>
-
-                <b-dropdown-divider></b-dropdown-divider>
-
-                <b-dropdown-header>{{ i18n.authTools.newContentAssmnt }}</b-dropdown-header>
-                <b-dropdown-item v-for="ass in $laya.la"
-                                :key="ass.id"
-                                :to="'/courses/'+name+'/'+nextId()+'/new/'+ass.id">
-                    {{ getLocale(ass) }}
-                </b-dropdown-item>
-                </b-dropdown>
-
-            </div>
-
-            <div class="col text-dark">
-                {{ i18n.authTools.newContentTip }}
-                <b>{{nextId()}}</b>.
-            </div>
-            </div>
+            <course-new-block :name="name" :step="step" :i18n="i18n" :nextId="nextId()"> </course-new-block>
 
             <!-- Edit Course Navigation -->
             <div class="row mb-2" v-if="course.content.length > 0">
@@ -168,14 +134,15 @@
 <script>
 import * as i18n from "@/i18n/course-detail/"
 import { mapState, mapGetters } from "vuex"
-import {courseEditHeader, courseEditType} from "./course-edit-tools/"
+import { courseEditHeader, courseEditType, courseNewBlock } from "./course-edit-tools/"
 
 
 export default {
     name: "course-edit",
     components: {
         courseEditHeader,
-        courseEditType
+        courseEditType,
+        courseNewBlock
     },
     props: {
         name: String,
@@ -191,11 +158,33 @@ export default {
     },
     computed: {
         i18n () {
-            return i18n[this.store.state.profile.lang]
+            return i18n[this.$store.state.profile.lang]
         }
     },
     methods: {
-        
+        content() {
+            return this.course.content[this.step-1]
+        },
+        updateStep(changedStep) {
+            this.course.content[this.step-1] = {
+                ...this.course.content[this.step-1], ...changedStep
+            }
+            this.storeCourse()
+            this.$forceUpdate()
+        },
+        updateContent(changedContent) {
+            this.course.content = [...changedContent]
+            this.storeCourse()
+            this.$forceUpdate()
+        },
+        nextId() {
+            return this.course.content.length+1
+        },
+        getLocale(comp) {
+            let lang = this.$store.state.profile.lang
+            if(comp.i18n.hasOwnProperty(lang)) return comp.i18n[lang]
+            else return comp.i18n.de
+        }
     }
     
 }

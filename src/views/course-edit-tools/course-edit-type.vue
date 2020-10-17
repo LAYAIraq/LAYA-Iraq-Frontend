@@ -3,7 +3,7 @@
 <!-- content change type modal -->
     
 <!-- change content type -->
-    <div class="row mb-2" v-if="content()">
+    <div class="row mb-2" v-if="content">
         <div class="col">
             <b-button variant="warning" block
                     @click="$bvModal.show('author-changeContentType-confirm')">
@@ -40,8 +40,22 @@ import {
 export default {
     name: "course-edit-type",
     props: {
-        content: Boolean,
+        content: Array,
         i18n: Object
+    },
+    data() {
+        return {
+            changetype: null,
+        }
+    },
+    methods: {
+        changeContentType() {
+            if(!this.changetype) return
+            console.log("Change type")
+            this.updateStep({name: this.changetype, input: null})
+        },
     }
+    
+    
 }
 </script>

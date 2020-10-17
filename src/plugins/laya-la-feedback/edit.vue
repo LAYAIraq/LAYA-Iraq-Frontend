@@ -113,7 +113,7 @@
 
 <script>
 
-import * as i18n from "@/i18n/plugins/laya-la-feedback";
+import * as i18n from "@/i18n/plugins/laya-la-feedback"
 
 export default {
   name: 'laya-la-feedback-edit',
