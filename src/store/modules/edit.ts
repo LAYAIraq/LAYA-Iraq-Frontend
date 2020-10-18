@@ -13,6 +13,9 @@ export default {
         },
         hasContent(state: { course: { content: Object } } ) {
           return state.course.content
+        },
+        hasCourse(state: { course: Object } ) {
+          return state.course
         }
     },
     mutations: {

@@ -8,7 +8,7 @@
         <router-view
             :content="content()"
             :onupdate="updateStep"
-            :course="edit.course"
+            :course="hasCourse"
             :onnavupdate="updateContent">
         </router-view>
 
@@ -118,7 +118,12 @@
 <script>
 import * as i18n from "@/i18n/course-detail/"
 import { mapState, mapGetters } from "vuex"
-import { courseEditHeader, courseEditNav, courseEditType, courseNewBlock } from "./course-edit-tools/"
+import { 
+    courseEditHeader, 
+    courseEditNav, 
+    courseEditType, 
+    courseNewBlock 
+    } from "./course-edit-tools/"
 
 
 export default {
@@ -139,7 +144,7 @@ export default {
     },
     computed: {
         ...mapState(["edit"]),
-        ...mapGetters(["profileLang", "hasContent"]),
+        ...mapGetters(["profileLang", "hasContent", "hasCourse"]),
         i18n () {
             return i18n[this.profileLang]
         }
@@ -166,7 +171,14 @@ export default {
         getLocale(comp) {
             if(comp.i18n.hasOwnProperty(this.profileLang)) return comp.i18n[this.profileLang]
             else return comp.i18n.de
-        }
+        },
+        storeCourse() {
+            http.patch(`courses/${this.name}`, {content: this.course.content})
+                .catch(err => console.error("Failed storing course content:", err))
+                .finally(() => {
+                this.$bvToast.show("author-toast")
+                })
+         },
     }
     
 }

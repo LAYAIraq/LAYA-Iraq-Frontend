@@ -110,10 +110,7 @@
           <component v-if="viewPermit()"
                      :key="name+'-'+step"
                      :is="content().name"
-                     v-bind="content().input"
-                     :name="name"
-                     :init="feedback()"
-                     :onSave="saveFeedback"
+                     v-bind="content().input"               
                      :onFinish="nextStep(content().nextStep)">
           </component>
           <!--<div v-else>-->
@@ -187,7 +184,7 @@ export default {
   },
   computed: {
     ...mapState(["auth", "note", "edit"]),
-    ...mapGetters(["isAuthor", "profileLang"]),
+    ...mapGetters(["isAuthor", "profileLang", "hasContent"]),
 
     /* returns empty function on every [] invocation */
     onFinishDummy() {
@@ -320,25 +317,23 @@ export default {
       this.$store.dispatch("updateEnrollment")
     },
 
-    compView: function(name) {
+    compView(name) {
       const la = this.$laya.la[name]
       return la ? la.components.view : this.$laya.lb[name].components.view
     },
 
     content() {
-      return this.$store.state.edit.course[this.step-1]
+      return this.hasContent[this.step-1]
     },
 
     viewPermit() {
-      const crs = this.content()
-      if(crs) {
-        
+      if( this.content() ) {
         return (this.isAuthor || this.userEnrolled)? true : false;
       }
       return false
     },
 
-    feedback() {
+    /* feedback() {
       if(this.course.content[this.step-1].name === "laya-course-feedback") {
         const fb = {
           feedback: this.enrollment.feedback,
@@ -348,7 +343,7 @@ export default {
       }
       return null
     },
-
+ */
     saveFeedback(feedback) {
       var cfb = this.enrollment.feedback
       for (var i in cfb) {
@@ -454,10 +449,6 @@ export default {
         })
     },
 
-    courseNavIncomplete() {
-      return this.course.content.reduce((all, c) => (!c.nextStep || all), false)
-    },
-
     nextStep(steps) { // string e.g. "1,2"
       if(!steps) return []
 
@@ -471,7 +462,7 @@ export default {
     },
 
     nextId() {
-      return this.course.content.length+1
+      return this.hasContent.length+1
     },
 
     getLocale(comp) {
@@ -480,53 +471,6 @@ export default {
       else return comp.i18n.de
     }
 
-    /*
-    
-    subscribe() {
-      const ctx = this;
-      http
-        .put(`accounts/${ctx.auth.userId}/mycourses/rel/${ctx.course.name}`)
-        .then(({ data }) => {
-          ctx.$store.commit("addMyCourse");
-          ctx.userEnrolled = true;
-        })
-        .catch(err => console.error(err));
-    },
-
-    unsubscribe() {
-      const ctx = this;
-      ctx.$store.commit("setBusy", true);
-      http
-        .delete(`accounts/${ctx.auth.userId}/mycourses/rel/${ctx.course.name}`)
-        .then(({ data }) => {
-          ctx.userEnrolled = false;
-        })
-        .catch(err => console.error(err))
-        .then(() => {
-          ctx.$store.commit("setBusy", false);
-        });
-    },
-
-    learn() {
-      const ctx = this;
-      http.get(`courses/${ctx.course.name}/startInteraction`)
-        .then(({ data }) => {
-          console.log("data", data);
-          let li = ctx.$laya.lookupType(data.assessmentType);
-          switch (li.type) {
-            case "assessment":
-              ctx.$router.push({
-                name: "assessment-view",
-                // FIXME data.id might be inconsistent with specific with Assessment's id. Ask Sebastian for details
-                params: { type: li.id, assId: data.id }
-              });
-              break;
-            case "block":
-              // TODO add logic for learning blocks.
-          }
-        });
-    }
-    */
   },
   components: {
     BDropdown,
