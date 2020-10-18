@@ -44,11 +44,6 @@ export default {
     },
     content: 'Dieser Inhalt ist noch leer',
     noPermit: 'Sie sind nicht berechtigt, diesen Inhalt zu betrachten!',
-    toolsNav: {
-        overview: 'Zur Autor-Tools Übersicht',
-        jumpTo: 'Zum Inhalt springen',
-        listContent: 'Inhalt '
-    },
     authTools: {
         changeType: 'Inhalts-Typ ändern',
         changeTypeTip: 'Damit kannst Du den Typ des Inhalts permanent ändern. <u>Achtung:</u> Dabei gehen die aktuellen Eingaben verloren.',

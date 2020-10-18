@@ -131,12 +131,7 @@
 
     <div style="height: 4rem"></div>
 
-    <courseEdit v-if="isAuthor" 
-      :name="name" 
-      :step="step" 
-      :course="course"
-      :userEnrolled="userEnrolled" 
-      :enrollment="enrollment"></courseEdit>
+    <courseEdit v-if="isAuthor" :name="name" :step="step"></courseEdit>
 
   </div>
 </template>
@@ -192,7 +187,7 @@ export default {
   },
   computed: {
     ...mapState(["auth", "note", "edit"]),
-    ...mapGetters(["isAuthor"]),
+    ...mapGetters(["isAuthor", "profileLang"]),
 
     /* returns empty function on every [] invocation */
     onFinishDummy() {
@@ -203,25 +198,8 @@ export default {
       })
     },
 
-    plugins() {
-      const la = this.$laya.la
-      const lb = this.$laya.lb
-      let lalb = [{value: null, text: this.i18n.changeTypeText, disabled: true}]
-      let lang = this.$store.state.profile.lang
-      for(const id in lb) {
-        if (lb[id].i18n.hasOwnProperty(lang))
-          lalb.push({value: id, text: lb[id].i18n[lang]})
-        else lalb.push({value: id, text: lb[id].i18n.de})
-      }
-      for(const id in la)
-        if (la[id].i18n.hasOwnProperty(lang))
-          lalb.push({value: id, text: la[id].i18n[lang]})
-        else lalb.push({value: id, text: la[id].i18n.de})
-      return lalb
-    },
-
     i18n () {
-      return i18n[this.$store.state.profile.lang]
+      return i18n[this.profileLang]
     },
 
   },

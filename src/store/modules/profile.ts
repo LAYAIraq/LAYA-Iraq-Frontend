@@ -16,6 +16,11 @@ export default {
     lang: "de",
     avatar: "",
   },
+  getters: {
+    profileLang(state: { lang: String }) {
+      return state.lang
+    }
+  },
   mutations: {
     setLang(state, lang) {
       state.lang = (supportedLangs.includes(lang)) ? lang : supportedLangs[0];

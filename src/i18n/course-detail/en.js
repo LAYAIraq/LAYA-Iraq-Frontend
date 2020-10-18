@@ -44,11 +44,7 @@ export default {
     },
     content: 'There is no content yet',
     noPermit: 'You are not allowed to see this content!',
-    toolsNav: {
-        overview: 'Go to Author Tools',
-        jumpTo: 'Go to Content',
-        listContent: 'Content# '
-    },
+    
     authTools: {
         changeType: 'Change Content Type',
         changeTypeTip: 'You can change the type of this content permanently. <u>Beware:</u> All data input will be lost.',

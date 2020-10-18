@@ -2,13 +2,13 @@
     <!-- author view -->
     <div class="ly-bg-author py-4">
         <course-edit-header
-        :name="name" :step="step" :course="course" :i18n="i18n">
+        :name="name" :step="step">
         </course-edit-header> 
 
         <router-view
             :content="content()"
             :onupdate="updateStep"
-            :course="course"
+            :course="edit.course"
             :onnavupdate="updateContent">
         </router-view>
 
@@ -33,7 +33,7 @@
             <course-new-block :name="name" :step="step" :i18n="i18n" :nextId="nextId()"> </course-new-block>
 
             <!-- Edit Course Navigation -->
-            <div class="row mb-2" v-if="course.content.length > 0">
+            <div class="row mb-2" v-if="$store.state.edit.course.content.length > 0">
             <div class="col">
                 <b-button block variant="primary" append :to="{path: 'editNav'}">
                 <i class="fas fa-project-diagram"></i> {{ i18n.authTools.editNav }}
@@ -46,7 +46,7 @@
                     style="padding: 2px 5px">
                 <i class="fas fa-exclamation-triangle"></i> {{ i18n.authTools.editNavIncomplete }}
                 </span>
-                {{ i18n.authTools.editNavTip.replace("{steps}", course.content.length ) }}
+                {{ i18n.authTools.editNavTip.replace("{steps}", $store.state.edit.course.content.length ) }}
             </div>
             </div>
 
@@ -146,10 +146,7 @@ export default {
     },
     props: {
         name: String,
-        step: String,
-        course: Object,
-        userEnrolled: Boolean,
-        enrollment: Object,
+        step: String
     },
     data() {
         return {
@@ -157,13 +154,15 @@ export default {
         }
     },
     computed: {
+        ...mapState(["edit"]),
+        ...mapGetters(["profileLang"]),
         i18n () {
-            return i18n[this.$store.state.profile.lang]
+            return i18n[this.profileLang]
         }
     },
     methods: {
         content() {
-            return this.course.content[this.step-1]
+            return this.edit.course.content[this.step-1]
         },
         updateStep(changedStep) {
             this.course.content[this.step-1] = {
@@ -178,7 +177,7 @@ export default {
             this.$forceUpdate()
         },
         nextId() {
-            return this.course.content.length+1
+            return this.$store.state.edit.course.content.length+1
         },
         getLocale(comp) {
             let lang = this.$store.state.profile.lang

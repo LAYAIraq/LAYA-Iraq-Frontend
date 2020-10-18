@@ -4,13 +4,12 @@ import { ids as supportedLangs } from "../../misc/langs.js";
 export default {
     state: {
         course: {},
-        i18n: {},
         enrollment: {},
         userEnrolled: false
     },
     getters: {
-        isUserEnrolled() {
-            return true || false
+        isUserEnrolled(state: { userEnrolled: Boolean}) {
+            return state.userEnrolled
         }
     },
     mutations: {
@@ -21,7 +20,6 @@ export default {
         setCourse(state, data) {
             state.course = data
         }
-        
 
     },
     actions: {
@@ -57,8 +55,8 @@ export default {
                 })
           },
 
-          fetchCourse ({ commit, state, rootState}, name) {
-            console.log("FETCHING COURSE")
+          fetchCourse ({ commit, state, rootState}, name: String) {
+            // console.log("FETCHING COURSE")
             commit("setBusy", true);
             /*
             * fetch course */
@@ -74,6 +72,10 @@ export default {
                 this.$router.push("/courses");
               })
               .then(() => commit("setBusy", false));
+          },
+
+          fetchTranslation() {
+
           }
         
     }
