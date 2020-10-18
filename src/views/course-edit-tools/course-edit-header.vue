@@ -4,7 +4,7 @@
             <div class="col">
                 <!-- back to author tools view TODO: only show when not already there--> 
                 <b-button
-                    v-if="$route.name != 'course-detail'"
+                    v-if="$route.name != 'course-detail-view'"
                     variant="outline-secondary"
                     size="sm"
                     active-class="active" 
@@ -22,7 +22,7 @@
                                 variant="secondary"
                                 no-flip
                                 right>
-                        <b-dropdown-item v-for="(c,id) in $store.state.edit.course.content" :key="id"
+                        <b-dropdown-item v-for="(c,id) in hasContent" :key="id"
                                         :to="{name: 'course-detail-view',
                                         params: {name, step: id+1+''}}">
                             {{ i18n.listContent }} <b>{{ id+1 }}</b>
@@ -52,9 +52,9 @@ export default {
         step: String,
     },
     computed: {
-        ...mapState["edit", "profile"],
+        ...mapGetters(["profileLang", "hasContent"]),
         i18n() {
-            return i18n[this.$store.state.profile.lang]
+            return i18n[this.profileLang]
         }
     },
     methods: {

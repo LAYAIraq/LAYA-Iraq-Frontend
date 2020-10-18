@@ -18,7 +18,7 @@
             <div class="row mb-2" v-if="content()">
                 <div class="col">
                     <b-button variant="primary" block append
-                            :to="{path: 'edit', params: {type: content.name}}">
+                            :to="{path: 'edit', params: {type: name}}">
                     <i class="fas fa-edit"></i> {{ i18n.authTools.editContent }}
                     </b-button>
                 </div>
@@ -28,27 +28,11 @@
                 </div>
             </div>
 
-            <course-edit-type :content="content()" :i18n="i18n"></course-edit-type>
+            <course-edit-type></course-edit-type>
             
-            <course-new-block :name="name" :step="step" :i18n="i18n" :nextId="nextId()"> </course-new-block>
+            <course-new-block :name="name" :step="step"> </course-new-block>
 
-            <!-- Edit Course Navigation -->
-            <div class="row mb-2" v-if="$store.state.edit.course.content.length > 0">
-            <div class="col">
-                <b-button block variant="primary" append :to="{path: 'editNav'}">
-                <i class="fas fa-project-diagram"></i> {{ i18n.authTools.editNav }}
-                </b-button>
-            </div>
-
-            <div class="col text-dark">
-                <span v-if="courseNavIncomplete()"
-                    class="bg-warning mr-1 rounded"
-                    style="padding: 2px 5px">
-                <i class="fas fa-exclamation-triangle"></i> {{ i18n.authTools.editNavIncomplete }}
-                </span>
-                {{ i18n.authTools.editNavTip.replace("{steps}", $store.state.edit.course.content.length ) }}
-            </div>
-            </div>
+            <course-edit-nav></course-edit-nav>
 
             <!-- rename course -->
             <div class="row mt-3">
@@ -89,7 +73,7 @@
                             variant="danger"
                             class="float-right"
                             @click="$bvModal.show('author-delContent-confirm')">
-                    <i class="fas fa-exclamation-circle"></i> {{ i18n.authTools.deleteContent }}
+                        <i class="fas fa-exclamation-circle"></i> {{ i18n.authTools.deleteContent }}
                     </b-button>
                 </div>
 
@@ -134,13 +118,14 @@
 <script>
 import * as i18n from "@/i18n/course-detail/"
 import { mapState, mapGetters } from "vuex"
-import { courseEditHeader, courseEditType, courseNewBlock } from "./course-edit-tools/"
+import { courseEditHeader, courseEditNav, courseEditType, courseNewBlock } from "./course-edit-tools/"
 
 
 export default {
     name: "course-edit",
     components: {
         courseEditHeader,
+        courseEditNav,
         courseEditType,
         courseNewBlock
     },
@@ -150,19 +135,18 @@ export default {
     },
     data() {
         return {
-
         }
     },
     computed: {
         ...mapState(["edit"]),
-        ...mapGetters(["profileLang"]),
+        ...mapGetters(["profileLang", "hasContent"]),
         i18n () {
             return i18n[this.profileLang]
         }
     },
     methods: {
         content() {
-            return this.edit.course.content[this.step-1]
+            return this.hasContent
         },
         updateStep(changedStep) {
             this.course.content[this.step-1] = {
@@ -177,11 +161,10 @@ export default {
             this.$forceUpdate()
         },
         nextId() {
-            return this.$store.state.edit.course.content.length+1
+            return this.edit.course.content.length+1
         },
         getLocale(comp) {
-            let lang = this.$store.state.profile.lang
-            if(comp.i18n.hasOwnProperty(lang)) return comp.i18n[lang]
+            if(comp.i18n.hasOwnProperty(this.profileLang)) return comp.i18n[this.profileLang]
             else return comp.i18n.de
         }
     }

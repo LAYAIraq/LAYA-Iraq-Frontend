@@ -3,7 +3,7 @@ import _Vue from "vue";
 import _create from "./view.vue";
 import _edit from "./edit.vue";
 import _view from "./view.vue";
-import * as i18n from "../../i18n/plugins/laya-la-feedback"
+import i18n from "./i18n.js";
 
 export default {
   install(Vue: typeof _Vue, options?: any): void {

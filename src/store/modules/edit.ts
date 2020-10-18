@@ -8,16 +8,19 @@ export default {
         userEnrolled: false
     },
     getters: {
-        isUserEnrolled(state: { userEnrolled: Boolean}) {
+        isUserEnrolled (state: { userEnrolled: Boolean}) {
             return state.userEnrolled
+        },
+        hasContent(state: { course: { content: Object } } ) {
+          return state.course.content
         }
     },
     mutations: {
-        setEnrollment(state, data) {
+        setEnrollment(state: {enrollment: Object, userEnrolled: Boolean }, data) {
             state.enrollment = data
             state.userEnrolled = true
         },
-        setCourse(state, data) {
+        setCourse(state: { course: Object}, data: Object) {
             state.course = data
         }
 
