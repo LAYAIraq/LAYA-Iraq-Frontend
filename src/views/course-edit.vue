@@ -18,7 +18,7 @@
             <div class="row mb-2" v-if="content()">
                 <div class="col">
                     <b-button variant="primary" block append
-                            :to="{path: 'edit', params: {type: name}}">
+                            :to="{path: 'edit', params: {type: content().name}}">
                     <i class="fas fa-edit"></i> {{ i18n.authTools.editContent }}
                     </b-button>
                 </div>
@@ -151,7 +151,7 @@ export default {
     },
     methods: {
         content() {
-            return this.hasContent
+            return this.hasContent[this.step-1]
         },
         updateStep(changedStep) {
             this.course.content[this.step-1] = {
