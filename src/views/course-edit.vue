@@ -34,21 +34,7 @@
 
             <course-edit-nav></course-edit-nav>
 
-            <!-- rename course -->
-            <div class="row mt-3">
-            <div class="col">
-                <b-button size="sm"
-                        variant="warning"
-                        class="float-right"
-                        @click="$bvModal.show('author-renameCourse-confirm')">
-                <i class="fas fa-exclamation-circle"></i> {{ i18n.authTools.renameCourse }}
-                </b-button>
-            </div>
-
-            <div class="col text-dark">
-                {{ i18n.authTools.renameCourseTip }}
-            </div>
-            </div>
+            <course-rename></course-rename>
 
             <!-- Copy Course -->
             <div class="row mt-3">
@@ -122,7 +108,8 @@ import {
     courseEditHeader, 
     courseEditNav, 
     courseEditType, 
-    courseNewBlock 
+    courseNewBlock,
+    courseRename 
     } from "./course-edit-tools/"
 
 
@@ -132,7 +119,8 @@ export default {
         courseEditHeader,
         courseEditNav,
         courseEditType,
-        courseNewBlock
+        courseNewBlock,
+        courseRename
     },
     props: {
         name: String,
