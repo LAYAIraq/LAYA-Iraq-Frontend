@@ -13,8 +13,14 @@
             <b-dropdown-header>{{ i18n.authTools.newContentBlock }}</b-dropdown-header>
                 <b-dropdown-item v-for="block in $laya.lb"
                                 :key="block.id"
-                                :to="'/courses/'+name+'/'+nextId+'/new/'+block.id">
-                    {{ getLocale(block) }} 
+                                :to="'/courses/'+name+'/'+nextId+'/new/'+block.id"
+                                >
+                    
+                    <div class="dropitem">
+                        {{ block.i18n[profileLang].name }} 
+                        <i class="far fa-question-circle" v-b-tooltip.right :title="block.i18n[profileLang].caption">
+                        </i>
+                    </div>
                 </b-dropdown-item>
 
                 <b-dropdown-divider></b-dropdown-divider>
@@ -22,8 +28,15 @@
                 <b-dropdown-header>{{ i18n.authTools.newContentAssmnt }}</b-dropdown-header>
                 <b-dropdown-item v-for="ass in $laya.la"
                                 :key="ass.id"
-                                :to="'/courses/'+name+'/'+nextId+'/new/'+ass.id">
-                    {{ getLocale(ass) }}
+                                :to="'/courses/'+name+'/'+nextId+'/new/'+ass.id"
+                                >
+                    <div class="dropitem">
+                        {{ ass.i18n[profileLang].name }}
+                    
+                        <i class="far fa-question-circle" v-b-tooltip.right :title="ass.i18n[profileLang].caption">
+                        </i>
+                    </div>
+                    
                 </b-dropdown-item>
             </b-dropdown>
 
@@ -37,43 +50,47 @@
 </template>
 
 <script>
-import { BDropdown, BDropdownItem, BDropdownDivider, BDropdownHeader } from "bootstrap-vue"
+import { mapState, mapGetters } from "vuex"
+import { 
+    BDropdown, 
+    BDropdownItem, 
+    BDropdownDivider, 
+    BDropdownHeader, 
+    BTooltip } from "bootstrap-vue"
+import * as i18n from "@/i18n/course-detail/"
 
 export default {
     name: "course-new-block",
     props: {
-        i18n: Object,
+       
         name: String,
         step: String,
-        nextId: Number
+
     },
     data() {
         return {
 
         }
     },
-    plugins() {
-      const la = this.$laya.la
-      const lb = this.$laya.lb
-      let lalb = [{value: null, text: this.i18n.changeTypeText, disabled: true}]
-      let lang = this.$store.state.profile.lang
-      for(const id in lb) {
-        if (lb[id].i18n.hasOwnProperty(lang))
-          lalb.push({value: id, text: lb[id].i18n[lang]})
-        else lalb.push({value: id, text: lb[id].i18n.de})
-      }
-      for(const id in la)
-        if (la[id].i18n.hasOwnProperty(lang))
-          lalb.push({value: id, text: la[id].i18n[lang].edit.title})
-        else lalb.push({value: id, text: la[id].i18n.de})
-      return lalb
+    computed: {
+        ...mapGetters(["profileLang", "hasContent"]),
+        i18n() {
+            return i18n[this.profileLang]
+        },
+        nextId() {
+            return this.hasContent.length+1
+        }
     },
     methods: {
-        getLocale(comp) {
-            let lang = this.$store.state.profile.lang
-            if(comp.i18n.hasOwnProperty(lang)) return comp.i18n[lang].edit.title
-            else return comp.i18n.de.edit.title
-        }
+       
     }
 }
 </script>
+
+<style scoped>
+
+.dropitem i {
+    float:inline-end;
+}
+    
+</style>

@@ -19,13 +19,16 @@ export default {
         }
     },
     mutations: {
-        setEnrollment(state: {enrollment: Object, userEnrolled: Boolean }, data) {
-            state.enrollment = data
-            state.userEnrolled = true
-        },
-        setCourse(state: { course: Object}, data: Object) {
-            state.course = data
-        }
+      renameCourse( state: {course: {name: String}}, newName: String) {
+        state.course.name = newName
+      },
+      setEnrollment(state: {enrollment: Object, userEnrolled: Boolean }, data: Object) {
+          state.enrollment = data
+          state.userEnrolled = true
+      },
+      setCourse(state: { course: Object}, data: Object) {
+          state.course = data
+      }
 
     },
     actions: {
@@ -62,7 +65,9 @@ export default {
           },
 
           fetchCourse ({ commit, state, rootState}, name: String) {
-            // console.log("FETCHING COURSE")
+            //can you return router function? //TODO direkt hier 
+            return new Promise((resolve, reject) => {
+              // console.log("FETCHING COURSE")
             commit("setBusy", true);
             /*
             * fetch course */
@@ -70,14 +75,21 @@ export default {
               .then(({ data }) => {
                 console.log(data)
                 commit("setCourse", data)
+                resolve("done")
               })
               .catch(err => {
                 /*
                 * redirect off invalid course */
                 console.error(err);
-                this.$router.push("/courses");
+                reject(err)
               })
-              .then(() => commit("setBusy", false));
+              .finally(() => commit("setBusy", false));
+             })
+            
+          },
+
+          updateCourse( { commit, state, }) {
+
           },
 
           fetchTranslation() {

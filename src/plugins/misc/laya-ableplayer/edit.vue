@@ -2,6 +2,13 @@
   <div class="laya-ableplayer-edit">
 
     <h3>{{ i18n.title }}</h3>
+    <b-jumbotron 
+            v-if="tooltipOn"
+            :header="i18n.video" :lead="i18n.tipHeadline">
+          <hr class="my-4">
+          <p v-html="i18n.tooltip"></p>
+
+        </b-jumbotron>
     <hr>
     <form>
       <div class="form-group">
