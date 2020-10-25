@@ -43,7 +43,8 @@ export default {
     name: "courseRename",
     data() {
         return {
-            rename: ""
+            rename: "",
+            oldName: ""        
         }
     },
     computed: {
@@ -57,22 +58,10 @@ export default {
     methods: {
         renameCourse() {
             if(!this.rename) return
+            this.oldName = this.edit.course.name
             this.$store.commit("renameCourse", this.rename)
-            
-            console.log("new name", this.rename)
-            http.delete(`courses/${this.name}`)
-                .then(function() {
-                let renamed_course = {...this.course}
-                renamed_course.name = this.rename
-                http.post(`courses`, renamed_course)
-                    .catch(err => console.error("Failed course rename:", err))
-                    .finally(() => {
-                    this.$bvToast.show("author-toast")
-                    this.$router.push("/courses")
-                    })
-                })
-                .catch(function() {
-                })
+            this.$store.dispatch("updateRenamedCourse", this.oldName)
+        
         
         }
 

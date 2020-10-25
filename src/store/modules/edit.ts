@@ -88,8 +88,23 @@ export default {
             
           },
 
-          updateCourse( { commit, state, }) {
-
+          updateRenamedCourse( { commit, state, rootState}, oldName: String ) {
+            
+            http.delete(`courses/${oldName}`)
+                .then(function() {
+                let renamed_course = state.course
+                http.post(`courses`, renamed_course)
+                    .catch(err => {
+                      console.error("Failed course rename:", err)
+                      return false
+                    })
+                    .finally(() => {
+                      return true
+                    })
+                })
+                .catch(function() {
+                })
+            
           },
 
           fetchTranslation() {
