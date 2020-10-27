@@ -1,7 +1,5 @@
 <template>
 
-<!-- content change type modal -->
-    
 <!-- change content type -->
     <div class="row mb-2" v-if="content">
         <div class="col">
@@ -36,25 +34,63 @@
 import {
     BModal
 } from "bootstrap-vue"
+import { mapGetters, mapState } from "vuex"
+import * as  i18n from "@/i18n/course-detail"
 
 export default {
     name: "course-edit-type",
     props: {
-        content: Array,
-        i18n: Object
+        name: String,
+        step: String
     },
     data() {
         return {
             changetype: null,
         }
     },
+    
+    computed: {
+        ...mapGetters(["profileLang", "hasContent"]),
+        ...mapState(["edit"]),
+        content() {
+            return this.hasContent[this.step-1]
+        },
+        i18n() {
+            return i18n[this.profileLang]
+        },
+        plugins() {
+            const la = this.$laya.la
+            const lb = this.$laya.lb
+            let lalb = [{value: null, text: this.i18n.changeTypeText, disabled: true}]
+            let lang = this.profileLang
+            for(const id in lb) {
+                if (lb[id].i18n.hasOwnProperty(lang))
+                lalb.push({value: id, text: lb[id].i18n[lang].name})
+                else lalb.push({value: id, text: lb[id].i18n.de.name})
+            }
+            for(const id in la)
+                if (la[id].i18n.hasOwnProperty(lang))
+                lalb.push({value: id, text: la[id].i18n[lang].name})
+                else lalb.push({value: id, text: la[id].i18n.de.name})
+            return lalb
+        }
+    },
     methods: {
         changeContentType() {
             if(!this.changetype) return
-            console.log("Change type")
-            this.updateStep({name: this.changetype, input: null})
+            
+            let step = this.step-1
+            const updatedStep = {
+                name: this.changetype,
+                input: null,
+                nextStep: null
+            }
+            // console.log(`Change type of step ${step} to ${updatedStep.name}`)
+            this.$store.commit("updateStep", { step , updatedStep } )
+            this.$emit("changedType")
         },
-    }
+    },
+    
     
     
 }

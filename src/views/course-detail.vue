@@ -1,73 +1,5 @@
 <template>
   <div v-if="!note.busy" class="course-detail-view">
-    <ly-scroll-to-top></ly-scroll-to-top>
-    <!-- content delete modal -->
-    <b-modal id="author-delContent-confirm"
-             :title="i18n.bModal.delContent.title"
-             header-bg-variant="danger"
-             ok-variant="danger"
-             :ok-title="i18n.bModal.delContent.ok"
-             :cancel-title="i18n.bModal.cancel"
-             @ok="delContent"
-             centered>
-      <p>{{ i18n.bModal.delContent.text }}</p>
-    </b-modal>
-
-    <!-- course delete modal -->
-    <b-modal id="author-delCourse-confirm"
-             :title="i18n.bModal.delCourse.title"
-             header-bg-variant="danger"
-             ok-variant="danger"
-             :ok-title="i18n.bModal.delCourse.ok"
-             :cancel-title="i18n.bModal.cancel"
-             @ok="delCourse"
-             centered>
-      <p v-html="i18n.bModal.delCourse.text"></p>
-    </b-modal>
-
-    <!-- course copy modal -->
-    <b-modal id="author-copyCourse-confirm"
-             :title="i18n.bModal.copyCourse.title"
-             header-bg-variant="warning"
-             ok-variant="warning"
-             :ok-title="i18n.bModal.copyCourse.ok"
-             :cancel-title="i18n.bModal.cancel"
-             @ok="copyCourse"
-             centered>
-      <p>
-        {{ i18n.bModal.copyCourse.text }}<input
-          type="text"
-          v-model="copy"
-          class="form-control"
-          :placeholder="i18n.bModal.copyCourse.placeholder">
-      </p>
-    </b-modal>
-
-    
-
-    <!-- course statistics modal -->
-    <b-modal ok-only id="author-courseStats"
-          :title="i18n.bModal.courseStats.title"
-          centered>
-      <p>  {{ i18n.bModal.courseStats.users }}: {{ courseStats.count }}</p>
-      <p>  {{ i18n.bModal.courseStats.time }}: {{ courseStats.averageTime }} </p>
-      <p>  {{ i18n.bModal.courseStats.flags }}: 0</p>
-      <p>  {{ i18n.bModal.courseStats.stoppedAt }}: {{courseStats.lostUsersAt}}</p>
-      <p>  {{ i18n.bModal.courseStats.totalLosses }}: {{ courseStats.usersLost}} </p>
-      <p>  {{ i18n.bModal.courseStats.feedback }}: {{ courseStats.feedbackAverage }} </p>
-     
-    </b-modal>
-
-
-    <!-- success toast-->
-    <b-toast id="author-toast"
-             :title="i18n.bToast.title"
-             static
-             variant="success"
-             auto-hide-delay="1500"
-             class="author-toast">
-      {{ i18n.bToast.text }}
-    </b-toast>
 
     <!-- course header -->
     <div class="container-fluid bg-dark">
@@ -108,9 +40,7 @@
       </div>
     </div>
 
-    <div style="height: 4rem"></div>
-
-    <courseEdit v-if="isAuthor" :name="name" :step="step"></courseEdit>
+    <courseEdit v-if="isAuthor" :name="name" :step="step" :saved="$forceUpdate"></courseEdit>
 
   </div>
 </template>
@@ -123,10 +53,8 @@ import {
   BDropdownItem,
   BDropdownHeader,
   BDropdownDivider,
-  BToast, 
-  //BvToast,
-  BModal, 
-  //BvModal
+  BToast,
+  
 } from "bootstrap-vue"
 
 import http from "axios";
@@ -144,7 +72,6 @@ export default {
   data() {
     return {
       course: {},
-      userEnrolled: false,
       enrollment: {},
       rename: "",
       copy: "",
@@ -166,7 +93,7 @@ export default {
   },
   computed: {
     ...mapState(["auth", "note", "edit"]),
-    ...mapGetters(["isAuthor", "profileLang", "hasContent"]),
+    ...mapGetters(["isAuthor", "profileLang", "hasContent", "hasCourse"]),
 
     /* returns empty function on every [] invocation */
     onFinishDummy() {
@@ -181,6 +108,10 @@ export default {
       return i18n[this.profileLang]
     },
 
+    userEnrolled() {
+      return this.$store.state.edit.userEnrolled
+    }
+
   },
   methods: {
     ...utils,
@@ -190,11 +121,10 @@ export default {
 
       window.scrollTo(0,0)
       document.title = `Laya - ${ctx.name}`
-
+      console.log("Fetching Course...")
       let fc = ctx.$store.dispatch("fetchCourse", ctx.name)
-      console.log(fc)
-      fc.then( succ => { 
-          console.log(succ)
+      fc.then( resp => { 
+          console.log(resp)
         })
         .catch( err => {
         ctx.$router.push("/courses")
@@ -220,86 +150,8 @@ export default {
       //       console.log('No enrollment found!')
       //       // console.error(err)
       //     })
-      this.$store.dispatch("fetchEnrollment", this.name)
+      this.$store.dispatch("fetchEnrollment", this.hasCourse.createDate)
       
-    },
-
-    async fetchCourseStats() {
-      const ctx = this
-      var listEnr = []
-
-      //get data from enrollments
-      await http.get('enrollments/getAllByCourseId', {params: {courseId: this.name}})
-        .then(({data}) => {
-          console.log(data.subs)
-          listEnr = data.subs
-        })
-        .catch(err => {
-          console.error(err)
-        })
-
-      var stats = (Object)
-      stats = {...stats, count: listEnr.length} //all enrolled users 
-
-      //get avg time to completion
-      var timeSpent = 0
-      var finished = 0
-      var notFinished = 0
-      var lostAt = []
-      var now = Date.now()
-      var avgFeedback = []
-
-      for (const enrol of listEnr) {
-        console.log(enrol)
-        if (enrol.finished) {
-          let userTime = Date.parse(enrol.lastActivity) - Date.parse(enrol.created)
-          console.log(`User time: ${userTime} `)
-          timespent += userTime
-          finished ++
-        }
-        else { //count as lost if user didn't take action for more than a week
-          console.log(`User ${enrol.studentId} didn't finish!`)
-          notFinished++
-          let lastAct = Date.parse(enrol.lastActivity)
-          lastAct >= 604800000? lostAt.push(enrol.progress) : null
-        }
-
-        if (enrol.feedback) { // get average of feedback if applicable
-          for(let token of enrol.feedback) {
-            let highScore = token.options.answers.length
-            let avgScore = Number((token.choice.reduce((a,b) => (a+b)) / token.choice.length).toFixed(1))
-            console.log(`Score: ${avgScore} of ${highScore} `)
-            avgFeedback.push(avgScore)
-          }
-        }
-      }
-
-      console.log(`time spent: ${timeSpent} by ${finished} users who finished`)
-      var avgTime = (finished != 0)? this.verbalizeTime(timeSpent/finished): this.verbalizeTime(0)
-      
-      console.log(`${notFinished} users didn't finish`)
-      var lossCnt = Array(ctx.course.content.length).fill(0)
-      console.log(lostAt)
-      for (let p of lostAt) { //count where not finished users stopped
-        lossCnt[p]++
-      }
-      var bigLoss = lossCnt.indexOf(Math.max(...lossCnt)) + 1 // Index of Content that lost most users
-      console.log(`We lost most users at Content #${bigLoss}`)
-
-      var lostUsers = notFinished - lostAt.length //only count users that didn't do anythin for over a week
-      console.log(`We lost ${lostUsers} in total`)
-
-      var fbAvg = avgFeedback? (avgFeedback.reduce((a,b) => (a+b)) / avgFeedback.length).toFixed(1) : null //calculate average of averages 
-
-      stats = {...stats, averageTime: avgTime, lostUsersAt: bigLoss, usersLost: lostUsers, feedbackAverage: fbAvg}
-      
-      
-
-      //TODO: get data for flags
-
-      console.log(stats)
-      this.courseStats = stats
-
     },
 
     updateEnrollment() {
@@ -367,36 +219,6 @@ export default {
       this.$forceUpdate()
     },
 
-    delContent() {
-      this.course.content.splice(this.step-1, 1) 
-      this.storeCourse()
-    },
-
-    delCourse() {
-      http.delete(`courses/${this.name}`)
-        .then(function() {
-          this.$router.push("/courses")
-        })
-        .catch(err => console.error("Failed to delete course:", err))
-    },
-
-    copyCourse() {
-      if(!this.copy) return
-      console.log("new copy", this.copy)
-      http.head(`courses/${this.copy}`)
-        .catch(function() {
-          // course name does not exist
-          let copied_course = {...this.course}
-          copied_course.name = this.copy
-          http.post(`courses`, copied_course)
-            .catch(err => console.error("Failed course copy:", err))
-            .finally(() => this.$bvToast.show("author-toast"))
-        })
-        .then(function() {
-          // course name already exists
-        })
-    },
-
     changeContentType() {
       if(!this.changetype) return
       console.log("Change type")
@@ -404,11 +226,12 @@ export default {
     },
 
     storeCourse() {
-      http.patch(`courses/${this.name}`, {content: this.course.content})
-        .catch(err => console.error("Failed storing course content:", err))
-        .finally(function() {
-          this.$bvToast.show("author-toast")
+      let stored = this.$store.dispatch("storeCourse")
+      stored.then( (succ) => {
+        console.log(succ)
+        this.$bvToast.show("author-toast")
         })
+        .catch( (err) => console.error(err))
     },
 
     storeFeedback() {
@@ -478,5 +301,13 @@ export default {
 
 .subscribe-btn {
   border: 2px solid black;
+}
+
+.container-fluid {
+  margin-bottom: 4rem;
+}
+
+.container.content {
+  margin-bottom: 4rem;
 }
 </style>

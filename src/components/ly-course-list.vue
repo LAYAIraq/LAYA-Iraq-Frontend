@@ -42,7 +42,7 @@
             {{ i18n.start }} <i class="fas fa-arrow-right"></i>
           </router-link>
           <a class="text-dark px-2 py-1 d-inline-block text-center" 
-            v-else @click="subscribe(course)">{{ i18n.subscribe }}</a>
+            v-else @click="subscribe(course)" href="#">{{ i18n.subscribe }}</a>
         </div>
       </div>
 
@@ -73,29 +73,30 @@ export default {
     this.getSubs
   },
   computed: {
+    ...mapGetters(["profileLang"]),
     ...mapState(["note", "auth"]),
 
-    filtered: function() {
+    filtered() {
       if (!this.filter) return this.courses;
 
       const filterByCourseName = new RegExp(this.filter, "i");
       return this.courses.filter(course => filterByCourseName.test(course.name))
     },
-    i18n: function() {
-      return i18n[this.$store.state.profile.lang];
+    i18n() {
+      return i18n[this.profileLang];
     }
   },
   methods: {
     getSubs() {
-      var self = this
-      var studentId = this.auth.userId
+      let self = this
+      let studentId = this.auth.userId
      
       http
         .get(`enrollments/getAllByStudentId/?uid=${studentId}`)
         .then(({ data }) => {
           const list = data.sublist
           for(var item of list) {
-            self.enrolledIn.push(item.courseId)
+            self.enrolledIn.push(item.createDate)
           }
         })
         .catch(err => {
@@ -103,9 +104,8 @@ export default {
         })
     },
     enrollmentNeeded(course) {
-      var needed = course.needsEnrollment
-      if (needed) {
-        return this.enrolledIn.find(x => x == course.name)? false : true
+      if (course.needsEnrollment) {
+        return this.enrolledIn.find(x => x == course.createDate)? false : true
       }
       else {
         return false
@@ -114,7 +114,7 @@ export default {
     subscribe(course) {
       const self = this
       const newEnrollment = {
-        courseId: course.name,
+        createDate: course.createDate,
         studentId: this.auth.userId
       }
 

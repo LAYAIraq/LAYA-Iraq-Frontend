@@ -61,8 +61,7 @@ export default {
             this.oldName = this.edit.course.name
             this.$store.commit("renameCourse", this.rename)
             this.$store.dispatch("updateRenamedCourse", this.oldName)
-        
-        
+            this.$emit("renamed")
         }
 
     }

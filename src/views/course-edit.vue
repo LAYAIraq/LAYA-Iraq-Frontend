@@ -14,90 +14,35 @@
 
         <div class="container" v-if="$route.name == 'course-detail-view'">
 
-            <!-- edit content -->
-            <div class="row mb-2" v-if="content()">
-                <div class="col">
-                    <b-button variant="primary" block append
-                            :to="{path: 'edit', params: {type: content().name}}">
-                    <i class="fas fa-edit"></i> {{ i18n.authTools.editContent }}
-                    </b-button>
-                </div>
-
-                <div class="col text-dark">
-                    {{ i18n.authTools.editContentTip.replace("{step}", this.step) }}
-                </div>
-            </div>
-
-            <course-edit-type></course-edit-type>
+            <course-edit-content :name="name" :step="step"></course-edit-content>
+            
+            <course-edit-type :name="name" :step="step" @changedType="storeCourse"></course-edit-type>
             
             <course-new-block :name="name" :step="step"> </course-new-block>
 
             <course-edit-nav></course-edit-nav>
 
-            <course-rename></course-rename>
+            <course-rename @renamed="$bvToast.show('author-toast')"></course-rename>
 
-            <!-- Copy Course -->
-            <div class="row mt-3">
-            <div class="col">
-                <b-button size="sm"
-                        variant="warning"
-                        class="float-right"
-                        @click="$bvModal.show('author-copyCourse-confirm')">
-                <i class="fas fa-exclamation-circle"></i> {{ i18n.authTools.copyCourse }}
-                </b-button>
-            </div>
+            <course-copy @success="$bvToast.show('author-toast')"></course-copy>
 
-            <div class="col text-dark">
-                {{ i18n.authTools.copyCourseTip }}
-            </div>
-            </div>
+            <course-delete-block :name="name" :step="step"></course-delete-block>
 
-            <!-- Delete content -->
-            <div class="row mt-5" v-if="content()">
-                <div class="col">
-                    <b-button size="sm"
-                            variant="danger"
-                            class="float-right"
-                            @click="$bvModal.show('author-delContent-confirm')">
-                        <i class="fas fa-exclamation-circle"></i> {{ i18n.authTools.deleteContent }}
-                    </b-button>
-                </div>
+            <course-delete :name="name"></course-delete>
 
-                <div class="col text-dark">
-                    {{ i18n.authTools.deleteContentTip }}
-                </div>
-            </div>
-
-            <!-- delete course-->
-            <div class="row mt-3">
-                <div class="col">
-                    <b-button size="sm"
-                            variant="danger"
-                            class="float-right"
-                            @click="$bvModal.show('author-delCourse-confirm')">
-                    <i class="fas fa-exclamation-circle"></i> {{ i18n.authTools.deleteCourse }}
-                    </b-button>
-                </div>
-
-                <div class="col text-dark" v-html="i18n.authTools.deleteCourseTip">
-                    
-                </div>
-            </div>
-
-            <!-- View Course Statistics -->
-            <div class="row mt-5">
-                <div class="col">
-                    <b-button block variant="success" @click="$bvModal.show('author-courseStats')">
-                    <i class="fas fa-info-circle"></i> {{ i18n.authTools.seeStats }}
-                    </b-button>
-                </div>
-
-                <div class="col text-dark">
-                    {{ i18n.authTools.statsTip }}
-                </div>
-            </div>
+            <course-stats></course-stats>
 
         </div>
+
+        <b-toast id="author-toast"
+             :title="i18n.bToast.title"
+             static
+             variant="success"
+             auto-hide-delay="1500"
+             class="author-toast">
+            {{ i18n.bToast.text }}
+        </b-toast>
+
     </div>
 </template>
 
@@ -105,22 +50,32 @@
 import * as i18n from "@/i18n/course-detail/"
 import { mapState, mapGetters } from "vuex"
 import { 
+    courseCopy,
+    courseDelete,
+    courseDeleteBlock,
+    courseEditContent,
     courseEditHeader, 
     courseEditNav, 
     courseEditType, 
     courseNewBlock,
-    courseRename 
+    courseRename,
+    courseStats
     } from "./course-edit-tools/"
 
 
 export default {
     name: "course-edit",
     components: {
+        courseCopy,
+        courseDelete,
+        courseDeleteBlock,
+        courseEditContent,
         courseEditHeader,
         courseEditNav,
         courseEditType,
         courseNewBlock,
-        courseRename
+        courseRename,
+        courseStats
     },
     props: {
         name: String,
@@ -142,9 +97,8 @@ export default {
             return this.hasContent[this.step-1]
         },
         updateStep(changedStep) {
-            this.course.content[this.step-1] = {
-                ...this.course.content[this.step-1], ...changedStep
-            }
+            let step = this.step-1
+            this.$store.commit("updateStep", { step, changedStep })
             this.storeCourse()
             this.$forceUpdate()
         },
@@ -161,17 +115,29 @@ export default {
             else return comp.i18n.de
         },
         storeCourse() {
-            http.patch(`courses/${this.name}`, {content: this.course.content})
-                .catch(err => console.error("Failed storing course content:", err))
-                .finally(() => {
+            let stored = this.$store.dispatch("storeCourse")
+            stored.then( (succ) => {
+                // console.log(succ)
                 this.$bvToast.show("author-toast")
+                this.$emit("saved")
                 })
+                .catch( (err) => console.error(err))
+            
          },
+        showToast() {
+            this.$bvToast.show("author-toast")
+        }
     }
     
 }
 </script>
 
 <style scoped>
-
+.author-toast {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11002;
+}
 </style>
