@@ -54,7 +54,7 @@ import {
   BDropdownHeader,
   BDropdownDivider,
   BToast,
-  
+  BModal
 } from "bootstrap-vue"
 
 import http from "axios";
