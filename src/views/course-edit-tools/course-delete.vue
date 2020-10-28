@@ -5,21 +5,21 @@
                     variant="danger"
                     class="float-right"
                     @click="$bvModal.show('author-delCourse-confirm')">
-            <i class="fas fa-exclamation-circle"></i> {{ i18n.authTools.deleteCourse }}
+            <i class="fas fa-exclamation-circle"></i> {{ i18n.deleteCourse }}
             </b-button>
         </div>
 
-        <div class="col text-dark" v-html="i18n.authTools.deleteCourseTip"></div>
+        <div class="col text-dark" v-html="i18n.deleteCourseTip"></div>
                 
         <b-modal id="author-delCourse-confirm"
-                :title="i18n.bModal.delCourse.title"
+                :title="i18n.modal.title"
                 header-bg-variant="danger"
                 ok-variant="danger"
-                :ok-title="i18n.bModal.delCourse.ok"
-                :cancel-title="i18n.bModal.cancel"
+                :ok-title="i18n.modal.ok"
+                :cancel-title="i18n.modal.cancel"
                 @ok="delCourse"
                 centered>
-        <p v-html="i18n.bModal.delCourse.text"></p>
+        <p v-html="i18n.modal.text"></p>
         </b-modal>
 
     </div>
@@ -27,7 +27,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex"
-import * as i18n from "@/i18n/course-detail"
+import * as i18n from "@/i18n/course-edit/delete-course"
 import http from "axios"
 
 export default {

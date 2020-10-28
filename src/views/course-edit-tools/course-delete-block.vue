@@ -5,30 +5,30 @@
                     variant="danger"
                     class="float-right"
                     @click="$bvModal.show('author-delContent-confirm')">
-                <i class="fas fa-exclamation-circle"></i> {{ i18n.authTools.deleteContent }}
+                <i class="fas fa-exclamation-circle"></i> {{ i18n.deleteContent }}
             </b-button>
         </div>
 
         <div class="col text-dark">
-            {{ i18n.authTools.deleteContentTip }}
+            {{ i18n.deleteContentTip }}
         </div>
 
         <b-modal id="author-delContent-confirm"
-             :title="i18n.bModal.delContent.title"
+             :title="i18n.modal.title"
              header-bg-variant="danger"
              ok-variant="danger"
-             :ok-title="i18n.bModal.delContent.ok"
-             :cancel-title="i18n.bModal.cancel"
+             :ok-title="i18n.modal.ok"
+             :cancel-title="i18n.modal.cancel"
              @ok="delContent"
              centered>
-            <p>{{ i18n.bModal.delContent.text }}</p>
+            <p>{{ i18n.modal.text }}</p>
         </b-modal>
     </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from "vuex"
-import * as i18n from "@/i18n/course-detail"
+import * as i18n from "@/i18n/course-edit/delete-block"
 
 export default {
     name: "course-delete-block",

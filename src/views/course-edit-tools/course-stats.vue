@@ -120,6 +120,44 @@ export default {
             this.courseStats = stats
 
             },
+
+            storeFeedback() {
+                const self = this
+                http.patch(`enrollments/${self.enrollment.id}`, {feedback: self.enrollment.feedback})
+                .catch(err => console.error("Failed storing course feedback:", err))
+                .finally(function() {
+                    //this.$bvToast.show("author-toast")
+                })
+             },
+
+            saveFeedback(feedback) {
+                var cfb = this.enrollment.feedback
+                for (var i in cfb) {
+                    if(cfb[i].step == this.step) {
+                    this.updateFeedback(feedback, i)
+                    return
+                    }
+                }
+                this.enrollment.feedback.push(feedback)
+                this.storeFeedback()
+            },
+
+            updateFeedback(updatedFeedback, index) {
+                this.enrollment.feedback[index] = {
+                    ...this.enrollment.feedback[index], ...updatedFeedback
+                    }
+                console.log("Feedback for step "+ updatedFeedback.step + " updated!")
+                this.storeFeedback()
+            },
+
+            /* storeFeedback() {
+            const self = this
+            http.patch(`enrollments/${self.enrollment.id}`, {feedback: self.enrollment.feedback})
+                .catch(err => console.error("Failed storing course feedback:", err))
+                .finally(function() {
+                //this.$bvToast.show("author-toast")
+                })
+            }, */
     }
 
 }

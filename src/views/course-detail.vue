@@ -40,7 +40,7 @@
       </div>
     </div>
 
-    <courseEdit v-if="isAuthor" :name="name" :step="step" :saved="$forceUpdate"></courseEdit>
+    <courseEdit v-if="isAuthor" :name="name" :step="step" @saved="$forceUpdate"></courseEdit>
 
   </div>
 </template>
@@ -132,35 +132,11 @@ export default {
     },
 
     fetchEnrollment() {
-      // // console.log("Getting Enrollment status...")
-      // const self = this
-      // let uid = self.auth.userId
-      // let cid = self.name
-      // // console.log(cid)
-      // // const params = http.paramsSerializer({filter:{where: {studentId: uid, courseId: self.course.name}}})
-      // // console.log(params)
-      // http.get("enrollments/findOne", {params: {filter:{where: {studentId: uid, courseId: cid}}}})
-      //     .then(({data}) => {
-      //       // console.log("Enrollment exists!")
-      //       // console.log(data)
-      //       self.enrollment = data
-      //       self.userEnrolled = true
-      //     })
-      //     .catch(err => {
-      //       console.log('No enrollment found!')
-      //       // console.error(err)
-      //     })
       this.$store.dispatch("fetchEnrollment", this.hasCourse.createDate)
-      
     },
 
     updateEnrollment() {
       this.$store.dispatch("updateEnrollment")
-    },
-
-    compView(name) {
-      const la = this.$laya.la[name]
-      return la ? la.components.view : this.$laya.lb[name].components.view
     },
 
     content() {
@@ -172,75 +148,6 @@ export default {
         return (this.isAuthor || this.userEnrolled)? true : false;
       }
       return false
-    },
-
-    /* feedback() {
-      if(this.course.content[this.step-1].name === "laya-course-feedback") {
-        const fb = {
-          feedback: this.enrollment.feedback,
-          fno: Number(this.step)
-        }
-        return fb
-      }
-      return null
-    },
- */
-    saveFeedback(feedback) {
-      var cfb = this.enrollment.feedback
-      for (var i in cfb) {
-        if(cfb[i].step == this.step) {
-          this.updateFeedback(feedback, i)
-          return
-        }
-      }
-      this.enrollment.feedback.push(feedback)
-      this.storeFeedback()
-    },
-
-    updateFeedback(updatedFeedback, index) {
-      this.enrollment.feedback[index] = {
-        ...this.enrollment.feedback[index], ...updatedFeedback
-      }
-      console.log("Feedback for step "+ updatedFeedback.step + " updated!")
-      this.storeFeedback()
-    },
-
-    updateStep(changedStep) {
-      this.course.content[this.step-1] = {
-        ...this.course.content[this.step-1], ...changedStep
-      }
-      this.storeCourse()
-      this.$forceUpdate()
-    },
-
-    updateContent(changedContent) {
-      this.course.content = [...changedContent]
-      this.storeCourse()
-      this.$forceUpdate()
-    },
-
-    changeContentType() {
-      if(!this.changetype) return
-      console.log("Change type")
-      this.updateStep({name: this.changetype, input: null})
-    },
-
-    storeCourse() {
-      let stored = this.$store.dispatch("storeCourse")
-      stored.then( (succ) => {
-        console.log(succ)
-        this.$bvToast.show("author-toast")
-        })
-        .catch( (err) => console.error(err))
-    },
-
-    storeFeedback() {
-      const self = this
-      http.patch(`enrollments/${self.enrollment.id}`, {feedback: self.enrollment.feedback})
-        .catch(err => console.error("Failed storing course feedback:", err))
-        .finally(function() {
-          //this.$bvToast.show("author-toast")
-        })
     },
 
     nextStep(steps) { // string e.g. "1,2"
@@ -255,30 +162,12 @@ export default {
       })
     },
 
-    nextId() {
-      return this.hasContent.length+1
-    },
-
-    getLocale(comp) {
-      let lang = this.$store.state.profile.lang
-      if(comp.i18n.hasOwnProperty(lang)) return comp.i18n[lang]
-      else return comp.i18n.de
-    }
-
   },
   components: {
-    BDropdown,
-    BDropdownItem,
-    BDropdownHeader,
-    BDropdownDivider,
-    BToast, 
-    //BvToast,
-    BModal, 
-    //BvModal,
     lyScrollToTop,
     courseEdit
   }
-};
+}
 </script>
 
 <style scoped>

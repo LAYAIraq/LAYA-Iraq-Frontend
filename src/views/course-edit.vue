@@ -81,10 +81,6 @@ export default {
         name: String,
         step: String
     },
-    data() {
-        return {
-        }
-    },
     computed: {
         ...mapState(["edit"]),
         ...mapGetters(["profileLang", "hasContent", "hasCourse"]),
@@ -96,24 +92,20 @@ export default {
         content() {
             return this.hasContent[this.step-1]
         },
+
         updateStep(changedStep) {
             let step = this.step-1
             this.$store.commit("updateStep", { step, changedStep })
             this.storeCourse()
             this.$forceUpdate()
         },
+
         updateContent(changedContent) {
             this.course.content = [...changedContent]
             this.storeCourse()
             this.$forceUpdate()
         },
-        nextId() {
-            return this.edit.course.content.length+1
-        },
-        getLocale(comp) {
-            if(comp.i18n.hasOwnProperty(this.profileLang)) return comp.i18n[this.profileLang]
-            else return comp.i18n.de
-        },
+       
         storeCourse() {
             let stored = this.$store.dispatch("storeCourse")
             stored.then( (succ) => {
@@ -121,14 +113,9 @@ export default {
                 this.$bvToast.show("author-toast")
                 this.$emit("saved")
                 })
-                .catch( (err) => console.error(err))
-            
-         },
-        showToast() {
-            this.$bvToast.show("author-toast")
+                .catch( (err) => console.error(err))            
         }
     }
-    
 }
 </script>
 
