@@ -5,23 +5,23 @@
         <div class="col">
             <b-button variant="warning" block
                     @click="$bvModal.show('author-changeContentType-confirm')">
-            <i class="fas fa-edit"></i> {{ i18n.authTools.changeType }}
+            <i class="fas fa-edit"></i> {{ i18n.changeType }}
             </b-button>
         </div>
 
-        <div class="col text-dark" v-html="i18n.authTools.changeTypeTip">
+        <div class="col text-dark" v-html="i18n.changeTypeTip">
         </div>
 
         <b-modal id="author-changeContentType-confirm"
-             :title="i18n.bModal.changeType.title"
+             :title="i18n.modal.title"
              header-bg-variant="warning"
              ok-variant="warning"
-             :ok-title="i18n.bModal.changeType.ok"
-             :cancel-title="i18n.bModal.cancel"
+             :ok-title="i18n.modal.ok"
+             :cancel-title="i18n.modal.cancel"
              @ok="changeContentType"
              centered>
             <p>
-                {{ i18n.bModal.changeType.text }}<b-form-select
+                {{ i18n.modal.text }}<b-form-select
                 v-model="changetype"
                 :options="plugins">
                 </b-form-select>
@@ -31,11 +31,8 @@
 </template>
 
 <script>
-import {
-    BModal
-} from "bootstrap-vue"
 import { mapGetters, mapState } from "vuex"
-import * as  i18n from "@/i18n/course-detail"
+import * as  i18n from "@/i18n/course-edit/type"
 
 export default {
     name: "course-edit-type",

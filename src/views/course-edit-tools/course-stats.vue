@@ -2,23 +2,23 @@
     <div class="row mt-5">
         <div class="col">
             <b-button block variant="success" @click="$bvModal.show('author-courseStats')">
-            <i class="fas fa-info-circle"></i> {{ i18n.authTools.seeStats }}
+            <i class="fas fa-info-circle"></i> {{ i18n.seeStats }}
             </b-button>
         </div>
 
         <div class="col text-dark">
-            {{ i18n.authTools.statsTip }}
+            {{ i18n.statsTip }}
         </div>
 
         <b-modal ok-only id="author-courseStats"
-          :title="i18n.bModal.courseStats.title"
+          :title="i18n.modal.title"
           centered>
-            <p>  {{ i18n.bModal.courseStats.users }}: {{ courseStats.count }}</p>
-            <p>  {{ i18n.bModal.courseStats.time }}: {{ courseStats.averageTime }} </p>
-            <p>  {{ i18n.bModal.courseStats.flags }}: 0</p>
-            <p>  {{ i18n.bModal.courseStats.stoppedAt }}: {{courseStats.lostUsersAt}}</p>
-            <p>  {{ i18n.bModal.courseStats.totalLosses }}: {{ courseStats.usersLost}} </p>
-            <p>  {{ i18n.bModal.courseStats.feedback }}: {{ courseStats.feedbackAverage }} </p>
+            <p>  {{ i18n.modal.users }}: {{ courseStats.count }}</p>
+            <p>  {{ i18n.modal.time }}: {{ courseStats.averageTime }} </p>
+            <p>  {{ i18n.modal.flags }}: 0</p>
+            <p>  {{ i18n.modal.stoppedAt }}: {{courseStats.lostUsersAt}}</p>
+            <p>  {{ i18n.modal.totalLosses }}: {{ courseStats.usersLost}} </p>
+            <p>  {{ i18n.modal.feedback }}: {{ courseStats.feedbackAverage }} </p>
         </b-modal>
 
     </div>
@@ -26,7 +26,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex"
-import * as i18n from "@/i18n/course-detail"
+import * as i18n from "@/i18n/course-edit/stats"
 
 export default {
     name: "course-stats",

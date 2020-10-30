@@ -7,10 +7,10 @@
                         class="w-100"
                         dropright>
             <template slot="button-content">
-                <i class="fas fa-plus"></i> {{ i18n.authTools.newContent }}
+                <i class="fas fa-plus"></i> {{ i18n.newContent }}
             </template>
 
-            <b-dropdown-header>{{ i18n.authTools.newContentBlock }}</b-dropdown-header>
+            <b-dropdown-header>{{ i18n.newContentBlock }}</b-dropdown-header>
                 <b-dropdown-item v-for="block in $laya.lb"
                                 :key="block.id"
                                 :to="'/courses/'+name+'/'+nextId+'/new/'+block.id"
@@ -25,7 +25,7 @@
 
                 <b-dropdown-divider></b-dropdown-divider>
 
-                <b-dropdown-header>{{ i18n.authTools.newContentAssmnt }}</b-dropdown-header>
+                <b-dropdown-header>{{ i18n.newContentAssmnt }}</b-dropdown-header>
                 <b-dropdown-item v-for="ass in $laya.la"
                                 :key="ass.id"
                                 :to="'/courses/'+name+'/'+nextId+'/new/'+ass.id"
@@ -43,7 +43,7 @@
         </div>
 
         <div class="col text-dark">
-            {{ i18n.authTools.newContentTip }}
+            {{ i18n.newContentTip }}
             <b>{{nextId}}</b>.
         </div>
     </div>
@@ -51,26 +51,13 @@
 
 <script>
 import { mapState, mapGetters } from "vuex"
-import { 
-    BDropdown, 
-    BDropdownItem, 
-    BDropdownDivider, 
-    BDropdownHeader, 
-    BTooltip } from "bootstrap-vue"
-import * as i18n from "@/i18n/course-detail/"
+import * as i18n from "@/i18n/course-edit/new-block/"
 
 export default {
     name: "course-new-block",
-    props: {
-       
+    props: {  
         name: String,
         step: String,
-
-    },
-    data() {
-        return {
-
-        }
     },
     computed: {
         ...mapGetters(["profileLang", "hasContent"]),
@@ -80,9 +67,6 @@ export default {
         nextId() {
             return this.hasContent.length+1
         }
-    },
-    methods: {
-       
     }
 }
 </script>

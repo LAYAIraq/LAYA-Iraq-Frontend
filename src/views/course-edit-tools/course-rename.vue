@@ -6,28 +6,28 @@
                     variant="warning"
                     class="float-right"
                     @click="$bvModal.show('author-renameCourse-confirm')">
-            <i class="fas fa-exclamation-circle"></i> {{ i18n.authTools.renameCourse }}
+            <i class="fas fa-exclamation-circle"></i> {{ i18n.renameCourse }}
             </b-button>
         </div>
 
         <div class="col text-dark">
-                {{ i18n.authTools.renameCourseTip }}
+                {{ i18n.renameCourseTip }}
         </div>
     
         <b-modal id="author-renameCourse-confirm"
-                :title="i18n.bModal.renameCourse.title"
+                :title="i18n.modal.title"
                 header-bg-variant="warning"
                 ok-variant="warning"
-                :ok-title="i18n.bModal.renameCourse.ok"
-                :cancel-title="i18n.bModal.cancel"
+                :ok-title="i18n.modal.ok"
+                :cancel-title="i18n.modal.cancel"
                 @ok="renameCourse"
                 centered>
             <p>
-                {{ i18n.bModal.renameCourse.text }}<input
+                {{ i18n.modal.text }}<input
                 type="text"
                 v-model="rename"
                 class="form-control"
-                :placeholder="i18n.bModal.renameCourse.placeholder">
+                :placeholder="i18n.modal.placeholder">
             </p>
         </b-modal>
     </div>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/course-detail"
+import * as i18n from "@/i18n/course-edit/rename/"
 import { bModal } from "bootstrap-vue"
 import { mapGetters, mapState } from "vuex"
 

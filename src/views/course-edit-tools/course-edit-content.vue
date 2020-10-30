@@ -3,18 +3,18 @@
         <div class="col">
             <b-button variant="primary" block append
                     :to="{path: 'edit', params: {type: content().name}}">
-            <i class="fas fa-edit"></i> {{ i18n.authTools.editContent }}
+            <i class="fas fa-edit"></i> {{ i18n.editContent }}
             </b-button>
         </div>
 
         <div class="col text-dark">
-            {{ i18n.authTools.editContentTip.replace("{step}", this.step) }}
+            {{ i18n.editContentTip.replace("{step}", this.step) }}
         </div>
     </div>
 </template>
 
 <script>
-import * as i18n from "@/i18n/course-detail"
+import * as i18n from "@/i18n/course-edit/content"
 import { mapGetters } from "vuex"
 import commonMethods from "./common-methods.js"
 
@@ -33,7 +33,6 @@ export default {
     methods: {
         ...commonMethods
     }
-
 
 }
 </script>
