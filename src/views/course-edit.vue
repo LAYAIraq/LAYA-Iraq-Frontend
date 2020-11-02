@@ -107,11 +107,12 @@ export default {
         },
        
         storeCourse() {
+            let ctx = this
             let stored = this.$store.dispatch("storeCourse")
             stored.then( (succ) => {
                 // console.log(succ)
-                this.$bvToast.show("author-toast")
-                this.$emit("saved")
+                ctx.$bvToast.show("author-toast")
+                ctx.$emit("saved")
                 })
                 .catch( (err) => console.error(err))            
         }

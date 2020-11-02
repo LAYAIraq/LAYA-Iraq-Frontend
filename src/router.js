@@ -7,11 +7,11 @@ export default new Router({
   mode: "hash",
   base: process.env.BASE_URL,
   routes: [
-    {
+    /* {
       path: "/test",
       name: "test-view",
       component: views.test
-    },
+    }, */
     {
       path: "/",
       //redirect: "/login", experimental starting page
@@ -48,14 +48,14 @@ export default new Router({
 
         {
           path: "edit",
-          name: "edit-course-content-view",
-          component: views.editCourseContent,
+          name: "edit-course-wrapper",
+          component: views.editCourseWrapper,
           props: true
         },
         {
           path: "new/:type",
           name: "new-course-content-view",
-          component: views.editCourseContent,
+          component: views.editCourseWrapper,
           props: true
         },
         {

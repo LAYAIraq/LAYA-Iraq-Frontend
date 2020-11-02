@@ -70,7 +70,7 @@ export default {
     this.getSubs()
   },
   updated(){
-    this.getSubs
+    // this.getSubs()
   },
   computed: {
     ...mapGetters(["profileLang"]),
@@ -95,13 +95,14 @@ export default {
         .get(`enrollments/getAllByStudentId/?uid=${studentId}`)
         .then(({ data }) => {
           const list = data.sublist
-          for(var item of list) {
+          for(let item of list) {
             self.enrolledIn.push(item.createDate)
           }
         })
         .catch(err => {
           console.error(err)
         })
+      
     },
     enrollmentNeeded(course) {
       if (course.needsEnrollment) {
