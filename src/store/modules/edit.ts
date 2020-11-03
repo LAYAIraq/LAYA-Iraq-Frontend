@@ -20,6 +20,10 @@ export default {
         }
     },
     mutations: {
+      appendContent ( state, data:{ name: String, nextStep, input: Object} ) {
+        console.log("adding: ", data)
+        state.course.content.push(data)
+      },
       delContent( state, step ) {
         let cnt = state.course.content
         console.log(cnt)
@@ -40,6 +44,7 @@ export default {
         state.course.content[step] = {
           ...state.course.content[step], ...updatedStep
         }
+        console.log(`New Step #${step}`, state.course.content[step])
       }
 
     },

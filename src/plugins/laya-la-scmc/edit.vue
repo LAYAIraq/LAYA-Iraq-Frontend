@@ -1,7 +1,10 @@
 <template>
   <div class="laya-la-scms-edit ly-bg-author p-3">
 
-    <h4>{{ i18n.edit.scmc }}</h4>
+    <label><h4>{{ i18n.edit.scmc }}</h4></label><i class="far fa-questionmark"></i>
+    <b-jumbotron>
+
+    </b-jumbotron>
     <hr>
     <form>
 
@@ -126,7 +129,7 @@ export default {
   data () {
     if(Object.entries(this.$attrs).length > 0)
       return {...this.$attrs}
-    return {
+    else return {
       title: "",
       task: "",
       taskAudio: "",

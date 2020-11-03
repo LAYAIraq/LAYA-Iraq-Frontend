@@ -4,7 +4,7 @@
 
     <form>
       <div class="form-group">
-        <label for="vimeo-vid-id">{{ i18n.video }}</label> 
+        <label for="vimeo-vid-id"><h4>{{ i18n.video }}</h4></label> 
         <i class="fas fa-question-circle" @click="toggleTip" 
           :title="i18n.showTip" v-b-tooltip.left></i>
        <!--  <div class="helptext" v-if="tooltipOn">
@@ -18,6 +18,7 @@
           <p v-html="i18n.tooltip"></p>
 
         </b-jumbotron>
+
         <input id="vimeo-vid-id"
                type="text"
                v-model="url"

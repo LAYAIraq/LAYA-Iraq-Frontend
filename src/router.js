@@ -41,7 +41,7 @@ export default new Router({
     {
       path: "/courses/:name/:step",
       name: "course-detail-view",
-      component: views.courseDetail,
+      component: views.courseDetailView,
       props: true,
 
       children: [

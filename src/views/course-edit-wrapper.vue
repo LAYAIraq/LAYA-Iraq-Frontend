@@ -45,15 +45,15 @@ export default {
   props: {
     name: String,
     step: String,
-    // cid: String,
-    init: Object,
+    type: String,
+  
     onsave: Function
   },
   computed: {
     ...mapGetters(["hasContent"]),
     ...mapState(["edit"]),
     cid() {
-      return this.hasContent[this.step-1].name
+      return this.type || this.hasContent[this.step-1].name
     },
     comps() {
       const la = this.$laya.la[this.cid]
@@ -71,6 +71,10 @@ export default {
     },
     i18n() {
       return i18n[this.$store.state.profile.lang];
+    },
+    init() {
+      return this.hasContent.len == this.step ? this.hasContent[this.step-1].input : null
+      
     }
   },
   mounted() {
@@ -79,12 +83,31 @@ export default {
   },
   methods: {
     save() {
-      this.onsave({
-        name: this.cid,
-        input: {...this.dataFromEdit}
-      })
+      let step = this.step-1
+      const newInput = this.dataFromEdit
+      console.log(newInput)
+      const changedStep = {
+        name: this.type,
+        nextStep: null,
+        input:  newInput
+      }
+      console.log(changedStep)
+      console.log(this.hasContent.length, step)
+      if(this.hasContent.length < this.step ){
+        console.log("id hand")
+        this.$store.commit("appendContent", changedStep)
+      }
+      else{
+        console.log("else hand")
+        this.$store.commit("updateStep", { step, changedStep })
+      }
+      
+        
     }
   },
+  beforeDestroy() {
+    this.$store.dispatch("storeCourse")
+  }
 }
 </script>
 

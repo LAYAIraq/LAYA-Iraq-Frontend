@@ -1,8 +1,18 @@
 <template>
   <div class="laya-lb-dialog-edit">
-
-    <h4>{{ i18n.title }}</h4>
+     
+    <label><h4>{{ i18n.title }}</h4></label> <i id="questionmark" class="fas fa-question-circle" @click="toggleTip" 
+          :title="i18n.showTip" v-b-tooltip.left></i>
     <hr>
+    
+    <b-jumbotron 
+            v-if="tooltipOn"
+            :header="i18n.title" :lead="i18n.tipHeadline">
+          <hr class="my-4">
+          <span v-html="i18n.tooltip"></span>
+
+    </b-jumbotron>
+
     <form>
 
       <div class="form-group row">
@@ -78,6 +88,7 @@ export default {
       bg: "",
       question: "",
       answers: [],
+      tooltipOn: false
     }
   },
   methods: {
@@ -87,6 +98,9 @@ export default {
     _addItem() {
       this.answers.push("")
     },
+    toggleTip() {
+      this.tooltipOn = !this.tooltipOn
+    }
   },
   computed: {
     i18n() {
@@ -134,5 +148,19 @@ export default {
 .answers > button:last-child {
   margin-right: 0;
 }
+
+#questionmark {
+    float: inline-end;
+  }
+
+.helptext {
+    border: 1px;
+    border-color: green;
+    padding: 5px;
+  }
+.helptext i {
+    float: inline-start;
+    margin-right: 10px;
+  }
 
 </style>
