@@ -1,6 +1,17 @@
 <template>
   <div class="laya-la-feedback-edit">
 
+     <label><h4>{{ i18n.title }}</h4></label><i id ="questionmark" class="fas fa-question-circle" @click="toggleTip" 
+          :title="i18n.showTip" v-b-tooltip.left></i>
+    <b-jumbotron 
+            v-if="tooltipOn"
+            :header="i18n.title" :lead="i18n.tipHeadline">
+          <hr class="my-4">
+          <span v-html="i18n.tooltip"></span>
+
+    </b-jumbotron>
+    <hr>
+
     <form>
 
       <!-- title -->
@@ -113,7 +124,7 @@
 
 <script>
 
-import * as i18n from "@/i18n/plugins/laya-la-feedback";
+import * as i18n from "@/i18n/plugins/laya-la-feedback"
 
 export default {
   name: 'laya-la-feedback-edit',
@@ -134,7 +145,8 @@ export default {
       task: "",
       taskAudio: "",
       items: [],
-      categories: []
+      categories: [],
+      tooltipOn: false
     }
   },
   props: {
@@ -158,6 +170,9 @@ export default {
     _addCategory() {
       this.categories.push("")
     },
+    toggleTip() {
+      this.tooltipOn = !this.tooltipOn
+    }
   }
 }
 </script>
@@ -170,5 +185,9 @@ export default {
 
 legend {
   font-size: 1rem;
+}
+
+#questionmark {
+  float: inline-end;
 }
 </style>

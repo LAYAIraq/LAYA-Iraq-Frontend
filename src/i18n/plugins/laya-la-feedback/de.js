@@ -36,5 +36,25 @@ export default {
             "Stimme zu"
         ]
 
-    }
+    },
+    showTip: 'Hilfetext anzeigen.',
+    tipHeadline: 'Was ist diese Komponente?',
+    title: 'Kurs-Rückmeldung',
+    tooltip: '<p>In dieser Komponente können Sie Rückmeldungen über \
+        den Kurs einholen. Sie können mehrere dieser Rückmeldungs-\
+        Komponenten in einem Kurs haben.</p>\
+        <p>In der Zeile "Titel" tragen Sie die Überschrift für die \
+        Rückmeldung ein. Sie können diese Zeile auch frei lassen.</p>\
+        <p>Die Zeile "Beschreibung" gibt Ihnen die Möglichkeit, den \
+        Teilnehmenden zu erklären, worauf Sie beim Feedback besondere \
+        Rücksicht nehmen sollten.</p>\
+        <p>Das Feedback ist in zwei Teile gegliedert: Geschlossene Fragen \
+        sowie einen Freitext. Die geschlossenen Fragen dienen dazu, ein \
+        Meinungsbild einzuholen. Sie können dazu verschiedene Auswahlmöglichkeiten \
+        vorgeben. Standardmäßig gibt es eine Abstufung von "Stimme zu" bis \
+        "Stimme nicht zu". Sie können jedoch eigene Abstufungen wählen. \
+        Dazu können Sie existierende Antworten über den roten Button \
+        löschen.</p>\
+        <p>Sie können Fragen nach Belieben hinzufügen und entfernen. Nutzen \
+        Sie dazu den blauen bzw. roten Knopf unter "Fragen".</p>'
 }

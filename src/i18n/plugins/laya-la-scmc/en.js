@@ -2,6 +2,30 @@ export default {
     addSolution: 'Add Solution',
     nextContent: 'Next Content Block ',
     triesLeft: 'Tries left:',
+    title: 'Single Choice / Multiple Choice',
+    showTip: 'Show help text.',
+    tipHeadline: 'What is this Component?',
+    tooltip: "<p>With this component you can create a quiz. \
+        You have the choice between single and multiple choice. \
+        A single-choice question has only one possible answer, \
+        a multiple choice question, on the other hand, several.</p>\
+        <p>In the line 'Type' you choose which questions you ask \
+        would like: A question with one possible answer (Single \
+        Choice), or one with several correct answers (Multiple \
+        Choice).</p>\
+        <p>The 'Title' line allows you to select a heading. \
+        You can also leave this line blank.</p>\
+        <p>In the line 'Question/Task' you must enter the work order or the \
+        question. </p>\
+        <p>In 'Voiceover' you store the address of the audio file that \
+        reads out the work order.</p>\
+        <p>The 'Items' now include the answer options. You can select \
+        add as many answers as you like. Use the red button on the \
+        on the left side you can remove single answers. The blue button \
+        at the end adds one more answer possibility each time.</p>\
+        <p> Don't forget to replace the correct answers with the \
+        Check mark! The respective answer is then considered correct \
+        scores when the participants evaluate your quiz.</p>",
     edit: {
         scmc: 'Single Choice / Multiple Choice',
         sc: 'Single Choice',

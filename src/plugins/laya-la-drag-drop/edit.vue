@@ -1,6 +1,17 @@
 <template>
   <div class="laya-la-drag-drop-edit">
 
+    <label><h4>{{ i18n.name }}</h4></label><i id ="questionmark" class="fas fa-question-circle" @click="toggleTip" 
+          :title="i18n.showTip" v-b-tooltip.left></i>
+    <b-jumbotron 
+            v-if="tooltipOn"
+            :header="i18n.name" :lead="i18n.tipHeadline">
+          <hr class="my-4">
+          <span v-html="i18n.tooltip"></span>
+
+    </b-jumbotron>
+    <hr>
+
     <form>
 
       <!-- title -->
@@ -153,6 +164,7 @@ export default {
       taskAudio: "",
       items: [],
       categories: [],
+      tooltipOn: false
     }
   },
   props: {
@@ -175,6 +187,9 @@ export default {
     _addCategory() {
       this.categories.push("")
     },
+    toggleTip() {
+      this.tooltipOn = !this.tooltipOn
+    }
   }
 }
 </script>
@@ -187,5 +202,9 @@ export default {
 
 legend {
   font-size: 1rem;
+}
+
+#questionmark {
+  float: inline-end;
 }
 </style>

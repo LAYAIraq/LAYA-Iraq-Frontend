@@ -1,8 +1,17 @@
 <template>
   <div class="laya-ableplayer-edit">
 
-    <h3>{{ i18n.title }}</h3>
+    <label><h4>{{ i18n.title }}</h4></label><i id ="questionmark" class="fas fa-question-circle" @click="tooltipOn = !tooltipOn" 
+          :title="i18n.showTip" v-b-tooltip.left></i>
+    <b-jumbotron 
+            v-if="tooltipOn"
+            :header="i18n.title" :lead="i18n.tipHeadline">
+          <hr class="my-4">
+          <span v-html="i18n.tooltip"></span>
+
+    </b-jumbotron>
     <hr>
+
     <form>
       <div class="form-group">
         <label for="able-src-id">{{ i18n.vidURL }}</label>
@@ -46,7 +55,8 @@ export default {
     return {
       src: "",
       sign: "",
-      sub: ""
+      sub: "",
+      tooltipOn: false
     }
   },
   computed: {
@@ -58,4 +68,7 @@ export default {
 </script>
 
 <style>
+#questionmark {
+  float: inline-end;
+}
 </style>
