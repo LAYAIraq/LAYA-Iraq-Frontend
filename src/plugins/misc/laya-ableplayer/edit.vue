@@ -51,7 +51,8 @@ export default {
   name: "laya-lb-plyr-vimeo-edit",
   data() {
     if(Object.entries(this.$attrs).length > 0)
-      return {...this.$attrs}
+      return {...this.$attrs, 
+        tooltipOn: false}
     return {
       src: "",
       sign: "",

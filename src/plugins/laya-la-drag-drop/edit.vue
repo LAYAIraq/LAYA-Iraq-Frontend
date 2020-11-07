@@ -157,7 +157,8 @@ export default {
   },
   data () {
     if(Object.entries(this.$attrs).length > 0)
-      return {...this.$attrs}
+      return {...this.$attrs, 
+        tooltipOn: false}
     return {
       title: "",
       task: "",
