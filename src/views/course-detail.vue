@@ -711,10 +711,11 @@ export default {
     },
 
     storeCourse() {
+      let self = this
       http.patch(`courses/${this.name}`, {content: this.course.content})
         .catch(err => console.error("Failed storing course content:", err))
         .finally(function() {
-          this.$bvToast.show("author-toast")
+          self.$bvToast.show("author-toast")
         })
     },
 
