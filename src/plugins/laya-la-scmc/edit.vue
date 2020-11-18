@@ -178,6 +178,7 @@ legend {
 }
 
 #questionmark {
-    float: inline-end;
+  float: inline-end;
+  cursor: pointer;
 }
 </style>

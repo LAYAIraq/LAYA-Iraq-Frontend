@@ -5,7 +5,7 @@
     <form>
       <div class="form-group">
         <label for="vimeo-vid-id"><h4>{{ i18n.video }}</h4></label> 
-        <i class="fas fa-question-circle" @click="toggleTip" 
+        <i id="questionmark" class="fas fa-question-circle" @click="toggleTip" 
           :title="i18n.showTip" v-b-tooltip.left></i>
        <!--  <div class="helptext" v-if="tooltipOn">
           <i class="far fa-clipboard"></i><h4>{{ i18n.tipHeadline }}</h4>
@@ -63,8 +63,9 @@ export default {
 </script>
 
 <style scoped>
-  .form-group i {
-    float: inline-end;
+  #questionmark {
+  float: inline-end;
+  cursor: pointer;
   }
   .helptext {
     border: 1px;

@@ -212,5 +212,6 @@ legend {
 
 #questionmark {
   float: inline-end;
+  cursor: pointer;
 }
 </style>

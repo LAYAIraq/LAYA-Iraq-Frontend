@@ -153,8 +153,9 @@ export default {
 }
 
 #questionmark {
-    float: inline-end;
-  }
+  float: inline-end;
+  cursor: pointer;
+}
 
 .helptext {
     border: 1px;

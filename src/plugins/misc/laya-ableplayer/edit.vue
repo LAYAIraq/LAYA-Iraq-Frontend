@@ -71,5 +71,6 @@ export default {
 <style>
 #questionmark {
   float: inline-end;
+  cursor: pointer;
 }
 </style>
