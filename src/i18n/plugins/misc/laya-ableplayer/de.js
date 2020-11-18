@@ -8,7 +8,7 @@ export default {
     subtitle: 'Untertitel-URL:',
     subtitlePlaceholder: 'z.B. https://laya.de/untertitel.vtt',
     showTip: 'Hilfetext anzeigen.',
-    tipHeadline: 'Was ist diese Komponente?',
+    tipHeadline: 'Was kann man mit diesem Element machen?',
     tooltip: '<p>In dieser Komponente können Sie barrierefreie \
         Filme zur Verfügung stellen. Zur Anzeige nutzen wir AblePlayer.<p/>\
         <p>Sie benötigen die URL für den Film, die Sie in der Zeile \

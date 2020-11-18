@@ -8,7 +8,7 @@ export default {
     subtitle: 'Subtitles URL:',
     subtitlePlaceholder: 'e.g. https://laya.de/subtitles.vtt',
     showTip: 'Show help text.',
-    tipHeadline: 'What is this component?',
+    tipHeadline: 'What can you do with this element?',
     tooltip: '<p>In this component you can provide barrier-free \
         films. We use AblePlayer.<p/>\
         <p>You need the URL for the movie, which you can enter in the line \

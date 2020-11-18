@@ -11,7 +11,7 @@ export default {
         succContent: 'No. of succeeding Content',
         swap: 'Swap',
         placeholder: 'e.g. 1,2',
-        renewGraph: 'Renew Graphical Preview',
+        renewGraph: 'Reload Graphical Preview',
         missingInfo: 'Please fill in all fields!',
         save: 'Save'
     },

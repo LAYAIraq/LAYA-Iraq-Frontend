@@ -51,7 +51,7 @@ export default {
     },
     authTools: {
         changeType: 'Change Content Type',
-        changeTypeTip: 'You can change the type of this content permanently. <u>Beware:</u> All data input will be lost.',
+        changeTypeTip: 'You can change the type of this content permanently. <u>Beware:</u> All data from the input before will be lost.',
         copyCourse: 'Copy Course',
         copyCourseTip: 'Duplicate this course with a new name.',
         deleteContent: 'Delete Content',
@@ -70,7 +70,7 @@ export default {
         renameCourse: 'Rename Course',
         renameCourseTip: 'The course will be renamed.',
         seeStats: 'See Course Statistics',
-        statsTip: 'See Statistics for the Course, such as number of participants etc.'
+        statsTip: 'See statistics for the course, such as number of participants etc.'
     },
     changeTypeText: 'Choose New Type'
 }

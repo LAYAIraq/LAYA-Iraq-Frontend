@@ -3,7 +3,7 @@ export default {
     nextContent: 'Next Content Block ',
     defaultOption: 'Choose',
     showTip: 'Show help text.',
-    tipHeadline: 'What is this component?',
+    tipHeadline: 'What can you do with this element?',
     title: 'Relate',
     tooltip: '<p>In this one you can ask your participants questions, \
     in which an assignment must be made. To do this, set image \

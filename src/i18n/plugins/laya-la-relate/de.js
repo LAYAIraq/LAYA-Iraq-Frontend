@@ -3,7 +3,7 @@ export default {
     nextContent: 'Nächster Inhalt ',
     defaultOption: 'Wähle aus',
     showTip: 'Hilfetext anzeigen.',
-    tipHeadline: 'Was ist diese Komponente?',
+    tipHeadline: 'Was kann man mit diesem Element machen?',
     title: 'Zuordnen',
     tooltip: '<p>In dieser können Sie Ihren Teilnehmenden Fragen stellen, \
         in denen eine Zuordnung erfolgen muss. Dabei setzen Sie Bild- \
@@ -17,7 +17,7 @@ export default {
         einem Backslash ("\\") erzeugen.</p>\
         <p>In "Offstimme" hinterlegen Sie die Adresse der Audio-Datei, die \
         den Arbeitsauftrag vorliest.</p>\
-        <p>In "Lösungen/Relationen" tragen Sie alle Antmöglichkeiten ein. \
+        <p>In "Lösungen/Relationen" tragen Sie alle Antwortmöglichkeiten ein. \
         Diese werden später im Drop-Down zur Auswahl stehen. Sie können \
         beliebig viele Lösungen hinzufügen. Dazu nutzen Sie den blauen \
         Knopf unter der Liste der Lösungen. Einzelne Lösungen können \

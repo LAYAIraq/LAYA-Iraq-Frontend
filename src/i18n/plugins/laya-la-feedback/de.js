@@ -38,7 +38,7 @@ export default {
 
     },
     showTip: 'Hilfetext anzeigen.',
-    tipHeadline: 'Was ist diese Komponente?',
+    tipHeadline: 'Was kann man mit diesem Element machen?',
     title: 'Kurs-Rückmeldung',
     tooltip: '<p>In dieser Komponente können Sie Rückmeldungen über \
         den Kurs einholen. Sie können mehrere dieser Rückmeldungs-\

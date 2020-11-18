@@ -386,7 +386,7 @@ import http from "axios";
 import * as i18n from "@/i18n/course-detail";
 import utils from "@/misc/utils.js";
 import lyScrollToTop from "@/components/scroll-to-top.vue"
-import VueI18n from "vue-i18n"
+// import VueI18n from "vue-i18n"
 
 export default {
   name: "course-detail-view",

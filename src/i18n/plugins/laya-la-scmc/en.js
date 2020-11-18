@@ -4,7 +4,7 @@ export default {
     triesLeft: 'Tries left:',
     title: 'Single Choice / Multiple Choice',
     showTip: 'Show help text.',
-    tipHeadline: 'What is this Component?',
+    tipHeadline: 'What can you do with this element?',
     tooltip: "<p>With this component you can create a quiz. \
         You have the choice between single and multiple choice. \
         A single-choice question has only one possible answer, \
@@ -23,8 +23,8 @@ export default {
         add as many answers as you like. Use the red button on the \
         on the left side you can remove single answers. The blue button \
         at the end adds one more answer possibility each time.</p>\
-        <p> Don't forget to replace the correct answers with the \
-        Check mark! The respective answer is then considered correct \
+        <p> Don't forget to mark the correct answers with the \
+        check mark! The respective answer is then considered correct \
         scores when the participants evaluate your quiz.</p>",
     edit: {
         scmc: 'Single Choice / Multiple Choice',

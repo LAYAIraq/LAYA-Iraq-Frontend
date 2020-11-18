@@ -4,7 +4,7 @@ export default {
     triesLeft: 'Versuche übrig:',
     title: 'Single Choice / Multiple Choice',
     showTip: 'Hilfetext anzeigen.',
-    tipHeadline: 'Was ist diese Komponente?',
+    tipHeadline: 'Was kann man mit diesem Element machen?',
     tooltip: '<p>Mit dieser Komponente können Sie ein Quiz erstellen. \
         Dabei haben Sie die Wahl zwischen Single- und Multiple-Choice. \
         Eine Single-Choice-Frage hat dabei nur eine mögliche Anwort, \

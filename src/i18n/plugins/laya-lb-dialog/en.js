@@ -1,5 +1,5 @@
 export default {
-    title: 'Dialog with Jump Labels',
+    title: 'Dialog',
     task: 'Question / Task',
     optional: 'Optional',
     bgURL: 'Background Image URL',
@@ -8,7 +8,7 @@ export default {
     text: 'Text',
     addAnswer: ' Add Answer',
     showTip: 'Show help text.',
-    tipHeadline: 'What is this component?',
+    tipHeadline: 'What can you do with this element?',
     tooltip: '<p>This component allows you to create different paths through a course. You specify a task or question and define answers. In the course navigation, you can then select different follow-up content depending on the selected answer.</p>\
              <p>In the text field "Task" you enter the task or question that you want your participants to answer.</p>\
              <p>The line for the background image allows you to specify the URL for a background image.</p>\

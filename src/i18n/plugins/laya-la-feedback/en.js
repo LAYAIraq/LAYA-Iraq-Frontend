@@ -38,7 +38,7 @@ export default {
 
     },
     showTip: 'Show help text.',
-    tipHeadline: 'What is this component?',
+    tipHeadline: 'What can you do with this element?',
     title: 'Course feedback',
     tooltip: '<p>In this component you can send feedback about \
         the course. You can use several of these feedback \
@@ -48,8 +48,8 @@ export default {
         <p>The line "Description" gives you the possibility to \
         explain to participants what you are particularly interested in when giving feedback. </p>\
         <p>The feedback is divided into two parts: Closed questions \
-        and a free text. The closed questions are used to create a \
-        Obtain an opinion. You can choose from various default options. \
+        and a free text. The closed questions are used to \
+        obtain an opinion. You can choose from various default options. \
         By default there is a gradation from "Agree" to \
         "Do not agree". However, you can choose your own gradations. \
         For this you can delete existing answers by clicking the red button.</p>\

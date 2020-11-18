@@ -15,7 +15,7 @@ export default {
     items: 'Items',
     itemAdd: ' Add Item',
     showTip: 'Hilfetext anzeigen.',
-    tipHeadline: 'Was ist diese Komponente?',
+    tipHeadline: 'Was kann man mit diesem Element machen?',
     name: 'Drag & Drop',
     tooltip: '<p>In this component you can ask multiple choice \
      questions. This serves as a quick learning check. </p>\
