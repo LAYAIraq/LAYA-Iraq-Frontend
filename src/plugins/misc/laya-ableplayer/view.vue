@@ -4,7 +4,7 @@
     <video :id="playerId"
       preload="auto"
       data-debug
-      :data-lang="lang" data-force-lang>
+      :data-lang="$store.state.profile.lang" data-force-lang>
 
       <source type="video/mp4"
               :src="notEmpty(src)"
@@ -44,10 +44,10 @@ export default {
     onFinish: Array
   },
   computed: {
-    playerId: function() {
+    playerId() {
       return `laya-ableplayer-${Date.now()}`
     },
-    lang: function() {
+    lang() {
       return "de"
     },
     i18n() {
@@ -55,7 +55,9 @@ export default {
     }
   },
   methods: {
-    notEmpty: (str) => (!!str && str.length > 0) ? str : false,
+    notEmpty(str) {
+      return (!!str && str.length > 0) ? str : false
+    }
   },
 }
 </script>
@@ -63,8 +65,26 @@ export default {
 <style>
 .able {
   box-shadow: unset;
-}
-.able * {
   box-sizing: content-box;
+}
+
+
+.able-status-bar {
+  display: block;
+}
+
+.able-controller div {
+  display: flex;
+}
+
+.able-seekbar {
+  margin-top: 20px;
+  width: 100%;
+}
+
+[role=button] {
+  margin-right: 5px;
+  padding: 1px;
+  width: 25px;
 }
 </style>

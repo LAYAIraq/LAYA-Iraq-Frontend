@@ -154,7 +154,7 @@ export default {
     onnavupdate: Function
   },
   computed: {
-    formInvalid: function() {
+    formInvalid() {
       return this.content.reduce((res, val) => !val.nextStep || res, false)
     },
     navGraphId() {
@@ -180,9 +180,14 @@ export default {
 
     typeName(compName) {
       let lang = this.$store.state.profile.lang
-      if ({...this.$laya.la, ...this.$laya.lb}[compName].i18n.hasOwnProperty(lang))
-        return {...this.$laya.la, ...this.$laya.lb}[compName].i18n[lang]
-      else return {...this.$laya.la, ...this.$laya.lb}[compName].i18n.de
+      let comps = {...this.$laya.la, ...this.$laya.lb}
+      if (comps[compName].i18n.hasOwnProperty(lang)) {
+        return comps[compName].i18n[lang].name
+      }
+        
+      else {
+        return comps[compName].i18n.de.name
+      }
     },
 
     renderNavGraph() {
