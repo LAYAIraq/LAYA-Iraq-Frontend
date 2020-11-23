@@ -73,5 +73,8 @@ export default {
 .laya-wysiwyg-edit .ql-formats button:last-child {
   margin-right: 0px;
 }
+.ql-container.ql-snow {
+ min-height: 200px;
+}
 
 </style>
