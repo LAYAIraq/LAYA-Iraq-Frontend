@@ -61,9 +61,11 @@ export default {
   },
   methods: {
     save() {
+      const newInput = (({tooltipOn, ...o }) => o)(this.dataFromEdit)
+      // console.log(newInput)
       this.onsave({
         name: this.cid,
-        input: {...this.dataFromEdit}
+        input: newInput
       })
     }
   },

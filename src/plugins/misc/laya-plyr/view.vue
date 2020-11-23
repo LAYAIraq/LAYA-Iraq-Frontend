@@ -6,11 +6,10 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue"
+<script>
 import Plyr from "plyr"
 
-export default Vue.extend({
+export default {
   name: "laya-plyr",
   data() {
     return {
@@ -19,7 +18,7 @@ export default Vue.extend({
   },
   mounted() {
     this.plyr = new Plyr(this.playerId)
-    console.log("plyr: ", this.plyr)
+    // console.log("plyr: ", this.plyr)
     this.plyr.on("ended", e => {
       console.log("finished playing")
     })
@@ -35,7 +34,7 @@ export default Vue.extend({
   methods: {
     notEmpty: (str) => (!!str && str.length > 0) ? str : false,
   },
-})
+}
 </script>
 
 <style>

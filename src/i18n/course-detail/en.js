@@ -65,7 +65,7 @@ export default {
         editNavTip: 'You can edit the course nagivation. Altogether, the course has {steps} different content blocks.',
         newContent: 'Add New Content',
         newContentBlock: 'Learning Blocks',
-        newContentAssmnt: 'Learning Assessments',
+        newContentAssmnt: 'Learning Assessments & Feedback',
         newContentTip: 'You can create a new content block. It will have number ',
         renameCourse: 'Rename Course',
         renameCourseTip: 'The course will be renamed.',

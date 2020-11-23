@@ -1,10 +1,10 @@
 <template>
 
-  <div class="laya-lb-plyr-vimeo-edit">
+  <div class="laya-plyr-edit">
 
     <form>
       <div class="form-group">
-        <label for="vimeo-vid-id"><h4>{{ i18n.video }}</h4></label> 
+        <label for="vid-id"><h4>{{ i18n.video }}</h4></label> 
         <i id="questionmark" class="fas fa-question-circle" @click="toggleTip" 
           :title="i18n.showTip" v-b-tooltip.left></i>
        <!--  <div class="helptext" v-if="tooltipOn">
@@ -19,9 +19,9 @@
 
         </b-jumbotron>
 
-        <input id="vimeo-vid-id"
+        <input id="vid-id"
                type="text"
-               v-model="url"
+               v-model="src"
                class="form-control"
                :placeholder="i18n.placeholder">
       </div>
@@ -33,19 +33,19 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/plugins/laya-lb-plyr-vimeo"
+import * as i18n from "@/i18n/plugins/misc/laya-plyr"
 import { BJumbotron, BTooltip } from "bootstrap-vue"
 
 export default {
-  name: "laya-lb-plyr-vimeo-edit",
+  name: "laya-lb-plyr-edit",
   data() {
     return {
-      url: "",
+      src: "",
       tooltipOn: false
     }
   },
   mounted() {
-    if(this.$attrs.url) this.url = this.$attrs.url
+    if(this.$attrs.src) this.src = this.$attrs.src
   },
   computed: {
     i18n() {

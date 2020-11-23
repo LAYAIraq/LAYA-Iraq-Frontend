@@ -65,7 +65,7 @@ export default {
         editNavTip: 'Damit kannst Du die Kursführung bearbeiten. Insgesamt hat der Kurs {steps} Inhalte.',
         newContent: 'Neuen Inhalt hinzufügen',
         newContentBlock: 'Lernbausteine',
-        newContentAssmnt: 'Lernüberprüfungen',
+        newContentAssmnt: 'Lernüberprüfungen & Rückmeldung',
         newContentTip: 'Damit kannst Du einen neuen Inhalt erstellen. Er erhält die Nummer ',
         renameCourse: 'Kurs umbenennen',
         renameCourseTip: 'Der Kurs wird umbenannt.',

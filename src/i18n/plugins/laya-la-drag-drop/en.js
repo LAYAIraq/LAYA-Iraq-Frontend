@@ -1,6 +1,6 @@
 export default {
     answer: 'Answer',
-    addSolution: 'Add Solution',
+    check: 'Check Solution',
     nextContent: 'Next Content Block',
     title: 'Title',
     titlePlaceholder: 'e.g. Excercise',

@@ -1,6 +1,6 @@
 export default {
     answer: 'Antwort',
-    addSolution: 'Lösung ergänzen',
+    check: 'Lösung einblenden',
     nextContent: 'Nächster Inhalt',
     title: 'Titel',
     titlePlaceholder: 'z.B. Übung 1',

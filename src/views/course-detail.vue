@@ -232,7 +232,7 @@
             <b-dropdown-header>{{ i18n.authTools.newContentBlock }}</b-dropdown-header>
                 <b-dropdown-item v-for="block in $laya.lb"
                                 :key="block.id"
-                                :to="'/courses/'+name+'/'+nextId+'/new/'+block.id"
+                                :to="'/courses/'+name+'/'+ nextId() +'/new/'+block.id"
                                 >
                     
                     <div class="dropitem">
@@ -247,7 +247,7 @@
                 <b-dropdown-header>{{ i18n.authTools.newContentAssmnt }}</b-dropdown-header>
                 <b-dropdown-item v-for="ass in $laya.la"
                                 :key="ass.id"
-                                :to="'/courses/'+name+'/'+nextId+'/new/'+ass.id"
+                                :to="'/courses/'+name+'/'+ nextId() +'/new/'+ass.id"
                                 >
                     <div class="dropitem">
                         {{ ass.i18n[profileLang].name }}
@@ -415,7 +415,7 @@ export default {
     // this.fetchCourseStats()
   },
   beforeDestroy(){
-    if(this.enrollment) this.updateEnrollment()
+    if(this.enrollment.length > 0) this.updateEnrollment()
   },
   computed: {
     ...mapState(["auth", "note"]),
@@ -458,7 +458,7 @@ export default {
   },
   methods: {
     ...utils,
-
+    
     fetchCourse() {
       const ctx = this;
 
@@ -489,6 +489,11 @@ export default {
       // console.log(cid)
       // const params = http.paramsSerializer({filter:{where: {studentId: uid, courseId: self.course.name}}})
       // console.log(params)
+      while (!self.course) setTimeout(100)
+      if(!self.course.needsEnrollment) {
+        console.log("No enrollment needed")
+        return
+      }
       http.get("enrollments/findOne", {params: {filter:{where: {studentId: uid, courseId: cid}}}})
           .then(({data}) => {
             // console.log("Enrollment exists!")
@@ -582,6 +587,7 @@ export default {
     },
 
     updateEnrollment() {
+      if (!this.course.needsEnrollment) return
       const enrol = this.enrollment
 
       http.patch(`enrollments/${enrol.id}`, enrol)
@@ -738,7 +744,7 @@ export default {
       const {name, $router} = this
       return steps.split(",").map(step => {
         return () =>{
-          this.enrollment.progress = Number(step)
+          if(this.enrollment.length >0) this.enrollment.progress = Number(step)
           $router.push({name: "course-detail-view", params: {name, step}})
         }
       })

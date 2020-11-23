@@ -25,6 +25,7 @@
 
 <script>
 import "ableplayer"
+import "ableplayer/build/ableplayer.min.css"
 import * as i18n from "@/i18n/plugins/misc/laya-ableplayer"
 
 export default {
@@ -62,29 +63,3 @@ export default {
 }
 </script>
 
-<style>
-.able {
-  box-shadow: unset;
-  box-sizing: content-box;
-}
-
-
-.able-status-bar {
-  display: block;
-}
-
-.able-controller div {
-  display: flex;
-}
-
-.able-seekbar {
-  margin-top: 20px;
-  width: 100%;
-}
-
-[role=button] {
-  margin-right: 5px;
-  padding: 1px;
-  width: 25px;
-}
-</style>
