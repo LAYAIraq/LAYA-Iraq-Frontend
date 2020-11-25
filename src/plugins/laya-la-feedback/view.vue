@@ -90,11 +90,11 @@ export default {
   name: "laya-feedback",
   created () {
     //console.log(Date.parse(this.feedback.created))
-    const mid = Math.floor((this.categories.length)/2)
+    const mid = Math.floor((this.categories.length-1)/2)
     let s = this.items.map(i => mid)
     this.choice = [...s]
     
-    this.getPreviousFeedback()
+    // this.getPreviousFeedback()
   },
   beforeDestroy() {
     //add saving feedback data
@@ -124,8 +124,8 @@ export default {
     onSave: Function
   },
   methods: {
-    getPreviousFeedback() {
-      for (var i of this.init.feedback) {
+    getPreviousFeedback() { //unused b/c of different data model in development
+      for (var i of this.init) {
         if(i.step === this.step) {
           this.answered = true
           let tmp = i
