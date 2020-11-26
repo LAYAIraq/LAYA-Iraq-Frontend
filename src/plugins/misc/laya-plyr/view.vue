@@ -27,12 +27,14 @@ export default {
     src: String,
   },
   computed: {
-    playerId: function() {
+    playerId() {
       return `ly-plyr-${Date.now()}`
     },
   },
   methods: {
-    notEmpty: (str) => (!!str && str.length > 0) ? str : false,
+    notEmpty(str) {
+      return (!!str && str.length > 0) ? str : false
+    }
   },
 }
 </script>

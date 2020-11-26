@@ -6,5 +6,9 @@ export default {
         Wir stellen dann im Kursinterface einen Player zur Verfügung, über den sich das Video abspielen lässt.',
     showTip: 'Hilfetext anzeigen.',
     tipHeadline: 'Was kann man mit diesem Element machen?',
-    nextContent: 'Nächster Inhalt '
+    nextContent: 'Nächster Inhalt ',
+    vimeo: 'Vimeo',
+    platform: 'Plattform',
+    youtube: 'Youtube',
+    wrongURL: 'Falsche URL!'
 }

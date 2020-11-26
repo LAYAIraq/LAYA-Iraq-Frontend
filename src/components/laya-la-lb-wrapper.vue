@@ -17,7 +17,7 @@
         <span v-if="preview">{{ i18n.edit }}</span> 
         <span v-else> {{ i18n.preview }} </span>
       </button>
-      <button type="button" class="btn btn-primary" @click="save">
+      <button type="button" class="btn btn-primary" @click="save" id="save-changes">
         <i class="fas fa-check"></i> {{ i18n.save }}
       </button>
     </div>

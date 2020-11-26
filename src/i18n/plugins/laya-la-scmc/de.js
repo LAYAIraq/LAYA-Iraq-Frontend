@@ -3,6 +3,7 @@ export default {
     nextContent: 'Nächster Inhalt ',
     triesLeft: 'Versuche übrig:',
     title: 'Single Choice / Multiple Choice',
+    type: 'Art',
     showTip: 'Hilfetext anzeigen.',
     tipHeadline: 'Was kann man mit diesem Element machen?',
     tooltip: '<p>Mit dieser Komponente können Sie ein Quiz erstellen. \

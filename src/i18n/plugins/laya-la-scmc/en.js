@@ -3,6 +3,7 @@ export default {
     nextContent: 'Next Content Block ',
     triesLeft: 'Tries left:',
     title: 'Single Choice / Multiple Choice',
+    type: 'Type',
     showTip: 'Show help text.',
     tipHeadline: 'What can you do with this element?',
     tooltip: "<p>With this component you can create a quiz. \

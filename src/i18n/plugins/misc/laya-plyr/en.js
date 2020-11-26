@@ -5,5 +5,9 @@ export default {
     We provide a player that allows the video to be played within the course interface.',
     showTip: 'Show help text.',
     tipHeadline: 'What can you do with this element?',
-    nextContent: 'Next Content Block '
+    nextContent: 'Next Content Block ',
+    vimeo: 'Vimeo',
+    platform: 'Platform',
+    youtube: 'Youtube',
+    wrongURL: 'Wrong URL!'
 }

@@ -15,7 +15,7 @@
 
       <!-- type -->
       <div class="form-group row">
-        <label for="smcs-type" class="col-2 col-form-label">Art</label>
+        <label for="smcs-type" class="col-2 col-form-label">{{ i18n.type }}</label>
         <div class="col-10">
           <div class="form-check form-check-inline align-text-top">
             <input id="scms-sc"
