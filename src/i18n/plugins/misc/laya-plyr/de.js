@@ -10,5 +10,5 @@ export default {
     vimeo: 'Vimeo',
     platform: 'Plattform',
     youtube: 'Youtube',
-    wrongURL: 'Falsche URL!'
+    wrongURL: 'Falsche URL! Bitte eine Vimeo- oder Youtube-URL angeben!'
 }

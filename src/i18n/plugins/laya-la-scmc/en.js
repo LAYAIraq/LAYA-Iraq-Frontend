@@ -2,14 +2,14 @@ export default {
     addSolution: 'Add Solution',
     nextContent: 'Next Content Block ',
     triesLeft: 'Tries left:',
-    title: 'Single Choice / Multiple Choice',
+    title: 'Multiple Choice / Multiple Response',
     type: 'Type',
     showTip: 'Show help text.',
     tipHeadline: 'What can you do with this element?',
     tooltip: "<p>With this component you can create a quiz. \
-        You have the choice between single and multiple choice. \
-        A single-choice question has only one possible answer, \
-        a multiple choice question, on the other hand, several.</p>\
+        You have the choice between multiple choice and multiple response. \
+        A multiple choice question has only one possible answer, \
+        a multiple response question, on the other hand, several.</p>\
         <p>In the line 'Type' you choose which questions you ask \
         would like: A question with one possible answer (Single \
         Choice), or one with several correct answers (Multiple \
@@ -28,9 +28,9 @@ export default {
         check mark! The respective answer is then considered correct \
         scores when the participants evaluate your quiz.</p>",
     edit: {
-        scmc: 'Single Choice / Multiple Choice',
-        sc: 'Single Choice',
-        mc: 'Multiple Choice',
+        scmc: 'Multiple Choice / Multiple Response',
+        sc: 'Multiple Choice',
+        mc: 'Multiple Response',
         title: 'Title',
         titlePlaceholder: 'e.g.. Excercise 1',
         task: 'Question / Task',

@@ -4,7 +4,7 @@ export default {
         caption: "Single- oder Multiple-Choice-Fragen."
     },
     en: {
-        name: "Single Choice / Multiple Choice",
-        caption: "Single Choice or Multiple Choice Questions."
+        name: "Multiple Choice / Multiple Response",
+        caption: "Multiple Choice or Multiple Response Questions."
     }
   }

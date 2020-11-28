@@ -185,7 +185,9 @@
         :content="content()"
         :onupdate="updateStep"
         :course="course"
-        :onnavupdate="updateContent">
+        :onnavupdate="updateContent"
+        :key="helpfulkey"
+        >
       </router-view>
 
       <div class="container" v-if="isAuthor && $route.name == 'course-detail-view'">
@@ -402,7 +404,8 @@ export default {
       rename: "",
       copy: "",
       changetype: null,
-      courseStats: {}
+      courseStats: {},
+      helpfulkey: 0
     }
   },
   beforeRouteUpdate(to,from,next) {
@@ -437,13 +440,13 @@ export default {
       let lang = this.$store.state.profile.lang
       for(const id in lb) {
         if (lb[id].i18n.hasOwnProperty(lang))
-          lalb.push({value: id, text: lb[id].i18n[lang]})
-        else lalb.push({value: id, text: lb[id].i18n.de})
+          lalb.push({value: id, text: lb[id].i18n[lang].name})
+        else lalb.push({value: id, text: lb[id].i18n.de.name})
       }
       for(const id in la)
         if (la[id].i18n.hasOwnProperty(lang))
-          lalb.push({value: id, text: la[id].i18n[lang]})
-        else lalb.push({value: id, text: la[id].i18n.de})
+          lalb.push({value: id, text: la[id].i18n[lang].name})
+        else lalb.push({value: id, text: la[id].i18n.de.name})
       return lalb
     },
 

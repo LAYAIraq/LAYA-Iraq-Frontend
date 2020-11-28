@@ -1,6 +1,6 @@
 <template>
   <div class="laya-lb-plyr-vimeo-view">
-    <div :id="playerId" data-plyr-provider="vimeo" :data-plyr-embed-id="vimeoId">
+    <div :id="playerId" data-plyr-provider="vimeo" :data-plyr-embed-id="url">
     </div>
     <button type="button"
             class="btn btn-primary mt-3 d-block ml-auto"
