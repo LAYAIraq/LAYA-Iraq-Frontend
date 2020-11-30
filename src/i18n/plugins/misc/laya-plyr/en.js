@@ -1,8 +1,10 @@
 export default {
     video: 'Video via Plyr',
     placeholder: 'e.g. https://vimeo.com/346694402',
-    tooltip: 'With this component, you can insert a video from Vimeo. You only have to give the link to the video you want to insert.\
-    We provide a player that allows the video to be played within the course interface.',
+    tooltip: '<p>With this component, you can insert a video two platforms, Youtube and Vimeo. \
+    You only have to give the link to the video you want to insert.</p>\
+    <p>After input, we check if the video comes from one of the two supported platforms.</p>\
+    <p>Afterwards, we provide a player that allows the video to be played within the course interface.</p>',
     showTip: 'Show help text.',
     tipHeadline: 'What can you do with this element?',
     nextContent: 'Next Content Block ',

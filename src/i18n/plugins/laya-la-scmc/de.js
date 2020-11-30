@@ -1,5 +1,5 @@
 export default {
-    addSolution: 'Lösung ergänzen',
+    check: 'Lösung einblenden',
     nextContent: 'Nächster Inhalt ',
     triesLeft: 'Versuche übrig:',
     title: 'Single Choice / Multiple Choice',

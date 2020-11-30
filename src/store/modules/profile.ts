@@ -24,7 +24,7 @@ export default {
       if (supportedLangs.includes(data.lang)) {
         state.lang = data.lang
         http.post(`/accounts/${data.uid}/change-language`, data)
-          .then( (data) => console.log(data))
+          .then( (data) => console.log(`Changed language to ${state.lang}`))
           .catch((err) => console.error(err))
       }
       else {

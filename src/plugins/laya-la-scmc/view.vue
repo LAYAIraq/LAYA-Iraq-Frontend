@@ -55,7 +55,7 @@
             class="btn btn-link mt-3"
             @click="diffSolution"
             :disabled="freeze">
-      {{ i18n.addSolution }}
+      {{ i18n.check }}
     </button>
     <button type="button"
             class="btn btn-primary mt-3 float-right"

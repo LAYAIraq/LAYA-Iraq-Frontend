@@ -36,8 +36,10 @@
               <input id="platform-vimeo"
                     class="form-check-input"
                     type="radio"
+                    name="platform"
                     :value="false"
                     v-model="youtube"
+                    disabled
                     >
               <label for="platform-vimeo" class="form-check-label">{{ i18n.vimeo }}</label>
             </div>
@@ -45,9 +47,10 @@
               <input id="platform-yt"
                     class="form-check-input"
                     type="radio"
-                    name="youtube"
+                    name="platform"
                     :value="true"
                     v-model="youtube"
+                    disabled
                     >
               <label for="platform-yt" class="form-check-label">{{ i18n.youtube }}</label>
             </div>
@@ -77,8 +80,7 @@ export default {
     return {
       src: "",
       tooltipOn: false,
-      youtube: false,
-      // correctURL: null
+      youtube: false
     }
   },
   mounted() {
@@ -121,5 +123,8 @@ export default {
   .helptext i {
     float: inline-start;
     margin-right: 10px;
+  }
+  .form-check-input:disabled {
+    color: #212529;
   }
 </style>

@@ -54,7 +54,7 @@
         -->
         <button type="button" class="btn btn-link" @click="check" 
           :disabled="freeze">
-          {{ i18n.addSolution }}
+          {{ i18n.check }}
         </button>
           
         <button type="button" class="btn btn-primary ml-auto" @click="done">

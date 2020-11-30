@@ -1,5 +1,5 @@
 export default {
-    addSolution: 'Lösung ergänzen',
+    check: 'Lösung einblenden',
     nextContent: 'Nächster Inhalt ',
     defaultOption: 'Wähle aus',
     showTip: 'Hilfetext anzeigen.',

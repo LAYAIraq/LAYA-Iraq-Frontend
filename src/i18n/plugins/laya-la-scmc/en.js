@@ -1,5 +1,5 @@
 export default {
-    addSolution: 'Add Solution',
+    check: 'Check Solution',
     nextContent: 'Next Content Block ',
     triesLeft: 'Tries left:',
     title: 'Multiple Choice / Multiple Response',

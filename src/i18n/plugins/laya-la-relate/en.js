@@ -1,5 +1,5 @@
 export default {
-    addSolution: 'Add Solution',
+    check: 'Check Solution',
     nextContent: 'Next Content Block ',
     defaultOption: 'Choose',
     showTip: 'Show help text.',
