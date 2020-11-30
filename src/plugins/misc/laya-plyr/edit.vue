@@ -124,7 +124,7 @@ export default {
     float: inline-start;
     margin-right: 10px;
   }
-  .form-check-input:disabled {
-    color: #212529;
+  .form-check-input[disabled] ~ .form-check-label{
+    color: #212529 !important;
   }
 </style>
