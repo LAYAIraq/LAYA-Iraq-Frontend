@@ -3,7 +3,7 @@ export default {
     check: 'Check Solution',
     nextContent: 'Next Content Block',
     title: 'Title',
-    titlePlaceholder: 'e.g. Excercise',
+    titlePlaceholder: 'e.g. Exercise',
     task: 'Question / Task',
     taskPlaceholder: 'e.g. Task 1',
     taskAudio: 'Voice Over',
@@ -14,8 +14,8 @@ export default {
     catAdd: ' Add Category',
     items: 'Items',
     itemAdd: ' Add Item',
-    showTip: 'Hilfetext anzeigen.',
-    tipHeadline: 'Was kann man mit diesem Element machen?',
+    showTip: 'Show help text.',
+    tipHeadline: 'What can you do with this element?',
     name: 'Drag & Drop',
     tooltip: '<p>In this component you can ask multiple choice \
      questions. This serves as a quick learning check. </p>\

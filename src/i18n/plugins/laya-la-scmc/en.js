@@ -32,7 +32,7 @@ export default {
         sc: 'Multiple Choice',
         mc: 'Multiple Response',
         title: 'Title',
-        titlePlaceholder: 'e.g.. Excercise 1',
+        titlePlaceholder: 'e.g. Exercise 1',
         task: 'Question / Task',
         taskPlaceholder: 'e.g. Task 1',
         taskAudio: 'Voice Over',

@@ -30,7 +30,7 @@ export default {
     with the red button you can delete items.</p>',
     edit: {
         title: 'Title',
-        titlePlaceholder: 'e.g. Excercise 1',
+        titlePlaceholder: 'e.g. Exercise 1',
         task: 'Question / Task',
         taskPlaceholder: 'e.g. Task 1',
         taskAudio: 'Voice over',

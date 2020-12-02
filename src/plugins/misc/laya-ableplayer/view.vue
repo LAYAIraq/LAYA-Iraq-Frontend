@@ -63,3 +63,7 @@ export default {
 }
 </script>
 
+<style scoped>
+.able-status-bar {
+  min-height: 2.5em;
+}
