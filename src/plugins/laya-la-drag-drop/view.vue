@@ -17,7 +17,7 @@
 
       <div class="row">
         <div class="col">
-          <div v-for="(item,i) in items" :key="item.label" class="item">
+          <div v-for="(item,i) in items" :key="item.label" class="item mb-5">
             <h4 class="text-center item-label">
               {{ item.label }}
               <i v-if="checked"
@@ -94,7 +94,7 @@ export default {
       this.onFinish[0]()
     },
     check() {
-      if (this.solution.length == 0) {
+      if (this.eval.length == 0) {
         for(let i=0; i<this.solution.length; i++) {
           let solution = this.solution[i]
           this.eval[i] = (solution == this.items[i].category)
@@ -102,7 +102,7 @@ export default {
       }
       
       this.checked = !this.checked
-      this.$forceUpdate()
+      //this.$forceUpdate()
     }
   }
 }

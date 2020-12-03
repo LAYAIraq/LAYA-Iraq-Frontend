@@ -149,7 +149,7 @@ export default {
 
       for (let i = 1; i<3; i++) {
         let tmp = this.i18n.cat + " " + i
-        console.log(tmp)
+        // console.log(tmp)
         this.categories.push(tmp)
       }
     }
