@@ -31,7 +31,7 @@
                   v-model="solution[i]"
                   :disabled="freeze"
                   class="custom-select">
-                  <option disabled>{{default_option}}</option>
+                  <option disabled>{{ defaultOption }}</option>
                   <option v-for="opt in options" :key="opt" :disabled="solution.includes(opt)">
                   {{opt}}
                   </option>
@@ -54,7 +54,7 @@
         -->
         <button type="button" class="btn btn-link" @click="check" 
           :disabled="freeze">
-          {{ i18n.addSolution }}
+          {{ i18n.check }}
         </button>
           
         <button type="button" class="btn btn-primary ml-auto" @click="done">
@@ -73,12 +73,12 @@ import * as i18n from "@/i18n/plugins/laya-la-relate"
 export default {
   name: "laya-quiz-relate",
   created () {
-    this.default_option = this.i18n.defaultOption
+    this.defaultOption = this.i18n.defaultOption
     this.reset()
   },
   data () {
     return {
-      default_option: "",
+      defaultOption: "",
       solution: [],
       eval: [],
       freeze: false
@@ -104,7 +104,7 @@ export default {
   },
   methods: {
     reset() {
-      this.solution = this.pairs.map(p => default_option)
+      this.solution = this.pairs.map(p => this.defaultOption)
     },
     done() {
       this.onFinish[0]()

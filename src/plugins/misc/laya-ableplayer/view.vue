@@ -4,7 +4,7 @@
     <video :id="playerId"
       preload="auto"
       data-debug
-      :data-lang="lang" data-force-lang>
+      :data-lang="$store.state.profile.lang" data-force-lang>
 
       <source type="video/mp4"
               :src="notEmpty(src)"
@@ -25,6 +25,7 @@
 
 <script>
 import "ableplayer"
+import "ableplayer/build/ableplayer.min.css"
 import * as i18n from "@/i18n/plugins/misc/laya-ableplayer"
 
 export default {
@@ -44,10 +45,10 @@ export default {
     onFinish: Array
   },
   computed: {
-    playerId: function() {
+    playerId() {
       return `laya-ableplayer-${Date.now()}`
     },
-    lang: function() {
+    lang() {
       return "de"
     },
     i18n() {
@@ -55,16 +56,14 @@ export default {
     }
   },
   methods: {
-    notEmpty: (str) => (!!str && str.length > 0) ? str : false,
+    notEmpty(str) {
+      return (!!str && str.length > 0) ? str : false
+    }
   },
 }
 </script>
 
-<style>
-.able {
-  box-shadow: unset;
+<style scoped>
+.able-status-bar {
+  min-height: 2.5em;
 }
-.able * {
-  box-sizing: content-box;
-}
-</style>

@@ -31,7 +31,8 @@ export default {
     quill.setContents(this.contents)
   },
   props: {
-    contents: Object
+    contents: Object,
+    onFinish: Array
   },
   computed: {
     editorId() {

@@ -99,7 +99,7 @@ export default {
       /* check if course exists */
       http.head(`courses/${newCourse.name}`)
         .then(function() {
-          self.msg = "Ein Kurs mit diesem Namen existiert bereits"
+          self.msg = self.i18n.courseExists
         }).catch(function() {
           let enrBool = self.needsEnrollment
           /* create course */
@@ -111,7 +111,7 @@ export default {
             self.$router.push(`/courses/${newCourse.name}/1`)
           }).catch((err) => {
             console.log(err)
-            self.msg = "Beim Speichern ist ein Fehler aufgetreten"
+            self.msg = self.i18n.savingFailed
           })
 
           /* create storage */

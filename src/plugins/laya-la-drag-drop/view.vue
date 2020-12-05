@@ -17,7 +17,7 @@
 
       <div class="row">
         <div class="col">
-          <div v-for="(item,i) in items" :key="item.label" class="item">
+          <div v-for="(item,i) in items" :key="item.label" class="item mb-5">
             <h4 class="text-center item-label">
               {{ item.label }}
               <i v-if="checked"
@@ -34,7 +34,7 @@
             <input type="range"
                    class="custom-range"
                    min="0"
-                   :max="categories.length"
+                   :max="categories.length-1"
                    :disabled="checked"
                    v-model.number="solution[i]">
           </div>
@@ -46,7 +46,7 @@
                 class="btn btn-link mt-3"
                 :disabled="checked"
                 @click="check">
-          {{ i18n.addSolution }}
+          {{ i18n.check }}
         </button>
         <button type="button"
                 class="btn btn-primary mt-3 ml-auto"
@@ -94,23 +94,15 @@ export default {
       this.onFinish[0]()
     },
     check() {
-
-      for(let i=0; i<this.solution.length; i++) {
-        let solution = this.solution[i]
-        switch (this.solution[i]) {
-          case 0:
-            this.eval[i] = (this.items[i].category === 0)
-            break
-          case 1:
-            this.eval[i] = false
-            break
-          case 2:
-            this.eval[i] = (this.items[i].category === 1)
-            break
+      if (this.eval.length == 0) {
+        for(let i=0; i<this.solution.length; i++) {
+          let solution = this.solution[i]
+          this.eval[i] = (solution == this.items[i].category)
         }
       }
-      this.checked = true
-      this.$forceUpdate()
+      
+      this.checked = !this.checked
+      //this.$forceUpdate()
     }
   }
 }

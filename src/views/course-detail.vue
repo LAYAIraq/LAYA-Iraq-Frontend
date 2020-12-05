@@ -185,7 +185,9 @@
         :content="content()"
         :onupdate="updateStep"
         :course="course"
-        :onnavupdate="updateContent">
+        :onnavupdate="updateContent"
+        :key="helpfulkey"
+        >
       </router-view>
 
       <div class="container" v-if="isAuthor && $route.name == 'course-detail-view'">
@@ -219,40 +221,53 @@
 
         <!-- new content -->
         <div class="row mb-2">
-          <div class="col">
+        <div class="col">
 
             <b-dropdown id="new-content-dd"
                         variant="primary"
                         class="w-100"
                         dropright>
-              <template slot="button-content">
+            <template slot="button-content">
                 <i class="fas fa-plus"></i> {{ i18n.authTools.newContent }}
-              </template>
+            </template>
 
-              <b-dropdown-header>{{ i18n.authTools.newContentBlock }}</b-dropdown-header>
-              <b-dropdown-item v-for="block in $laya.lb"
-                               :key="block.id"
-                               :to="'/courses/'+name+'/'+nextId()+'/new/'+block.id">
-                {{ getLocale(block) }}
-              </b-dropdown-item>
+            <b-dropdown-header>{{ i18n.authTools.newContentBlock }}</b-dropdown-header>
+                <b-dropdown-item v-for="block in $laya.lb"
+                                :key="block.id"
+                                :to="'/courses/'+name+'/'+ nextId() +'/new/'+block.id"
+                                >
+                    
+                    <div class="dropitem">
+                        {{ block.i18n[profileLang].name }} 
+                        <i class="far fa-question-circle" v-b-tooltip.right :title="block.i18n[profileLang].caption">
+                        </i>
+                    </div>
+                </b-dropdown-item>
 
-              <b-dropdown-divider></b-dropdown-divider>
+                <b-dropdown-divider></b-dropdown-divider>
 
-              <b-dropdown-header>{{ i18n.authTools.newContentAssmnt }}</b-dropdown-header>
-              <b-dropdown-item v-for="ass in $laya.la"
-                               :key="ass.id"
-                               :to="'/courses/'+name+'/'+nextId()+'/new/'+ass.id">
-                {{ getLocale(ass) }}
-              </b-dropdown-item>
+                <b-dropdown-header>{{ i18n.authTools.newContentAssmnt }}</b-dropdown-header>
+                <b-dropdown-item v-for="ass in $laya.la"
+                                :key="ass.id"
+                                :to="'/courses/'+name+'/'+ nextId() +'/new/'+ass.id"
+                                >
+                    <div class="dropitem">
+                        {{ ass.i18n[profileLang].name }}
+                    
+                        <i class="far fa-question-circle" v-b-tooltip.right :title="ass.i18n[profileLang].caption">
+                        </i>
+                    </div>
+                    
+                </b-dropdown-item>
             </b-dropdown>
 
-          </div>
-
-          <div class="col text-dark">
-            {{ i18n.authTools.newContentTip }}
-            <b>{{nextId()}}</b>.
-          </div>
         </div>
+
+        <div class="col text-dark">
+            {{ i18n.authTools.newContentTip }}
+            <b>{{ nextId() }}</b>.
+        </div>
+    </div>
 
         <!-- Edit Course Navigation -->
         <div class="row mb-2" v-if="course.content.length > 0">
@@ -373,7 +388,7 @@ import http from "axios";
 import * as i18n from "@/i18n/course-detail";
 import utils from "@/misc/utils.js";
 import lyScrollToTop from "@/components/scroll-to-top.vue"
-import VueI18n from "vue-i18n"
+// import VueI18n from "vue-i18n"
 
 export default {
   name: "course-detail-view",
@@ -389,7 +404,8 @@ export default {
       rename: "",
       copy: "",
       changetype: null,
-      courseStats: {}
+      courseStats: {},
+      helpfulkey: 0
     }
   },
   beforeRouteUpdate(to,from,next) {
@@ -399,10 +415,10 @@ export default {
   created() {
     this.fetchCourse()
     this.fetchEnrollment()
-    this.fetchCourseStats()
+    // this.fetchCourseStats()
   },
   beforeDestroy(){
-    if(this.enrollment) this.updateEnrollment()
+    if(this.enrollment.length > 0) this.updateEnrollment()
   },
   computed: {
     ...mapState(["auth", "note"]),
@@ -424,13 +440,13 @@ export default {
       let lang = this.$store.state.profile.lang
       for(const id in lb) {
         if (lb[id].i18n.hasOwnProperty(lang))
-          lalb.push({value: id, text: lb[id].i18n[lang]})
-        else lalb.push({value: id, text: lb[id].i18n.de})
+          lalb.push({value: id, text: lb[id].i18n[lang].name})
+        else lalb.push({value: id, text: lb[id].i18n.de.name})
       }
       for(const id in la)
         if (la[id].i18n.hasOwnProperty(lang))
-          lalb.push({value: id, text: la[id].i18n[lang]})
-        else lalb.push({value: id, text: la[id].i18n.de})
+          lalb.push({value: id, text: la[id].i18n[lang].name})
+        else lalb.push({value: id, text: la[id].i18n.de.name})
       return lalb
     },
 
@@ -438,10 +454,14 @@ export default {
       return i18n[this.$store.state.profile.lang]
     },
 
+    profileLang() {
+      return this.$store.state.profile.lang
+    }
+
   },
   methods: {
     ...utils,
-
+    
     fetchCourse() {
       const ctx = this;
 
@@ -472,6 +492,11 @@ export default {
       // console.log(cid)
       // const params = http.paramsSerializer({filter:{where: {studentId: uid, courseId: self.course.name}}})
       // console.log(params)
+      while (!self.course) setTimeout(100)
+      if(!self.course.needsEnrollment) {
+        console.log("No enrollment needed")
+        return
+      }
       http.get("enrollments/findOne", {params: {filter:{where: {studentId: uid, courseId: cid}}}})
           .then(({data}) => {
             // console.log("Enrollment exists!")
@@ -565,6 +590,7 @@ export default {
     },
 
     updateEnrollment() {
+      if (!this.course.needsEnrollment) return
       const enrol = this.enrollment
 
       http.patch(`enrollments/${enrol.id}`, enrol)
@@ -694,10 +720,11 @@ export default {
     },
 
     storeCourse() {
+      let self = this
       http.patch(`courses/${this.name}`, {content: this.course.content})
         .catch(err => console.error("Failed storing course content:", err))
         .finally(function() {
-          this.$bvToast.show("author-toast")
+          self.$bvToast.show("author-toast")
         })
     },
 
@@ -720,7 +747,7 @@ export default {
       const {name, $router} = this
       return steps.split(",").map(step => {
         return () =>{
-          this.enrollment.progress = Number(step)
+          if(this.enrollment.length >0) this.enrollment.progress = Number(step)
           $router.push({name: "course-detail-view", params: {name, step}})
         }
       })
@@ -819,4 +846,9 @@ export default {
 .subscribe-btn {
   border: 2px solid black;
 }
+
+.dropitem i {
+    float:inline-end;
+}
+
 </style>

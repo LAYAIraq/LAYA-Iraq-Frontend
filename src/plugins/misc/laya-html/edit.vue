@@ -1,12 +1,15 @@
 <template>
-  <div class="laya-wysiwyg-edit bg-light">
+
+  <div class="laya-wysiwyg-edit bg-light">  
     <div :id="editorId"></div>
   </div>
+
 </template>
 
 <script>
 import "quill/dist/quill.snow.css"
 import Quill from "quill"
+import * as i18n from "@/i18n/plugins/misc/laya-html"
 
 export default {
   name: "laya-wysiwyg-edit",
@@ -21,7 +24,7 @@ export default {
     const self = this
     const quill = new Quill(`#${self.editorId}`, {
       theme: "snow",
-      placeholder: "Hier Freitext, Links etc. schreiben...",
+      placeholder: self.i18n.placeholder,
       modules: {
         toolbar: [
           ['bold', 'italic', 'underline'],
@@ -43,6 +46,9 @@ export default {
   computed: {
     editorId() {
       return `laya-wysiwyg-${Date.now()}`
+    },
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
     }
   },
 }
@@ -67,4 +73,8 @@ export default {
 .laya-wysiwyg-edit .ql-formats button:last-child {
   margin-right: 0px;
 }
+.ql-container.ql-snow {
+ min-height: 200px;
+}
+
 </style>

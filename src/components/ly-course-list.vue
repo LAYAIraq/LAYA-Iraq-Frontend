@@ -87,25 +87,26 @@ export default {
   },
   methods: {
     getSubs() {
-      var self = this
-      var studentId = this.auth.userId
+      let self = this
+      let studentId = this.auth.userId
      
       http
         .get(`enrollments/getAllByStudentId/?uid=${studentId}`)
         .then(({ data }) => {
           const list = data.sublist
-          for(var item of list) {
-            self.enrolledIn.push(item.courseId)
+          for(let item of list) {
+            self.enrolledIn.push(item.createDate)
           }
         })
         .catch(err => {
-          console.error(err)
+          console.log(`No enrollments for ${studentId} found`)
+          // console.error(err)
         })
     },
     enrollmentNeeded(course) {
-      var needed = course.needsEnrollment
+      let needed = course.needsEnrollment
       if (needed) {
-        return this.enrolledIn.find(x => x == course.name)? false : true
+        return this.enrolledIn.find(x => x == course.createDate)? false : true
       }
       else {
         return false
@@ -114,7 +115,7 @@ export default {
     subscribe(course) {
       const self = this
       const newEnrollment = {
-        courseId: course.name,
+        createDate: course.createDate,
         studentId: this.auth.userId
       }
 
