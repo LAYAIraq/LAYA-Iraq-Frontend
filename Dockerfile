@@ -1,22 +1,14 @@
-FROM node:lts-alpine as builder
+# Build has to be done in NPM Project
+FROM nginx:stable-alpine as production
 
-RUN apk add --update git && rm -rf /var/cache/apk/*
+# Copy production-ready build into Docker
+WORKDIR /usr/share/nginx/html
+COPY dist/* ./
 
-# use npm server for Testing Purposes, uncomment for testing build
-RUN npm install -g http-server
+# Expose the build at Port 80
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
 
-WORKDIR /laya-frontend
-
-COPY package*.json ./
-RUN npm install
-
-COPY . .
-
-# Build Production version of LAYA frontend
-RUN npm run build
-
-EXPOSE 8080
-CMD ["http-server", "dist"]
 
 
 
