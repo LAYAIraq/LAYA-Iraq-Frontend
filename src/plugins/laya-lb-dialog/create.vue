@@ -1,5 +1,5 @@
 <template>
-  <div class="laya-lb-dialog-edit">
+  <div class="laya-lb-dialog-new">
      
     <label><h4>{{ i18n.title }}</h4></label> <i id="questionmark" class="fas fa-question-circle" @click="toggleTip" 
           :title="i18n.showTip" v-b-tooltip.left></i>
@@ -78,20 +78,9 @@
 
 <script>
 import * as i18n from "@/i18n/plugins/laya-lb-dialog"
-import { mapGetters } from "vuex"
 
 export default {
-  name: "laya-lb-dialog-edit",
-  created() {
-    let idx = this.$route.params.step -1 //comply with array indexing in store
-    //create deep copy of store object to manipulate in vue instance
-    let preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
-    console.log("Existing data:")
-    console.log(preData)
-    this.bg = preData.bg
-    this.question = preData.question
-    this.answers = preData.answers
-  },
+  name: "laya-lb-dialog-new",
   data() {
     return {
       bg: "",
@@ -112,7 +101,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["hasContent"]),
     i18n() {
       return i18n[this.$store.state.profile.lang]
     },

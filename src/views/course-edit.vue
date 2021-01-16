@@ -5,12 +5,7 @@
         :name="name" :step="step">
         </course-edit-header> 
 
-        <router-view
-            :content="content()"
-            :onupdate="updateStep"
-            :course="hasCourse"
-            :onnavupdate="updateContent">
-        </router-view>
+        <router-view @saved="$emit('updated')"></router-view> <!-- mounts course-edit-wrapper -->
 
         <div class="container" v-if="$route.name == 'course-detail-view'">
 
@@ -81,6 +76,9 @@ export default {
         name: String,
         step: String
     },
+    created() {
+        this.$emit("updated")
+    },
     computed: {
         ...mapState(["edit"]),
         ...mapGetters(["profileLang", "hasContent", "hasCourse"]),
@@ -89,16 +87,6 @@ export default {
         }
     },
     methods: {
-        content() {
-            return this.hasContent[this.step-1]
-        },
-
-        updateStep(changedStep) {
-            let step = this.step-1
-            this.$store.commit("updateStep", { step, changedStep })
-            this.storeCourse()
-            this.$forceUpdate()
-        },
 
         updateContent(changedContent) {
             this.course.content = [...changedContent]
@@ -116,6 +104,7 @@ export default {
                 })
                 .catch( (err) => console.error(err))            
         }
+
     }
 }
 </script>

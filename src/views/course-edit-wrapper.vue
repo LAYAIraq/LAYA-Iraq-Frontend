@@ -4,11 +4,13 @@
       <div class="row">
         <div class="col">
           <!-- preview -->
-          <div v-if="preview" :is="comps.view" v-bind="dataFromEdit"></div>
+          <div v-if="preview" :is="comps.view" v-bind="stepData"></div>
 
           <!-- editing view -->
-          <div v-show="!preview" :is="comps.edit" v-bind="init" ref="edit"></div>
-
+          <div v-show="!preview">
+            <component v-if="!editContent" :is="comps.new" ref="new"></component>
+            <component v-else :is="comps.edit" ref="edit"></component>
+          </div>
           <hr>
 
           <div class="d-flex justify-content-between">
@@ -45,36 +47,32 @@ export default {
   props: {
     name: String,
     step: String,
-    type: String,
-  
-    onsave: Function
   },
   computed: {
     ...mapGetters(["hasContent"]),
     ...mapState(["edit"]),
     cid() {
-      return this.type || this.hasContent[this.step-1].name
+      return this.$route.params.type || this.hasContent[this.step-1].name //why not always use $route.params.type?
     },
     comps() {
       const la = this.$laya.la[this.cid]
       return la ? la.components : this.$laya.lb[this.cid].components
     },
-    dataFromEdit() {
+    editContent() {
+      return this.step <= this.hasContent.length
+    },
+    i18n() {
+      return i18n[this.$store.state.profile.lang];
+    },
+    stepData() {
       let input = {}
-      const data = this.$refs.edit.$data
+      const data = this.editContent? this.$refs.edit.$data: this.$refs.new.$data
       for (let prop in data) {
         if(!/^[$_]/.test(prop)) {
           input[prop] = data[prop]
         }
       }
       return input
-    },
-    i18n() {
-      return i18n[this.$store.state.profile.lang];
-    },
-    init() {
-      return this.hasContent.len == this.step ? this.hasContent[this.step-1].input : null
-      
     }
   },
   mounted() {
@@ -83,26 +81,27 @@ export default {
   },
   methods: {
     save() {
-      let step = this.step-1
-      const newInput = this.dataFromEdit
+      let step = this.step -1 // to comply to array indexing in store
+      const newInput = this.stepData
       console.log(newInput)
-      const changedStep = {
-        name: this.type,
+      const changedInput = (({tooltipOn, ...o}) => o) (newInput) //remove "tooltipOn" boolean from data
+      console.log(changedInput)
+      const updatedStep = {
+        name: this.cid,
         nextStep: null,
-        input:  newInput
+        input: changedInput
       }
-      console.log(changedStep)
+      console.log(updatedStep)
       console.log(this.hasContent.length, step)
-      if(this.hasContent.length < this.step ){
-        console.log("id hand")
-        this.$store.commit("appendContent", changedStep)
+      if(!this.editContent){
+        console.log("if hand: new content")
+        this.$store.commit("appendContent", updatedStep)
       }
       else{
-        console.log("else hand")
-        this.$store.commit("updateStep", { step, changedStep })
+        console.log("else hand: update content", updatedStep)
+        this.$store.commit("updateStep", { step, updatedStep })
       }
-      
-        
+      this.$emit("saved")
     }
   },
   beforeDestroy() {

@@ -40,11 +40,13 @@ export default {
       setCourse(state: { course: Object}, data: Object) {
         state.course = data
       },
-      updateStep( state , { step, updatedStep } ) {
+      updateStep( state: {course: {content: Array<Object>}} , { step, updatedStep } ) {
+        console.log(`Trying to update step ${step}`)
+        console.log("Updated Data: ", updatedStep)
         state.course.content[step] = {
           ...state.course.content[step], ...updatedStep
         }
-        console.log(`New Step #${step}`, state.course.content[step])
+        console.log(`Updated Step #${step}`, state.course.content[step])
       }
 
     },

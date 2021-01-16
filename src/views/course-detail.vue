@@ -21,15 +21,15 @@
 
           <div id="main-content-anchor" style="height: 7rem"></div>
 
-          <component v-if="viewPermit()"
+          <component v-if="viewPermit"
                      :key="name+'-'+step"
-                     :is="content().name"
-                     v-bind="content().input"               
-                     :onFinish="nextStep(content().nextStep)">
+                     :is="content.name"
+                     v-bind="content.input"               
+                     :onFinish="nextStep(content.nextStep)">
           </component>
           <!--<div v-else>-->
           <div v-else>
-            <h2 v-if="!content()" class="mt-5 text-center text-muted">
+            <h2 v-if="!content" class="mt-5 text-center text-muted">
               {{ i18n.content }}
             </h2>
             <h2 v-else class="mt-5 text-center text-muted">
@@ -40,7 +40,7 @@
       </div>
     </div>
 
-    <courseEdit v-if="isAuthor" :name="name" :step="step" @saved="$forceUpdate"></courseEdit>
+    <courseEdit v-if="isAuthor" :name="name" :step="step" @saved="$forceUpdate" @updated="$forceUpdate"></courseEdit>
 
   </div>
 </template>
@@ -110,8 +110,23 @@ export default {
 
     userEnrolled() {
       return this.$store.state.edit.userEnrolled
-    }
+    },
+    content() {
+      return this.hasContent[this.step-1]
+    },
 
+    viewPermit() {
+      if( this.content ) {
+        return (this.isAuthor || this.userEnrolled)? true : false;
+      }
+      return false
+    },
+
+  },
+  watch: {
+    content() { 
+      this.$forceUpdate
+    }
   },
   methods: {
     ...utils,
@@ -137,17 +152,6 @@ export default {
 
     updateEnrollment() {
       this.$store.dispatch("updateEnrollment")
-    },
-
-    content() {
-      return this.hasContent[this.step-1]
-    },
-
-    viewPermit() {
-      if( this.content() ) {
-        return (this.isAuthor || this.userEnrolled)? true : false;
-      }
-      return false
     },
 
     nextStep(steps) { // string e.g. "1,2"

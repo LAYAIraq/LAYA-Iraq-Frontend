@@ -168,6 +168,7 @@ export default {
     }
   },
   props: {
+    step: String
   },
   computed: {
     i18n() {
