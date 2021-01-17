@@ -72,7 +72,7 @@ export default {
           input[prop] = data[prop]
         }
       }
-      return input
+      return (({tooltipOn, ...o}) => o) (input) //strip tooltipOn var from data
     }
   },
   mounted() {
@@ -83,22 +83,16 @@ export default {
     save() {
       let step = this.step -1 // to comply to array indexing in store
       const newInput = this.stepData
-      console.log(newInput)
-      const changedInput = (({tooltipOn, ...o}) => o) (newInput) //remove "tooltipOn" boolean from data
-      console.log(changedInput)
       const updatedStep = {
         name: this.cid,
         nextStep: null,
-        input: changedInput
+        input: newInput
       }
-      console.log(updatedStep)
-      console.log(this.hasContent.length, step)
+      
       if(!this.editContent){
-        console.log("if hand: new content")
         this.$store.commit("appendContent", updatedStep)
       }
       else{
-        console.log("else hand: update content", updatedStep)
         this.$store.commit("updateStep", { step, updatedStep })
       }
       this.$emit("saved")

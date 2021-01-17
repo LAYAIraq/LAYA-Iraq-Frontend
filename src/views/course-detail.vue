@@ -21,12 +21,19 @@
 
           <div id="main-content-anchor" style="height: 7rem"></div>
 
+          <!-- v-bind need to go in favor of vuex store -->
           <component v-if="viewPermit"
                      :key="name+'-'+step"
                      :is="content.name"
-                     v-bind="content.input"               
+                     v-bind="content.input"             
                      :onFinish="nextStep(content.nextStep)">
           </component>
+          <!-- this is desired 
+          <component v-if="viewPermit"
+                     :key="name+'-'+step"
+                     :is="content.name"          
+                     :onFinish="nextStep(content.nextStep)">
+          </component> -->
           <!--<div v-else>-->
           <div v-else>
             <h2 v-if="!content" class="mt-5 text-center text-muted">
@@ -40,7 +47,7 @@
       </div>
     </div>
 
-    <courseEdit v-if="isAuthor" :name="name" :step="step" @saved="$forceUpdate" @updated="$forceUpdate"></courseEdit>
+    <courseEdit v-if="isAuthor" :name="name" :step="step" @saved="$forceUpdate"></courseEdit>
 
   </div>
 </template>

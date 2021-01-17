@@ -10,7 +10,7 @@
                 :key="i"
                 type="button"
                 class="btn btn-info btn-lg"
-                @click="onFinish[i]() || dummy">
+                @click="onFinish[i]()">
           {{ answer }}
         </button>
       </div>
@@ -19,25 +19,52 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from "vuex"
 export default {
   name: "laya-dialog",
   data() {
+    if (Object.entries(this.$attrs).length === 3) { // for "preview" feature
+      return {...this.$attrs}
+    }
     return {
+      question: "",
+      answers: [],
+      bg: ""
     }
   },
-  mounted() {
+  beforeMount() {
+    // fetch data from vuex if not preview
+    if (Object.entries(this.$attrs).length != 3) {
+      // No attributed Data --> actual view
+      this.refreshData()
+    }
+  },
+  computed: {
+    ...mapGetters(["hasContent"]),
+    idx() {
+      //comply with array indexing in store
+      return this.$route.params.step -1 
+    }
   },
   props: {
-    question: String,
-    answers: Array,
-    bg: String,
     onFinish: Array
   },
   methods: {
-    dummy() {
-      // Do not delete
+    refreshData() {
+      // dereference store data
+      let preData = JSON.parse(JSON.stringify(this.hasContent[this.idx].input))
+      //replace data stubs with stored data
+      this.question = preData.question
+      this.answers = preData.answers
+      this.bg = preData.bg
     }
   },
+  watch: {
+    hasContent(newValue) {
+      //FIXME doesn't actually watch the property
+      this.refreshData()
+    }
+  }
 }
 </script>
 

@@ -86,8 +86,6 @@ export default {
     let idx = this.$route.params.step -1 //comply with array indexing in store
     //create deep copy of store object to manipulate in vue instance
     let preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
-    console.log("Existing data:")
-    console.log(preData)
     this.bg = preData.bg
     this.question = preData.question
     this.answers = preData.answers

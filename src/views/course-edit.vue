@@ -5,7 +5,7 @@
         :name="name" :step="step">
         </course-edit-header> 
 
-        <router-view @saved="$emit('updated')"></router-view> <!-- mounts course-edit-wrapper -->
+        <router-view @saved="$bvToast.show('author-toast')"></router-view> <!-- mounts course-edit-wrapper -->
 
         <div class="container" v-if="$route.name == 'course-detail-view'">
 
@@ -76,9 +76,6 @@ export default {
         name: String,
         step: String
     },
-    created() {
-        this.$emit("updated")
-    },
     computed: {
         ...mapState(["edit"]),
         ...mapGetters(["profileLang", "hasContent", "hasCourse"]),
@@ -98,7 +95,6 @@ export default {
             let ctx = this
             let stored = this.$store.dispatch("storeCourse")
             stored.then( (succ) => {
-                // console.log(succ)
                 ctx.$bvToast.show("author-toast")
                 ctx.$emit("saved")
                 })

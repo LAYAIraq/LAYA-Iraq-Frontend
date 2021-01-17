@@ -21,14 +21,11 @@ export default {
     },
     mutations: {
       appendContent ( state, data:{ name: String, nextStep, input: Object} ) {
-        console.log("adding: ", data)
         state.course.content.push(data)
       },
       delContent( state, step ) {
         let cnt = state.course.content
-        console.log(cnt)
         state.course.content.splice(step, 1)
-        console.log(cnt)
       },
       renameCourse( state: {course: {name: String}}, newName: String) {
         state.course.name = newName
@@ -41,28 +38,21 @@ export default {
         state.course = data
       },
       updateStep( state: {course: {content: Array<Object>}} , { step, updatedStep } ) {
-        console.log(`Trying to update step ${step}`)
-        console.log("Updated Data: ", updatedStep)
         state.course.content[step] = {
           ...state.course.content[step], ...updatedStep
         }
-        console.log(`Updated Step #${step}`, state.course.content[step])
       }
 
     },
     actions: {
       fetchEnrollment({ commit, state, rootState }, createdDate: String) {
-        console.log("Getting Enrollment status...")
         const self = this
         let uid = rootState.auth.userId
         let cid = createdDate
         console.log(cid)
-        // const params = http.paramsSerializer({filter:{where: {studentId: uid, courseId: self.course.name}}})
-        // console.log(params)
         http.get("enrollments/findOne", {params: {filter:{where: {studentId: uid, createDate: cid}}}})
             .then(({data}) => {
               console.log("Enrollment exists!")
-              console.log(data)
               commit("setEnrollment", data)
             })
             .catch(err => {
@@ -86,7 +76,6 @@ export default {
       fetchCourse ({ commit, state, rootState}, name: String) {
         //can you return router function? //TODO direkt hier 
         return new Promise((resolve, reject) => {
-          // console.log("FETCHING COURSE")
           commit("setBusy", true);
           /*
           * fetch course */
@@ -142,11 +131,6 @@ export default {
             .catch(function() {
             })
         
-      },
-
-      fetchTranslation() {
-
-      }
-      
+      }      
   }
 }
