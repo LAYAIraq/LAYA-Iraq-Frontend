@@ -74,4 +74,8 @@ export default {
   margin-right: 0px;
 }
 
+.ql-container.ql-snow {
+ min-height: 200px;
+}
+
 </style>

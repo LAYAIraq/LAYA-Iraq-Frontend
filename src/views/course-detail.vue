@@ -130,11 +130,11 @@ export default {
     },
 
   },
-  watch: {
-    content() { 
-      this.$forceUpdate
-    }
-  },
+  // watch: {
+  //   content() { 
+  //     this.$forceUpdate
+  //   }
+  // },
   methods: {
     ...utils,
 

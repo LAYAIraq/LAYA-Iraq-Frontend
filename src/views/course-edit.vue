@@ -96,7 +96,7 @@ export default {
             let stored = this.$store.dispatch("storeCourse")
             stored.then( (succ) => {
                 ctx.$bvToast.show("author-toast")
-                ctx.$emit("saved")
+                // ctx.$emit("saved")
                 })
                 .catch( (err) => console.error(err))            
         }

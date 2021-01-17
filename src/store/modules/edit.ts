@@ -37,6 +37,9 @@ export default {
       setCourse(state: { course: Object}, data: Object) {
         state.course = data
       },
+      updateCourseNav( state: {course: {content: Array<Object>}}, data: Array<Object>) {
+        state.course.content = data
+      },
       updateStep( state: {course: {content: Array<Object>}} , { step, updatedStep } ) {
         state.course.content[step] = {
           ...state.course.content[step], ...updatedStep
@@ -81,7 +84,7 @@ export default {
           * fetch course */
           http.get(`courses/${name}`)
             .then(({ data }) => {
-              console.log(data)
+              // console.log(data)
               commit("setCourse", data)
               resolve("Course loaded")
             })
