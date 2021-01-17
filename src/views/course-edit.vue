@@ -5,7 +5,8 @@
         :name="name" :step="step">
         </course-edit-header> 
 
-        <router-view @saved="$bvToast.show('author-toast')"></router-view> <!-- mounts course-edit-wrapper -->
+        <!-- mounts course-edit-wrapper & edit-course-nav -->
+        <router-view @saved="$bvToast.show('author-toast')"></router-view>
 
         <div class="container" v-if="$route.name == 'course-detail-view'">
 
