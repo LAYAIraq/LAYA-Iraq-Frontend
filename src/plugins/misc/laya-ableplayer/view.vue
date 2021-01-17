@@ -25,6 +25,7 @@
 
 <script>
 import "ableplayer"
+import "ableplayer/build/ableplayer.min.css"
 import * as i18n from "@/i18n/plugins/misc/laya-ableplayer"
 
 export default {
@@ -55,16 +56,15 @@ export default {
     }
   },
   methods: {
-    notEmpty: (str) => (!!str && str.length > 0) ? str : false,
+    notEmpty(str) {
+      return (!!str && str.length > 0) ? str : false
+    }
   },
 }
 </script>
 
-<style>
-.able {
-  box-shadow: unset;
-}
-.able * {
-  box-sizing: content-box;
+<style scoped>
+.able-status-bar {
+  min-height: 2.5em;
 }
 </style>
