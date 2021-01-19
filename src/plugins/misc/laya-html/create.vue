@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
 import "quill/dist/quill.snow.css"
 import Quill from "quill"
 import * as i18n from "@/i18n/plugins/misc/laya-html"
@@ -18,11 +17,6 @@ export default {
     return {
       contents: null
     }
-  },
-  created() {
-    let idx = this.$route.params.step -1
-    const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
-    this.contents = preData.contents
   },
   mounted() {
     const self = this
@@ -44,12 +38,10 @@ export default {
     quill.on("text-change", function(delta, oldDelta, source) {
       if (source === "user")
         self.contents = quill.getContents()
-        self.$forceUpdate
     })
     quill.setContents(self.contents)
   },
   computed: {
-    ...mapGetters(["hasContent"]),
     editorId() {
       return `laya-wysiwyg-${Date.now()}`
     },
