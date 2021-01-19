@@ -58,9 +58,12 @@ export default {
     methods: {
         renameCourse() {
             if(!this.rename) return
+            let newName = this.rename
+            let step = this.$route.params.step
             this.oldName = this.edit.course.name
-            this.$store.commit("renameCourse", this.rename)
+            this.$store.commit("renameCourse", newName)
             this.$store.dispatch("updateRenamedCourse", this.oldName)
+            this.$router.replace(`/courses/${newName}/${step}`)
             this.$emit("renamed")
         }
 

@@ -16,7 +16,6 @@
 <script>
 import * as i18n from "@/i18n/course-edit/content"
 import { mapGetters } from "vuex"
-import commonMethods from "./common-methods.js"
 
 export default {
     name: "course-edit-content",
@@ -26,12 +25,12 @@ export default {
     },
     computed: {
         ...mapGetters(["profileLang", "hasContent"]),
+        content() {
+            return this.hasContent[this.step-1]
+        },
         i18n() {
             return i18n[this.profileLang]
         }
-    },
-    methods: {
-        ...commonMethods
     }
 
 }
