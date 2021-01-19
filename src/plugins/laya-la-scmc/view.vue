@@ -69,38 +69,60 @@
 
 <script>
 import Vue from "vue"
-import {mapState, mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 import * as i18n from "@/i18n/plugins/laya-la-scmc"
 
 export default {
   name: 'laya-multiple-choice',
-  created () {
-  },
   data () {
+    if (Object.entries(this.$attrs).length === 7) 
+      return {
+        ...this.$attrs,
+        tries: 0,
+        answers: [],
+        checked: [],
+        feedback: '',
+        freeze: false,
+        eval: []
+      }
     return {
       tries: 0,
       answers: [],
       checked: [],
       feedback: '',
       freeze: false,
-      eval: []
+      eval: [],
+      multiple: false,
+      title: "",
+      task: "",
+      taskAudio: "",
+      options: "",
+      solutions: "",
+      maxTries: ""
+    }
+  },
+  created () {
+    if (Object.entries(this.$attrs).length != 7) { // previewing newly created content
+      let idx = this.$route.params.step - 1
+      const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+      this.multiple = preData.multiple
+      this.title = preData.title
+      this.task = preData.task
+      this.taskAudio = preData.taskAudio
+      this.options = preData.options
+      this.solutions = preData.solutions
+      this.maxTries = preData.maxTries
     }
   },
   props: {
-    multiple: Boolean,
-    title: String,
-    task: String,
-    taskAudio: String,
-    options: Array,
-    solutions: Array,
-    maxTries: Number,
     onFinish: Array
   },
   computed: {
-    feedbackId: function () {
+    ...mapGetters(["hasContent"]),
+    feedbackId() {
       return `mchoice-feedback-${this._uid}`
     },
-    i18n () {
+    i18n() {
       return i18n[this.$store.state.profile.lang]
     }
   },

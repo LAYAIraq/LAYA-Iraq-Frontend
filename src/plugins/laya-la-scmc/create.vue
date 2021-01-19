@@ -124,11 +124,13 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
 import * as i18n from "@/i18n/plugins/laya-la-scmc"
 
 export default {
   name: 'laya-la-scmc-edit',
+  created () {
+    this.options.push(this.i18n.edit.sampleOption)
+  },
   data () {
     return {
       title: "",
@@ -141,19 +143,7 @@ export default {
       tooltipOn: false
     }
   },
-  created () {
-    let idx = this.$route.params.step - 1
-    const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
-    this.multiple = preData.multiple
-    this.title = preData.title
-    this.task = preData.task
-    this.taskAudio = preData.taskAudio
-    this.options = preData.options
-    this.solutions = preData.solutions
-    this.maxTries = preData.maxTries
-  },
   computed: {
-    ...mapGetters(["hasContent"]),
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }
