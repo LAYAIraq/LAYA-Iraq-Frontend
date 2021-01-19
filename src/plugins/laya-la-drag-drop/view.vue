@@ -34,7 +34,7 @@
             <input type="range"
                    class="custom-range"
                    min="0"
-                   :max="categories.length"
+                   :max="categories.length-1"
                    :disabled="checked"
                    v-model.number="solution[i]">
           </div>
@@ -60,31 +60,48 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex"
 import * as i18n from "@/i18n/plugins/laya-la-drag-drop";
 
 export default {
   name: "laya-quiz-drag-drop",
   created () {
-    const mid = Math.floor((this.categories.length+1)/2)
+    const mid = Math.floor((this.categories.length)/2)
     let s = this.items.map(i => mid)
     this.solution = [...s]
+    let idx = this.$route.params.step - 1
+    const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+    this.title = preData.title
+    this.task = preData.task
+    this.taskAudio = preData.taskAudio
+    this.items = preData.items
+    this.categories = preData.categories
+
   },
   data () {
+    if (Object.entries(this.$attrs).length === 5) 
+      return {
+        ...this.$attrs,
+        checked: false,
+        solution: [], // users solution as index
+        eval: []
+      }
     return {
       checked: false,
       solution: [], // users solution as index
       eval: [], // list of booleans
+      title: "",
+      task: "",
+      taskAudio: "",
+      items: [],
+      categories: [],
     }
   },
   props: {
-    title: String,
-    task: String,
-    taskAudio: String,
-    items: Array,
-    categories: Array,
     onFinish: Array
   },
   computed: {
+    ...mapGetters(["hasContent"]),
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }
