@@ -141,21 +141,19 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
 import * as i18n from "@/i18n/plugins/laya-la-relate";
 
 export default {
   name: 'laya-la-drag-drop-edit',
-  created() {
-    let idx = this.$route.params.step - 1
-    const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
-    this.title = preData.title
-    this.task = preData.task
-    this.taskAudio = preData.taskAudio
-    this.pairs = preData.pairs
-    this.relations = preData.relations
+  created () {
+    if (this.relations.length == 0) {
+      for (let i=1; i<3 ;i++) {
+        let tmp = this.i18n.edit.solution + " " + i
+        this.relations.push(tmp)
+      }
+    }
   },
-  data() {
+  data () {
     return {
       title: "",
       task: "",
@@ -172,7 +170,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["hasContent"]),
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }

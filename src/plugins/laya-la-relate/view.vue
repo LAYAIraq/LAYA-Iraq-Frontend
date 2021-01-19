@@ -67,38 +67,55 @@
 </template>
 
 <script>
-
+import { mapGetters } from "vuex"
 import * as i18n from "@/i18n/plugins/laya-la-relate"
 
 export default {
   name: "laya-quiz-relate",
-  created () {
-    this.default_option = this.i18n.defaultOption
-    this.reset()
-  },
+  
   data () {
+    if (Object.entries(this.$attrs).length === 4) //preview
+      return {
+        ...this.$attrs,
+        default_option: "",
+        solution: [],
+        eval: [],
+        freeze: false
+      }
     return {
+      title: "",
+      task: "",
+      taskAudio: "",
+      pairs: [],
       default_option: "",
       solution: [],
       eval: [],
       freeze: false
     }
   },
+  created () {
+    this.default_option = this.i18n.defaultOption
+    if (Object.entries(this.$attrs).length != 4) { // no preview 
+      let idx = this.$route.params.step - 1
+      const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+      this.title = preData.title
+      this.task = preData.task
+      this.taskAudio = preData.taskAudio
+      this.pairs = preData.pairs
+    }
+  },
   props: {
-    title: String,
-    task: String,
-    taskAudio: String,
-    pairs: Array,
     onFinish: Array
   },
   computed: {
+    ...mapGetters(["hasContent"]),
     i18n() {
       return i18n[this.$store.state.profile.lang]
     },
-    uid: function() {
+    uid() {
       return Date.now()
     },
-    options: function() {
+    options() {
       return this.pairs.map(p => p.relation)
     }
   },
