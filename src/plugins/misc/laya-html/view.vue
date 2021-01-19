@@ -48,8 +48,9 @@ export default {
       return i18n[this.$store.state.profile.lang]
     }
   },
-  methods: {
-  },
+  props: {
+    onFinish: Array
+  }
 }
 </script>
 
