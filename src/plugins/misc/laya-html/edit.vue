@@ -79,10 +79,6 @@ export default {
 .laya-wysiwyg-edit .ql-formats button:last-child {
   margin-right: 0px;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> refactor-course-edit
 .ql-container.ql-snow {
  min-height: 200px;
 }

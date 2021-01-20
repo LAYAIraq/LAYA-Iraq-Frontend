@@ -35,10 +35,6 @@
 <script lang="ts">
 import Vue from "vue"
 import * as messages from "../../../i18n/plugins/misc/laya-stepper"
-<<<<<<< HEAD
-// import VueI18n from "vue-cli-plugin-i18n"
-=======
->>>>>>> refactor-course-edit
 
 export default Vue.extend({
   name: 'laya-stepper',
