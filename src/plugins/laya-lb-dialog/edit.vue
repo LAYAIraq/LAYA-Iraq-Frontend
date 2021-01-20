@@ -91,14 +91,6 @@ export default {
     this.answers = preData.answers
   },
   data() {
-<<<<<<< HEAD
-    if(Object.entries(this.$attrs).length > 0)
-      return {
-        ...this.$attrs, 
-        tooltipOn: false
-        }
-=======
->>>>>>> refactor-course-edit
     return {
       bg: "",
       question: "",
@@ -169,14 +161,9 @@ export default {
 }
 
 #questionmark {
-<<<<<<< HEAD
   float: inline-end;
   cursor: pointer;
 }
-=======
-    float: inline-end;
-  }
->>>>>>> refactor-course-edit
 
 .helptext {
     border: 1px;

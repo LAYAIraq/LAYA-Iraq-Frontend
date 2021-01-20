@@ -16,10 +16,7 @@
 
 <script>
 import Plyr from "plyr"
-<<<<<<< HEAD
-=======
 import { mapGetters } from "vuex"
->>>>>>> refactor-course-edit
 import "plyr/dist/plyr.css"
 import * as i18n from "@/i18n/plugins/misc/laya-plyr"
 
@@ -57,17 +54,10 @@ export default {
   },
   
   props: {
-<<<<<<< HEAD
-    src: String,
-    onFinish: Array
-  },
-  computed: {
-=======
     onFinish: Array
   },
   computed: {
     ...mapGetters(["hasContent"]),
->>>>>>> refactor-course-edit
     playerId() {
       return `ly-plyr-${Date.now()}`
     },

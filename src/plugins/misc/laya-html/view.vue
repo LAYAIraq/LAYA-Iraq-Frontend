@@ -39,13 +39,6 @@ export default {
     })
     quill.setContents(this.contents)
   },
-<<<<<<< HEAD
-  props: {
-    contents: Object,
-    onFinish: Array
-  },
-=======
->>>>>>> refactor-course-edit
   computed: {
     ...mapGetters(["hasContent"]),
     editorId() {

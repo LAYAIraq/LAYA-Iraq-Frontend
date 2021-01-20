@@ -25,10 +25,7 @@
 
 <script>
 import "ableplayer"
-<<<<<<< HEAD
-=======
 import { mapGetters } from "vuex"
->>>>>>> refactor-course-edit
 import "ableplayer/build/ableplayer.min.css"
 import * as i18n from "@/i18n/plugins/misc/laya-ableplayer"
 
@@ -61,19 +58,12 @@ export default {
     onFinish: Array
   },
   computed: {
-<<<<<<< HEAD
-=======
     ...mapGetters(["hasContent"]),
->>>>>>> refactor-course-edit
     playerId() {
       return `laya-ableplayer-${Date.now()}`
     },
     lang() {
-<<<<<<< HEAD
-      return "de"
-=======
       return this.$store.state.profile.lang
->>>>>>> refactor-course-edit
     },
     i18n() {
       return i18n[this.$store.state.profile.lang]
@@ -89,11 +79,6 @@ export default {
 
 <style scoped>
 .able-status-bar {
-<<<<<<< HEAD
-  min-height: 2.5em;
-}
-=======
   min-height: 2.5em !important;
 }
 </style>
->>>>>>> refactor-course-edit

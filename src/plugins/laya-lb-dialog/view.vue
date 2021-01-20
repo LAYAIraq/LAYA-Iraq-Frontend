@@ -3,22 +3,6 @@
     <img v-if="bg" class="bg" :src="bg" alt="">
     <div v-else class="bg-fallback"></div>
 
-<<<<<<< HEAD
-    <div class="dialog-text" :class="
-     { absolute: bg }
-    ">
-      <div class="question">{{ question }}</div>
-      <div class="answers ">
-        <div class="d-flex justify-content-around">
-          <button v-for="(answer,i) in answers"
-                  :key="i"
-                  type="button"
-                  class="btn btn-info btn-lg"
-                  @click="onFinish[i]()">
-            {{ answer }}
-          </button>
-        </div>
-=======
     <div class="dialog-text">
       <div v-if="question" class="question">{{ question }}</div>
       <div class="answers d-flex justify-content-around">
@@ -29,7 +13,6 @@
                 @click="onFinish[i]()">
           {{ answer }}
         </button>
->>>>>>> refactor-course-edit
       </div>
     </div>
   </div>
@@ -67,9 +50,6 @@ export default {
   props: {
     onFinish: Array
   },
-<<<<<<< HEAD
-  
-=======
   methods: {
     refreshData() {
       // dereference store data
@@ -86,7 +66,6 @@ export default {
       this.refreshData()
     }
   }
->>>>>>> refactor-course-edit
 }
 </script>
 

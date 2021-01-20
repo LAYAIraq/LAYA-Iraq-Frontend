@@ -130,14 +130,7 @@ import * as i18n from "@/i18n/plugins/laya-la-scmc"
 export default {
   name: 'laya-la-scmc-edit',
   data () {
-<<<<<<< HEAD
-    if(Object.entries(this.$attrs).length > 0)
-      return {...this.$attrs, 
-        tooltipOn: false}
-    else return {
-=======
     return {
->>>>>>> refactor-course-edit
       title: "",
       task: "",
       taskAudio: "",
@@ -190,11 +183,7 @@ legend {
 }
 
 #questionmark {
-<<<<<<< HEAD
   float: inline-end;
   cursor: pointer;
-=======
-    float: inline-end;
->>>>>>> refactor-course-edit
 }
 </style>

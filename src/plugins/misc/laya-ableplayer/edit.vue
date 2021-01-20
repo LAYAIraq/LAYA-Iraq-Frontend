@@ -51,12 +51,6 @@ import * as i18n from "@/i18n/plugins/misc/laya-ableplayer"
 export default {
   name: "laya-lb-plyr-vimeo-edit",
   data() {
-<<<<<<< HEAD
-    if(Object.entries(this.$attrs).length > 0)
-      return {...this.$attrs, 
-        tooltipOn: false}
-=======
->>>>>>> refactor-course-edit
     return {
       src: "",
       sign: "",
@@ -83,9 +77,6 @@ export default {
 <style>
 #questionmark {
   float: inline-end;
-<<<<<<< HEAD
   cursor: pointer;
-=======
->>>>>>> refactor-course-edit
 }
 </style>

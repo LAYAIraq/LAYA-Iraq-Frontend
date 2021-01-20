@@ -155,14 +155,7 @@ export default {
     this.pairs = preData.pairs
     this.relations = preData.relations
   },
-<<<<<<< HEAD
-  data () {
-    if(Object.entries(this.$attrs).length > 0)
-      return {...this.$attrs, 
-        tooltipOn: false}
-=======
   data() {
->>>>>>> refactor-course-edit
     return {
       title: "",
       task: "",
@@ -216,9 +209,6 @@ legend {
 
 #questionmark {
   float: inline-end;
-<<<<<<< HEAD
   cursor: pointer;
-=======
->>>>>>> refactor-course-edit
 }
 </style>

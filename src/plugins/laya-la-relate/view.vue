@@ -72,14 +72,7 @@ import * as i18n from "@/i18n/plugins/laya-la-relate"
 
 export default {
   name: "laya-quiz-relate",
-<<<<<<< HEAD
-  created () {
-    this.defaultOption = this.i18n.defaultOption
-    this.reset()
-  },
-=======
   
->>>>>>> refactor-course-edit
   data () {
     if (Object.entries(this.$attrs).length === 4) //preview
       return {
@@ -90,15 +83,11 @@ export default {
         freeze: false
       }
     return {
-<<<<<<< HEAD
-      defaultOption: "",
-=======
       title: "",
       task: "",
       taskAudio: "",
       pairs: [],
       default_option: "",
->>>>>>> refactor-course-edit
       solution: [],
       eval: [],
       freeze: false

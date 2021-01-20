@@ -190,9 +190,6 @@ legend {
 
 #questionmark {
   float: inline-end;
-<<<<<<< HEAD
   cursor: pointer;
-=======
->>>>>>> refactor-course-edit
 }
 </style>

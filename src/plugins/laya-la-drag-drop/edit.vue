@@ -139,29 +139,6 @@ import * as i18n from "@/i18n/plugins/laya-la-drag-drop";
 export default {
   name: 'laya-la-drag-drop-edit',
   created () {
-<<<<<<< HEAD
-    // fill item and category props with localized tokens
-    if (this.categories.length == 0) {
-      let temp = this.i18n.answer + " 1"
-      let tmpItem = {
-        label: temp,
-        category: -1
-      }
-      this.items.push(tmpItem)
-
-      for (let i = 1; i<3; i++) {
-        let tmp = this.i18n.cat + " " + i
-        // console.log(tmp)
-        this.categories.push(tmp)
-      }
-    }
-
-  },
-  data () {
-    if(Object.entries(this.$attrs).length > 0)
-      return {...this.$attrs, 
-        tooltipOn: false}
-=======
     let idx = this.$route.params.step - 1
     const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
     this.title = preData.title
@@ -171,7 +148,6 @@ export default {
     this.categories = preData.categories
   },
   data () {
->>>>>>> refactor-course-edit
     return {
       title: "",
       task: "",
@@ -219,9 +195,6 @@ legend {
 
 #questionmark {
   float: inline-end;
-<<<<<<< HEAD
   cursor: pointer;
-=======
->>>>>>> refactor-course-edit
 }
 </style>

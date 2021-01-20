@@ -106,12 +106,7 @@ export default {
       
     },
     enrollmentNeeded(course) {
-<<<<<<< HEAD
-      let needed = course.needsEnrollment
-      if (needed) {
-=======
       if (course.needsEnrollment) {
->>>>>>> refactor-course-edit
         return this.enrolledIn.find(x => x == course.createDate)? false : true
       }
       else {
