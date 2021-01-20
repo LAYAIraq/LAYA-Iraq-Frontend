@@ -124,18 +124,20 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex"
 import * as i18n from "@/i18n/plugins/laya-la-scmc"
 
 export default {
   name: 'laya-la-scmc-edit',
-  created () {
-    if (this.options.length == 0) this.options.push(this.i18n.edit.sampleOption)
-  },
   data () {
+<<<<<<< HEAD
     if(Object.entries(this.$attrs).length > 0)
       return {...this.$attrs, 
         tooltipOn: false}
     else return {
+=======
+    return {
+>>>>>>> refactor-course-edit
       title: "",
       task: "",
       taskAudio: "",
@@ -146,9 +148,19 @@ export default {
       tooltipOn: false
     }
   },
-  props: {
+  created () {
+    let idx = this.$route.params.step - 1
+    const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+    this.multiple = preData.multiple
+    this.title = preData.title
+    this.task = preData.task
+    this.taskAudio = preData.taskAudio
+    this.options = preData.options
+    this.solutions = preData.solutions
+    this.maxTries = preData.maxTries
   },
   computed: {
+    ...mapGetters(["hasContent"]),
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }
@@ -178,7 +190,11 @@ legend {
 }
 
 #questionmark {
+<<<<<<< HEAD
   float: inline-end;
   cursor: pointer;
+=======
+    float: inline-end;
+>>>>>>> refactor-course-edit
 }
 </style>

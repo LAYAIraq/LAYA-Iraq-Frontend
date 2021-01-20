@@ -78,15 +78,27 @@
 
 <script>
 import * as i18n from "@/i18n/plugins/laya-lb-dialog"
+import { mapGetters } from "vuex"
 
 export default {
   name: "laya-lb-dialog-edit",
+  created() {
+    let idx = this.$route.params.step -1 //comply with array indexing in store
+    //create deep copy of store object to manipulate in vue instance
+    let preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+    this.bg = preData.bg
+    this.question = preData.question
+    this.answers = preData.answers
+  },
   data() {
+<<<<<<< HEAD
     if(Object.entries(this.$attrs).length > 0)
       return {
         ...this.$attrs, 
         tooltipOn: false
         }
+=======
+>>>>>>> refactor-course-edit
     return {
       bg: "",
       question: "",
@@ -106,8 +118,12 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(["hasContent"]),
     i18n() {
       return i18n[this.$store.state.profile.lang]
+    },
+    step() {
+      return this.$route.params.step
     }
   }
 }
@@ -153,9 +169,14 @@ export default {
 }
 
 #questionmark {
+<<<<<<< HEAD
   float: inline-end;
   cursor: pointer;
 }
+=======
+    float: inline-end;
+  }
+>>>>>>> refactor-course-edit
 
 .helptext {
     border: 1px;

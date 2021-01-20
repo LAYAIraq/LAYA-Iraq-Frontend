@@ -16,15 +16,28 @@
 
 <script>
 import Plyr from "plyr"
+<<<<<<< HEAD
+=======
+import { mapGetters } from "vuex"
+>>>>>>> refactor-course-edit
 import "plyr/dist/plyr.css"
 import * as i18n from "@/i18n/plugins/misc/laya-plyr"
 
 export default {
   name: "laya-plyr",
   data() {
-    return {
-      plyr: null
+    if (Object.entries(this.$attrs).length === 2) { // for "preview" feature
+      return {...this.$attrs}
     }
+    return {
+      plyr: null,
+      src: ""
+    }
+  },
+  created() {
+    let idx = this.$route.params.step - 1 
+    const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+    this.src = preData.src
   },
   mounted() {
     this.plyr = new Plyr(`#${this.playerId}`)
@@ -44,10 +57,17 @@ export default {
   },
   
   props: {
+<<<<<<< HEAD
     src: String,
     onFinish: Array
   },
   computed: {
+=======
+    onFinish: Array
+  },
+  computed: {
+    ...mapGetters(["hasContent"]),
+>>>>>>> refactor-course-edit
     playerId() {
       return `ly-plyr-${Date.now()}`
     },

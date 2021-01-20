@@ -16,12 +16,21 @@
 import "quill/dist/quill.snow.css"
 import Quill from "quill"
 import * as i18n from "@/i18n/plugins/misc/laya-html"
+import { mapGetters } from "vuex"
 
 export default {
   name: "laya-wysiwyg",
   data() {
+    if(Object.entries(this.$attrs).length === 1) //for preview
+      return {...this.$attrs}
     return {
+      contents: null
     }
+  },
+  created() {
+    let idx = this.$route.params.step -1
+    const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+    this.contents = preData.contents
   },
   mounted() {
     const quill = new Quill(`#${this.editorId}`, {
@@ -30,11 +39,15 @@ export default {
     })
     quill.setContents(this.contents)
   },
+<<<<<<< HEAD
   props: {
     contents: Object,
     onFinish: Array
   },
+=======
+>>>>>>> refactor-course-edit
   computed: {
+    ...mapGetters(["hasContent"]),
     editorId() {
       return `laya-wysiwyg-readonly-${Date.now()}`
     },
@@ -42,8 +55,9 @@ export default {
       return i18n[this.$store.state.profile.lang]
     }
   },
-  methods: {
-  },
+  props: {
+    onFinish: Array
+  }
 }
 </script>
 

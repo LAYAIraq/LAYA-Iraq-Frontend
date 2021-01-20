@@ -45,14 +45,18 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex"
 import * as i18n from "@/i18n/plugins/misc/laya-ableplayer"
 
 export default {
   name: "laya-lb-plyr-vimeo-edit",
   data() {
+<<<<<<< HEAD
     if(Object.entries(this.$attrs).length > 0)
       return {...this.$attrs, 
         tooltipOn: false}
+=======
+>>>>>>> refactor-course-edit
     return {
       src: "",
       sign: "",
@@ -60,7 +64,15 @@ export default {
       tooltipOn: false
     }
   },
+  created() {
+    let idx = this.$route.params.step - 1
+    const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+    this.src = preData.src
+    this.sign = preData.sign
+    this.sub = preData.sub
+  },
   computed: {
+    ...mapGetters(["hasContent"]),
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }
@@ -71,6 +83,9 @@ export default {
 <style>
 #questionmark {
   float: inline-end;
+<<<<<<< HEAD
   cursor: pointer;
+=======
+>>>>>>> refactor-course-edit
 }
 </style>

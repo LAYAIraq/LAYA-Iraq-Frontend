@@ -98,7 +98,11 @@ export default {
 
       /* check if course exists */
       http.head(`courses/${newCourse.name}`)
+<<<<<<< HEAD
         .then(function() {
+=======
+        .then( () => {
+>>>>>>> refactor-course-edit
           self.msg = self.i18n.courseExists
         }).catch(function() {
           let enrBool = self.needsEnrollment
@@ -107,7 +111,7 @@ export default {
             ...newCourse,
             authorId: auth.userId,
             needsEnrollment: enrBool
-          }).then(function() {
+          }).then( () => {
             self.$router.push(`/courses/${newCourse.name}/1`)
           }).catch((err) => {
             console.log(err)

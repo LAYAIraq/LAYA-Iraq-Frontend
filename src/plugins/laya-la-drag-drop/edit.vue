@@ -133,11 +133,13 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex"
 import * as i18n from "@/i18n/plugins/laya-la-drag-drop";
 
 export default {
   name: 'laya-la-drag-drop-edit',
   created () {
+<<<<<<< HEAD
     // fill item and category props with localized tokens
     if (this.categories.length == 0) {
       let temp = this.i18n.answer + " 1"
@@ -159,6 +161,17 @@ export default {
     if(Object.entries(this.$attrs).length > 0)
       return {...this.$attrs, 
         tooltipOn: false}
+=======
+    let idx = this.$route.params.step - 1
+    const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+    this.title = preData.title
+    this.task = preData.task
+    this.taskAudio = preData.taskAudio
+    this.items = preData.items
+    this.categories = preData.categories
+  },
+  data () {
+>>>>>>> refactor-course-edit
     return {
       title: "",
       task: "",
@@ -168,9 +181,8 @@ export default {
       tooltipOn: false
     }
   },
-  props: {
-  },
   computed: {
+    ...mapGetters(["hasContent"]),
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }
@@ -207,6 +219,9 @@ legend {
 
 #questionmark {
   float: inline-end;
+<<<<<<< HEAD
   cursor: pointer;
+=======
+>>>>>>> refactor-course-edit
 }
 </style>

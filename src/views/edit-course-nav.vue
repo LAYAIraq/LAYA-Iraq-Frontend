@@ -126,14 +126,15 @@
 
 <script>
 import vis from "vis-network"
+import { mapGetters } from "vuex"
 import * as i18n from "@/i18n/course-nav-edit"
-
-//import BSpinner from "bootstrap-vue"
 
 export default {
   name: "edit-course-nav-view",
   created() {
-    this.content = [...this.course.content]
+    //create deep copy of store object to manipulate in vue instance
+    let preData = JSON.parse(JSON.stringify(this.hasContent))
+    this.content = preData
   },
   mounted() {
     if(!this.formInvalid)
@@ -142,19 +143,15 @@ export default {
   data() {
     return {
       graph: null,
-
-      content: [{
-        name: "",
-        input: {},
-      }]
+      content: []
     }
   },
   props: {
-    course: Object,
     onnavupdate: Function
   },
   computed: {
-    formInvalid() {
+    ...mapGetters(["hasContent"]),
+    formInvalid: function() {
       return this.content.reduce((res, val) => !val.nextStep || res, false)
     },
     navGraphId() {
@@ -241,12 +238,11 @@ export default {
     },
 
     save() {
-      this.onnavupdate(this.content)
+      this.$store.commit("updateCourseNav", this.content)
+      this.$store.dispatch("storeCourse")
+      this.$emit("saved")
     }
-  },
-  /*components: {
-   // BSpinner
-  }*/
+  }
 }
 </script>
 

@@ -5,7 +5,11 @@
     <form>
       <div class="form-group">
         <label for="vimeo-vid-id"><h4>{{ i18n.video }}</h4></label> 
+<<<<<<< HEAD
         <i id="questionmark" class="fas fa-question-circle" @click="toggleTip" 
+=======
+        <i class="fas fa-question-circle" @click="toggleTip" 
+>>>>>>> refactor-course-edit
           :title="i18n.showTip" v-b-tooltip.left></i>
        <!--  <div class="helptext" v-if="tooltipOn">
           <i class="far fa-clipboard"></i><h4>{{ i18n.tipHeadline }}</h4>
@@ -40,12 +44,22 @@ export default {
   name: "laya-lb-plyr-vimeo-edit",
   data() {
     return {
+<<<<<<< HEAD
       url: "",
+=======
+>>>>>>> refactor-course-edit
       tooltipOn: false
     }
   },
   mounted() {
+<<<<<<< HEAD
     if(this.$attrs.url) this.url = this.$attrs.url
+=======
+    this.$attrs.url = this.url
+  },
+  props: {
+    url: String
+>>>>>>> refactor-course-edit
   },
   computed: {
     i18n() {
@@ -61,9 +75,14 @@ export default {
 </script>
 
 <style scoped>
+<<<<<<< HEAD
   #questionmark {
   float: inline-end;
   cursor: pointer;
+=======
+  .form-group i {
+    float: inline-end;
+>>>>>>> refactor-course-edit
   }
   .helptext {
     border: 1px;

@@ -72,8 +72,15 @@
 
 <script>
 import * as i18n from "@/i18n/plugins/misc/laya-plyr"
+<<<<<<< HEAD
 import { BJumbotron, BTooltip } from "bootstrap-vue"
 
+=======
+import { mapGetters } from "vuex"
+import { BJumbotron, BTooltip } from "bootstrap-vue"
+
+
+>>>>>>> refactor-course-edit
 export default {
   name: "laya-plyr-edit",
   data() {
@@ -83,11 +90,25 @@ export default {
       youtube: false
     }
   },
+<<<<<<< HEAD
+=======
+  created() {
+    let idx = this.$route.params.step -1 //comply with array indexing in store
+    //create deep copy of store object to manipulate in vue instance
+    let preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+    this.src = preData.src
+    this.youtube = preData.youtube
+  },
+>>>>>>> refactor-course-edit
   mounted() {
     if(this.$attrs.src) this.src = this.$attrs.src
     this.youtube = ( this.correctURL && this.src.includes("youtube"))
   },
   computed: {
+<<<<<<< HEAD
+=======
+    ...mapGetters(["hasContent"]),
+>>>>>>> refactor-course-edit
     i18n() {
       return i18n[this.$store.state.profile.lang]
     },
