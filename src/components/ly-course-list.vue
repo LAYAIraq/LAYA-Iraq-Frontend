@@ -42,7 +42,7 @@
             {{ i18n.start }} <i class="fas fa-arrow-right"></i>
           </router-link>
           <a class="text-dark px-2 py-1 d-inline-block text-center" 
-            v-else @click="subscribe(course)">{{ i18n.subscribe }}</a>
+            v-else @click="subscribe(course)" href="#">{{ i18n.subscribe }}</a>
         </div>
       </div>
 
@@ -70,19 +70,20 @@ export default {
     this.getSubs()
   },
   updated(){
-    this.getSubs
+    // this.getSubs()
   },
   computed: {
+    ...mapGetters(["profileLang"]),
     ...mapState(["note", "auth"]),
 
-    filtered: function() {
+    filtered() {
       if (!this.filter) return this.courses;
 
       const filterByCourseName = new RegExp(this.filter, "i");
       return this.courses.filter(course => filterByCourseName.test(course.name))
     },
-    i18n: function() {
-      return i18n[this.$store.state.profile.lang];
+    i18n() {
+      return i18n[this.profileLang];
     }
   },
   methods: {
@@ -102,10 +103,10 @@ export default {
           console.log(`No enrollments for ${studentId} found`)
           // console.error(err)
         })
+      
     },
     enrollmentNeeded(course) {
-      let needed = course.needsEnrollment
-      if (needed) {
+      if (course.needsEnrollment) {
         return this.enrolledIn.find(x => x == course.createDate)? false : true
       }
       else {

@@ -40,12 +40,14 @@ export default {
   name: "laya-lb-plyr-vimeo-edit",
   data() {
     return {
-      url: "",
       tooltipOn: false
     }
   },
   mounted() {
-    if(this.$attrs.url) this.url = this.$attrs.url
+    this.$attrs.url = this.url
+  },
+  props: {
+    url: String
   },
   computed: {
     i18n() {

@@ -3,20 +3,16 @@
     <img v-if="bg" class="bg" :src="bg" alt="">
     <div v-else class="bg-fallback"></div>
 
-    <div class="dialog-text" :class="
-     { absolute: bg }
-    ">
-      <div class="question">{{ question }}</div>
-      <div class="answers ">
-        <div class="d-flex justify-content-around">
-          <button v-for="(answer,i) in answers"
-                  :key="i"
-                  type="button"
-                  class="btn btn-info btn-lg"
-                  @click="onFinish[i]()">
-            {{ answer }}
-          </button>
-        </div>
+    <div class="dialog-text">
+      <div v-if="question" class="question">{{ question }}</div>
+      <div class="answers d-flex justify-content-around">
+        <button v-for="(answer,i) in answers"
+                :key="i"
+                type="button"
+                class="btn btn-info btn-lg"
+                @click="onFinish[i]()">
+          {{ answer }}
+        </button>
       </div>
     </div>
   </div>
@@ -24,21 +20,52 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from "vuex"
 export default {
   name: "laya-dialog",
   data() {
+    if (Object.entries(this.$attrs).length === 3) { // for "preview" feature
+      return {...this.$attrs}
+    }
     return {
+      question: "",
+      answers: [],
+      bg: ""
     }
   },
-  mounted() {
+  beforeMount() {
+    // fetch data from vuex if not preview
+    if (Object.entries(this.$attrs).length != 3) {
+      // No attributed Data --> actual view
+      this.refreshData()
+    }
+  },
+  computed: {
+    ...mapGetters(["hasContent"]),
+    idx() {
+      //comply with array indexing in store
+      return this.$route.params.step -1 
+    }
   },
   props: {
-    question: String,
-    answers: Array,
-    bg: String,
     onFinish: Array
   },
-  
+  methods: {
+    refreshData() {
+      // dereference store data
+      let preData = JSON.parse(JSON.stringify(this.hasContent[this.idx].input))
+      //replace data stubs with stored data
+      this.question = preData.question
+      this.answers = preData.answers
+      this.bg = preData.bg
+    }
+  },
+  watch: {
+    hasContent(newValue) {
+      //FIXME doesn't actually watch the property
+      this.refreshData()
+    }
+  }
 }
 </script>
 
