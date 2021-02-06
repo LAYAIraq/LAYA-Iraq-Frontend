@@ -48,7 +48,7 @@ export default {
             let listEnr = []
 
             //get data from enrollments
-            await http.get('enrollments/getAllByCourseId', {params: {createDate: this.name}})
+            await http.get('enrollments/getAllByCourseId', {params: {courseId: this.name}})
                 .then(({data}) => {
                 console.log(data.subs)
                 listEnr = data.subs

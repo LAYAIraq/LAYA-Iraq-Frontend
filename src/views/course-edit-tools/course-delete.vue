@@ -44,7 +44,7 @@ export default {
     },
     methods: {
         delCourse() {
-            http.delete(`courses/${this.name}`)
+            http.delete(`courses/${this.hasCourse.courseId}`)
                 .then( () => {
                 this.$router.push("/courses")
                 })

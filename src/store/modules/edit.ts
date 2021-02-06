@@ -53,7 +53,7 @@ export default {
         let uid = rootState.auth.userId
         let cid = createdDate
         console.log(cid)
-        http.get("enrollments/findOne", {params: {filter:{where: {studentId: uid, createDate: cid}}}})
+        http.get("enrollments/findOne", {params: {filter:{where: {studentId: uid, courseId: cid}}}})
             .then(({data}) => {
               console.log("Enrollment exists!")
               commit("setEnrollment", data)
@@ -80,32 +80,39 @@ export default {
         //can you return router function? //TODO direkt hier 
         return new Promise((resolve, reject) => {
           commit("setBusy", true);
-          /*
-          * fetch course */
-          http.get(`courses/${name}`)
-            .then(({ data }) => {
-              // console.log(data)
-              commit("setCourse", data)
-              resolve("Course loaded")
+
+          //get course ID
+          http.get(`courses/getCourseId?courseName=${name}`)
+            .then( ({data}) => {
+              /* fetch course */
+              http.get(`courses/${data.courseId}`)
+              .then(({ data }) => {
+                // console.log(data)
+                commit("setCourse", data)
+                resolve("Course loaded")
+              })
+              .catch(err => {
+                /*
+                * redirect off invalid course */
+                console.error(err);
+                reject(err)
+              })
             })
             .catch(err => {
-              /*
-              * redirect off invalid course */
-              console.error(err);
-              reject(err)
+              console.log(err)
             })
             .finally(() => commit("setBusy", false));
           })
-        
+
       },
 
       storeCourse({ commit, state, rootState}) {
         let updated = Date.now()
-        let cName = state.course.name
+        let cId = state.course.courseId
         let cContent = state.course.content
 
         return new Promise( (resolve, reject) => { 
-          http.patch(`courses/${cName}`, {content: cContent, lastChanged: updated})
+          http.patch(`courses/${cId}`, {content: cContent, lastChanged: updated})
             .catch(err => {
               console.error("Failed storing course content:", err)
               reject(err)
@@ -117,21 +124,14 @@ export default {
         
       },
 
-      updateRenamedCourse( { commit, state, rootState}, oldName: String ) {
+      updateRenamedCourse( { commit, state, rootState}, oldId: String ) {
         
-        http.delete(`courses/${oldName}`)
-            .then(function() {
-            let renamed_course = state.course
-            http.post(`courses`, renamed_course)
-                .catch(err => {
-                  console.error("Failed course rename:", err)
-                  return false
-                })
-                .finally(() => {
-                  return true
-                })
+        http.patch(`courses/${oldId}`, state.course)
+            .then( () => {
+              console.log("Updated Course name!")
             })
-            .catch(function() {
+            .catch( (err) => {
+              console.error(err)
             })
         
       }      

@@ -71,7 +71,6 @@ export default {
   },
   data() {
     return {
-      course: {},
       enrollment: {},
       rename: "",
       copy: "",
@@ -138,6 +137,7 @@ export default {
       window.scrollTo(0,0)
       document.title = `Laya - ${ctx.name}`
       console.log("Fetching Course...")
+
       let fc = ctx.$store.dispatch("fetchCourse", ctx.name)
       fc.then( resp => { 
           console.log(resp)
@@ -148,11 +148,11 @@ export default {
     },
 
     fetchEnrollment() {
-      this.$store.dispatch("fetchEnrollment", this.hasCourse.createDate)
+      if(this.hasCourse.needsEnrollment) this.$store.dispatch("fetchEnrollment", this.hasCourse.courseId)
     },
 
     updateEnrollment() {
-      this.$store.dispatch("updateEnrollment")
+      if(this.hasCourse.needsEnrollment) this.$store.dispatch("updateEnrollment")
     },
 
     nextStep(steps) { // string e.g. "1,2"

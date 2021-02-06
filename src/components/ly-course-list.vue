@@ -96,7 +96,7 @@ export default {
         .then(({ data }) => {
           const list = data.sublist
           for(let item of list) {
-            self.enrolledIn.push(item.createDate)
+            self.enrolledIn.push(item.courseId)
           }
         })
         .catch(err => {
@@ -107,7 +107,7 @@ export default {
     },
     enrollmentNeeded(course) {
       if (course.needsEnrollment) {
-        return this.enrolledIn.find(x => x == course.createDate)? false : true
+        return this.enrolledIn.find(x => x == course.courseId)? false : true
       }
       else {
         return false
@@ -116,7 +116,7 @@ export default {
     subscribe(course) {
       const self = this
       const newEnrollment = {
-        createDate: course.createDate,
+        courseId: course.courseId,
         studentId: this.auth.userId
       }
 

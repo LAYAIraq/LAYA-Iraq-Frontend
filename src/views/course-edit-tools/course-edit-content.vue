@@ -1,8 +1,8 @@
 <template>
-    <div class="row mb-2" v-if="content()">
+    <div class="row mb-2" v-if="content">
         <div class="col">
             <b-button variant="primary" block append
-                    :to="{path: 'edit', params: {type: content().name}}">
+                    :to="{path: 'edit', params: {type: content.name}}">
             <i class="fas fa-edit"></i> {{ i18n.editContent }}
             </b-button>
         </div>

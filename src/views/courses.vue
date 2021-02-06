@@ -100,14 +100,7 @@ export default {
       http.get("courses?filter[include]=author").then( ({data}) => {
         ctx.courses = [...data]
       }).catch(err => console.error(err))
-    },
-
-    delCourse: function(name) {
-      const { fetchCourses } = this;
-      http.delete(`courses/${name}`)
-        .catch(err => console.error(err))
-        .then(fetchCourses)
-    },
+    }
 
   },
   components: {

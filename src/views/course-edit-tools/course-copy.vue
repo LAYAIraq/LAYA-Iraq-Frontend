@@ -77,7 +77,7 @@ export default {
                 let now = Date.now()
                 let copied_course = {...this.$store.state.edit.course}
                 copied_course.name = this.copy
-                copied_course.createDate = now
+                copied_course.courseId = now
                 copied_course.lastChanged = now
                 console.log(copied_course)
                 http.post(`courses`, copied_course)

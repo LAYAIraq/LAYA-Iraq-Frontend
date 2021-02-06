@@ -62,6 +62,7 @@
 import { mapState, mapGetters } from "vuex";
 import http from "axios";
 import * as i18n from "@/i18n/course-update";
+import { v4 as uuidv4 } from "uuid";
 
 export default {
   data() {
@@ -96,30 +97,44 @@ export default {
       const self = this
       const {$store, newCourse, auth} = this;
 
-      /* check if course exists */
-      http.head(`courses/${newCourse.name}`)
-        .then( () => {
-          self.msg = self.i18n.courseExists
-        }).catch(function() {
-          let enrBool = self.needsEnrollment
-          /* create course */
-          http.post("courses", {
-            ...newCourse,
-            authorId: auth.userId,
-            needsEnrollment: enrBool
-          }).then( () => {
-            self.$router.push(`/courses/${newCourse.name}/1`)
-          }).catch((err) => {
-            console.log(err)
-            self.msg = self.i18n.savingFailed
-          })
+      let enrBool = self.needsEnrollment
+      let newId = uuidv4()
+      console.log(`New Id: ${newId}`)
 
-          /* create storage */
-          http.post("storage", {
-            name: newCourse.name,
-          }).then(() => console.log(`New Storage: ${newCourse.name}`))
-            .catch((err) => console.error(err));
-        })
+      /* create storage */
+      http.post("storage", {
+        name: newId,
+      }).then(() => console.log(`New Storage: ${newId}`))
+        .catch((err) => console.error(err));
+
+      /* create course */
+      http.post("courses", {
+        ...newCourse,
+        authorId: auth.userId,
+        storageId: newId,
+        needsEnrollment: enrBool
+        }).then( (resp) => {
+          console.log(resp)
+          self.$router.push(`/courses/${newCourse.name}/1`)
+
+          /* create enrollment for creator */
+          if (enrBool) {
+              http.get(`courses/getCourseId?courseName=${newCourse.name}`).
+                then( resp => {
+                  const newEnrollment = {
+                    courseId: resp.data.courseId,
+                    studentId: self.auth.userId
+                  }
+                  http.patch("enrollments", {
+                    ...newEnrollment
+                  }).catch((err) => {console.log(err)})
+                })
+          }
+        }).catch((err) => {
+          console.log(err)
+          self.msg = self.i18n.savingFailed
+      })
+
     }
   }
 }

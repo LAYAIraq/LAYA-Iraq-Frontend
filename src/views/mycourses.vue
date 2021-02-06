@@ -113,7 +113,7 @@
 
                   <!-- right meta infos -->
                   <div class="w-25 text-right">
-                    <span>{{ locDate(data.item.createDate) }}</span>
+                    <span>{{ locDate(data.item.courseId) }}</span>
                   </div>
                 </div>
               </div>
@@ -198,10 +198,10 @@ export default {
         return courses.sort((c1, c2) => c1.name >= c2.name);
       }
       if (by === "dateASC") {
-        return courses.sort((c1, c2) => c1.createDate < c2.createDate);
+        return courses.sort((c1, c2) => c1.courseId < c2.courseId);
       }
       if (by === "dateDESC") {
-        return courses.sort((c1, c2) => c1.createDate >= c2.createDate);
+        return courses.sort((c1, c2) => c1.courseId >= c2.courseId);
       }
       return courses;
     },

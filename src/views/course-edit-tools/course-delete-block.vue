@@ -1,5 +1,5 @@
 <template>
-    <div class="row mt-5" v-if="content()">
+    <div class="row mt-5" v-if="content">
         <div class="col">
             <b-button size="sm"
                     variant="danger"

@@ -60,9 +60,9 @@ export default {
             if(!this.rename) return
             let newName = this.rename
             let step = this.$route.params.step
-            this.oldName = this.edit.course.name
+            let oldId = this.edit.course.courseId
             this.$store.commit("renameCourse", newName)
-            this.$store.dispatch("updateRenamedCourse", this.oldName)
+            this.$store.dispatch("updateRenamedCourse", oldId)
             this.$router.replace(`/courses/${newName}/${step}`)
             this.$emit("renamed")
         }
