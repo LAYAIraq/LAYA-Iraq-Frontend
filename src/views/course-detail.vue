@@ -23,13 +23,13 @@
 
           <component v-if="viewPermit"
                      :key="name+'-'+step"
-                     :is="content.name"          
-                     :onFinish="nextStep(content.nextStep)">
+                     :is="contentToDisplay.name"          
+                     :onFinish="nextStep(contentToDisplay.nextStep)">
           </component> 
           
           <!--<div v-else>-->
           <div v-else>
-            <h2 v-if="!content" class="mt-5 text-center text-muted">
+            <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">
               {{ i18n.content }}
             </h2>
             <h2 v-else class="mt-5 text-center text-muted">
@@ -93,7 +93,7 @@ export default {
   },
   computed: {
     ...mapState(["auth", "note", "edit"]),
-    ...mapGetters(["isAuthor", "profileLang", "hasContent", "hasCourse"]),
+    ...mapGetters(["isAuthor", "profileLang", "content", "course"]),
 
     /* returns empty function on every [] invocation */
     onFinishDummy() {
@@ -111,12 +111,12 @@ export default {
     userEnrolled() {
       return this.$store.state.edit.userEnrolled
     },
-    content() {
-      return this.hasContent[this.step-1]
+    contentToDisplay() {
+      return this.content[this.step-1]
     },
 
     viewPermit() {
-      if( this.content ) {
+      if( this.contentToDisplay ) {
         return (this.isAuthor || this.userEnrolled)? true : false;
       }
       return false
@@ -148,11 +148,11 @@ export default {
     },
 
     fetchEnrollment() {
-      if(this.hasCourse.needsEnrollment) this.$store.dispatch("fetchEnrollment", this.hasCourse.courseId)
+      if(this.course.needsEnrollment) this.$store.dispatch("fetchEnrollment", this.course.courseId)
     },
 
     updateEnrollment() {
-      if(this.hasCourse.needsEnrollment) this.$store.dispatch("updateEnrollment")
+      if(this.course.needsEnrollment) this.$store.dispatch("updateEnrollment")
     },
 
     nextStep(steps) { // string e.g. "1,2"

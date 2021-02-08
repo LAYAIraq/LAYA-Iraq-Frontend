@@ -133,7 +133,7 @@ export default {
   name: "edit-course-nav-view",
   created() {
     //create deep copy of store object to manipulate in vue instance
-    let preData = JSON.parse(JSON.stringify(this.hasContent))
+    let preData = JSON.parse(JSON.stringify(this.content))
     this.content = preData
   },
   mounted() {
@@ -150,7 +150,7 @@ export default {
     onnavupdate: Function
   },
   computed: {
-    ...mapGetters(["hasContent"]),
+    ...mapGetters(["content"]),
     formInvalid: function() {
       return this.content.reduce((res, val) => !val.nextStep || res, false)
     },

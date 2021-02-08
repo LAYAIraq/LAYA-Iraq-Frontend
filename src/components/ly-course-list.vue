@@ -59,28 +59,29 @@ export default {
   name: "laya-course-list",
   data() {
     return {
+      filteredList: [],
       enrolledIn: []
     }
   },
   props: {
-    courses: Array,
     filter: String,
   },
   mounted() {
     this.getSubs()
+    this.filteredList = [...this.courseList]
   },
   updated(){
     // this.getSubs()
   },
   computed: {
-    ...mapGetters(["profileLang"]),
+    ...mapGetters(["profileLang", "courseList"]),
     ...mapState(["note", "auth"]),
 
     filtered() {
-      if (!this.filter) return this.courses;
+      if (!this.filter) return this.courseList;
 
       const filterByCourseName = new RegExp(this.filter, "i");
-      return this.courses.filter(course => filterByCourseName.test(course.name))
+      return this.filteredList.filter(course => filterByCourseName.test(course.name))
     },
     i18n() {
       return i18n[this.profileLang];

@@ -79,18 +79,12 @@ export default {
     },
     computed: {
         ...mapState(["edit"]),
-        ...mapGetters(["profileLang", "hasContent", "hasCourse"]),
+        ...mapGetters(["profileLang", "content", "course"]),
         i18n () {
             return i18n[this.profileLang]
         }
     },
     methods: {
-
-        updateContent(changedContent) {
-            this.course.content = [...changedContent]
-            this.storeCourse()
-            this.$forceUpdate()
-        },
        
         storeCourse() {
             let ctx = this

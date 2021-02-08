@@ -140,7 +140,7 @@ export default {
   name: 'laya-la-drag-drop-edit',
   created () {
     let idx = this.$route.params.step - 1
-    const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+    const preData = JSON.parse(JSON.stringify(this.content[idx].input))
     this.title = preData.title
     this.task = preData.task
     this.taskAudio = preData.taskAudio
@@ -158,7 +158,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["hasContent"]),
+    ...mapGetters(["content"]),
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }

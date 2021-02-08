@@ -60,12 +60,12 @@ export default {
         step: String,
     },
     computed: {
-        ...mapGetters(["profileLang", "hasContent"]),
+        ...mapGetters(["profileLang", "content"]),
         i18n() {
             return i18n[this.profileLang]
         },
         nextId() {
-            return this.hasContent.length+1
+            return this.content.length+1
         }
     }
 }

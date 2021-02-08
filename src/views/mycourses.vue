@@ -130,7 +130,7 @@ import { mapState } from "vuex";
 
 //import bCollapse from "bootstrap-vue/es/components/collapse/collapse";
 //import vBToggle from "bootstrap-vue/es/directives/toggle/toggle";
-//import lyAccordion from "@/components/accordion";
+import lyAccordion from "@/components/accordion";
 
 import http from "axios";
 import * as i18n from "@/i18n/mycourses";
@@ -257,7 +257,7 @@ export default {
       .then(() => ctx.$store.commit("setBusy", false));
   },
   components: {
-    //lyAccordion,
+    lyAccordion,
     //bCollapse,
     //vBToggle
   }

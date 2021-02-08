@@ -29,7 +29,7 @@ export default {
   },
   created() {
     let idx = this.$route.params.step -1
-    const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+    const preData = JSON.parse(JSON.stringify(this.content[idx].input))
     this.contents = preData.contents
   },
   mounted() {
@@ -40,7 +40,7 @@ export default {
     quill.setContents(this.contents)
   },
   computed: {
-    ...mapGetters(["hasContent"]),
+    ...mapGetters(["content"]),
     editorId() {
       return `laya-wysiwyg-readonly-${Date.now()}`
     },

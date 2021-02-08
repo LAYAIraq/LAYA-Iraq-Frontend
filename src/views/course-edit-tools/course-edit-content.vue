@@ -1,8 +1,8 @@
 <template>
-    <div class="row mb-2" v-if="content">
+    <div class="row mb-2" v-if="contentToDisplay">
         <div class="col">
             <b-button variant="primary" block append
-                    :to="{path: 'edit', params: {type: content.name}}">
+                    :to="{path: 'edit', params: {type: contentToDisplay.name}}">
             <i class="fas fa-edit"></i> {{ i18n.editContent }}
             </b-button>
         </div>
@@ -24,9 +24,9 @@ export default {
         step: String
     },
     computed: {
-        ...mapGetters(["profileLang", "hasContent"]),
-        content() {
-            return this.hasContent[this.step-1]
+        ...mapGetters(["profileLang", "content"]),
+        contentToDisplay() {
+            return this.content[this.step-1]
         },
         i18n() {
             return i18n[this.profileLang]

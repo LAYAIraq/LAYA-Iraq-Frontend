@@ -49,12 +49,14 @@
           <button type="submit"
                   class="btn btn-block btn-primary"
                   :disabled="!formValid"
-                  @click="storeNewCourse">
+                  @click="duplicateCheck">
             <i class="fas fa-check"></i> {{ i18n.save }}
           </button>
         </div>
       </div>
     </form>
+
+
   </div>
 </template>
 
@@ -72,10 +74,12 @@ export default {
         name: "",
         category: ""
       },
+      duplicateNameCategory: false
     }
   },
   computed: {
     ...mapState(["note", "auth"]),
+    ...mapGetters(["courseList"]),
 
     formValid() {
       return !!this.newCourse.name && !!this.newCourse.category
@@ -91,6 +95,18 @@ export default {
 
   },
   methods: {
+
+
+    //check for duplicate keys before storing the course
+    duplicateCheck() {
+      for(let entry of this.courseList) {
+        if (this.newCourse.name == entry.name) {
+          this.msg = this.i18n.courseExists
+          return
+        }
+      }
+      this.storeNewCourse()
+    },
     
     storeNewCourse() {
       
@@ -114,7 +130,7 @@ export default {
         storageId: newId,
         needsEnrollment: enrBool
         }).then( (resp) => {
-          console.log(resp)
+          // console.log(resp)
           self.$router.push(`/courses/${newCourse.name}/1`)
 
           /* create enrollment for creator */

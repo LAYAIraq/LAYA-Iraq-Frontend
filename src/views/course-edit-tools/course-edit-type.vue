@@ -1,7 +1,7 @@
 <template>
 
 <!-- change content type -->
-    <div class="row mb-2" v-if="content">
+    <div class="row mb-2" v-if="contentToDisplay">
         <div class="col">
             <b-button variant="warning" block
                     @click="$bvModal.show('author-changeContentType-confirm')">
@@ -47,10 +47,10 @@ export default {
     },
     
     computed: {
-        ...mapGetters(["profileLang", "hasContent"]),
+        ...mapGetters(["profileLang", "content"]),
         ...mapState(["edit"]),
-        content() {
-            return this.hasContent[this.step-1]
+        contentToDisplay() {
+            return this.content[this.step-1]
         },
         i18n() {
             return i18n[this.profileLang]

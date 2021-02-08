@@ -37,14 +37,14 @@ export default {
     },
     computed: {
         ...mapState(["edit"]),
-        ...mapGetters(["profileLang", "hasCourse"]),
+        ...mapGetters(["profileLang", "course"]),
         i18n() {
             return i18n[this.profileLang]
         }
     },
     methods: {
         delCourse() {
-            http.delete(`courses/${this.hasCourse.courseId}`)
+            http.delete(`courses/${this.course.courseId}`)
                 .then( () => {
                 this.$router.push("/courses")
                 })

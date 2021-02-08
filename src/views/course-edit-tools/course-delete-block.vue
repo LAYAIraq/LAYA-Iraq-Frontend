@@ -1,5 +1,5 @@
 <template>
-    <div class="row mt-5" v-if="content">
+    <div class="row mt-5" v-if="contentToDisplay">
         <div class="col">
             <b-button size="sm"
                     variant="danger"
@@ -37,7 +37,7 @@ export default {
         step: String
     },
     computed: {
-        ...mapGetters(["hasContent", "profileLang"]),
+        ...mapGetters(["content", "profileLang"]),
         ...mapState(["edit"]),
         i18n() {
             return i18n[this.profileLang]
@@ -45,8 +45,8 @@ export default {
 
     },
     methods: {
-        content() {
-            return this.hasContent[this.step-1]
+        contentToDisplay() {
+            return this.content[this.step-1]
         },
         delContent() {
             this.$store.commit("delContent", this.step-1) 

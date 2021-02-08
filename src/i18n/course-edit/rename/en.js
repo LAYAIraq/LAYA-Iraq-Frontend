@@ -6,6 +6,7 @@ export default {
         placeholder: 'New Course Name',
         title: 'Rename Course',
         text: 'New Course Name*',
-        cancel: 'Cancel'
+        cancel: 'Cancel',
+        dupeName: 'This Course Name already exists!'
     }
 }

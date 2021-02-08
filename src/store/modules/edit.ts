@@ -5,6 +5,7 @@ import { ids as supportedLangs } from "../../misc/langs.js"
 export default {
     state: {
         course: {},
+        courseList: [],
         enrollment: {},
         userEnrolled: false
     },
@@ -12,11 +13,14 @@ export default {
         isUserEnrolled (state: { userEnrolled: Boolean}) {
           return state.userEnrolled
         },
-        hasContent(state: { course: { content: Object } } ) {
+        content(state: { course: { content: Object } } ) {
           return state.course.content
         },
-        hasCourse(state: { course: Object } ) {
+        course(state: { course: Object } ) {
           return state.course
+        },
+        courseList(state: { courseList: Array<Object>}) {
+          return state.courseList
         }
     },
     mutations: {
@@ -24,7 +28,6 @@ export default {
         state.course.content.push(data)
       },
       delContent( state, step ) {
-        let cnt = state.course.content
         state.course.content.splice(step, 1)
       },
       renameCourse( state: {course: {name: String}}, newName: String) {
@@ -37,6 +40,12 @@ export default {
       setCourse(state: { course: Object}, data: Object) {
         state.course = data
       },
+      setCourseList(state: { courseList: Array<Object>}, data: Array<Object>) {
+        state.courseList = data
+      },
+      appendToCourseList(state: {courseList: Array<Object>}, data: Object){
+        state.courseList.push(data)
+      },
       updateCourseNav( state: {course: {content: Array<Object>}}, data: Array<Object>) {
         state.course.content = data
       },
@@ -48,11 +57,11 @@ export default {
 
     },
     actions: {
-      fetchEnrollment({ commit, state, rootState }, createdDate: String) {
+      fetchEnrollment({ commit, state, rootState }, courseId: String) {
         const self = this
         let uid = rootState.auth.userId
-        let cid = createdDate
-        console.log(cid)
+        let cid = courseId
+        commit("setBusy", true)
         http.get("enrollments/findOne", {params: {filter:{where: {studentId: uid, courseId: cid}}}})
             .then(({data}) => {
               console.log("Enrollment exists!")
@@ -62,6 +71,26 @@ export default {
               console.log('No enrollment found!')
               console.error(err)
             })
+            .finally( () => { commit("setBusy", false) })
+      },
+
+      fetchCourseList({commit, state, rootState}) {
+        commit("setBusy", true)
+        http.get("courses?filter[include]=author")
+          .then( ({data}) => {
+            for(let courseObject of data) {
+              const listData = { 
+                category: courseObject.category, 
+                name: courseObject.name, 
+                needsEnrollment: courseObject.needsEnrollment, 
+                courseId: courseObject.courseId 
+              }
+              state.courseList.some((e: { courseId: String }) => 
+                e.courseId === listData.courseId)? "" : commit("appendToCourseList", listData)
+            }
+          })
+          .catch(err => console.error(err))
+          .finally( () => {commit("setBusy", false)})
       },
 
       updateEnrollment({ commit, state, rootState } ) {
@@ -76,7 +105,7 @@ export default {
             })
       },
 
-      fetchCourse ({ commit, state, rootState}, name: String) {
+      async fetchCourse ({ commit, state, rootState}, name: String) {
         //can you return router function? //TODO direkt hier 
         return new Promise((resolve, reject) => {
           commit("setBusy", true);

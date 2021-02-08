@@ -41,7 +41,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["hasContent"]),
+    ...mapGetters(["content"]),
     idx() {
       //comply with array indexing in store
       return this.$route.params.step -1 
@@ -53,7 +53,7 @@ export default {
   methods: {
     refreshData() {
       // dereference store data
-      let preData = JSON.parse(JSON.stringify(this.hasContent[this.idx].input))
+      let preData = JSON.parse(JSON.stringify(this.content[this.idx].input))
       //replace data stubs with stored data
       this.question = preData.question
       this.answers = preData.answers
@@ -61,7 +61,7 @@ export default {
     }
   },
   watch: {
-    hasContent(newValue) {
+    content(newValue) {
       //FIXME doesn't actually watch the property
       this.refreshData()
     }

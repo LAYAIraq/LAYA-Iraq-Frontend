@@ -22,7 +22,7 @@
                                 variant="secondary"
                                 no-flip
                                 right>
-                        <b-dropdown-item v-for="(c,id) in hasContent" :key="id"
+                        <b-dropdown-item v-for="(c,id) in content" :key="id"
                                         :to="{name: 'course-detail-view',
                                         params: {name, step: id+1+''}}">
                             {{ i18n.listContent }} <b>{{ id+1 }}</b>
@@ -52,7 +52,7 @@ export default {
         step: String,
     },
     computed: {
-        ...mapGetters(["profileLang", "hasContent"]),
+        ...mapGetters(["profileLang", "content"]),
         i18n() {
             return i18n[this.profileLang]
         }

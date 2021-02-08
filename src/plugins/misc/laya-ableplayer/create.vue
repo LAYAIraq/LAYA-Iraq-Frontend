@@ -48,7 +48,7 @@
 import * as i18n from "@/i18n/plugins/misc/laya-ableplayer"
 
 export default {
-  name: "laya-lb-plyr-vimeo-edit",
+  name: "laya-ableplayer-create",
   data() {
     return {
       src: "",

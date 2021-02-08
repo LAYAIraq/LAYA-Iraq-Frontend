@@ -1,5 +1,5 @@
 <template>
-    <div class="row mb-2" v-if="hasContent.length > 0">
+    <div class="row mb-2" v-if="content.length > 0">
         <div class="col">
             <b-button block variant="primary" append :to="{path: 'editNav'}">
             <i class="fas fa-project-diagram"></i> {{ i18n.editNav }}
@@ -12,7 +12,7 @@
                 style="padding: 2px 5px">
             <i class="fas fa-exclamation-triangle"></i> {{ i18n.editNavIncomplete }}
             </span>
-            {{ i18n.editNavTip.replace("{steps}", hasContent.length ) }}
+            {{ i18n.editNavTip.replace("{steps}", content.length ) }}
         </div>
     </div>
 </template>
@@ -29,14 +29,14 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(["profileLang", "hasContent"]),
+        ...mapGetters(["profileLang", "content"]),
         i18n() {
             return i18n[this.profileLang]
         }
     },
     methods: {
         courseNavIncomplete() {
-            return this.hasContent.reduce((all, c) => (!c.nextStep || all), false)
+            return this.content.reduce((all, c) => (!c.nextStep || all), false)
         },
     }
 }

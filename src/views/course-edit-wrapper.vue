@@ -47,19 +47,20 @@ export default {
   props: {
     name: String,
     step: String,
+    type: String
   },
   computed: {
-    ...mapGetters(["hasContent"]),
+    ...mapGetters(["content"]),
     ...mapState(["edit"]),
     cid() {
-      return this.$route.params.type || this.hasContent[this.step-1].name //why not always use $route.params.type?
+      return this.type || this.content[this.step-1].name //why not always use $route.params.type?
     },
     comps() {
       const la = this.$laya.la[this.cid]
       return la ? la.components : this.$laya.lb[this.cid].components
     },
     editContent() {
-      return this.step <= this.hasContent.length
+      return this.step <= this.content.length
     },
     i18n() {
       return i18n[this.$store.state.profile.lang];
@@ -76,7 +77,7 @@ export default {
     }
   },
   mounted() {
-    if(!this.cid && !this.hasContent) // data not passed -> go back
+    if(!this.cid && !this.content) // data not passed -> go back
       this.$router.back()
   },
   methods: {

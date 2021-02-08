@@ -40,7 +40,7 @@
         <div class="row">
           <div class="col">
 
-            <ly-course-list :courses="courses" :filter="search">
+            <ly-course-list :filter="search">
             </ly-course-list>
 
           </div> <!-- col -->
@@ -80,13 +80,12 @@ export default {
   },
   data() {
     return {
-      courses: [],
       search: "",
     };
   },
   computed: {
     ...mapState(["note", "auth"]),
-    ...mapGetters(["isAuthor"]),
+    ...mapGetters(["isAuthor", "courseList"]),
 
     i18n: function() {
       return i18n[this.$store.state.profile.lang];
@@ -95,11 +94,8 @@ export default {
   methods: {
     ...utils,
 
-    fetchCourses: function() {
-      let ctx = this;
-      http.get("courses?filter[include]=author").then( ({data}) => {
-        ctx.courses = [...data]
-      }).catch(err => console.error(err))
+    fetchCourses() {
+      this.$store.dispatch('fetchCourseList')
     }
 
   },

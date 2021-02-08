@@ -6,6 +6,7 @@ export default {
         placeholder: 'Neuer Kursname',
         title: 'Kurs umbenennen',
         text: 'Neuer Kursname*',
-        cancel: 'Abbrechen'
+        cancel: 'Abbrechen',
+        dupeName: 'Dieser Kursname existiert bereits!'
     }
 }

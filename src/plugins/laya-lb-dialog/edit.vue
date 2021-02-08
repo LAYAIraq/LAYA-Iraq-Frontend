@@ -85,7 +85,7 @@ export default {
   created() {
     let idx = this.$route.params.step -1 //comply with array indexing in store
     //create deep copy of store object to manipulate in vue instance
-    let preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+    let preData = JSON.parse(JSON.stringify(this.content[idx].input))
     this.bg = preData.bg
     this.question = preData.question
     this.answers = preData.answers
@@ -110,7 +110,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["hasContent"]),
+    ...mapGetters(["content"]),
     i18n() {
       return i18n[this.$store.state.profile.lang]
     },
