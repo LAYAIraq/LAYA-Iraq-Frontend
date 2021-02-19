@@ -13,7 +13,10 @@ export default {
 
   oldPwd: 'Altes Passwort',
   newPwd: 'Neues Passwort',
+  repeatPwd: 'Passwort wiederholen',
   pwdFail: 'Bitte überprüfe Deine Eingaben',
+  pwdDiffer: 'Passwörter müssen übereinstimmen!',
+  pwdStrength: 'Passwortstärke',
 
   defmedia: {
     label: 'Darstellungsformen',
@@ -26,5 +29,7 @@ export default {
   submit: 'Speichern',
   busy: 'Bitte Warten',
   submitOk: 'Dein Profil wurde erneuert',
-  submitFail: '[PH]'
+  submitFail: 'Etwas ist beim Speichern schief gelaufen!',
+  success: 'Speichern erfolgreich',
+  fail: 'Fehler beim Speichern'
 }

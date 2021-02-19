@@ -6,7 +6,7 @@
         <div class="bg-dark w-100 pt-5 pb-3">
           <!-- avatar -->
           <img
-            v-if="avatar !== ''"
+            v-if="avatar != ''"
             :src="avatarURL"
             alt="Avatar"
             class="d-block rounded-circle mx-auto avatar"
@@ -28,12 +28,12 @@
     <div class="container">
       <div class="row">
         <form class="w-100" style="margin-top: 1rem">
-          <h1>{{ msg.title }}</h1>
+          <h1>{{ i18n.title }}</h1>
           <hr>
 
           <!-- Name -->
           <div class="form-group row">
-            <label for="username" class="col-sm-3 col-form-label">{{ msg.namePH }}</label>
+            <label for="username" class="col-sm-3 col-form-label">{{ i18n.namePH }}</label>
             <div class="col-sm-9">
               <input
                 id="username"
@@ -48,7 +48,7 @@
 
           <!-- Email -->
           <div class="form-group row">
-            <label for="email" class="col-sm-3 col-form-label">{{ msg.emailPH }}</label>
+            <label for="email" class="col-sm-3 col-form-label">{{ i18n.emailPH }}</label>
             <div class="col-sm-9">
               <input
                 id="email"
@@ -64,45 +64,89 @@
           <hr>
           <!-- Old Password -->
           <div class="form-group row">
-            <label for="oldPwd" class="col-sm-3 col-form-label">{{ msg.oldPwd }}</label>
+            <label for="oldPwd" class="col-sm-3 col-form-label">{{ i18n.oldPwd }}</label>
             <div class="col-sm-9">
               <input
                 id="oldPwd"
                 type="password"
                 class="form-control"
                 v-model="oldPwd"
-                :placeholder="msg.oldPwd"
+                :placeholder="i18n.oldPwd"
                 autocomplete="on"
               >
             </div>
+            <strong id="pwdStoreMsg" class="form-text text-center">{{ pwdMsg }}</strong>
           </div>
 
           <!-- New Password -->
           <div class="form-group row">
-            <label for="newPwd" class="col-sm-3 col-form-label">{{ msg.newPwd }}</label>
+            <label for="newPwd" class="col-sm-3 col-form-label">{{ i18n.newPwd }}</label>
             <div class="col-sm-9">
               <input
                 id="newPwd"
                 type="password"
                 class="form-control"
                 v-model="newPwd"
-                :placeholder="msg.newPwd"
-                aria-describedby="pwdMsg"
+                :placeholder="i18n.newPwd"
               >
-              <strong id="pwdMsg" class="form-text text-center">{{ pwdMsg }}</strong>
             </div>
           </div>
+
+          <!-- repeat password -->
+          <div class="form-group row">
+            <label for="repeatPwd" class="col-sm-3 col-form-label">{{ i18n.repeatPwd }}</label>
+            <div class="col-sm-9">
+              <input
+                id="repeatPwd"
+                type="password"
+                class="form-control"
+                v-model="repeatPwd"
+                :placeholder="i18n.repeatPwd"
+                aria-describedby="pwdStrength"
+              >
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="pwdMeter" class="col-sm-3 col-form-label">{{ i18n.pwdStrength }}</label>
+            <div class="col-sm-9">
+              
+              <password id="pwdMeter" v-model="repeatPwd" :strength-meter-only="true"></password>
+              <strong id="pwdDiffMsg" class="form-text text-center">{{ pwdDiffMsg }}</strong>
+              <strong id="pwdStoreMsg" class="form-text text-center">{{ pwdMsg }}</strong>
+            </div>
+          </div>
+
           <hr>
+
+          <!-- avatar upload TODO: FIX Cropper Problems  
+
+          <div class="form-group row">
+            <div class="col-sm-3">
+              {{ i18n.avatar }}
+            </div>
+            <div class="col-sm-3" >
+              <img :src="avatarURL">
+            </div>
+            <div class="col-sm-6">
+              <laya-upload-avatar :oldAvatar="avatarURL" :type="'avatar'"></laya-upload-avatar>
+            </div>
+
+          </div>
+        
+
+          <hr>
+          -->
+
 
           <!-- Default Media Forms -->
           <div class="form-group row">
-            <label class="col-sm-3 col-form-label">{{ msg.defmedia.label }}</label>
+            <label class="col-sm-3 col-form-label">{{ i18n.defmedia.label }}</label>
             <div class="col-sm-9 d-inline-flex justify-content-between align-items-center">
               <!-- Text -->
               <div class="checkbox-inline">
                 <label>
                   <input type="checkbox" v-model="prefs.media.text">
-                  {{ msg.defmedia.text }}
+                  {{ i18n.defmedia.text }}
                 </label>
               </div>
 
@@ -110,7 +154,7 @@
               <div class="checkbox-inline">
                 <label>
                   <input type="checkbox" v-model="prefs.media.simple">
-                  {{ msg.defmedia.simple }}
+                  {{ i18n.defmedia.simple }}
                 </label>
               </div>
 
@@ -118,7 +162,7 @@
               <div class="checkbox-inline">
                 <label>
                   <input type="checkbox" v-model="prefs.media.video">
-                  {{ msg.defmedia.video }}
+                  {{ i18n.defmedia.video }}
                 </label>
               </div>
 
@@ -126,7 +170,7 @@
               <div class="checkbox-inline">
                 <label>
                   <input type="checkbox" v-model="prefs.media.audio">
-                  {{ msg.defmedia.audio }}
+                  {{ i18n.defmedia.audio }}
                 </label>
               </div>
             </div>
@@ -142,13 +186,21 @@
               style="border-width: 2px"
             >
               <i class="fas fa-check"></i>
-              {{ msg.submit }}
+              {{ i18n.submit }}
             </button>
           </div>
           <strong class="form-text text-center">{{ formMsg }}</strong>
         </form>
       </div>
     </div>
+    <b-toast variant="danger" id="submit-failed" :title="i18n.fail"
+      class="author-toast" auto-hide-delay="1500" static>
+      {{ i18n.submitFailed}}
+    </b-toast>
+    <b-toast variant="success" id="submit-ok" :title="i18n.success"
+      class="author-toast" auto-hide-delay="1500" static>
+      {{ i18n.submitOk}}
+    </b-toast>
   </div>
 </template>
 
@@ -156,7 +208,9 @@
 import http from "axios";
 import * as i18n from "@/i18n/profile";
 import api from "../backend-url.ts";
+import Password from "vue-password-strength-meter"
 import { mapState } from "vuex";
+import LayaUploadAvatar from "@/plugins/misc/laya-upload-avatar/avatar.vue"
 
 export default {
   name: "profile-view",
@@ -165,6 +219,7 @@ export default {
       avatar: null,
       oldPwd: "",
       newPwd: "",
+      repeatPwd: "",
       pwdMsg: "",
       formMsg: "",
       busy: false,
@@ -175,20 +230,32 @@ export default {
   computed: {
     ...mapState(["profile"]),
 
-    msg: function() {
+    i18n() {
       return i18n[this.profile.lang];
     },
 
-    avatarURL: function() {
-      return `${api()}/storage/img/download/${this.avatar}`;
+    avatarURL() {
+      return (!this.avatar || this.avatar === '') ?
+        null : `${api}/storage/img/download/${this.avatar}`
+    },
+
+    passwordsDiffer() {
+      return this.newPwd !== this.repeatPwd
+    },
+    pwdDiffMsg() {
+      return this.passwordsDiffer? this.i18n.pwdDiffer : ""
     }
   },
   created() {
-    this.avatar = this.profile.avatar;
-    this.prefs = { ...this.profile.prefs };
+    const preData = JSON.parse(JSON.stringify(this.profile))
+    this.prefs = {...preData.prefs}
+    this.avatar = preData.avatar
+  },
+  beforeDestroy() {
+    this.$store.dispatch("saveProfile", {...this.avatar, ...this.prefs})
   },
   methods: {
-    submit: function() {
+    submit() {
       this.busy = true;
       const ctx = this;
       ctx.formMsg = "";
@@ -205,38 +272,42 @@ export default {
             })
             .catch(err => {
               console.error(err);
-              ctx.pwdMsg = ctx.msg.pwdFail;
+              ctx.pwdMsg = ctx.i18n.pwdFail;
             })
         );
       }
-
+      console.log(requests)
       /* fire requests */
       http
         .all(requests)
         .then(
           http.spread(() => {
-            ctx.formMsg = ctx.msg.submitOk;
+            ctx.formMsg = ctx.i18n.submitOk;
           })
         )
         .catch(function(err) {
           console.log(err);
-          // ctx.formMsg = ctx.msg.submitFail
+          ctx.$bvToast.show("submit-failed")
         })
         .then(() => {
           ctx.busy = false;
           setTimeout(() => {
             ctx.formMsg = "";
           }, 2000);
+          ctx.$forceUpdate
+          ctx.$bvToast.show("submit-ok")
         });
 
       /* update state */
       ctx.$store.commit("setPrefs", ctx.prefs);
     },
-    onProfileImg: function(img) {
+    onProfileImg(img) {
       if (!img) return;
     }
   },
   components: {
+    Password,
+    // LayaUploadAvatar
   }
 };
 </script>
@@ -258,5 +329,13 @@ export default {
 
 .checkbox-inline input {
   margin-right: 5px;
+}
+
+.author-toast {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11002;
 }
 </style>

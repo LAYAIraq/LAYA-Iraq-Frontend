@@ -40,7 +40,7 @@
 
       </div>
 
-      <div class="row" v-for="(step,i) in content" :key="'step-'+i">
+      <div class="row" v-for="(step,i) in courseContent" :key="'step-'+i">
 
         <div class="col-2">
           <b>{{ i+1 }}</b>
@@ -67,7 +67,7 @@
             <i class="fas fa-level-up-alt"></i>
           </button>
           <!-- swap down -->
-          <button v-if="i < content.length-1"
+          <button v-if="i < courseContent.length-1"
                   type="button"
                   class="btn btn-primary btn-sm float-right"
                   @click="swapDown(i)">
@@ -134,7 +134,7 @@ export default {
   created() {
     //create deep copy of store object to manipulate in vue instance
     let preData = JSON.parse(JSON.stringify(this.content))
-    this.content = preData
+    this.courseContent = preData
   },
   mounted() {
     if(!this.formInvalid)
@@ -143,7 +143,7 @@ export default {
   data() {
     return {
       graph: null,
-      content: []
+      courseContent: []
     }
   },
   props: {
@@ -151,8 +151,8 @@ export default {
   },
   computed: {
     ...mapGetters(["content"]),
-    formInvalid: function() {
-      return this.content.reduce((res, val) => !val.nextStep || res, false)
+    formInvalid() {
+      return this.courseContent.reduce((res, val) => !val.nextStep || res, false)
     },
     navGraphId() {
       return "nav-graph"
@@ -164,18 +164,18 @@ export default {
   methods: {
 
     swapUp(i) {
-      [this.content[i-1], this.content[i]] =
-        [this.content[i], this.content[i-1]]
+      [this.courseContent[i-1], this.courseContent[i]] =
+        [this.courseContent[i], this.courseContent[i-1]]
       this.$forceUpdate()
     },
 
     swapDown(i) {
-      [this.content[i], this.content[i+1]] =
-        [this.content[i+1], this.content[i]]
+      [this.courseContent[i], this.courseContent[i+1]] =
+        [this.courseContent[i+1], this.courseContent[i]]
       this.$forceUpdate()
     },
 
-    typeName(compName) {
+    typeName(compName) {   
       let lang = this.$store.state.profile.lang
       let comps = {...this.$laya.la, ...this.$laya.lb}
       if (comps[compName].i18n.hasOwnProperty(lang)) {
@@ -190,13 +190,13 @@ export default {
     renderNavGraph() {
       const self = this
 
-      let _nodes = self.content.map(
+      let _nodes = self.courseContent.map(
         (c,i) => ({id: i+1, label: `${i+1}. ${self.typeName(c.name)}`})
       )
 
       let _edges = []
-      for(let i=0; i<self.content.length; ++i) {
-        let c = self.content[i]
+      for(let i=0; i<self.courseContent.length; ++i) {
+        let c = self.courseContent[i]
         if(!c.nextStep) continue
         let steps = c.nextStep.split(",").map(s => parseInt(s))
         for(let s=0; s<steps.length; ++s) {
@@ -238,7 +238,7 @@ export default {
     },
 
     save() {
-      this.$store.commit("updateCourseNav", this.content)
+      this.$store.commit("updateCourseNav", this.courseContent)
       this.$store.dispatch("storeCourse")
       this.$emit("saved")
     }

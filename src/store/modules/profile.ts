@@ -25,18 +25,6 @@ export default {
     setLang(state, lang) {
       state.lang = (supportedLangs.includes(lang)) ? lang : supportedLangs[0];
     },
-    setUserLang(state, data) { //save language choice in User's profile
-      if (supportedLangs.includes(data.lang)) {
-        state.lang = data.lang
-        http.post(`/accounts/${data.uid}/change-language`, data)
-          .then( (data) => console.log(`Changed language to ${state.lang}`))
-          .catch((err) => console.error(err))
-      }
-      else {
-        console.log("Setting language failed")
-        state.lang = supportedLangs[0]
-      }
-    },
     toggleMedia(state, type) {
       state.prefs.media[type] = !state.prefs.media[type];
     },
@@ -63,6 +51,18 @@ export default {
       http.get(`accounts/${rootState.auth.userId}`)
         .then(({data}) => commit("setProfile", data))
         .catch((err) => console.error(err));
+    },
+    saveProfile({commit, state, rootState}) {
+      http.patch(`accounts/${rootState.auth.userId}`, {...state})
+        .catch(err => {
+          console.error(err)
+        })
+    },
+    setUserLang({state, rootState}, {lang, uid}) { //save language choice in User's profile
+      if(!lang) lang = state.profile.lang
+      http.post(`/accounts/${rootState.auth.userId}/change-language`, {lang, uid})
+        .then( () => console.log(`Changed language to ${state.lang}`))
+        .catch((err) => console.error(err))
     },
   },
 };

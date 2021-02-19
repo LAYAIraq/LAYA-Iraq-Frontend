@@ -48,16 +48,6 @@
 <script>
 import { mapState, mapGetters } from "vuex"
 
-import {
-  BDropdown,
-  BDropdownItem,
-  BDropdownHeader,
-  BDropdownDivider,
-  BToast,
-  BModal
-} from "bootstrap-vue"
-
-import http from "axios";
 import * as i18n from "@/i18n/course-detail";
 import utils from "@/misc/utils.js";
 import lyScrollToTop from "@/components/scroll-to-top.vue"
@@ -117,17 +107,14 @@ export default {
 
     viewPermit() {
       if( this.contentToDisplay ) {
-        return (this.isAuthor || this.userEnrolled)? true : false;
+        return this.course.needsEnrollment ? 
+          ((this.isAuthor || this.userEnrolled)? true : false) : true
       }
       return false
     },
 
   },
-  // watch: {
-  //   content() { 
-  //     this.$forceUpdate
-  //   }
-  // },
+ 
   methods: {
     ...utils,
 
@@ -141,6 +128,7 @@ export default {
       let fc = ctx.$store.dispatch("fetchCourse", ctx.name)
       fc.then( resp => { 
           console.log(resp)
+          ctx.$forceUpdate()
         })
         .catch( err => {
         ctx.$router.push("/courses")

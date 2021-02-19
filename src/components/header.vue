@@ -103,16 +103,16 @@ export default {
       this.$forceUpdate()
     },
     setLang (newlang) {
-      if(!this.auth.online) this.$store.commit('setLang', newlang)
-      else {
-        const data = {
-          lang: newlang,
-          uid: this.$store.state.auth.userId,
-          //email: this.$store.state.profile.email
+      this.$store.commit('setLang', newlang)
+      this.$nextTick(() => {
+        if(this.$store.state.auth.userId != -1) {
+          const data = {
+            lang: this.$store.state.profile.lang,
+            uid: this.$store.state.auth.userId
+          }
+          this.$store.dispatch("setUserLang", data)
         }
-        this.$store.commit('setUserLang', data)
-        this.$forceUpdate()
-      }
+      })
     },
     logout () {
       this.$ls.remove('auth')
