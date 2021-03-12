@@ -137,42 +137,44 @@
 
     </form>
 
+    <hr>
+
+    <laya-upload-file-list></laya-upload-file-list>
+
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex"
-import * as i18n from "@/i18n/plugins/laya-la-relate";
+import { mapGetters } from 'vuex'
+import * as i18n from '@/i18n/plugins/laya-la-relate'
+import LayaUploadFileList from '@/plugins/misc/laya-upload-file-list/file-list.vue'
 
 export default {
   name: 'laya-la-drag-drop-edit',
+  components: {
+    LayaUploadFileList
+  },
   created() {
     let idx = this.$route.params.step - 1
     const preData = JSON.parse(JSON.stringify(this.content[idx].input))
     this.title = preData.title
     this.task = preData.task
     this.taskAudio = preData.taskAudio
-    this.pairs = preData.pairs
-    this.relations = preData.relations
+    this.pairs = [...preData.pairs]
+    this.relations = [...preData.relations]
   },
   data() {
     return {
       title: "",
       task: "",
       taskAudio: "",
-      pairs: [
-        {
-          img: "",
-          audio: "",
-          relation: -1
-        }
-      ],
+      pairs: [],
       relations: [],
       tooltipOn: false
     }
   },
   computed: {
-    ...mapGetters(["content"]),
+    ...mapGetters(['content', 'courseStorage']),
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }
@@ -201,10 +203,6 @@ export default {
 *:focus {
   outline: 2px dashed deepskyblue;
   outline-offset: 5px;
-}
-
-legend {
-  font-size: 1rem;
 }
 
 #questionmark {

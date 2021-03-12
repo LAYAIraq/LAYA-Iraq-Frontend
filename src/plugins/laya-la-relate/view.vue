@@ -77,7 +77,7 @@ export default {
     if (Object.entries(this.$attrs).length === 4) //preview
       return {
         ...this.$attrs,
-        default_option: "",
+        defaultOption: "",
         solution: [],
         eval: [],
         freeze: false
@@ -87,14 +87,14 @@ export default {
       task: "",
       taskAudio: "",
       pairs: [],
-      default_option: "",
+      defaultOption: "",
       solution: [],
       eval: [],
       freeze: false
     }
   },
   created () {
-    this.default_option = this.i18n.defaultOption
+    this.defaultOption = this.i18n.defaultOption
     if (Object.entries(this.$attrs).length != 4) { // no preview 
       let idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
