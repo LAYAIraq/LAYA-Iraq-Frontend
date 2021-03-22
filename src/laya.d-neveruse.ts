@@ -1,6 +1,16 @@
-/** make global $laya propety avaible to typescript.
- * source: https://vuejs.org/v2/guide/typescript.html#Augmenting-Types-for-Use-with-Plugins
+/** 
+ * Filename: laya.d.neveruse.ts
+ * Use: * make global $laya propety avaible to typescript.
+ *  source: https://vuejs.org/v2/guide/typescript.html#Augmenting-Types-for-Use-with-Plugins
+ * Creator: core
+ * Date: unknown
+ * Depedencies: 
+ *  vue,
+ *  ./laya
  */
+
+//FIXME content has been copied to laya.ts
+
 // 1. Make sure to import 'vue' before declaring augmented types
 import Vue from "vue";
 import { Laya } from "./laya";

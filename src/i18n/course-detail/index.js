@@ -1,3 +1,10 @@
+/**
+ * Filename: index.js
+ * Use: wrap Localization for CourseDetail component
+ * Creator: cmc
+ * Date: August 19, 2020
+ */
+
 export { default as de } from './de.js'
 export { default as en } from './en.js'
 export { default as us } from './en.js'

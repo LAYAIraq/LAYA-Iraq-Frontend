@@ -1,3 +1,13 @@
+<!-- 
+Filename: edit.vue
+Use: Edit existing Drag & Drop content block
+Creator: core
+Date: unknown
+Dependencies:
+  vuex,
+  @/i18n/plugins/laya-la-drag-drop
+-->
+
 <template>
   <div class="laya-la-drag-drop-edit">
 
@@ -133,49 +143,113 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
-import * as i18n from "@/i18n/plugins/laya-la-drag-drop";
+import { mapGetters } from 'vuex'
+import * as i18n from '@/i18n/plugins/laya-la-drag-drop';
 
 export default {
   name: 'laya-la-drag-drop-edit',
   created () {
-    let idx = this.$route.params.step - 1
-    const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
-    this.title = preData.title
-    this.task = preData.task
-    this.taskAudio = preData.taskAudio
-    this.items = preData.items
-    this.categories = preData.categories
+    this.fetchData()
   },
   data () {
     return {
-      title: "",
-      task: "",
-      taskAudio: "",
+      title: '',
+      task: '',
+      taskAudio: '',
       items: [],
       categories: [],
       tooltipOn: false
     }
   },
   computed: {
-    ...mapGetters(["hasContent"]),
+    ...mapGetters(['hasContent', 'profileLang']),
+
+    /**
+    * i18n: Load translation files depending on user langugage
+    * 
+    * Author: cmc
+    * 
+    * Last updated: March 12, 2021
+    */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }
   },
   methods: {
+    /**
+     * Function _delItem: remove item at position idx
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param {*} idx index at which to remove
+     */
     _delItem(idx) {
       this.items.splice(idx, 1)
     },
+
+    /**
+     * Function _addItem: Add new item to items
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     */
     _addItem() {
-      this.items.push({label: "", category: -1})
+      this.items.push({label: '', category: -1})
     },
+
+    /**
+     * Function _delCategory: delete category at position idx
+     * 
+     * Author: core
+     *
+     * Last Updated: unknown
+     * 
+     * @param {*} idx index at which to remove the category
+     */
     _delCategory(idx) {
       this.categories.splice(idx, 1)
     },
+
+    /**
+     * Function _addCategory: Add new category to categories
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     */
     _addCategory() {
-      this.categories.push("")
+      this.categories.push('')
     },
+
+    /**
+     * Function fetchData(): fetch data from vuex and make data property
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 12, 2021
+     */
+    fetchData() {
+      let idx = this.$route.params.step - 1
+      const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+      this.title = preData.title
+      this.task = preData.task
+      this.taskAudio = preData.taskAudio
+      this.items = preData.items
+      this.categories = preData.categories
+    },
+
+    /**
+     * Function toggleTip: toggle tooltipOn boolean
+     * 
+     * Author: cmc
+     * 
+     * Last updated: unknown
+     */
     toggleTip() {
       this.tooltipOn = !this.tooltipOn
     }

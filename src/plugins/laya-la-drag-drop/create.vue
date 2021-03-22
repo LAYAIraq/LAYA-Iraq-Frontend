@@ -1,3 +1,11 @@
+<!--
+Filename: create.vue
+Use: Creating a new Drag & Drop content block
+Creator: core
+Date: unknown
+Dependencies: @/i18n/plugins/laya-la-drag-drop
+-->
+
 <template>
   <div class="laya-la-drag-drop-edit">
 
@@ -133,26 +141,12 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/plugins/laya-la-drag-drop"
+import * as i18n from '@/i18n/plugins/laya-la-drag-drop'
 
 export default {
   name: 'laya-la-drag-drop-edit',
   created () {
-    // fill item and category props with localized tokens
-    if (this.categories.length == 0) {
-      let temp = this.i18n.answer + " 1"
-      let tmpItem = {
-        label: temp,
-        category: -1
-      }
-      this.items.push(tmpItem)
-
-      for (let i = 1; i<3; i++) {
-        let tmp = this.i18n.cat + " " + i
-        this.categories.push(tmp)
-      }
-    }
-
+    this.fillFormSamples()
   },
   data () {
     return {
@@ -165,23 +159,98 @@ export default {
     }
   },
   computed: {
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 12, 2021
+     * 
+     */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }
   },
   methods: {
+    /**
+     * Function fillFormSamples: fill form with example names in locale
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 12, 2021
+     */
+    fillFormSamples() {
+      // fill item and category props with localized tokens
+      if (this.categories.length == 0) {
+        let temp = this.i18n.answer + " 1"
+        let tmpItem = {
+          label: temp,
+          category: -1
+        }
+        this.items.push(tmpItem)
+
+        for (let i = 1; i<3; i++) {
+          let tmp = this.i18n.cat + " " + i
+          this.categories.push(tmp)
+        }
+      }
+    },
+
+    /**
+     * Function _delItem: remove item at position idx
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param {*} idx index at which to remove
+     */
     _delItem(idx) {
       this.items.splice(idx, 1)
     },
+
+    /**
+     * Function _addItem: Add new item to items
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     */
     _addItem() {
       this.items.push({label: "", category: -1})
     },
+
+    /**
+     * Function _delCategory: delete category at position idx
+     * 
+     * Author: core
+     *
+     * Last Updated: unknown
+     * 
+     * @param {*} idx index at which to remove the category
+     */
     _delCategory(idx) {
       this.categories.splice(idx, 1)
     },
+    /**
+     * Function _addCategory: Add new category to categories
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     */
     _addCategory() {
       this.categories.push("")
     },
+    /**
+     * Function toggleTip: toggle tooltipOn boolean
+     * 
+     * Author: cmc
+     * 
+     * Last updated: unknown
+     */
     toggleTip() {
       this.tooltipOn = !this.tooltipOn
     }

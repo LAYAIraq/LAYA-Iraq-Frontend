@@ -1,3 +1,11 @@
+/**
+ * Filename: index.ts
+ * Use: expose all Plugins to $laya
+ * Creator: core
+ * Date: unknown
+ * Dependencies: none
+ */
+
 export { default as LayaScMc } from "./laya-la-scmc"
 //export { default as LayaQuizSort } from "./laya-la-sort"
 export { default as LayaQuizDragDrop } from "./laya-la-drag-drop"

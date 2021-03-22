@@ -1,3 +1,11 @@
+<!--
+Filename: imprint.vue 
+Use: display imprint
+Creator: core
+Date: unknown
+Dependencies: @/i18n/imprint
+-->
+
 <template>
   <div class="imprint-view">
 
@@ -57,7 +65,7 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/imprint";
+import * as i18n from '@/i18n/imprint'
 
 export default {
   name: 'imprint-view',
@@ -65,6 +73,15 @@ export default {
     window.scroll(0, 0)
   },
   computed: {
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 21, 2021
+     * 
+     */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }

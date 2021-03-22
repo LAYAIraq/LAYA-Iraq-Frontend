@@ -1,3 +1,11 @@
+/**
+ * Filename: laya.ts
+ * Use: make all content blocks available as global mixin
+ * Creator: core
+ * Date: unknown
+ * Dependencies: vue
+ */
+
 import _Vue from "vue";
 import { VueConstructor } from "vue";
 

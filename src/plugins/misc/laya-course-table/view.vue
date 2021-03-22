@@ -1,3 +1,11 @@
+<!--
+Filename: view.vue
+Use: Show Course Table
+Creator: core
+Date: unknown
+Dependencies: @/i18n/plugins/misc/laya-course-table
+-->
+
 <template>
   <div class="laya-course-table">
 
@@ -53,10 +61,10 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/plugins/misc/laya-course-table"
+import * as i18n from '@/i18n/plugins/misc/laya-course-table'
 
 export default {
-  name: "laya-course-table",
+  name: 'laya-course-table',
   data() {
     return {
       cats: {},
@@ -68,13 +76,29 @@ export default {
     filter: String,
   },
   computed: {
-    filtered: function() {
+
+    /**
+     * filtered: Filter Course list 
+     * 
+     * Author: Core
+     * 
+     * Last Updated: unknown
+     */
+    filtered() {
       if (!this.filter) return this.courses;
 
-      const filterByCourseName = new RegExp(this.filter, "i");
+      const filterByCourseName = new RegExp(this.filter, 'i')
       return this.courses.filter(course => filterByCourseName.test(course.name))
     },
-    categories: function() {
+
+    /**
+     * categories: Return a List of Categories
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    categories() {
 
       let cats = {}
       if (!this.filtered || this.filtered.length == 0)
@@ -88,18 +112,33 @@ export default {
       })
       return cats
     },
+    
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 20, 2021
+     * 
+     */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }
   },
   methods: {
-    collapse: function(category) {
-      this.collapsed[category] = !this.collapsed[category];
-    },
-  },
-  components: {
+
+    /**
+     * function collapse: supposedly collapse certain categories
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    collapse(category) {
+      this.collapsed[category] = !this.collapsed[category]
+    }
   }
-};
+}
 </script>
 
 <style scoped>

@@ -1,3 +1,10 @@
+/**
+ * Filename: index.js
+ * Use: wrap Localization for LayaLbDialog component
+ * Creator: cmc
+ * Date: August 16, 2020
+ */
+
 export { default as de } from './de.js'
 export { default as en } from './en.js'
 export { default as us } from './en.js'

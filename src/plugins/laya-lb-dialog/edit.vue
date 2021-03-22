@@ -1,3 +1,13 @@
+<!--
+Filename: edit.vue
+Use: Edit Dialog content block
+Creator: core
+Date: unknown
+Dependencies:
+  vuex,
+  @/i18n/plugins/laya-lb-dialog
+-->
+
 <template>
   <div class="laya-lb-dialog-edit">
      
@@ -77,43 +87,96 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/plugins/laya-lb-dialog"
-import { mapGetters } from "vuex"
+import * as i18n from '@/i18n/plugins/laya-lb-dialog'
+import { mapGetters } from 'vuex'
 
 export default {
-  name: "laya-lb-dialog-edit",
+  name: 'laya-lb-dialog-edit',
   created() {
-    let idx = this.$route.params.step -1 //comply with array indexing in store
-    //create deep copy of store object to manipulate in vue instance
-    let preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
-    this.bg = preData.bg
-    this.question = preData.question
-    this.answers = preData.answers
+    this.fetchData()
   },
   data() {
     return {
-      bg: "",
-      question: "",
+      bg: '',
+      question: '',
       answers: [],
       tooltipOn: false
     }
   },
   methods: {
+    /**
+     * Function _delItem: delete item at given index
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param {*} idx index of item
+     */
     _delItem(idx) {
       this.answers.splice(idx, 1)
     },
+
+    /**
+     * Function _addItem: add item
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     _addItem() {
-      this.answers.push("")
+      this.answers.push('')
     },
+
+    /**
+     * Function toggleTip: toggle tooltipOn boolean
+     * 
+     * Author: cmc
+     * 
+     * Last updated: unknown
+     */
     toggleTip() {
       this.tooltipOn = !this.tooltipOn
+    },
+
+    /**
+     * Function fetchData: Fetch data from vuex and make data property
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 19, 2021
+     */
+    fetchData() {
+      let idx = this.$route.params.step -1 //comply with array indexing in store
+      //create deep copy of store object to manipulate in vue instance
+      let preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+      this.bg = preData.bg
+      this.question = preData.question
+      this.answers = preData.answers
     }
   },
   computed: {
-    ...mapGetters(["hasContent"]),
+    ...mapGetters(['hasContent', 'profileLang']),
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 19, 2021
+     * 
+     */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     },
+
+    /**
+     * step: return the step of the content block
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: January 16, 2021
+     */
     step() {
       return this.$route.params.step
     }

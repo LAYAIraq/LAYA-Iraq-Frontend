@@ -1,4 +1,10 @@
-
+/**
+ * Filename: index.ts
+ * Use: expose views to module build
+ * Creator: core
+ * Date: unknown
+ * Dependencies: none
+ */
 export { default as root } from "./root.vue";
 export { default as register } from "./register.vue";
 export { default as login } from "./login.vue";

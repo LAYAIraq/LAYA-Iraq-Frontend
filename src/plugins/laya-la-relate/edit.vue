@@ -1,3 +1,13 @@
+<!--
+Filename: edit.vue
+Use: Edit a Relate content block
+Creator: core
+Date: unknown
+Dependencies: 
+  @/i18n/plugins/laya-la-feedback,
+  vuex
+-->
+
 <template>
   <div class="laya-la-relate-edit">
     <label><h4>{{ i18n.title }}</h4></label><i id ="questionmark" class="fas fa-question-circle" @click="toggleTip" 
@@ -141,29 +151,23 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
-import * as i18n from "@/i18n/plugins/laya-la-relate";
+import { mapGetters } from 'vuex'
+import * as i18n from '@/i18n/plugins/laya-la-relate'
 
 export default {
   name: 'laya-la-drag-drop-edit',
   created() {
-    let idx = this.$route.params.step - 1
-    const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
-    this.title = preData.title
-    this.task = preData.task
-    this.taskAudio = preData.taskAudio
-    this.pairs = preData.pairs
-    this.relations = preData.relations
+    this.fetchData()
   },
   data() {
     return {
-      title: "",
-      task: "",
-      taskAudio: "",
+      title: '',
+      task: '',
+      taskAudio: '',
       pairs: [
         {
-          img: "",
-          audio: "",
+          img: '',
+          audio: '',
           relation: -1
         }
       ],
@@ -172,26 +176,98 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["hasContent"]),
+    ...mapGetters(['hasContent', 'profileLang']),
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 19, 2021
+     * 
+     */
     i18n() {
-      return i18n[this.$store.state.profile.lang]
+      return i18n[this.profileLang]
     }
   },
   methods: {
+
+    /**
+     * Function _delItem: remove item at position idx
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param {*} idx index at which to remove
+     */
     _delPair(idx) {
       this.pairs.splice(idx, 1)
     },
+
+    /**
+     * Function _addPair: add an empty pair
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param {*} idx index at which to remove
+     */
     _addPair() {
-      this.pairs.push({img: "", audio: "", relation: -1})
+      this.pairs.push({img: '', audio: '', relation: -1})
     },
+
+    /**
+     * Function _delRelation: remove a relation 
+     * 
+     * Author: core
+     * 
+     * Last Updated: unkown
+     * 
+     * @param {*} idx index of relation to remove
+     */
     _delRelation(idx) {
       this.relations.splice(idx, 1)
     },
+
+    /**
+     * Function _addRelation: add an empty relation
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     _addRelation() {
-      this.relations.push("")
+      this.relations.push('')
     },
+
+    /**
+     * Function toggleTip: toggle tooltipOn boolean
+     * 
+     * Author: cmc
+     * 
+     * Last updated: unknown
+     */
     toggleTip() {
       this.tooltipOn = !this.tooltipOn
+    },
+
+    /**
+     * Function fetchData: fetch data from vuex and make data property
+     * 
+     * Author: cmc 
+     * 
+     * Last Updated: March 19, 2021
+     */
+    fetchData() {
+      let idx = this.$route.params.step - 1
+      const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+      this.title = preData.title
+      this.task = preData.task
+      this.taskAudio = preData.taskAudio
+      this.pairs = preData.pairs
+      this.relations = preData.relations
     }
   }
 }

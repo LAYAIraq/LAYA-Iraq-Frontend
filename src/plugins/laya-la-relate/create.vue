@@ -1,3 +1,11 @@
+<!--
+Filename: create.vue
+Use: Create a Relate content block
+Creator: core
+Date: unknown
+Dependencies: @/i18n/plugins/laya-la-relate
+-->
+
 <template>
   <div class="laya-la-relate-edit">
     <label><h4>{{ i18n.title }}</h4></label><i id ="questionmark" class="fas fa-question-circle" @click="toggleTip" 
@@ -141,27 +149,27 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/plugins/laya-la-relate";
+import * as i18n from '@/i18n/plugins/laya-la-relate'
 
 export default {
   name: 'laya-la-drag-drop-edit',
   created () {
     if (this.relations.length == 0) {
       for (let i=1; i<3 ;i++) {
-        let tmp = this.i18n.edit.solution + " " + i
+        let tmp = this.i18n.edit.solution + ' ' + i
         this.relations.push(tmp)
       }
     }
   },
   data () {
     return {
-      title: "",
-      task: "",
-      taskAudio: "",
+      title: '',
+      task: '',
+      taskAudio: '',
       pairs: [
         {
-          img: "",
-          audio: "",
+          img: '',
+          audio: '',
           relation: -1
         }
       ],
@@ -170,23 +178,77 @@ export default {
     }
   },
   computed: {
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 19, 2021
+     * 
+     */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }
   },
   methods: {
-    _delPair(idx) {
-      this.pairs.splice(idx, 1)
+    /**
+     * Function _delItem: remove item at position idx
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param {*} idx index at which to remove
+     */
+    _delItem(idx) {
+      this.items.splice(idx, 1)
     },
+    
+    /**
+     * Function _addPair: add an empty pair
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param {*} idx index at which to remove
+     */
     _addPair() {
-      this.pairs.push({img: "", audio: "", relation: -1})
+      this.pairs.push({img: '', audio: '', relation: -1})
     },
+
+    /**
+     * Function _delRelation: remove a relation 
+     * 
+     * Author: core
+     * 
+     * Last Updated: unkown
+     * 
+     * @param {*} idx index of relation to remove
+     */
     _delRelation(idx) {
       this.relations.splice(idx, 1)
     },
+
+    /**
+     * Function _addRelation: add an empty relation
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     _addRelation() {
-      this.relations.push("")
+      this.relations.push('')
     },
+
+    /**
+     * Function toggleTip: toggle tooltipOn boolean
+     * 
+     * Author: cmc
+     * 
+     * Last updated: unknown
+     */
     toggleTip() {
       this.tooltipOn = !this.tooltipOn
     }
