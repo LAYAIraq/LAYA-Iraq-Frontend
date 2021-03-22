@@ -1,3 +1,16 @@
+<!--
+Filename: course-detail.vue 
+Use: Show Course Content 
+Creator: core
+Date: unknown
+Dependencies: 
+  vuex,
+  @/i18n/course-detail,
+  @/misc/utils.js,
+  @/components/scroll-to-top.vue
+  @/views/course-edit.vue
+-->
+
 <template>
   <div v-if="!note.busy" class="course-detail-view">
 
@@ -46,25 +59,25 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex"
+import { mapState, mapGetters } from 'vuex'
 
-import {
-  BDropdown,
-  BDropdownItem,
-  BDropdownHeader,
-  BDropdownDivider,
-  BToast,
-  BModal
-} from "bootstrap-vue"
+// import {
+//   BDropdown,
+//   BDropdownItem,
+//   BDropdownHeader,
+//   BDropdownDivider,
+//   BToast,
+//   BModal
+// } from 'bootstrap-vue'
 
-import http from "axios";
-import * as i18n from "@/i18n/course-detail";
-import utils from "@/misc/utils.js";
-import lyScrollToTop from "@/components/scroll-to-top.vue"
-import courseEdit from "@/views/course-edit.vue"
+// import http from 'axios';
+import * as i18n from '@/i18n/course-detail';
+import utils from '@/misc/utils.js';
+import lyScrollToTop from '@/components/scroll-to-top.vue'
+import courseEdit from '@/views/course-edit.vue'
 
 export default {
-  name: "course-detail-view",
+  name: 'course-detail-view',
   props: {
     name: String,
     step: String
@@ -73,15 +86,15 @@ export default {
     return {
       course: {},
       enrollment: {},
-      rename: "",
-      copy: "",
+      rename: '',
+      copy: '',
       changetype: null,
       courseStats: {},
       helpfulkey: 0
     }
   },
   beforeRouteUpdate(to,from,next) {
-    document.getElementById("main-content-anchor").scrollIntoView()
+    document.getElementById('main-content-anchor').scrollIntoView()
     next()
   },
   created() {
@@ -93,10 +106,17 @@ export default {
     if(this.enrollment.length > 0) this.updateEnrollment()
   },
   computed: {
-    ...mapState(["auth", "note", "edit"]),
-    ...mapGetters(["isAuthor", "profileLang", "hasContent", "hasCourse"]),
+    ...mapState(['auth', 'note', 'edit']),
+    ...mapGetters(['isAuthor', 'profileLang', 'hasContent', 'hasCourse']),
 
-    /* returns empty function on every [] invocation */
+
+    /**
+     *  onFinishDummy: returns empty function on every [] invocation 
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * */
     onFinishDummy() {
       return new Proxy({}, {
         get(target, name) {
@@ -105,17 +125,47 @@ export default {
       })
     },
 
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 21, 2021
+     * 
+     */
     i18n () {
       return i18n[this.profileLang]
     },
 
+    /**
+     * userEnrolled: returns enrollment status
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: October 27, 2020
+     */
     userEnrolled() {
       return this.$store.state.edit.userEnrolled
     },
+
+    /**
+     * content: returns current content
+     * 
+     * Author: core
+     * 
+     * Last Updated: October 27, 2020
+     */
     content() {
       return this.hasContent[this.step-1]
     },
 
+    /**
+     * viewPermit: returns true if user is allowed to see selected course
+     * 
+     * Author: core
+     * 
+     * Last Updated: October 27, 2020
+     */
     viewPermit() {
       if( this.content ) {
         return (this.isAuthor || this.userEnrolled)? true : false;
@@ -132,37 +182,67 @@ export default {
   methods: {
     ...utils,
 
+    /**
+     * Function fetchCourse: get course from backend, set title
+     * 
+     * Author: core
+     * 
+     * Last Updated: October 27, 2020
+     */
     fetchCourse() {
       const ctx = this;
 
       window.scrollTo(0,0)
       document.title = `Laya - ${ctx.name}`
-      console.log("Fetching Course...")
-      let fc = ctx.$store.dispatch("fetchCourse", ctx.name)
+      console.log('Fetching Course...')
+      let fc = ctx.$store.dispatch('fetchCourse', ctx.name)
       fc.then( resp => { 
           console.log(resp)
         })
         .catch( err => {
-        ctx.$router.push("/courses")
+         ctx.$router.push('/courses')
       })
     },
 
+    /**
+     * Function fetchEnrollment: load enrollment status of user 
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: October 27, 2020
+     */
     fetchEnrollment() {
-      this.$store.dispatch("fetchEnrollment", this.hasCourse.createDate)
+      this.$store.dispatch('fetchEnrollment', this.hasCourse.createDate)
     },
 
+    /**
+     * Function updateEnrollment: update enrollment in store
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: October 27, 2020
+     */
     updateEnrollment() {
-      this.$store.dispatch("updateEnrollment")
+      this.$store.dispatch('updateEnrollment')
     },
 
-    nextStep(steps) { // string e.g. "1,2"
+    /**
+     * Function nextStep: map 'steps' string to components
+     * 
+     * Author: core
+     * 
+     * Last Updated: October 27, 2020
+     * 
+     * @param {string} steps next steps
+     */
+    nextStep(steps) { // string e.g. '1,2'
       if(!steps) return []
 
       const {name, $router} = this
-      return steps.split(",").map(step => {
+      return steps.split(',').map(step => {
         return () =>{
           if(this.enrollment.length >0) this.enrollment.progress = Number(step)
-          $router.push({name: "course-detail-view", params: {name, step}})
+          $router.push({name: 'course-detail-view', params: {name, step}})
         }
       })
     },

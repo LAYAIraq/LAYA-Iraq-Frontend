@@ -1,3 +1,10 @@
+/**
+ * Filename: index.js
+ * Use: wrap Localization for CourseEdit component
+ * Creator: cmc
+ * Date: Ocotber 27, 2020
+ */
+
 export { default as de } from './de.js'
 export { default as en } from './en.js'
 export { default as us } from './en.js'

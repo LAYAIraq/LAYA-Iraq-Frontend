@@ -1,3 +1,11 @@
+<!-- 
+Filename: simple-icon.vue
+Use: Shows a simple icon
+Author: core
+Date: unknown
+Dependencies: none
+-->
+
 <template>
   <span class="ly-simple-icon">
     <i class="lc fas fa-circle"></i>

@@ -1,3 +1,15 @@
+<!--
+Filename: profile.vue 
+Use: User Profile Settings, such as password and avatar
+Creator: core
+Date: unknown
+Dependencies: 
+  axios,
+  vuex,
+  @/i18n/profile,
+  @/backend-url.ts
+-->
+
 <template>
   <div>
     <div class="container-fluid">
@@ -28,12 +40,12 @@
     <div class="container">
       <div class="row">
         <form class="w-100" style="margin-top: 1rem">
-          <h1>{{ msg.title }}</h1>
+          <h1>{{ i18n.title }}</h1>
           <hr>
 
           <!-- Name -->
           <div class="form-group row">
-            <label for="username" class="col-sm-3 col-form-label">{{ msg.namePH }}</label>
+            <label for="username" class="col-sm-3 col-form-label">{{ i18n.namePH }}</label>
             <div class="col-sm-9">
               <input
                 id="username"
@@ -48,7 +60,7 @@
 
           <!-- Email -->
           <div class="form-group row">
-            <label for="email" class="col-sm-3 col-form-label">{{ msg.emailPH }}</label>
+            <label for="email" class="col-sm-3 col-form-label">{{ i18n.emailPH }}</label>
             <div class="col-sm-9">
               <input
                 id="email"
@@ -64,14 +76,14 @@
           <hr>
           <!-- Old Password -->
           <div class="form-group row">
-            <label for="oldPwd" class="col-sm-3 col-form-label">{{ msg.oldPwd }}</label>
+            <label for="oldPwd" class="col-sm-3 col-form-label">{{ i18n.oldPwd }}</label>
             <div class="col-sm-9">
               <input
                 id="oldPwd"
                 type="password"
                 class="form-control"
                 v-model="oldPwd"
-                :placeholder="msg.oldPwd"
+                :placeholder="i18n.oldPwd"
                 autocomplete="on"
               >
             </div>
@@ -79,14 +91,14 @@
 
           <!-- New Password -->
           <div class="form-group row">
-            <label for="newPwd" class="col-sm-3 col-form-label">{{ msg.newPwd }}</label>
+            <label for="newPwd" class="col-sm-3 col-form-label">{{ i18n.newPwd }}</label>
             <div class="col-sm-9">
               <input
                 id="newPwd"
                 type="password"
                 class="form-control"
                 v-model="newPwd"
-                :placeholder="msg.newPwd"
+                :placeholder="i18n.newPwd"
                 aria-describedby="pwdMsg"
               >
               <strong id="pwdMsg" class="form-text text-center">{{ pwdMsg }}</strong>
@@ -96,13 +108,13 @@
 
           <!-- Default Media Forms -->
           <div class="form-group row">
-            <label class="col-sm-3 col-form-label">{{ msg.defmedia.label }}</label>
+            <label class="col-sm-3 col-form-label">{{ i18n.defmedia.label }}</label>
             <div class="col-sm-9 d-inline-flex justify-content-between align-items-center">
               <!-- Text -->
               <div class="checkbox-inline">
                 <label>
                   <input type="checkbox" v-model="prefs.media.text">
-                  {{ msg.defmedia.text }}
+                  {{ i18n.defmedia.text }}
                 </label>
               </div>
 
@@ -110,7 +122,7 @@
               <div class="checkbox-inline">
                 <label>
                   <input type="checkbox" v-model="prefs.media.simple">
-                  {{ msg.defmedia.simple }}
+                  {{ i18n.defmedia.simple }}
                 </label>
               </div>
 
@@ -118,7 +130,7 @@
               <div class="checkbox-inline">
                 <label>
                   <input type="checkbox" v-model="prefs.media.video">
-                  {{ msg.defmedia.video }}
+                  {{ i18n.defmedia.video }}
                 </label>
               </div>
 
@@ -126,7 +138,7 @@
               <div class="checkbox-inline">
                 <label>
                   <input type="checkbox" v-model="prefs.media.audio">
-                  {{ msg.defmedia.audio }}
+                  {{ i18n.defmedia.audio }}
                 </label>
               </div>
             </div>
@@ -142,7 +154,7 @@
               style="border-width: 2px"
             >
               <i class="fas fa-check"></i>
-              {{ msg.submit }}
+              {{ i18n.submit }}
             </button>
           </div>
           <strong class="form-text text-center">{{ formMsg }}</strong>
@@ -153,61 +165,85 @@
 </template>
 
 <script>
-import http from "axios";
-import * as i18n from "@/i18n/profile";
-import api from "../backend-url.ts";
-import { mapState } from "vuex";
+import http from 'axios'
+import * as i18n from '@/i18n/profile'
+import api from '../backend-url.ts'
+import { mapState } from 'vuex'
 
 export default {
-  name: "profile-view",
+  name: 'profile-view',
   data() {
     return {
       avatar: null,
-      oldPwd: "",
-      newPwd: "",
-      pwdMsg: "",
-      formMsg: "",
+      oldPwd: '',
+      newPwd: '',
+      pwdMsg: '',
+      formMsg: '',
       busy: false,
 
       prefs: {}
-    };
+    }
   },
   computed: {
-    ...mapState(["profile"]),
+    ...mapState(['profile']),
 
-    msg: function() {
-      return i18n[this.profile.lang];
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 21, 2021
+     * 
+     */
+    i18n() {
+      return i18n[this.profile.lang]
     },
 
-    avatarURL: function() {
-      return `${api()}/storage/img/download/${this.avatar}`;
+    /**
+     * avatarURL: return URL of user avatar
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    avatarURL() {
+      return `${api()}/storage/img/download/${this.avatar}`
     }
   },
   created() {
-    this.avatar = this.profile.avatar;
-    this.prefs = { ...this.profile.prefs };
+    // make profile settings mutable 
+    this.avatar = this.profile.avatar
+    this.prefs = { ...this.profile.prefs }
   },
   methods: {
-    submit: function() {
-      this.busy = true;
-      const ctx = this;
-      ctx.formMsg = "";
+    
+    /**
+     * Function submit: get password change request and fire it
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    submit() {
+      this.busy = true
+      const ctx = this
+      ctx.formMsg = ''
 
-      const requests = [];
+      const requests = []
 
       /* change password request */
-      if (ctx.oldPwd !== "" && ctx.newPwd !== "") {
+      if (ctx.oldPwd !== '' && ctx.newPwd !== '') {
         requests.push(
           http
-            .post("accounts/change-password", {
+            .post('accounts/change-password', {
               oldPassword: ctx.oldPwd,
               newPassword: ctx.newPwd
             })
             .catch(err => {
-              console.error(err);
-              ctx.pwdMsg = ctx.msg.pwdFail;
+              console.error(err)
+              ctx.pwdMsg = ctx.i18n.pwdFail
             })
-        );
+        )
       }
 
       /* fire requests */
@@ -215,30 +251,39 @@ export default {
         .all(requests)
         .then(
           http.spread(() => {
-            ctx.formMsg = ctx.msg.submitOk;
+            ctx.formMsg = ctx.i18n.submitOk
           })
         )
         .catch(function(err) {
-          console.log(err);
-          // ctx.formMsg = ctx.msg.submitFail
+          console.log(err)
+          // ctx.formMsg = ctx.i18n.submitFail
         })
         .then(() => {
-          ctx.busy = false;
+          ctx.busy = false
           setTimeout(() => {
-            ctx.formMsg = "";
-          }, 2000);
-        });
+            ctx.formMsg = ''
+          }, 2000)
+        })
 
       /* update state */
-      ctx.$store.commit("setPrefs", ctx.prefs);
+      ctx.$store.commit('setPrefs', ctx.prefs)
     },
-    onProfileImg: function(img) {
-      if (!img) return;
+
+    /**
+     * Function onProfileImg: do nothing
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    onProfileImg(img) {
+      //FIXME is never called
+      if (!img) return
     }
   },
   components: {
   }
-};
+}
 </script>
 
 <style scoped>

@@ -1,3 +1,11 @@
+<!--
+Filename: privacy.vue 
+Use: Show privacy and legal notices
+Creator: core
+Date: unknown
+Dependencies: @/i18n/privacy
+-->
+
 <template>
   <div class="privacy-view">
 
@@ -170,13 +178,22 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/privacy";
+import * as i18n from '@/i18n/privacy'
 export default {
   name: 'privacy-view',
   mounted () {
     window.scroll(0, 0)
   },
   computed: {
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 21, 2021
+     * 
+     */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }

@@ -1,3 +1,11 @@
+<!--
+Filename: edit.vue
+Use: Edit VimeoPlyr content block
+Creator: core
+Date: unknown
+Dependencies: @/i18n/plugins/laya-lb-plyr-vimeo
+-->
+
 <template>
 
   <div class="laya-lb-plyr-vimeo-edit">
@@ -33,11 +41,10 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/plugins/laya-lb-plyr-vimeo"
-import { BJumbotron, BTooltip } from "bootstrap-vue"
+import * as i18n from '@/i18n/plugins/laya-lb-plyr-vimeo'
 
 export default {
-  name: "laya-lb-plyr-vimeo-edit",
+  name: 'laya-lb-plyr-vimeo-edit',
   data() {
     return {
       tooltipOn: false
@@ -50,11 +57,28 @@ export default {
     url: String
   },
   computed: {
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 19, 2021
+     * 
+     */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }
   },
   methods: {
+
+    /**
+     * Function toggleTip: toggle tooltipOn boolean
+     * 
+     * Author: cmc
+     * 
+     * Last updated: unknown
+     */
     toggleTip() {
       this.tooltipOn = !this.tooltipOn
     }

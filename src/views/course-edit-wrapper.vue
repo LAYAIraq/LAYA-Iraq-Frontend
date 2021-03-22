@@ -1,3 +1,13 @@
+<!--
+Filename: course-edit-wrapper.vue 
+Use: wrap components needed for course editing
+Creator: core
+Date: unknown
+Dependencies: 
+  vuex, 
+  @/i18n/course-wrapper
+-->
+
 <template>
   <div class="laya-la-lb-wrapper">
     <div class="container">
@@ -33,12 +43,12 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/course-wrapper"
-import { mapGetters, mapState } from "vuex"
+import * as i18n from '@/i18n/course-wrapper'
+import { mapGetters, mapState } from 'vuex'
 
 
 export default {
-  name: "course-edit-wrapper",
+  name: 'course-edit-wrapper',
   data() {
     return {
       preview: false,
@@ -49,21 +59,62 @@ export default {
     step: String,
   },
   computed: {
-    ...mapGetters(["hasContent"]),
-    ...mapState(["edit"]),
+    ...mapGetters(['hasContent', 'profileLang']),
+    ...mapState(['edit']),
+
+    /**
+     * cid: returns the type of content
+     * 
+     * Author: core
+     * 
+     * Last Updated: January 20, 2021
+     */
     cid() {
       return this.$route.params.type || this.hasContent[this.step-1].name //why not always use $route.params.type?
     },
+
+    /**
+     * comps: return create, edit, view components for given content type
+     * 
+     * Author: core
+     * 
+     * Last Updated: January 20, 2021
+     */
     comps() {
       const la = this.$laya.la[this.cid]
       return la ? la.components : this.$laya.lb[this.cid].components
     },
+
+    /**
+     * editContent: returns true if it's editing an existing content
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: January 20, 2021
+     */
     editContent() {
       return this.step <= this.hasContent.length
     },
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 21, 2021
+     * 
+     */
     i18n() {
-      return i18n[this.$store.state.profile.lang];
+      return i18n[this.profileLang];
     },
+
+    /**
+     * stepData: return input data for content
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: January 20, 2021
+     */
     stepData() {
       let input = {}
       const data = this.editContent? this.$refs.edit.$data: this.$refs.new.$data
@@ -80,6 +131,14 @@ export default {
       this.$router.back()
   },
   methods: {
+
+    /**
+     * Function save: write changes to content to store
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: January 20, 2021
+     */
     save() {
       let step = this.step -1 // to comply to array indexing in store
       const newInput = this.stepData
@@ -89,17 +148,19 @@ export default {
         input: newInput
       }
       
+      // choose way depending on new or existing content
       if(!this.editContent){
-        this.$store.commit("appendContent", updatedStep)
+        this.$store.commit('appendContent', updatedStep)
       }
       else{
-        this.$store.commit("updateStep", { step, updatedStep })
+        this.$store.commit('updateStep', { step, updatedStep })
       }
-      this.$emit("saved")
+      this.$emit('saved')
     }
   },
   beforeDestroy() {
-    this.$store.dispatch("storeCourse")
+    // persist changes in database
+    this.$store.dispatch('storeCourse')
   }
 }
 </script>
