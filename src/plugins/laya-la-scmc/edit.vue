@@ -1,3 +1,13 @@
+<!--
+Filename: edit.vue
+Use: Edit a Multiple Choice/Response content block
+Creator: core
+Date: unknown
+Dependencies:
+  vuex,
+  @/i18n/plugins/laya-la-scmc
+-->
+
 <template>
   <div class="laya-la-scms-edit ly-bg-author p-3">
 
@@ -124,16 +134,16 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
-import * as i18n from "@/i18n/plugins/laya-la-scmc"
+import { mapGetters } from 'vuex'
+import * as i18n from '@/i18n/plugins/laya-la-scmc'
 
 export default {
   name: 'laya-la-scmc-edit',
   data () {
     return {
-      title: "",
-      task: "",
-      taskAudio: "",
+      title: '',
+      task: '',
+      taskAudio: '',
       options: [],
       solutions: [],
       maxTries: 1,
@@ -142,31 +152,75 @@ export default {
     }
   },
   created () {
-    let idx = this.$route.params.step - 1
-    const preData = JSON.parse(JSON.stringify(this.content[idx].input))
-    this.multiple = preData.multiple
-    this.title = preData.title
-    this.task = preData.task
-    this.taskAudio = preData.taskAudio
-    this.options = preData.options
-    this.solutions = preData.solutions
-    this.maxTries = preData.maxTries
+    this.fetchData()
   },
   computed: {
-    ...mapGetters(["content"]),
+    ...mapGetters(['content', 'profileLang']),
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 19, 2021
+     * 
+     */
     i18n() {
-      return i18n[this.$store.state.profile.lang]
+      return i18n[this.profileLang]
     }
   },
   methods: {
+
+    /**
+     * Function _delItem(idx): Delete item at given index
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     _delItem(idx) {
       this.options.splice(idx, 1)
     },
+
+    /**
+     * Function _addItem: Add item to options
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     _addItem() {
-      this.options.push("");
+      this.options.push('');
     },
+
+    /**
+     * Function toggleTip: toggle tooltipOn boolean
+     * 
+     * Author: cmc
+     * 
+     * Last updated: unknown
+     */
     toggleTip() {
       this.tooltipOn = !this.tooltipOn
+    },
+
+    /**
+     * Function fetchData: fetch data from vuex and make data property
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 19, 2021
+     */
+    fetchData() {
+      let idx = this.$route.params.step - 1
+      const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+      this.multiple = preData.multiple
+      this.title = preData.title
+      this.task = preData.task
+      this.taskAudio = preData.taskAudio
+      this.options = preData.options
+      this.solutions = preData.solutions
+      this.maxTries = preData.maxTries
     }
   }
 }

@@ -1,3 +1,11 @@
+<!-- 
+Filename: create.vue
+Use: Create a Dialog content block
+Creator: core
+Date: unknown
+Dependencies: @/i18n/plugins/laya-lb-dialog
+-->
+
 <template>
   <div class="laya-lb-dialog-new">
      
@@ -77,33 +85,75 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/plugins/laya-lb-dialog"
+import * as i18n from '@/i18n/plugins/laya-lb-dialog'
 
 export default {
-  name: "laya-lb-dialog-new",
+  name: 'laya-lb-dialog-new',
   data() {
     return {
-      bg: "",
-      question: "",
+      bg: '',
+      question: '',
       answers: [],
       tooltipOn: false
     }
   },
   methods: {
+    /**
+     * Function _delItem: remove item at given index
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param {*} idx index of item
+     */
     _delItem(idx) {
       this.answers.splice(idx, 1)
     },
+
+    /**
+     * Function _addItem: Add item
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     _addItem() {
-      this.answers.push("")
+      this.answers.push('')
     },
+
+    /**
+     * Function toggleTip: toggle tooltipOn boolean
+     * 
+     * Author: cmc
+     * 
+     * Last updated: unknown
+     */
     toggleTip() {
       this.tooltipOn = !this.tooltipOn
     }
   },
   computed: {
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 19, 2021
+     * 
+     */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     },
+
+    /**
+     * step: return step of content block
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: January 16, 2021
+     */
     step() {
       return this.$route.params.step
     }

@@ -1,3 +1,14 @@
+<!--
+Filename: ly-course-list.vue
+Use: List all available courses, users can start or enroll
+Creator: core
+Date: unknown
+Dependencies: 
+  @/i18n/course-list,
+  axios,
+  vuex
+-->
+
 <template>
   <div class="laya-course-list">
 
@@ -51,12 +62,15 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/course-list"
-import http from "axios"
-import { mapState, mapGetters } from "vuex"
+import * as i18n from '@/i18n/course-list'
+import http from 'axios'
+import { 
+  mapState, 
+  mapGetters 
+} from 'vuex'
 
 export default {
-  name: "laya-course-list",
+  name: 'laya-course-list',
   data() {
     return {
       filteredList: [],
@@ -74,20 +88,44 @@ export default {
     // this.getSubs()
   },
   computed: {
-    ...mapGetters(["profileLang", "courseList"]),
-    ...mapState(["note", "auth"]),
+    ...mapGetters(['profileLang', 'courseList']),
+    ...mapState(['note', 'auth']),
 
+     /**
+     * filtered: filter course list depending on user input
+     * 
+     * Author: core
+     * 
+     * Last updated: March 24, 2021 
+     */
     filtered() {
       if (!this.filter) return this.courseList;
 
-      const filterByCourseName = new RegExp(this.filter, "i");
+      const filterByCourseName = new RegExp(this.filter, 'i');
       return this.filteredList.filter(course => filterByCourseName.test(course.name))
     },
+
+     /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: unknown
+     * 
+     */
     i18n() {
-      return i18n[this.profileLang];
+      return i18n[this.profileLang]
     }
   },
   methods: {
+
+    /**
+     * Function getSubs: get a list of all courses the user enrolled in
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: unkown
+     */
     getSubs() {
       let self = this
       let studentId = this.auth.userId
@@ -106,6 +144,18 @@ export default {
         })
       
     },
+
+    /**
+     * Function enrollmentNeeded: return true if course needs and enrollment, false if not
+     * 
+     * @param course the Course object for which it's checked
+     * 
+     * @returns true if course needs enrollment, false if not
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: unknown
+     */
     enrollmentNeeded(course) {
       if (course.needsEnrollment) {
         return this.enrolledIn.find(x => x == course.courseId)? false : true
@@ -114,6 +164,17 @@ export default {
         return false
       }
     },
+
+    /**
+     * Function subscribe: Lets user enroll in a course
+     * 
+     * @param course the course the user wants to enroll in
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 12, 2021
+     * 
+     */
     subscribe(course) {
       const self = this
       const newEnrollment = {
@@ -122,7 +183,7 @@ export default {
       }
 
       /* create enrollment */
-      http.patch("enrollments", {
+      http.patch('enrollments', {
         ...newEnrollment
       }).then(() => {
         
@@ -130,7 +191,10 @@ export default {
         console.log(err)
       })
 
-      self.getSubs()
+      self.$nextTick( () => {
+        self.getSubs()
+      })
+
     }
   }
 }

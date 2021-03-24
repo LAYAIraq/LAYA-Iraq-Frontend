@@ -1,10 +1,21 @@
+<!--
+Filename: view.vue
+Use: View Videos in AblePlayer
+Creator: core
+Date: unknown
+Dependencies:
+  ableplayer,
+  vuex,
+  @/i18n/plugins/misc/laya-ableplayer
+-->
+
 <template>
   <div class="ly-ableplayer">
 
     <video :id="playerId"
       preload="auto"
       data-debug
-      :data-lang="$store.state.profile.lang" data-force-lang>
+      :data-lang="profileLang" data-force-lang>
 
       <source type="video/mp4"
               :src="notEmpty(src)"
@@ -24,13 +35,13 @@
 </template>
 
 <script>
-import "ableplayer"
-import { mapGetters } from "vuex"
-import "ableplayer/build/ableplayer.min.css"
-import * as i18n from "@/i18n/plugins/misc/laya-ableplayer"
+import 'ableplayer'
+import { mapGetters } from 'vuex'
+import 'ableplayer/build/ableplayer.min.css' //neccessary, otherwise ableplayer is butchered
+import * as i18n from '@/i18n/plugins/misc/laya-ableplayer'
 
 export default {
-  name: "laya-ableplayer",
+  name: 'laya-ableplayer',
   data() {
     if (Object.entries(this.$attrs).length === 3)
       return {
@@ -38,18 +49,14 @@ export default {
         ableplayer: null
       }
     return {
-      src: "",
-      sign: "",
-      sub: "",
+      src: '',
+      sign: '',
+      sub: '',
       ableplayer: null
     }
   },
   created() {
-    let idx = this.$route.params.step - 1
-    const preData = JSON.parse(JSON.stringify(this.content[idx].input))
-    this.src = preData.src
-    this.sign = preData.sign
-    this.sub = preData.sub
+    this.fetchData()
   },
   mounted() {
     this.ableplayer = new window.AblePlayer(`#${this.playerId}`)
@@ -58,20 +65,59 @@ export default {
     onFinish: Array
   },
   computed: {
-    ...mapGetters(["content"]),
+    ...mapGetters(['content', 'profileLang']),
+
+    /**
+     * playerId: return an id for ableplayer html element
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     playerId() {
       return `laya-ableplayer-${Date.now()}`
     },
-    lang() {
-      return this.$store.state.profile.lang
-    },
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 19, 2021
+     * 
+     */
     i18n() {
-      return i18n[this.$store.state.profile.lang]
+      return i18n[this.profileLang]
     }
   },
   methods: {
+
+    /**
+     * Function notEmpty: returns the string if it's not empty, false otherwise
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param {string} str string to be checked
+     */
     notEmpty(str) {
       return (!!str && str.length > 0) ? str : false
+    },
+
+    /**
+     * Function fetchData: fetch data from vuex and make data property
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 19, 2021
+     */
+    fetchData() {
+      let idx = this.$route.params.step - 1
+      const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+      this.src = preData.src
+      this.sign = preData.sign
+      this.sub = preData.sub
     }
   },
 }

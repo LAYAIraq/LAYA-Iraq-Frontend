@@ -1,3 +1,11 @@
+<!--
+Filename: view.vue
+Use: view a Sort content block
+Creator: core
+Date: unknown
+Dependencies: @/i18n/plugins/laya-la-sort
+-->
+
 <template>
   <div class="laya-quiz-sort">
     <div class="container">
@@ -56,20 +64,12 @@
 </template>
 
 <script>
-import Vue from "vue";
-import * as i18n from "@/i18n/plugins/laya-la-sort";
+import * as i18n from '@/i18n/plugins/laya-la-sort';
 
-export default Vue.extend({
-  name: "laya-quiz-sort",
+export default {
+  name: 'laya-quiz-sort',
   created () {
-    const shuffle = function shuffle(arr) {
-      for (let i = arr.length-1; i>0; i--) {
-        const j = Math.floor(Math.random() * (i+1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
-    this.unsorted = shuffle([...this.sorted])
+    this.unsorted = this.shuffle([...this.sorted])
   },
   data () {
     return {
@@ -83,25 +83,79 @@ export default Vue.extend({
     sorted: Array,
   },
   computed: {
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 19, 2021
+     * 
+     */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }
   },
   methods: {
-    moveToSorted: function(i) {
+
+    /**
+     * Function moveToSorted: remove an item from unsorted and push to solutions
+     * 
+     * Author: core
+     * 
+     * Last Updated: March 19, 2021
+     * 
+     * @param {*} i index of item
+     */
+    moveToSorted(i) {
       this.solution.push(this.unsorted.splice(i,1)[0])
     },
-    moveToUnsorted: function(i) {
+
+    /**
+     * Function moveToUnsorted: remove an item from solution and push to unsorted
+     * 
+     * Author: core
+     * 
+     * Last Updated: March 19, 2021
+     * 
+     * @param {*} i index of item
+     */
+    moveToUnsorted(i) {
       this.unsorted.push(this.solution.splice(i,1)[0])
     },
-    check: function () {
+
+    /**
+     * Function check: check if the solution order is correct
+     * 
+     * Author: core
+     * 
+     * Last Updated: March 19, 2021
+     */
+    check() {
       for(let i=0; i<this.sorted.length; i++) {
         this.result[i] = (this.sorted[i].order === this.solution[i].order)
       }
       this.$forceUpdate()
+    },
+
+    /**
+     * Function shuffle: shuffle any array
+     * 
+     * Creator: core
+     * 
+     * Last Updated: March 21, 2021
+     * 
+     * @param {Array} arr array to be shuffled
+     */
+    shuffle(arr) {
+      for (let i = arr.length-1; i>0; i--) {
+        const j = Math.floor(Math.random() * (i+1))
+        [arr[i], arr[j]] = [arr[j], arr[i]]
+      }
+      return arr
     }
   }
-})
+}
 </script>
 
 <style scoped>

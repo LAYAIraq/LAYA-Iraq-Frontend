@@ -1,3 +1,11 @@
+<!--
+Filename: create.vue 
+Use: Create new Plyr content block
+Creator: cmc
+Date: January 17, 2021
+Dependencies: @/i18n/plugins/misc/laya-plyr
+-->
+
 <template>
 
   <div class="laya-plyr-create">
@@ -71,39 +79,75 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/plugins/misc/laya-plyr"
-import { BJumbotron, BTooltip } from "bootstrap-vue"
+import * as i18n from '@/i18n/plugins/misc/laya-plyr'
 
 export default {
-  name: "laya-plyr-new",
+  name: 'laya-plyr-new',
   data() {
     return {
-      src: "",
+      src: '',
       tooltipOn: false,
       youtube: false
     }
   },
-  mounted() {
-    if(this.$attrs.src) this.src = this.$attrs.src
-    this.youtube = ( this.correctURL && this.src.includes("youtube"))
-  },
   computed: {
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 20, 2021
+     * 
+     */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     },
+
+    /**
+     * urlMsg: return warning if URL is not supported
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: January 17, 2021
+     */
     urlMsg () {
-      return this.correctURL? "" : this.i18n.wrongURL
+      return this.correctURL? '' : this.i18n.wrongURL
     },
+
+    /**
+     * correctURL: checks if video is on yt or vimeo
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: January 17, 2021
+     */
     correctURL() {
-      return (this.src.includes("youtube") || this.src.includes("vimeo") )
+      return (this.src.includes('youtube') || this.src.includes('vimeo') )
     }
   },
   methods: {
+
+    /**
+     * Function toggleTip: toggle tooltipOn boolean
+     * 
+     * Author: cmc
+     * 
+     * Last updated: unknown
+     */
     toggleTip() {
       this.tooltipOn = !this.tooltipOn
     },
+
+    /**
+     * function checkURL: check if video is from youtube or vimeo
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: January 17, 2021
+     */
     checkURL() {
-      if (this.correctURL && this.src.includes("youtube")) this.youtube = true
+      if (this.correctURL && this.src.includes('youtube')) this.youtube = true
       else this.youtube = false
     }
   },

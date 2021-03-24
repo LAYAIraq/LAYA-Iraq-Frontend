@@ -1,3 +1,11 @@
+<!--
+Filename: view.vue
+Use: View Dialog content block
+Author: core
+Date: unknown
+Dependencies: vuex
+-->
+
 <template>
   <div class="laya-dialog">
     <img v-if="bg" class="bg" :src="bg" alt="">
@@ -20,17 +28,17 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex"
+import { mapGetters } from 'vuex'
 export default {
-  name: "laya-dialog",
+  name: 'laya-dialog',
   data() {
-    if (Object.entries(this.$attrs).length === 3) { // for "preview" feature
+    if (Object.entries(this.$attrs).length === 3) { // for 'preview' feature
       return {...this.$attrs}
     }
     return {
-      question: "",
+      question: '',
       answers: [],
-      bg: ""
+      bg: ''
     }
   },
   beforeMount() {
@@ -41,7 +49,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["content"]),
+    ...mapGetters(['content']),
+
+    /**
+     * idx: Return index of content block in course array
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: January 16, 2021
+     */
     idx() {
       //comply with array indexing in store
       return this.$route.params.step -1 
@@ -51,6 +67,14 @@ export default {
     onFinish: Array
   },
   methods: {
+
+    /**
+     * Function refreshData: make vuex store data mutable
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: January 16, 2021
+     */
     refreshData() {
       // dereference store data
       let preData = JSON.parse(JSON.stringify(this.content[this.idx].input))

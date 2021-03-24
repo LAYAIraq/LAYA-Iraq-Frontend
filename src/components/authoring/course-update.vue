@@ -1,3 +1,14 @@
+<!-- 
+Filename: course-update.vue
+Use: This file implements the form to add a new course
+Creator: core
+Date: unknown
+Dependencies: 
+  axios, 
+  vuex, 
+  @/i18n/course-update
+-->
+
 <template>
   <div class="laya-course-new-view">
     <h3> {{ i18n.createCourse }}</h3>
@@ -61,34 +72,57 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
-import http from "axios";
-import * as i18n from "@/i18n/course-update";
-import { v4 as uuidv4 } from "uuid";
+import { mapState, mapGetters } from 'vuex'
+import http from 'axios'
+import * as i18n from '@/i18n/course-update'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   data() {
     return {
-      msg: "",
+      msg: '',
       newCourse: {
-        name: "",
-        category: ""
+        name: '',
+        category: ''
       },
       duplicateNameCategory: false
     }
   },
   computed: {
-    ...mapState(["note", "auth"]),
-    ...mapGetters(["courseList"]),
+    ...mapState(['note', 'auth']),
+    ...mapGetters(['courseList', 'profileLang']),
 
+    /**
+     * formValid: to test if both name and category are set
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     formValid() {
       return !!this.newCourse.name && !!this.newCourse.category
     },
 
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 12, 2021
+     * 
+     */
+
     i18n () {
-      return i18n[this.$store.state.profile.lang];
+      return i18n[this.profileLang];
     },
 
+    /**
+     * needsEnrollment: Check if new course will need an enrollment
+     * 
+     * Author: cmc
+     * 
+     * Last updated: unknown
+     */
     needsEnrollment() {
       return this.$refs.enrollmentRequired.checked
     }
@@ -97,7 +131,13 @@ export default {
   methods: {
 
 
-    //check for duplicate keys before storing the course
+    /**
+     * Function duplicateCheck: check for duplicate keys before storing the course
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 24, 2021
+     */
     duplicateCheck() {
       for(let entry of this.courseList) {
         if (this.newCourse.name == entry.name) {
@@ -108,6 +148,14 @@ export default {
       this.storeNewCourse()
     },
     
+    /**
+     * Function storeNewCourse: check for duplicate name, persist new database entry, 
+     *  create a new storage
+     * 
+     * Author: cmc
+     * 
+     * last updated: March 24, 2021
+     *  */    
     storeNewCourse() {
       
       const self = this
@@ -118,13 +166,13 @@ export default {
       console.log(`New Id: ${newId}`)
 
       /* create storage */
-      http.post("storage", {
+      http.post('storage', {
         name: newId,
       }).then(() => console.log(`New Storage: ${newId}`))
         .catch((err) => console.error(err));
 
       /* create course */
-      http.post("courses", {
+      http.post('courses', {
         ...newCourse,
         authorId: auth.userId,
         storageId: newId,
@@ -141,7 +189,7 @@ export default {
                     courseId: resp.data.courseId,
                     studentId: self.auth.userId
                   }
-                  http.patch("enrollments", {
+                  http.patch('enrollments', {
                     ...newEnrollment
                   }).catch((err) => {console.log(err)})
                 })
