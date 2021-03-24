@@ -416,23 +416,29 @@ export default {
     /**
      * Function updateRenamedCourse: rename old course
      * 
-     * Author: core
+     * Author: cmc
      * 
-     * Last Updated: unknown
+     * Last Updated: March 24, 2021
      * 
      * @param param0 state variables
-     * @param oldId id of course to update
+     * @returns Promise to update renamed course
      */
-    updateRenamedCourse( { commit, state, rootState}, oldId: String ) {   
+    updateRenamedCourse({ commit, state, rootState}) {   
 
-      //TODO: does it update enrollment?
-      http.patch(`courses/${oldId}`, state.course)
-        .then( () => {
-          console.log('Updated Course name!')
-        })
-        .catch( (err) => {
-          console.error(err)
-        })
+      const newName = {
+        lastChanged: Date.now(),
+        name: state.course.name
+      }
+
+      return new Promise( (resolve, reject) => {
+        http.patch(`courses/${state.course.courseId}`, newName)
+          .then( () => {
+            resolve('Updated Course name!')
+          })
+          .catch( (err) => {
+            reject(err)
+          })
+      }) 
     }      
   }
 }

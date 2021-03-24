@@ -168,7 +168,7 @@ export default {
     fetchData() {
       let idx = this.$route.params.step -1 //comply with array indexing in store
       //create deep copy of store object to manipulate in vue instance
-      let preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+      let preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.src = preData.src
       this.youtube = preData.youtube
     }

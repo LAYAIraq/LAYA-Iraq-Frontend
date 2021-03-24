@@ -59,7 +59,7 @@ export default {
      * Last Updated: October 27, 2020
      */
     courseNavIncomplete() {
-      return this.hasContent.reduce((all, c) => (!c.nextStep || all), false)
+      return this.content.reduce((all, c) => (!c.nextStep || all), false)
     }
   }
 }

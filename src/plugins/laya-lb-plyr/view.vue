@@ -116,7 +116,7 @@ export default {
      */
     fetchData() {
       let idx = this.$route.params.step - 1 
-      const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.src = preData.src
     },
 

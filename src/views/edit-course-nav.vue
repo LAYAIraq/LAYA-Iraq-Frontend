@@ -171,7 +171,7 @@ export default {
      * Last Updated: January 20, 2021
      */
     formInvalid() {
-      return this.content.reduce((res, val) => !val.nextStep || res, false)
+      return this.courseContent.reduce((res, val) => !val.nextStep || res, false)
     },
 
     /**

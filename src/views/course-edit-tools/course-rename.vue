@@ -65,8 +65,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['profileLang']),
-    ...mapState(['edit']),
+    ...mapGetters(['course', 'profileLang']),
 
     /**
      * i18n: Load translation files depending on user langugage
@@ -115,17 +114,25 @@ export default {
      * 
      * Author: cmc
      * 
-     * Last Updated: October 27, 2020
+     * Last Updated: March 24, 2021
      */
     renameCourse() {
       if(!this.rename) return
       let newName = this.rename
       let step = this.$route.params.step
-      this.oldName = this.edit.course.name
       this.$store.commit('renameCourse', newName)
-      this.$store.dispatch('updateRenamedCourse', this.oldName)
-      this.$router.replace(`/courses/${newName}/${step}`)
-      this.$emit('renamed')
+      let renamed = this.$store.dispatch('updateRenamedCourse')
+      
+      renamed.then( () => {
+        this.$router.replace(`/courses/${newName}/${step}`)
+        console.log('Renaming successful!')
+        this.$emit('renamed')
+      })
+      .catch(err => {
+        console.err(err)
+        console.log('Renaming failed!')
+      })
+    
     }
   }
 }
