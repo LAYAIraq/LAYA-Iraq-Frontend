@@ -1,3 +1,11 @@
+/**
+ * Filename: index.ts
+ * Use: expose Plyr to $laya
+ * Creator: core
+ * Date: unknown
+ * Dependencies: vue
+ */
+
 import _Vue from 'vue'
 
 import _create from './create.vue'

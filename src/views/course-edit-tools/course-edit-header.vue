@@ -46,7 +46,7 @@ Dependencies:
 
             </b-dropdown>
           </span>
-
+      </div>
     </div>
 
   </div>
