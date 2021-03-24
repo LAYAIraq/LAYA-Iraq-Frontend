@@ -1,3 +1,17 @@
+<!--
+Filename: courses.vue 
+Use: Wrap course list and adding courses
+Creator: core
+Date: unknown
+Dependencies:
+  axios,
+  vuex,
+  @/components/authoring/course-update,
+  @/components/ly-course-list,
+  @/i18n/courses,
+  @/misc/utils.js
+-->
+
 <template>
   <div class="courses-view">
     <div class="container">
@@ -63,40 +77,72 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex"
+import { mapState, mapGetters } from 'vuex'
+import http from 'axios'
 
-import lyCourseEdit from "@/components/authoring/course-update"
-import lyCourseList from "@/components/ly-course-list"
+import lyCourseEdit from '@/components/authoring/course-update'
+import lyCourseList from '@/components/ly-course-list'
 
-import http from "axios";
-import * as i18n from "@/i18n/courses";
-import utils from "../misc/utils.js";
+import * as i18n from '@/i18n/courses'
+import utils from '../misc/utils.js'
 
 export default {
-  name: "courses-view",
+  name: 'courses-view',
   mounted() {
-    document.querySelector("#search-bar").focus();
-    this.fetchCourses();
+    document.querySelector('#search-bar').focus()
+    this.fetchCourses()
   },
   data() {
     return {
-      search: "",
-    };
+      courses: [],
+      search: '',
+    }
   },
   computed: {
-    ...mapState(["note", "auth"]),
-    ...mapGetters(["isAuthor", "courseList"]),
+    ...mapState(['note', 'auth']),
+    ...mapGetters(['courseList', 'isAuthor', 'profileLang']),
 
-    i18n: function() {
-      return i18n[this.$store.state.profile.lang];
-    },
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 21, 2021
+     * 
+     */
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
+    }
   },
   methods: {
     ...utils,
 
+    /**
+     * Function fetchCourses: fetch all courses from database
+     * 
+     * Author: core
+     * 
+     * Last Updated: January 20, 2021
+     */
     fetchCourses() {
       this.$store.dispatch('fetchCourseList')
-    }
+    },
+
+    /**
+     * Function delCourse: remove course
+     * 
+     * Author: core
+     * 
+     * Last Updated: January 20, 2021
+     * 
+     * @param {string} name name of course to delete
+     */
+    delCourse(name) { //FIXME never called
+      const { fetchCourses } = this
+      http.delete(`courses/${name}`)
+        .catch(err => console.error(err))
+        .then(fetchCourses)
+    },
 
   },
   components: {

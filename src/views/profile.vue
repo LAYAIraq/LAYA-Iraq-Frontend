@@ -1,3 +1,17 @@
+<!--
+Filename: profile.vue 
+Use: User Profile Settings, such as password and avatar
+Creator: core
+Date: unknown
+Dependencies: 
+  axios,
+  vuex,
+  vue-password-strength-meter,
+  @/i18n/profile,
+  @/backend-url.ts,
+  @/plugins/misc/laya-upload-avatar/avatar.vue
+-->
+
 <template>
   <div>
     <div class="container-fluid">
@@ -205,76 +219,117 @@
 </template>
 
 <script>
-import http from "axios";
-import * as i18n from "@/i18n/profile";
-import api from "../backend-url.ts";
-import Password from "vue-password-strength-meter"
-import { mapState } from "vuex";
-import LayaUploadAvatar from "@/plugins/misc/laya-upload-avatar/avatar.vue"
+import http from 'axios'
+import * as i18n from '@/i18n/profile'
+import api from '../backend-url.ts'
+import Password from 'vue-password-strength-meter'
+import { mapState } from 'vuex'
+import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
 
 export default {
-  name: "profile-view",
+  name: 'profile-view',
   data() {
     return {
       avatar: null,
-      oldPwd: "",
-      newPwd: "",
-      repeatPwd: "",
-      pwdMsg: "",
-      formMsg: "",
+      oldPwd: '',
+      newPwd: '',
+      repeatPwd: '',
+      pwdMsg: '',
+      formMsg: '',
       busy: false,
-
       prefs: {}
-    };
+    }
   },
   computed: {
-    ...mapState(["profile"]),
+    ...mapState(['profile']),
 
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 21, 2021
+     * 
+     */
     i18n() {
-      return i18n[this.profile.lang];
+      return i18n[this.profile.lang]
     },
 
+    /**
+     * avatarURL: return URL of user avatar
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     avatarURL() {
       return (!this.avatar || this.avatar === '') ?
         null : `${api}/storage/img/download/${this.avatar}`
     },
 
+    /**
+     * passwordsDiffer: returns true if passwords differ
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 24, 2021
+     */
     passwordsDiffer() {
       return this.newPwd !== this.repeatPwd
     },
+
+    /**
+     * pwdDiffMsg: returns a message if passwords differ
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 24, 2021
+     */
     pwdDiffMsg() {
-      return this.passwordsDiffer? this.i18n.pwdDiffer : ""
+      return this.passwordsDiffer? this.i18n.pwdDiffer : ''
     }
   },
-  created() {
-    const preData = JSON.parse(JSON.stringify(this.profile))
-    this.prefs = {...preData.prefs}
-    this.avatar = preData.avatar
-  },
   beforeDestroy() {
-    this.$store.dispatch("saveProfile", {...this.avatar, ...this.prefs})
+    //save changes in profile
+    this.$store.dispatch('saveProfile', {
+      ...this.avatar, 
+      ...this.prefs
+    })
+  },
+  created() {
+    // make profile settings mutable 
+    this.avatar = this.profile.avatar
+    this.prefs = { ...this.profile.prefs }
   },
   methods: {
+    
+    /**
+     * Function submit: get password change request and fire it
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     submit() {
-      this.busy = true;
-      const ctx = this;
-      ctx.formMsg = "";
+      this.busy = true
+      const ctx = this
+      ctx.formMsg = ''
 
-      const requests = [];
+      const requests = []
 
       /* change password request */
-      if (ctx.oldPwd !== "" && ctx.newPwd !== "") {
+      if (ctx.oldPwd !== '' && ctx.newPwd !== '') {
         requests.push(
           http
-            .post("accounts/change-password", {
+            .post('accounts/change-password', {
               oldPassword: ctx.oldPwd,
               newPassword: ctx.newPwd
             })
             .catch(err => {
-              console.error(err);
-              ctx.pwdMsg = ctx.i18n.pwdFail;
+              console.error(err)
+              ctx.pwdMsg = ctx.i18n.pwdFail
             })
-        );
+        )
       }
       console.log(requests)
       /* fire requests */
@@ -282,34 +337,33 @@ export default {
         .all(requests)
         .then(
           http.spread(() => {
-            ctx.formMsg = ctx.i18n.submitOk;
+            ctx.formMsg = ctx.i18n.submitOk
           })
         )
         .catch(function(err) {
-          console.log(err);
-          ctx.$bvToast.show("submit-failed")
+          console.log(err)
+          ctx.$bvToast.show('submit-failed')
         })
         .then(() => {
-          ctx.busy = false;
+          ctx.busy = false
           setTimeout(() => {
-            ctx.formMsg = "";
-          }, 2000);
+            ctx.formMsg = ''
+          }, 2000)
           ctx.$forceUpdate
-          ctx.$bvToast.show("submit-ok")
-        });
+          ctx.$bvToast.show('submit-ok')
+        })
 
       /* update state */
-      ctx.$store.commit("setPrefs", ctx.prefs);
+      ctx.$store.commit('setPrefs', ctx.prefs)
     },
-    onProfileImg(img) {
-      if (!img) return;
-    }
+
+   
   },
   components: {
     Password,
     // LayaUploadAvatar
   }
-};
+}
 </script>
 
 <style scoped>

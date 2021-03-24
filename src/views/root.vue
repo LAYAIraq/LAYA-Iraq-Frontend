@@ -1,3 +1,11 @@
+<!--
+Filename: root.vue 
+Use: Show Landing Page
+Creator: core
+Date: unknown
+Dependencies: @/i18n/root
+-->
+
 <template>
   <div class="root-view">
 
@@ -24,16 +32,20 @@ import * as i18n from '@/i18n/root'
 
 export default {
   name: 'root-view',
-  data () {
-    return {
-    }
-  },
+
   computed: {
-    i18n () {
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 21, 2021
+     * 
+     */
+    i18n() {
       return i18n[this.$store.state.profile.lang]
     }
-  },
-  components: {
   }
 }
 </script>

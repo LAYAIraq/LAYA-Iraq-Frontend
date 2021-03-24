@@ -1,3 +1,14 @@
+<!--
+Filename edit-course-nav.vue 
+Use: Edit paths through a course
+Creator: core
+Date: unknown
+Dependencies: 
+  vis-network,
+  vuex,
+  @/i18n/course-nav-edit
+-->
+
 <template>
   <div class="edit-course-nav-view">
 
@@ -125,12 +136,12 @@
 </template>
 
 <script>
-import vis from "vis-network"
-import { mapGetters } from "vuex"
-import * as i18n from "@/i18n/course-nav-edit"
+import vis from 'vis-network'
+import { mapGetters } from 'vuex'
+import * as i18n from '@/i18n/course-nav-edit'
 
 export default {
-  name: "edit-course-nav-view",
+  name: 'edit-course-nav-view',
   created() {
     //create deep copy of store object to manipulate in vue instance
     let preData = JSON.parse(JSON.stringify(this.content))
@@ -150,32 +161,81 @@ export default {
     onnavupdate: Function
   },
   computed: {
-    ...mapGetters(["content"]),
+    ...mapGetters(['content', 'profileLang']),
+
+    /**
+     * formInvalid: checks if all contents have nextStep set
+     * 
+     * Author: core
+     * 
+     * Last Updated: January 20, 2021
+     */
     formInvalid() {
-      return this.courseContent.reduce((res, val) => !val.nextStep || res, false)
+      return this.content.reduce((res, val) => !val.nextStep || res, false)
     },
+
+    /**
+     * navGraphId: returns 'nav-graph' as identifier for html element
+     */
     navGraphId() {
-      return "nav-graph"
+      return 'nav-graph'
     },
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 21, 2021
+     * 
+     */
     i18n() {
-      return i18n[this.$store.state.profile.lang]
+      return i18n[this.profileLang]
     }
   },
   methods: {
 
+    /**
+     * Function swapUp: swap element with the one above
+     * 
+     * Author: core
+     * 
+     * Last Updated: January 20, 2021
+     * 
+     * @param {number} i index of element to swap up
+     */
     swapUp(i) {
       [this.courseContent[i-1], this.courseContent[i]] =
         [this.courseContent[i], this.courseContent[i-1]]
       this.$forceUpdate()
     },
 
+    /**
+     * Function swapDown: swap element with the one below
+     * 
+     * Author: core
+     * 
+     * Last Updated: January 20, 2021
+     * 
+     * @param {number} i index of element to swap down
+     */
     swapDown(i) {
       [this.courseContent[i], this.courseContent[i+1]] =
         [this.courseContent[i+1], this.courseContent[i]]
       this.$forceUpdate()
     },
 
-    typeName(compName) {   
+    /**
+     * Function typeName: returns name of content block in locale,
+     *  de if locale not available
+     * 
+     * Author: core
+     * 
+     * Last Updated: January 20, 2021
+     * 
+     * @param {string} compName name of content block
+     */
+    typeName(compName) {
       let lang = this.$store.state.profile.lang
       let comps = {...this.$laya.la, ...this.$laya.lb}
       if (comps[compName].i18n.hasOwnProperty(lang)) {
@@ -187,6 +247,13 @@ export default {
       }
     },
 
+    /**
+     * Function renderNavGraph: render graph for course path
+     * 
+     * Author: core
+     * 
+     * Last Updated: January 20, 2021
+     */
     renderNavGraph() {
       const self = this
 
@@ -198,7 +265,7 @@ export default {
       for(let i=0; i<self.courseContent.length; ++i) {
         let c = self.courseContent[i]
         if(!c.nextStep) continue
-        let steps = c.nextStep.split(",").map(s => parseInt(s))
+        let steps = c.nextStep.split(',').map(s => parseInt(s))
         for(let s=0; s<steps.length; ++s) {
           _edges.push({from: i+1, to: steps[s]})
         }
@@ -209,10 +276,10 @@ export default {
         edges: new vis.DataSet(_edges)
       }, {
         edges: {
-          arrows: "to"
+          arrows: 'to'
         },
         nodes: {
-          shape: "box"
+          shape: 'box'
         },
         physics: {
           enabled: true,
@@ -224,12 +291,12 @@ export default {
         interaction: {
           dragNodes: false,
           selectable: false,
-        }
+        },
         /*
         layout: {
           hierarchical: {
             enabled: true,
-            direction: "LR"
+            direction: 'LR'
           }
         }
         */
@@ -237,10 +304,17 @@ export default {
       graph.selectNodes([1])
     },
 
+    /**
+     * Function save: save changes in store and db
+     * 
+     * Author: core
+     * 
+     * Last Updated: January 20, 2021
+     */
     save() {
-      this.$store.commit("updateCourseNav", this.courseContent)
-      this.$store.dispatch("storeCourse")
-      this.$emit("saved")
+      this.$store.commit('updateCourseNav', this.courseContent)
+      this.$store.dispatch('storeCourse')
+      this.$emit('saved')
     }
   }
 }

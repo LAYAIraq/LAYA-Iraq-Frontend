@@ -1,3 +1,11 @@
+/**
+ * FIlename: langs.js
+ * Use: Give language icons
+ * Author: core
+ * Date: unknown
+ * Dependencies: none
+ */
+
 import de from "language-icons/icons/de.svg"
 import en from "language-icons/icons/en.svg"
 import ar from "language-icons/icons/ar.svg"

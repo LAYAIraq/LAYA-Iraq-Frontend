@@ -1,3 +1,16 @@
+<!--
+Filename: header.vue
+Use: shows the navbar
+Creator: core
+Date: unknown
+Dependencies: 
+  vuex, 
+  axios, 
+  @/i18n/header, 
+  @/components/scroll-to-top.vue, 
+  @/misc/icons.js
+-->
+
 <template>
   
   <div id="ly-header">
@@ -35,7 +48,7 @@
           <b-nav-item-dropdown right>
 
             <template v-slot:button-content>
-              <img :src="icons[profile.lang]" class="lang-icon">
+              <img :src="icons[profileLang]" class="lang-icon">
             </template>
 
             <b-dropdown-item-btn v-for="(svg, lang) in icons"
@@ -55,53 +68,104 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { 
+  mapGetters,
+  mapState 
+} from 'vuex'
 
 import http from 'axios'
-import {icons} from '@/misc/langs.js'
+import { icons } from '@/misc/langs.js'
 import * as i18n from '@/i18n/header'
-import lyScrollToTop from "@/components/scroll-to-top.vue"
+import lyScrollToTop from '@/components/scroll-to-top.vue'
 
 export default {
   name: 'ly-header',
   data () {
     return {
-      icons
+      icons,
+      isCourse: Boolean
     }
   },
   watch: {
     '$route': 'checkCourse'
   },
   computed: {
-    ...mapState(['profile', 'auth', 'note']),
+    ...mapState(['auth']),
+    ...mapGetters(['profileLang']),
+    
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 12, 2021
+     * 
+     */
     i18n () {
-      return i18n[this.$store.state.profile.lang]
+      return i18n[this.profileLang]
     }
   },
   mounted () {
-    document.title = "Laya"
+    document.title = 'Laya'
     this.checkCourse()
     this.$forceUpdate()
-    let store = this.$store
-    /*
-     * get browser locale */
-    http.get('lang')
-      .then(({data}) => {
-        var lang = data.substring(0, data.indexOf('-'))
-        store.commit('setLang', lang)
-      })
-      .catch(() => {
-        store.commit('setLang', 'de')
-      })
+    this.getLocale()
   },
   methods: {
-    toggleMedia (type) {
+    /**
+     * Function getLocale: Get Browser locale for localization
+     * 
+     * Author: core
+     * 
+     * Last Updated: March 12, 2021
+     */
+    getLocale() {
+      let store = this.$store
+      /*
+      * get browser locale */
+      http.get('lang')
+        .then(({data}) => {
+          let lang = data.substring(0, data.indexOf('-'))
+          store.commit('setLang', lang)
+        })
+        .catch(() => {
+          store.commit('setLang', 'de')
+        })
+    },
+
+    /**
+     * Function toggleMedia (deprecated): toggle media preferences for user
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     *
+     */
+    toggleMedia(type) {
       this.$store.commit('toggleMedia', type)
     },
+
+    /**
+     * Function checkCourse: check if the route exists
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     checkCourse () {
       this.isCourse = /courses[/]./.test(location.hash)
       this.$forceUpdate()
     },
+
+     /**
+     * Function setLang: set a new User Language
+     * 
+     * @param newLang the new language (String)
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: unknown
+     */
     setLang (newlang) {
       this.$store.commit('setLang', newlang)
       this.$nextTick(() => {
@@ -110,11 +174,19 @@ export default {
             lang: this.$store.state.profile.lang,
             uid: this.$store.state.auth.userId
           }
-          this.$store.dispatch("setUserLang", data)
+          this.$store.dispatch('setUserLang', data)
         }
       })
     },
-    logout () {
+
+    /**
+     * Function logout: Remove local storage, redirect to login page
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    logout() {
       this.$ls.remove('auth')
       this.$store.commit('logout')
       this.$router.push('/login')

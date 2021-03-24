@@ -1,3 +1,11 @@
+<!-- 
+Filename: create.vue
+Use: Create a new Ableplayer content block
+Creator: cmc
+Date: January 19, 2021
+Dependencies: @/i18n/plugins/misc/laya-ableplayer
+-->
+
 <template>
   <div class="laya-ableplayer-edit">
 
@@ -45,19 +53,28 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/plugins/misc/laya-ableplayer"
+import * as i18n from '@/i18n/plugins/misc/laya-ableplayer'
 
 export default {
-  name: "laya-ableplayer-create",
+  name: 'laya-ableplayer-create',
   data() {
     return {
-      src: "",
-      sign: "",
-      sub: "",
+      src: '',
+      sign: '',
+      sub: '',
       tooltipOn: false
     }
   },
   computed: {
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 19, 2021
+     * 
+     */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }

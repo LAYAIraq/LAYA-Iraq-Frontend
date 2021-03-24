@@ -18,5 +18,4 @@ export default {
     graph: 'Graphical Preview:',
     graphTip: '(You can reload the graphic any number of times)'
 
-
 }

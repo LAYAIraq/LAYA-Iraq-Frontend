@@ -9,54 +9,213 @@ export default {
     enrollment: {},
     userEnrolled: false
   },
-
+  
   getters: {
-    isUserEnrolled (state: { userEnrolled: Boolean }) {
+
+    /**
+     * Function isUserEnrolled: returns if user is enrolled
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: unknown
+     * 
+     * @param state contains userEnrolled boolean 
+     * @returns true if user is enrolled
+     */
+    isUserEnrolled (state: { userEnrolled: boolean}) {
       return state.userEnrolled
     },
-    content(state: { course: { content: Object } } ) {
+
+    /**
+     * Function content: returns content of given course
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 24, 2021
+     * 
+     * @param state contains course Object
+     * @returns content Array
+     */
+    content(state: { course: { content: Array<object> } } ) {
       return state.course.content
     },
-    course(state: { course: Object } ) {
+
+    /**
+     * Function course: returns course Object
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 24, 2021
+     * 
+     * @param state contains course Object
+     * @returns course Object
+     */
+    course(state: { course: object } ) {
       return state.course
     },
+
+    /**
+     * Function courseFiles: returns array of stored files
+     * 
+     * Author: cmc 
+     * 
+     * Last Updated: March 24, 2021
+     * 
+     * @param state contains course object
+     * @returns array of course files
+     */
     courseFiles(state: { course: { files: Array<Object> } }) {
       return state.course.files
     },
+
+    /**
+     * Function courseList: returns list of courses
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 24, 2021
+     * 
+     * @param state contains courseList 
+     * @returns array of courses
+     */
     courseList(state: { courseList: Array<Object>}) {
       return state.courseList
     },
-    courseStorage(state: { course: { storageId: String } }) {
+
+    /**
+     * Function courseStorage: returns id of course storage
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 24, 2021
+     * 
+     * @param state contains course object
+     * @returns course storage id
+     */
+    courseStorage(state: { course: { storageId: string } }) {
       return state.course.storageId
     }
   },
 
   mutations: {
+
+    /**
+     * Function appendContent: add a content block to content array
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param state contains course containing content array
+     * @param data content to add
+     */
     appendContent ( 
-      state: {course: {content: Array<Object>}}, 
+      state: { course: { content: Array<Object> } }, 
       data:{ name: String, nextStep: any, input: Object} 
       ) {
       state.course.content.push(data)
     },
-    appendToCourseList(state: {courseList: Array<Object>}, data: Object){
+
+    /**
+     * Function appendToCourseList: add course object
+     *  to courseList array
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 24, 2021
+     * 
+     * @param state contains courseList array
+     * @param data course objecte to be added to list
+     */
+    appendToCourseList(
+      state: { courseList: Array<Object> }, 
+      data: Object ) {
       state.courseList.push(data)
     },
-    delContent( state: {course: {content: Array<Object>}}, step: number ) {
+
+    /**
+     * Function delContent: remove Content at given index
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param state contains course object
+     * @param step index of content to remove
+     */
+    delContent( state: 
+        { course: { content: object[] } }, 
+        step: number ) {
       state.course.content.splice(step, 1)
     },
-    renameCourse( state: {course: {name: String}}, newName: String) {
+
+    /**
+     * Function renameCourse: rename a Course
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param state contains course 
+     * @param newName string for new name
+     */
+    renameCourse( state: {course: {name: string}}, newName: string) {
       state.course.name = newName
     },
-    setEnrollment(state: {enrollment: Object, userEnrolled: Boolean }, data: Object) {
+
+    /**
+     * Function setEnrollment: set an enrollment for current user
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: unknown
+     * 
+     * @param state contains enrollment, userEnrolled
+     * @param data enrollment object
+     */
+    setEnrollment(state: {enrollment: object, userEnrolled: boolean }, data: object) {
       state.enrollment = data
       state.userEnrolled = true
     },
-    setCourse(state: { course: Object}, data: Object) {
+
+    /**
+     * Function setCourse: set state to given course
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param state contains course
+     * @param data course object
+     */
+    setCourse(state: { course: object}, data: object) {
       state.course = data
     },
-    setCourseList(state: { courseList: Array<Object>}, data: Array<Object>) {
+
+    /**
+     * Function setCourseList: set list of courses in store
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 24, 2021
+     * 
+     * @param state contains courseList array
+     * @param data array of course objects
+     */
+    setCourseList(state: { courseList: Array<Object> }, data: Array<Object>) {
       state.courseList = data
     },
+
+    /**
+     * Function updateCourseFiles: updates list of course files
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 24, 2021
+     * 
+     * @param state contains course object
+     * @param data array of files
+     */
     updateCourseFiles(state: {course: {files: Array<Object>}}, data: Array<Object>) {
       state.course.files = [...state.course.files, ...data]
       /** 
@@ -66,34 +225,93 @@ export default {
        * 
        */
     },
-    updateCourseNav( state: {course: {content: Array<Object>}}, data: Array<Object>) {
+
+    /**
+     * Function updateCourseNav: replace content with input content array
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param state contains course, content
+     * @param data new content array
+     */
+    updateCourseNav( state: {course: {content: Array<object>}}, data: Array<object>) {
       state.course.content = data
     },
-    updateStep( state: {course: {content: Array<Object>}} , data: { step: number, updatedStep: Object } ) {
+
+
+    /**
+     * Function updateStep: update content block at given index
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param state contains course, content
+     * @param data contains step index, new content object 
+     */
+    updateStep( state: {course: {content: Array<object>}} , 
+        data: { step: number, updatedStep: object } ) {
       state.course.content[data.step] = {
-        ...state.course.content[data.step], ...data.updatedStep
+        ...state.course.content[data.step], 
+        ...data.updatedStep
       }
     }
-  },
 
+  },
+  
   actions: {
-    fetchEnrollment({ commit, state, rootState }, courseId: String) {
-      const self = this
-      let uid = rootState.auth.userId
-      let cid = courseId
-      commit('setBusy', true)
-      http.get('enrollments/findOne', {params: {filter:{where: {studentId: uid, courseId: cid}}}})
-        .then(({data}) => {
-          console.log('Enrollment exists!')
-          commit('setEnrollment', data)
+
+    /**
+     * Function fetchCourse: load course into store
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param param0 state variables
+     * @param name course identifier
+     * @returns Promise to load course object
+     */
+     fetchCourse ({ commit, state, rootState}, name: String) {
+      //can you return router function? //TODO direkt hier 
+      return new Promise( (resolve, reject) => {
+        commit('setBusy', true)
+
+        //get course ID from name
+        http.get(`courses/getCourseId?courseName=${name}`)
+          .then( ({ data }) => {
+            /* fetch course */
+            http.get(`courses/${data.courseId}`)
+            .then(({ data }) => {
+              // console.log(data)
+              commit('setCourse', data)
+              resolve('Course loaded')
+            })
+            .catch( err => {
+              /*
+              * redirect off invalid course */
+              console.error(err);
+              reject(err)
+            })
+          })
+          .catch( err => {
+            console.log(err)
+          })
+          .finally( () => commit('setBusy', false))
         })
-        .catch(err => {
-          console.log('No enrollment found!')
-          console.error(err)
-        })
-        .finally( () => { commit('setBusy', false) })
     },
 
+    /**
+     * Function fetchCourseList: get list of courses
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 24, 2021
+     * 
+     * @param param0 state variables
+     */
     fetchCourseList({commit, state, rootState}) {
       commit('setBusy', true)
       http.get('courses?filter[include]=author')
@@ -113,48 +331,50 @@ export default {
         .finally( () => {commit('setBusy', false)})
     },
 
-    updateEnrollment({ commit, state, rootState } ) {
-      const enrol = state.enrollment
-
-      http.patch(`enrollments/${enrol.id}`, enrol)
-        .then(resp => {
-          console.log('Enrollment updated!')
+    /**
+     * Function fetchEnrollment: fetch enrollment created at given date
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: unknown
+     * 
+     * @param param0 state variables
+     * @param courseId identifier for enrollment
+     */
+     fetchEnrollment({ commit, state, rootState }, courseId: String) {
+      const self = this
+      let uid = rootState.auth.userId
+      let cid = courseId
+      commit('setBusy', true)
+      http.get('enrollments/findOne', { params: 
+          { filter:
+            { where: 
+              { studentId: uid, courseId: cid } 
+            }
+          }
+        })
+        .then(({data}) => {
+          console.log('Enrollment exists!')
+          commit('setEnrollment', data)
         })
         .catch(err => {
+          console.log('No enrollment found!')
           console.error(err)
         })
+        .finally( () => { commit('setBusy', false) })
     },
 
-    async fetchCourse ({ commit, state, rootState}, name: String) {
-      //can you return router function? //TODO direkt hier 
-      return new Promise((resolve, reject) => {
-        commit('setBusy', true)
-
-        //get course ID
-        http.get(`courses/getCourseId?courseName=${name}`)
-          .then( ({data}) => {
-            /* fetch course */
-            http.get(`courses/${data.courseId}`)
-            .then(({ data }) => {
-              // console.log(data)
-              commit('setCourse', data)
-              resolve('Course loaded')
-            })
-            .catch(err => {
-              /*
-              * redirect off invalid course */
-              console.error(err);
-              reject(err)
-            })
-          })
-          .catch(err => {
-            console.log(err)
-          })
-          .finally(() => commit('setBusy', false))
-        })
-    },
-
-    storeCourse({ commit, state, rootState}) {
+    /**
+     * Function storeCourse: persist changes to store in database
+     * 
+     * Author: core
+     * 
+     * Last Updated: March 24, 2021
+     * 
+     * @param param0 state variables
+     * @returns Promise to save changes
+     */
+     storeCourse({ commit, state, rootState}) {
       let updated = Date.now()
       let cId = state.course.courseId
       let cContent = state.course.content
@@ -172,7 +392,40 @@ export default {
       
     },
 
+    /**
+     * function updateEnrollment: update enrollment object
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: unknown
+     * 
+     * @param param0 state variables 
+     */
+     updateEnrollment({ commit, state, rootState } ) {
+      const enrol = state.enrollment
+
+      http.patch(`enrollments/${enrol.id}`, enrol)
+        .then(resp => {
+          console.log('Enrollment updated!')
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    },
+
+    /**
+     * Function updateRenamedCourse: rename old course
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param param0 state variables
+     * @param oldId id of course to update
+     */
     updateRenamedCourse( { commit, state, rootState}, oldId: String ) {   
+
+      //TODO: does it update enrollment?
       http.patch(`courses/${oldId}`, state.course)
         .then( () => {
           console.log('Updated Course name!')

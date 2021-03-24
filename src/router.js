@@ -1,8 +1,19 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+/**
+ * Filename: router.js
+ * Use: register all possible routes
+ * Creator: core
+ * Date: unknown
+ * Dependencies:
+ *  vue,
+ *  vue-router,
+ *  @/views
+ */
+
+import Vue from 'vue';
+import Router from 'vue-router';
 /* views */
-import * as views from './views'
-Vue.use(Router)
+import * as views from './views';
+Vue.use(Router);
 export default new Router({
   mode: 'hash',
   base: process.env.BASE_URL,
@@ -14,7 +25,7 @@ export default new Router({
     }, */
     {
       path: '/',
-      // redirect: '/login', experimental starting page
+      //redirect: '/login', experimental starting page
       name: 'root-view',
       component: views.root
     },

@@ -1,3 +1,13 @@
+<!--
+Filename: edit.vue 
+Use: View Plyr content block
+Creator: core
+Date: unknown
+Dependencies:
+  vuex,
+  @/i18n/plugins/misc/laya-plyr
+-->
+
 <template>
 
   <div class="laya-plyr-edit">
@@ -71,50 +81,96 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/plugins/misc/laya-plyr"
-import { mapGetters } from "vuex"
-import { BJumbotron, BTooltip } from "bootstrap-vue"
-
+import * as i18n from '@/i18n/plugins/misc/laya-plyr'
+import { mapGetters } from 'vuex'
 
 export default {
-  name: "laya-plyr-edit",
+  name: 'laya-plyr-edit',
   data() {
     return {
-      src: "",
+      src: '',
       tooltipOn: false,
       youtube: false
     }
   },
   created() {
-    let idx = this.$route.params.step -1 //comply with array indexing in store
-    //create deep copy of store object to manipulate in vue instance
-    let preData = JSON.parse(JSON.stringify(this.content[idx].input))
-    this.src = preData.src
-    this.youtube = preData.youtube
-  },
-  mounted() {
-    if(this.$attrs.src) this.src = this.$attrs.src
-    this.youtube = ( this.correctURL && this.src.includes("youtube"))
+    this.fetchData()
   },
   computed: {
-    ...mapGetters(["content"]),
+    ...mapGetters(['content', 'profileLang']),
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 20, 2021
+     * 
+     */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     },
+
+    /**
+     * urlMsg: return warning if URL not supported
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: January 17, 2021
+     */
     urlMsg () {
-      return this.correctURL? "" : this.i18n.wrongURL
+      return this.correctURL? '' : this.i18n.wrongURL
     },
+
+    /**
+     * correctURL: checks if video is on yt or vimeo
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: January 17, 2021
+     */
     correctURL() {
-      return (this.src.includes("youtube") || this.src.includes("vimeo") )
+      return (this.src.includes('youtube') || this.src.includes('vimeo') )
     }
   },
   methods: {
+
+    /**
+     * Function toggleTip: toggle tooltipOn boolean
+     * 
+     * Author: cmc
+     * 
+     * Last updated: unknown
+     */
     toggleTip() {
       this.tooltipOn = !this.tooltipOn
     },
+
+    /**
+     * function checkURL: checks if URL is on yt, sets boolean if it is
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: January 17, 2021
+     */
     checkURL() {
-      if (this.correctURL && this.src.includes("youtube")) this.youtube = true
+      if (this.correctURL && this.src.includes('youtube')) this.youtube = true
       else this.youtube = false
+    },
+
+    /**
+     * Function fetchData: fetch data from vuex and make data property
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 20, 2021
+     */
+    fetchData() {
+      let idx = this.$route.params.step -1 //comply with array indexing in store
+      //create deep copy of store object to manipulate in vue instance
+      let preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+      this.src = preData.src
+      this.youtube = preData.youtube
     }
   },
 }

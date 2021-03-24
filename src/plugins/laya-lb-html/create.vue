@@ -1,3 +1,13 @@
+<!--
+Filename: create.vue 
+Use: Create a new WYSIWYG content block
+Creator: cmc
+Date: January 19, 2021
+Dependencies: 
+  quill,
+  @/i18n/plugins/misc/laya-html
+-->
+
 <template>
 
   <div class="laya-wysiwyg-edit bg-light">  
@@ -7,48 +17,78 @@
 </template>
 
 <script>
-import "quill/dist/quill.snow.css"
-import Quill from "quill"
-import * as i18n from "@/i18n/plugins/misc/laya-html"
+import 'quill/dist/quill.snow.css'
+import Quill from 'quill'
+import * as i18n from '@/i18n/plugins/misc/laya-html'
 
 export default {
-  name: "laya-wysiwyg-edit",
+  name: 'laya-wysiwyg-edit',
   data() {
     return {
       contents: null
     }
   },
   mounted() {
-    const self = this
-    const quill = new Quill(`#${self.editorId}`, {
-      theme: "snow",
-      placeholder: self.i18n.placeholder,
-      modules: {
-        toolbar: [
-          ['bold', 'italic', 'underline'],
-          ['blockquote', 'link', 'image'],
-          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-          [{ 'size': ['small', false, 'large', 'huge'] }],
-          [{ 'color': [] }, { 'background': [] }],
-          [{ 'align': [] }],
-          ['clean']
-        ]
-      }
-    })
-    quill.on("text-change", function(delta, oldDelta, source) {
-      if (source === "user")
-        self.contents = quill.getContents()
-    })
-    quill.setContents(self.contents)
+    this.initQuill()
   },
   computed: {
+
+    /**
+     * editorId: return id for html element
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     editorId() {
       return `laya-wysiwyg-${Date.now()}`
     },
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 20, 2021
+     * 
+     */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }
   },
+  methods: {
+
+    /**
+     * Function initQuill: Initialize editor for wysiwyg
+     * 
+     * Author: core
+     * 
+     * Last Updated: March 20, 2021
+     */
+    initQuill() {
+      const self = this
+      const quill = new Quill(`#${self.editorId}`, {
+        theme: 'snow',
+        placeholder: self.i18n.placeholder,
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline'],
+            ['blockquote', 'link', 'image'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'size': ['small', false, 'large', 'huge'] }],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'align': [] }],
+            ['clean']
+          ]
+        }
+      })
+      quill.on('text-change', (delta, oldDelta, source) => {
+        if (source === 'user')
+          self.contents = quill.getContents()
+      })
+      quill.setContents(self.contents)
+    }
+  }
 }
 </script>
 

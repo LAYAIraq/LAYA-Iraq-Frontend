@@ -1,3 +1,13 @@
+<!--
+Filename: edit.vue
+Use: Edit Ableplayer content block
+Creator: core
+Date: unknown
+Dependencies: 
+  vuex,
+  @/i18n/plugins/misc/laya-ableplayer
+-->
+
 <template>
   <div class="laya-ableplayer-edit">
 
@@ -45,30 +55,52 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
-import * as i18n from "@/i18n/plugins/misc/laya-ableplayer"
+import { mapGetters } from 'vuex'
+import * as i18n from '@/i18n/plugins/misc/laya-ableplayer'
 
 export default {
-  name: "laya-ableplayer-edit",
+  name: 'laya-ableplayer-edit',
   data() {
     return {
-      src: "",
-      sign: "",
-      sub: "",
+      src: '',
+      sign: '',
+      sub: '',
       tooltipOn: false
     }
   },
   created() {
-    let idx = this.$route.params.step - 1
-    const preData = JSON.parse(JSON.stringify(this.content[idx].input))
-    this.src = preData.src
-    this.sign = preData.sign
-    this.sub = preData.sub
+    this.fetchData()
   },
   computed: {
-    ...mapGetters(["content"]),
+    ...mapGetters(['content', 'profileLang']),
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 19, 2021
+     * 
+     */
     i18n() {
-      return i18n[this.$store.state.profile.lang]
+      return i18n[this.profileLang]
+    }
+  },
+  methods: {
+
+    /**
+     * Function fetchData: fetch data from vuex and make data property
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 19, 2021
+     */
+    fetchData() {
+      let idx = this.$route.params.step - 1
+      const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+      this.src = preData.src
+      this.sign = preData.sign
+      this.sub = preData.sub
     }
   }
 }

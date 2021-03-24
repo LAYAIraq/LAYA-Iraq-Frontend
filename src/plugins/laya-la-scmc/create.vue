@@ -1,3 +1,11 @@
+<!--
+Filename: create.vue
+Use: Create a Multiple Choice/Response content block
+Creator: core
+Date: unknown
+Dependencies: @/i18n/plugins/laya-la-scmc
+-->
+
 <template>
   <div class="laya-la-scms-edit ly-bg-author p-3">
 
@@ -124,7 +132,7 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/plugins/laya-la-scmc"
+import * as i18n from '@/i18n/plugins/laya-la-scmc'
 
 export default {
   name: 'laya-la-scmc-edit',
@@ -133,9 +141,9 @@ export default {
   },
   data () {
     return {
-      title: "",
-      task: "",
-      taskAudio: "",
+      title: '',
+      task: '',
+      taskAudio: '',
       options: [],
       solutions: [],
       maxTries: 1,
@@ -144,17 +152,52 @@ export default {
     }
   },
   computed: {
+
+    /**
+     * i18n: Load translation files depending on user langugage
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 19, 2021
+     * 
+     */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }
   },
   methods: {
+
+    /**
+     * Function _delItem(idx): Remove an item at given index
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param {*} idx index at which the item is to be removed
+     */
     _delItem(idx) {
       this.options.splice(idx, 1)
     },
+
+    /**
+     * Function _addItem: add a new item to options
+     * 
+     * Author: core
+     * 
+     * Last Update: unknown
+     */
     _addItem() {
-      this.options.push("");
+      this.options.push('');
     },
+
+    /**
+     * Function toggleTip: toggles the tooltipOn boolean
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: unknown
+     */
     toggleTip() {
       this.tooltipOn = !this.tooltipOn
     }

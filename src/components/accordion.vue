@@ -1,3 +1,11 @@
+<!-- 
+Filename: accordion.vue 
+Use: This component is used to show all courses a user has enrolled in
+Creator: core
+Date: unknown
+Dependencies: none
+-->
+
 <template>
 
   <div class="ly-accordion">
