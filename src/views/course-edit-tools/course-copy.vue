@@ -5,6 +5,7 @@ Creator: cmc
 Date: October 27, 2020
 Dependencies: 
 	axios,
+  uuid,
 	vuex,
 	@/i18n/course-edit/copy
 -->
@@ -59,6 +60,7 @@ Dependencies:
 import http from 'axios'
 import * as i18n from '@/i18n/course-edit/copy'
 import { mapGetters, mapState } from 'vuex'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'course-copy',
@@ -103,10 +105,12 @@ export default {
         .catch( () => {
         // course name does not exist
         let now = Date.now()
+        let newId = uuidv4()
         let copiedCourse = {...this.course}
         copiedCourse.name = this.copy
         copiedCourse.createDate = now
         copiedCourse.lastChanged = now
+        copiedCourse.courseId = newId
         console.log(copiedCourse)
 
         http.post(`courses`, copiedCourse)
