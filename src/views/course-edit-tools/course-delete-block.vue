@@ -55,7 +55,7 @@ export default {
     ...mapState(['edit']),
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 

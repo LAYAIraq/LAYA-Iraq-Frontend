@@ -99,23 +99,58 @@ export default {
         'courseStorage'
       ]),
 
+    /**
+     * i18n: Load translation files depending on user language
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 29, 2021
+     * 
+     */
     i18n() {
       return i18n[this.profileLang]
     },
 
+    /**
+     * step: return step of current content block
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 29, 2021
+     */
     step() {
       return this.$route.params.step
     },
 
+    /**
+     * upload: make refs available
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 29, 2021
+     */
     upload() {
       return this.$refs.upload
     },
 
-
+    /**
+     * uploaded: make uploaded status available
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 29, 2021
+     */
     uploaded() {
       return this.$refs.upload.uploaded
     },
 
+    /**
+     * uploadUrl: return course storage URL for upload
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 29, 2021 
+     */
     uploadUrl() {
       return `${api}/storage/${this.courseStorage}/upload`
     }
@@ -124,10 +159,7 @@ export default {
   data() {
     return {
       files: [
-        {
-          name: 'Hurensohn',
-          size: '1234'
-        }
+
       ],
       uploadedFiles: null
     }
@@ -154,9 +186,28 @@ export default {
   },
 
   methods: {
+    /**
+     * function _removeFiles: remove file from list at index idx
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 29, 2021
+     * 
+     * @param {number} idx index of file object
+     */
     _removeFile(idx) {
       this.files.splice(idx, 1)
     },
+
+    /**
+     * function updateCourseFiles: store new files in vuex store
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 29, 2021
+     * 
+     * @param {array} fileList list of files 
+     */
     updateCourseFiles(fileList) {
       this.$store.commit('updateCourseFiles', fileList)
     }

@@ -93,7 +93,7 @@ export default {
     ...mapGetters(['profileLang', 'content', 'course']),
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 
