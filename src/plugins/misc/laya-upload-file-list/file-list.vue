@@ -46,6 +46,7 @@
       <div class="example-btn">
         <file-upload
           class="btn btn-primary"
+          :custom-action="uploadFile"
           :post-action="uploadUrl"
           :multiple="true"
           :drop="true"
@@ -83,7 +84,7 @@
 import { mapGetters } from 'vuex'
 import FileUpload from 'vue-upload-component'
 import * as i18n from '@/i18n/plugins/misc/laya-upload-file-list'
-import api from '../../../backend-url'
+import api from '@/backend-url'
 
 export default {
   name: 'laya-upload-file-list',
@@ -95,7 +96,7 @@ export default {
   computed: {
     ...mapGetters([
         'profileLang',
-        'course',
+        'courseFiles',
         'courseStorage'
       ]),
 
@@ -134,17 +135,6 @@ export default {
     },
 
     /**
-     * uploaded: make uploaded status available
-     * 
-     * Author: cmc
-     * 
-     * Last Updated: March 29, 2021
-     */
-    uploaded() {
-      return this.$refs.upload.uploaded
-    },
-
-    /**
      * uploadUrl: return course storage URL for upload
      * 
      * Author: cmc
@@ -158,34 +148,122 @@ export default {
 
   data() {
     return {
-      files: [
-
-      ],
-      uploadedFiles: null
+      files: [],
+      uploaded: false,
+      uploadedFiles: []
     }
   },
 
   watch: {
-    uploaded(value) {
-      if (!value) {
-        console.log('Wert für uploading hat sich geändert')
-        this.uploadedFiles = false
-      } else {
-        console.log('Upload abgeschlossen')
-        if (this.uploadedFiles != null) this.uploadedFiles = true
+
+    /**
+     * watcher files: watch for changes in files data prop,
+     *  change uploaded property if an action happened in
+     *  upload
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 29, 2021
+     */
+    files() {
+      this.uploaded = this.$refs.upload.uploaded
+
+    },
+
+    /**
+     * watcher uploaded: fire updateFileList() if uploaded is true
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 29, 2021
+     */
+    uploaded(val) {
+      if(val) {
+        this.updateFileList()
+      }
+      else {
+        console.log('neue files!')
       }
     },
 
-    uploadedFiles(value) {
-      if (value) {
-        this.$nextTick( () => {
-          this.updateCourseFiles()
-        })
-      }
+    /**
+     * watcher uploadedFiles: watch for changes in uploadedFiles,
+     *  fire updateCourseFiles() when there are any
+     *
+     * Author: cmc
+     * 
+     * Last Updated: March 29, 2021
+     */
+    uploadedFiles() {
+      this.$nextTick( () => {
+        this.updateCourseFiles()
+      })
     }
   },
 
+  beforeDestroy() {
+    // persist course files in database
+    this.$store.dispatch('storeCourseFiles')
+  },
+
   methods: {
+
+    /**
+     * function upLoadFile: proceed a duplicate check,
+     *  then upload the file to uploadUrl()
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 29, 2021
+     */
+    async uploadFile(file, component) {
+      //let component = this.upload
+      let ctx = this
+      let duplicateFile = this.checkBeforeUpload(file)
+      if (!duplicateFile) {
+        console.log('starting upload...')
+        return await component.uploadHtml5(file)
+      }
+      else return false
+    },
+
+    /**
+     * function checkBeforeUpload: check if file with same name 
+     *  and size already exists in a course
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 29, 2021
+     * 
+     * @param {object} file file to be uploaded
+     * @returns true if no file with same name and size exists
+     */
+    checkBeforeUpload(file){
+      if(file.success) {
+        console.log('This file has already been uploaded!')
+        file.error = 'duplicate file!'
+        return true
+      }
+
+      const attrs = { 
+        name: file.name, 
+        size: file.size, 
+        type: file.type 
+      }
+      // check if file with the same parameters already 
+      // exists in the course
+      for (let entry of this.courseFiles ) {
+        if (entry.originalFilename === attrs.name && 
+          entry.size == attrs.size &&
+          entry.type === attrs.type ) {
+            console.log('This file already exists in this course!')
+            file.error = 'duplicate file!'
+            return true
+          } 
+      }
+      return false
+    },
+
     /**
      * function _removeFiles: remove file from list at index idx
      * 
@@ -208,8 +286,25 @@ export default {
      * 
      * @param {array} fileList list of files 
      */
-    updateCourseFiles(fileList) {
-      this.$store.commit('updateCourseFiles', fileList)
+    updateCourseFiles() {
+      this.$store.commit('updateCourseFiles', this.uploadedFiles)
+    },
+
+    /**
+     * function updateFileList: update list of files
+     *  that have been added in this component
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 29, 2021
+     */
+    updateFileList() {
+      for (let file of this.files) {
+        if (file.success) {
+          const fileEntry = { ...file.response.result.files.file[0]} 
+          this.uploadedFiles.push(fileEntry)
+        }
+      }
     }
   }
 

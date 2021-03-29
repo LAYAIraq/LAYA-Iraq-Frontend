@@ -203,6 +203,7 @@ export default {
      * @param data array of course objects
      */
     setCourseList(state: { courseList: Array<Object> }, data: Array<Object>) {
+      console.log(data)
       state.courseList = data
     },
 
@@ -216,7 +217,7 @@ export default {
      * @param state contains course object
      * @param data array of files
      */
-    updateCourseFiles(state: {course: {files: Array<Object>}}, data: Array<Object>) {
+    updateCourseFiles(state: { course: { files: Array<Object> } }, data: Array<Object>) {
       state.course.files = [...state.course.files, ...data]
       /** 
        * TODO: 
@@ -328,7 +329,7 @@ export default {
           }
         })
         .catch(err => console.error(err))
-        .finally( () => {commit('setBusy', false)})
+        .finally( () => { commit('setBusy', false) })
     },
 
     /**
@@ -390,6 +391,36 @@ export default {
           })
         })
       
+    },
+
+    /**
+     * Function storeCourseFiles: persist list of course files 
+     *  into database
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 29, 2021
+     * 
+     * @param param0 state variables
+     */
+    storeCourseFiles({ state }) {
+      const newFileData = {
+        files: state.course.files,
+        lastChanged: Date.now()
+      }
+      console.log(newFileData)
+      return new Promise( (resolve, reject) => {
+        http.patch(`courses/${state.course.courseId}`, newFileData)
+          .then( (resp) => {
+            console.log(resp)
+            resolve(resp)
+          })
+          .catch( err => {
+            console.error(err)
+            reject(err)
+          })
+      })
+ 
     },
 
     /**
