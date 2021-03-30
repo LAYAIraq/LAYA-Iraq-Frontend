@@ -1,81 +1,113 @@
 <template>
-  <div class="file-list-upload">
-    <div class="drag-upload">
+  <div class="file-list">
 
-      <ul v-if="files.length">
-        <li 
-          v-for="(file, i) in files" 
-          :key="file.id"
+    <div class="file-explorer">
+      <div class="row">
+        <h2>DATEIEN IN KURS</h2>
+      </div>
+      <ul 
+        class="explorer"
+        v-if="courseFiles"
+        >
+        <li
+          v-for="file of courseFiles"
+          :key="file.name"
         >
           <div class="row">
-            <div class="col-auto"> {{ file.name }} </div>
-            <div class="col-auto"> {{ file.size }} </div>
-            <div class="col-auto" v-if="file.error"> {{ file.error }} </div>
-            <div class="col-auto" v-else-if="file.success"> {{ i18n.success }} </div>
-            <div class="col-auto" v-else-if="file.active"> {{ i18n.active }} </div>
-            <div class="col-auto" v-else></div>
-            <div class="col-auto align-self-center">
-              <button 
-                type="button"
-                class="btn btn-danger btn-sm remove-file"
-                @click="_removeFile(i)"
-              >
-                <i class="fas fa-times"></i>
-              </button>
+            <div class="col">
+              {{ file.originalFilename }}
+            </div>
+            <div class="col">
+              {{ file.size }}
+            </div>
+            <div class="col">
+              <i :class="fileIcon(file.type)"></i>
             </div>
           </div>
         </li>
       </ul>
 
-      <ul v-else>
-        <div class="text-center p-5">
-          <h4 v-html="i18n.dropOr"></h4>
-          <label 
-            for="file"
-            class="btn btn-lg btn-primary"
+    
+    </div>
+    <hr>
+    <div class="file-list-upload">
+      <div class="drag-upload">
+
+        <ul v-if="files.length">
+          <li 
+            v-for="(file, i) in files" 
+            :key="file.id"
           >
-            {{ i18n.selectFiles }}
-          </label>
+            <div class="row">
+              <div class="col-auto"> {{ file.name }} </div>
+              <div class="col-auto"> {{ file.size }} </div>
+              <div class="col-auto" v-if="file.error"> {{ file.error }} </div>
+              <div class="col-auto" v-else-if="file.success"> {{ i18n.success }} </div>
+              <div class="col-auto" v-else-if="file.active"> {{ i18n.active }} </div>
+              <div class="col-auto" v-else></div>
+              <div class="col-auto align-self-center">
+                <button 
+                  type="button"
+                  class="btn btn-danger btn-sm remove-file"
+                  @click="_removeFile(i)"
+                >
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </li>
+        </ul>
+
+        <ul v-else>
+          <div class="text-center p-5">
+            <h4 v-html="i18n.dropOr"></h4>
+            <label 
+              for="file"
+              class="btn btn-lg btn-primary"
+            >
+              {{ i18n.selectFiles }}
+            </label>
+          </div>
+        </ul>
+
+        <div v-show="$refs.upload && $refs.upload.dropActive" class="drop-active">
+          <h3>{{ i18n.dropToUpload }}</h3>
         </div>
-      </ul>
 
-      <div v-show="$refs.upload && $refs.upload.dropActive" class="drop-active">
-        <h3>{{ i18n.dropToUpload }}</h3>
+        <div class="example-btn">
+          <file-upload
+            class="btn btn-primary"
+            :custom-action="uploadFile"
+            :post-action="uploadUrl"
+            :multiple="true"
+            :drop="true"
+            :drop-directory="true"
+            v-model="files"
+            ref="upload">
+            <i class="fas fa-plus"></i>
+            {{ i18n.selectFiles }}
+          </file-upload>
+          <button 
+            type="button" 
+            class="btn btn-success" 
+            v-if="!$refs.upload || !$refs.upload.active" 
+            @click.prevent="$refs.upload.active = true"
+          >
+            <i class="fas fa-arrow-up" aria-hidden="true"></i>
+            {{ i18n.startUpload }}
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-danger"  
+            v-else 
+            @click.prevent="$refs.upload.active = false"
+          >
+            <i class="fas fa-stop" aria-hidden="true"></i>
+            {{ i18n.stopUpload }}
+          </button>
+        </div>
+
       </div>
-
-      <div class="example-btn">
-        <file-upload
-          class="btn btn-primary"
-          :custom-action="uploadFile"
-          :post-action="uploadUrl"
-          :multiple="true"
-          :drop="true"
-          :drop-directory="true"
-          v-model="files"
-          ref="upload">
-          <i class="fas fa-plus"></i>
-          {{ i18n.selectFiles }}
-        </file-upload>
-        <button 
-          type="button" 
-          class="btn btn-success" 
-          v-if="!$refs.upload || !$refs.upload.active" 
-          @click.prevent="$refs.upload.active = true"
-        >
-          <i class="fa fa-arrow-up" aria-hidden="true"></i>
-          {{ i18n.startUpload }}
-        </button>
-        <button 
-          type="button" 
-          class="btn btn-danger"  
-          v-else 
-          @click.prevent="$refs.upload.active = false"
-        >
-          <i class="fas fa-stop" aria-hidden="true"></i>
-          {{ i18n.stopUpload }}
-        </button>
-      </div>
-
     </div>
   </div>
 </template>
@@ -305,6 +337,47 @@ export default {
           this.uploadedFiles.push(fileEntry)
         }
       }
+    },
+
+    fileIcon(type){
+      // List of official MIME Types: http://www.iana.org/assignments/media-types/media-types.xhtml
+      var icon_classes = {
+        // Media
+        image: 'fas fa-file-image',
+        audio: 'fas fa-file-audio',
+        video: 'fas fa-file-video',
+        // Documents
+        'application/pdf': 'fas fa-file-pdf',
+        'application/msword': 'fas fa-file-word',
+        'application/vnd.ms-word': 'fas fa-file-word',
+        'application/vnd.oasis.opendocument.text': 'fas fa-file-word',
+        'application/vnd.openxmlformatsfficedocument.wordprocessingml':
+          'fas fa-file-word',
+        'application/vnd.ms-excel': 'fas fa-file-excel',
+        'application/vnd.openxmlformatsfficedocument.spreadsheetml':
+          'fas fa-file-excel',
+        'application/vnd.oasis.opendocument.spreadsheet': 'fas fa-file-excel',
+        'application/vnd.ms-powerpoint': 'fas fa-file-powerpoint',
+        'application/vnd.openxmlformatsfficedocument.presentationml':
+          'fas fa-file-powerpoint',
+        'application/vnd.oasis.opendocument.presentation': 'fas fa-file-powerpoint',
+        'text/plain': 'fas fa-file-alt',
+        'text/html': 'fas fa-file-code',
+        'application/json': 'fas fa-file-code',
+        // Archives
+        'application/gzip': 'fas fa-file-archive',
+        'application/zip': 'fas fa-file-archive'
+      };
+
+      for (var key in icon_classes) {
+        if (icon_classes.hasOwnProperty(key)) {
+          if (type.search(key) === 0) {
+            // Found it
+            return icon_classes[key]
+          }
+        }
+      }
+      return 'fas fa-file'
     }
   }
 

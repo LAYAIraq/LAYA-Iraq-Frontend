@@ -1,6 +1,8 @@
 import http from 'axios'
 import router from '../../router.js'
 import { ids as supportedLangs } from '../../misc/langs.js'
+import { courseCopy } from '@/views/course-edit-tools/index.js'
+import store from '../index.js'
 
 export default {
   state: {
@@ -218,13 +220,51 @@ export default {
      * @param data array of files
      */
     updateCourseFiles(state: { course: { files: Array<Object> } }, data: Array<Object>) {
-      state.course.files = [...state.course.files, ...data]
+      // state.course.files = [...state.course.files, ...data]
       /** 
        * TODO: 
        * find duplicates (filename, type, size)
        * remove files that are no longer in the list
        * 
        */
+
+      //sort data and state alphabetically
+
+      // let mySort = (a: { name: string},b: { name: string }) => {
+      //   if(a.name < b.name) return -1
+      //   if(a.name > b.name) return 1
+      //   return 0
+      // }
+
+      // const sortedFiles = state.course.files.sort((a: { name:string },b: { name:string }) => mySort(a,b))
+      // const sortedData = data.sort((a: { name:string },b: { name: string }) => mySort(a,b))
+
+      // console.log(sortedFiles)
+      // console.log(sortedData)
+
+      // console.log('removing duplicates from state course files')
+      // let mofo = state.course.files
+      // let removed = 0
+      // for (let i=0; i < state.course.files.length; i++) {
+      //   if (i == mofo.length - 1) break
+      //   for (let j=i+1; j<state.course.files.length; j++) {
+      //     //@ts-ignore
+      //     if (mofo[i].name === mofo[j].name) {
+      //       mofo.splice(j, 1)
+      //       removed++
+      //       j--
+      //     }
+      //   }
+      // }
+      // console.log(`removed ${removed} duplicate elements!`)
+      console.log('Start updating Course Files in Store')
+      // 
+      let ids = new Set(state.course.files.map((d: {name: string}) => d.name))
+      let merged = [...state.course.files, ...data.filter( (d: {name: string}) => !ids.has(d.name) )]
+
+      // console.log(merged)
+      state.course.files = merged
+
     },
 
     /**
