@@ -13,15 +13,31 @@
           v-for="file of courseFiles"
           :key="file.name"
         >
+
           <div class="row">
-            <div class="col">
+
+            <div class="col-0">
+              <i 
+              :class="fileIcon(file.type)"
+              title="File Type"
+              v-b-tooltip.left></i>
+            </div>
+
+            <div class="col-5">
               {{ file.originalFilename }}
             </div>
-            <div class="col">
-              {{ file.size }}
+
+            <div class="col-2 size">
+              {{ fileSize(file.size) }}
             </div>
+            
             <div class="col">
-              <i :class="fileIcon(file.type)"></i>
+              <i 
+                class="fas fa-copy copy"
+                title="Copy File URL"
+                v-b-tooltip.right
+                @click="copyUrl(file.name)"
+              ></i>
             </div>
           </div>
         </li>
@@ -40,7 +56,7 @@
           >
             <div class="row">
               <div class="col-auto"> {{ file.name }} </div>
-              <div class="col-auto"> {{ file.size }} </div>
+              <div class="col-auto"> {{ fileSize(file.size) }} </div>
               <div class="col-auto" v-if="file.error"> {{ file.error }} </div>
               <div class="col-auto" v-else-if="file.success"> {{ i18n.success }} </div>
               <div class="col-auto" v-else-if="file.active"> {{ i18n.active }} </div>
@@ -117,6 +133,7 @@ import { mapGetters } from 'vuex'
 import FileUpload from 'vue-upload-component'
 import * as i18n from '@/i18n/plugins/misc/laya-upload-file-list'
 import api from '@/backend-url'
+import fileSize from '@/misc/utils.js'
 
 export default {
   name: 'laya-upload-file-list',
@@ -239,7 +256,7 @@ export default {
   },
 
   methods: {
-
+    ...fileSize,
     /**
      * function upLoadFile: proceed a duplicate check,
      *  then upload the file to uploadUrl()
@@ -341,7 +358,7 @@ export default {
 
     fileIcon(type){
       // List of official MIME Types: http://www.iana.org/assignments/media-types/media-types.xhtml
-      var icon_classes = {
+      var iconClasses = {
         // Media
         image: 'fas fa-file-image',
         audio: 'fas fa-file-audio',
@@ -369,11 +386,11 @@ export default {
         'application/zip': 'fas fa-file-archive'
       };
 
-      for (var key in icon_classes) {
-        if (icon_classes.hasOwnProperty(key)) {
+      for (var key in iconClasses) {
+        if (iconClasses.hasOwnProperty(key)) {
           if (type.search(key) === 0) {
             // Found it
-            return icon_classes[key]
+            return iconClasses[key]
           }
         }
       }
@@ -385,6 +402,20 @@ export default {
 </script>
 
 <style scoped>
+.draggable {
+  cursor: move;
+}
+.explorer {
+  list-style-type: none;
+}
+.explorer .size {
+  text-align: right;
+}
+
+.explorer .copy {
+  cursor: copy;
+}
+
 .file-list-upload label.btn {
   margin-bottom: 0;
   margin-right: 1rem;

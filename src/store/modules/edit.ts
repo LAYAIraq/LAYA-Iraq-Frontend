@@ -448,11 +448,11 @@ export default {
         files: state.course.files,
         lastChanged: Date.now()
       }
-      console.log(newFileData)
+      // console.log(newFileData)
       return new Promise( (resolve, reject) => {
         http.patch(`courses/${state.course.courseId}`, newFileData)
           .then( (resp) => {
-            console.log(resp)
+            // console.log(resp)
             resolve(resp)
           })
           .catch( err => {
