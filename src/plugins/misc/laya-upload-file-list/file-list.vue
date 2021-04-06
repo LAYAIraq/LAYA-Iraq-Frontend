@@ -3,7 +3,7 @@
 
     <div class="file-explorer">
       <div class="row">
-        <h2>DATEIEN IN KURS</h2>
+        <h2>{{ i18n.filesInCourse }}</h2>
       </div>
       <ul 
         class="explorer"
@@ -19,7 +19,7 @@
             <div class="col-0">
               <i 
               :class="fileIcon(file.type)"
-              title="File Type"
+              :title="i18n.fileType"
               v-b-tooltip.left></i>
             </div>
 
@@ -34,9 +34,9 @@
             <div class="col">
               <i 
                 class="fas fa-copy copy"
-                title="Copy File URL"
+                :title="i18n.copyUrl"
                 v-b-tooltip.right
-                @click="copyUrl(file.name)"
+                @click="copyUrl(getUrl(file.name))"
               ></i>
             </div>
           </div>
@@ -267,30 +267,50 @@ export default {
      */
     async uploadFile(file, component) {
       //let component = this.upload
-      let ctx = this
-      let duplicateFile = this.checkBeforeUpload(file)
-      if (!duplicateFile) {
-        console.log('starting upload...')
+      // let ctx = this
+      let duplicateFile = this.checkForDuplicate(file)
+      let tooLarge = this.checkforSizeExcess(file)
+      if (!duplicateFile && !tooLarge) {
+        // console.log('starting upload...')
         return await component.uploadHtml5(file)
       }
       else return false
     },
 
     /**
-     * function checkBeforeUpload: check if file with same name 
-     *  and size already exists in a course
+     * function checkForSizeExcess: check if a file is too large
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: April 6, 2021
+     * 
+     * @param file the file to be checked
+     * @returns true if file is too large!
+     */
+    checkforSizeExcess(file) {
+      if(file.size>500000) {
+        // console.log('File too large!')
+        file.error = this.i18n.fileTooLarge
+        return true
+      }
+      return false
+    },
+
+    /**
+     * function checkForDuplicate: check if file with same name 
+     *  and size already exists in a course 
      * 
      * Author: cmc
      * 
      * Last updated: March 29, 2021
      * 
      * @param {object} file file to be uploaded
-     * @returns true if no file with same name and size exists
+     * @returns true if a file with same name and size exists
      */
-    checkBeforeUpload(file){
+    checkForDuplicate(file){
       if(file.success) {
-        console.log('This file has already been uploaded!')
-        file.error = 'duplicate file!'
+        // console.log('This file has already been uploaded!')
+        file.error = this.i18n.duplicateFile
         return true
       }
 
@@ -305,8 +325,8 @@ export default {
         if (entry.originalFilename === attrs.name && 
           entry.size == attrs.size &&
           entry.type === attrs.type ) {
-            console.log('This file already exists in this course!')
-            file.error = 'duplicate file!'
+            // console.log('This file already exists in this course!')
+            file.error = this.i18n.duplicateFile
             return true
           } 
       }
@@ -356,6 +376,13 @@ export default {
       }
     },
 
+    /**
+     * function fileIcon: returns a fas class for expected MIME types
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: April 1, 2021
+     */
     fileIcon(type){
       // List of official MIME Types: http://www.iana.org/assignments/media-types/media-types.xhtml
       var iconClasses = {
@@ -395,6 +422,51 @@ export default {
         }
       }
       return 'fas fa-file'
+    },
+
+    /**
+     * function copyUrl: copy URL for that file
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: April 6, 2021
+     * 
+     * @param url file URL
+     */
+    copyUrl(url) {
+      if (!url) {
+        alert(this.i18n.fileNameError)
+      }
+      const dummy = document.createElement('textarea')
+      dummy.value = url
+      dummy.setAttribute('readonly', '')
+      dummy.style.position = 'absolute'
+      dummy.style.left = '-9999px'
+      document.body.appendChild(dummy)
+      const selected = document.getSelection().rangeCount > 0 ?
+        document.getSelection().getRangeAt(0) :
+        false
+      dummy.select()
+      document.execCommand('copy')
+      document.body.removeChild(dummy)
+      if(selected) {
+        document.getSelection().removeAllRanges()
+        document.getSelection().addRange(selected)
+      }
+    },
+
+    /**
+     * function getUrl: get store download URL for file
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: April 6, 2021
+     *
+     * @param name file name
+     * @return url for the file
+     */
+    getUrl(name) {
+      return `${api}/storage/${this.courseStorage}/download/${name}`
     }
   }
 
@@ -444,4 +516,5 @@ export default {
   color: #fff;
   padding: 0;
 }
+
 </style>
