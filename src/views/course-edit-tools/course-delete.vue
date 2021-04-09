@@ -70,11 +70,9 @@ export default {
      * Last Updated: March 29, 2021
      */
     delCourse() {
-      http.delete(`courses/${this.course.courseId}`)
-      .then( () => {
-        this.$router.push('/courses')
-      })
-      .catch(err => console.error('Failed to delete course:', err))
+      this.$store.dispatch('deleteCourse')
+        .then(() => this.$router.push('/courses'))
+        .catch( err => console.error('ERROR:', err))
     }
   }
 }

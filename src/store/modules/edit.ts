@@ -288,6 +288,65 @@ export default {
   actions: {
 
     /**
+     * Function deleteCourse: delete Course, remove all files
+     *   and storage
+     * 
+     * Author: cmc
+     * 
+     * Last Changed: April 9, 2021
+     * 
+     * @param param0 state variables
+     */
+    deleteCourse({ state }) {
+      let cid = state.course.courseId
+      let sid = state.course.storageId
+      let files = state.course.files
+
+      return new Promise ((resolve, reject) => {
+        // collect delete requests for all course files
+        let requests = []
+        for ( let file of files) {
+          requests.push(
+            http.delete(`storage/${sid}/files/${file.name}`)
+              .then( () => console.log(`removed ${file.originalFilename}`))
+              .catch( (err) => { 
+                // console.error(err)
+                reject(err)
+              })
+          )
+        }
+        http.all(requests)
+          .then(
+            http.spread( () => console.log('FILES REMOVED'))
+          )
+          .catch(err => {
+            // console.error(err)
+            reject(err)
+          })
+          .finally( () => {
+            // delete course storage
+            http.delete(`storage/${sid}`)
+            .then( () => console.log('Container removed!'))
+            .catch( (err) => {
+              // console.error(err)
+              reject(err)
+            })
+          })
+
+        // delete course itself
+        http.delete(`courses/${cid}`)
+        .then( () => {
+          // console.log("REMOVED COURSE", cid)
+          resolve('all good')
+        })
+        .catch(err => {
+          // console.error('Failed to delete course:', err)
+          reject(err)
+        })
+      })
+    },
+
+    /**
      * Function fetchCourse: load course into store
      * 
      * Author: core
