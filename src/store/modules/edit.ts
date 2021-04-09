@@ -152,6 +152,26 @@ export default {
     },
 
     /**
+     * Function delFile: delete file from state and database
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: April 9, 2021
+     * 
+     * @param state contains course file list
+     * @param file file object to remove
+     */
+    delFile(state: { course: { files: object[] } }, file: { name: string, container: string } ) {
+      let idx = state.course.files.indexOf(file)
+      // console.log(`${file.name} hat Stelle ${idx}`)
+      state.course.files.splice(idx, 1)
+      http.delete(`storage/${file.container}/files/${file.name}`)
+        .catch( (err) => {
+          console.error(err)
+        })
+    },
+
+    /**
      * Function renameCourse: rename a Course
      * 
      * Author: core
@@ -220,45 +240,8 @@ export default {
      * @param data array of files
      */
     updateCourseFiles(state: { course: { files: Array<Object> } }, data: Array<Object>) {
-      // state.course.files = [...state.course.files, ...data]
-      /** 
-       * TODO: 
-       * find duplicates (filename, type, size)
-       * remove files that are no longer in the list
-       * 
-       */
-
-      //sort data and state alphabetically
-
-      // let mySort = (a: { name: string},b: { name: string }) => {
-      //   if(a.name < b.name) return -1
-      //   if(a.name > b.name) return 1
-      //   return 0
-      // }
-
-      // const sortedFiles = state.course.files.sort((a: { name:string },b: { name:string }) => mySort(a,b))
-      // const sortedData = data.sort((a: { name:string },b: { name: string }) => mySort(a,b))
-
-      // console.log(sortedFiles)
-      // console.log(sortedData)
-
-      // console.log('removing duplicates from state course files')
-      // let mofo = state.course.files
-      // let removed = 0
-      // for (let i=0; i < state.course.files.length; i++) {
-      //   if (i == mofo.length - 1) break
-      //   for (let j=i+1; j<state.course.files.length; j++) {
-      //     //@ts-ignore
-      //     if (mofo[i].name === mofo[j].name) {
-      //       mofo.splice(j, 1)
-      //       removed++
-      //       j--
-      //     }
-      //   }
-      // }
-      // console.log(`removed ${removed} duplicate elements!`)
       console.log('Start updating Course Files in Store')
-      // 
+      
       let ids = new Set(state.course.files.map((d: {name: string}) => d.name))
       let merged = [...state.course.files, ...data.filter( (d: {name: string}) => !ids.has(d.name) )]
 

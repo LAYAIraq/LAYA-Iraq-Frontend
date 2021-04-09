@@ -161,6 +161,7 @@ export default {
   },
   beforeDestroy() {
     // persist changes in database
+    this.save()
     this.$store.dispatch('storeCourse')
   }
 }

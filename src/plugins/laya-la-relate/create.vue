@@ -7,7 +7,7 @@ Dependencies: @/i18n/plugins/laya-la-relate
 -->
 
 <template>
-  <div class="laya-la-relate-edit">
+  <div class="laya-la-relate-create">
     <label><h4>{{ i18n.title }}</h4></label><i id ="questionmark" class="fas fa-question-circle" @click="toggleTip" 
           :title="i18n.showTip" v-b-tooltip.left></i>
     <b-jumbotron 
@@ -152,7 +152,7 @@ Dependencies: @/i18n/plugins/laya-la-relate
 import * as i18n from '@/i18n/plugins/laya-la-relate'
 
 export default {
-  name: 'laya-la-drag-drop-edit',
+  name: 'laya-la-relate-create',
   created () {
     if (this.relations.length == 0) {
       for (let i=1; i<3 ;i++) {

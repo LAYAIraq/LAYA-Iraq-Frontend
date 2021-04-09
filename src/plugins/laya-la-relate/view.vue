@@ -84,7 +84,7 @@ export default {
   name: 'laya-quiz-relate',
   
   data () {
-    if (Object.entries(this.$attrs).length === 4) //preview
+    if (Object.entries(this.$attrs).length === 5) //preview
       return {
         ...this.$attrs,
         defaultOption: '',
@@ -105,7 +105,7 @@ export default {
   },
   created () {
     this.defaultOption = this.i18n.defaultOption
-    if (Object.entries(this.$attrs).length != 4) { // no preview 
+    if (Object.entries(this.$attrs).length != 5) { // no preview 
       this.fetchData()
     }
   },
@@ -147,6 +147,12 @@ export default {
      */
     options() {
       return this.pairs.map(p => p.relation)
+    }
+  },
+  watch: {
+    content() {
+      this.fetchData
+      this.$forceUpdate
     }
   },
   methods: {

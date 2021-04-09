@@ -7,7 +7,7 @@
       </div>
       <ul 
         class="explorer"
-        v-if="courseFiles"
+        v-if="courseFiles.length>0"
         >
         <li
           v-for="file of courseFiles"
@@ -31,7 +31,7 @@
               {{ fileSize(file.size) }}
             </div>
             
-            <div class="col">
+            <div class="col-0">
               <i 
                 class="fas fa-copy copy"
                 :title="i18n.copyUrl"
@@ -39,14 +39,39 @@
                 @click="copyUrl(getUrl(file.name))"
               ></i>
             </div>
+
+            <div class="col align-self-center">
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                @click="deleteFile(file)"
+              >
+                <i 
+                  class="fas fa-trash"
+                  :title="i18n.deleteFile"
+                  v-b-tooltip.top
+                ></i>
+              </button>
+            </div>
           </div>
         </li>
       </ul>
-
+      <div v-else class="row">
+        {{ i18n.noFiles }}
+      </div>
     
     </div>
     <hr>
-    <div class="file-list-upload">
+    <div class="show-uploader" v-if="!addUpload">
+      <button 
+        type="button"
+        class="btn btn-primary btn-large"
+        @click="addUpload = true">
+          <i class="fas fa-upload"></i>
+          {{ i18n.addUpload }}
+        </button>
+    </div>
+    <div class="file-list-upload" v-else>
       <div class="drag-upload">
 
         <ul v-if="files.length">
@@ -64,7 +89,7 @@
               <div class="col-auto align-self-center">
                 <button 
                   type="button"
-                  class="btn btn-danger btn-sm remove-file"
+                  class="btn btn-danger btn-sm"
                   @click="_removeFile(i)"
                 >
                   <i class="fas fa-times"></i>
@@ -90,41 +115,64 @@
           <h3>{{ i18n.dropToUpload }}</h3>
         </div>
 
-        <div class="example-btn">
-          <file-upload
-            class="btn btn-primary"
-            :custom-action="uploadFile"
-            :post-action="uploadUrl"
-            :multiple="true"
-            :drop="true"
-            :drop-directory="true"
-            v-model="files"
-            ref="upload">
-            <i class="fas fa-plus"></i>
-            {{ i18n.selectFiles }}
-          </file-upload>
-          <button 
-            type="button" 
-            class="btn btn-success" 
-            v-if="!$refs.upload || !$refs.upload.active" 
-            @click.prevent="$refs.upload.active = true"
-          >
-            <i class="fas fa-arrow-up" aria-hidden="true"></i>
-            {{ i18n.startUpload }}
-          </button>
-          <button 
-            type="button" 
-            class="btn btn-danger"  
-            v-else 
-            @click.prevent="$refs.upload.active = false"
-          >
-            <i class="fas fa-stop" aria-hidden="true"></i>
-            {{ i18n.stopUpload }}
-          </button>
+        <div class="button-group">
+          <b-button-group>
+            <file-upload
+              class="btn btn-primary"
+              :custom-action="uploadFile"
+              :post-action="uploadUrl"
+              :multiple="true"
+              :drop="true"
+              :drop-directory="true"
+              v-model="files"
+              ref="upload">
+              <i class="fas fa-plus"></i>
+              {{ i18n.selectFiles }}
+            </file-upload>
+            <button 
+              type="button" 
+              class="btn btn-success" 
+              v-if="!$refs.upload || !$refs.upload.active" 
+              @click.prevent="$refs.upload.active = true"
+            >
+              <i class="fas fa-arrow-up" aria-hidden="true"></i>
+              {{ i18n.startUpload }}
+            </button>
+            <button 
+              type="button" 
+              class="btn btn-danger"  
+              v-else 
+              @click.prevent="$refs.upload.active = false"
+            >
+              <i class="fas fa-stop" aria-hidden="true"></i>
+              {{ i18n.stopUpload }}
+            </button>
+            <button 
+              type="button"
+              class="btn btn-warning"
+              @click="addUpload = false"
+            >
+              <i class="fas fa-minus"></i>
+              {{ i18n.hideUploader }}
+            </button>
+          </b-button-group>
         </div>
 
       </div>
     </div>
+
+    <b-modal 
+      id="file-delete-confirm"
+      :title="i18n.deleteFile"
+      centered
+      header-bg-variant="danger"
+      ok-variant="danger"
+      @ok="confirmedFileDelete"
+      @cancel="fileToDelete = null"
+    >
+      {{ i18n.deleteFileConfirm }}
+    </b-modal>
+
   </div>
 </template>
 
@@ -197,7 +245,9 @@ export default {
 
   data() {
     return {
+      addUpload: false,
       files: [],
+      fileToDelete: null,
       uploaded: false,
       uploadedFiles: []
     }
@@ -467,6 +517,34 @@ export default {
      */
     getUrl(name) {
       return `${api}/storage/${this.courseStorage}/download/${name}`
+    },
+
+    /**
+     * Function deleteFile: mark file as to delete, show prompt
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: April 9, 2021
+     * 
+     * @param file the file to delete
+     */
+    deleteFile(file) {
+      this.fileToDelete = file
+      this.$bvModal.show('file-delete-confirm')
+    },
+
+    /**
+     * Function confirmedFileDelete: propagate file to delete to vuex,
+     *  nullify the global variable 
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: April 9, 2021
+     */
+    confirmedFileDelete() {
+      let file = this.fileToDelete
+      this.$store.commit('delFile', file)
+      this.fileToDelete = null
     }
   }
 
@@ -486,6 +564,10 @@ export default {
 
 .explorer .copy {
   cursor: copy;
+}
+
+.file-list {
+  padding: 10px;
 }
 
 .file-list-upload label.btn {

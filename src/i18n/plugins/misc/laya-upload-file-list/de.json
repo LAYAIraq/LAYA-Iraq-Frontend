@@ -1,6 +1,9 @@
 {
   "active": "aktiv",
+  "addUpload": "Dateien hochladen",
   "copyUrl": "URL der Datei kopieren",
+  "deleteFile": "Datei löschen",
+  "deleteFileConfirm": "Möchten Sie die Datei wirklich löschen?",
   "dropOr": "Dateien hierher ziehen zum hochladen <br>oder",
   "dropToUpload": "Dateien ablegen zum Hochladen",
   "duplicateFile": "Doppelte Datei!",
@@ -8,6 +11,8 @@
   "fileNameError": "Fehler: Dateiname nicht gefunden!",
   "fileTooLarge": "Datei ist zu groß!",
   "fileType": "Dateityp",
+  "hideUploader": "Upload-Fenster verbergen",
+  "noFiles": "Es sind derzeit keine Dateien in diesem Kurs vorhanden!",
   "removeFile": "Datei entfernen",
   "selectFiles": "Dateien auswählen",
   "startUpload": "Hochladen beginnen",
