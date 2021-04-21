@@ -1,8 +1,5 @@
 import http from 'axios'
-import router from '../../router.js'
-import { ids as supportedLangs } from '../../misc/langs.js'
-import { courseCopy } from '@/views/course-edit-tools/index.js'
-import store from '../index.js'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   state: {
@@ -305,15 +302,17 @@ export default {
       return new Promise ((resolve, reject) => {
         // collect delete requests for all course files
         let requests = []
-        for ( let file of files) {
-          requests.push(
-            http.delete(`storage/${sid}/files/${file.name}`)
-              .then( () => console.log(`removed ${file.originalFilename}`))
-              .catch( (err) => { 
-                // console.error(err)
-                reject(err)
-              })
-          )
+        if (files) {
+          for ( let file of files) {
+            requests.push(
+              http.delete(`storage/${sid}/files/${file.name}`)
+                .then( () => console.log(`removed ${file.originalFilename}`))
+                .catch( (err) => { 
+                  // console.error(err)
+                  reject(err)
+                })
+            )
+          }
         }
         http.all(requests)
           .then(
@@ -342,6 +341,138 @@ export default {
         .catch(err => {
           // console.error('Failed to delete course:', err)
           reject(err)
+        })
+      })
+    },
+
+    /**
+     * Function copyCourse: copy course and all the files
+     *  FIXME: file list is not put in database
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: April 21, 2021
+     * @param param0 
+     * @param newName 
+     */
+    copyCourse({commit, state, rootState}, newName: string) {
+      console.log('Original Course Files:', state.course.files)
+      // console.log(rootState)
+      // create new course object
+      let newId = uuidv4()
+      let newStorage = uuidv4()
+      let copiedCourse = { ...state.course,
+        name: newName,
+        createDate: Date.now(),
+        lastChanged: Date.now(),
+        courseId: newId,
+        storageId: newStorage
+      }
+
+      // create new Storage
+      let store = http.post('storage', { name: newStorage })
+      let fileReqs = []
+      let newFiles = []
+      store.then( () => {
+        // storage created, now copy files
+        // therefore, we create an array of requests
+        state.course.files.forEach( (file: { 
+          name: string, 
+          container: string, 
+          originalFilename: string
+        }) => {
+          fileReqs.push(
+            // download file
+            new Promise((resolve, reject) => {
+              http.get(`storage/${file.container}/download/${file.name}`)
+              .then( resp => {
+                //file was downloaded, extract values
+                // console.log('new data: ', resp)
+                let mimeType = JSON.parse(JSON.stringify(resp.headers))['content-type']
+                // console.log(mimeType)
+                let blob = new Blob([resp.data], {type: mimeType})
+                // console.log(blob)
+                const formData = new FormData()
+                formData.append('file', blob, file.originalFilename)
+                
+                // re-upload file in new storage
+                http.post(`storage/${newStorage}/upload/`, formData, {
+                  headers: {
+                    'Content-Type': 'multipart/form-data'
+                  }
+                  })
+                  .then( resp => {
+                    // file was re-uploaded, push values to newFiles
+                    let newFile = resp.data.result.files.file[0]
+                    // console.log(newFile)
+                    // console.log('File uploaded: ', resp)
+                    newFiles.push(newFile)
+                    // console.log('New files:', newFiles)
+                    resolve('done')
+                  })
+                  .catch( err => {
+                    // file re-upload failed
+                    // console.error('Hier geht nix: ', err)
+                    reject('nox')
+                  })
+              })
+            })
+          )
+        })
+      })
+      .catch( err => { 
+        // creating new storage failed, return reject
+        return new Promise((resolve, reject) => { 
+          reject(err) 
+        }) 
+      })
+
+      // fire all requests for new files
+      // console.log('Array of requests: ', fileReqs)
+      let copiedFiles = Promise.allSettled(fileReqs)
+      copiedFiles.then( (...resp) => {
+
+        // console.log('ALL FILES HAVE SUCCESSFULLY BEEN UPLOADED!')
+        // console.log(resp)
+        // console.log(newFiles)
+        copiedCourse = {
+          ...copiedCourse, 
+          files: newFiles
+        }
+        // console.log('NEW COPIED COURSE:', copiedCourse)
+
+        return new Promise( (resolve,reject) => {
+          console.log('again: this course should be posted ', copiedCourse)
+          // FIXME: filelist is not pushed in database
+          http.post(`courses`, copiedCourse)
+            .then( (resp) => { 
+              // console.log('This response we got: ', resp)
+              resolve('success')
+              // FIXME: Copy File List to Course
+              // let fileList = []
+              // newFiles.forEach(elem => {
+              //   let copy = JSON.parse(JSON.stringify(elem))
+              //   fileList.push(copy)
+              // })
+              // console.log('We try to push these files:', fileList)
+              // console.log('We tried to copy this array: ', newFiles)
+
+              // http.post(`courses/${newId}/update-files`, newFiles)
+              //   .then( (resp) => {
+              //     console.log(`New course files: `, resp)
+              //     resolve('success')
+              //   })
+              //   .catch((err) => {
+              //     reject(err)
+              //   })
+            })
+            .catch( (err) => { reject(err)})
+        })
+      })
+      .catch(err => { 
+        // copying course files failed, return reject
+        return new Promise((resolve, reject) => { 
+          reject(err) 
         })
       })
     },

@@ -67,11 +67,14 @@ export default {
      * 
      * Author: cmc
      * 
-     * Last Updated: March 29, 2021
+     * Last Updated: April 9, 2021
      */
     delCourse() {
       this.$store.dispatch('deleteCourse')
-        .then(() => this.$router.push('/courses'))
+        .then(() => {
+          this.$store.dispatch('fetchCourseList')
+          this.$router.push('/courses')
+        })
         .catch( err => console.error('ERROR:', err))
     }
   }

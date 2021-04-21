@@ -10,6 +10,7 @@
     },
     "toast": {
         "title": "Author Tools",
-        "text": "Course Name already exists!"
+        "text": "Course Name already exists!",
+        "copySuccess": "Course successfully copied!"
     }
 }

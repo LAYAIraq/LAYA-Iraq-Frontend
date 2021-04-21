@@ -10,6 +10,7 @@
     },
     "toast": {
         "title": "Autor-Tools",
-        "text": "Der Kursname exisitiert bereits!"
+        "text": "Der Kursname exisitiert bereits!",
+        "copySuccess": "Kurs erfolgreich kopiert!"
     }
 }
