@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="26px" height="26px" viewBox="0 0 26 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.7.2 (28276) - http://www.bohemiancoding.com/sketch -->
+    <title>vimeo</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0 26 25.727 26 25.727 0.418 0 0.418"></polygon>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="vimeo" transform="translate(0.000000, -1.000000)">
+            <g id="Page-1">
+                <g id="Group-3" transform="translate(0.000000, 0.581700)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <g id="Clip-2"></g>
+                    <path d="M12.8636,26 C19.9676,26 25.7276,20.273 25.7276,13.209 C25.7276,6.145 19.9676,0.418 12.8636,0.418 C5.7596,0.418 -0.0004,6.145 -0.0004,13.209 C-0.0004,20.273 5.7596,26 12.8636,26" id="Fill-1" fill="#1D1C1B" mask="url(#mask-2)"></path>
+                </g>
+                <path d="M5.9945,11.2491 C7.4175,9.9731 8.6875,7.7481 10.1615,8.2101 C12.6045,8.8431 11.5495,13.5171 12.9375,15.7021 C14.8385,14.6291 16.0725,12.3741 15.5605,11.2031 C15.4455,10.8761 15.5855,10.0601 14.0235,10.7731 C13.6185,10.9581 13.6355,10.2411 13.7065,10.1441 C15.1525,8.5561 15.9865,7.8931 16.9755,7.9341 C17.8075,8.0731 19.2705,9.0071 19.0015,11.2491 C18.4445,14.5841 13.5475,19.8221 11.9115,19.6291 C10.0375,20.0421 9.0845,14.1221 7.6755,11.3411 L6.3855,11.8401 C5.8535,11.9241 5.9275,11.5841 5.9945,11.2491" id="Fill-4" fill="#FEFEFE"></path>
+            </g>
+        </g>
+    </g>
+</svg>
