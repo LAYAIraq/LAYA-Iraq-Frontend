@@ -147,23 +147,15 @@ Dependencies:
 
     </form>
 
-    <hr>
-
-    <laya-upload-file-list></laya-upload-file-list>
-
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import * as i18n from '@/i18n/plugins/laya-la-relate'
-import LayaUploadFileList from '@/plugins/misc/laya-upload-file-list/file-list.vue'
 
 export default {
   name: 'laya-la-relate-edit',
-  components: {
-    LayaUploadFileList
-  },
   created() {
     this.fetchData()
   },

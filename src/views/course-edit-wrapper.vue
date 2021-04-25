@@ -20,6 +20,7 @@ Dependencies:
           <div v-show="!preview">
             <component v-if="!editContent" :is="comps.new" ref="new"></component>
             <component v-else :is="comps.edit" ref="edit"></component>
+            
           </div>
           <hr>
 
@@ -36,6 +37,9 @@ Dependencies:
             </button>
           </div>
 
+          <hr>
+          <laya-upload-file-list v-if="!preview"></laya-upload-file-list>
+
         </div>
       </div>
     </div>
@@ -45,10 +49,14 @@ Dependencies:
 <script>
 import * as i18n from '@/i18n/course-wrapper'
 import { mapGetters, mapState } from 'vuex'
+import LayaUploadFileList from '@/plugins/misc/laya-upload-file-list/file-list.vue'
 
 
 export default {
   name: 'course-edit-wrapper',
+  components: {
+    LayaUploadFileList
+  },
   data() {
     return {
       preview: false,

@@ -14,6 +14,7 @@
   "hideUploader": "Upload-Fenster verbergen",
   "noFiles": "Es sind derzeit keine Dateien in diesem Kurs vorhanden!",
   "removeFile": "Datei entfernen",
+  "removeUpload": "Datei von Uploads entfernen",
   "selectFiles": "Dateien auswählen",
   "startUpload": "Hochladen beginnen",
   "stopUpload": "Hochladen beenden",

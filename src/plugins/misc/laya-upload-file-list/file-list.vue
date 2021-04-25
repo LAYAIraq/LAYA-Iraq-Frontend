@@ -44,12 +44,13 @@
               <button
                 type="button"
                 class="btn btn-danger btn-sm"
+                :title="i18n.deleteFile"
+                v-b-tooltip.top
                 @click="deleteFile(file)"
               >
                 <i 
                   class="fas fa-trash"
-                  :title="i18n.deleteFile"
-                  v-b-tooltip.top
+                  
                 ></i>
               </button>
             </div>
@@ -80,19 +81,24 @@
             :key="file.id"
           >
             <div class="row">
-              <div class="col-auto"> {{ file.name }} </div>
-              <div class="col-auto"> {{ fileSize(file.size) }} </div>
+              <div class="col-5"> {{ file.name }} </div>
+              <div class="col-2 size"> {{ fileSize(file.size) }} </div>
               <div class="col-auto" v-if="file.error"> {{ file.error }} </div>
               <div class="col-auto" v-else-if="file.success"> {{ i18n.success }} </div>
               <div class="col-auto" v-else-if="file.active"> {{ i18n.active }} </div>
               <div class="col-auto" v-else></div>
-              <div class="col-auto align-self-center">
+              <div class="col-0 align-self-center" v-if="!file.success">
                 <button 
                   type="button"
                   class="btn btn-danger btn-sm"
+                  :title="i18n.removeUpload"
+                  v-b-tooltip.right
                   @click="_removeFile(i)"
                 >
-                  <i class="fas fa-times"></i>
+                  <i 
+                    class="fas fa-times" 
+                    >
+                  </i>
                 </button>
               </div>
             </div>

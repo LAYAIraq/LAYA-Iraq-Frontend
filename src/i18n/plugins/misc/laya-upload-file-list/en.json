@@ -14,6 +14,7 @@
   "hideUploader": "Hide Uploader",
   "noFiles": "There are currently no files in this Course!",
   "removeFile": "Remove file",
+  "removeUpload": "Remove File from Uploads",
   "selectFiles": "Select files",
   "startUpload": "Start upload",
   "stopUpload": "Stop upload",
