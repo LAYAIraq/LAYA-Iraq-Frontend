@@ -1,3 +1,13 @@
+<!--
+Filename: view.vue
+Use: Display Drag & Drop content block
+Creator: core
+Date: unknown
+Dependencies:
+  vuex,
+  @/i18n/plugins/laya-la-drag-drop
+-->
+
 <template>
   <div class="laya-quiz-drag-drop">
     <div class="container">
@@ -17,7 +27,7 @@
 
       <div class="row">
         <div class="col">
-          <div v-for="(item,i) in items" :key="item.label" class="item">
+          <div v-for="(item,i) in items" :key="item.label" class="item mb-5">
             <h4 class="text-center item-label">
               {{ item.label }}
               <i v-if="checked"
@@ -34,7 +44,7 @@
             <input type="range"
                    class="custom-range"
                    min="0"
-                   :max="categories.length"
+                   :max="categories.length-1"
                    :disabled="checked"
                    v-model.number="solution[i]">
           </div>
@@ -46,7 +56,7 @@
                 class="btn btn-link mt-3"
                 :disabled="checked"
                 @click="check">
-          {{ i18n.addSolution }}
+          {{ i18n.check }}
         </button>
         <button type="button"
                 class="btn btn-primary mt-3 ml-auto"
@@ -60,57 +70,112 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/plugins/laya-la-drag-drop";
+import { mapGetters } from 'vuex'
+import * as i18n from '@/i18n/plugins/laya-la-drag-drop'
 
 export default {
-  name: "laya-quiz-drag-drop",
+  name: 'laya-quiz-drag-drop',
   created () {
-    const mid = Math.floor((this.categories.length+1)/2)
-    let s = this.items.map(i => mid)
-    this.solution = [...s]
+    this.mapSolutions()
+    this.fetchData()
   },
   data () {
+    if (Object.entries(this.$attrs).length === 5) //for showing preview
+      return {
+        ...this.$attrs,
+        checked: false,
+        solution: [], // users solution as index
+        eval: []
+      }
     return {
       checked: false,
       solution: [], // users solution as index
       eval: [], // list of booleans
+      title: '',
+      task: '',
+      taskAudio: '',
+      items: [],
+      categories: [],
     }
   },
   props: {
-    title: String,
-    task: String,
-    taskAudio: String,
-    items: Array,
-    categories: Array,
     onFinish: Array
   },
   computed: {
+    ...mapGetters(['content', 'profileLang']),
+
+     /**
+     * i18n: Load translation files depending on user language
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 12, 2021
+     * 
+     */
     i18n() {
-      return i18n[this.$store.state.profile.lang]
+      return i18n[this.profileLang]
     }
   },
   methods: {
+
+    /**
+     * Function done: execute function from onFinish[0]
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     done() {
       this.onFinish[0]()
     },
-    check() {
 
-      for(let i=0; i<this.solution.length; i++) {
-        let solution = this.solution[i]
-        switch (this.solution[i]) {
-          case 0:
-            this.eval[i] = (this.items[i].category === 0)
-            break
-          case 1:
-            this.eval[i] = false
-            break
-          case 2:
-            this.eval[i] = (this.items[i].category === 1)
-            break
+    /**
+     * Function check: check if given answers are correct
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    check() {
+      if (this.eval.length == 0) {
+        for(let i=0; i<this.solution.length; i++) {
+          let solution = this.solution[i]
+          this.eval[i] = (solution == this.items[i].category)
         }
       }
-      this.checked = true
-      this.$forceUpdate()
+      
+      this.checked = !this.checked
+      //this.$forceUpdate()
+    },
+
+    /**
+     * Function mapSolutions: initialize rendered ranges to the middle
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    mapSolutions() {
+      const mid = Math.floor((this.categories.length)/2)
+      let s = this.items.map(i => mid)
+      this.solution = [...s]
+    },
+
+    /**
+     * Function fetchData(): fetch data from vuex and make data property
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 12, 2021
+     */
+    fetchData() {
+      let idx = this.$route.params.step - 1
+      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
+      this.title = preData.title
+      this.task = preData.task
+      this.taskAudio = preData.taskAudio
+      this.items = preData.items
+      this.categories = preData.categories
     }
   }
 }

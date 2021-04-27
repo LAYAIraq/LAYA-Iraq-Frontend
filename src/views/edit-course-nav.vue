@@ -1,3 +1,14 @@
+<!--
+Filename edit-course-nav.vue 
+Use: Edit paths through a course
+Creator: core
+Date: unknown
+Dependencies: 
+  vis-network,
+  vuex,
+  @/i18n/course-nav-edit
+-->
+
 <template>
   <div class="edit-course-nav-view">
 
@@ -7,17 +18,11 @@
         <div class="col">
 
           <h4>{{ i18n.title }}</h4>
-          <p>
-            {{ i18n.text.p1pt1 }}<u>{{ i18n.text.p1pt2 }}</u>{{ i18n.text.p1pt3 }}
+          <p v-html="i18n.text.p1">
           </p>
-          <p>
-            {{ i18n.text.p2pt1 }}<b>1</b>{{ i18n.text.p2pt2 }}<b>4</b>
-            {{ i18n.text.p2pt3 }}<b>1</b>{{ i18n.text.p2pt4 }}<b>4</b>.
+          <p v-html="i18n.text.p2">
           </p>
-          <p>
-            {{ i18n.text.p3pt1 }}
-            <br>{{ i18n.text.p3pt2 }}<b class="bg-light rounded py-1 px-2">3, 4</b>
-            {{ i18n.text.p3pt3 }}<b>3</b>{{ i18n.text.p3pt4 }}<b>4</b>{{ i18n.text.p3pt5 }}
+          <p v-html="i18n.text.p3">
           </p>
 
         </div>
@@ -46,7 +51,7 @@
 
       </div>
 
-      <div class="row" v-for="(step,i) in content" :key="'step-'+i">
+      <div class="row" v-for="(step,i) in courseContent" :key="'step-'+i">
 
         <div class="col-2">
           <b>{{ i+1 }}</b>
@@ -73,7 +78,7 @@
             <i class="fas fa-level-up-alt"></i>
           </button>
           <!-- swap down -->
-          <button v-if="i < content.length-1"
+          <button v-if="i < courseContent.length-1"
                   type="button"
                   class="btn btn-primary btn-sm float-right"
                   @click="swapDown(i)">
@@ -131,15 +136,16 @@
 </template>
 
 <script>
-import vis from "vis-network"
-import * as i18n from "@/i18n/course-nav-edit"
-
-//import BSpinner from "bootstrap-vue"
+import vis from 'vis-network'
+import { mapGetters } from 'vuex'
+import * as i18n from '@/i18n/course-nav-edit'
 
 export default {
-  name: "edit-course-nav-view",
+  name: 'edit-course-nav-view',
   created() {
-    this.content = [...this.course.content]
+    //create deep copy of store object to manipulate in vue instance
+    let preData = JSON.parse(JSON.stringify(this.content))
+    this.courseContent = preData
   },
   mounted() {
     if(!this.formInvalid)
@@ -148,61 +154,118 @@ export default {
   data() {
     return {
       graph: null,
-
-      content: [{
-        name: "",
-        input: {},
-      }]
+      courseContent: []
     }
   },
   props: {
-    course: Object,
     onnavupdate: Function
   },
   computed: {
-    formInvalid: function() {
-      return this.content.reduce((res, val) => !val.nextStep || res, false)
+    ...mapGetters(['content', 'profileLang']),
+
+    /**
+     * formInvalid: checks if all contents have nextStep set
+     * 
+     * Author: core
+     * 
+     * Last Updated: January 20, 2021
+     */
+    formInvalid() {
+      return this.courseContent.reduce((res, val) => !val.nextStep || res, false)
     },
+
+    /**
+     * navGraphId: returns 'nav-graph' as identifier for html element
+     */
     navGraphId() {
-      return "nav-graph"
+      return 'nav-graph'
     },
+
+    /**
+     * i18n: Load translation files depending on user language
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 21, 2021
+     * 
+     */
     i18n() {
-      return i18n[this.$store.state.profile.lang]
+      return i18n[this.profileLang]
     }
   },
   methods: {
 
+    /**
+     * Function swapUp: swap element with the one above
+     * 
+     * Author: core
+     * 
+     * Last Updated: January 20, 2021
+     * 
+     * @param {number} i index of element to swap up
+     */
     swapUp(i) {
-      [this.content[i-1], this.content[i]] =
-        [this.content[i], this.content[i-1]]
+      [this.courseContent[i-1], this.courseContent[i]] =
+        [this.courseContent[i], this.courseContent[i-1]]
       this.$forceUpdate()
     },
 
+    /**
+     * Function swapDown: swap element with the one below
+     * 
+     * Author: core
+     * 
+     * Last Updated: January 20, 2021
+     * 
+     * @param {number} i index of element to swap down
+     */
     swapDown(i) {
-      [this.content[i], this.content[i+1]] =
-        [this.content[i+1], this.content[i]]
+      [this.courseContent[i], this.courseContent[i+1]] =
+        [this.courseContent[i+1], this.courseContent[i]]
       this.$forceUpdate()
     },
 
+    /**
+     * Function typeName: returns name of content block in locale,
+     *  de if locale not available
+     * 
+     * Author: core
+     * 
+     * Last Updated: January 20, 2021
+     * 
+     * @param {string} compName name of content block
+     */
     typeName(compName) {
       let lang = this.$store.state.profile.lang
-      if ({...this.$laya.la, ...this.$laya.lb}[compName].i18n.hasOwnProperty(lang))
-        return {...this.$laya.la, ...this.$laya.lb}[compName].i18n[lang]
-      else return {...this.$laya.la, ...this.$laya.lb}[compName].i18n.de
+      let comps = {...this.$laya.la, ...this.$laya.lb}
+      if (comps[compName].i18n.hasOwnProperty(lang)) {
+        return comps[compName].i18n[lang].name
+      }
+        
+      else {
+        return comps[compName].i18n.de.name
+      }
     },
 
+    /**
+     * Function renderNavGraph: render graph for course path
+     * 
+     * Author: core
+     * 
+     * Last Updated: January 20, 2021
+     */
     renderNavGraph() {
       const self = this
 
-      let _nodes = self.content.map(
+      let _nodes = self.courseContent.map(
         (c,i) => ({id: i+1, label: `${i+1}. ${self.typeName(c.name)}`})
       )
 
       let _edges = []
-      for(let i=0; i<self.content.length; ++i) {
-        let c = self.content[i]
+      for(let i=0; i<self.courseContent.length; ++i) {
+        let c = self.courseContent[i]
         if(!c.nextStep) continue
-        let steps = c.nextStep.split(",").map(s => parseInt(s))
+        let steps = c.nextStep.split(',').map(s => parseInt(s))
         for(let s=0; s<steps.length; ++s) {
           _edges.push({from: i+1, to: steps[s]})
         }
@@ -213,10 +276,10 @@ export default {
         edges: new vis.DataSet(_edges)
       }, {
         edges: {
-          arrows: "to"
+          arrows: 'to'
         },
         nodes: {
-          shape: "box"
+          shape: 'box'
         },
         physics: {
           enabled: true,
@@ -228,12 +291,12 @@ export default {
         interaction: {
           dragNodes: false,
           selectable: false,
-        }
+        },
         /*
         layout: {
           hierarchical: {
             enabled: true,
-            direction: "LR"
+            direction: 'LR'
           }
         }
         */
@@ -241,13 +304,19 @@ export default {
       graph.selectNodes([1])
     },
 
+    /**
+     * Function save: save changes in store and db
+     * 
+     * Author: core
+     * 
+     * Last Updated: January 20, 2021
+     */
     save() {
-      this.onnavupdate(this.content)
+      this.$store.commit('updateCourseNav', this.courseContent)
+      this.$store.dispatch('storeCourse')
+      this.$emit('saved')
     }
-  },
-  /*components: {
-   // BSpinner
-  }*/
+  }
 }
 </script>
 

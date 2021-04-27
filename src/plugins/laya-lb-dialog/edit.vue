@@ -1,8 +1,28 @@
+<!--
+Filename: edit.vue
+Use: Edit Dialog content block
+Creator: core
+Date: unknown
+Dependencies:
+  vuex,
+  @/i18n/plugins/laya-lb-dialog
+-->
+
 <template>
   <div class="laya-lb-dialog-edit">
-
-    <h4>{{ i18n.title }}</h4>
+     
+    <label><h4>{{ i18n.title }}</h4></label> <i id="questionmark" class="fas fa-question-circle" @click="toggleTip" 
+          :title="i18n.showTip" v-b-tooltip.left></i>
     <hr>
+    
+    <b-jumbotron 
+            v-if="tooltipOn"
+            :header="i18n.title" :lead="i18n.tipHeadline">
+          <hr class="my-4">
+          <span v-html="i18n.tooltip"></span>
+
+    </b-jumbotron>
+
     <form>
 
       <div class="form-group row">
@@ -67,30 +87,98 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/plugins/laya-lb-dialog"
+import * as i18n from '@/i18n/plugins/laya-lb-dialog'
+import { mapGetters } from 'vuex'
 
 export default {
-  name: "laya-lb-dialog-edit",
+  name: 'laya-lb-dialog-edit',
+  created() {
+    this.fetchData()
+  },
   data() {
-    if(Object.entries(this.$attrs).length > 0)
-      return {...this.$attrs}
     return {
-      bg: "",
-      question: "",
+      bg: '',
+      question: '',
       answers: [],
+      tooltipOn: false
     }
   },
   methods: {
+    /**
+     * Function _delItem: delete item at given index
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param {*} idx index of item
+     */
     _delItem(idx) {
       this.answers.splice(idx, 1)
     },
+
+    /**
+     * Function _addItem: add item
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     _addItem() {
-      this.answers.push("")
+      this.answers.push('')
     },
+
+    /**
+     * Function toggleTip: toggle tooltipOn boolean
+     * 
+     * Author: cmc
+     * 
+     * Last updated: unknown
+     */
+    toggleTip() {
+      this.tooltipOn = !this.tooltipOn
+    },
+
+    /**
+     * Function fetchData: Fetch data from vuex and make data property
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 19, 2021
+     */
+    fetchData() {
+      let idx = this.$route.params.step -1 //comply with array indexing in store
+      //create deep copy of store object to manipulate in vue instance
+      let preData = JSON.parse(JSON.stringify(this.content[idx].input))
+      this.bg = preData.bg
+      this.question = preData.question
+      this.answers = preData.answers
+    }
   },
   computed: {
+    ...mapGetters(['content', 'profileLang']),
+
+    /**
+     * i18n: Load translation files depending on user language
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 19, 2021
+     * 
+     */
     i18n() {
       return i18n[this.$store.state.profile.lang]
+    },
+
+    /**
+     * step: return the step of the content block
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: January 16, 2021
+     */
+    step() {
+      return this.$route.params.step
     }
   }
 }
@@ -134,5 +222,20 @@ export default {
 .answers > button:last-child {
   margin-right: 0;
 }
+
+#questionmark {
+  float: inline-end;
+  cursor: pointer;
+}
+
+.helptext {
+    border: 1px;
+    border-color: green;
+    padding: 5px;
+  }
+.helptext i {
+    float: inline-start;
+    margin-right: 10px;
+  }
 
 </style>

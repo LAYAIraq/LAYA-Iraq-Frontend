@@ -1,3 +1,11 @@
+<!--
+Filename: footer.vue 
+Use: Shows the whole footer area
+Creator: core
+Date: unknown
+Dependencies: @/i18n/footer
+-->
+
 <template>
   <footer id="ly-footer">
     <div class="container" style="border-top: 0.2rem solid black; padding-top: 1rem;">
@@ -69,20 +77,20 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/footer";
+import * as i18n from '@/i18n/footer'
 
 export default {
   name: "ly-footer",
   data() {
-    return {};
+    return {}
   },
   computed: {
-    i18n: function() {
-      return i18n[this.$store.state.profile.lang];
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
     }
   },
   components: {}
-};
+}
 </script>
 
 <style scoped>

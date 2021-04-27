@@ -1,3 +1,11 @@
+<!-- 
+Filename: view.vue
+Use: Show button to play audio
+Creator: core
+Date: unknown
+Dependencies: none
+-->
+
 <template>
   <span class="laya-audio-inline">
     <button type="button"
@@ -22,10 +30,16 @@ export default {
   props: {
     src: String,
   },
-  computed: {
-  },
   methods: {
-    togglePlay: function() {
+
+    /**
+     * Function togglePlay: toggle audio
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    togglePlay() {
       if (this.playing) {
         this.$refs.player.pause()
         this.playing = false
