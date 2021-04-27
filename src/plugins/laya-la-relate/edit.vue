@@ -155,7 +155,7 @@ import { mapGetters } from 'vuex'
 import * as i18n from '@/i18n/plugins/laya-la-relate'
 
 export default {
-  name: 'laya-la-drag-drop-edit',
+  name: 'laya-la-relate-edit',
   created() {
     this.fetchData()
   },
@@ -176,10 +176,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['hasContent', 'profileLang']),
+    ...mapGetters(['content', 'courseStorage', 'profileLang']),
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 
@@ -262,7 +262,7 @@ export default {
      */
     fetchData() {
       let idx = this.$route.params.step - 1
-      const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.title = preData.title
       this.task = preData.task
       this.taskAudio = preData.taskAudio
@@ -277,10 +277,6 @@ export default {
 *:focus {
   outline: 2px dashed deepskyblue;
   outline-offset: 5px;
-}
-
-legend {
-  font-size: 1rem;
 }
 
 #questionmark {

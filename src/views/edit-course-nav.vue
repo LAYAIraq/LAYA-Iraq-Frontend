@@ -51,7 +51,7 @@ Dependencies:
 
       </div>
 
-      <div class="row" v-for="(step,i) in content" :key="'step-'+i">
+      <div class="row" v-for="(step,i) in courseContent" :key="'step-'+i">
 
         <div class="col-2">
           <b>{{ i+1 }}</b>
@@ -78,7 +78,7 @@ Dependencies:
             <i class="fas fa-level-up-alt"></i>
           </button>
           <!-- swap down -->
-          <button v-if="i < content.length-1"
+          <button v-if="i < courseContent.length-1"
                   type="button"
                   class="btn btn-primary btn-sm float-right"
                   @click="swapDown(i)">
@@ -144,8 +144,8 @@ export default {
   name: 'edit-course-nav-view',
   created() {
     //create deep copy of store object to manipulate in vue instance
-    let preData = JSON.parse(JSON.stringify(this.hasContent))
-    this.content = preData
+    let preData = JSON.parse(JSON.stringify(this.content))
+    this.courseContent = preData
   },
   mounted() {
     if(!this.formInvalid)
@@ -154,14 +154,14 @@ export default {
   data() {
     return {
       graph: null,
-      content: []
+      courseContent: []
     }
   },
   props: {
     onnavupdate: Function
   },
   computed: {
-    ...mapGetters(['hasContent', 'profileLang']),
+    ...mapGetters(['content', 'profileLang']),
 
     /**
      * formInvalid: checks if all contents have nextStep set
@@ -171,7 +171,7 @@ export default {
      * Last Updated: January 20, 2021
      */
     formInvalid() {
-      return this.content.reduce((res, val) => !val.nextStep || res, false)
+      return this.courseContent.reduce((res, val) => !val.nextStep || res, false)
     },
 
     /**
@@ -182,7 +182,7 @@ export default {
     },
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 
@@ -205,8 +205,8 @@ export default {
      * @param {number} i index of element to swap up
      */
     swapUp(i) {
-      [this.content[i-1], this.content[i]] =
-        [this.content[i], this.content[i-1]]
+      [this.courseContent[i-1], this.courseContent[i]] =
+        [this.courseContent[i], this.courseContent[i-1]]
       this.$forceUpdate()
     },
 
@@ -220,8 +220,8 @@ export default {
      * @param {number} i index of element to swap down
      */
     swapDown(i) {
-      [this.content[i], this.content[i+1]] =
-        [this.content[i+1], this.content[i]]
+      [this.courseContent[i], this.courseContent[i+1]] =
+        [this.courseContent[i+1], this.courseContent[i]]
       this.$forceUpdate()
     },
 
@@ -257,13 +257,13 @@ export default {
     renderNavGraph() {
       const self = this
 
-      let _nodes = self.content.map(
+      let _nodes = self.courseContent.map(
         (c,i) => ({id: i+1, label: `${i+1}. ${self.typeName(c.name)}`})
       )
 
       let _edges = []
-      for(let i=0; i<self.content.length; ++i) {
-        let c = self.content[i]
+      for(let i=0; i<self.courseContent.length; ++i) {
+        let c = self.courseContent[i]
         if(!c.nextStep) continue
         let steps = c.nextStep.split(',').map(s => parseInt(s))
         for(let s=0; s<steps.length; ++s) {
@@ -312,7 +312,7 @@ export default {
      * Last Updated: January 20, 2021
      */
     save() {
-      this.$store.commit('updateCourseNav', this.content)
+      this.$store.commit('updateCourseNav', this.courseContent)
       this.$store.dispatch('storeCourse')
       this.$emit('saved')
     }

@@ -57,31 +57,6 @@ export default {
     },
 
     /**
-     * function setUserLang: persist locale to backend
-     * 
-     * Author: cmc
-     * 
-     * Last Updated: unknown 
-     * 
-     * @param state contains lang
-     * @param data contains user language and id
-     */
-    setUserLang(state: { lang: string }, 
-        data: { lang: string, uid: number }) { 
-      //save language choice in User's profile
-      if (supportedLangs.includes(data.lang)) {
-        state.lang = data.lang
-        http.post(`/accounts/${data.uid}/change-language`, data)
-          .then( () => console.log(`Changed language to ${state.lang}`))
-          .catch((err) => console.error(err))
-      }
-      else {
-        console.log('Setting language failed')
-        state.lang = supportedLangs[0]
-      }
-    },
-
-    /**
      * Function toggleMedia: toggle input media boolean
      * 
      * Author: core
@@ -114,12 +89,7 @@ export default {
           video: object,
           audio: object
         } ) {
-      state.prefs.media = {
-        text: media.text,
-        simple: media.simple,
-        video: media.video,
-        audio: media.audio,
-      };
+      state.prefs.media = { ...media }
     },
 
     /**
@@ -143,6 +113,32 @@ export default {
       }) {
       state = { ...settings }
     },
+
+
+    /**
+     * function setUserLang: persist locale to backend
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: unknown 
+     * 
+     * @param state contains lang
+     * @param data contains user language and id
+     */
+     setUserLang(state: { lang: string }, 
+      data: { lang: string, uid: number }) { 
+      //save language choice in User's profile
+      if (supportedLangs.includes(data.lang)) {
+        state.lang = data.lang
+        http.post(`/accounts/${data.uid}/change-language`, data)
+          .then( () => console.log(`Changed language to ${state.lang}`))
+          .catch((err) => console.error(err))
+      }
+      else {
+        console.log('Setting language failed')
+        state.lang = supportedLangs[0]
+      }
+    },
   },
   actions: {
 
@@ -159,6 +155,23 @@ export default {
       http.get(`accounts/${rootState.auth.userId}`)
         .then(({ data }) => commit('setProfile', data))
         .catch((err) => console.error(err));
+    },
+
+    /**
+     * Function saveProfile: save profile settings in database
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 24, 2021
+     * 
+     * @param param0 state variables
+     */
+    saveProfile({commit, state, rootState}) {
+      http.patch(`accounts/${rootState.auth.userId}`, {...state})
+        .catch(err => {
+          console.error(err)
+        })
     }
+
   }
-};
+}

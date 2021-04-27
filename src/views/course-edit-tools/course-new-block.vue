@@ -87,10 +87,10 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['profileLang', 'hasContent']),
+    ...mapGetters(['profileLang', 'content']),
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 
@@ -104,12 +104,12 @@ export default {
     /**
      * nextId: return step # for next content
      * 
-     * Author: cmcm
+     * Author: cmc
      * 
      * Last Updated: October 27, 2020
      */
     nextId() {
-      return this.hasContent.length+1
+      return this.content.length+1
     }
   }
 }

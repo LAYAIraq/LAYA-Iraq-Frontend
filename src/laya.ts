@@ -46,6 +46,10 @@ export class Laya {
     return this._la;
   }
 
+  public get li() {
+    return this._li;
+  }
+
   constructor(v: typeof _Vue) {
     this._vue = v;
     this._lb = {};
@@ -111,6 +115,7 @@ export default {
           $laya: {
             lb: $laya.lb,
             la: $laya.la,
+            li: $laya.li
           },
         };
       },

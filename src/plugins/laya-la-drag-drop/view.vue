@@ -71,7 +71,7 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import * as i18n from '@/i18n/plugins/laya-la-drag-drop';
+import * as i18n from '@/i18n/plugins/laya-la-drag-drop'
 
 export default {
   name: 'laya-quiz-drag-drop',
@@ -102,10 +102,10 @@ export default {
     onFinish: Array
   },
   computed: {
-    ...mapGetters(['hasContent', 'profileLang']),
+    ...mapGetters(['content', 'profileLang']),
 
      /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 
@@ -170,7 +170,7 @@ export default {
      */
     fetchData() {
       let idx = this.$route.params.step - 1
-      const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.title = preData.title
       this.task = preData.task
       this.taskAudio = preData.taskAudio

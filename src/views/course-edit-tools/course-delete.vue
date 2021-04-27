@@ -38,23 +38,18 @@ Dependencies:
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import * as i18n from '@/i18n/course-edit/delete-course'
 import http from 'axios'
 
 export default {
   name: 'course-delete',
-  
-  props: {
-    name: String
-  },
 
   computed: {
-    ...mapState(['edit']),
-    ...mapGetters(['profileLang', 'hasCourse']),
+    ...mapGetters(['profileLang', 'course']),
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 
@@ -72,14 +67,15 @@ export default {
      * 
      * Author: cmc
      * 
-     * Last Updated: October 27, 2020
+     * Last Updated: April 9, 2021
      */
     delCourse() {
-      http.delete(`courses/${this.name}`)
-      .then( () => {
-        this.$router.push('/courses')
-      })
-      .catch(err => console.error('Failed to delete course:', err))
+      this.$store.dispatch('deleteCourse')
+        .then(() => {
+          this.$store.dispatch('fetchCourseList')
+          this.$router.push('/courses')
+        })
+        .catch( err => console.error('ERROR:', err))
     }
   }
 }

@@ -54,7 +54,7 @@ Dependencies:
         <div class="row">
           <div class="col">
 
-            <ly-course-list :courses="courses" :filter="search">
+            <ly-course-list :filter="search">
             </ly-course-list>
 
           </div> <!-- col -->
@@ -100,10 +100,10 @@ export default {
   },
   computed: {
     ...mapState(['note', 'auth']),
-    ...mapGetters(['isAuthor', 'profileLang']),
+    ...mapGetters(['courseList', 'isAuthor', 'profileLang']),
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 
@@ -125,10 +125,7 @@ export default {
      * Last Updated: January 20, 2021
      */
     fetchCourses() {
-      let ctx = this
-      http.get('courses?filter[include]=author').then( ({data}) => {
-        ctx.courses = [...data]
-      }).catch(err => console.error(err))
+      this.$store.dispatch('fetchCourseList')
     },
 
     /**

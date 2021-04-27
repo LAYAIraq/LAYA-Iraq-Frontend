@@ -72,7 +72,7 @@ export default {
     ...mapGetters(['profileLang']),
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 
@@ -228,16 +228,7 @@ export default {
       }
       console.log('Feedback for step '+ updatedFeedback.step + ' updated!')
       this.storeFeedback()
-    },
-
-    /* storeFeedback() {
-    const self = this
-    http.patch(`enrollments/${self.enrollment.id}`, {feedback: self.enrollment.feedback})
-        .catch(err => console.error('Failed storing course feedback:', err))
-        .finally(function() {
-        //this.$bvToast.show('author-toast')
-        })
-    }, */
+    }
   }
 
 }

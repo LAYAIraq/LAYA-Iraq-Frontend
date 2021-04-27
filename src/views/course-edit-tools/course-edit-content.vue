@@ -9,18 +9,19 @@ Dependencies:
 -->
 
 <template>
-  <div class="row mb-2" v-if="content">
-    <div class="col">
-      <b-button variant="primary" block append
-          :to="{path: 'edit', params: {type: content.name}}">
-        <i class="fas fa-edit"></i> {{ i18n.editContent }}
-      </b-button>
+    <div class="row mb-2" v-if="contentToDisplay">
+        <div class="col">
+            <b-button variant="primary" block append
+                    :to="{path: 'edit', params: {type: contentToDisplay.name}}">
+            <i class="fas fa-edit"></i> {{ i18n.editContent }}
+            </b-button>
+        </div>
+
+        <div class="col text-dark">
+            {{ i18n.editContentTip.replace('{step}', this.step) }}
+        </div>
     </div>
 
-    <div class="col text-dark">
-      {{ i18n.editContentTip.replace('{step}', this.step) }}
-    </div>
-  </div>
 </template>
 
 <script>
@@ -36,21 +37,21 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['profileLang', 'hasContent']),
+    ...mapGetters(['profileLang', 'content']),
 
     /**
-     * content: return current content object
+     * contentToDisplay: return current content object
      * 
      * Author: cmc
      * 
      * Last Updated: October 27, 2020
      */
-    content() {
-      return this.hasContent[this.step-1]
+    contentToDisplay() {
+      return this.content[this.step-1]
     },
 
     /**
-   * i18n: Load translation files depending on user langugage
+   * i18n: Load translation files depending on user language
    * 
    * Author: cmc
    * 

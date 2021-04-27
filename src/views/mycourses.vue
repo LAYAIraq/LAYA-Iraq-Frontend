@@ -126,7 +126,7 @@ Dependencies:
 
                   <!-- right meta infos -->
                   <div class="w-25 text-right">
-                    <span>{{ locDate(data.item.createDate) }}</span>
+                    <span>{{ locDate(data.item.courseId) }}</span>
                   </div>
                 </div>
               </div>
@@ -165,7 +165,7 @@ export default {
     ...mapState(['profile', 'note', 'auth']),
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 

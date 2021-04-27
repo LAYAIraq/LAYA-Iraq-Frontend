@@ -26,27 +26,27 @@ Dependencies:
           {{ i18n.overview }}
         </b-button>
 
-        <!-- jump to content number -->
-        <span class="content-nav float-right" style="font-size: 120%">
-          <b-dropdown id="cid-dd"
-              :text="i18n.jumpTo"
-              size="sm"
-              variant="secondary"
-              no-flip
-              right>
-            <b-dropdown-item v-for="(c,id) in hasContent" :key="id"
-                :to="{name: 'course-detail-view',
-                params: {name, step: id+1+''}}">
-                {{ i18n.listContent }} 
-              <b>
-                {{ id+1 }}
-              </b>
-            </b-dropdown-item>
-          </b-dropdown>
-        </span>
+          <!-- jump to content number -->
+          <span class="content-nav float-right" style="font-size: 120%">
+            <b-dropdown id="cid-dd"
+                :text="i18n.jumpTo"
+                size="sm"
+                variant="secondary"
+                no-flip
+                right>
+              
+              <b-dropdown-item v-for="(c,id) in content" :key="id"
+                  :to="{name: 'course-detail-view',
+                  params: {name, step: id+1+''}}">
+                  {{ i18n.listContent }} 
+                <b>
+                  {{ id+1 }}
+                </b>
+              </b-dropdown-item>
 
+            </b-dropdown>
+          </span>
       </div>
-
     </div>
 
   </div>
@@ -66,10 +66,10 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['profileLang', 'hasContent']),
+    ...mapGetters(['profileLang', 'content']),
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 

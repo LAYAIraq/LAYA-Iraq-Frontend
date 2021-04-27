@@ -73,39 +73,40 @@ export default {
   name: 'laya-course-list',
   data() {
     return {
+      filteredList: [],
       enrolledIn: []
     }
   },
   props: {
-    courses: Array,
     filter: String,
   },
   mounted() {
     this.getSubs()
+    this.filteredList = [...this.courseList]
   },
   updated(){
     // this.getSubs()
   },
   computed: {
-    ...mapGetters(['profileLang']),
-    ...mapState(['auth']),
+    ...mapGetters(['profileLang', 'courseList']),
+    ...mapState(['note', 'auth']),
 
-    /**
+     /**
      * filtered: filter course list depending on user input
      * 
      * Author: core
      * 
-     * Last updated: unknown 
+     * Last updated: March 24, 2021 
      */
     filtered() {
-      if (!this.filter) return this.courses
+      if (!this.filter) return this.courseList;
 
-      const filterByCourseName = new RegExp(this.filter, 'i')
-      return this.courses.filter(course => filterByCourseName.test(course.name))
+      const filterByCourseName = new RegExp(this.filter, 'i');
+      return this.filteredList.filter(course => filterByCourseName.test(course.name))
     },
 
      /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 
@@ -134,7 +135,7 @@ export default {
         .then(({ data }) => {
           const list = data.sublist
           for(let item of list) {
-            self.enrolledIn.push(item.createDate)
+            self.enrolledIn.push(item.courseId)
           }
         })
         .catch(err => {
@@ -157,7 +158,7 @@ export default {
      */
     enrollmentNeeded(course) {
       if (course.needsEnrollment) {
-        return this.enrolledIn.find(x => x == course.createDate)? false : true
+        return this.enrolledIn.find(x => x == course.courseId)? false : true
       }
       else {
         return false
@@ -177,7 +178,7 @@ export default {
     subscribe(course) {
       const self = this
       const newEnrollment = {
-        createDate: course.createDate,
+        courseId: course.courseId,
         studentId: this.auth.userId
       }
 

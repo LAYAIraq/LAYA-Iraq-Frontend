@@ -65,11 +65,10 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['profileLang']),
-    ...mapState(['edit']),
+    ...mapGetters(['course', 'profileLang']),
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 
@@ -84,21 +83,56 @@ export default {
   methods: {
 
     /**
+     * Function duplicateCheck: check if rename already exists,
+     *  call renameCourse() if it doesn't
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 24, 2021
+     */
+
+    duplicateCheck(click) {
+      click.preventDefault()
+      if(!this.rename) {
+        this.$nextTick( () => {
+          this.$bvModal.hide('author-rename-course-confirm')
+        })
+        return
+      }
+      if(!this.courseList) this.$store.dispatch('fetchCourseList')
+      if(this.courseList.some( e => e.name == this.rename)) {
+        this.dupeName = true
+      }
+      else {
+        this.dupeName = false
+        this.renameCourse()
+      }
+    },
+
+    /**
      * Function renameCourse: rename Course, change route to new name
      * 
      * Author: cmc
      * 
-     * Last Updated: October 27, 2020
+     * Last Updated: March 24, 2021
      */
     renameCourse() {
       if(!this.rename) return
       let newName = this.rename
       let step = this.$route.params.step
-      this.oldName = this.edit.course.name
       this.$store.commit('renameCourse', newName)
-      this.$store.dispatch('updateRenamedCourse', this.oldName)
-      this.$router.replace(`/courses/${newName}/${step}`)
-      this.$emit('renamed')
+      let renamed = this.$store.dispatch('updateRenamedCourse')
+      
+      renamed.then( () => {
+        this.$router.replace(`/courses/${newName}/${step}`)
+        console.log('Renaming successful!')
+        this.$emit('renamed')
+      })
+      .catch(err => {
+        console.err(err)
+        console.log('Renaming failed!')
+      })
+    
     }
   }
 }

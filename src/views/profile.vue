@@ -6,8 +6,10 @@ Date: unknown
 Dependencies: 
   axios,
   vuex,
+  vue-password-strength-meter,
   @/i18n/profile,
-  @/backend-url.ts
+  @/backend-url.ts,
+  @/plugins/misc/laya-upload-avatar/avatar.vue
 -->
 
 <template>
@@ -18,7 +20,7 @@ Dependencies:
         <div class="bg-dark w-100 pt-5 pb-3">
           <!-- avatar -->
           <img
-            v-if="avatar !== ''"
+            v-if="avatar != ''"
             :src="avatarURL"
             alt="Avatar"
             class="d-block rounded-circle mx-auto avatar"
@@ -87,6 +89,7 @@ Dependencies:
                 autocomplete="on"
               >
             </div>
+            <strong id="pwdStoreMsg" class="form-text text-center">{{ pwdMsg }}</strong>
           </div>
 
           <!-- New Password -->
@@ -101,10 +104,54 @@ Dependencies:
                 :placeholder="i18n.newPwd"
                 aria-describedby="pwdMsg"
               >
-              <strong id="pwdMsg" class="form-text text-center">{{ pwdMsg }}</strong>
             </div>
           </div>
+
+          <!-- repeat password -->
+          <div class="form-group row">
+            <label for="repeatPwd" class="col-sm-3 col-form-label">{{ i18n.repeatPwd }}</label>
+            <div class="col-sm-9">
+              <input
+                id="repeatPwd"
+                type="password"
+                class="form-control"
+                v-model="repeatPwd"
+                :placeholder="i18n.repeatPwd"
+                aria-describedby="pwdStrength"
+              >
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="pwdMeter" class="col-sm-3 col-form-label">{{ i18n.pwdStrength }}</label>
+            <div class="col-sm-9">
+              
+              <password id="pwdMeter" v-model="repeatPwd" :strength-meter-only="true"></password>
+              <strong id="pwdDiffMsg" class="form-text text-center">{{ pwdDiffMsg }}</strong>
+              <strong id="pwdStoreMsg" class="form-text text-center">{{ pwdMsg }}</strong>
+            </div>
+          </div>
+
           <hr>
+
+          <!-- avatar upload TODO: FIX Cropper Problems  
+
+          <div class="form-group row">
+            <div class="col-sm-3">
+              {{ i18n.avatar }}
+            </div>
+            <div class="col-sm-3" >
+              <img :src="avatarURL">
+            </div>
+            <div class="col-sm-6">
+              <laya-upload-avatar :oldAvatar="avatarURL" :type="'avatar'"></laya-upload-avatar>
+            </div>
+
+          </div>
+        
+
+          <hr>
+          -->
+
 
           <!-- Default Media Forms -->
           <div class="form-group row">
@@ -161,6 +208,14 @@ Dependencies:
         </form>
       </div>
     </div>
+    <b-toast variant="danger" id="submit-failed" :title="i18n.fail"
+      class="author-toast" auto-hide-delay="1500" static>
+      {{ i18n.submitFailed}}
+    </b-toast>
+    <b-toast variant="success" id="submit-ok" :title="i18n.success"
+      class="author-toast" auto-hide-delay="1500" static>
+      {{ i18n.submitOk}}
+    </b-toast>
   </div>
 </template>
 
@@ -168,7 +223,9 @@ Dependencies:
 import http from 'axios'
 import * as i18n from '@/i18n/profile'
 import api from '../backend-url.ts'
+import Password from 'vue-password-strength-meter'
 import { mapState } from 'vuex'
+import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
 
 export default {
   name: 'profile-view',
@@ -177,10 +234,10 @@ export default {
       avatar: null,
       oldPwd: '',
       newPwd: '',
+      repeatPwd: '',
       pwdMsg: '',
       formMsg: '',
       busy: false,
-
       prefs: {}
     }
   },
@@ -188,7 +245,7 @@ export default {
     ...mapState(['profile']),
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 
@@ -207,8 +264,38 @@ export default {
      * Last Updated: unknown
      */
     avatarURL() {
-      return `${api()}/storage/img/download/${this.avatar}`
+      return (!this.avatar || this.avatar === '') ?
+        null : `${api}/storage/img/download/${this.avatar}`
+    },
+
+    /**
+     * passwordsDiffer: returns true if passwords differ
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 24, 2021
+     */
+    passwordsDiffer() {
+      return this.newPwd !== this.repeatPwd
+    },
+
+    /**
+     * pwdDiffMsg: returns a message if passwords differ
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 24, 2021
+     */
+    pwdDiffMsg() {
+      return this.passwordsDiffer? this.i18n.pwdDiffer : ''
     }
+  },
+  beforeDestroy() {
+    //save changes in profile
+    this.$store.dispatch('saveProfile', {
+      ...this.avatar, 
+      ...this.prefs
+    })
   },
   created() {
     // make profile settings mutable 
@@ -245,7 +332,7 @@ export default {
             })
         )
       }
-
+      console.log(requests)
       /* fire requests */
       http
         .all(requests)
@@ -256,32 +343,26 @@ export default {
         )
         .catch(function(err) {
           console.log(err)
-          // ctx.formMsg = ctx.i18n.submitFail
+          ctx.$bvToast.show('submit-failed')
         })
         .then(() => {
           ctx.busy = false
           setTimeout(() => {
             ctx.formMsg = ''
           }, 2000)
+          ctx.$forceUpdate
+          ctx.$bvToast.show('submit-ok')
         })
 
       /* update state */
       ctx.$store.commit('setPrefs', ctx.prefs)
     },
 
-    /**
-     * Function onProfileImg: do nothing
-     * 
-     * Author: core
-     * 
-     * Last Updated: unknown
-     */
-    onProfileImg(img) {
-      //FIXME is never called
-      if (!img) return
-    }
+   
   },
   components: {
+    Password,
+    // LayaUploadAvatar
   }
 }
 </script>
@@ -303,5 +384,13 @@ export default {
 
 .checkbox-inline input {
   margin-right: 5px;
+}
+
+.author-toast {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11002;
 }
 </style>

@@ -84,7 +84,7 @@ export default {
   name: 'laya-quiz-relate',
   
   data () {
-    if (Object.entries(this.$attrs).length === 4) //preview
+    if (Object.entries(this.$attrs).length === 5) //preview
       return {
         ...this.$attrs,
         defaultOption: '',
@@ -105,7 +105,7 @@ export default {
   },
   created () {
     this.defaultOption = this.i18n.defaultOption
-    if (Object.entries(this.$attrs).length != 4) { // no preview 
+    if (Object.entries(this.$attrs).length != 5) { // no preview 
       this.fetchData()
     }
   },
@@ -113,10 +113,10 @@ export default {
     onFinish: Array
   },
   computed: {
-    ...mapGetters(['hasContent', 'profileLang']),
+    ...mapGetters(['content', 'profileLang']),
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 
@@ -147,6 +147,12 @@ export default {
      */
     options() {
       return this.pairs.map(p => p.relation)
+    }
+  },
+  watch: {
+    content() {
+      this.fetchData
+      this.$forceUpdate
     }
   },
   methods: {
@@ -202,7 +208,7 @@ export default {
      */
     fetchData() {
       let idx = this.$route.params.step - 1
-      const preData = JSON.parse(JSON.stringify(this.hasContent[idx].input))
+      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.title = preData.title
       this.task = preData.task
       this.taskAudio = preData.taskAudio

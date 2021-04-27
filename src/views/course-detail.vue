@@ -36,13 +36,13 @@ Dependencies:
 
           <component v-if="viewPermit"
                      :key="name+'-'+step"
-                     :is="content.name"          
-                     :onFinish="nextStep(content.nextStep)">
+                     :is="contentToDisplay.name"          
+                     :onFinish="nextStep(contentToDisplay.nextStep)">
           </component> 
           
           <!--<div v-else>-->
           <div v-else>
-            <h2 v-if="!content" class="mt-5 text-center text-muted">
+            <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">
               {{ i18n.content }}
             </h2>
             <h2 v-else class="mt-5 text-center text-muted">
@@ -61,18 +61,8 @@ Dependencies:
 <script>
 import { mapState, mapGetters } from 'vuex'
 
-// import {
-//   BDropdown,
-//   BDropdownItem,
-//   BDropdownHeader,
-//   BDropdownDivider,
-//   BToast,
-//   BModal
-// } from 'bootstrap-vue'
-
-// import http from 'axios';
-import * as i18n from '@/i18n/course-detail';
-import utils from '@/misc/utils.js';
+import * as i18n from '@/i18n/course-detail'
+import utils from '@/misc/utils.js'
 import lyScrollToTop from '@/components/scroll-to-top.vue'
 import courseEdit from '@/views/course-edit.vue'
 
@@ -84,7 +74,6 @@ export default {
   },
   data() {
     return {
-      course: {},
       enrollment: {},
       rename: '',
       copy: '',
@@ -107,7 +96,7 @@ export default {
   },
   computed: {
     ...mapState(['auth', 'note', 'edit']),
-    ...mapGetters(['isAuthor', 'profileLang', 'hasContent', 'hasCourse']),
+    ...mapGetters(['isAuthor', 'profileLang', 'content', 'course']),
 
 
     /**
@@ -126,7 +115,7 @@ export default {
     },
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 
@@ -149,14 +138,14 @@ export default {
     },
 
     /**
-     * content: returns current content
+     * contentToDisplay: return current content object
      * 
-     * Author: core
+     * Author: cmc
      * 
-     * Last Updated: October 27, 2020
+     * Last Updated: March 24, 2021
      */
-    content() {
-      return this.hasContent[this.step-1]
+    contentToDisplay() {
+      return this.content[this.step-1]
     },
 
     /**
@@ -167,18 +156,15 @@ export default {
      * Last Updated: October 27, 2020
      */
     viewPermit() {
-      if( this.content ) {
-        return (this.isAuthor || this.userEnrolled)? true : false;
+      if( this.contentToDisplay ) {
+        return this.course.needsEnrollment ? 
+          ((this.isAuthor || this.userEnrolled)? true : false) : true
       }
       return false
     },
 
   },
-  // watch: {
-  //   content() { 
-  //     this.$forceUpdate
-  //   }
-  // },
+ 
   methods: {
     ...utils,
 
@@ -198,6 +184,7 @@ export default {
       let fc = ctx.$store.dispatch('fetchCourse', ctx.name)
       fc.then( resp => { 
           console.log(resp)
+          ctx.$forceUpdate()
         })
         .catch( err => {
          ctx.$router.push('/courses')
@@ -212,7 +199,7 @@ export default {
      * Last Updated: October 27, 2020
      */
     fetchEnrollment() {
-      this.$store.dispatch('fetchEnrollment', this.hasCourse.createDate)
+      if(this.course.needsEnrollment) this.$store.dispatch('fetchEnrollment', this.course.courseId)
     },
 
     /**

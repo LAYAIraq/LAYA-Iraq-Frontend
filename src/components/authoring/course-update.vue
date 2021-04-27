@@ -60,12 +60,14 @@ Dependencies:
           <button type="submit"
                   class="btn btn-block btn-primary"
                   :disabled="!formValid"
-                  @click="storeNewCourse">
+                  @click="duplicateCheck">
             <i class="fas fa-check"></i> {{ i18n.save }}
           </button>
         </div>
       </div>
     </form>
+
+
   </div>
 </template>
 
@@ -73,6 +75,7 @@ Dependencies:
 import { mapState, mapGetters } from 'vuex'
 import http from 'axios'
 import * as i18n from '@/i18n/course-update'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   data() {
@@ -82,11 +85,12 @@ export default {
         name: '',
         category: ''
       },
+      duplicateNameCategory: false
     }
   },
   computed: {
-    ...mapState(['auth']),
-    ...mapGetters(['profileLang']),
+    ...mapState(['note', 'auth']),
+    ...mapGetters(['courseList', 'profileLang']),
 
     /**
      * formValid: to test if both name and category are set
@@ -100,7 +104,7 @@ export default {
     },
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 
@@ -126,45 +130,75 @@ export default {
   },
   methods: {
 
+
+    /**
+     * Function duplicateCheck: check for duplicate keys before storing the course
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 24, 2021
+     */
+    duplicateCheck() {
+      for(let entry of this.courseList) {
+        if (this.newCourse.name == entry.name) {
+          this.msg = this.i18n.courseExists
+          return
+        }
+      }
+      this.storeNewCourse()
+    },
+    
     /**
      * Function storeNewCourse: check for duplicate name, persist new database entry, 
      *  create a new storage
      * 
      * Author: cmc
      * 
-     * last updated: Jan 20, 2021
+     * last updated: March 24, 2021
      *  */    
     storeNewCourse() {
       
       const self = this
       const {$store, newCourse, auth} = this;
 
-      /* check if course exists 
-        give output if duplicate name */
-      http.head(`courses/${newCourse.name}`)
-        .then( () => {
-          self.msg = self.i18n.courseExists
-        }).catch(function() {
-          let enrBool = self.needsEnrollment
-          /* create course */
-          http.post('courses', {
-            ...newCourse,
-            authorId: auth.userId,
-            needsEnrollment: enrBool
-          }).then( () => {
-            /* redirect to course edit */
-            self.$router.push(`/courses/${newCourse.name}/1`)
-          }).catch((err) => {
-            console.log(err)
-            self.msg = self.i18n.savingFailed
-          })
+      let enrBool = self.needsEnrollment
+      let newId = uuidv4()
+      console.log(`New Id: ${newId}`)
 
-          /* create storage */
-          http.post('storage', {
-            name: newCourse.name,
-          }).then(() => console.log(`New Storage: ${newCourse.name}`))
-            .catch((err) => console.error(err));
-        })
+      /* create storage */
+      http.post('storage', {
+        name: newId,
+      }).then(() => console.log(`New Storage: ${newId}`))
+        .catch((err) => console.error(err));
+
+      /* create course */
+      http.post('courses', {
+        ...newCourse,
+        authorId: auth.userId,
+        storageId: newId,
+        needsEnrollment: enrBool
+        }).then( (resp) => {
+          // console.log(resp)
+          self.$router.push(`/courses/${newCourse.name}/1`)
+
+          /* create enrollment for creator */
+          if (enrBool) {
+              http.get(`courses/getCourseId?courseName=${newCourse.name}`).
+                then( resp => {
+                  const newEnrollment = {
+                    courseId: resp.data.courseId,
+                    studentId: self.auth.userId
+                  }
+                  http.patch('enrollments', {
+                    ...newEnrollment
+                  }).catch((err) => {console.log(err)})
+                })
+          }
+        }).catch((err) => {
+          console.log(err)
+          self.msg = self.i18n.savingFailed
+      })
+
     }
   }
 }

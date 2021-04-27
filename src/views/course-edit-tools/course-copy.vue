@@ -46,10 +46,19 @@ Dependencies:
     <b-toast id="name-exists"
       :title="i18n.toast.title"
       static
-      ariant="danger"
+      variant="danger"
       auto-hide-delay="1500"
       class="author-toast">
       {{ i18n.toast.text }}
+    </b-toast>
+
+    <b-toast id="copy-success"
+      :title="i18n.toast.title"
+      static
+      variant="success"
+      auto-hide-delay="1500"
+      class="author-toast">
+      {{ i18n.toast.copySuccess }}
     </b-toast>
 
 	</div>
@@ -63,11 +72,10 @@ import { mapGetters, mapState } from 'vuex'
 export default {
   name: 'course-copy',
   computed: {
-    ...mapGetters(['profileLang']),
-    ...mapState(['edit']),
+    ...mapGetters(['profileLang', 'course']),
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 
@@ -102,18 +110,11 @@ export default {
           this.$bvToast.show('name-exists')
         })
         .catch( () => {
-        // course name does not exist
-        let now = Date.now()
-        let copied_course = {...this.$store.state.edit.course}
-        copied_course.name = this.copy
-        copied_course.createDate = now
-        copied_course.lastChanged = now
-        console.log(copied_course)
-
-        http.post(`courses`, copied_course)
-          .catch(err => console.error('Failed course copy:', err))
-          .finally(() => this.$emit('success'))
-        }) 
+          // course name does not exist
+          this.$store.dispatch('copyCourse', this.copy)
+            .then( () => this.$bvToast.show('copy-success'))
+            .catch( err => alert(err))
+        })
     }
   }
 }

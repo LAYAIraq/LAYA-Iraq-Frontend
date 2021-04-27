@@ -72,17 +72,15 @@ export default new Router({
         {
           path: 'editNav',
           name: 'edit-course-nav-view',
-          component: views.editCourseNav,
+          component: views.editCourseNav
         }
       ]
     },
-    
     {
       path: '/mycourses',
       name: 'mycourses-view',
       component: views.mycourses
     },
-    
     {
       path: '/imprint',
       name: 'imprint-view',
@@ -94,4 +92,4 @@ export default new Router({
       component: views.privacy
     }
   ]
-});
+})

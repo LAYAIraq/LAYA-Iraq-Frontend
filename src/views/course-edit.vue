@@ -90,10 +90,10 @@ export default {
   },
   computed: {
     ...mapState(['edit']),
-    ...mapGetters(['profileLang', 'hasContent', 'hasCourse']),
+    ...mapGetters(['profileLang', 'content', 'course']),
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 
@@ -114,6 +114,8 @@ export default {
      * Last Updated: October 27, 2020
      */
     updateContent(changedContent) {
+      // TODO: alters vuex property
+      // also is never called
       this.course.content = [...changedContent]
       this.storeCourse()
       this.$forceUpdate()
@@ -128,7 +130,7 @@ export default {
      *  */    
     storeCourse() {
       let ctx = this
-      let stored = this.$store.dispatch('storeCourse')
+      let stored = this.$store.dispatch('storeCourse') //returns promise
       stored
       .then( (succ) => {
         ctx.$bvToast.show('author-toast')

@@ -9,7 +9,7 @@ Dependencies:
 -->
 
 <template>
-  <div class="row mt-5" v-if="content()">
+  <div class="row mt-5" v-if="contentToDisplay">
 
     <div class="col">
       <b-button size="sm"
@@ -51,11 +51,11 @@ export default {
     step: String
   },
   computed: {
-    ...mapGetters(['hasContent', 'profileLang']),
+    ...mapGetters(['content', 'profileLang']),
     ...mapState(['edit']),
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 
@@ -68,15 +68,16 @@ export default {
 
   },
   methods: {
+
     /**
-     * Function Content: return current content block
+     * Function contentToDisplay: return current content block
      * 
      * Author: cmc
      * 
-     * Last Updated: October 27, 2020
+     * Last Updated: March 24, 2021
      */
-    content() {
-      return this.hasContent[this.step-1]
+    contentToDisplay() {
+      return this.content[this.step-1]
     },
 
     /**
@@ -90,6 +91,7 @@ export default {
       this.$store.commit('delContent', this.step-1) 
       this.$store.dispatch('storeCourse')
     }
+    
   }
 }
 </script>

@@ -88,6 +88,30 @@ export default {
     var seconds = Math.floor(time/1000);
     return `${days}d ${hours}h ${minutes}m ${seconds}s`
 
+  },
+  
+  /**
+   * Function fileSize: verbalize file size
+   * 
+   * Author: cmc
+   * 
+   * Last Updated: April 1, 2021
+   * @param {number} size size of a file
+   * @returns a string making the size human-readable
+   */
+  fileSize(size) {
+    if(size>1024*1024){
+      let mbsize = Math.round(size/1024/1024 *10) /10
+      return `${mbsize} MBytes`
+    }
+    else if (size>1024){
+      let kbsize = Math.round(size/1024 *10) /10
+      return `${kbsize} kBytes`
+    }
+    else {
+      return `${size} Bytes`
+    }
   }
-
 }
+
+

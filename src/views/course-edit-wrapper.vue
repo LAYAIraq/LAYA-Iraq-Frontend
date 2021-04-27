@@ -20,6 +20,7 @@ Dependencies:
           <div v-show="!preview">
             <component v-if="!editContent" :is="comps.new" ref="new"></component>
             <component v-else :is="comps.edit" ref="edit"></component>
+            
           </div>
           <hr>
 
@@ -36,6 +37,9 @@ Dependencies:
             </button>
           </div>
 
+          <hr>
+          <laya-upload-file-list v-if="!preview"></laya-upload-file-list>
+
         </div>
       </div>
     </div>
@@ -45,10 +49,14 @@ Dependencies:
 <script>
 import * as i18n from '@/i18n/course-wrapper'
 import { mapGetters, mapState } from 'vuex'
+import LayaUploadFileList from '@/plugins/misc/laya-upload-file-list/file-list.vue'
 
 
 export default {
   name: 'course-edit-wrapper',
+  components: {
+    LayaUploadFileList
+  },
   data() {
     return {
       preview: false,
@@ -57,9 +65,10 @@ export default {
   props: {
     name: String,
     step: String,
+    type: String
   },
   computed: {
-    ...mapGetters(['hasContent', 'profileLang']),
+    ...mapGetters(['content', 'profileLang']),
     ...mapState(['edit']),
 
     /**
@@ -70,7 +79,7 @@ export default {
      * Last Updated: January 20, 2021
      */
     cid() {
-      return this.$route.params.type || this.hasContent[this.step-1].name //why not always use $route.params.type?
+      return this.type || this.content[this.step-1].name //why not always use $route.params.type?
     },
 
     /**
@@ -93,11 +102,11 @@ export default {
      * Last Updated: January 20, 2021
      */
     editContent() {
-      return this.step <= this.hasContent.length
+      return this.step <= this.content.length
     },
 
     /**
-     * i18n: Load translation files depending on user langugage
+     * i18n: Load translation files depending on user language
      * 
      * Author: cmc
      * 
@@ -127,7 +136,7 @@ export default {
     }
   },
   mounted() {
-    if(!this.cid && !this.hasContent) // data not passed -> go back
+    if(!this.cid && !this.content) // data not passed -> go back
       this.$router.back()
   },
   methods: {
@@ -160,6 +169,7 @@ export default {
   },
   beforeDestroy() {
     // persist changes in database
+    this.save()
     this.$store.dispatch('storeCourse')
   }
 }

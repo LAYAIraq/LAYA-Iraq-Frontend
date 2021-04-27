@@ -49,7 +49,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['hasContent']),
+    ...mapGetters(['content']),
 
     /**
      * idx: Return index of content block in course array
@@ -77,7 +77,7 @@ export default {
      */
     refreshData() {
       // dereference store data
-      let preData = JSON.parse(JSON.stringify(this.hasContent[this.idx].input))
+      let preData = JSON.parse(JSON.stringify(this.content[this.idx].input))
       //replace data stubs with stored data
       this.question = preData.question
       this.answers = preData.answers
@@ -85,7 +85,7 @@ export default {
     }
   },
   watch: {
-    hasContent(newValue) {
+    content(newValue) {
       //FIXME doesn't actually watch the property
       this.refreshData()
     }
