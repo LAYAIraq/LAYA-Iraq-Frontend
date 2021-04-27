@@ -1,118 +1,95 @@
-import Vue from "vue";
-import Router from "vue-router";
+/**
+ * Filename: router.js
+ * Use: register all possible routes
+ * Creator: core
+ * Date: unknown
+ * Dependencies:
+ *  vue,
+ *  vue-router,
+ *  @/views
+ */
+
+import Vue from 'vue';
+import Router from 'vue-router';
 /* views */
-import * as views from "./views";
+import * as views from './views';
 Vue.use(Router);
 export default new Router({
-  mode: "hash",
+  mode: 'hash',
   base: process.env.BASE_URL,
   routes: [
-    {
-      path: "/test",
-      name: "test-view",
+    /* {
+      path: '/test',
+      name: 'test-view',
       component: views.test
-    },
+    }, */
     {
-      path: "/",
-      //redirect: "/login", experimental starting page
-      name: "root-view",
+      path: '/',
+      //redirect: '/login', experimental starting page
+      name: 'root-view',
       component: views.root
     },
     {
-      path: "/register",
-      name: "register-view",
+      path: '/register',
+      name: 'register-view',
       component: views.register
     },
     {
-      path: "/login",
-      name: "login-view",
+      path: '/login',
+      name: 'login-view',
       component: views.login
     },
     {
-      path: "/profile",
-      name: "profile-view",
+      path: '/profile',
+      name: 'profile-view',
       component: views.profile
     },
     {
-      path: "/courses",
-      name: "courses-view",
+      path: '/courses',
+      name: 'courses-view',
       component: views.courses
     },
     {
-      path: "/courses/:name/:step",
-      name: "course-detail-view",
-      component: views.courseDetail,
+      path: '/courses/:name/:step',
+      name: 'course-detail-view',
+      component: views.courseDetailView,
       props: true,
 
       children: [
 
         {
-          path: "edit",
-          name: "edit-course-content-view",
-          component: views.editCourseContent,
+          path: 'edit',
+          name: 'edit-course-wrapper',
+          component: views.editCourseWrapper,
           props: true
         },
         {
-          path: "new/:type",
-          name: "new-course-content-view",
-          component: views.editCourseContent,
+          path: 'new/:type',
+          name: 'new-course-content-view',
+          component: views.editCourseWrapper,
           props: true
         },
         {
-          path: "editNav",
-          name: "edit-course-nav-view",
-          component: views.editCourseNav,
-        },
-
-        // TODO: review
-        {
-          path: "new-learning-block",
-          name: "new-learning-block",
-          component: views.newLearningBlock,
-        },
-        {
-          path: "new-learning-assessment",
-          name: "new-learning-assessment",
-          component: views.newLearningAssessment,
-        },
-        {
-          path: "new-block",
-          name: "new-block",
-          component: views.newLearningBlock
-        },
-        {
-          path: "new-assessment",
-          name: "new-assessment",
-          component: views.newLearningAssessment
-        },
-        {
-          path: "assessment/:type/new",
-          name: "assessment-create",
-          component: views.assessment
-        },
-        {
-          path: "assessment/:type/:assId",
-          name: "assessment-view",
-          component: views.assessment
-        },
+          path: 'editNav',
+          name: 'edit-course-nav-view',
+          component: views.editCourseNav
+        }
       ]
     },
-    /*
     {
-      path: "/mycourses",
-      name: "mycourses-view",
+      path: '/mycourses',
+      name: 'mycourses-view',
       component: views.mycourses
     },
-    */
     {
-      path: "/imprint",
-      name: "imprint-view",
+      path: '/imprint',
+      name: 'imprint-view',
       component: views.imprint
     },
     {
-      path: "/privacy",
-      name: "privacy-view",
+      path: '/privacy',
+      name: 'privacy-view',
       component: views.privacy
     }
   ]
-});
+})

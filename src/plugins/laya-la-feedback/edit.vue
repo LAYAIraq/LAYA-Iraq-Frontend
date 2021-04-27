@@ -1,5 +1,24 @@
+<!--
+Filename: edit.vue
+Use: Edit a Course Feedback content block
+Creator: cmc
+Date: unknown
+Dependencies: @/i18n/plugins/laya-la-feedback
+-->
+
 <template>
   <div class="laya-la-feedback-edit">
+
+     <label><h4>{{ i18n.title }}</h4></label><i id ="questionmark" class="fas fa-question-circle" @click="toggleTip" 
+          :title="i18n.showTip" v-b-tooltip.left></i>
+    <b-jumbotron 
+            v-if="tooltipOn"
+            :header="i18n.title" :lead="i18n.tipHeadline">
+          <hr class="my-4">
+          <span v-html="i18n.tooltip"></span>
+
+    </b-jumbotron>
+    <hr>
 
     <form>
 
@@ -112,52 +131,119 @@
 </template>
 
 <script>
-
-import * as i18n from "@/i18n/plugins/laya-la-feedback";
+import * as i18n from '@/i18n/plugins/laya-la-feedback'
 
 export default {
   name: 'laya-la-feedback-edit',
   created () {
-    if (this.title === "") { //prefetch Data at creation
-      const prefData = this.i18n.prefetch
-      this.title = prefData.title
-      this.task = prefData.task
-      this.items = prefData.items
-      this.categories = prefData.categories
-    }
+    this.fetchData()
   },
   data () {
     if(Object.entries(this.$attrs).length > 0)
-      return {...this.$attrs}
+      return {...this.$attrs, 
+        tooltipOn: false}
     return {
-      title: "",
-      task: "",
-      taskAudio: "",
+      title: '',
+      task: '',
+      taskAudio: '',
       items: [],
-      categories: []
+      categories: [],
+      tooltipOn: false
     }
   },
-  props: {
-    
-  },
+  
   computed: {
+
+    /**
+     * i18n: Load translation files depending on user language
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 12, 2021
+     * 
+     */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }
   },
   methods: {
+    /**
+     * Function _delItem: remove item at position idx
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param {*} idx index at which to remove
+     */
     _delItem(idx) {
       this.items.splice(idx, 1)
     },
+
+    /**
+     * Function _addItem: Add new item to items
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     */
     _addItem() {
-      this.items.push("")
+      this.items.push('')
     },
+
+    /**
+     * Function _delCategory: delete category at position idx
+     * 
+     * Author: core
+     *
+     * Last Updated: unknown
+     * 
+     * @param {*} idx index at which to remove the category
+     */
     _delCategory(idx) {
       this.categories.splice(idx, 1)
     },
+
+    /**
+     * Function _addCategory: Add new category to categories
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     */
     _addCategory() {
-      this.categories.push("")
+      this.categories.push('')
     },
+
+    /**
+     * Function fetchData: Fill in localized sample input
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 12, 2021
+     */
+    fetchData() {
+      if (this.title === '') { //prefetch Data at creation
+        const prefData = this.i18n.prefetch
+        this.title = prefData.title
+        this.task = prefData.task
+        this.items = prefData.items
+        this.categories = prefData.categories
+      }
+    },
+
+    /**
+     * Function toggleTip: toggle tooltipOn boolean
+     * 
+     * Author: cmc
+     * 
+     * Last updated: unknown
+     */
+    toggleTip() {
+      this.tooltipOn = !this.tooltipOn
+    }
   }
 }
 </script>
@@ -170,5 +256,10 @@ export default {
 
 legend {
   font-size: 1rem;
+}
+
+#questionmark {
+  float: inline-end;
+  cursor: pointer;
 }
 </style>

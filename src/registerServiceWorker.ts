@@ -1,3 +1,11 @@
+/**
+ * Filename: registerServiceWorker.ts
+ * Use: register a service worker to serve app faster in production
+ * Creator: core
+ * Date: unknown
+ * Dependencies: register-service-worker
+ */
+
 /* tslint:disable:no-console */
 
 import { register } from 'register-service-worker';

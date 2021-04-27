@@ -1,3 +1,13 @@
+<!--
+Filename: view.vue
+Use: View a Relate content block
+Creator: core
+Date: unknown
+Dependencies: 
+  vuex,
+  @/i18n/plugins/laya-la-feedback
+-->
+
 <template>
   <div class="laya-quiz-relate">
     <div class="container">
@@ -31,7 +41,7 @@
                   v-model="solution[i]"
                   :disabled="freeze"
                   class="custom-select">
-                  <option disabled>{{default_option}}</option>
+                  <option disabled>{{ defaultOption }}</option>
                   <option v-for="opt in options" :key="opt" :disabled="solution.includes(opt)">
                   {{opt}}
                   </option>
@@ -54,7 +64,7 @@
         -->
         <button type="button" class="btn btn-link" @click="check" 
           :disabled="freeze">
-          {{ i18n.addSolution }}
+          {{ i18n.check }}
         </button>
           
         <button type="button" class="btn btn-primary ml-auto" @click="done">
@@ -67,59 +77,142 @@
 </template>
 
 <script>
-
-import * as i18n from "@/i18n/plugins/laya-la-relate"
+import { mapGetters } from 'vuex'
+import * as i18n from '@/i18n/plugins/laya-la-relate'
 
 export default {
-  name: "laya-quiz-relate",
-  created () {
-    this.default_option = this.i18n.defaultOption
-    this.reset()
-  },
+  name: 'laya-quiz-relate',
+  
   data () {
+    if (Object.entries(this.$attrs).length === 5) //preview
+      return {
+        ...this.$attrs,
+        defaultOption: '',
+        solution: [],
+        eval: [],
+        freeze: false
+      }
     return {
-      default_option: "",
+      title: '',
+      task: '',
+      taskAudio: '',
+      pairs: [],
+      defaultOption: '',
       solution: [],
       eval: [],
       freeze: false
     }
   },
+  created () {
+    this.defaultOption = this.i18n.defaultOption
+    if (Object.entries(this.$attrs).length != 5) { // no preview 
+      this.fetchData()
+    }
+  },
   props: {
-    title: String,
-    task: String,
-    taskAudio: String,
-    pairs: Array,
     onFinish: Array
   },
   computed: {
+    ...mapGetters(['content', 'profileLang']),
+
+    /**
+     * i18n: Load translation files depending on user language
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 19, 2021
+     * 
+     */
     i18n() {
-      return i18n[this.$store.state.profile.lang]
+      return i18n[this.profileLang]
     },
-    uid: function() {
+
+    /**
+     * uid: return date in ms
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    uid() {
       return Date.now()
     },
-    options: function() {
+
+    /**
+     * options: map pairs to their relation
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    options() {
       return this.pairs.map(p => p.relation)
     }
   },
+  watch: {
+    content() {
+      this.fetchData
+      this.$forceUpdate
+    }
+  },
   methods: {
+
+    /**
+     * Function reset: reset relations to default
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     reset() {
-      this.solution = this.pairs.map(p => default_option)
+      this.solution = this.pairs.map(p => this.defaultOption)
     },
+
+    /**
+     * Function done: execute first function from onFinish
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     done() {
       this.onFinish[0]()
     },
+
+    /**
+     * Function check: Check if User's solution is correct
+     * 
+     * Author: core
+     * 
+     * Last Updated: March 19, 2021
+     */
     check() {
       for(let i=0; i<this.pairs.length; ++i) {
         if(this.pairs[i].relation === this.solution[i]) {
-          this.eval[i] = {"fa fa-check fa-2x text-success": true}
+          this.eval[i] = {'fa fa-check fa-2x text-success': true}
         } else {
           this.solution[i] = this.pairs[i].relation 
-          this.eval[i] = {"fa fa-times fa-2x text-danger": true}
+          this.eval[i] = {'fa fa-times fa-2x text-danger': true}
         }
       }
       this.freeze = true
       this.$forceUpdate()
+    },
+
+    /**
+     * Function fetchData: fethc data from vuex and create data property
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 19, 2021
+     */
+    fetchData() {
+      let idx = this.$route.params.step - 1
+      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
+      this.title = preData.title
+      this.task = preData.task
+      this.taskAudio = preData.taskAudio
+      this.pairs = preData.pairs
     }
   }
 }

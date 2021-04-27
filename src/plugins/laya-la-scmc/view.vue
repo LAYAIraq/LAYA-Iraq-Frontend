@@ -1,3 +1,13 @@
+<!--
+Filename: view.vue
+Use: View a Multiple Choice/Response content block
+Creator: core
+Date: unknown
+Dependencies:
+  vuex,
+  @/i18n/plugins/laya-la-scmc
+-->
+
 <template>
   <fieldset class="laya-la-scmc">
 
@@ -55,7 +65,7 @@
             class="btn btn-link mt-3"
             @click="diffSolution"
             :disabled="freeze">
-      {{ i18n.addSolution }}
+      {{ i18n.check }}
     </button>
     <button type="button"
             class="btn btn-primary mt-3 float-right"
@@ -68,80 +78,160 @@
 </template>
 
 <script>
-import Vue from "vue"
-import {mapState, mapGetters} from 'vuex'
-import * as i18n from "@/i18n/plugins/laya-la-scmc"
+import { mapGetters } from 'vuex'
+import * as i18n from '@/i18n/plugins/laya-la-scmc'
 
 export default {
   name: 'laya-multiple-choice',
-  created () {
-  },
   data () {
+    if (Object.entries(this.$attrs).length === 7) 
+      return {
+        ...this.$attrs,
+        tries: 0,
+        answers: [],
+        checked: [],
+        feedback: '',
+        freeze: false,
+        eval: []
+      }
     return {
       tries: 0,
       answers: [],
       checked: [],
       feedback: '',
       freeze: false,
-      eval: []
+      eval: [],
+      multiple: false,
+      title: '',
+      task: '',
+      taskAudio: '',
+      options: '',
+      solutions: '',
+      maxTries: ''
+    }
+  },
+  created () {
+    if (Object.entries(this.$attrs).length != 7) { // previewing newly created content
+      this.fetchData()
     }
   },
   props: {
-    multiple: Boolean,
-    title: String,
-    task: String,
-    taskAudio: String,
-    options: Array,
-    solutions: Array,
-    maxTries: Number,
     onFinish: Array
   },
   computed: {
-    feedbackId: function () {
-      return `mchoice-feedback-${this._uid}`
+    ...mapGetters(['content', 'profileLang']),
+
+    /**
+     * feedbackId: creates an identifier string
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    feedbackId() {
+      return `mchoice-feedback-${this._uid}` 
+      //FIXME vm _uid is not supposed to be used as data
+      //source: https://github.com/vuejs/vue/issues/5886#issuecomment-308625735
     },
-    i18n () {
-      return i18n[this.$store.state.profile.lang]
+
+    /**
+     * i18n: Load translation files depending on user language
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 19, 2021
+     * 
+     */
+    i18n() {
+      return i18n[this.profileLang]
     }
   },
   methods: {
-    correct: function (i) {
+
+    /**
+     * Function correct: returns true if user choice is correct
+     * 
+     * Author: core
+     * 
+     * Last Updated: March 19, 2021
+     * 
+     * @param {*} i index of answer
+     */
+    correct(i) {
+      //FIXME currently not used
       return this.answers.includes(i) && this.checked[i]
     },
-    incorrect: function (i) {
+
+    /**
+     * Function incorrect: returns true if answer is incorrect
+     * 
+     * Author: core
+     * 
+     * Last Updated: March 19, 2021
+     * 
+     * @param {*} i index of answer
+     */
+    incorrect(i) {
+      //FIXME currently not used
       return this.answers.includes(i) && (this.checked[i] === false)
     },
-    markAnwsers: function () {
+
+    /**
+     * Function markAnswers: marks questions that have been checked
+     * 
+     * Author: core 
+     * 
+     * Last Updated: March 19, 2021
+     */
+    markAnswers() {
       const zis = this
-      this.answers.forEach(function (answer) {
+      this.answers.forEach( (answer) => {
         zis.checked[answer] = zis.solutions.includes(answer)
       })
     },
-    diffSolution: function() {
+
+    /**
+     * Function diffSolution: check if given answers are correct, 
+     *  mark with check if yes, cross if not
+     * 
+     * Author: core
+     * 
+     * Last Updated: March 19, 2021
+     */
+    diffSolution() {
 
       for(let i=0; i<this.options.length; ++i) {
         // is solution ?
         if(this.solutions.includes(i)) {
           // is also answer ?
           if(this.answers.includes(i)) {
-            this.eval[i] = {"far fa-check-circle text-success": true}
+            this.eval[i] = {'far fa-check-circle text-success': true}
           } else {
-            this.eval[i] = {"far fa-times-circle text-danger": true}
+            this.eval[i] = {'far fa-times-circle text-danger': true}
           }
         } else {
           // but is answer ?
           if(this.answers.includes(i)) {
-            this.eval[i] = {"far fa-times-circle text-danger": true}
+            this.eval[i] = {'far fa-times-circle text-danger': true}
           } else {
-            this.eval[i] = {"far fa-check-circle text-success": true}
+            this.eval[i] = {'far fa-check-circle text-success': true}
           }
         }
       }
       this.freeze = true
       this.$forceUpdate()
-
     },
-    check: function () {
+
+    /**
+     * Function check: check user's answers, give feedback accordingly
+     * 
+     * Author: core
+     * 
+     * Updated: March 21, 2021
+     */
+    check() {
+
+      //FIXME is never called, missing i18n, missing connection to diffSolution
 
       // NOTE: eval is currently not wanted so skip it
       this.onFinish[0]()
@@ -152,7 +242,7 @@ export default {
       this.tries++
       /*
        * check given answers */
-      this.markAnwsers()
+      this.markAnswers()
       
       /*
        * check if solutions === answers */
@@ -175,10 +265,29 @@ export default {
       /*
        * no tries left - show solutions */
       this.answers = [ ...this.solutions ]
-      this.markAnwsers()
+      this.markAnswers()
       this.feedback = 'Die Lösung wurde ergänzt!'
       document.getElementById(this.feedbackId).focus()
       this.freeze = true
+    },
+
+    /**
+     * Function fetchData: Fetch data from vuex and make data property
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 19, 2021
+     */
+    fetchData() {
+      let idx = this.$route.params.step - 1
+      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
+      this.multiple = preData.multiple
+      this.title = preData.title
+      this.task = preData.task
+      this.taskAudio = preData.taskAudio
+      this.options = preData.options
+      this.solutions = preData.solutions
+      this.maxTries = preData.maxTries
     }
   }
 }

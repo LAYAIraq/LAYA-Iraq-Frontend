@@ -1,3 +1,16 @@
+<!--
+Filename: header.vue
+Use: shows the navbar
+Creator: core
+Date: unknown
+Dependencies: 
+  vuex, 
+  axios, 
+  @/i18n/header, 
+  @/components/scroll-to-top.vue, 
+  @/misc/icons.js
+-->
+
 <template>
   
   <div id="ly-header">
@@ -17,7 +30,7 @@
         <!-- left links -->
         <b-navbar-nav v-if="auth.online">
           <b-nav-item to="/courses">{{i18n.courses}}</b-nav-item>
-          <b-nav-item to="/mycourses">{{i18n.mycourses}}</b-nav-item>
+          <b-nav-item to="/mycourses">{{i18n.myCourses}}</b-nav-item>
         </b-navbar-nav>
 
         <!-- right links -->
@@ -35,7 +48,7 @@
           <b-nav-item-dropdown right>
 
             <template v-slot:button-content>
-              <img :src="icons[profile.lang]" class="lang-icon">
+              <img :src="icons[profileLang]" class="lang-icon">
             </template>
 
             <b-dropdown-item-btn v-for="(svg, lang) in icons"
@@ -55,62 +68,125 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { 
+  mapGetters,
+  mapState 
+} from 'vuex'
 
 import http from 'axios'
-import {icons} from '@/misc/langs.js'
+import { icons } from '@/misc/langs.js'
 import * as i18n from '@/i18n/header'
-import lyScrollToTop from "@/components/scroll-to-top.vue"
+import lyScrollToTop from '@/components/scroll-to-top.vue'
 
 export default {
   name: 'ly-header',
   data () {
     return {
-      icons
+      icons,
+      isCourse: Boolean
     }
   },
   watch: {
     '$route': 'checkCourse'
   },
   computed: {
-    ...mapState(['profile', 'auth', 'note']),
+    ...mapState(['auth']),
+    ...mapGetters(['profileLang']),
+    
+    /**
+     * i18n: Load translation files depending on user language
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 12, 2021
+     * 
+     */
     i18n () {
-      return i18n[this.$store.state.profile.lang]
+      return i18n[this.profileLang]
     }
   },
   mounted () {
-    document.title = "Laya"
+    document.title = 'Laya'
     this.checkCourse()
     this.$forceUpdate()
-    let store = this.$store
-    /*
-     * get browser locale */
-    http.get('lang')
-      .then(function ({data}) {
-        store.commit('setLang', data)
-      })
-      .catch(function () {
-        store.commit('setLang', { lang: de })
-      })
+    this.getLocale()
   },
   methods: {
-    toggleMedia (type) {
+    /**
+     * Function getLocale: Get Browser locale for localization
+     * 
+     * Author: core
+     * 
+     * Last Updated: March 12, 2021
+     */
+    getLocale() {
+      let store = this.$store
+      /*
+      * get browser locale */
+      http.get('lang')
+        .then(({data}) => {
+          let lang = data.substring(0, data.indexOf('-'))
+          store.commit('setLang', lang)
+        })
+        .catch(() => {
+          store.commit('setLang', 'de')
+        })
+    },
+
+    /**
+     * Function toggleMedia (deprecated): toggle media preferences for user
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     *
+     */
+    toggleMedia(type) {
       this.$store.commit('toggleMedia', type)
     },
+
+    /**
+     * Function checkCourse: check if the route exists
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     checkCourse () {
       this.isCourse = /courses[/]./.test(location.hash)
       this.$forceUpdate()
     },
-    setLang (lang) {
-      const data = {
-        spr: lang,
-        uid: this.$store.state.auth.userId,
-        email: this.$store.state.profile.email
-      }
-      this.$store.commit('setLang', data)
-      this.$forceUpdate()
+
+     /**
+     * Function setLang: set a new User Language
+     * 
+     * @param newLang the new language (String)
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: unknown
+     */
+    setLang (newlang) {
+      this.$store.commit('setLang', newlang)
+      this.$nextTick(() => {
+        if(this.$store.state.auth.userId != -1) {
+          const data = {
+            lang: this.$store.state.profile.lang,
+            uid: this.$store.state.auth.userId
+          }
+          this.$store.dispatch('setUserLang', data)
+        }
+      })
     },
-    logout () {
+
+    /**
+     * Function logout: Remove local storage, redirect to login page
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    logout() {
       this.$ls.remove('auth')
       this.$store.commit('logout')
       this.$router.push('/login')
@@ -118,9 +194,6 @@ export default {
   },
   components: {
     lyScrollToTop
-  },
-  beforeUpdate () {
-    console.log(this.$store.state.auth.userId)
   }
 }
 </script>
@@ -128,6 +201,10 @@ export default {
 <style scoped>
 *:focus {
   outline: 2px dashed deepskyblue;
+}
+
+#rtl {
+  flex-direction: row-reverse !important;
 }
 
 .navbar-brand {

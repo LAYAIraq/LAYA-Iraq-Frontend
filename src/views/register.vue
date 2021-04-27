@@ -1,3 +1,13 @@
+<!--
+Filename: register.vue 
+Use: Allow users to register 
+Creator: core
+Date: unknown
+Dependencies: 
+  axios,
+  @/i18n/register
+-->
+
 <template>
   <div class="register-view ly-nav-margin">
 
@@ -132,59 +142,124 @@ export default {
   },
   computed: {
 
-    /* messages */
+    /**
+     * i18n: Load translation files depending on user language
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 21, 2021
+     * 
+     */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     },
 
-    /* form validation */
-    errName: function () {
+    /**
+     * errName: form validation for name
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    errName() {
       return /\W/.test(this.name) || /^$/.test(this.name) ||
         this.nameTaken
     },
-    errEmail: function () {
+
+    /**
+     * errEmail: form validation for email
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    errEmail() {
       return !(/^[^@\s]+[@][^@\s]+$/.test(this.email)) ||
         this.emailTaken
     },
-    errPwds: function () {
+
+    /**
+     * errPwds: form validation for password input
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    errPwds() {
       return (/^$/.test(this.pwd1) || /^$/.test(this.pwd2)) ||
         (this.pwd1 !== this.pwd2)
     },
-    errForm: function () {
+
+    /**
+     * errForm: form validation altogether
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    errForm() {
       return this.errName || this.errEmail || this.errPwds
     }
   },
   methods: {
 
-    focusImgInput: function () {
+    /**
+     * function focusImgInput: focus #image-input html element
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    focusImgInput() {
       document.querySelector('#image-input').focus()
     },
 
-    isNameTaken: function () {
+    /**
+     * Function isNameTaken: return if chosen name is already taken
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    isNameTaken() {
       let ctx = this
       if (ctx.name.length === 0) {
         ctx.nameTaken = false
         return
       }
       http.get(`accounts/name/${ctx.name}`)
-        .then(function ({data}) {
+        .then( ({data}) => {
           ctx.nameTaken = data
         })
     },
 
-    isEmailTaken: function () {
+    /**
+     * Function isEmailTake: return if given email is already taken
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown 
+     */
+    isEmailTaken() {
       let ctx = this
       if (ctx.email.length === 0) {
         ctx.emailTaken = false
         return
       }
       http.get(`accounts/email/${ctx.email}`)
-        .then(function ({data}) {
+        .then(({data}) => {
           ctx.emailTaken = data
         })
     },
 
-    submit: function () {
+    /**
+     * Function submit: collect requests for changes, then shoot them
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    submit() {
       if (this.errForm || this.nameTaken || this.emailTaken) {
         console.log('Not Submitting')
         return
@@ -220,12 +295,14 @@ export default {
       }
 
       http.all(requests)
-        .then(http.spread(function () {
+        .then(http.spread( () => {
           ctx.submitOk = true
-        })).catch(function (err) {
+        }))
+        .catch( (err) => {
           console.log(err)
           ctx.errmsg = this.i18n.fail
-        }).then(function () {
+        })
+        .finally( () => {
           ctx.busy = false
         })
     }

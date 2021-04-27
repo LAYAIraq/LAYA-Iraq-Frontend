@@ -1,3 +1,13 @@
+<!--
+Filename: login.vue 
+Use: Organize Login for Users
+Creator: core
+Date: unknown
+Dependencies: 
+  axios,
+  @/i18n/login
+-->
+
 <template>
   <div class="login-view ly-nav-margin">
     <div class="container">
@@ -63,87 +73,127 @@
 </template>
 
 <script>
-import http from "axios";
-import * as i18n from "@/i18n/login";
+import http from 'axios'
+import * as i18n from '@/i18n/login'
 
 export default {
-  name: "login-view",
+  name: 'login-view',
   mounted() {
-    document.querySelector("#email-input").focus();
+    // focus email input field on mount
+    document.querySelector('#email-input').focus()
   },
   data() {
     return {
       /* form */
-      email: "",
-      pwd: "",
+      email: '',
+      pwd: '',
 
       /* temp */
       busy: false,
-      errMsg: "",
+      errMsg: '',
       submitFailed: false
     };
   },
   computed: {
-    i18n: function() {
-      return i18n[this.$store.state.profile.lang];
+
+    /**
+     * i18n: Load translation files depending on user language
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 21, 2021
+     * 
+     */
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
     },
 
-    errEmail: function() {
-      return this.email.length === 0;
+    /**
+     * errEmail: return true of no email input
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    errEmail() {
+      return this.email.length === 0
     },
 
-    errPwd: function() {
-      return this.pwd.length === 0;
+    /**
+     * errPwd: return true if no password input
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    errPwd() {
+      return this.pwd.length === 0
     },
 
-    errForm: function() {
-      return this.errEmail || this.errPwd;
+    /**
+     * errForm: return true if password or email not put in
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    errForm() {
+      return this.errEmail || this.errPwd
     }
   },
   methods: {
-    submit: function() {
+
+    /**
+     * Function submit: submit login, on success load profile,
+     *  set login state, store token in local storage, reroute
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    submit() {
       if (this.errForm || this.busy) {
-        console.log("Not Submitting");
-        return;
+        console.log('Not Submitting')
+        return
       }
 
-      console.log("Submitting...");
-      this.busy = true;
-      let ctx = this;
+      console.log('Submitting...')
+      this.busy = true
+      let ctx = this
 
-      http.post("accounts/login", {
+      http.post('accounts/login', {
         email: ctx.email,
         password: ctx.pwd
       }).then(({ data }) => {
         /*
          * set login state */
-        ctx.$store.commit("login", data);
+        ctx.$store.commit('login', data)
 
         /* load profile */
-        ctx.$store.dispatch("fetchProfile");
-        ctx.$store.dispatch("fetchRole");
+        ctx.$store.dispatch('fetchProfile')
+        ctx.$store.dispatch('fetchRole')
 
         /* store auth for reloads */
-        const { id, userId, created, ttl } = data;
-        let expire = new Date(created);
-        expire.setSeconds(expire.getSeconds() + ttl);
-        console.log("Auth expires on", expire);
-        ctx.$ls.set("auth", { id: id, userId: userId }, expire.getTime());
+        const { id, userId, created, ttl } = data
+        let expire = new Date(created)
+        expire.setSeconds(expire.getSeconds() + ttl)
+        console.log('Auth expires on', expire)
+        ctx.$ls.set('auth', { id: id, userId: userId }, expire.getTime())
 
         /* move to view */
-        ctx.$router.push("/courses");
+        ctx.$router.push('/courses')
       }).catch(err => {
-        console.log(err);
-        ctx.submitFailed = true;
-        ctx.errMsg = ctx.i18n.errMsg;
+        console.log(err)
+        ctx.submitFailed = true
+        ctx.errMsg = ctx.i18n.errMsg
       }).then(() => {
-        ctx.busy = false;
-      });
+        ctx.busy = false
+      })
     }
   },
   components: {
   }
-};
+}
 </script>
 
 <style scoped>

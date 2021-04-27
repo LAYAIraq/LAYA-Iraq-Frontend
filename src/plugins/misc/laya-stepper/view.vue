@@ -1,8 +1,16 @@
+<!--
+Filename: view.vue 
+Use: Show stepper component
+Creator: core
+Date: unknown
+Dependencies: @/i18n/plugins/misc/laya-stepper
+-->
+
 <template>
   <div class="ly-stepper" :id="id">
 
     <div class="status text-center p-1 d-none">
-      {{ i18n.step }}{{step}}{{ i18n.of }}{{components.length}}
+      {{ stepOfSteps }}
     </div>
 
     <div class="content">
@@ -32,11 +40,10 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue"
-import * as i18n from "../../../i18n/plugins/misc/laya-stepper"
+<script>
+import * as messages from '@/i18n/plugins/misc/laya-stepper'
 
-export default Vue.extend({
+export default {
   name: 'laya-stepper',
   mounted () {
   },
@@ -49,25 +56,88 @@ export default Vue.extend({
     components: Array
   },
   computed: {
-    id: function() {
+
+    /**
+     * id: return id for html element
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    id() {
       return `stepper-${Date.now()}`
     },
-    comps: function() {
+
+    /**
+     * comps: return components of the course
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    comps() {
       return [this.components[this.step-1]]
     },
+
+    /**
+     * i18n: Load translation files depending on user language
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 20, 2021
+     * 
+     */
     i18n() {
-      return i18n[this.$store.state.profile.lang]
+      return messages[this.$store.state.profile.lang]
     }
   },
   methods: {
+
+    /**
+     * Function stepOfSteps: replace variables in str with data
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: unknown
+     */
+    stepOfSteps() {
+      let str = this.i18n.step
+      str.replace('{step}', this.step)
+      str.replace('{steps}', this.components.length)
+      return str
+    },
+
+    /**
+     * Function next: return next step 
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     next() {
       this.step = (this.step === this.components.length) ? this.step : this.step+1
       this.$forceUpdate()
     },
+
+    /**
+     * Function back: return last step
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     back() {
       this.step = (this.step === 1) ? this.step : this.step-1
       this.$forceUpdate()
     },
+
+    /**
+     * Function nextStep: map all steps to their content and scroll into view
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     nextStep(steps) {
       const vue = this
       return steps.map(step => function() {
@@ -76,7 +146,7 @@ export default Vue.extend({
       })
     }
   },
-})
+}
 </script>
 
 <style scoped>

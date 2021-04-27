@@ -1,3 +1,13 @@
+<!--
+Filename: App.vue 
+Use: render Laya
+Creator: core
+Date: unknown
+Dependencies: 
+  @/components/header,
+  @/components/footer
+-->
+
 <template>
   <div id="app">
     <ly-header></ly-header>
@@ -7,50 +17,72 @@
 </template>
 
 <script>
-import lyHeader from "@/components/header"
-import lyFooter from "@/components/footer"
+import lyHeader from '@/components/header'
+import lyFooter from '@/components/footer'
 
 export default {
-  name: "app",
+  name: 'app',
   watch: {
-    $route: "relocateUnauthorized"
+    $route: 'relocateUnauthorized'
   },
   created() {
-    /*
-     * restore auth from local storage */
-    let auth = this.$ls.get("auth", false);
-    if (!auth) return;
-    console.log("Auth restored");
-    this.$store.commit("login", auth);
-    this.$store.dispatch("fetchProfile");
-    this.$store.dispatch("fetchRole");
+    this.restoreAuth()
   },
   methods: {
+
+    /**
+     * function relocateUnauthorized: relocate users that are not 
+     *  authenticated
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     relocateUnauthorized() {
       /* 
        * pass access if auth true */
-      if (this.$ls.get("auth", false)) return;
+      if (this.$ls.get('auth', false)) return
 
       const publicURLs = [
-        "#/",
-        "#/login",
-        "#/register",
-        "#/imprint",
-        "#/privacy"
-      ];
+        '#/',
+        '#/login',
+        '#/register',
+        '#/imprint',
+        '#/privacy'
+      ]
 
       /* target url is public */
-      if (publicURLs.includes(location.hash)) return;
+      if (publicURLs.includes(location.hash)) return
 
       /* temporary allow public course access */
-      if (/courses/.test(location.hash)) return;
+      if (/courses/.test(location.hash)) return
 
       /* auth first */
-      this.$router.push("/login");
+      this.$router.push('/login')
+    },
+
+    /**
+     * Function restoreAuth: restore authentication from local
+     *  storage, set vuex store
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    restoreAuth() {
+      let auth = this.$ls.get('auth', false)
+      if (!auth) return
+      console.log('Auth restored')
+      this.$store.commit('login', auth)
+      this.$store.dispatch('fetchProfile')
+      this.$store.dispatch('fetchRole')
     }
   },
-  components: { lyHeader, lyFooter }
-};
+  components: { 
+    lyHeader, 
+    lyFooter 
+  }
+}
 </script>
 
 <style>

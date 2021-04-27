@@ -1,3 +1,11 @@
+/**
+ * Filename: laya.ts
+ * Use: make all content blocks available as global mixin
+ * Creator: core
+ * Date: unknown
+ * Dependencies: vue
+ */
+
 import _Vue from "vue";
 import { VueConstructor } from "vue";
 
@@ -36,6 +44,10 @@ export class Laya {
 
   public get la() {
     return this._la;
+  }
+
+  public get li() {
+    return this._li;
   }
 
   constructor(v: typeof _Vue) {
@@ -103,6 +115,7 @@ export default {
           $laya: {
             lb: $laya.lb,
             la: $laya.la,
+            li: $laya.li
           },
         };
       },

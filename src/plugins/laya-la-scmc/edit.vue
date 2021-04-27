@@ -1,13 +1,31 @@
+<!--
+Filename: edit.vue
+Use: Edit a Multiple Choice/Response content block
+Creator: core
+Date: unknown
+Dependencies:
+  vuex,
+  @/i18n/plugins/laya-la-scmc
+-->
+
 <template>
   <div class="laya-la-scms-edit ly-bg-author p-3">
 
-    <h4>{{ i18n.edit.scmc }}</h4>
+    <label><h4>{{ i18n.edit.scmc }}</h4></label><i id ="questionmark" class="fas fa-question-circle" @click="toggleTip" 
+          :title="i18n.showTip" v-b-tooltip.left></i>
+    <b-jumbotron 
+            v-if="tooltipOn"
+            :header="i18n.title" :lead="i18n.tipHeadline">
+          <hr class="my-4">
+          <span v-html="i18n.tooltip"></span>
+
+    </b-jumbotron>
     <hr>
     <form>
 
       <!-- type -->
       <div class="form-group row">
-        <label for="smcs-type" class="col-2 col-form-label">Art</label>
+        <label for="smcs-type" class="col-2 col-form-label">{{ i18n.type }}</label>
         <div class="col-10">
           <div class="form-check form-check-inline align-text-top">
             <input id="scms-sc"
@@ -116,40 +134,94 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/plugins/laya-la-scmc"
+import { mapGetters } from 'vuex'
+import * as i18n from '@/i18n/plugins/laya-la-scmc'
 
 export default {
   name: 'laya-la-scmc-edit',
-  created () {
-    if (this.options.length == 0) this.options.push(this.i18n.edit.sampleOption)
-  },
   data () {
-    if(Object.entries(this.$attrs).length > 0)
-      return {...this.$attrs}
     return {
-      title: "",
-      task: "",
-      taskAudio: "",
+      title: '',
+      task: '',
+      taskAudio: '',
       options: [],
       solutions: [],
       maxTries: 1,
       multiple: false,
+      tooltipOn: false
     }
   },
-  props: {
+  created () {
+    this.fetchData()
   },
   computed: {
+    ...mapGetters(['content', 'profileLang']),
+
+    /**
+     * i18n: Load translation files depending on user language
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 19, 2021
+     * 
+     */
     i18n() {
-      return i18n[this.$store.state.profile.lang]
+      return i18n[this.profileLang]
     }
   },
   methods: {
+
+    /**
+     * Function _delItem(idx): Delete item at given index
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     _delItem(idx) {
       this.options.splice(idx, 1)
     },
+
+    /**
+     * Function _addItem: Add item to options
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
     _addItem() {
-      this.options.push("");
+      this.options.push('');
     },
+
+    /**
+     * Function toggleTip: toggle tooltipOn boolean
+     * 
+     * Author: cmc
+     * 
+     * Last updated: unknown
+     */
+    toggleTip() {
+      this.tooltipOn = !this.tooltipOn
+    },
+
+    /**
+     * Function fetchData: fetch data from vuex and make data property
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 19, 2021
+     */
+    fetchData() {
+      let idx = this.$route.params.step - 1
+      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
+      this.multiple = preData.multiple
+      this.title = preData.title
+      this.task = preData.task
+      this.taskAudio = preData.taskAudio
+      this.options = preData.options
+      this.solutions = preData.solutions
+      this.maxTries = preData.maxTries
+    }
   }
 }
 </script>
@@ -162,5 +234,10 @@ export default {
 
 legend {
   font-size: 1rem;
+}
+
+#questionmark {
+  float: inline-end;
+  cursor: pointer;
 }
 </style>

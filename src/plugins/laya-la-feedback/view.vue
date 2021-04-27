@@ -1,3 +1,11 @@
+<!--
+Filename: view.vue
+Use: Display Course Feedback content block
+Creator: cmc
+Date: unknown
+Dependencies: @/i18n/plugins/laya-la-feedback
+-->
+
 <template>
   <div class="laya-feedback">
 
@@ -82,21 +90,19 @@
 
 <script>
 
-import { BToast, BvToast } from "bootstrap-vue";
-import * as i18n from "@/i18n/plugins/laya-la-feedback";
+import { BToast, BvToast } from 'bootstrap-vue';
+import * as i18n from '@/i18n/plugins/laya-la-feedback';
 
 //import layaWsyisyg from '../misc/laya-html'
 export default {
-  name: "laya-feedback",
-  created () {
+  name: 'laya-feedback',
+  created() {
     //console.log(Date.parse(this.feedback.created))
-    const mid = Math.floor((this.categories.length)/2)
+    const mid = Math.floor((this.categories.length-1)/2)
     let s = this.items.map(i => mid)
     this.choice = [...s]
     
-    this.getFid()
-    this.getPreviousFeedback()
-    
+    // this.getPreviousFeedback()
   },
   beforeDestroy() {
     //add saving feedback data
@@ -104,15 +110,22 @@ export default {
   },
   data () {
     return {
-      //checked: false,
       choice: [], // users choice as index
-      freetext: "",
+      freetext: '',
       answered: false,
-      fid: 0,
-      created: 0
+      step: this.init.fno
     }
   },
   computed: {
+
+    /**
+     * i18n: Load translation files depending on user language
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 12, 2021
+     * 
+     */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }
@@ -128,44 +141,51 @@ export default {
     onSave: Function
   },
   methods: {
-    getFid() {
-      let uid = this.init.uid
-      let cid = this.init.cid
-      let fno = this.init.fno
-      let slt = this.init.created
-      let now = Date.now()
-      this.created = now
-      this.fid = uid ^ cid ^ fno ^ slt ^ now
-    },
-    getPreviousFeedback() {
-      for (let i in this.init.feedback) {
-        let tuid = this.calcUID(this.init.feedback[i])
-        if(tuid === this.init.uid) {
-          //console.log("Previous Feedback loaded!")
+
+    /**
+     * Function getPreviousFeedback: fetch eventual previous feedback
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: unknown
+     */
+    getPreviousFeedback() { //unused b/c of different data model in development
+      for (var i of this.init) {
+        if(i.step === this.step) {
           this.answered = true
-          let tmp = this.init.feedback[i]
+          let tmp = i
           this.freetext = tmp.freetext
           this.choice = tmp.choice
           this.created = tmp.created
-          this.fid = tmp.fid
+          this.step = tmp.step
           return
         } 
       }
-      //console.log("No previous feedback found!")
     },
-    calcUID(fb) {
-      
-      var tuid = fb.fid ^ fb.created ^ this.init.fno ^ this.init.cid ^ this.init.created
-      //console.log("Calculating UID... UID is " + tuid)
-      return tuid
-    },
+
+    /**
+     * Function done: execute function from onFinish[0]
+     * 
+     * Creator: cmc
+     * 
+     * LastUpdated: unknown
+     */
     done() {
       this.onFinish[0]();
     },
+
+    /**
+     * function bundleFeedback: bundle input in Object to persist
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: unknown
+     */
     bundleFeedback() {
+      let now = Date.now()
       const newFeedback = {
-          fid: this.fid,
-          created: this.created,
+          step: this.step,
+          created: Date.now(),
           choice: this.choice,
           freetext: this.freetext,
           options: {
@@ -175,11 +195,21 @@ export default {
         }
         return newFeedback
     },
+
+    /**
+     * function storeFeedback: emit feedback to parent component, show toast
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 12, 2021  
+     */
     storeFeedback() {
       const newFeedback = this.bundleFeedback()
-      this.onSave(newFeedback);
-      this.$forceUpdate();
-      !this.answered? this.$bvToast.show("feedback-new") : this.$bvToast.show("feedback-updated")
+      this.onSave(newFeedback)
+      this.$forceUpdate()
+      !this.answered? 
+        this.$bvToast.show('feedback-new') : 
+        this.$bvToast.show('feedback-updated')
     }
 
 

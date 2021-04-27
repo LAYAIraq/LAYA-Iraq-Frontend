@@ -1,5 +1,26 @@
+<!-- 
+Filename: edit.vue
+Use: Edit existing Drag & Drop content block
+Creator: core
+Date: unknown
+Dependencies:
+  vuex,
+  @/i18n/plugins/laya-la-drag-drop
+-->
+
 <template>
   <div class="laya-la-drag-drop-edit">
+
+    <label><h4>{{ i18n.name }}</h4></label><i id ="questionmark" class="fas fa-question-circle" @click="toggleTip" 
+          :title="i18n.showTip" v-b-tooltip.left></i>
+    <b-jumbotron 
+            v-if="tooltipOn"
+            :header="i18n.name" :lead="i18n.tipHeadline">
+          <hr class="my-4">
+          <span v-html="i18n.tooltip"></span>
+
+    </b-jumbotron>
+    <hr>
 
     <form>
 
@@ -122,59 +143,116 @@
 </template>
 
 <script>
-import * as i18n from "@/i18n/plugins/laya-la-drag-drop";
+import { mapGetters } from 'vuex'
+import * as i18n from '@/i18n/plugins/laya-la-drag-drop';
 
 export default {
   name: 'laya-la-drag-drop-edit',
   created () {
-    // fill item and category props with localized tokens
-    if (this.categories.length == 0) {
-      let temp = this.i18n.answer + " 1"
-      let tmpItem = {
-        label: temp,
-        category: -1
-      }
-      this.items.push(tmpItem)
-
-      for (let i = 1; i<3; i++) {
-        let tmp = this.i18n.cat + " " + i
-        console.log(tmp)
-        this.categories.push(tmp)
-      }
-    }
-
+    this.fetchData()
   },
   data () {
-    if(Object.entries(this.$attrs).length > 0)
-      return {...this.$attrs}
     return {
-      title: "",
-      task: "",
-      taskAudio: "",
+      title: '',
+      task: '',
+      taskAudio: '',
       items: [],
       categories: [],
+      tooltipOn: false
     }
   },
-  props: {
-  },
   computed: {
+    ...mapGetters(['content', 'profileLang']),
+
+    /**
+    * i18n: Load translation files depending on user language
+    * 
+    * Author: cmc
+    * 
+    * Last updated: March 12, 2021
+    */
     i18n() {
       return i18n[this.$store.state.profile.lang]
     }
   },
   methods: {
+    /**
+     * Function _delItem: remove item at position idx
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param {*} idx index at which to remove
+     */
     _delItem(idx) {
       this.items.splice(idx, 1)
     },
+
+    /**
+     * Function _addItem: Add new item to items
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     */
     _addItem() {
-      this.items.push({label: "", category: -1})
+      this.items.push({label: '', category: -1})
     },
+
+    /**
+     * Function _delCategory: delete category at position idx
+     * 
+     * Author: core
+     *
+     * Last Updated: unknown
+     * 
+     * @param {*} idx index at which to remove the category
+     */
     _delCategory(idx) {
       this.categories.splice(idx, 1)
     },
+
+    /**
+     * Function _addCategory: Add new category to categories
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     */
     _addCategory() {
-      this.categories.push("")
+      this.categories.push('')
     },
+
+    /**
+     * Function fetchData(): fetch data from vuex and make data property
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: March 12, 2021
+     */
+    fetchData() {
+      let idx = this.$route.params.step - 1
+      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
+      this.title = preData.title
+      this.task = preData.task
+      this.taskAudio = preData.taskAudio
+      this.items = preData.items
+      this.categories = preData.categories
+    },
+
+    /**
+     * Function toggleTip: toggle tooltipOn boolean
+     * 
+     * Author: cmc
+     * 
+     * Last updated: unknown
+     */
+    toggleTip() {
+      this.tooltipOn = !this.tooltipOn
+    }
   }
 }
 </script>
@@ -187,5 +265,10 @@ export default {
 
 legend {
   font-size: 1rem;
+}
+
+#questionmark {
+  float: inline-end;
+  cursor: pointer;
 }
 </style>

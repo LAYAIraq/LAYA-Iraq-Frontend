@@ -1,3 +1,16 @@
+<!--
+Filename: mycourses.vue 
+Use: show courses for certain user 
+Creator: core
+Date: unknown
+Dependencies: 
+  vuex,
+  axios,
+  @/i18n/mycourses,
+  @/misc/utils.js,
+  @/backend-url.ts
+-->
+
 <template>
   <div class="mycourses-view">
     <!-- avatar -->
@@ -113,7 +126,7 @@
 
                   <!-- right meta infos -->
                   <div class="w-25 text-right">
-                    <span>{{ locDate(data.item.createDate) }}</span>
+                    <span>{{ locDate(data.item.courseId) }}</span>
                   </div>
                 </div>
               </div>
@@ -126,142 +139,235 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 
-import bCollapse from "bootstrap-vue/es/components/collapse/collapse";
-import vBToggle from "bootstrap-vue/es/directives/toggle/toggle";
-import lyAccordion from "@/components/accordion";
+//import bCollapse from 'bootstrap-vue/es/components/collapse/collapse'
+//import vBToggle from 'bootstrap-vue/es/directives/toggle/toggle'
+import lyAccordion from '@/components/accordion'
 
-import http from "axios";
-import * as i18n from "@/i18n/mycourses";
-import utils from "../misc/utils.js";
-import be from "../backend-url.ts";
+import http from 'axios'
+import * as i18n from '@/i18n/mycourses'
+import utils from '../misc/utils.js'
+import be from '@/backend-url'
 
 export default {
-  name: "mycourses-view",
+  name: 'mycourses-view',
   data() {
     return {
       cats: [],
       courses: [],
 
-      sortBy: "nameDESC",
-      searchStr: ""
-    };
+      sortBy: 'nameDESC',
+      searchStr: ''
+    }
   },
   computed: {
-    ...mapState(["profile", "note", "auth"]),
+    ...mapState(['profile', 'note', 'auth']),
 
-    i18n: function() {
-      return i18n[this.$store.state.profile.lang];
+    /**
+     * i18n: Load translation files depending on user language
+     * 
+     * Author: cmc
+     * 
+     * Last updated: March 21, 2021
+     * 
+     */
+    i18n() {
+      return i18n[this.$store.state.profile.lang]
     },
-    avatarURL: function() {
-      return `${be()}/storage/img/download/${this.profile.avatar}`;
+
+    /**
+     * avatarURL: return url of profile avatar
+     * 
+     * Author: core
+     * 
+     * Last Updated: March 21, 2021
+     */
+    avatarURL() {
+      return `${be()}/storage/img/download/${this.profile.avatar}`
     },
-    nameSortIcon: function() {
+
+    /**
+     * nameSortIcon: return icon css class depending on how names are sorted
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    nameSortIcon() {
       return {
-        "fas fa-sort-up": this.sortBy === "nameASC",
-        "fas fa-sort-down": this.sortBy === "nameDESC",
-        "fas fa-sort": /date/.test(this.sortBy)
-      };
+        'fas fa-sort-up': this.sortBy === 'nameASC',
+        'fas fa-sort-down': this.sortBy === 'nameDESC',
+        'fas fa-sort': /date/.test(this.sortBy)
+      }
     },
-    dateSortIcon: function() {
+
+    /**
+     * dateSortIcon: return icon css class depending on how dates are sorted
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    dateSortIcon() {
       return {
-        "fas fa-sort-up": this.sortBy === "dateASC",
-        "fas fa-sort-down": this.sortBy === "dateDESC",
-        "fas fa-sort": /name/.test(this.sortBy)
-      };
+        'fas fa-sort-up': this.sortBy === 'dateASC',
+        'fas fa-sort-down': this.sortBy === 'dateDESC',
+        'fas fa-sort': /name/.test(this.sortBy)
+      }
     }
   },
   methods: {
     ...utils,
-    search: function(courses) {
-      const { searchStr } = this;
-      if (searchStr === "") return courses;
+
+    /**
+     * Function search: filter courses with given input
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param {array} courses course array
+     * @returns {array} filtered course list
+     */
+    search(courses) {
+      const { searchStr } = this
+      if (searchStr === '') return courses
       return courses.filter(course => {
-        const re = new RegExp(searchStr, "i");
-        return re.test(course.name);
-      });
+        const re = new RegExp(searchStr, 'i')
+        return re.test(course.name)
+      })
     },
-    filter: function(courses) {
-      if (courses.length === 0) return courses;
-      let activeCats = this.cats.filter(c => c.on).map(c => c.label);
-      if (activeCats.length === 0) return courses;
-      return courses.filter(c => activeCats.includes(c.category));
+
+    /**
+     * Function filter: filter courses by category
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param {array} courses course array
+     * @returns {array} filtered course list
+     */
+    filter(courses) {
+      if (courses.length === 0) return courses
+      let activeCats = this.cats.filter(c => c.on).map(c => c.label)
+      if (activeCats.length === 0) return courses
+      return courses.filter(c => activeCats.includes(c.category))
     },
-    sort: function(_courses) {
-      let courses = [..._courses];
-      const by = this.sortBy;
-      if (by === "nameASC") {
-        return courses.sort((c1, c2) => c1.name < c2.name);
+
+    /**
+     * Function sort: sort courses 
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     * 
+     * @param {array} _courses course array
+     * @returns {array} sorted course array
+     */
+    sort(_courses) {
+      let courses = [..._courses]
+      const by = this.sortBy
+      if (by === 'nameASC') {
+        return courses.sort((c1, c2) => c1.name < c2.name)
       }
-      if (by === "nameDESC") {
-        return courses.sort((c1, c2) => c1.name >= c2.name);
+      if (by === 'nameDESC') {
+        return courses.sort((c1, c2) => c1.name >= c2.name)
       }
-      if (by === "dateASC") {
-        return courses.sort((c1, c2) => c1.createDate < c2.createDate);
+      if (by === 'dateASC') {
+        return courses.sort((c1, c2) => c1.createDate < c2.createDate)
       }
-      if (by === "dateDESC") {
-        return courses.sort((c1, c2) => c1.createDate >= c2.createDate);
+      if (by === 'dateDESC') {
+        return courses.sort((c1, c2) => c1.createDate >= c2.createDate)
       }
-      return courses;
+      return courses
     },
-    sortByName: function() {
-      if (this.sortBy === "nameASC") {
-        this.sortBy = "nameDESC";
-        return;
+
+    /**
+     * Function sortByName: sort courses by name
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    sortByName() {
+      if (this.sortBy === 'nameASC') {
+        this.sortBy = 'nameDESC'
+        return
       }
-      if (this.sortBy === "nameDESC") {
-        this.sortBy = "nameASC";
-        return;
+      if (this.sortBy === 'nameDESC') {
+        this.sortBy = 'nameASC'
+        return
       }
-      this.sortBy = "nameDESC";
+      this.sortBy = 'nameDESC'
     },
-    sortByDate: function() {
-      if (this.sortBy === "dateASC") {
-        this.sortBy = "dateDESC";
-        return;
+
+    /**
+     * Function sortByDate: sort courses by date
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    sortByDate() {
+      if (this.sortBy === 'dateASC') {
+        this.sortBy = 'dateDESC'
+        return
       }
-      if (this.sortBy === "dateDESC") {
-        this.sortBy = "dateASC";
-        return;
+      if (this.sortBy === 'dateDESC') {
+        this.sortBy = 'dateASC'
+        return
       }
-      this.sortBy = "dateDESC";
+      this.sortBy = 'dateDESC'
+    },
+    
+    /**
+     * Function fetchCourses: fetch courses from database,
+     *  create categories
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    fetchCourses() {
+      const ctx = this
+      this.$store.commit('setBusy', true)
+      this.$store.commit('clearMyCourse')
+      /*
+      * fetch courses */
+      http
+        .get(`accounts/${ctx.auth.userId}/mycourses?filter[include]=author`)
+        .then(function({ data }) {
+          ctx.courses = data
+          /*
+          * create filters from categories */
+          const filters = []
+          const cats = ctx.courses.map(course => course.category)
+          cats.forEach(cat => {
+            if (filters.indexOf(cat) === -1) filters.push(cat)
+          })
+          ctx.cats = filters.map(f => ({ label: f, on: false }))
+        })
+        .catch(err => console.error(err))
+        .then(() => ctx.$store.commit('setBusy', false))
     }
   },
   beforeRouteEnter(to, from, next) {
-    next();
+    next()
   },
   mounted() {
-    document.querySelector("#tab-focus").focus();
+    document.querySelector('#tab-focus').focus()
   },
   created() {
-    const ctx = this;
-    this.$store.commit("setBusy", true);
-    this.$store.commit("clearMyCourse");
-    /*
-     * fetch courses */
-    http
-      .get(`accounts/${ctx.auth.userId}/mycourses?filter[include]=author`)
-      .then(function({ data }) {
-        ctx.courses = data;
-        /*
-         * create filters from categories */
-        const filters = [];
-        const cats = ctx.courses.map(course => course.category);
-        cats.forEach(cat => {
-          if (filters.indexOf(cat) === -1) filters.push(cat);
-        });
-        ctx.cats = filters.map(f => ({ label: f, on: false }));
-      })
-      .catch(err => console.error(err))
-      .then(() => ctx.$store.commit("setBusy", false));
+    this.fetchCourses()
   },
   components: {
     lyAccordion,
-    bCollapse,
-    vBToggle
+    //bCollapse,
+    //vBToggle
   }
-};
+}
 </script>
 
 <style scoped>

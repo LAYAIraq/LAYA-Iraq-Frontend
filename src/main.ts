@@ -1,3 +1,11 @@
+/**
+ * Filename: main.ts
+ * Use: packs all components of LAYA together
+ * Creator: core
+ * Date:unknown
+ * Dependencies: see import statements
+ */
+
 import Vue from "vue"
 import App from "./App.vue"
 import router from "./router.js"
