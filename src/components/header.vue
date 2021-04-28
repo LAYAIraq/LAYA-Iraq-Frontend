@@ -30,7 +30,7 @@ Dependencies:
         <!-- left links -->
         <b-navbar-nav v-if="auth.online">
           <b-nav-item to="/courses">{{i18n.courses}}</b-nav-item>
-          <b-nav-item to="/mycourses">{{i18n.myCourses}}</b-nav-item>
+          <!-- <b-nav-item to="/mycourses">{{i18n.myCourses}}</b-nav-item> -->
         </b-navbar-nav>
 
         <!-- right links -->
@@ -174,7 +174,7 @@ export default {
             lang: this.$store.state.profile.lang,
             uid: this.$store.state.auth.userId
           }
-          this.$store.dispatch('setUserLang', data)
+          this.$store.commit('setUserLang', data)
         }
       })
     },
