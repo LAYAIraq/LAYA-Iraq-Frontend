@@ -30,13 +30,22 @@
 
       <div class="row">
         <div class="col-2">
-          {{ i18n.fileType }}
+          <span @click="sortByProp('type')">
+            <i :class="sortIcon('type')"></i>
+            {{ i18n.fileType }}
+          </span>
         </div>
         <div class="col-5">
-          {{ i18n.fileName }}
+          <span @click="sortByProp('originalFilename')">
+            <i :class="sortIcon('originalFilename')"></i>
+            {{ i18n.fileName }}
+          </span>
         </div>
         <div class="col-2">
-          {{ i18n.fileSize }}
+          <span @click="sortByProp('size')">
+            <i :class="sortIcon('size')"></i>
+            {{ i18n.fileSize }}
+          </span>
         </div>
         <div class="col-1">
           {{ i18n.url }}
@@ -53,10 +62,10 @@
       <!-- List of files -->
       <ul 
         class="explorer"
-        v-if="courseFiles.length>0"
+        v-if="sortedFiles.length>0"
         >
         <li
-          v-for="file of courseFiles"
+          v-for="file of sortedFiles"
           :key="file.name"
         >
 
@@ -232,7 +241,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import FileUpload from 'vue-upload-component'
-import { mimeTypes, tooltipIcon }  from '@/mixins'
+import { listSort, mimeTypes, tooltipIcon }  from '@/mixins'
 import * as i18n from '@/i18n/plugins/misc/laya-upload-file-list'
 import api from '@/backend-url'
 import fileSize from '@/misc/utils.js'
@@ -245,6 +254,7 @@ export default {
   },
 
   mixins: [
+    listSort,
     mimeTypes,
     tooltipIcon
   ],
@@ -266,6 +276,10 @@ export default {
      */
     i18n() {
       return i18n[this.profileLang]
+    },
+
+    sortedFiles() {
+      return this.sortList(this.courseFiles)
     },
 
     /**
