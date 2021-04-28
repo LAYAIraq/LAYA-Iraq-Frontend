@@ -2,8 +2,28 @@
   <div class="file-list">
 
     <div class="file-explorer">
-      <div class="row">
-        <h2>{{ i18n.filesInCourse }}</h2>
+      <div>
+        <label>
+          <h2>
+            {{ i18n.filesInCourse }}
+          </h2>
+        </label>
+        <i 
+          id ="questionmark" 
+          class="fas fa-question-circle align-right" 
+          @click="toggleTip" 
+          :title="i18n.showTip" 
+          v-b-tooltip.left
+        >
+        </i>
+        <b-jumbotron 
+          v-if="tooltipOn"
+          :header="i18n.title"
+          :lead="i18n.tipHeadline">
+          <hr>
+          <span v-html="i18n.tooltip"></span>
+        </b-jumbotron>
+
       </div>
       <ul 
         class="explorer"
@@ -185,6 +205,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import FileUpload from 'vue-upload-component'
+import tooltipIcon from '@/mixins/tooltip-icon.vue'
 import * as i18n from '@/i18n/plugins/misc/laya-upload-file-list'
 import api from '@/backend-url'
 import fileSize from '@/misc/utils.js'
@@ -195,6 +216,10 @@ export default {
   components: {
     FileUpload
   },
+
+  mixins: [
+    tooltipIcon
+  ],
 
   computed: {
     ...mapGetters([
