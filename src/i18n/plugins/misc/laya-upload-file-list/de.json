@@ -8,9 +8,7 @@
   "dropToUpload": "Dateien ablegen zum Hochladen",
   "duplicateFile": "Doppelte Datei!",
   "filesInCourse": "Zum Kurs gehörige Dateien",
-  "fileName": "Dateiname",
   "fileNameError": "Fehler: Dateiname nicht gefunden!",
-  "fileSize": "Dateigröße",
   "fileTooLarge": "Datei ist zu groß!",
   "fileType": "Dateityp",
   "hideUploader": "Upload-Fenster verbergen",
@@ -21,8 +19,5 @@
   "startUpload": "Hochladen beginnen",
   "stopUpload": "Hochladen beenden",
   "success": "erfolgreich",
-  "tipHeadline": "Was kann man mit diesem Element machen?",
-  "title": "Dateien hochladen",
-  "tooltip": "<p>Du kannst die Dateien, die zum Kurs gehören, ansehen. Außerdem kannst du neue Dateien zum Kurs hinzufügen.</p><p>Wenn bereits Dateien zum Kurs hochgeladen wurden, kannst du sie in einer Liste sehen. Ein Symbol zeigt den Dateityp an. Dann wird der Dateiname und die Dateingröße angezeigt. Das 'Kopieren'-Symbol erlaubt, die URL der Datei zu kopieren. Das ist nützlich, um die URL in die Formularfelder der Kursblöcke einzusetzen. Mit dem roten Knopf kannst du Dateien löschen.</p><p>Wenn du Dateien hochladen möchtest, klick auf 'Dateien hochladen'. Du kannst jetzt per Drag & Drop Dateien zum Hochladen hinzufügen. Wenn du 'Dateien auswählen' klickst, öffnet sich ein Fenster, in dem du die Datein auswählen kannst. Klicke 'Hochladen beginnen', um den Upload zu starten. Eventuelle Fehler werden in der Liste der hochzuladenden Dateien angezeigt. Beachte, dass das Klicken auf den roten Knopf die Dateien nicht löscht, sondern lediglich aus der Liste entfernt.</p><p>Einschränkungen für das Hochladen: Keine doppelten Dateien, keine Dateien größer als 500 MByte, keine ausführbaren Dateien.</p>",
-  "url": "URL"
+  "title": "Dateien hochladen"
 }
