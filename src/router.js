@@ -76,11 +76,11 @@ export default new Router({
         }
       ]
     },
-    // {
-    //   path: '/mycourses',
-    //   name: 'mycourses-view',
-    //   component: views.mycourses
-    // },
+    {
+      path: '/mycourses',
+      name: 'mycourses-view',
+      component: views.mycourses
+    },
     {
       path: '/imprint',
       name: 'imprint-view',

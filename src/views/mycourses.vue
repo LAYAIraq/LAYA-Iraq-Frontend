@@ -139,7 +139,7 @@ Dependencies:
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapState } from 'vuex'
 
 //import bCollapse from 'bootstrap-vue/es/components/collapse/collapse'
 //import vBToggle from 'bootstrap-vue/es/directives/toggle/toggle'
@@ -163,7 +163,6 @@ export default {
   },
   computed: {
     ...mapState(['profile', 'note', 'auth']),
-    ...mapGetters(['courseList']),
 
     /**
      * i18n: Load translation files depending on user language

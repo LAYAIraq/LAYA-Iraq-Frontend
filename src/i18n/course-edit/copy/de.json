@@ -1,6 +1,6 @@
 {
     "copyCourse": "Kurs kopieren",
-    "copyCourseTip": "Der Kurs wird mit einem neuen Namen dupliziert. ACHTUNG: Die zugehörigen Dateien werden nicht kopiert!",
+    "copyCourseTip": "Der Kurs wird mit einem neuen Namen dupliziert.",
     "modal": {
         "ok": "Mit neuem Namen kopieren",
         "placeholder": "Neuer Kursname",

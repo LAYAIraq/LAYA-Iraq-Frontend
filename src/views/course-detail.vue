@@ -85,7 +85,6 @@ export default {
   beforeRouteUpdate(to,from,next) {
     document.getElementById('main-content-anchor').scrollIntoView()
     next()
-    //new commit
   },
   created() {
     this.fetchCourse()
