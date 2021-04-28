@@ -112,7 +112,32 @@ export default {
         avatar: string
       }) {
       state = { ...settings }
-    }
+    },
+
+    /**
+     * function setUserLang: persist locale to backend
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: unknown 
+     * 
+     * @param state contains lang
+     * @param data contains user language and id
+     */
+     setUserLang(state: { lang: string }, 
+      data: { lang: string, uid: number }) { 
+      //save language choice in User's profile
+      if (supportedLangs.includes(data.lang)) {
+        state.lang = data.lang
+        http.post(`/accounts/${data.uid}/change-language`, data)
+          // .then( () => console.log(`Changed language to ${state.lang}`))
+          .catch((err) => console.error(err))
+      }
+      else {
+        // console.log('Setting language failed')
+        state.lang = supportedLangs[0]
+      }
+    },
 
     
   },
@@ -147,32 +172,7 @@ export default {
         .catch(err => {
           console.error(err)
         })
-    },
-
-    /**
-     * function setUserLang: persist locale to backend
-     * 
-     * Author: cmc
-     * 
-     * Last Updated: unknown 
-     * 
-     * @param state contains lang
-     * @param data contains user language and id
-     */
-     setUserLang(state: { lang: string }, 
-      data: { lang: string, uid: number }) { 
-      //save language choice in User's profile
-      if (supportedLangs.includes(data.lang)) {
-        state.lang = data.lang
-        http.post(`/accounts/${data.uid}/change-language`, data)
-          // .then( () => console.log(`Changed language to ${state.lang}`))
-          .catch((err) => console.error(err))
-      }
-      else {
-        // console.log('Setting language failed')
-        state.lang = supportedLangs[0]
-      }
-    },
+    }
 
   }
 }

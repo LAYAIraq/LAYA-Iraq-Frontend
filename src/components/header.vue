@@ -174,7 +174,7 @@ export default {
             lang: this.$store.state.profile.lang,
             uid: this.$store.state.auth.userId
           }
-          this.$store.dispatch('setUserLang', data)
+          this.$store.commit('setUserLang', data)
         }
       })
     },
