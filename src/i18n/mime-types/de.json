@@ -1,18 +1,25 @@
  { 
   "audio": "Audiodatei",
-  "excel": "Excel-Datei",
   "file": "Datei",
-  "gzip": "Archivdatei",
-  "html": "HTML-Datei",
   "image": "Bilddatei",
-  "json": "JSON-Datei",
-  "openDoc": "Open-Office-Textdatei",
-  "openPres": "Open-Office-Präsentationsdatei",
-  "openSpread": "Open-Office-Tabellendatei",
-  "pdf": "PDF-Datei",
-  "powerPoint": "Powerpoint-Datei",
-  "text": "Textdatei",
   "video": "Videodatei",
-  "word": "Word-Datei",
-  "zip": "ZIP-Archiv"
+  "application/pdf": "PDF-Datei",
+  "application/msword": "Word-Datei",
+  "application/vnd.ms-word": "Word-Datei",
+  "application/vnd.oasis.opendocument.text": "Open-Office-Textdatei",
+  "application/vnd.openxmlformatsfficedocument.wordprocessingml":
+    "Open-Office-Textdatei",
+  "application/vnd.ms-excel": "Excel-Datei",
+  "application/vnd.openxmlformatsfficedocument.spreadsheetml":
+    "Open-Office-Tabellendatei",
+  "application/vnd.oasis.opendocument.spreadsheet": "Open-Office-Tabellendatei",
+  "application/vnd.ms-powerpoint": "Powerpoint-Datei",
+  "application/vnd.openxmlformatsfficedocument.presentationml":
+    "Open-Office-Präsentationsdatei",
+  "application/vnd.oasis.opendocument.presentation": "Open-Office-Präsentationsdatei",
+  "text/plain": "Textdatei",
+  "text/html": "HTML-Datei",
+  "application/json": "json",
+  "application/gzip": "Archivdatei",
+  "application/zip": "ZIP-Archiv"
 }

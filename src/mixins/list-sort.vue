@@ -7,7 +7,15 @@
     vuex
 -->
 <script>
+import { mapGetters } from 'vuex'
+import * as locale from '@/i18n/list-sort'
 export default {
+  computed: {
+    ...mapGetters(['profileLang']),
+    tooltips() {
+      return locale[this.profileLang]
+    }
+  },
   data() {
     return {
       sortBy: '',
@@ -76,6 +84,17 @@ export default {
         'fas fa-sort-down': this.sortBy === prop && this.sortAsc,
         'fas fa-sort': this.sortBy !== prop
       }
+    },
+
+    sortTooltip(prop) {
+      let propClass = this.sortIcon(prop)
+      if(propClass['fas fa-sort-up']){
+        return this.tooltips.sortDesc
+      }
+      else if (propClass['fas fa-sort-down']) {
+        return this.tooltips.sortAsc
+      }
+      else return this.tooltips.sort
     },
 
     /**

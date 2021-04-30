@@ -30,19 +30,32 @@
 
       <div class="row">
         <div class="col-2">
-          <span @click="sortByProp('type')">
+          <span @click="sortByProp('type')"
+            :title="sortTooltip('type')"
+            v-b-tooltip.top 
+            class="sort-list"
+          >
             <i :class="sortIcon('type')"></i>
             {{ i18n.fileType }}
           </span>
         </div>
         <div class="col-5">
-          <span @click="sortByProp('originalFilename')">
+          <span 
+            @click="sortByProp('originalFilename')"
+            :title="sortTooltip('originalFilename')"
+            v-b-tooltip.top 
+            class="sort-list"
+          >
             <i :class="sortIcon('originalFilename')"></i>
             {{ i18n.fileName }}
           </span>
         </div>
         <div class="col-2">
-          <span @click="sortByProp('size')">
+          <span @click="sortByProp('size')"
+            :title="sortTooltip('size')"
+            v-b-tooltip.top 
+            class="sort-list"
+          >
             <i :class="sortIcon('size')"></i>
             {{ i18n.fileSize }}
           </span>
@@ -577,6 +590,10 @@ export default {
 </script>
 
 <style scoped>
+span.sort-list {
+  cursor: pointer;
+}
+
 .draggable {
   cursor: move;
 }

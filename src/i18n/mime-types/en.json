@@ -1,18 +1,26 @@
 { 
     "audio": "Audio file",
-    "excel": "Excel file",
     "file": "File",
-    "gzip": "Archive file",
-    "html": "HTML file",
     "image": "Image file",
-    "json": "JSON file",
-    "openDoc": "Open Office Text file",
-    "openPres": "Open Office Presentation file",
-    "openSpread": "Open Office Spreadsheet file",
-    "pdf": "PDF file",
-    "powerPoint": "Powerpoint file",
-    "text": "Text file",
     "video": "Video file",
-    "word": "Word file",
-    "zip": "ZIP file"
+    "application/pdf": "PDF file",
+    "application/msword": "Word file",
+    "application/vnd.ms-word": "Word file",
+    "application/vnd.oasis.opendocument.text": "Open Office Text file",
+    "application/vnd.openxmlformatsfficedocument.wordprocessingml":
+      "Open Office Text file",
+    "application/vnd.ms-excel": "Excel file",
+    "application/vnd.openxmlformatsfficedocument.spreadsheetml":
+      "Open Office Spreadsheet file",
+    "application/vnd.oasis.opendocument.spreadsheet": "Open Office Spreadsheet file",
+    "application/vnd.ms-powerpoint": "Powerpoint file",
+    "application/vnd.openxmlformatsfficedocument.presentationml":
+      "Open Office Presentation file",
+    "application/vnd.oasis.opendocument.presentation": "Open Office Presentation file",
+    "text/plain": "Text file",
+    "text/html": "HTML file",
+    "application/json": "JSON file",
+    "application/gzip": "Archive file",
+    "application/zip": "ZIP file"
   }
+  
