@@ -347,7 +347,7 @@ export default {
 
     /**
      * Function copyCourse: copy course and all the files
-     *  FIXME: file list is not put in database
+     *  FIXME: Files are not copied
      * 
      * Author: cmc
      * 
@@ -366,60 +366,64 @@ export default {
         createDate: Date.now(),
         lastChanged: Date.now(),
         courseId: newId,
-        storageId: newStorage
+        storageId: newStorage,
+        files: []
       }
 
       // create new Storage
       let store = http.post('storage', { name: newStorage })
       let fileReqs = []
       let newFiles = []
-      store.then( () => {
-        // storage created, now copy files
-        // therefore, we create an array of requests
-        state.course.files.forEach( (file: { 
-          name: string, 
-          container: string, 
-          originalFilename: string
-        }) => {
-          fileReqs.push(
-            // download file
-            new Promise((resolve, reject) => {
-              http.get(`storage/${file.container}/download/${file.name}`)
-              .then( resp => {
-                //file was downloaded, extract values
-                // console.log('new data: ', resp)
-                let mimeType = JSON.parse(JSON.stringify(resp.headers))['content-type']
-                // console.log(mimeType)
-                let blob = new Blob([resp.data], {type: mimeType})
-                // console.log(blob)
-                const formData = new FormData()
-                formData.append('file', blob, file.originalFilename)
+      store
+
+      /* Files are not being copied because of a bug */
+      // .then( () => {
+      //   // storage created, now copy files
+      //   // therefore, we create an array of requests
+      //   state.course.files.forEach( (file: { 
+      //     name: string, 
+      //     container: string, 
+      //     originalFilename: string
+      //   }) => {
+      //     fileReqs.push(
+      //       // download file
+      //       new Promise((resolve, reject) => {
+      //         http.get(`storage/${file.container}/download/${file.name}`)
+      //         .then( resp => {
+      //           //file was downloaded, extract values
+      //           // console.log('new data: ', resp)
+      //           let mimeType = JSON.parse(JSON.stringify(resp.headers))['content-type']
+      //           // console.log(mimeType)
+      //           let blob = new Blob([resp.data], {type: mimeType})
+      //           // console.log(blob)
+      //           const formData = new FormData()
+      //           formData.append('file', blob, file.originalFilename)
                 
-                // re-upload file in new storage
-                http.post(`storage/${newStorage}/upload/`, formData, {
-                  headers: {
-                    'Content-Type': 'multipart/form-data'
-                  }
-                  })
-                  .then( resp => {
-                    // file was re-uploaded, push values to newFiles
-                    let newFile = resp.data.result.files.file[0]
-                    // console.log(newFile)
-                    // console.log('File uploaded: ', resp)
-                    newFiles.push(newFile)
-                    // console.log('New files:', newFiles)
-                    resolve('done')
-                  })
-                  .catch( err => {
-                    // file re-upload failed
-                    // console.error('Hier geht nix: ', err)
-                    reject('nox')
-                  })
-              })
-            })
-          )
-        })
-      })
+      //           // re-upload file in new storage
+      //           http.post(`storage/${newStorage}/upload/`, formData, {
+      //             headers: {
+      //               'Content-Type': 'multipart/form-data'
+      //             }
+      //             })
+      //             .then( resp => {
+      //               // file was re-uploaded, push values to newFiles
+      //               let newFile = resp.data.result.files.file[0]
+      //               // console.log(newFile)
+      //               // console.log('File uploaded: ', resp)
+      //               newFiles.push(newFile)
+      //               // console.log('New files:', newFiles)
+      //               resolve('done')
+      //             })
+      //             .catch( err => {
+      //               // file re-upload failed
+      //               // console.error('Hier geht nix: ', err)
+      //               reject('nox')
+      //             })
+      //         })
+      //       })
+      //     )
+      //   })
+      // })
       .catch( err => { 
         // creating new storage failed, return reject
         return new Promise((resolve, reject) => { 
@@ -427,22 +431,24 @@ export default {
         }) 
       })
 
-      // fire all requests for new files
-      // console.log('Array of requests: ', fileReqs)
-      let copiedFiles = Promise.allSettled(fileReqs)
-      copiedFiles.then( (...resp) => {
+      /* commented out because files are not being copied as of now */
+      // // fire all requests for new files
+      // // console.log('Array of requests: ', fileReqs)
+      // let copiedFiles = Promise.allSettled(fileReqs)
+      // copiedFiles.then( (...resp) => {
 
-        // console.log('ALL FILES HAVE SUCCESSFULLY BEEN UPLOADED!')
-        // console.log(resp)
-        // console.log(newFiles)
-        copiedCourse = {
-          ...copiedCourse, 
-          files: newFiles
-        }
-        // console.log('NEW COPIED COURSE:', copiedCourse)
+      //   // console.log('ALL FILES HAVE SUCCESSFULLY BEEN UPLOADED!')
+      //   // console.log(resp)
+      //   // console.log(newFiles)
+      //   copiedCourse = {
+      //     ...copiedCourse, 
+      //     files: newFiles
+      //   }
+      //   // console.log('NEW COPIED COURSE:', copiedCourse)
 
         return new Promise( (resolve,reject) => {
-          console.log('again: this course should be posted ', copiedCourse)
+          
+          // console.log('again: this course should be posted ', copiedCourse)
           // FIXME: filelist is not pushed in database
           http.post(`courses`, copiedCourse)
             .then( (resp) => { 
@@ -468,13 +474,13 @@ export default {
             })
             .catch( (err) => { reject(err)})
         })
-      })
-      .catch(err => { 
-        // copying course files failed, return reject
-        return new Promise((resolve, reject) => { 
-          reject(err) 
-        })
-      })
+      // })
+      // .catch(err => { 
+      //   // copying course files failed, return reject
+      //   return new Promise((resolve, reject) => { 
+      //     reject(err) 
+      //   })
+      // })
     },
 
     /**

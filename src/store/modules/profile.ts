@@ -114,7 +114,6 @@ export default {
       state = { ...settings }
     },
 
-
     /**
      * function setUserLang: persist locale to backend
      * 
@@ -131,14 +130,16 @@ export default {
       if (supportedLangs.includes(data.lang)) {
         state.lang = data.lang
         http.post(`/accounts/${data.uid}/change-language`, data)
-          .then( () => console.log(`Changed language to ${state.lang}`))
+          // .then( () => console.log(`Changed language to ${state.lang}`))
           .catch((err) => console.error(err))
       }
       else {
-        console.log('Setting language failed')
+        // console.log('Setting language failed')
         state.lang = supportedLangs[0]
       }
     },
+
+    
   },
   actions: {
 

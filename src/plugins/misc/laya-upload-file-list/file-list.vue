@@ -1,26 +1,95 @@
 <template>
   <div class="file-list">
 
+    <!-- title, tooltip-->
     <div class="file-explorer">
-      <div class="row">
-        <h2>{{ i18n.filesInCourse }}</h2>
+      <div>
+        <label>
+          <h2>
+            {{ i18n.filesInCourse }}
+          </h2>
+        </label>
+        <i 
+          id ="questionmark" 
+          class="fas fa-question-circle align-right" 
+          @click="toggleTip" 
+          :title="i18n.showTip" 
+          v-b-tooltip.left
+        >
+        </i>
+        <b-jumbotron 
+          v-if="tooltipOn"
+          :header="i18n.title"
+          :lead="i18n.tipHeadline">
+          <hr>
+          <span v-html="i18n.tooltip"></span>
+        </b-jumbotron>
+
       </div>
+      <!-- List header -->
+
+      <div class="row">
+        <div class="col-2">
+          <span @click="sortByProp('type')"
+            :title="sortTooltip('type')"
+            v-b-tooltip.top 
+            class="sort-list"
+          >
+            <i :class="sortIcon('type')"></i>
+            {{ i18n.fileType }}
+          </span>
+        </div>
+        <div class="col-5">
+          <span 
+            @click="sortByProp('originalFilename')"
+            :title="sortTooltip('originalFilename')"
+            v-b-tooltip.top 
+            class="sort-list"
+          >
+            <i :class="sortIcon('originalFilename')"></i>
+            {{ i18n.fileName }}
+          </span>
+        </div>
+        <div class="col-2">
+          <span @click="sortByProp('size')"
+            :title="sortTooltip('size')"
+            v-b-tooltip.top 
+            class="sort-list"
+          >
+            <i :class="sortIcon('size')"></i>
+            {{ i18n.fileSize }}
+          </span>
+        </div>
+        <div class="col-1">
+          {{ i18n.url }}
+        </div>
+        <div class="col">
+          {{ i18n.deleteFile }}
+        </div>
+        
+      </div>
+      <hr>
+
+      
+
+      <!-- List of files -->
       <ul 
         class="explorer"
-        v-if="courseFiles.length>0"
+        v-if="sortedFiles.length>0"
         >
         <li
-          v-for="file of courseFiles"
+          v-for="file of sortedFiles"
           :key="file.name"
         >
 
           <div class="row">
 
-            <div class="col-0">
+            <div class="col-2">
               <i 
               :class="fileIcon(file.type)"
               :title="i18n.fileType"
               v-b-tooltip.left></i>
+              {{ fileTypeString(file.type) }}
             </div>
 
             <div class="col-5">
@@ -31,7 +100,7 @@
               {{ fileSize(file.size) }}
             </div>
             
-            <div class="col-0">
+            <div class="col-1">
               <i 
                 class="fas fa-copy copy"
                 :title="i18n.copyUrl"
@@ -185,6 +254,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import FileUpload from 'vue-upload-component'
+import { listSort, mimeTypes, tooltipIcon }  from '@/mixins'
 import * as i18n from '@/i18n/plugins/misc/laya-upload-file-list'
 import api from '@/backend-url'
 import fileSize from '@/misc/utils.js'
@@ -195,6 +265,12 @@ export default {
   components: {
     FileUpload
   },
+
+  mixins: [
+    listSort,
+    mimeTypes,
+    tooltipIcon
+  ],
 
   computed: {
     ...mapGetters([
@@ -213,6 +289,10 @@ export default {
      */
     i18n() {
       return i18n[this.profileLang]
+    },
+
+    sortedFiles() {
+      return this.sortList(this.courseFiles)
     },
 
     /**
@@ -433,54 +513,6 @@ export default {
     },
 
     /**
-     * function fileIcon: returns a fas class for expected MIME types
-     * 
-     * Author: cmc
-     * 
-     * Last Updated: April 1, 2021
-     */
-    fileIcon(type){
-      // List of official MIME Types: http://www.iana.org/assignments/media-types/media-types.xhtml
-      var iconClasses = {
-        // Media
-        image: 'fas fa-file-image',
-        audio: 'fas fa-file-audio',
-        video: 'fas fa-file-video',
-        // Documents
-        'application/pdf': 'fas fa-file-pdf',
-        'application/msword': 'fas fa-file-word',
-        'application/vnd.ms-word': 'fas fa-file-word',
-        'application/vnd.oasis.opendocument.text': 'fas fa-file-word',
-        'application/vnd.openxmlformatsfficedocument.wordprocessingml':
-          'fas fa-file-word',
-        'application/vnd.ms-excel': 'fas fa-file-excel',
-        'application/vnd.openxmlformatsfficedocument.spreadsheetml':
-          'fas fa-file-excel',
-        'application/vnd.oasis.opendocument.spreadsheet': 'fas fa-file-excel',
-        'application/vnd.ms-powerpoint': 'fas fa-file-powerpoint',
-        'application/vnd.openxmlformatsfficedocument.presentationml':
-          'fas fa-file-powerpoint',
-        'application/vnd.oasis.opendocument.presentation': 'fas fa-file-powerpoint',
-        'text/plain': 'fas fa-file-alt',
-        'text/html': 'fas fa-file-code',
-        'application/json': 'fas fa-file-code',
-        // Archives
-        'application/gzip': 'fas fa-file-archive',
-        'application/zip': 'fas fa-file-archive'
-      };
-
-      for (var key in iconClasses) {
-        if (iconClasses.hasOwnProperty(key)) {
-          if (type.search(key) === 0) {
-            // Found it
-            return iconClasses[key]
-          }
-        }
-      }
-      return 'fas fa-file'
-    },
-
-    /**
      * function copyUrl: copy URL for that file
      * 
      * Author: cmc
@@ -558,11 +590,17 @@ export default {
 </script>
 
 <style scoped>
+span.sort-list {
+  cursor: pointer;
+}
+
 .draggable {
   cursor: move;
 }
 .explorer {
   list-style-type: none;
+  margin-top: 20px;
+  /* padding: 10px; */
 }
 .explorer .size {
   text-align: right;
