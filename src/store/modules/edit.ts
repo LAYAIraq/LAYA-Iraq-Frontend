@@ -347,7 +347,7 @@ export default {
 
     /**
      * Function copyCourse: copy course and all the files
-     *  FIXME: file list is not put in database
+     *  FIXME: Files are not copied
      * 
      * Author: cmc
      * 
@@ -375,6 +375,8 @@ export default {
       let fileReqs = []
       let newFiles = []
       store
+
+      /* Files are not being copied because of a bug */
       // .then( () => {
       //   // storage created, now copy files
       //   // therefore, we create an array of requests
@@ -429,6 +431,7 @@ export default {
         }) 
       })
 
+      /* commented out because files are not being copied as of now */
       // // fire all requests for new files
       // // console.log('Array of requests: ', fileReqs)
       // let copiedFiles = Promise.allSettled(fileReqs)
