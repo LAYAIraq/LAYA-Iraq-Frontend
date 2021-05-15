@@ -41,7 +41,7 @@ Dependencies:
             aria-describedby="login-error"
           >
             {{ i18n['login.title'] }}
-            <i class="fas fa-arrow-right"></i>
+            <i class="fas fa-sign-in-alt"></i>
           </button>
 
           <!-- busy note -->
@@ -63,6 +63,7 @@ Dependencies:
             {{ i18n['login.registerHint1'] }}
             <br>
             <router-link :to="{ name: 'register-view'}">
+              <i class="fas fa-user-plus"></i>
               {{ i18n['login.registerHint2'] }}
             </router-link>
           </div>

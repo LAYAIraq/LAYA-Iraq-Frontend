@@ -29,32 +29,54 @@ Dependencies:
 
         <!-- left links -->
         <b-navbar-nav v-if="auth.online">
-          <b-nav-item to="/courses">{{ i18n['header.courses'] }}</b-nav-item>
+          <b-nav-item to="/courses">
+            <i class="fas fa-chalkboard-teacher" size="2x"></i> 
+            {{ i18n['header.courses'] }}
+          </b-nav-item>
           <!-- <b-nav-item to="/mycourses">{{ i18n['mycourses.title'] }}</b-nav-item> -->
         </b-navbar-nav>
 
         <!-- right links -->
         <b-navbar-nav v-if="!auth.online" class="ml-auto">
-          <b-nav-item to="/register">{{ i18n['header.register'] }}</b-nav-item>
-          <b-nav-item to="/login">{{ i18n['login.title'] }}</b-nav-item>
+          <b-nav-item to="/register">
+          <i class="fas fa-user-plus"></i>
+            {{ i18n['header.register'] }}
+          </b-nav-item>
+          <b-nav-item to="/login">
+          <i class="fas fa-sign-in-alt"></i>
+            {{ i18n['login.title'] }}
+          </b-nav-item>
         </b-navbar-nav>
 
         <b-navbar-nav v-if="auth.online" class="ml-auto">
-          <b-nav-item to="/profile">{{ i18n['header.profile'] }}</b-nav-item>
-          <b-nav-item @click="logout">{{ i18n['header.logout'] }}</b-nav-item>
+          <b-nav-item to="/profile">
+            <i class="fas fa-user-alt"></i>
+            {{ i18n['header.profile'] }}
+          </b-nav-item>
+          <b-nav-item @click="logout">
+            <i class="fas fa-sign-out-alt"></i>
+            {{ i18n['header.logout'] }}
+          </b-nav-item>
         </b-navbar-nav>
 
         <b-navbar-nav>
+          
           <b-nav-item-dropdown right>
 
             <template v-slot:button-content>
               <img :src="icons[profileLang]" class="lang-icon">
             </template>
 
-            <b-dropdown-item-btn v-for="(svg, lang) in icons"
-                                 :key="lang"
-                                 @click="setLang(lang)">
-              <img :src="svg" :alt="lang" class="lang-icon lang-icon-list">
+            <b-dropdown-item-btn 
+              v-for="(svg, lang) in icons"
+              :key="lang"
+              @click="setLang(lang)"
+            >
+              <img 
+                :src="svg" 
+                :alt="lang" 
+                class="lang-icon lang-icon-list"
+              >
             </b-dropdown-item-btn>
 
           </b-nav-item-dropdown>
@@ -234,4 +256,5 @@ export default {
 .lang-icon-list {
   margin: 5px;
 }
+
 </style>

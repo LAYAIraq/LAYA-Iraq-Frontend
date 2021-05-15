@@ -21,48 +21,102 @@ Dependencies:
           <h1 class="text-center">{{ i18n['register.title'] }}</h1>
 
           <!-- name -->
-          <div class="ly-input" :class="{error: errName}">
-            <input id="register-focus" v-model="name" :placeholder="i18n['namePH']"
-            type="text" :disabled="submitOk" @blur="isNameTaken" class="w-100"
-            aria-describedby="name-err">
+          <div class="form-group row" :class="{error: errName}">
+            <div class="col-1 col-form-label">
+              <i class="fas fa-signature"></i>
+            </div>
+            <div class="col">
+              <input 
+                id="register-focus" 
+                v-model="name" 
+                :placeholder="i18n['namePH']"
+                type="text" 
+                :disabled="submitOk" 
+                @blur="isNameTaken" 
+                class="w-100"
+                aria-describedby="name-err">
+            </div>
           </div>
-          <div class="text-center" :class="{'d-none': !errName}">
-            <span id="name-err" class="text-center" v-show="nameTaken"
-              :aria-hidden="!nameTaken">
-              {{ nameTaken ? i18n['nameTaken'] : i18n['nameErr'] }}
-            </span>
+
+          <div class="form-group row" :class="{'d-none': !errName}">
+            <div class="col text-center">
+              <span 
+                id="name-err" 
+                class="text-center" 
+                v-show="errName"
+                :aria-hidden="!nameTaken"
+              >
+                {{ nameTaken ? i18n['nameTaken'] : i18n['nameErr'] }}
+              </span>
+            </div>
           </div>
 
           <!-- email -->
-          <div class="ly-input" :class="{error: errEmail}">
-            <input v-model="email" :placeholder="i18n['emailPH']" type="text"
-            :disabled="submitOk" @blur="isEmailTaken" class="w-100"
-            aria-describedby="email-err">
+          <div class="form-group row" :class="{error: errEmail}">
+            <div class="col-1 col-form-label">
+              <i class="fas fa-at"></i>
+            </div>
+            <div class="col">
+              <input v-model="email" :placeholder="i18n['emailPH']" type="text"
+              :disabled="submitOk" @blur="isEmailTaken" class="w-100"
+              aria-describedby="email-err">
+            </div>
           </div>
-          <div class="text-center" :class="{'d-none': !errEmail}">
-            <span id="email-err" class="text-center" v-show="emailTaken"
-              :aria-hidden="!emailTaken">
-              {{ emailTaken ? i18n['emailTaken'] : i18n['emailErr'] }}
-            </span>
+
+          <!-- email hint-->
+          <div class="form-group row text-center" :class="{'d-none': !errEmail}">
+            <div class="col text-center">
+                <span 
+                  id="email-err"
+                  v-show="errEmail"
+                  :aria-hidden="!emailTaken"
+                >
+                  {{ emailTaken ? i18n['emailTaken'] : i18n['emailErr'] }}
+                </span>
+            </div>
           </div>
 
           <!-- password -->
-          <div class="ly-input" :class="{error: errPwds}">
-            <input v-model="pwd1" :placeholder="i18n['pwdPH']" type="password"
-            :disabled="submitOk" class="w-100" aria-describedby="pwd-err">
+          <div class="form-group row" :class="{error: errPwds}">
+            <div class="col-1 col-form-label">
+              <label for="password">
+                <i class="fas fa-key"></i>
+              </label>
+            </div>
+            <div class="col">
+              <input 
+                v-model="pwd1" 
+                :placeholder="i18n['pwdPH']" 
+                type="password"
+                :disabled="submitOk" 
+                class="w-100" 
+                aria-describedby="pwd-err"
+              >
+            </div>
           </div>
-          <div class="ly-input" :class="{error: errPwds}">
-            <input v-model="pwd2" :placeholder="i18n['pwd2PH']" type="password"
-            :disabled="submitOk" class="w-100" aria-describedby="pwd-err">
+          <div class="form-group row" :class="{error: errPwds}">
+            <div class="col-1 col-form-label">
+              <label for="password">
+                <i class="fas fa-redo-alt"></i>
+              </label>
+            </div>
+            <div class="col">
+              <input v-model="pwd2" :placeholder="i18n['pwd2PH']" type="password"
+              :disabled="submitOk" class="w-100" aria-describedby="pwd-err">
+            </div>
           </div>
-          <div id="pwd-err" class="text-center" :class="{'d-none': !errPwds}"
-            :aria-hidden="!errPwds">
+          <div 
+            id="pwd-err" 
+            class="text-center" 
+            :class="{'d-none': !errPwds}"
+            :aria-hidden="!errPwds"
+            v-show="errPwds">
             {{ i18n['register.pwdErr'] }}
           </div>
 
           <!-- profile pic -->
-          <!--
-          <div style="height: 2rem"></div>
+          
+          <!-- <div style="height: 2rem"></div>
           <div class="position-relative">
             <div class="position-absolute">{{ i18n['profilePic'] }}</div>
 
@@ -71,18 +125,19 @@ Dependencies:
                           class="m-auto">
               <img src="../assets/hochladen.svg" alt="Profilbild wählen">
             </ly-input-img>
-          </div>
-          -->
+          </div> -->
+         
 
           <!-- submit -->
-          <div style="height: 4rem"></div>
+          <!-- <div style="height: 4rem"></div> -->
           <h4 :class="{'d-none': busy || submitOk}">
             <button v-if="!errForm"
-                    @click.prevent="submit"
-                    type="submit"
-                    class="btn btn-lg btn-block btn-outline-dark"
-                    style="border: 2px solid black">
-              {{ i18n['register.submit'] }} <i class="fas fa-arrow-right"></i>
+              @click.prevent="submit"
+              type="submit"
+              class="btn btn-lg btn-block btn-outline-dark"
+              style="border: 2px solid black">
+              {{ i18n['register.submit'] }} 
+              <i class="fas fa-user-plus"></i>
             </button>
           </h4>
           <!-- still form errors -->
@@ -153,6 +208,7 @@ export default {
      * Last Updated: unknown
      */
     errName() {
+      if(this.name === '') return false
       return /\W/.test(this.name) || /^$/.test(this.name) ||
         this.nameTaken
     },
@@ -165,6 +221,7 @@ export default {
      * Last Updated: unknown
      */
     errEmail() {
+      if(this.email === '') return false
       return !(/^[^@\s]+[@][^@\s]+$/.test(this.email)) ||
         this.emailTaken
     },
@@ -177,8 +234,23 @@ export default {
      * Last Updated: unknown
      */
     errPwds() {
+      if(this.pwd1 === '') return false
       return (/^$/.test(this.pwd1) || /^$/.test(this.pwd2)) ||
         (this.pwd1 !== this.pwd2)
+    },
+
+    /**
+     * noInput: return true if no input is set
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: May 15, 2021
+     */
+    noInput() {
+      return (this.name === '' && 
+        this.email === '' && 
+        this.pwd1 === '' && 
+        this.pwd2 === '')
     },
 
     /**
@@ -189,7 +261,7 @@ export default {
      * Last Updated: unknown
      */
     errForm() {
-      return this.errName || this.errEmail || this.errPwds
+      return this.errName || this.errEmail || this.errPwds || this.noInput
     }
   },
 
@@ -313,7 +385,7 @@ export default {
 }
 
 form {
-  width: 21rem;
+  width: 30rem;
   margin: auto;
 }
 
