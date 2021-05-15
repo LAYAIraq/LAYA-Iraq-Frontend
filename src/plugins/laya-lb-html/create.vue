@@ -5,7 +5,7 @@ Creator: cmc
 Date: January 19, 2021
 Dependencies: 
   quill,
-  @/i18n/plugins/misc/laya-html
+  @/mixins/locale.vue
 -->
 
 <template>
@@ -19,18 +19,15 @@ Dependencies:
 <script>
 import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
-import * as i18n from '@/i18n/plugins/misc/laya-html'
+import { locale } from '@/mixins'
 
 export default {
   name: 'laya-wysiwyg-edit',
-  data() {
-    return {
-      contents: null
-    }
-  },
-  mounted() {
-    this.initQuill()
-  },
+
+  mixins: [
+    locale
+  ],
+
   computed: {
 
     /**
@@ -42,20 +39,19 @@ export default {
      */
     editorId() {
       return `laya-wysiwyg-${Date.now()}`
-    },
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 20, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.$store.state.profile.lang]
     }
   },
+
+  data() {
+    return {
+      contents: null
+    }
+  },
+
+  mounted() {
+    this.initQuill()
+  },
+
   methods: {
 
     /**
@@ -69,7 +65,7 @@ export default {
       const self = this
       const quill = new Quill(`#${self.editorId}`, {
         theme: 'snow',
-        placeholder: self.i18n.placeholder,
+        placeholder: self.i18n['layaHtml.placeholder'],
         modules: {
           toolbar: [
             ['bold', 'italic', 'underline'],

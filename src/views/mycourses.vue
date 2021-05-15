@@ -6,7 +6,7 @@ Date: unknown
 Dependencies: 
   vuex,
   axios,
-  @/i18n/mycourses,
+  @/mixins/locale.vue
   @/misc/utils.js,
   @/backend-url.ts
 -->
@@ -36,7 +36,7 @@ Dependencies:
         <div class="col">
           <div class="d-flex justify-content-between">
             <h2 id="tab-focus" tabindex="0">
-              <b>{{ i18n.title }}</b>
+              <b>{{ i18n['mycourses.title'] }}</b>
             </h2>
           </div>
           <div class="sep"></div>
@@ -59,7 +59,7 @@ Dependencies:
               id="search-bar"
               type="text"
               v-model="searchStr"
-              :placeholder="i18n.searchPH"
+              :placeholder="i18n['searchPH']"
               autofocus
             >
             <i class="fas fa-search"></i>
@@ -80,11 +80,11 @@ Dependencies:
                   <div style="flex-basis: 25%;"></div>
                   <a href @click.prevent="sortByName" class="w-50 pt-3 pb-3">
                     <i :class="nameSortIcon"></i>
-                    <span class="d-none d-sm-inline">{{ i18n.sortByName }}</span>
+                    <span class="d-none d-sm-inline">{{ i18n['mycourses.sortByName'] }}</span>
                   </a>
                   <a href @click.prevent="sortByDate" class="w-25 text-right pt-3 pb-3">
                     <i :class="dateSortIcon"></i>
-                    <span class="d-none d-sm-inline">{{ i18n.sortByDate }}</span>
+                    <span class="d-none d-sm-inline">{{ i18n['mycourses.sortByDate'] }}</span>
                   </a>
                 </div>
               </div>
@@ -140,18 +140,24 @@ Dependencies:
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-
-//import bCollapse from 'bootstrap-vue/es/components/collapse/collapse'
-//import vBToggle from 'bootstrap-vue/es/directives/toggle/toggle'
 import lyAccordion from '@/components/accordion'
 
 import http from 'axios'
-import * as i18n from '@/i18n/mycourses'
+import { locale } from '@/mixins'
 import utils from '../misc/utils.js'
 import be from '@/backend-url'
 
 export default {
   name: 'mycourses-view',
+
+  components: {
+    lyAccordion
+  },
+
+  mixins: [
+    locale
+  ],
+
   data() {
     return {
       cats: [],
@@ -161,21 +167,10 @@ export default {
       searchStr: ''
     }
   },
+
   computed: {
     ...mapState(['profile', 'note', 'auth']),
     ...mapGetters(['courseList']),
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 21, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.$store.state.profile.lang]
-    },
 
     /**
      * avatarURL: return url of profile avatar
@@ -218,6 +213,19 @@ export default {
       }
     }
   },
+
+  beforeRouteEnter(to, from, next) {
+    next()
+  },
+
+  mounted() {
+    document.querySelector('#tab-focus').focus()
+  },
+
+  created() {
+    this.fetchCourses()
+  },
+
   methods: {
     ...utils,
 
@@ -353,20 +361,6 @@ export default {
         .catch(err => console.error(err))
         .then(() => ctx.$store.commit('setBusy', false))
     }
-  },
-  beforeRouteEnter(to, from, next) {
-    next()
-  },
-  mounted() {
-    document.querySelector('#tab-focus').focus()
-  },
-  created() {
-    this.fetchCourses()
-  },
-  components: {
-    lyAccordion,
-    //bCollapse,
-    //vBToggle
   }
 }
 </script>

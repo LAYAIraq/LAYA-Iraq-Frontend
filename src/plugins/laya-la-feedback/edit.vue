@@ -3,19 +3,30 @@ Filename: edit.vue
 Use: Edit a Course Feedback content block
 Creator: cmc
 Date: unknown
-Dependencies: @/i18n/plugins/laya-la-feedback
+Dependencies: @/mixins/locale.vue 
 -->
 
 <template>
   <div class="laya-la-feedback-edit">
 
-     <label><h4>{{ i18n.title }}</h4></label><i id ="questionmark" class="fas fa-question-circle" @click="toggleTip" 
-          :title="i18n.showTip" v-b-tooltip.left></i>
+     <label>
+      <h4>
+         {{ i18n['layaLaFeedback.name'] }}
+      </h4>
+    </label>
+    <i 
+      id ="questionmark" 
+      class="fas fa-question-circle" 
+      @click="toggleTip" 
+      :title="i18n['showTip']" 
+      v-b-tooltip.left
+    ></i>
     <b-jumbotron 
-            v-if="tooltipOn"
-            :header="i18n.title" :lead="i18n.tipHeadline">
-          <hr class="my-4">
-          <span v-html="i18n.tooltip"></span>
+      v-if="tooltipOn"
+      :header="i18n['layaLaFeedback.name']" 
+      :lead="i18n['tipHeadline']">
+      <hr class="my-4">
+        <span v-html="i18n['layaLaFeedback.tooltip']"></span>
 
     </b-jumbotron>
     <hr>
@@ -24,7 +35,12 @@ Dependencies: @/i18n/plugins/laya-la-feedback
 
       <!-- title -->
       <div class="form-group row">
-        <label for="feedback-title" class="col-2 col-form-label">{{ i18n.edit.title }}</label>
+        <label 
+          for="feedback-title" 
+          class="col-2 col-form-label"
+        >
+          {{ i18n['title'] }}
+        </label>
         <div class="col-10">
           <input id="feedback-title"
                  type="text"
@@ -37,12 +53,12 @@ Dependencies: @/i18n/plugins/laya-la-feedback
       <!-- task -->
       <div class="form-group row">
         <label for="feedback-task" class="col-2 col-form-label">
-          {{ i18n.edit.desc }}
+          {{ i18n['layaLaFeedback.edit.desc'] }}
         </label>
         <div class="col-10">
           <textarea id="feedback-task"
-                    v-model="task"
-                    class="w-100">
+            v-model="task"
+            class="w-100">
           </textarea>
         </div>
       </div>
@@ -63,13 +79,26 @@ Dependencies: @/i18n/plugins/laya-la-feedback
       </div>
       -->
 
-      <p><b>{{ i18n.edit.answers }}</b></p>
-      <div class="form-group row" v-for="(cat, i) in categories" :key="'cat-'+i">
+      <p>
+        <b>
+          {{ i18n['layaLaFeedback.edit.answers'] }}
+        </b>
+      </p>
+      <div 
+        class="form-group row" 
+        v-for="(cat, i) in categories" 
+        :key="'cat-'+i"
+      >
 
         <!-- text -->
-        <label class="col-form-label col-2" :for="'cat-text-'+i">{{ i18n.edit.text }}</label>
+        <label 
+          class="col-form-label col-2" 
+          :for="'cat-text-'+i">
+          {{ i18n['text'] }}
+        </label>
         <div class="col-7">
-          <input :id="'cat-text-'+i"
+          <input 
+            :id="'cat-text-'+i"
             class="form-control"
             type="text"
             v-model="categories[i]">
@@ -89,16 +118,16 @@ Dependencies: @/i18n/plugins/laya-la-feedback
           <button type="button"
                   class="btn btn-primary btn-sm"
                   @click="_addCategory">
-            <i class="fas fa-plus"></i>{{ i18n.edit.addAnswer }}
+            <i class="fas fa-plus"></i>{{ i18n['layaLaFeedback.edit.addAnswer'] }}
           </button>
         </div>
       </div>
 
-      <p><b>{{ i18n.edit.questions }}</b></p>
+      <p><b>{{ i18n['layaLaFeedback.edit.questions'] }}</b></p>
       <div class="form-group row" v-for="(item, i) in items" :key="'item-'+i">
 
         <!-- text -->
-        <label class="col-form-label col-2" :for="'item-text-'+i">{{ i18n.edit.text }}</label>
+        <label class="col-form-label col-2" :for="'item-text-'+i">{{ i18n['text'] }}</label>
         <div class="col-5">
           <input :id="item"
             class="form-control"
@@ -120,7 +149,7 @@ Dependencies: @/i18n/plugins/laya-la-feedback
           <button type="button"
                   class="btn btn-primary btn-sm"
                   @click="_addItem">
-            <i class="fas fa-plus"></i>{{ i18n.edit.addQuestion }}
+            <i class="fas fa-plus"></i>{{ i18n['layaLaFeedback.edit.addQuestion'] }}
           </button>
         </div>
       </div>
@@ -131,13 +160,20 @@ Dependencies: @/i18n/plugins/laya-la-feedback
 </template>
 
 <script>
-import * as i18n from '@/i18n/plugins/laya-la-feedback'
+import { locale, tooltipIcon } from '@/mixins'
 
 export default {
   name: 'laya-la-feedback-edit',
+
+  mixins: [
+    locale,
+    tooltipIcon
+  ],
+
   created () {
     this.fetchData()
   },
+
   data () {
     if(Object.entries(this.$attrs).length > 0)
       return {...this.$attrs, 
@@ -148,22 +184,7 @@ export default {
       taskAudio: '',
       items: [],
       categories: [],
-      tooltipOn: false
-    }
-  },
-  
-  computed: {
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 12, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.$store.state.profile.lang]
+      
     }
   },
   methods: {
@@ -226,23 +247,11 @@ export default {
      */
     fetchData() {
       if (this.title === '') { //prefetch Data at creation
-        const prefData = this.i18n.prefetch
-        this.title = prefData.title
-        this.task = prefData.task
-        this.items = prefData.items
-        this.categories = prefData.categories
+        this.title = this.i18n['layaLaFeedback.name']
+        this.task = this.i18n['layaLaFeedback.prefetch.task']
+        this.items = this.i18n['layaLaFeedback.prefetch.items'].split(',')
+        this.categories = this.i18n['layaLaFeedback.prefetch.categories'].split(',')
       }
-    },
-
-    /**
-     * Function toggleTip: toggle tooltipOn boolean
-     * 
-     * Author: cmc
-     * 
-     * Last updated: unknown
-     */
-    toggleTip() {
-      this.tooltipOn = !this.tooltipOn
     }
   }
 }

@@ -4,8 +4,8 @@ Use: Provide User Stats
 Author: cmc
 Date: October 27, 2020
 Dependencies: 
-  vuex,
-  @/i18n/course-edit/stats
+  axios,
+  @/mixins/locale.vue
 -->
 
 <template>
@@ -18,35 +18,35 @@ Dependencies:
         variant="success" 
         @click="$bvModal.show('author-courseStats')"
       >
-        <i class="fas fa-info-circle"></i> {{ i18n.seeStats }}
+        <i class="fas fa-info-circle"></i> {{ i18n['stats.seeStats'] }}
       </b-button>
     </div>
 
     <div class="col text-dark">
-      {{ i18n.statsTip }}
+      {{ i18n['stats.statsTip'] }}
     </div>
 
     <b-modal ok-only id="author-courseStats"
-      :title="i18n.modal.title"
+      :title="i18n['stats.modal.title']"
       centered
     >
       <p>  
-        {{ i18n.modal.users }}: {{ courseStats.count }}
+        {{ i18n['stats.modal.users'] }}: {{ courseStats.count }}
       </p>
       <p>  
-        {{ i18n.modal.time }}: {{ courseStats.averageTime }} 
+        {{ i18n['stats.modal.time'] }}: {{ courseStats.averageTime }} 
       </p>
       <p>  
-        {{ i18n.modal.flags }}: 0
+        {{ i18n['stats.modal.flags'] }}: 0
       </p>
       <p>  
-        {{ i18n.modal.stoppedAt }}: {{courseStats.lostUsersAt}}
+        {{ i18n['stats.modal.stoppedAt'] }}: {{courseStats.lostUsersAt}}
       </p>
       <p>  
-        {{ i18n.modal.totalLosses }}: {{ courseStats.usersLost}} 
+        {{ i18n['stats.modal.totalLosses'] }}: {{ courseStats.usersLost}} 
       </p>
       <p>  
-        {{ i18n.modal.feedback }}: {{ courseStats.feedbackAverage }} 
+        {{ i18n['stats.modal.feedback'] }}: {{ courseStats.feedbackAverage }} 
       </p>
     </b-modal>
 
@@ -55,11 +55,15 @@ Dependencies:
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
-import * as i18n from '@/i18n/course-edit/stats'
+import http from 'axios'
+import { locale } from '@/mixins'
 
 export default {
   name: 'course-stats',
+
+  mixins: [ 
+    locale
+  ],
 
   data() {
     return{
@@ -67,22 +71,6 @@ export default {
     }
   },
 
-  computed: {
-    ...mapState(['edit']),
-    ...mapGetters(['profileLang']),
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 20, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
-    }
-  },
   methods: { 
 
     /**

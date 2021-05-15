@@ -3,7 +3,7 @@ Filename: view.vue
 Use: Show stepper component
 Creator: core
 Date: unknown
-Dependencies: @/i18n/plugins/misc/laya-stepper
+Dependencies: @/mixins/locale.vue
 -->
 
 <template>
@@ -15,7 +15,8 @@ Dependencies: @/i18n/plugins/misc/laya-stepper
 
     <div class="content">
       <div v-for="c in comps" v-bind:key="c"> <!--was "(c,i) in comps" and key="step+20"-->
-        <component :is="c.name"
+        <component 
+          :is="c.name"
           :key="step"
           v-bind="c.input"
           :onFinish="nextStep(c.nextStep)">
@@ -23,28 +24,39 @@ Dependencies: @/i18n/plugins/misc/laya-stepper
       </div>
     </div>
     <div v-if="!components" class="dev-error">
-      <h3>{{ i18n.noComps }}</h3>
+      <h3>{{ i18n['layaStepper.noComps'] }}</h3>
     </div>
 
     <div class="controls d-none">
-      <button type="button" @click="back" class="btn btn-outline-primary m-1">{{ i18n.back }}</button>
+      <button 
+        type="button" 
+        @click="back" 
+        class="btn btn-outline-primary m-1"
+      >
+        {{ i18n['layaStepper.back'] }}
+      </button>
       <!--
       <button type="button" @click="next" class="btn btn-outline-primary m-1">
-        {{ i18n.skipChap }}
+        {{ i18n['layaStepper.skipChap'] }}
       </button>
       -->
       <button type="button" @click="next" class="btn btn-outline-primary m-1">
-        {{ i18n.skipStep }}
+        {{ i18n['layaStepper.skipStep'] }}
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import * as messages from '@/i18n/plugins/misc/laya-stepper'
+import { locale } from '@/mixins'
 
 export default {
   name: 'laya-stepper',
+
+  mixins: [
+    locale
+  ],
+
   mounted () {
   },
   data () {
@@ -77,18 +89,6 @@ export default {
      */
     comps() {
       return [this.components[this.step-1]]
-    },
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 20, 2021
-     * 
-     */
-    i18n() {
-      return messages[this.$store.state.profile.lang]
     }
   },
   methods: {
@@ -101,7 +101,7 @@ export default {
      * Last Updated: unknown
      */
     stepOfSteps() {
-      let str = this.i18n.step
+      let str = this.i18n['layaStepper.step']
       str.replace('{step}', this.step)
       str.replace('{steps}', this.components.length)
       return str
@@ -158,9 +158,6 @@ export default {
   padding: 1rem;
 }
 
-.stepper {
-}
-
 .controls {
   display: flex;
 }
@@ -170,6 +167,4 @@ export default {
   padding: 5px 10px;
 }
 
-.dev-error {
-}
 </style>

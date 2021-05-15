@@ -8,12 +8,37 @@
 -->
 <script>
 import { mapGetters } from 'vuex'
-import * as locale from '@/i18n/list-sort'
+import * as locale from '@/i18n'
 export default {
   computed: {
     ...mapGetters(['profileLang']),
+
+    /**
+     * tooltips(): filters i18n file for needed tooltip keys
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: May 5, 2021
+     */
     tooltips() {
-      return locale[this.profileLang]
+      //needed keys
+      const needed = [ 
+        'listSort.sort', 
+        'listSort.sortAsc', 
+        'listSort.sortDesc'
+      ]
+
+      //filtered object from i18n
+      const myTips = Object.keys(locale[this.profileLang])
+        .filter(key => needed.includes(key))
+        .reduce((obj, key) => {
+          return {
+            ...obj,
+            [key]: locale[this.profileLang][key]
+          }
+        }, {})
+        
+      return myTips
     }
   },
   data() {
@@ -89,12 +114,12 @@ export default {
     sortTooltip(prop) {
       let propClass = this.sortIcon(prop)
       if(propClass['fas fa-sort-up']){
-        return this.tooltips.sortDesc
+        return this.tooltips['listSort.sortDesc']
       }
       else if (propClass['fas fa-sort-down']) {
-        return this.tooltips.sortAsc
+        return this.tooltips['listSort.sortAsc']
       }
-      else return this.tooltips.sort
+      else return this.tooltips['listSort.sort']
     },
 
     /**

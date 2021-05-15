@@ -6,16 +6,18 @@ Date: unknown
 Dependencies: 
   vuex,
   quill,
-  @/i18n/plugins/misc/laya-html
+  @/mixins/locale.vue
 -->
 
 <template>
   <div class="laya-wysiwyg-view">
     <div :id="editorId"></div>
-    <button type="button"
-            class="btn btn-primary mt-3 d-block ml-auto"
-            @click="onFinish[0]() || {}">
-      {{ i18n.nextContent }}<i class="fas fa-arrow-right"></i>
+    <button 
+      type="button"
+      class="btn btn-primary mt-3 d-block ml-auto"
+      @click="onFinish[0]() || {}">
+      {{ i18n['nextContent'] }}
+      <i class="fas fa-arrow-right"></i>
     </button>
   </div>
 
@@ -26,11 +28,16 @@ Dependencies:
 <script>
 import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
-import * as i18n from '@/i18n/plugins/misc/laya-html'
+import { locale } from '@/mixins'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'laya-wysiwyg',
+
+  mixins: [
+    locale
+  ],
+
   data() {
     if(Object.entries(this.$attrs).length === 1) //for preview
       return {...this.$attrs}
@@ -45,7 +52,7 @@ export default {
     this.fetchContent()
   },
   computed: {
-    ...mapGetters(['content', 'profileLang']),
+    ...mapGetters(['content']),
 
     /**
      * editorId: return id for html element
@@ -56,18 +63,6 @@ export default {
      */
     editorId() {
       return `laya-wysiwyg-readonly-${Date.now()}`
-    },
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 20, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
     }
   },
   methods: {

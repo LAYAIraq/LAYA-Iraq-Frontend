@@ -6,30 +6,36 @@ Date: unknown
 Dependencies:
   ableplayer,
   vuex,
-  @/i18n/plugins/misc/laya-ableplayer
+  @/mixins/locale.vue
 -->
 
 <template>
   <div class="ly-ableplayer">
 
-    <video :id="playerId"
+    <video 
+      :id="playerId"
       preload="auto"
       data-debug
       :data-lang="profileLang" data-force-lang>
 
-      <source type="video/mp4"
-              :src="notEmpty(src)"
-              :data-sign-src="notEmpty(sign)"/>
+      <source 
+        type="video/mp4"
+        :src="notEmpty(src)"
+        :data-sign-src="notEmpty(sign)"
+      />
 
-        <track kind="captions" :src="notEmpty(sub)" default/>
+      <track 
+        kind="captions" 
+        :src="notEmpty(sub)" 
+        default/>
     </video>
 
     <button type="button"
-            class="btn btn-primary mt-3 d-block ml-auto"
-            @click="onFinish[0]() || {}">
-      {{ i18n.nextContent }}<i class="fas fa-arrow-right"></i>
+      class="btn btn-primary mt-3 d-block ml-auto"
+      @click="onFinish[0]() || {}">
+      {{ i18n['nextContent'] }}
+      <i class="fas fa-arrow-right"></i>
     </button>
-
 
   </div>
 </template>
@@ -38,10 +44,16 @@ Dependencies:
 import 'ableplayer'
 import { mapGetters } from 'vuex'
 import 'ableplayer/build/ableplayer.min.css' //neccessary, otherwise ableplayer is butchered
-import * as i18n from '@/i18n/plugins/misc/laya-ableplayer'
+import { locale } from '@/mixins'
 
 export default {
+
   name: 'laya-ableplayer',
+
+  mixins: [
+    locale
+  ],
+
   data() {
     if (Object.entries(this.$attrs).length === 3)
       return {
@@ -76,18 +88,6 @@ export default {
      */
     playerId() {
       return `laya-ableplayer-${Date.now()}`
-    },
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 19, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
     }
   },
   methods: {

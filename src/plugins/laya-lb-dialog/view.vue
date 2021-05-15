@@ -3,7 +3,7 @@ Filename: view.vue
 Use: View Dialog content block
 Author: core
 Date: unknown
-Dependencies: vuex
+Dependencies: @/mixins/locale.vue
 -->
 
 <template>
@@ -14,11 +14,12 @@ Dependencies: vuex
     <div class="dialog-text">
       <div v-if="question" class="question">{{ question }}</div>
       <div class="answers d-flex justify-content-around">
-        <button v-for="(answer,i) in answers"
-                :key="i"
-                type="button"
-                class="btn btn-info btn-lg"
-                @click="onFinish[i]()">
+        <button 
+          v-for="(answer,i) in answers"
+          :key="i"
+          type="button"
+          class="btn btn-info btn-lg"
+          @click="onFinish[i]()">
           {{ answer }}
         </button>
       </div>

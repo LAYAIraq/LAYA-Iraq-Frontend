@@ -5,7 +5,7 @@ Creator: core
 Date: unknown
 Dependencies: 
   vuex, 
-  @/i18n/course-wrapper
+  @/mixins/locale.vue
 -->
 
 <template>
@@ -27,13 +27,13 @@ Dependencies:
           <div class="d-flex justify-content-between">
             <button type="button"
                     class="btn btn-secondary"
-                    :class="{active: preview}"
+                    :class="{ active: preview }"
                     @click="preview = !preview">
-              <span v-if="preview">{{ i18n.edit }}</span> 
-              <span v-else> {{ i18n.preview }} </span>
+              <span v-if="preview">{{ i18n['courseWrapper.edit'] }}</span> 
+              <span v-else> {{ i18n['courseWrapper.preview'] }} </span>
             </button>
             <button type="button" class="btn btn-primary" @click="save">
-              <i class="fas fa-check"></i> {{ i18n.save }}
+              <i class="fas fa-check"></i> {{ i18n['save'] }}
             </button>
           </div>
 
@@ -47,28 +47,36 @@ Dependencies:
 </template>
 
 <script>
-import * as i18n from '@/i18n/course-wrapper'
+import { locale } from '@/mixins'
 import { mapGetters, mapState } from 'vuex'
 import LayaUploadFileList from '@/plugins/misc/laya-upload-file-list/file-list.vue'
 
 
 export default {
   name: 'course-edit-wrapper',
+
   components: {
     LayaUploadFileList
   },
-  data() {
-    return {
-      preview: false,
-    }
-  },
+
+  mixins: [
+    locale
+  ],
+  
   props: {
     name: String,
     step: String,
     type: String
   },
+
+  data() {
+    return {
+      preview: false,
+    }
+  },
+
   computed: {
-    ...mapGetters(['content', 'profileLang']),
+    ...mapGetters(['content']),
     ...mapState(['edit']),
 
     /**
@@ -106,18 +114,6 @@ export default {
     },
 
     /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 21, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang];
-    },
-
-    /**
      * stepData: return input data for content
      * 
      * Author: cmc
@@ -134,11 +130,19 @@ export default {
       }
       return (({tooltipOn, ...o}) => o) (input) //strip tooltipOn var from data
     }
+  },  
+
+  beforeDestroy() {
+    // persist changes in database
+    this.save()
+    this.$store.dispatch('storeCourse')
   },
+
   mounted() {
     if(!this.cid && !this.content) // data not passed -> go back
       this.$router.back()
   },
+
   methods: {
 
     /**
@@ -166,12 +170,8 @@ export default {
       }
       this.$emit('saved')
     }
-  },
-  beforeDestroy() {
-    // persist changes in database
-    this.save()
-    this.$store.dispatch('storeCourse')
   }
+  
 }
 </script>
 

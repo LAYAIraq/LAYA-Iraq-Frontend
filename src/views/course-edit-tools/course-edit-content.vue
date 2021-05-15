@@ -5,7 +5,7 @@ Creator: cmc
 Date: October 27, 2020
 Dependencies: 
   vuex,
-  @/i18n/course-edit/content
+  @/mixins/locale.vue
 -->
 
 <template>
@@ -13,31 +13,30 @@ Dependencies:
         <div class="col">
             <b-button variant="primary" block append
                     :to="{path: 'edit', params: {type: contentToDisplay.name}}">
-            <i class="fas fa-edit"></i> {{ i18n.editContent }}
+            <i class="fas fa-edit"></i> {{ i18n['content.editContent'] }}
             </b-button>
         </div>
 
         <div class="col text-dark">
-            {{ i18n.editContentTip.replace('{step}', this.step) }}
+            {{ i18n['content.editContentTip'].replace('{step}', this.step) }}
         </div>
     </div>
 
 </template>
 
 <script>
-import * as i18n from '@/i18n/course-edit/content'
+import { locale } from '@/mixins'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'course-edit-content',
 
-  props: {
-    name: String,
-    step: String
-  },
+  mixins: [
+    locale 
+  ],
 
   computed: {
-    ...mapGetters(['profileLang', 'content']),
+    ...mapGetters(['content']),
 
     /**
      * contentToDisplay: return current content object
@@ -48,19 +47,12 @@ export default {
      */
     contentToDisplay() {
       return this.content[this.step-1]
-    },
-
-    /**
-   * i18n: Load translation files depending on user language
-   * 
-   * Author: cmc
-   * 
-   * Last updated: March 20, 2021
-   * 
-   */
-    i18n() {
-      return i18n[this.profileLang]
     }
+  },
+
+  props: {
+    name: String,
+    step: String
   }
 
 }

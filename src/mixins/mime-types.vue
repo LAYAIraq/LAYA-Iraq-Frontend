@@ -9,13 +9,31 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import * as locale from '@/i18n/mime-types'
+import * as locale from '@/i18n'
 export default {
   computed: {
     ...mapGetters(['profileLang']),
 
+    /**
+     * types(): filter i18n file for mimeType keys
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: May 5, 2021
+     */
     types() {
-      return locale[this.profileLang]
+      let types = {}
+
+      // filter i18n file for key containing 'mimeTypes'
+      for (let key in locale[this.profileLang]) {
+        if (locale[this.profileLang].hasOwnProperty(key)) {
+          if (/mimeTypes/.test(key) === true) {
+            // add to types in scope
+            types[key] = locale[this.profileLang][key]
+          }
+        }
+      }
+      return types
     }
   },
   methods: {
@@ -111,11 +129,11 @@ export default {
         if (fileClasses.hasOwnProperty(key)) {
           if (type.search(key) === 0) {
             // Found it
-            return this.types[key]
+            return this.types['mimeTypes.'+key]
           }
         }
       }
-      return this.types.file
+      return this.types['mimeTypes.file']
     }
   }
 }

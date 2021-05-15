@@ -5,7 +5,7 @@ Creator: core
 Date: unknown
 Dependencies: 
   axios,
-  @/i18n/login
+  @/mixins/locale.vue
 -->
 
 <template>
@@ -15,13 +15,13 @@ Dependencies:
         <form class="d-flex flex-column align-items-center">
           <div style="height: 2rem"></div>
           <img src="../assets/anmelden.svg" alt="Login" class="d-block m-auto w-50">
-          <h1 class="text-center">{{ i18n.title }}</h1>
+          <h1 class="text-center">{{ i18n['login.title'] }}</h1>
 
           <div class="ly-input" :class="{error: errEmail}">
             <input
               id="email-input"
               v-model.trim="email"
-              :placeholder="i18n.emailPH"
+              :placeholder="i18n['emailPH']"
               type="text"
               autofocus
               autocomplete="on"
@@ -29,7 +29,7 @@ Dependencies:
           </div>
 
           <div class="ly-input" :class="{error: errPwd}">
-            <input v-model.trim="pwd" :placeholder="i18n.pwdPH" type="password" autocomplete="on">
+            <input v-model.trim="pwd" :placeholder="i18n['pwdPH']" type="password" autocomplete="on">
           </div>
 
           <div style="height: 2rem"></div>
@@ -40,13 +40,13 @@ Dependencies:
             class="btn btn-lg btn-outline-dark"
             aria-describedby="login-error"
           >
-            {{ i18n.submitTxt }}
+            {{ i18n['login.title'] }}
             <i class="fas fa-arrow-right"></i>
           </button>
 
           <!-- busy note -->
           <h5 v-if="busy" class="text-center">
-            {{ i18n.busy }}
+            {{ i18n['busy'] }}
             <i class="fas fa-spinner fa-spin"></i>
           </h5>
 
@@ -60,10 +60,10 @@ Dependencies:
 
           <hr>
           <div class="text-center">
-            {{ i18n.registerHint1 }}
+            {{ i18n['login.registerHint1'] }}
             <br>
             <router-link :to="{ name: 'register-view'}">
-              {{ i18n.registerHint2 }}
+              {{ i18n['login.registerHint2'] }}
             </router-link>
           </div>
         </form>
@@ -74,14 +74,15 @@ Dependencies:
 
 <script>
 import http from 'axios'
-import * as i18n from '@/i18n/login'
+import { locale } from '@/mixins'
 
 export default {
   name: 'login-view',
-  mounted() {
-    // focus email input field on mount
-    document.querySelector('#email-input').focus()
-  },
+
+  mixins: [
+    locale
+  ],
+
   data() {
     return {
       /* form */
@@ -94,19 +95,8 @@ export default {
       submitFailed: false
     };
   },
-  computed: {
 
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 21, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.$store.state.profile.lang]
-    },
+  computed: {
 
     /**
      * errEmail: return true of no email input
@@ -141,6 +131,12 @@ export default {
       return this.errEmail || this.errPwd
     }
   },
+
+  mounted() {
+    // focus email input field on mount
+    document.querySelector('#email-input').focus()
+  },
+
   methods: {
 
     /**
@@ -185,13 +181,11 @@ export default {
       }).catch(err => {
         console.log(err)
         ctx.submitFailed = true
-        ctx.errMsg = ctx.i18n.errMsg
+        ctx.errMsg = ctx.i18n['login.errMsg']
       }).then(() => {
         ctx.busy = false
       })
     }
-  },
-  components: {
   }
 }
 </script>
