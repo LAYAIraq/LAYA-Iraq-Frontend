@@ -1,8 +1,8 @@
 /**
  * Filename: index.ts
- * Use: wrap Localization for ListSort mixin
+ * Use: wrap Localization for all LAYA
  * Creator: cmc
- * Date: April 30, 2021
+ * Date: May 4, 2021
  */
 
  export { default as de } from './de.json'

@@ -6,7 +6,7 @@ Date: unknown
 Dependencies:
   vuex,
   quill,
-  @/i18n/plugins/misc/laya-html
+  @/mixins/locale.vue
 -->
 
 <template>
@@ -21,23 +21,17 @@ Dependencies:
 import { mapGetters } from 'vuex'
 import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
-import * as i18n from '@/i18n/plugins/misc/laya-html'
+import { locale } from '@/mixins'
 
 export default {
   name: 'laya-wysiwyg-edit',
-  data() {
-    return {
-      contents: null,
-    }
-  },
-  created() {
-    this.fetchData()
-  },
-  mounted() {
-    this.initQuill()
-  },
+
+  mixins: [
+    locale
+  ],
+
   computed: {
-    ...mapGetters(['content', 'profileLang']),
+    ...mapGetters(['content']),
 
     /**
      * editorId: return ID for html element
@@ -48,20 +42,23 @@ export default {
      */
     editorId() {
       return `laya-wysiwyg-${Date.now()}`
-    },
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 20, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
     }
   },
+
+  data() {
+    return {
+      contents: null,
+    }
+  },
+
+  created() {
+    this.fetchData()
+  },
+  
+  mounted() {
+    this.initQuill()
+  },
+  
   methods: {
 
     /**
@@ -88,7 +85,7 @@ export default {
       const self = this
       const quill = new Quill(`#${self.editorId}`, {
         theme: 'snow',
-        placeholder: self.i18n.placeholder,
+        placeholder: self.i18n['layaHtml.placeholder'],
         modules: {
           toolbar: [
             ['bold', 'italic', 'underline'],

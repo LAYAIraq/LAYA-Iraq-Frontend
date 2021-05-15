@@ -5,35 +5,50 @@ Creator: core
 Date: unknown
 Dependencies:
   vuex,
-  @/i18n/plugins/laya-lb-dialog
+  @/mixins/locale.vue,
+  @/mixins/tooltipIcon.vue
 -->
 
 <template>
-  <div class="laya-lb-dialog-edit">
+  <div class="laya-lb-dialog-new">
      
-    <label><h4>{{ i18n.title }}</h4></label> <i id="questionmark" class="fas fa-question-circle" @click="toggleTip" 
-          :title="i18n.showTip" v-b-tooltip.left></i>
+    <label>
+      <h4>
+        {{ i18n['layaLbDialog.name'] }}
+      </h4>
+    </label> 
+    <i 
+      id="questionmark" 
+      class="fas fa-question-circle" 
+      @click="toggleTip" 
+      :title="i18n['showTip']" 
+      v-b-tooltip.left
+    ></i>
     <hr>
     
     <b-jumbotron 
-            v-if="tooltipOn"
-            :header="i18n.title" :lead="i18n.tipHeadline">
-          <hr class="my-4">
-          <span v-html="i18n.tooltip"></span>
+      v-if="tooltipOn"
+      :header="i18n['layaLbDialog.name']" 
+      :lead="i18n['tipHeadline']">
+      <hr class="my-4">
+      <span v-html="i18n['layaLbDialog.tooltip']"></span>
 
     </b-jumbotron>
 
     <form>
-
       <div class="form-group row">
-        <label for="smcs-question" class="col-2 col-form-label">
-          {{ i18n.task }}
+        <label 
+          for="smcs-question" 
+          class="col-2 col-form-label"
+        >
+          {{ i18n['task'] }}
         </label>
         <div class="col-10">
-          <textarea id="scms-question"
-                    v-model="question"
-                    class="w-100"
-                    :placeholder="i18n.optional">
+          <textarea 
+            id="scms-question"
+            v-model="question"
+            class="w-100"
+            :placeholder="i18n['layaLbDialog.optional']">
           </textarea>
         </div>
       </div>
@@ -41,24 +56,33 @@ Dependencies:
       <div class="form-group row">
         <label for="dialog-bg" class="col-2 col-form-label"
           style="word-wrap: anywhere">
-          {{ i18n.bgURL }}
+          {{ i18n['layaLbDialog.bgURL'] }}
         </label>
         <div class="col-10">
           <input id="dialog-bg"
-                 type="text"
-                 class="form-control"
-                 v-model="bg"
-                 :placeholder="i18n.bgPlaceholder">
+            type="text"
+            class="form-control"
+            v-model="bg"
+            :placeholder="i18n['layaLbDialog.bgPlaceholder']">
         </div>
       </div>
 
-      <p><b>{{ i18n.answers }}</b></p>
-      <div class="form-group row" v-for="(it, i) in answers" :key="'answer-'+i">
-
+      <p><b>{{ i18n['layaLbDialog.answers'] }}</b></p>
+      <div 
+        class="form-group row" 
+        v-for="(it, i) in answers" 
+        :key="'answer-'+i"
+      >
         <!-- text -->
-        <label class="col-form-label col-2" :for="'answer-text-'+i">{{ i18n.text }}</label>
+        <label 
+          class="col-form-label col-2" 
+          :for="'answer-text-'+i"
+        >
+          {{ i18n['text'] }}
+        </label>
         <div class="col-5">
-          <textarea :id="'answer-text-'+i"
+          <textarea 
+            :id="'answer-text-'+i"
             class="form-control"
             style="height: 6rem; font-size: 80%"
             v-model="answers[i]">
@@ -67,18 +91,21 @@ Dependencies:
 
         <!-- delete -->
         <div class="col-auto align-self-center">
-          <button type="button"
-                  class="btn btn-danger btn-sm"
-                  @click="_delItem(i)">
+          <button 
+            type="button"
+            class="btn btn-danger btn-sm"
+            @click="_delItem(i)">
             <i class="fas fa-times"></i>
           </button>
         </div>
       </div>
 
-      <button type="button"
-              class="btn btn-primary btn-sm"
-              @click="_addItem">
-        <i class="fas fa-plus"></i>{{ i18n.addAnswer }}
+      <button 
+        type="button"
+        class="btn btn-primary btn-sm"
+        @click="_addItem">
+        <i class="fas fa-plus"></i>
+        {{ i18n['layaLbDialog.addAnswer'] }}
       </button>
 
     </form>
@@ -87,22 +114,44 @@ Dependencies:
 </template>
 
 <script>
-import * as i18n from '@/i18n/plugins/laya-lb-dialog'
+import { locale, tooltipIcon } from '@/mixins'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'laya-lb-dialog-edit',
-  created() {
-    this.fetchData()
+
+  mixins: [
+    locale,
+    tooltipIcon
+  ],
+
+  computed: {
+    ...mapGetters(['content']),
+
+    /**
+     * step: return the step of the content block
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: January 16, 2021
+     */
+    step() {
+      return this.$route.params.step
+    }
   },
+
   data() {
     return {
       bg: '',
       question: '',
-      answers: [],
-      tooltipOn: false
+      answers: []
     }
   },
+
+  created() {
+    this.fetchData()
+  },
+
   methods: {
     /**
      * Function _delItem: delete item at given index
@@ -129,17 +178,6 @@ export default {
     },
 
     /**
-     * Function toggleTip: toggle tooltipOn boolean
-     * 
-     * Author: cmc
-     * 
-     * Last updated: unknown
-     */
-    toggleTip() {
-      this.tooltipOn = !this.tooltipOn
-    },
-
-    /**
      * Function fetchData: Fetch data from vuex and make data property
      * 
      * Author: cmc
@@ -153,32 +191,6 @@ export default {
       this.bg = preData.bg
       this.question = preData.question
       this.answers = preData.answers
-    }
-  },
-  computed: {
-    ...mapGetters(['content', 'profileLang']),
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 19, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.$store.state.profile.lang]
-    },
-
-    /**
-     * step: return the step of the content block
-     * 
-     * Author: cmc
-     * 
-     * Last Updated: January 16, 2021
-     */
-    step() {
-      return this.$route.params.step
     }
   }
 }

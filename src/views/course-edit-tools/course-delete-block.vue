@@ -5,7 +5,7 @@ Creator: cmc
 Date: October 27, 2020
 Dependencies: 
   vuex,
-  @/i18n/course-edit/delete-block
+  @/mixins/locale.vue
 -->
 
 <template>
@@ -16,24 +16,24 @@ Dependencies:
           variant="danger"
           class="float-right"
           @click="$bvModal.show('author-delContent-confirm')">
-        <i class="fas fa-exclamation-circle"></i> {{ i18n.deleteContent }}
+        <i class="fas fa-exclamation-circle"></i> {{ i18n['deleteContent'] }}
       </b-button>
     </div>
 
     <div class="col text-dark">
-      {{ i18n.deleteContentTip }}
+      {{ i18n['deleteBlock.deleteContentTip'] }}
     </div>
 
     <b-modal id="author-delContent-confirm"
-        :title="i18n.modal.title"
+        :title="i18n['deleteContent']"
         header-bg-variant="danger"
         ok-variant="danger"
-        :ok-title="i18n.modal.ok"
-        :cancel-title="i18n.modal.cancel"
+        :ok-title="i18n['delete']"
+        :cancel-title="i18n['cancel']"
         @ok="delContent"
         centered>
       <p>
-        {{ i18n.modal.text }}
+        {{ i18n['deleteBlock.modal.text'] }}
       </p>
     </b-modal>
 
@@ -42,31 +42,23 @@ Dependencies:
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import * as i18n from '@/i18n/course-edit/delete-block'
+import { locale } from '@/mixins'
 
 export default {
   name: 'course-delete-block',
+  mixins: [
+    locale
+  ],
+  computed: {
+    ...mapGetters(['content']),
+    ...mapState(['edit'])
+  },
+
   props: {
     name: String,
     step: String
   },
-  computed: {
-    ...mapGetters(['content', 'profileLang']),
-    ...mapState(['edit']),
 
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 20, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
-    }
-
-  },
   methods: {
 
     /**

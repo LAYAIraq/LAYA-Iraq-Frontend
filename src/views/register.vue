@@ -5,7 +5,7 @@ Creator: core
 Date: unknown
 Dependencies: 
   axios,
-  @/i18n/register
+  @/mixins/locale.vue
 -->
 
 <template>
@@ -18,53 +18,53 @@ Dependencies:
 
           <div style="height: 2rem"></div>
           <img src="../assets/anmelden.svg" alt="Login" class="w-50">
-          <h1 class="text-center">{{ i18n.title }}</h1>
+          <h1 class="text-center">{{ i18n['register.title'] }}</h1>
 
           <!-- name -->
           <div class="ly-input" :class="{error: errName}">
-            <input id="register-focus" v-model="name" :placeholder="i18n.namePH"
+            <input id="register-focus" v-model="name" :placeholder="i18n['namePH']"
             type="text" :disabled="submitOk" @blur="isNameTaken" class="w-100"
             aria-describedby="name-err">
           </div>
           <div class="text-center" :class="{'d-none': !errName}">
             <span id="name-err" class="text-center" v-show="nameTaken"
               :aria-hidden="!nameTaken">
-              {{ nameTaken ? i18n.nameTaken : i18n.nameErr }}
+              {{ nameTaken ? i18n['nameTaken'] : i18n['nameErr'] }}
             </span>
           </div>
 
           <!-- email -->
           <div class="ly-input" :class="{error: errEmail}">
-            <input v-model="email" :placeholder="i18n.emailPH" type="text"
+            <input v-model="email" :placeholder="i18n['emailPH']" type="text"
             :disabled="submitOk" @blur="isEmailTaken" class="w-100"
             aria-describedby="email-err">
           </div>
           <div class="text-center" :class="{'d-none': !errEmail}">
             <span id="email-err" class="text-center" v-show="emailTaken"
               :aria-hidden="!emailTaken">
-              {{ emailTaken ? i18n.emailTaken : i18n.emailErr }}
+              {{ emailTaken ? i18n['emailTaken'] : i18n['emailErr'] }}
             </span>
           </div>
 
           <!-- password -->
           <div class="ly-input" :class="{error: errPwds}">
-            <input v-model="pwd1" :placeholder="i18n.pwd1PH" type="password"
+            <input v-model="pwd1" :placeholder="i18n['pwdPH']" type="password"
             :disabled="submitOk" class="w-100" aria-describedby="pwd-err">
           </div>
           <div class="ly-input" :class="{error: errPwds}">
-            <input v-model="pwd2" :placeholder="i18n.pwd2PH" type="password"
+            <input v-model="pwd2" :placeholder="i18n['pwd2PH']" type="password"
             :disabled="submitOk" class="w-100" aria-describedby="pwd-err">
           </div>
           <div id="pwd-err" class="text-center" :class="{'d-none': !errPwds}"
             :aria-hidden="!errPwds">
-            {{ i18n.pwdErr }}
+            {{ i18n['register.pwdErr'] }}
           </div>
 
           <!-- profile pic -->
           <!--
           <div style="height: 2rem"></div>
           <div class="position-relative">
-            <div class="position-absolute">{{ i18n.profilePic }}</div>
+            <div class="position-absolute">{{ i18n['profilePic'] }}</div>
 
             <ly-input-img v-model="profileImg"
                           style="width: 7rem"
@@ -82,22 +82,22 @@ Dependencies:
                     type="submit"
                     class="btn btn-lg btn-block btn-outline-dark"
                     style="border: 2px solid black">
-              {{ i18n.submit }} <i class="fas fa-arrow-right"></i>
+              {{ i18n['register.submit'] }} <i class="fas fa-arrow-right"></i>
             </button>
           </h4>
           <!-- still form errors -->
           <h5 id="form-err" class="text-center" :class="{'d-none': !errForm}">
-            {{ i18n.formErr }}
+            {{ i18n['register.formErr'] }}
           </h5>
           <!-- busy note -->
           <h5 class="text-center" :class="{'d-none': !busy}">
-            {{ i18n.busy }} <i class="fas fa-spinner fa-spin"></i>
+            {{ i18n['busy'] }} <i class="fas fa-spinner fa-spin"></i>
           </h5>
           <!-- submit ok: goto login -->
           <h5 class="text-center" :class="{'d-none': !submitOk}">
             <router-link to="/login">
               <div>
-                <u>{{ i18n.success }}</u>
+                <u>{{ i18n['register.success'] }}</u>
               <img src="../assets/fertig.svg" alt="Erfolg" style="width: 3rem">
               </div>
             </router-link>
@@ -115,13 +115,15 @@ Dependencies:
 
 <script>
 import http from 'axios'
-import * as i18n from '@/i18n/register'
+import { locale } from '@/mixins'
 
 export default {
   name: 'register-view',
-  mounted () {
-    document.querySelector('#register-focus').focus()
-  },
+
+  mixins: [
+    locale
+  ],
+
   data () {
     return {
 
@@ -140,19 +142,8 @@ export default {
       emailTaken: false
     }
   },
-  computed: {
 
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 21, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.$store.state.profile.lang]
-    },
+  computed: {
 
     /**
      * errName: form validation for name
@@ -201,6 +192,11 @@ export default {
       return this.errName || this.errEmail || this.errPwds
     }
   },
+
+  mounted () {
+    document.querySelector('#register-focus').focus()
+  },
+
   methods: {
 
     /**
@@ -300,14 +296,12 @@ export default {
         }))
         .catch( (err) => {
           console.log(err)
-          ctx.errmsg = this.i18n.fail
+          ctx.errmsg = this.i18n['register.fail']
         })
         .finally( () => {
           ctx.busy = false
         })
     }
-  },
-  components: {
   }
 }
 </script>

@@ -5,7 +5,7 @@ Author: cmc
 Date: October 27, 2020
 Dependencies: 
   vuex,
-  @/i18n/course-edit/new-block/
+  @/mixins/locale.vue
 -->
 
 <template>
@@ -14,16 +14,17 @@ Dependencies:
     <div class="col">
 
       <b-dropdown id="new-content-dd"
-          variant="primary"
-          class="w-100"
-          dropright
+        variant="primary"
+        class="w-100"
+        dropright
       >
         <template slot="button-content">
-            <i class="fas fa-plus"></i> {{ i18n.newContent }}
+          <i class="fas fa-plus"></i> 
+          {{ i18n['newBlock.newContent'] }}
         </template>
 
         <b-dropdown-header>
-          {{ i18n.newContentBlock }}
+          {{ i18n['newBlock.newContentBlock'] }}
         </b-dropdown-header>
 
         <b-dropdown-item v-for="block in $laya.lb"
@@ -31,11 +32,11 @@ Dependencies:
           :to="'/courses/'+name+'/'+nextId+'/new/'+block.id"
         >
           <div class="dropitem">
-            {{ block.i18n[profileLang].name }} 
+            {{ getName(block) }} 
             <i 
               class="far fa-question-circle" 
               v-b-tooltip.right 
-              :title="block.i18n[profileLang].caption"
+              :title="getCaption(block)"
             >
             </i>
           </div>
@@ -44,7 +45,7 @@ Dependencies:
         <b-dropdown-divider></b-dropdown-divider>
 
         <b-dropdown-header>
-          {{ i18n.newContentAssmnt }}
+          {{ i18n['newBlock.newContentAssmnt'] }}
         </b-dropdown-header>
 
         <b-dropdown-item v-for="ass in $laya.la"
@@ -52,12 +53,12 @@ Dependencies:
           :to="'/courses/'+name+'/'+nextId+'/new/'+ass.id"
         >
           <div class="dropitem">
-            {{ ass.i18n[profileLang].name }}
+            {{ getName(ass) }}
         
             <i 
               class="far fa-question-circle" 
               v-b-tooltip.right 
-              :title="ass.i18n[profileLang].caption"
+              :title="getCaption(ass)"
             >
             </i>
           </div>
@@ -68,38 +69,25 @@ Dependencies:
     </div>
 
     <div class="col text-dark">
-      {{ i18n.newContentTip }}
-      <b>{{nextId}}</b>.
+      {{ i18n['newBlock.newContentTip'] }}
+      <b>{{ nextId }}</b>.
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import * as i18n from '@/i18n/course-edit/new-block/'
+import { locale } from '@/mixins'
 
 export default {
   name: 'course-new-block',
 
-  props: {  
-    name: String,
-    step: String
-  },
+  mixins: [
+    locale 
+  ],
 
   computed: {
-    ...mapGetters(['profileLang', 'content']),
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 20, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
-    },
+    ...mapGetters(['content']),
 
     /**
      * nextId: return step # for next content
@@ -110,6 +98,40 @@ export default {
      */
     nextId() {
       return this.content.length+1
+    }
+  },
+
+   props: {  
+    name: String,
+    step: String
+  },
+
+  methods: {
+
+    /**
+     * function getCaption: get caption property of $laya block
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: May 6, 2021
+     * 
+     * @param {obj} layaBlock $laya block object
+     */
+    getCaption(layaBlock) {
+      return this.i18n[layaBlock.name + '.caption']
+    },
+
+    /**
+     * function getName: get name property of $laya block
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: May 6, 2021
+     * 
+     * @param {obj} layaBlock $laya block object
+     */
+    getName(layaBlock) {
+      return this.i18n[layaBlock.name + '.name']
     }
   }
 }

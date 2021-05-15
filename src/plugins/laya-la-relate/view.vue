@@ -5,7 +5,7 @@ Creator: core
 Date: unknown
 Dependencies: 
   vuex,
-  @/i18n/plugins/laya-la-feedback
+  @/mixins/locale.vue
 -->
 
 <template>
@@ -64,11 +64,11 @@ Dependencies:
         -->
         <button type="button" class="btn btn-link" @click="check" 
           :disabled="freeze">
-          {{ i18n.check }}
+          {{ i18n['check'] }}
         </button>
           
         <button type="button" class="btn btn-primary ml-auto" @click="done">
-          {{ i18n.nextContent }}<i class="fas fa-arrow-right"></i>
+          {{ i18n['nextContent'] }}<i class="fas fa-arrow-right"></i>
         </button>
       </div>
 
@@ -78,10 +78,14 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import * as i18n from '@/i18n/plugins/laya-la-relate'
+import { locale } from '@/mixins'
 
 export default {
   name: 'laya-quiz-relate',
+
+  mixins: [
+    locale
+  ],
   
   data () {
     if (Object.entries(this.$attrs).length === 5) //preview
@@ -104,7 +108,7 @@ export default {
     }
   },
   created () {
-    this.defaultOption = this.i18n.defaultOption
+    this.defaultOption = this.i18n['layaLaRelate.defaultOption']
     if (Object.entries(this.$attrs).length != 5) { // no preview 
       this.fetchData()
     }
@@ -113,19 +117,7 @@ export default {
     onFinish: Array
   },
   computed: {
-    ...mapGetters(['content', 'profileLang']),
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 19, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
-    },
+    ...mapGetters(['content']),
 
     /**
      * uid: return date in ms

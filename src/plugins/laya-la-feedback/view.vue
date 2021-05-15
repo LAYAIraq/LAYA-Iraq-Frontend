@@ -3,28 +3,28 @@ Filename: view.vue
 Use: Display Course Feedback content block
 Creator: cmc
 Date: unknown
-Dependencies: @/i18n/plugins/laya-la-feedback
+Dependencies: @/mixins/locale.vue 
 -->
 
 <template>
   <div class="laya-feedback">
 
     <b-toast id="feedback-new"
-            :title="i18n.bToast.title"
-            static
-            variant="success"
-            auto-hide-delay="1500"
-            class="feedback-toast">
-      {{ i18n.bToast.successfulSave }}
+      :title="i18n['layaLaFeedback.name']"
+      static
+      variant="success"
+      auto-hide-delay="1500"
+      class="feedback-toast">
+      {{ i18n['successfulSave'] }}
     </b-toast>
 
     <b-toast id="feedback-updated"
-            :title="i18n.bToast.title"
-            static
-            variant="success"
-            auto-hide-delay="1500"
-            class="feedback-toast">
-      {{ i18n.bToast.feedbackUpdated }}
+      :title="i18n['layaLaFeedback.title']"
+      static
+      variant="success"
+      auto-hide-delay="1500"
+      class="feedback-toast">
+      {{ i18n['layaLaFeedback.bToast.feedbackUpdated'] }}
     </b-toast>
 
     <div class="feedback-container-main">
@@ -32,9 +32,9 @@ Dependencies: @/i18n/plugins/laya-la-feedback
       <div class="row mb-3">
         <div class="col">
           <h4>
-            {{title}}
+            {{ title }}
           </h4>
-          <p>{{task}}</p>
+          <p>{{ task }}</p>
         </div>
       </div>
     
@@ -62,7 +62,7 @@ Dependencies: @/i18n/plugins/laya-la-feedback
 
       <div class="row mt-5">
         <div class="col">
-          <h4>{{ i18n.addFreetext }}</h4>
+          <h4>{{ i18n['layaLaFeedback.addFreetext'] }}</h4>
           <textarea class="w-100 mt-1" rows="5" v-model="freetext">
           </textarea>
         </div>
@@ -70,7 +70,7 @@ Dependencies: @/i18n/plugins/laya-la-feedback
       <div class="row mt-1">
         <div class="col">
           <button type="button" class="btn btn-outline-success btn-block" @click="storeFeedback">
-          <i class="fas fa-check"></i>{{ i18n.save }}
+          <i class="fas fa-check"></i>{{ i18n['save'] }}
           </button>
         </div>
       </div>
@@ -79,9 +79,9 @@ Dependencies: @/i18n/plugins/laya-la-feedback
       <div class="row">
        
         <button type="button"
-                class="btn btn-primary mt-3 ml-auto"
-                @click="done">
-          {{ i18n.nextContent }}<i class="fas fa-arrow-right"></i>
+          class="btn btn-primary mt-3 ml-auto"
+          @click="done">
+          {{ i18n['nextContent'] }}<i class="fas fa-arrow-right"></i>
         </button>
       </div>
     </div>
@@ -89,13 +89,36 @@ Dependencies: @/i18n/plugins/laya-la-feedback
 </template>
 
 <script>
-
-import { BToast, BvToast } from 'bootstrap-vue';
-import * as i18n from '@/i18n/plugins/laya-la-feedback';
+import { locale } from '@/mixins'
 
 //import layaWsyisyg from '../misc/laya-html'
 export default {
   name: 'laya-feedback',
+
+  mixins: [
+    locale
+  ],
+  
+  data () {
+    return {
+      choice: [], // users choice as index
+      freetext: '',
+      answered: false,
+      step: this.init.fno
+    }
+
+  },
+  props: {
+    title: String,
+    task: String,
+    taskAudio: String,
+    items: Array,
+    categories: Array,
+    init: Object,
+    onFinish: Array,
+    onSave: Function
+  },
+
   created() {
     //console.log(Date.parse(this.feedback.created))
     const mid = Math.floor((this.categories.length-1)/2)
@@ -107,38 +130,6 @@ export default {
   beforeDestroy() {
     //add saving feedback data
     
-  },
-  data () {
-    return {
-      choice: [], // users choice as index
-      freetext: '',
-      answered: false,
-      step: this.init.fno
-    }
-  },
-  computed: {
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 12, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.$store.state.profile.lang]
-    }
-  },
-  props: {
-    title: String,
-    task: String,
-    taskAudio: String,
-    items: Array,
-    categories: Array,
-    init: Object,
-    onFinish: Array,
-    onSave: Function
   },
   methods: {
 

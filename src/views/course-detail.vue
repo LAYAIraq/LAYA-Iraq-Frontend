@@ -5,7 +5,7 @@ Creator: core
 Date: unknown
 Dependencies: 
   vuex,
-  @/i18n/course-detail,
+  @/mixins/locale.vue,
   @/misc/utils.js,
   @/components/scroll-to-top.vue
   @/views/course-edit.vue
@@ -43,10 +43,10 @@ Dependencies:
           <!--<div v-else>-->
           <div v-else>
             <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">
-              {{ i18n.content }}
+              {{ i18n['courseDetail.content'] }}
             </h2>
             <h2 v-else class="mt-5 text-center text-muted">
-              {{ i18n.noPermit }}
+              {{ i18n['courseDetail.noPermit'] }}
             </h2>
           </div>
         </div>
@@ -61,13 +61,16 @@ Dependencies:
 <script>
 import { mapState, mapGetters } from 'vuex'
 
-import * as i18n from '@/i18n/course-detail'
 import utils from '@/misc/utils.js'
 import lyScrollToTop from '@/components/scroll-to-top.vue'
 import courseEdit from '@/views/course-edit.vue'
+import { locale } from '@/mixins'
 
 export default {
   name: 'course-detail-view',
+  mixins: [
+    locale
+  ],
   props: {
     name: String,
     step: String
@@ -97,7 +100,7 @@ export default {
   },
   computed: {
     ...mapState(['auth', 'note', 'edit']),
-    ...mapGetters(['isAuthor', 'profileLang', 'content', 'course']),
+    ...mapGetters(['isAuthor', 'content', 'course']),
 
 
     /**
@@ -113,18 +116,6 @@ export default {
           return ()=>{}
         }
       })
-    },
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 21, 2021
-     * 
-     */
-    i18n () {
-      return i18n[this.profileLang]
     },
 
     /**

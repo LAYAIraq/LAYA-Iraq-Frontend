@@ -3,7 +3,7 @@ Filename: root.vue
 Use: Show Landing Page
 Creator: core
 Date: unknown
-Dependencies: @/i18n/root
+Dependencies: @/mixins/locale.vue
 -->
 
 <template>
@@ -12,15 +12,15 @@ Dependencies: @/i18n/root
     <div class="container">
       <div class="row">
         <div class="col">
-          <h1> {{ i18n. title }} </h1>
-          <h2> {{ i18n.subtitle }} </h2>
-          <p> {{ i18n.promoText1 }} </p>
-          <p> {{ i18n.promoText2 }} </p>
-          <p> {{ i18n.promoText3 }} </p>
-          <p> {{ i18n.promoText4 }} </p>
-          <p> {{ i18n.promoText5 }} </p>
+          <h1> {{ i18n['root.title'] }} </h1>
+          <h2> {{ i18n['root.subtitle'] }} </h2>
+          <p> {{ i18n['root.promoText1'] }} </p>
+          <p> {{ i18n['root.promoText2'] }} </p>
+          <p> {{ i18n['root.promoText3'] }} </p>
+          <p> {{ i18n['root.promoText4'] }} </p>
+          <p> {{ i18n['root.promoText5'] }} </p>
 
-          <b-link to="/register">{{ i18n.register }}</b-link>
+          <b-link to="/register">{{ i18n['root.register'] }}</b-link>
         </div>
       </div>
     </div>
@@ -28,25 +28,15 @@ Dependencies: @/i18n/root
 </template>
 
 <script>
-import * as i18n from '@/i18n/root'
+import { locale } from '@/mixins'
 
 export default {
   name: 'root-view',
 
-  computed: {
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 21, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.$store.state.profile.lang]
-    }
-  }
+  mixins: [
+    locale
+  ]
+  
 }
 </script>
 

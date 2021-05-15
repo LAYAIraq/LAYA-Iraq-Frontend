@@ -3,18 +3,30 @@ Filename: create.vue
 Use: Create a Relate content block
 Creator: core
 Date: unknown
-Dependencies: @/i18n/plugins/laya-la-relate
+Dependencies: @/mixins/locale.vue 
 -->
 
 <template>
   <div class="laya-la-relate-create">
-    <label><h4>{{ i18n.title }}</h4></label><i id ="questionmark" class="fas fa-question-circle" @click="toggleTip" 
-          :title="i18n.showTip" v-b-tooltip.left></i>
+    <label>
+      <h4>
+        {{ i18n['layaLaRelate.name'] }}
+      </h4>
+    </label>
+    <i 
+      id ="questionmark" 
+      class="fas fa-question-circle" 
+      @click="toggleTip" 
+      :title="i18n['showTip']" 
+      v-b-tooltip.left
+    ></i>
     <b-jumbotron 
-            v-if="tooltipOn"
-            :header="i18n.title" :lead="i18n.tipHeadline">
-          <hr class="my-4">
-          <span v-html="i18n.tooltip"></span>
+      v-if="tooltipOn"
+      :header="i18n['layaLaRelate.name']" 
+      :lead="i18n['tipHeadline']"
+    >
+      <hr class="my-4">
+      <span v-html="i18n['layaLaRelate.tooltip']"></span>
 
     </b-jumbotron>
     <hr>
@@ -23,13 +35,18 @@ Dependencies: @/i18n/plugins/laya-la-relate
 
       <!-- title -->
       <div class="form-group row">
-        <label for="relate-title" class="col-2 col-form-label">{{ i18n.edit.title }}</label>
+        <label 
+          for="relate-title" 
+          class="col-2 col-form-label"
+        >
+          {{ i18n['title'] }}
+        </label>
         <div class="col-10">
           <input id="relate-title"
-                 type="text"
-                 v-model="title"
-                 class="form-control"
-                 :placeholder="i18n.edit.titlePlaceholder">
+            type="text"
+            v-model="title"
+            class="form-control"
+            :placeholder="i18n['titlePlaceholder']">
         </div>
       </div>
 
@@ -37,13 +54,14 @@ Dependencies: @/i18n/plugins/laya-la-relate
       <!-- task -->
       <div class="form-group row">
         <label for="relate-task" class="col-2 col-form-label">
-          {{ i18n.edit.task }}
+          {{ i18n['task'] }}
         </label>
         <div class="col-10">
           <textarea id="relate-task"
-                    v-model="task"
-                    class="w-100"
-                    :placeholder="i18n.edit.taskPlaceholder">
+            v-model="task"
+            class="w-100"
+            :placeholder="i18n['taskPlaceholder']"
+          >
           </textarea>
         </div>
       </div>
@@ -51,22 +69,30 @@ Dependencies: @/i18n/plugins/laya-la-relate
       <!-- task audio -->
       <div class="form-group row">
         <label for="relate-task-audio" class="col-2 col-form-label">
-          {{ i18n.edit.taskAudio }}
+          {{ i18n['taskAudio'] }}
         </label>
         <div class="col-10">
           <input id="relate-task-audio"
-                 type="text"
-                 v-model="taskAudio"
-                 class="form-control"
-                 :placeholder="i18n.edit.taskAudioPlaceholder">
+            type="text"
+            v-model="taskAudio"
+            class="form-control"
+            :placeholder="i18n['taskAudioPlaceholder']">
         </div>
       </div>
 
-      <p><b>{{ i18n.edit.solutions }}</b></p>
-      <div class="form-group row" v-for="(rel, i) in relations" :key="'rel-'+i">
-
+      <p><b>{{ i18n['layaLaRelate.edit.solutions'] }}</b></p>
+      <div 
+        class="form-group row" 
+        v-for="(rel, i) in relations" 
+        :key="'rel-'+i"
+      >
         <!-- text -->
-        <label class="col-form-label col-2" :for="'rel-text-'+i">{{ i18n.edit.text }}</label>
+        <label 
+          class="col-form-label col-2" 
+          :for="'rel-text-'+i"
+        >
+          {{ i18n['text'] }}
+        </label>
         <div class="col-7">
           <input :id="'rel-text-'+i"
             class="form-control"
@@ -76,33 +102,42 @@ Dependencies: @/i18n/plugins/laya-la-relate
 
         <!-- delete -->
         <div class="col-auto align-self-center">
-          <button type="button"
-                  class="btn btn-danger btn-sm"
-                  @click="_delRelation(i)">
+          <button 
+            type="button"
+            class="btn btn-danger btn-sm"
+            @click="_delRelation(i)"
+          >
             <i class="fas fa-times"></i>
           </button>
         </div>
       </div>
       <div class="form-group row">
         <div class="col-10 offset-2">
-          <button type="button"
-                  class="btn btn-primary btn-sm"
-                  @click="_addRelation">
-            <i class="fas fa-plus"></i>{{ i18n.edit.solutionAdd }}
+          <button 
+            type="button"
+            class="btn btn-primary btn-sm"
+            @click="_addRelation">
+            <i class="fas fa-plus"></i>
+            {{ i18n['layaLaRelate.edit.solutionAdd'] }}
           </button>
         </div>
       </div>
 
-      <p><b>{{ i18n.edit.items }}</b></p>
-      <div class="form-group row" v-for="(pair, i) in pairs" :key="'pair-'+i">
+      <p><b>{{ i18n['items'] }}</b></p>
+      <div 
+        class="form-group row" 
+        v-for="(pair, i) in pairs" 
+        :key="'pair-'+i"
+      >
 
         <!-- image -->
         <div class="col-3 offset-2">
-          <input :id="'pair-text-'+i"
+          <input 
+            :id="'pair-text-'+i"
             class="form-control"
             type="text"
             v-model="pairs[i].img"
-            :placeholder="i18n.edit.imgPlaceholder">
+            :placeholder="i18n['layaLaRelate.edit.imgPlaceholder']">
         </div>
 
         <!-- audio -->
@@ -111,34 +146,50 @@ Dependencies: @/i18n/plugins/laya-la-relate
             class="form-control"
             type="text"
             v-model="pairs[i].audio"
-            :placeholder="i18n.edit.audioPlaceholder">
+            :placeholder="i18n['taskAudioPlaceholder']">
         </div>
 
         <!-- relation -->
         <div class="col-auto">
-          <select class="custom-select" v-model="pairs[i].relation">
-            <option disabled :value="-1">{{ i18n.edit.solution }}</option>
-            <option v-for="(rel,j) in relations" :key="rel+'-'+i+'-'+j">
-            {{ rel }}
+          <select 
+            class="custom-select" 
+            v-model="pairs[i].relation"
+          >
+            <option 
+              disabled 
+              :value="-1"
+            >
+              {{ i18n['layaLaRelate.edit.solution'] }}
+            </option>
+            <option 
+              v-for="(rel,j) in relations" 
+              :key="rel+'-'+i+'-'+j"
+            >
+              {{ rel }}
             </option>
           </select>
         </div>
 
         <!-- delete -->
         <div class="col-auto align-self-center">
-          <button type="button"
-                  class="btn btn-danger btn-sm"
-                  @click="_delPair(i)">
+          <button 
+            type="button"
+            class="btn btn-danger btn-sm"
+            @click="_delPair(i)"
+          >
             <i class="fas fa-times"></i>
           </button>
         </div>
       </div>
       <div class="form-group row">
         <div class="col-10 offset-2">
-          <button type="button"
-                  class="btn btn-primary btn-sm"
-                  @click="_addPair">
-            <i class="fas fa-plus"></i>{{ i18n.edit.itemAdd }}
+          <button 
+            type="button"
+            class="btn btn-primary btn-sm"
+            @click="_addPair"
+          >
+            <i class="fas fa-plus"></i>
+            {{ i18n['itemAdd'] }}
           </button>
         </div>
       </div>
@@ -149,18 +200,16 @@ Dependencies: @/i18n/plugins/laya-la-relate
 </template>
 
 <script>
-import * as i18n from '@/i18n/plugins/laya-la-relate'
+import { locale, tooltipIcon } from '@/mixins'
 
 export default {
   name: 'laya-la-relate-create',
-  created () {
-    if (this.relations.length == 0) {
-      for (let i=1; i<3 ;i++) {
-        let tmp = this.i18n.edit.solution + ' ' + i
-        this.relations.push(tmp)
-      }
-    }
-  },
+
+  mixins: [
+    locale,
+    tooltipIcon
+  ],
+
   data () {
     return {
       title: '',
@@ -173,24 +222,19 @@ export default {
           relation: -1
         }
       ],
-      relations: [],
-      tooltipOn: false
+      relations: []
     }
   },
-  computed: {
 
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 19, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.$store.state.profile.lang]
+  created () {
+    if (this.relations.length == 0) {
+      for (let i=1; i<3 ;i++) {
+        let tmp = this.i18n['layaLaRelate.edit.solution'] + ' ' + i
+        this.relations.push(tmp)
+      }
     }
   },
+
   methods: {
     /**
      * Function _delItem: remove item at position idx
@@ -240,17 +284,6 @@ export default {
      */
     _addRelation() {
       this.relations.push('')
-    },
-
-    /**
-     * Function toggleTip: toggle tooltipOn boolean
-     * 
-     * Author: cmc
-     * 
-     * Last updated: unknown
-     */
-    toggleTip() {
-      this.tooltipOn = !this.tooltipOn
     }
   }
 }

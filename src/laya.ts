@@ -64,10 +64,10 @@ export class Laya {
   public registerLB<VC1, VC2, VC3 extends VueConstructor>(
     id: string,
     type: string,
-    i18n: object,
+    name: string,
     components: { new?: VC1; edit?: VC2; view: VC3 },
   ): void {
-    this._lb[id] = { id, type, i18n, components };
+    this._lb[id] = { id, type, name, components };
     this._li[type] = { type: "block", id };
 
     if ("new" in components) {
@@ -84,10 +84,10 @@ export class Laya {
   public registerLA<VC1, VC2, VC3 extends VueConstructor>(
     id: string,
     type: string,
-    i18n: object,
+    name: string,
     components: { new?: VC1; edit?: VC2; view: VC3 },
   ): void {
-    this._la[id] = { id, type, i18n, components };
+    this._la[id] = { id, type, name, components };
     this._li[type] = { type: "assessment", id };
 
     if ("new" in components) {

@@ -6,7 +6,7 @@ Date: unknown
 Dependencies: 
   vuex, 
   axios, 
-  @/i18n/header, 
+  @/mixins/locale.vue, 
   @/components/scroll-to-top.vue, 
   @/misc/icons.js
 -->
@@ -29,19 +29,19 @@ Dependencies:
 
         <!-- left links -->
         <b-navbar-nav v-if="auth.online">
-          <b-nav-item to="/courses">{{i18n.courses}}</b-nav-item>
-          <!-- <b-nav-item to="/mycourses">{{i18n.myCourses}}</b-nav-item> -->
+          <b-nav-item to="/courses">{{ i18n['header.courses'] }}</b-nav-item>
+          <!-- <b-nav-item to="/mycourses">{{ i18n['mycourses.title'] }}</b-nav-item> -->
         </b-navbar-nav>
 
         <!-- right links -->
         <b-navbar-nav v-if="!auth.online" class="ml-auto">
-          <b-nav-item to="/register">{{i18n.register}}</b-nav-item>
-          <b-nav-item to="/login">{{i18n.login}}</b-nav-item>
+          <b-nav-item to="/register">{{ i18n['header.register'] }}</b-nav-item>
+          <b-nav-item to="/login">{{ i18n['login.title'] }}</b-nav-item>
         </b-navbar-nav>
 
         <b-navbar-nav v-if="auth.online" class="ml-auto">
-          <b-nav-item to="/profile">{{i18n.profile}}</b-nav-item>
-          <b-nav-item @click="logout">{{i18n.logout}}</b-nav-item>
+          <b-nav-item to="/profile">{{ i18n['header.profile'] }}</b-nav-item>
+          <b-nav-item @click="logout">{{ i18n['header.logout'] }}</b-nav-item>
         </b-navbar-nav>
 
         <b-navbar-nav>
@@ -68,49 +68,46 @@ Dependencies:
 </template>
 
 <script>
-import { 
-  mapGetters,
-  mapState 
-} from 'vuex'
-
+import { mapGetters, mapState } from 'vuex'
 import http from 'axios'
 import { icons } from '@/misc/langs.js'
-import * as i18n from '@/i18n/header'
+import { locale } from '@/mixins'
 import lyScrollToTop from '@/components/scroll-to-top.vue'
 
 export default {
   name: 'ly-header',
+
+  components: {
+    lyScrollToTop
+  },
+
+  mixins: [
+    locale
+  ],
+
   data () {
     return {
       icons,
       isCourse: Boolean
     }
   },
+  
+  computed: {
+    ...mapState(['auth']),
+    ...mapGetters(['profileLang'])
+  },
+
   watch: {
     '$route': 'checkCourse'
   },
-  computed: {
-    ...mapState(['auth']),
-    ...mapGetters(['profileLang']),
-    
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 12, 2021
-     * 
-     */
-    i18n () {
-      return i18n[this.profileLang]
-    }
-  },
+
   mounted () {
     document.title = 'Laya'
     this.checkCourse()
     this.$forceUpdate()
     this.getLocale()
   },
+
   methods: {
     /**
      * Function getLocale: Get Browser locale for localization
@@ -191,9 +188,6 @@ export default {
       this.$store.commit('logout')
       this.$router.push('/login')
     }
-  },
-  components: {
-    lyScrollToTop
   }
 }
 </script>

@@ -5,7 +5,7 @@ Author: cmc
 Date: October 27, 2020
 Dependencies:
   vuex,
-  @/i18n/course-edit/type
+  @/mixins/locale.vue
 -->
 
 <template>
@@ -16,23 +16,23 @@ Dependencies:
       <b-button variant="warning" block
         @click="$bvModal.show('author-changeContentType-confirm')"
         >
-        <i class="fas fa-edit"></i> {{ i18n.changeType }}
+        <i class="fas fa-edit"></i> {{ i18n['type.changeType'] }}
       </b-button>
     </div>
 
-    <div class="col text-dark" v-html="i18n.changeTypeTip">
+    <div class="col text-dark" v-html="i18n['type.changeTypeTip']">
     </div>
 
     <b-modal id="author-changeContentType-confirm"
-        :title="i18n.modal.title"
+        :title="i18n['type.changeType']"
         header-bg-variant="warning"
         ok-variant="warning"
-        :ok-title="i18n.modal.ok"
-        :cancel-title="i18n.modal.cancel"
+        :ok-title="i18n['type.modal.ok']"
+        :cancel-title="i18n['cancel']"
         @ok="changeContentType"
         centered>
       <p>
-        {{ i18n.modal.text }}
+        {{ i18n['type.modal.text'] }}
         <b-form-select
           v-model="changetype"
           :options="plugins">
@@ -44,10 +44,14 @@ Dependencies:
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-import * as  i18n from '@/i18n/course-edit/type'
+import { locale } from '@/mixins'
 
 export default {
   name: 'course-edit-type',
+
+  mixins: [
+    locale 
+  ],
 
   props: {
     name: String,
@@ -76,18 +80,6 @@ export default {
     },
 
     /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 20, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
-    },
-
-    /**
      * plugins: make localized names of laya plugins available 
      *  as computed property
      * 
@@ -101,40 +93,24 @@ export default {
       let lalb = [ 
         { 
           value: null, 
-          text: this.i18n.changeTypeText, 
+          text: this.i18n['type.changeTypeText'], 
           disabled: true
         }
       ]
-      let lang = this.profileLang
+      
       // add lb elements by name and id
       for(const id in lb) {
-        if (lb[id].i18n.hasOwnProperty(lang)) {
-          lalb.push({
-            value: id, 
-            text: lb[id].i18n[lang].name
-          })
-        }
-        else { 
-          lalb.push({
-            value: id, 
-            text: lb[id].i18n.de.name
-          })
-        }
+        lalb.push({
+          value: id, 
+          text: this.i18n[lb[id].name + '.name']
+        })
       }
       // add la elements by name and id
       for(const id in la) {
-        if (la[id].i18n.hasOwnProperty(lang)) {
-          lalb.push({
-            value: id, 
-            text: la[id].i18n[lang].name
-          })
-        }
-        else {
-          lalb.push({
-            value: id, 
-            text: la[id].i18n.de.name
-          })
-        }
+        lalb.push({
+          value: id, 
+          text: this.i18n[la[id].name + '.name']
+        })
       }
 
       return lalb

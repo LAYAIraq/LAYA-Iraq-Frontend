@@ -5,7 +5,7 @@ Author: cmc
 Date: October 27, 2020
 Dependencies: 
   vuex,
-  @/i18n/course-edit/rename/
+  @/mixins/locale.vue
 -->
 
 <template>
@@ -18,30 +18,30 @@ Dependencies:
         class="float-right"
         @click="$bvModal.show('author-renameCourse-confirm')"
       >
-        <i class="fas fa-exclamation-circle"></i> {{ i18n.renameCourse }}
+        <i class="fas fa-exclamation-circle"></i> {{ i18n['renameCourse'] }}
       </b-button>
     </div>
 
     <div class="col text-dark">
-      {{ i18n.renameCourseTip }}
+      {{ i18n['rename.renameCourseTip'] }}
     </div>
 
     <b-modal id="author-renameCourse-confirm"
-      :title="i18n.modal.title"
+      :title="i18n['renameCourse']"
       header-bg-variant="warning"
       ok-variant="warning"
-      :ok-title="i18n.modal.ok"
-      :cancel-title="i18n.modal.cancel"
+      :ok-title="i18n['rename.modal.ok']"
+      :cancel-title="i18n['cancel']"
       @ok="renameCourse"
       centered
     >
       <p>
-        {{ i18n.modal.text }}
+        {{ i18n['copy.modal.text'] }}
         <input
         type="text"
         v-model="rename"
         class="form-control"
-        :placeholder="i18n.modal.placeholder"
+        :placeholder="i18n['placeholder']"
         >
       </p>
 
@@ -51,11 +51,19 @@ Dependencies:
 </template>
 
 <script>
-import * as i18n from '@/i18n/course-edit/rename/'
-import { mapGetters, mapState } from 'vuex'
+import { locale } from '@/mixins'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'courseRename',
+
+  mixins: [
+    locale 
+  ],
+
+  computed: {
+    ...mapGetters(['course']),
+  },
 
   data() {
     return {
@@ -64,22 +72,6 @@ export default {
     }
   },
 
-  computed: {
-    ...mapGetters(['course', 'profileLang']),
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 20, 2021
-     * 
-     */
-    i18n()  {
-      return i18n[this.profileLang]
-    }
-
-  },
   methods: {
 
     /**
