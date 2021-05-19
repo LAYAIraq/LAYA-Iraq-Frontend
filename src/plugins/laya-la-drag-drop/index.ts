@@ -15,11 +15,17 @@ import _view from './view.vue'
 
 export default {
   install(Vue: typeof _Vue, options?: any): void {
-    Vue.$laya.registerLA('laya-quiz-drag-drop', 'AssessmentDragDrop', 'layaLaDragDrop' , {
-      new: _create,
-      //@ts-ignore
-      view: _view,
-      edit: _edit,
-    })
+    Vue.$laya.registerLA(
+      'laya-quiz-drag-drop', 
+      'AssessmentDragDrop', 
+      'layaLaDragDrop',
+      'fas fa-ellipsis-h',
+      {
+        new: _create,
+        //@ts-ignore
+        view: _view,
+        edit: _edit
+      }
+    )
   }
 }

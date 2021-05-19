@@ -43,11 +43,12 @@ Dependencies:
           {{ i18n['courseUpdate.enrollment'] }}
         </label>
         <div class="col">
-          <input id="new-course-enrollment"
-                 type="checkbox"
-                 class="form-control"
-                 ref="enrollmentRequired"
-                 >
+          <input 
+            id="new-course-enrollment"
+            type="checkbox"
+            class="form-control"
+            ref="enrollmentRequired"
+          >
         </div>
       </div>
       <div class="form-group row">
@@ -57,10 +58,12 @@ Dependencies:
           </span>
         </div>
         <div class="col-4">
-          <button type="submit"
-                  class="btn btn-block btn-primary"
-                  :disabled="!formValid"
-                  @click="duplicateCheck">
+          <button 
+            type="submit"
+            class="btn btn-block btn-primary"
+            :disabled="!formValid"
+            @click="duplicateCheck"
+          >
             <i class="fas fa-check"></i> {{ i18n['save'] }}
           </button>
         </div>

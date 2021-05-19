@@ -14,11 +14,17 @@ import _view from './view.vue'
 
 export default {
   install(Vue: typeof _Vue, options?: any): void {
-    Vue.$laya.registerLB('laya-dialog', 'BlockDialog', 'layaLbDialog', {
-      new: _create,
-      //@ts-ignore
-      view: _view,
-      edit: _edit
-    })
+    Vue.$laya.registerLB(
+      'laya-dialog', 
+      'BlockDialog', 
+      'layaLbDialog',
+      'fas fa-route',
+      {
+        new: _create,
+        //@ts-ignore
+        view: _view,
+        edit: _edit
+      }
+    )
   }
 }

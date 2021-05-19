@@ -14,11 +14,17 @@ import _view from './view.vue'
 
 export default {
   install(Vue: typeof _Vue, options?: any): void {
-    Vue.$laya.registerLA('laya-course-feedback', 'CourseFeedback', 'layaLaFeedback', {
-      new: _create,
-      //@ts-ignore
-      view: _view,
-      edit: _edit,
-    })
+    Vue.$laya.registerLA(
+      'laya-course-feedback', 
+      'CourseFeedback', 
+      'layaLaFeedback',
+      'fas fa-comment-dots',
+      {
+        new: _create,
+        //@ts-ignore
+        view: _view,
+        edit: _edit
+      }
+    )
   }
 }

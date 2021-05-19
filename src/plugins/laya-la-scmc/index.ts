@@ -14,14 +14,17 @@ import _edit from './edit.vue'
 
 export default {
   install(Vue: typeof _Vue, options?: any): void {
-    Vue.$laya.registerLA('laya-scmc', 'AssessmentScmc',
+    Vue.$laya.registerLA(
+      'laya-scmc', 
+      'AssessmentScmc',
       'layaLaScmc',
+      'fas fa-user-graduate',
       {
         new: _create,
         //@ts-ignore
         view: _view,
         edit: _edit,
-      },
+      }
     )
   }
 }

@@ -50,10 +50,14 @@ Dependencies:
             :to="'/courses/'+course.name+'/1'"
             class="text-dark px-2 py-1 d-inline-block text-center"
             v-if="!enrollmentNeeded(course)" >
-            {{ i18n['courseList.start'] }} <i class="fas fa-arrow-right"></i>
+            {{ i18n['courseList.start'] }} 
+            <i class="fas fa-arrow-right"></i>
           </router-link>
           <a class="text-dark px-2 py-1 d-inline-block text-center" 
-            v-else @click="subscribe(course)" href="#">{{ i18n['courseList.subscribe'] }}</a>
+            v-else @click="subscribe(course)" href="#">
+            {{ i18n['courseList.subscribe'] }}
+            <i class="fas fa-file-signature"></i>  
+          </a>
         </div>
       </div>
 

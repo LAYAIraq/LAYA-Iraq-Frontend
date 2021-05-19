@@ -16,6 +16,7 @@ Dependencies:
       <b-dropdown id="new-content-dd"
         variant="primary"
         class="w-100"
+        menu-class="drop-wrap"
         dropright
       >
         <template slot="button-content">
@@ -27,18 +28,23 @@ Dependencies:
           {{ i18n['newBlock.newContentBlock'] }}
         </b-dropdown-header>
 
-        <b-dropdown-item v-for="block in $laya.lb"
+        <b-dropdown-item 
+          v-for="block in $laya.lb"
           :key="block.id"
           :to="'/courses/'+name+'/'+nextId+'/new/'+block.id"
         >
           <div class="dropitem">
-            {{ getName(block) }} 
             <i 
+              :class="block.icon"
+              id="icon"
+            ></i>
+            {{ getName(block) }} 
+            <i
+              id="questionmark" 
               class="far fa-question-circle" 
               v-b-tooltip.right 
               :title="getCaption(block)"
-            >
-            </i>
+            ></i>
           </div>
         </b-dropdown-item>
 
@@ -48,11 +54,13 @@ Dependencies:
           {{ i18n['newBlock.newContentAssmnt'] }}
         </b-dropdown-header>
 
-        <b-dropdown-item v-for="ass in $laya.la"
+        <b-dropdown-item 
+          v-for="ass in $laya.la"
           :key="ass.id"
           :to="'/courses/'+name+'/'+nextId+'/new/'+ass.id"
         >
           <div class="dropitem">
+            <i :class="ass.icon"></i>
             {{ getName(ass) }}
         
             <i 
@@ -139,8 +147,17 @@ export default {
 
 <style scoped>
 
-.dropitem i {
-  float:inline-end;
+.drop-wrap {
+  min-width: 0;
+  width: 100%;
+}
+
+.dropitem {
+  white-space: normal;
+}
+
+.far {
+  float: inline-end;
 }
     
 </style>

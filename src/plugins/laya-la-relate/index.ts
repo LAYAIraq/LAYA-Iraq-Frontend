@@ -14,11 +14,17 @@ import _view from './view.vue'
 
 export default {
   install(Vue: typeof _Vue, options?: any): void {
-    Vue.$laya.registerLA('laya-quiz-relate', 'AssessmentRelate', 'layaLaRelate', {
-      new: _create,
-      //@ts-ignore
-      view: _view,
-      edit: _edit,
-    })
+    Vue.$laya.registerLA(
+      'laya-quiz-relate', 
+      'AssessmentRelate', 
+      'layaLaRelate',
+      'fas fa-paperclip',
+      {
+        new: _create,
+        //@ts-ignore
+        view: _view,
+        edit: _edit
+      }
+    )
   }
 }

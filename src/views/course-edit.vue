@@ -40,13 +40,14 @@ Dependencies:
 
     </div>
 
-    <b-toast id="author-toast"
+    <b-toast 
+      id="author-toast"
       :title="i18n['authorTools']"
       static
       variant="success"
       auto-hide-delay="1500"
       class="author-toast"
-      > 
+    > 
       {{ i18n['successfulSave'] }}
     </b-toast>
 

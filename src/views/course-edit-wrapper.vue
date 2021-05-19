@@ -29,11 +29,17 @@ Dependencies:
                     class="btn btn-secondary"
                     :class="{ active: preview }"
                     @click="preview = !preview">
-              <span v-if="preview">{{ i18n['courseWrapper.edit'] }}</span> 
-              <span v-else> {{ i18n['courseWrapper.preview'] }} </span>
+              <span v-if="preview">
+                <i class="fas fa-edit"></i>
+                {{ i18n['courseWrapper.edit'] }}
+              </span> 
+              <span v-else>
+                <i class="fas fa-eye"></i>
+                {{ i18n['courseWrapper.preview'] }} 
+              </span>
             </button>
             <button type="button" class="btn btn-primary" @click="save">
-              <i class="fas fa-check"></i> {{ i18n['save'] }}
+              <i class="fas fa-save"></i> {{ i18n['save'] }}
             </button>
           </div>
 

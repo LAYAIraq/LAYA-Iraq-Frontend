@@ -181,6 +181,7 @@
               for="file"
               class="btn btn-lg btn-primary"
             >
+              <i class="fas fa-plus"></i>
               {{ i18n['layaUploadFileList.selectFiles'] }}
             </label>
           </div>
@@ -577,6 +578,11 @@ export default {
 </script>
 
 <style scoped>
+#questionmark {
+  float: inline-end;
+  cursor: pointer;
+}
+
 span.sort-list {
   cursor: pointer;
 }
