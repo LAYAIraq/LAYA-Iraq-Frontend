@@ -35,6 +35,22 @@ Dependencies:
     </b-jumbotron>
 
     <form>
+      <div class="form-group row">   
+        <label 
+          for="dialog-title" 
+        >
+          {{ i18n['title'] }}
+        </label>
+        
+        <input 
+          id="dialog-title"
+          type="text"
+          v-model="title"
+          class="form-control"
+          :placeholder="i18n['titlePlaceholder']"
+        >
+      </div>
+      
       <div class="form-group row">
         <label 
           for="smcs-question" 
@@ -127,7 +143,9 @@ export default {
     return {
       bg: '',
       question: '',
-      answers: []
+      answers: [],
+      title: '',
+      showTitle: false
     }
   },
   methods: {

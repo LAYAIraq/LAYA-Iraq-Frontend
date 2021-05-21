@@ -34,6 +34,42 @@ Dependencies:
     <hr>
 
     <form>
+
+      <!-- title -->
+      <div class="form-group row">
+        <div class="form-group col-10">
+          <label 
+            for="ableplayer-title" 
+          >
+            {{ i18n['title'] }}
+          </label>
+          
+          
+          <input 
+            id="ableplayer-title"
+            type="text"
+            v-model="title"
+            class="form-control"
+            :placeholder="i18n['titlePlaceholder']"
+          >
+        </div>
+        <div class="form-group col" id="show-title-button">
+          <div style="height: calc(1.5em + .75rem + 2px);"></div>
+          <label
+            for="show-title-tick"
+            class="col"
+          >
+            {{ i18n['showTitle'] }}
+            <input
+              id="show-title-tick"
+              type="checkbox"
+              v-model="showTitle"
+            >
+          </label>
+            
+          
+        </div>
+      </div>
       <div class="form-group">
         <label for="able-src-id">{{ i18n['layaAbleplayer.vidURL'] }}</label>
         <input id="able-src-id"
@@ -78,10 +114,18 @@ export default {
   
   data() {
     return {
+      title: '',
       src: '',
       sign: '',
+      showTitle: false,
       sub: ''
     }
   }
 }
 </script>
+
+<style scoped>
+#show-title-button {
+  vertical-align: bottom;
+}
+</style>

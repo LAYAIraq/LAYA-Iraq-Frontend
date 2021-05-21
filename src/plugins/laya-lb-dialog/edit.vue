@@ -37,6 +37,39 @@ Dependencies:
 
     <form>
       <div class="form-group row">
+        <div class="form-group col-10">
+          <label 
+            for="dialog-title" 
+          >
+            {{ i18n['title'] }}
+          </label>
+          
+          <input 
+            id="dialog-title"
+            type="text"
+            v-model="title"
+            class="form-control"
+            :placeholder="i18n['titlePlaceholder']"
+          >
+        </div>
+
+        <div class="form-group col" id="show-title-button">
+          <div style="height: calc(1.5em + .75rem + 2px);"></div>
+          <label
+            for="show-title-tick"
+            class="col"
+          >
+            {{ i18n['showTitle'] }}
+            <input
+              id="show-title-tick"
+              type="checkbox"
+              v-model="showTitle"
+            >
+          </label>
+        </div>
+        
+      </div>
+      <div class="form-group row">
         <label 
           for="smcs-question" 
           class="col-2 col-form-label"
@@ -144,7 +177,8 @@ export default {
     return {
       bg: '',
       question: '',
-      answers: []
+      answers: [],
+      title: ''
     }
   },
 
@@ -191,6 +225,7 @@ export default {
       this.bg = preData.bg
       this.question = preData.question
       this.answers = preData.answers
+      this.title = preData.title
     }
   }
 }

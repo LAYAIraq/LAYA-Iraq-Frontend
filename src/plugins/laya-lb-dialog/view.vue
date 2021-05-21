@@ -10,7 +10,6 @@ Dependencies: @/mixins/locale.vue
   <div class="laya-dialog">
     <img v-if="bg" class="bg" :src="bg" alt="">
     <div v-else class="bg-fallback"></div>
-
     <div class="dialog-text">
       <div v-if="question" class="question">{{ question }}</div>
       <div class="answers d-flex justify-content-around">
@@ -33,18 +32,20 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'laya-dialog',
   data() {
-    if (Object.entries(this.$attrs).length === 3) { // for 'preview' feature
+    if (Object.entries(this.$attrs).length === 5) { // for 'preview' feature
       return {...this.$attrs}
     }
     return {
       question: '',
       answers: [],
-      bg: ''
+      bg: '',
+      title: '',
+      showTitle: false
     }
   },
   beforeMount() {
     // fetch data from vuex if not preview
-    if (Object.entries(this.$attrs).length != 3) {
+    if (Object.entries(this.$attrs).length != 5) {
       // No attributed Data --> actual view
       this.refreshData()
     }
@@ -83,6 +84,8 @@ export default {
       this.question = preData.question
       this.answers = preData.answers
       this.bg = preData.bg
+      this.title = preData.title
+      this.showTitle = preData.showTitle
     }
   },
   watch: {

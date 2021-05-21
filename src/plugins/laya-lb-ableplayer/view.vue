@@ -12,6 +12,8 @@ Dependencies:
 <template>
   <div class="ly-ableplayer">
 
+    <h4 v-if="showTitle"> {{ title }}</h4>
+
     <video 
       :id="playerId"
       preload="auto"
@@ -55,15 +57,17 @@ export default {
   ],
 
   data() {
-    if (Object.entries(this.$attrs).length === 3)
+    if (Object.entries(this.$attrs).length === 5)
       return {
         ...this.$attrs,
         ableplayer: null
       }
     return {
+      title: '',
       src: '',
       sign: '',
       sub: '',
+      showTitle: false,
       ableplayer: null
     }
   },
@@ -118,6 +122,8 @@ export default {
       this.src = preData.src
       this.sign = preData.sign
       this.sub = preData.sub
+      this.title = preData.title
+      this.showTitle = preData.showTitle
     }
   },
 }

@@ -140,8 +140,10 @@ export default {
 
   beforeDestroy() {
     // persist changes in database
-    this.save()
-    this.$store.dispatch('storeCourse')
+    if(this.editContent) {
+      this.save()
+      this.$store.dispatch('storeCourse')
+    }
   },
 
   mounted() {
