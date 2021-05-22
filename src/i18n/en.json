@@ -5,6 +5,7 @@
 	"cancel": "Cancel",
 	"cat": "Category",
 	"check": "Check Solution",
+	"content": "Content",
 	"content.editContent": "Edit Content",
 	"content.editContentTip": "You can modify the displayed content ( #{step} ).",
 	"copy.copyCourseTip": "Duplicate this course with a new name. BEWARE:The associated files are not copied!",

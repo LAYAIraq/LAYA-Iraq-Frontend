@@ -5,6 +5,7 @@
 	"cancel": "Abbrechen",
 	"cat": "Kategorie",
 	"check": "Lösung einblenden",
+	"content": "Inhalt",
 	"content.editContent": "Inhalt bearbeiten",
 	"content.editContentTip": "Damit kannst Du den oben angezeigten Inhalt ( Nr. {step} ) bearbeiten.",
 	"copy.copyCourseTip": "Der Kurs wird mit einem neuen Namen dupliziert. ACHTUNG:Die zugehörigen Dateien werden nicht kopiert!",

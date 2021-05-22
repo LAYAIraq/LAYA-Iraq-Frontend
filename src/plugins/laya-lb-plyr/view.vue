@@ -12,6 +12,8 @@ Dependencies:
 <template>
   <div class="ly-plyr-view">
 
+    <h4 v-if="showTitle">{{ title }}</h4>
+
     <div 
       :id="playerId" 
       :data-plyr-provider="platform" 
@@ -46,12 +48,14 @@ export default {
   ],
 
   data() {
-    if (Object.entries(this.$attrs).length === 2) { // for 'preview' feature
+    if (Object.entries(this.$attrs).length === 4) { // for 'preview' feature
       return {...this.$attrs}
     }
     return {
       plyr: null,
-      src: ''
+      src: '',
+      title: '',
+      showTitle: false
     }
   },
   created() {
@@ -118,6 +122,8 @@ export default {
       let idx = this.$route.params.step - 1 
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.src = preData.src
+      this.showTitle = preData.showTitle
+      this.title = preData.title
     },
 
     /**

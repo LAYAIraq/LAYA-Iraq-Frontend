@@ -41,6 +41,10 @@ Dependencies:
           <b>{{ i18n['courseNavEdit.table.contentType'] }}</b>
         </div>
 
+        <div class="col">
+          <b>{{ i18n['title'] }}</b>
+        </div>
+
         <div class="col-3">
           <b>{{ i18n['courseNavEdit.table.succContent'] }}</b>
         </div>
@@ -51,7 +55,11 @@ Dependencies:
 
       </div>
 
-      <div class="row" v-for="(step,i) in courseContent" :key="'step-'+i">
+      <div 
+        class="row" 
+        v-for="(step,i) in courseContent" 
+        :key="'step-'+i"
+      >
 
         <div class="col-2">
           <b>{{ i+1 }}</b>
@@ -61,27 +69,34 @@ Dependencies:
           {{ typeName(step.name) }}
         </div>
 
+        <div class="col">
+          {{ step.input.title }}
+        </div>
+
         <div class="col-3">
-          <input class="form-control"
-                 :class="{'is-invalid': !step.nextStep}"
-                 type="text"
-                 v-model="step.nextStep"
-                 :placeholder="i18n['courseNavEdit.table.placeholder']">
+          <input 
+            class="form-control"
+            :class="{'is-invalid': !step.nextStep}"
+            type="text"
+            v-model="step.nextStep"
+            :placeholder="i18n['courseNavEdit.table.placeholder']">
         </div>
 
         <div class="col-2">
           <!-- swap up -->
-          <button v-if="i > 0"
-                  type="button"
-                  class="btn btn-primary btn-sm"
-                  @click="swapUp(i)">
+          <button 
+            v-if="i > 0"
+            type="button"
+            class="btn btn-primary btn-sm"
+            @click="swapUp(i)">
             <i class="fas fa-level-up-alt"></i>
           </button>
           <!-- swap down -->
-          <button v-if="i < courseContent.length-1"
-                  type="button"
-                  class="btn btn-primary btn-sm float-right"
-                  @click="swapDown(i)">
+          <button 
+            v-if="i < courseContent.length-1"
+            type="button"
+            class="btn btn-primary btn-sm float-right"
+            @click="swapDown(i)">
             <i class="fas fa-level-down-alt"></i>
           </button>
         </div>
@@ -92,10 +107,11 @@ Dependencies:
 
         <!-- graph preview -->
         <div class="col">
-          <button type="button"
-                  class="btn btn-secondary"
-                  :disabled="formInvalid"
-                  @click="renderNavGraph">
+          <button 
+            type="button"
+            class="btn btn-secondary"
+            :disabled="formInvalid"
+            @click="renderNavGraph">
             <i class="fas fa-project-diagram"></i>
             {{ i18n['courseNavEdit.table.renewGraph'] }}
           </button>
@@ -103,14 +119,19 @@ Dependencies:
 
         <!-- store -->
         <div class="col text-right">
-          <button type="button"
-                  class="btn btn-primary"
-                  :disabled="formInvalid"
-                  @click="save">
+          <button 
+            type="button"
+            class="btn btn-primary"
+            :disabled="formInvalid"
+            @click="save">
             <span v-if="formInvalid">
-              <i class="fas fa-exclamation-triangle"></i> {{ i18n['courseNavEdit.table.missingInfo'] }}
+              <i class="fas fa-exclamation-triangle"></i> 
+              {{ i18n['courseNavEdit.table.missingInfo'] }}
             </span>
-            <span v-else><i class="fas fa-check"></i> {{ i18n['save'] }}</span>
+            <span v-else>
+              <i class="fas fa-check"></i> 
+              {{ i18n['save'] }}
+            </span>
           </button>
         </div>
 

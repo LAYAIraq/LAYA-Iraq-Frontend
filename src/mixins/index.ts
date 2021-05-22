@@ -1,3 +1,4 @@
+export { default as contentTypes } from './content-types.vue'
 export { default as listSort } from './list-sort.vue'
 export { default as locale } from './locale.vue'
 export { default as mimeTypes } from './mime-types.vue'

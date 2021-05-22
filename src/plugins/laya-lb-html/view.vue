@@ -11,6 +11,7 @@ Dependencies:
 
 <template>
   <div class="laya-wysiwyg-view">
+    <h4 v-if="showTitle">{{ title }}</h4>
     <div :id="editorId"></div>
     <button 
       type="button"
@@ -39,7 +40,7 @@ export default {
   ],
 
   data() {
-    if(Object.entries(this.$attrs).length === 1) //for preview
+    if(Object.entries(this.$attrs).length === 3) //for preview
       return {...this.$attrs}
     return {
       contents: null
@@ -78,6 +79,8 @@ export default {
       let idx = this.$route.params.step -1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.contents = preData.contents
+      this.title = preData.title
+      this.showTitle = preData.showTitle
     },
     /**
      * Function fetchContent: fetch contents from quill

@@ -36,14 +36,20 @@ Dependencies:
               no-flip
               right>
               
-              <b-dropdown-item v-for="(c,id) in content" :key="id"
-                :to="{name: 'course-detail-view',
-                params: {name, step: id+1+''}}"
+              <b-dropdown-item 
+                v-for="(c,id) in content" 
+                :key="id"
+                :to="{
+                  name: 'course-detail-view',
+                  params: { name, step: id+1+'' }
+                }"
               >
                 {{ i18n['header.listContent'] }} 
                 <b>
                   {{ id+1 }}
-                </b>
+                </b>:
+                {{ c.input.title }}
+                ({{ typeName(c.name)}})
               </b-dropdown-item>
 
             </b-dropdown>
@@ -57,12 +63,13 @@ Dependencies:
 <script>
 
 import { mapGetters } from 'vuex'
-import { locale } from '@/mixins'
+import { contentTypes, locale } from '@/mixins'
 
 export default {
   name: 'course-edit-header',
 
   mixins: [
+    contentTypes,
     locale 
   ],
 

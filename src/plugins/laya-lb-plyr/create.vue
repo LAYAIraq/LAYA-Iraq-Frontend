@@ -33,66 +33,102 @@ Dependencies: @/mixins/locale.vue
           <p v-html="i18n['layaPlyr.tooltip']"></p>
 
         </b-jumbotron>
-          <div class="form-group-row">
-            <input id="vid-id"
-                type="text"
-                v-model="src"
-                class="form-control"
-                :placeholder="i18n['layaPlyr.placeholder']"
-                @blur="checkURL"
-                >
-          </div>
 
-
-          <div class="form-group row">
+        <div class="form-group row">  
+          <div class="form-group col-10"> 
             <label 
-              for="platform-vimeo" 
-              class="col-2 col-form-label"
+              for="laya-plyr-title" 
             >
-              {{ i18n['layaPlyr.platform'] }}
+              {{ i18n['title'] }}
             </label>
             
-            <div class="col-2 form-check form-check-inline align-text-top">
-              <input 
-                id="platform-vimeo"
-                class="form-check-input"
-                type="radio"
-                name="platform"
-                :value="false"
-                v-model="youtube"
-                disabled
+            <input 
+              id="laya-plyr-title"
+              type="text"
+              v-model="title"
+              class="form-control"
+              :placeholder="i18n['titlePlaceholder']"
+            >
+          </div>
+          <div class="form-group col" id="show-title-button">
+            <div style="height: calc(1.5em + .75rem + 2px);"></div>
+            <label
+              for="show-title-tick"
+              class="col"
+            >
+              {{ i18n['showTitle'] }}
+              <input
+                id="show-title-tick"
+                type="checkbox"
+                v-model="showTitle"
               >
-              <label 
-                for="platform-vimeo" 
-                class="form-check-label"
-              >
-                {{ i18n['layaPlyr.vimeo'] }}
-              </label>
-            </div>
-            <div class="col-2 form-check form-check-inline align-text-top">
-              <input 
-                id="platform-yt"
-                class="form-check-input"
-                type="radio"
-                name="platform"
-                :value="true"
-                v-model="youtube"
-                disabled
-              >
-              <label 
-                for="platform-yt" 
-                class="form-check-label"
-              >
-                {{ i18n['layaPlyr.youtube'] }}
-              </label>
-            </div>
-
-            <div class="col form-check form-check-inline align-text-top">
-              <span class="text-danger form-control-plaintext text-right"> {{ urlMsg }}</span>
-            </div>
-
+            </label>
+              
             
           </div>
+        </div>
+
+        
+        <div class="form-group-row">
+          <input id="vid-id"
+              type="text"
+              v-model="src"
+              class="form-control"
+              :placeholder="i18n['layaPlyr.placeholder']"
+              @blur="checkURL"
+              >
+        </div>
+
+
+        <div class="form-group row">
+          <label 
+            for="platform-vimeo" 
+            class="col-2 col-form-label"
+          >
+            {{ i18n['layaPlyr.platform'] }}
+          </label>
+          
+          <div class="col-2 form-check form-check-inline align-text-top">
+            <input 
+              id="platform-vimeo"
+              class="form-check-input"
+              type="radio"
+              name="platform"
+              :value="false"
+              v-model="youtube"
+              disabled
+            >
+            <label 
+              for="platform-vimeo" 
+              class="form-check-label"
+            >
+              {{ i18n['layaPlyr.vimeo'] }}
+            </label>
+          </div>
+          <div class="col-2 form-check form-check-inline align-text-top">
+            <input 
+              id="platform-yt"
+              class="form-check-input"
+              type="radio"
+              name="platform"
+              :value="true"
+              v-model="youtube"
+              disabled
+            >
+            <label 
+              for="platform-yt" 
+              class="form-check-label"
+            >
+              {{ i18n['layaPlyr.youtube'] }}
+            </label>
+          </div>
+
+          <div class="col form-check form-check-inline align-text-top">
+            <span class="text-danger form-control-plaintext text-right"> {{ urlMsg }}</span>
+          </div>
+
+          
+        </div>
         
       </div>
 
@@ -141,7 +177,9 @@ export default {
   data() {
     return {
       src: '',
-      youtube: false
+      youtube: false,
+      title: '',
+      showTitle: false
     }
   },
   

@@ -11,8 +11,46 @@ Dependencies:
 
 <template>
 
-  <div class="laya-wysiwyg-edit bg-light">  
-    <div :id="editorId"></div>
+  <div>
+    <form>
+      <div class="form-group row">  
+        <div class="form-group col-10"> 
+          <label 
+            for="laya-wysiwyg-title" 
+          >
+            {{ i18n['title'] }}
+          </label>
+          
+          <input 
+            id="laya-wysiwyg-title"
+            type="text"
+            v-model="title"
+            class="form-control"
+            :placeholder="i18n['titlePlaceholder']"
+          >
+        </div>
+        <div class="form-group col" id="show-title-button">
+          <div style="height: calc(1.5em + .75rem + 2px);"></div>
+          <label
+            for="show-title-tick"
+            class="col"
+          >
+            {{ i18n['showTitle'] }}
+            <input
+              id="show-title-tick"
+              type="checkbox"
+              v-model="showTitle"
+            >
+          </label>
+            
+          
+        </div>
+      </div>
+    </form>
+    <div class="laya-wysiwyg-edit bg-light" >
+      <label :for="editorId"> {{ i18n['content'] }} </label>
+      <div :id="editorId"></div>
+    </div>
   </div>
 
 </template>
@@ -48,6 +86,8 @@ export default {
   data() {
     return {
       contents: null,
+      title: '',
+      showTitle: false
     }
   },
 
@@ -72,6 +112,8 @@ export default {
       let idx = this.$route.params.step -1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.contents = preData.contents
+      this.title = preData.title
+      this.showTitle = preData.showTitle
     },
 
     /**
