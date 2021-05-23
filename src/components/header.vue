@@ -49,10 +49,17 @@ Dependencies:
         </b-navbar-nav>
 
         <b-navbar-nav v-if="auth.online" class="ml-auto">
+
+          <b-nav-item to="/notifications">
+            <ly-header-notifications></ly-header-notifications>
+          </b-nav-item>
+
+
           <b-nav-item to="/profile">
             <i class="fas fa-user-alt"></i>
             {{ i18n['header.profile'] }}
           </b-nav-item>
+
           <b-nav-item @click="logout">
             <i class="fas fa-sign-out-alt"></i>
             {{ i18n['header.logout'] }}
@@ -94,12 +101,14 @@ import { mapGetters, mapState } from 'vuex'
 import http from 'axios'
 import { icons } from '@/misc/langs.js'
 import { locale } from '@/mixins'
+import lyHeaderNotifications from '@/components/header-notifications.vue'
 import lyScrollToTop from '@/components/scroll-to-top.vue'
 
 export default {
   name: 'ly-header',
 
   components: {
+    lyHeaderNotifications,
     lyScrollToTop
   },
 

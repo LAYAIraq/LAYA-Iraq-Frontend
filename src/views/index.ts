@@ -10,6 +10,7 @@ export { default as register } from './register.vue'
 export { default as login } from './login.vue'
 export { default as courses } from './courses.vue'
 // export { default as mycourses } from './mycourses.vue'
+export { default as notifications } from './notifications.vue'
 
 export { default as courseDetailView } from './course-detail.vue'
 export { default as courseEdit } from './course-edit.vue'

@@ -216,6 +216,8 @@
 	"newBlock.newContentTip": "You can create a new content block. It will have number",
 	"nextContent": "Next Content Block",
 	"noCourses": "No Courses Found",
+	"notifications": "Notifications",
+	"notifications.seeAll": "See all notifications",
 	"placeholder": "New Course Name",
 	"privacy.title": "Privacy",
 	"profile.defmedia.audio": "Audio",

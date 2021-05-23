@@ -40,6 +40,11 @@ export default new Router({
       component: views.login
     },
     {
+      path: '/notifications',
+      name: 'notification-view',
+      component: views.notifications
+    },
+    {
       path: '/profile',
       name: 'profile-view',
       component: views.profile
