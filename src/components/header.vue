@@ -50,9 +50,8 @@ Dependencies:
 
         <b-navbar-nav v-if="auth.online" class="ml-auto">
 
-          <b-nav-item to="/notifications">
-            <ly-header-notifications></ly-header-notifications>
-          </b-nav-item>
+          <ly-header-notifications></ly-header-notifications>
+          
 
 
           <b-nav-item to="/profile">

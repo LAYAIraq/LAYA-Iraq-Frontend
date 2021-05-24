@@ -1,13 +1,21 @@
 <template>
   <b-dropdown
     id="notifications-list"
-    toggle-class="list-on"
-    menu-class="list-off"
+    menu-class="notify-icon"
     variant="light"
   >
     <template slot="button-content">
-      <i class="fas fa-bell"></i>
-      {{ i18n['notifications'] }}
+      <!-- <i class="fas fa-bell"></i>
+      {{ i18n['notifications'] }} -->
+        {{ i18n['notifications'] }}
+        <i class="fas fa-bell fa-lg"></i>
+    
+      <span
+        v-if="newNotifications" 
+        class="note-badge"
+      >
+        {{ newNotesNumber }}
+      </span>
     </template>
 
     <b-dropdown-item
@@ -43,10 +51,32 @@ export default {
         'deine mutter',
         'stinkt',
         'nach fisch'
-      ] 
+      ],
+      newNotifications: true,
+      newNotesNumber: 34
     }
   }
 }
 
 
 </script>
+
+<style scoped>
+#notifications-list {
+  position: relative;
+}
+
+
+.note-badge {
+  position: absolute;
+  right: 20px;
+  top: -5px;
+  font-size: 0.7em;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 3px;
+  color: whitesmoke;
+  background-color: tomato;
+}
+
+</style>
