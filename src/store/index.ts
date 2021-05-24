@@ -27,7 +27,7 @@ export default new Vuex.Store({
     auth,
     edit,
     note,
-    profile,
+    profile
   },
   strict: debug,
 });

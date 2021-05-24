@@ -3,6 +3,7 @@
     id="notifications-list"
     toggle-class="list-on"
     menu-class="list-off"
+    variant="light"
   >
     <template slot="button-content">
       <i class="fas fa-bell"></i>

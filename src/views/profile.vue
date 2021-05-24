@@ -292,16 +292,14 @@ export default {
 
   beforeDestroy() {
     //save changes in profile
-    this.$store.dispatch('saveProfile', {
-      ...this.avatar, 
-      ...this.prefs
-    })
+    this.$store.commit('setPrefs', this.prefs)
+    this.$store.dispatch('saveProfile')
   },
 
   created() {
     // make profile settings mutable 
     this.avatar = this.profile.avatar
-    this.prefs = { ...this.profile.prefs }
+    this.prefs =  JSON.parse(JSON.stringify(this.profile.prefs))
   },
 
   methods: {
