@@ -14,6 +14,7 @@ import Vuex from 'vuex';
 /* modules */
 import auth from './modules/auth';
 import edit from './modules/edit';
+import message from './modules/message';
 import note from './modules/note';
 import profile from './modules/profile';
 
@@ -26,6 +27,7 @@ export default new Vuex.Store({
   modules: {
     auth,
     edit,
+    message,
     note,
     profile
   },

@@ -4,7 +4,7 @@
  * Creator: core
  * Date: unknown
  * Dependencies:
- *  vuex,
+ *  axios,
  *  @/misc/roles.ts
  */
 

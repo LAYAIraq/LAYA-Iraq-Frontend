@@ -43,6 +43,20 @@ export default {
   },
 
   /**
+   * Function locTime: localize given date string
+   * 
+   * Author: cmc
+   * 
+   * Last Updated: May 27, 2021
+   * @param {*} dateStr date given as string
+   * @param {*} lang language given as string
+   */
+   locTime(dateStr, lang) {
+    return new Date(Date.parse(dateStr))
+      .toLocaleTimeString(lang)
+  },
+
+  /**
    * Function categorize: push list from arr to target, if exists
    * 
    * Author: core
