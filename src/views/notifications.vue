@@ -28,6 +28,14 @@
           class="list-group-item"
           v-for="(c,i) in message.messages"
           :key="i"
+          :id="c.noteId"
+          :class="{
+            'highlighted': $route.query.id === c.noteId,
+            'noHighlight': showhighLight
+          }"
+          @click="$route.query.id === c.noteId? 
+            showhighLight = !showhighLight:
+            false"
         >
           <div class="row">
             <div class="col" :class="{
@@ -72,7 +80,8 @@ export default {
 
   data() {
     return {
-      msgList: []
+      msgList: [],
+      showhighLight: true
     }
   },
 
@@ -82,11 +91,24 @@ export default {
 
   created() {
     this.$store.dispatch('getNewMessages')
+    if (this.$route.query.hasOwnProperty('id')) {
+      this.highlightId = this.$route.query.id
+    }
+  },
+
+  mounted() {
+    // this.highlightMessage()
   },
 
   methods: {
     ...locDate,
     ...locTime,
+    highlightMessage() {
+      if (this.$route.query.hasOwnProperty('id')) {
+        const [el] = this.$refs.highlight
+        el.scrollIntoView()
+      }
+    },
     /**
      * Function markAsRead: set 'read' boolean in message's data
      * Author: cmc
@@ -104,3 +126,23 @@ export default {
 
 }
 </script>
+
+<style scoped>
+
+.ly-notifications {
+  overflow-y: scroll;
+}
+
+.highlighted {
+  background-color: tomato;
+  transition: background-color .5s ease-out;
+}
+.highlighted:hover {
+  background-color: transparent;
+}
+
+.noHighlight { 
+  background-color: transparent;
+}
+
+</style>

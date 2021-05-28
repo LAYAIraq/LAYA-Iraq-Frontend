@@ -13,10 +13,27 @@ import roles from '../../misc/roles';
 
 export default {
   state: {
-    messages: []
+    messages: [],
+    unreadMessages: false,
+    unreadMsgNo: 0
   },
   getters: {
+    /** 
+     * messages: return messages property
+     * Author: cmc
+     * Last Updated: May 27, 2021
+    */
+    messages(state: { messages: Array<object>}) {
+      return state.messages
+    },
 
+    unreadMessages(state: { unreadMessages: boolean}) {
+      return state.unreadMessages
+    },
+
+    unreadMsgNo(state: { unreadMsgNo: number }) {
+      return state.unreadMsgNo
+    }
   },
   mutations: {
     /**
@@ -29,9 +46,10 @@ export default {
      */
     appendMsg(state: { 
       messages: Array<object>, 
-      msgIds: Array<string>
+      unreadMessages: boolean,
+      unreadMsgNo: number
       },
-      msg: { noteId: string, data: object }) {
+      msg: { noteId: string, data: { read: boolean } }) {
       let present = false
       // check if message exists already
       state.messages.forEach((elem: { noteId: string }) => {
@@ -44,6 +62,10 @@ export default {
           // message has been loaded to store before
           if (msg.data.hasOwnProperty('read')) {
             state.messages.push(msg)
+            if (!msg.data.read) {
+              state.unreadMessages = true
+              state.unreadMsgNo++
+            }
           }
           // first time store handles message,
           // add 'read' boolean
@@ -57,6 +79,8 @@ export default {
               data: newData
             }
             state.messages.push(newMsg)
+            state.unreadMessages = true
+            state.unreadMsgNo++
           }
           
         }
@@ -70,12 +94,12 @@ export default {
      */
     readNotification(state: { messages: Array<object> }, 
       msgId: string) {
-        state.messages.forEach((elem: { noteId: string, data: { read: boolean } }) => {
-          if(elem.noteId === msgId) {
-            elem.data.read = true
-          }
-        })
-      }
+      state.messages.forEach((elem: { noteId: string, data: { read: boolean } }) => {
+        if(elem.noteId === msgId) {
+          elem.data.read = true
+        }
+      })
+    }
   },
   actions: {
 

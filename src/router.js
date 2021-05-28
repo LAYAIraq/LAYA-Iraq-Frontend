@@ -42,7 +42,8 @@ export default new Router({
     {
       path: '/notifications',
       name: 'notification-view',
-      component: views.notifications
+      component: views.notifications,
+      props: true
     },
     {
       path: '/profile',
