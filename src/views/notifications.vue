@@ -1,26 +1,25 @@
 <template>
   <div class="ly-notifications">
     <div class="container">
-      <div class="row">
+      <div class="row mt-5 mb-5">
         <div class="col">
           <h1 class="text-center">
             {{ i18n['notifications'] }}
           </h1>
         </div>
       </div>
-      <div class="row">
+      <div class="row font-weight-bold mb-2">
         <div class="col">
-          {{ i18n['type'] }} 
-        </div>
-        <div class="col">
+          <i class="far fa-envelope"></i>
           {{ i18n['message'] }}
         </div>
-        <div class="col">
+        <div class="col-sm-3">
+          <i class="fas fa-clock"></i>
           {{ i18n['timestamp'] }}
         </div>
-        <div class="col">
+        <div class="col-sm-4">
           <i class="fas fa-eye"></i>
-          {{ i18n['markAsRead'] }}
+          {{ i18n['message.read'] }}
         </div>
       </div>
       <ul class="list-group">
@@ -37,28 +36,60 @@
             showhighLight = !showhighLight:
             false"
         >
-          <div class="row">
-            <div class="col" :class="{
-                'font-italic': c.data.read,
-                'font-weight-bold': !c.data.read
-                }">
-              {{ c.type }}
-            </div>
-            <div class="col">
-              {{ i18n['placeholder'] }}
-            </div>
-            <div class="col">
-              {{ locDate(c.time) }},
-              {{ locTime(c.time) }}
-            </div>
-            <div class="col">
-              <button 
-                class="btn"
-                variant="primary"
-                @click="markAsRead(c)"
+          <div class="message-toggle" >
+            <div class="row">
+              <div class="col" 
+                :class="{
+                  'font-italic': c.data.read,
+                  'font-weight-bold': !c.data.read
+                }"
               >
-                DO IT
-              </button>
+                <i :class="{
+                  'fas fa-envelope-open': c.data.read,
+                  'fas fa-envelope': !c.data.read
+                }"></i>
+                {{ i18n['placeholder'] }}
+              </div>
+              <div class="col-sm-3">
+                {{ locDate(c.time) }},
+                {{ locTime(c.time) }}
+              </div>
+              <div class="col-sm-4">
+                <b-button-group>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    variant="dark"
+                    v-b-toggle="`collapse-${i}`"
+                  >
+                    <small>
+                      {{ i18n['message.read'] }}
+                      <i class="fas fa-chevron-down"></i>
+                    </small>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    variant="dark"
+                    @click="markAsRead(c)"
+                  >
+                    <small>
+                      {{ i18n['markAsRead'] }}
+                      <i class="far fa-check-circle"></i>
+                    </small>
+                  </button>
+                </b-button-group>
+                 
+              </div>
+            </div>
+            <div class="row">
+              <b-collapse :id="`collapse-${i}`" class="w-100">
+                <b-card class="mt-2 w-100">
+                
+                  KEKW
+                </b-card>
+              </b-collapse>
+                
             </div>
           </div>
         </li>

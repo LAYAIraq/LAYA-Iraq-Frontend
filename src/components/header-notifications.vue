@@ -37,15 +37,32 @@
         {{ i18n['notifications.seeAll'] }}
       </router-link>
     </b-dropdown-item>
+
+    <b-dropdown-item>
+      <b-button
+        variant="info"
+        @click="markAllAsRead"
+      >
+        {{ i18n['markAllAsRead'] }}
+      </b-button>
+    </b-dropdown-item>
+    <!-- <b-dropdown-item>
+      <ly-on-off :check="doNotDisturb"></ly-on-off>
+    </b-dropdown-item> -->
   </b-dropdown>
 </template>
 
 <script>
 import { locale } from '@/mixins'
 import { mapGetters, mapState } from 'vuex'
+// import lyOnOff from '@/components/on-off-switch.vue'
 
 export default {
   name: 'lyHeaderNotifications',
+
+  // components: {
+  //   lyOnOff
+  // },
 
   mixins: [
     locale
@@ -58,6 +75,7 @@ export default {
 
   data() {
     return {
+      doNotDisturb: false,
       newNotifications: false,
       newNotesNumber: 0,
       notifyShortList: []
@@ -76,6 +94,14 @@ export default {
   },
 
   methods: {
+    /** 
+     * Function markAllAsRead: set allRead commit in store
+     * Author: cmc
+     * Last Updated: May 28, 2021
+    */
+    markAllAsRead() {
+      this.$store.commit('allRead')
+    },
     /**
      * Function setShortList: take first 5 elements of
      *  notifications for dropdown

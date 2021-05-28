@@ -18,11 +18,6 @@ export default {
     unreadMsgNo: 0
   },
   getters: {
-    /** 
-     * messages: return messages property
-     * Author: cmc
-     * Last Updated: May 27, 2021
-    */
     messages(state: { messages: Array<object>}) {
       return state.messages
     },
@@ -36,6 +31,25 @@ export default {
     }
   },
   mutations: {
+    /**
+     * function allRead: mark all messages in state as read
+     * Author: cmc
+     * Last Updated: May 28, 2021
+     * @param state state variables
+     */
+    allRead(state: { 
+      messages: Array<object>,
+      unreadMessages: boolean,
+      unreadMsgNo: number
+    }) {
+      state.messages.forEach((elem: { 
+        data: { read: boolean }
+      }) => {
+        elem.data.read = true
+      })
+      state.unreadMessages = false
+      state.unreadMsgNo = 0
+    },
     /**
      * function appendMsg: append message to state 
      *  given it's not present yet
@@ -92,11 +106,19 @@ export default {
      * @param state state variable
      * @param msgId id of message to be marked as read
      */
-    readNotification(state: { messages: Array<object> }, 
+    readNotification(state: { 
+      messages: Array<object>,
+      unreadMessages: boolean,
+      unreadMsgNo: number 
+    }, 
       msgId: string) {
       state.messages.forEach((elem: { noteId: string, data: { read: boolean } }) => {
         if(elem.noteId === msgId) {
           elem.data.read = true
+          state.unreadMsgNo--
+          if (state.unreadMsgNo === 0) {
+            state.unreadMessages = false
+          }
         }
       })
     }
