@@ -43,7 +43,7 @@ Dependencies:
 </template>
 
 <script>
-import 'ableplayer'
+// import 'ableplayer'
 import { mapGetters } from 'vuex'
 import 'ableplayer/build/ableplayer.min.css' //neccessary, otherwise ableplayer is butchered
 import { locale } from '@/mixins'

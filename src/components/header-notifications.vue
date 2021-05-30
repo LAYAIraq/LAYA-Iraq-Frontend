@@ -19,14 +19,15 @@
     </template>
 
     <b-dropdown-item
-      v-for="(item, i) in notifyShortList"
+      v-for="(note, i) in notifyShortList"
       :key="i"
     >
       <router-link
-        :to="'/notifications?id=' + item.noteId"
-        :highlight="item.noteId"
+        :to="'/notifications?id=' + note.noteId"
+        :highlight="note.noteId"
       >
-        {{ item.type }}
+        {{ note.type }}
+        {{ timeSince(note.time) }}
       </router-link>
     </b-dropdown-item>
 
@@ -53,7 +54,7 @@
 </template>
 
 <script>
-import { locale } from '@/mixins'
+import { locale, time } from '@/mixins'
 import { mapGetters, mapState } from 'vuex'
 // import lyOnOff from '@/components/on-off-switch.vue'
 
@@ -65,7 +66,8 @@ export default {
   // },
 
   mixins: [
-    locale
+    locale,
+    time
   ],
 
   computed: {

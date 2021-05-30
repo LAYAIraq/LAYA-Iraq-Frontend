@@ -1,5 +1,6 @@
 <script>
 export default {
+
   methods: {
     /**
      * function timeSince: returns a worded timestamp
@@ -9,22 +10,35 @@ export default {
      */
     timeSince(timeStamp) {
       let now = new Date()
-      timeStamp = Date.parse(timeStamp)
-      let secondsPast = (now.getTime() - timeStamp) / 1000;
+      let newTimeStamp = Date.parse(timeStamp)
+      let secondsPast = (now - newTimeStamp) / 1000;
+      let timePast = 0
       if (secondsPast < 60) {
-        return parseInt(secondsPast) + 's';
+        timePast = parseInt(secondsPast)
+        return this.i18n['time.secondsPast'].replace('<T>', timePast)
       }
-      if (secondsPast < 3600) {
-        return parseInt(secondsPast / 60) + 'm';
+      else if (secondsPast < 3600) {
+        timePast = parseInt(secondsPast / 60)
+        return this.i18n['time.minutesPast'].replace('<T>', timePast)
       }
-      if (secondsPast <= 86400) {
-        return parseInt(secondsPast / 3600) + 'h';
+      else if (secondsPast <= 86400) {
+        timePast = parseInt(secondsPast / 3600)
+        return this.i18n['time.hoursPast'].replace('<T>', timePast)
       }
-      if (secondsPast > 86400) {
-        let day = timeStamp.getDate();
-        let month = timeStamp.toDateString().match(/ [a-zA-Z]*/)[0].replace(" ", "");
-        let year = timeStamp.getFullYear() == now.getFullYear() ? "" : " " + timeStamp.getFullYear();
-        return day + " " + month + year;
+      else if (secondsPast <= 604800) {
+        timePast = parseInt(secondsPast / 86400)
+        return this.i18n['time.daysPast'].replace('<T>', timePast)
+      }
+      else if (secondsPast <= 2592000) {
+        timePast = parseInt(secondsPast / 604800)
+        return this.i18n['time.weeksPast'].replace('<T>', timePast)
+      }
+      else if (secondsPast <= 31104000) {
+        timePast = parseInt(secondsPast / 2592000)
+        return this.i18n['time.monthsPast'].replace('<T>', timePast)
+      }
+      else {
+        return this.i18n['time.moreThanYear']
       }
     },
 

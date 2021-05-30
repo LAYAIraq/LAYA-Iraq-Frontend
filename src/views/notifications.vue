@@ -25,14 +25,14 @@
       <ul class="list-group">
         <li
           class="list-group-item"
-          v-for="(c,i) in message.messages"
+          v-for="(note ,i) in message.messages"
           :key="i"
-          :id="c.noteId"
+          :id="note.noteId"
           :class="{
-            'highlighted': $route.query.id === c.noteId,
+            'highlighted': $route.query.id === note.noteId,
             'noHighlight': showhighLight
           }"
-          @click="$route.query.id === c.noteId? 
+          @click="$route.query.id === note.noteId? 
             showhighLight = !showhighLight:
             false"
         >
@@ -40,20 +40,20 @@
             <div class="row">
               <div class="col" 
                 :class="{
-                  'font-italic': c.data.read,
-                  'font-weight-bold': !c.data.read
+                  'font-italic': note.data.read,
+                  'font-weight-bold': !note.data.read
                 }"
               >
                 <i :class="{
-                  'fas fa-envelope-open': c.data.read,
-                  'fas fa-envelope': !c.data.read
+                  'fas fa-envelope-open': note.data.read,
+                  'fas fa-envelope': !note.data.read
                 }"></i>
                 {{ i18n['placeholder'] }}
               </div>
               <div class="col-sm-3">
-                {{ timeSince(c.time) }}
-                {{ locDate(c.time) }},
-                {{ locTime(c.time) }}
+                {{ timeSince(note.time) }}
+                {{ locDate(note.time) }},
+                {{ locTime(note.time) }}
               </div>
               <div class="col-sm-4">
                 <b-button-group>
