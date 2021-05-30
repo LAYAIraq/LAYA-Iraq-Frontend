@@ -21,3 +21,12 @@ sast:
   stage: test
 include:
 - template: Auto-DevOps.gitlab-ci.yml
+
+test:
+  stage: test
+  script: npm run lint
+
+build:
+  stage: build
+  script: docker build .
+
