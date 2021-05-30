@@ -53,9 +53,9 @@ export default {
      * @param {*} lang interface language, hard set as 'de'
      * @returns Localized date string
      */
-    shortDate(dateStr, lang = 'de') {
+    shortDate(dateStr) {
       return new Date(Date.parse(dateStr))
-        .toLocaleDateString(lang, {
+        .toLocaleDateString(this.profileLang, {
           day: '2-digit',
           month: '2-digit',
           year: '2-digit'
@@ -71,9 +71,9 @@ export default {
      * @param {*} dateStr date given as string
      * @param {*} lang language given as string
      */
-    locDate(dateStr, lang) {
+    locDate(dateStr) {
       return new Date(Date.parse(dateStr))
-        .toLocaleDateString(lang)
+        .toLocaleDateString(this.profileLang)
     },
 
     /**
@@ -85,9 +85,12 @@ export default {
      * @param {*} dateStr date given as string
      * @param {*} lang language given as string
      */
-    locTime(dateStr, lang) {
+    locTime(dateStr) {
       return new Date(Date.parse(dateStr))
-        .toLocaleTimeString(lang)
+        .toLocaleTimeString(this.profileLang, {
+          hour: '2-digit',
+          minute: '2-digit'
+        })
     },
 
     /**

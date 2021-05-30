@@ -114,8 +114,10 @@ export default {
       msgId: string) {
       state.messages.forEach((elem: { noteId: string, data: { read: boolean } }) => {
         if(elem.noteId === msgId) {
-          elem.data.read = true
-          state.unreadMsgNo--
+          if (!elem.data.read) {
+            elem.data.read = true
+            state.unreadMsgNo--
+          }
           if (state.unreadMsgNo === 0) {
             state.unreadMessages = false
           }
@@ -126,15 +128,17 @@ export default {
   actions: {
 
     /**
-     * function getNewMessages: get notifications for logged user
+     * function getInitialMessages: get notifications for logged user
      * Author: cmc
-     * Last Updated: May 26, 2021
+     * Last Updated: May 30, 2021
      * @param param0 state property 
      */
-    getNewMessages({ commit, state, rootState }) {
+    getInitialMessages({ commit, state, rootState }) {
       http.get('notifications', { 
         params: {
           filter: {
+            limit: 10,
+            order: 'time DESC',
             where: {
               userId: rootState.auth.userId
             }
@@ -147,6 +151,26 @@ export default {
         })
       })
       .catch(err => console.error(err))
-    }
+    },
+
+    updateNoteData({ state }) {
+        let requests = []
+        state.messages.forEach((elem: { 
+          noteId: string, 
+          data: {
+            read: boolean
+          } }) => {
+          const dataWrapper = {
+            data: {
+              read: elem.data.read
+            }
+          }
+          requests.push(
+            http.patch(`notifications/${elem.noteId}`, dataWrapper)
+          )
+        })
+        http.all(requests)
+          .catch(err => console.error(err))
+      }
   } 
 }

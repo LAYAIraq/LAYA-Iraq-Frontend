@@ -71,8 +71,7 @@ export default {
   ],
 
   computed: {
-    ...mapGetters(['messages', 'unreadMessages', 'unreadMsgNo']),
-    ...mapState(['message'])
+    ...mapGetters(['messages', 'unreadMessages', 'unreadMsgNo'])
   },
 
   data() {
@@ -91,8 +90,12 @@ export default {
   },
 
   created() {
-    this.$store.dispatch('getNewMessages')
+    this.$store.dispatch('getInitialMessages')
     this.setShortlist()
+  },
+
+  beforeDestroy() {
+    this.$store.dispatch('updateNoteData')
   },
 
   methods: {

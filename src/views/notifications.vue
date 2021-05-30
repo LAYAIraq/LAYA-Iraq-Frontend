@@ -17,15 +17,23 @@
           <i class="fas fa-clock"></i>
           {{ i18n['timestamp'] }}
         </div>
-        <div class="col-sm-4">
-          <i class="fas fa-eye"></i>
-          {{ i18n['message.read'] }}
+        <div class="col-sm-4 text-nowrap">
+            <i class="fas fa-eye"></i>
+            {{ i18n['message.read'] }}
+            <button
+              type="button"
+              class="btn btn-info ml-1"
+              :disabled="!unreadMessages"
+              @click="markAllAsRead"
+            >
+              {{ i18n['markAllAsRead'] }}
+            </button>
         </div>
       </div>
       <ul class="list-group">
         <li
           class="list-group-item"
-          v-for="(note ,i) in message.messages"
+          v-for="(note ,i) in messages"
           :key="i"
           :id="note.noteId"
           :class="{
@@ -51,9 +59,14 @@
                 {{ i18n['placeholder'] }}
               </div>
               <div class="col-sm-3">
-                {{ timeSince(note.time) }}
-                {{ locDate(note.time) }},
-                {{ locTime(note.time) }}
+                <span 
+                  class="time-note"
+                  :title="noteTime(note.time)"
+                  v-b-tooltip.top
+                >
+                  {{ timeSince(note.time) }}
+                </span>
+                
               </div>
               <div class="col-sm-4">
                 <b-button-group>
@@ -70,13 +83,20 @@
                   </button>
                   <button
                     type="button"
-                    class="btn btn-secondary"
+                    class="btn"
+                    :class="note.data.read ? 
+                      'btn-light border-secondary' :
+                      'btn-secondary'"
                     variant="dark"
-                    @click="markAsRead(c)"
+                    :disabled="note.data.read"
+                    @click="markAsRead(note)"
                   >
                     <small>
                       {{ i18n['markAsRead'] }}
-                      <i class="far fa-check-circle"></i>
+                      <i 
+                        class="far fa-check-circle" 
+                        :class="note.data.read? 'text-success': ''"
+                      ></i>
                     </small>
                   </button>
                 </b-button-group>
@@ -100,7 +120,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import { locale, time } from '@/mixins'
 
 export default {
@@ -119,7 +139,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['message'])
+    ...mapGetters(['messages', 'unreadMessages'])
   },
 
   created() {
@@ -131,6 +151,10 @@ export default {
 
   mounted() {
     // this.highlightMessage()
+  },
+
+  beforeDestroy() {
+    this.$store.dispatch('updateNoteData')
   },
 
   methods: {
@@ -153,6 +177,25 @@ export default {
      */
     markAsRead(msg) {
       this.$store.commit('readNotification', msg.noteId)
+    },
+
+    /** 
+     * Function markAllAsRead: set allRead commit in store
+     * Author: cmc
+     * Last Updated: May 28, 2021
+    */
+    markAllAsRead() {
+      this.$store.commit('allRead')
+    },
+
+    /**
+     * Function noteTime: return timestamp in locale
+     * Author: cmc
+     * Last Updated: May 30, 2021
+     * @param time timestamp
+     */
+    noteTime(time) {
+      return `${this.locDate(time)}, ${this.locTime(time)}`
     }
   }
 
