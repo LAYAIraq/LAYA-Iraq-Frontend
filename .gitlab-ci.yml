@@ -22,6 +22,10 @@ sast:
 include:
 - template: Auto-DevOps.gitlab-ci.yml
 
+test: 
+  stage: test
+  allow_failure: true
+
 build:
   stage: build
   script: docker build .
