@@ -21,3 +21,12 @@ sast:
   stage: test
 include:
 - template: Auto-DevOps.gitlab-ci.yml
+
+
+build:
+  stage: build
+  before_script:
+    - apt update && apt install npm && npm i
+  script: npm run build
+
+
