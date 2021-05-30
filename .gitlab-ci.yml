@@ -22,6 +22,9 @@ sast:
 include:
 - template: Auto-DevOps.gitlab-ci.yml
 
+test:
+  stage: test
+  script: npm run lint
 
 build:
   stage: build
