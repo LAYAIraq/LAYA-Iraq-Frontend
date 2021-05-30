@@ -56,13 +56,14 @@ Dependencies:
 
 <script>
 import http from 'axios'
-import { locale } from '@/mixins'
+import { locale, time } from '@/mixins'
 
 export default {
   name: 'course-stats',
 
   mixins: [ 
-    locale
+    locale,
+    time
   ],
 
   data() {

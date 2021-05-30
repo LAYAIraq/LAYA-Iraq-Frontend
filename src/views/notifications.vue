@@ -51,6 +51,7 @@
                 {{ i18n['placeholder'] }}
               </div>
               <div class="col-sm-3">
+                {{ timeSince(c.time) }}
                 {{ locDate(c.time) }},
                 {{ locTime(c.time) }}
               </div>
@@ -100,14 +101,15 @@
 
 <script>
 import { mapState } from 'vuex'
-import { locale } from '@/mixins'
-import locDate from '@/misc/utils.js'
-import locTime from '@/misc/utils.js'
+import { locale, time } from '@/mixins'
 
 export default {
   name: 'laya-notifications',
 
-  mixins: [locale],
+  mixins: [
+    locale,
+    time
+  ],
 
   data() {
     return {
@@ -132,8 +134,11 @@ export default {
   },
 
   methods: {
-    ...locDate,
-    ...locTime,
+    /**
+     * function highlightMessage: scroll highlighted message into view
+     * Author: cmc
+     * Last Updated: May 30, 2021
+     */
     highlightMessage() {
       if (this.$route.query.hasOwnProperty('id')) {
         const [el] = this.$refs.highlight
