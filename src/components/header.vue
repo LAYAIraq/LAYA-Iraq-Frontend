@@ -154,6 +154,8 @@ export default {
         .then(({data}) => {
           let lang = data.substring(0, data.indexOf('-'))
           store.commit('setLang', lang)
+          const html = document.documentElement
+          html.setAttribute('lang', lang)
         })
         .catch(() => {
           store.commit('setLang', 'de')
