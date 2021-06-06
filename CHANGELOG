@@ -1,0 +1,6 @@
+# Changes
+
+## v1.2.2
+
+- Added Arabic Localization
+- Some fixes for display in rtl (right-to-left) locale
