@@ -3,18 +3,21 @@ Filename: privacy.vue
 Use: Show privacy and legal notices
 Creator: core
 Date: unknown
-Dependencies: @/i18n/privacy
+Dependencies: @/mixins/locale.vue
 -->
 
 <template>
-  <div class="privacy-view">
+  <div 
+    class="privacy-view"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
 
     <div class="container">
       <div class="row">
         <div class="col">
 
           <div style="height: 2rem"></div>
-          <h1><b>{{ i18n.title }}</b></h1>
+          <h1><b>{{ i18n['privacy.title'] }}</b></h1>
 
         </div>
       </div>
@@ -23,25 +26,17 @@ Dependencies: @/i18n/privacy
 </template>
 
 <script>
-import * as i18n from '@/i18n/privacy'
+import { locale } from '@/mixins'
+
 export default {
   name: 'privacy-view',
+
+  mixins: [
+    locale
+  ],
+
   mounted () {
     window.scroll(0, 0)
-  },
-  computed: {
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 21, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.$store.state.profile.lang]
-    }
   }
 }
 </script>

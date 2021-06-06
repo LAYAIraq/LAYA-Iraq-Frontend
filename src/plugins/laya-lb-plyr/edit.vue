@@ -5,111 +5,163 @@ Creator: core
 Date: unknown
 Dependencies:
   vuex,
-  @/i18n/plugins/misc/laya-plyr
+  @/mixins/locale.vue
 -->
 
 <template>
 
-  <div class="laya-plyr-edit">
+  <div 
+    class="laya-plyr-edit"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
 
     <form>
       <div class="form-group">
-        <label for="vid-id"><h4>{{ i18n.video }}</h4></label> 
-        <i id="questionmark" class="fas fa-question-circle" @click="toggleTip" 
-          :title="i18n.showTip" v-b-tooltip.left></i>
-       <!--  <div class="helptext" v-if="tooltipOn">
-          <i class="far fa-clipboard"></i><h4>{{ i18n.tipHeadline }}</h4>
-          <p  v-html="i18n.tooltip"></p>
-        </div> -->
+        <label for="vid-id">
+          <h4>
+            {{ i18n['layaPlyr.name'] }}
+          </h4>
+        </label> 
+        <i 
+          id="questionmark" 
+          class="fas fa-question-circle" 
+          @click="toggleTip" 
+          :title="i18n['showTip']" 
+          v-b-tooltip.left
+        ></i>
+
         <b-jumbotron 
             v-if="tooltipOn"
-            :header="i18n.video" :lead="i18n.tipHeadline">
+            :header="i18n['layaPlyr.name']" 
+            :lead="i18n['tipHeadline']">
           <hr class="my-4">
-          <p v-html="i18n.tooltip"></p>
+          <p v-html="i18n['layaPlyr.tooltip']"></p>
 
         </b-jumbotron>
-          <div class="form-group-row">
-            <input id="vid-id"
-                type="text"
-                v-model="src"
-                class="form-control"
-                :placeholder="i18n.placeholder"
-                @blur="checkURL"
-                >
-          </div>
-
-
-          <div class="form-group row">
-            <label for="platform-vimeo" class="col-2 col-form-label">{{ i18n.platform }}</label>
-            
-            <div class="col-2 form-check form-check-inline align-text-top">
-              <input id="platform-vimeo"
-                    class="form-check-input"
-                    type="radio"
-                    name="platform"
-                    :value="false"
-                    v-model="youtube"
-                    disabled
-                    >
-              <label for="platform-vimeo" class="form-check-label">{{ i18n.vimeo }}</label>
-            </div>
-            <div class="col-2 form-check form-check-inline align-text-top">
-              <input id="platform-yt"
-                    class="form-check-input"
-                    type="radio"
-                    name="platform"
-                    :value="true"
-                    v-model="youtube"
-                    disabled
-                    >
-              <label for="platform-yt" class="form-check-label">{{ i18n.youtube }}</label>
-            </div>
-
-            <div class="col form-check form-check-inline align-text-top">
-              <span class="text-danger form-control-plaintext text-right"> {{ urlMsg }}</span>
-            </div>
-
-            
-          </div>
         
-      </div>
+        <div class="form-group row">  
+          <div class="form-group col-10"> 
+            <label 
+              for="laya-wysiwyg-title" 
+            >
+              {{ i18n['title'] }}
+            </label>
+            
+            <input 
+              id="laya-wysiwyg-title"
+              type="text"
+              v-model="title"
+              class="form-control"
+              :placeholder="i18n['titlePlaceholder']"
+            >
+          </div>
+          <div class="form-group col" id="show-title-button">
+            <div style="height: calc(1.5em + .75rem + 2px);"></div>
+            <label
+              for="show-title-tick"
+              class="col"
+            >
+              {{ i18n['showTitle'] }}
+              <input
+                id="show-title-tick"
+                type="checkbox"
+                v-model="showTitle"
+              >
+            </label>
+              
+            
+          </div>
+        </div>
 
+        <div class="form-group-row">
+          <input id="vid-id"
+              type="text"
+              v-model="src"
+              class="form-control"
+              :placeholder="i18n['layaPlyr.placeholder']"
+              @blur="checkURL"
+              >
+        </div>
+
+        
+
+
+        <div class="form-group row">
+          <label 
+            for="platform-vimeo" 
+            class="col-2 col-form-label"
+          >
+            {{ i18n['layaPlyr.platform'] }}
+          </label>
+          
+          <div class="col-2 form-check form-check-inline align-text-top">
+            <input 
+              id="platform-vimeo"
+              class="form-check-input"
+              type="radio"
+              name="platform"
+              :value="false"
+              v-model="youtube"
+              disabled
+            >
+            <label 
+              for="platform-vimeo" 
+              class="form-check-label"
+            >
+              {{ i18n['layaPlyr.vimeo'] }}
+            </label>
+          </div>
+          <div class="col-2 form-check form-check-inline align-text-top">
+            <input 
+              id="platform-yt"
+              class="form-check-input"
+              type="radio"
+              name="platform"
+              :value="true"
+              v-model="youtube"
+              disabled
+            >
+            <label 
+              for="platform-yt" 
+              class="form-check-label"
+            >
+              {{ i18n['layaPlyr.youtube'] }}
+            </label>
+          </div>
+
+          <div class="col form-check form-check-inline align-text-top">
+            <span class="text-danger form-control-plaintext text-right"> {{ urlMsg }}</span>
+          </div> 
+        </div>
+      </div>
     </form>
-      
   </div>
 
 </template>
 
 <script>
-import * as i18n from '@/i18n/plugins/misc/laya-plyr'
+import { locale, tooltipIcon } from '@/mixins'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'laya-plyr-edit',
+
+  mixins: [
+    locale,
+    tooltipIcon
+  ],
+
   data() {
     return {
       src: '',
-      tooltipOn: false,
-      youtube: false
+      youtube: false,
+      title: '',
+      showTitle: false
     }
   },
-  created() {
-    this.fetchData()
-  },
-  computed: {
-    ...mapGetters(['content', 'profileLang']),
 
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 20, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.$store.state.profile.lang]
-    },
+  computed: {
+    ...mapGetters(['content']),
 
     /**
      * urlMsg: return warning if URL not supported
@@ -119,7 +171,7 @@ export default {
      * Last Updated: January 17, 2021
      */
     urlMsg () {
-      return this.correctURL? '' : this.i18n.wrongURL
+      return this.correctURL? '' : this.i18n['layaPlyr.wrongURL']
     },
 
     /**
@@ -133,18 +185,12 @@ export default {
       return (this.src.includes('youtube') || this.src.includes('vimeo') )
     }
   },
-  methods: {
 
-    /**
-     * Function toggleTip: toggle tooltipOn boolean
-     * 
-     * Author: cmc
-     * 
-     * Last updated: unknown
-     */
-    toggleTip() {
-      this.tooltipOn = !this.tooltipOn
-    },
+  created() {
+    this.fetchData()
+  },
+
+  methods: {
 
     /**
      * function checkURL: checks if URL is on yt, sets boolean if it is
@@ -171,6 +217,8 @@ export default {
       let preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.src = preData.src
       this.youtube = preData.youtube
+      this.title = preData.title
+      this.showTitle = preData.showTitle
     }
   },
 }

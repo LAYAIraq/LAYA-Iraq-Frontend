@@ -5,7 +5,7 @@ Creator: cmc
 Date: October 27, 2020
 Dependencies: 
   vuex,
-  @/i18n/course-detail/,
+  @/mixins/locale.vue,
   ./course-edit-tools
 -->
 <template>
@@ -18,7 +18,11 @@ Dependencies:
     <!-- mounts course-edit-wrapper & edit-course-nav -->
     <router-view @saved="$bvToast.show('author-toast')"></router-view>
 
-    <div class="container" v-if="$route.name == 'course-detail-view'">
+    <div 
+      class="container"
+      :class="langIsAr ? 'text-right' : ''"
+      v-if="$route.name == 'course-detail-view'"
+    >
 
       <course-edit-content :name="name" :step="step"></course-edit-content>
       
@@ -40,21 +44,22 @@ Dependencies:
 
     </div>
 
-    <b-toast id="author-toast"
-      :title="i18n.bToast.title"
+    <b-toast 
+      id="author-toast"
+      :title="i18n['authorTools']"
       static
       variant="success"
       auto-hide-delay="1500"
       class="author-toast"
-      > 
-      {{ i18n.bToast.text }}
+    > 
+      {{ i18n['successfulSave'] }}
     </b-toast>
 
   </div>
 </template>
 
 <script>
-import * as i18n from '@/i18n/course-detail/'
+import { locale } from '@/mixins'
 import { mapState, mapGetters } from 'vuex'
 import { 
   courseCopy,
@@ -84,25 +89,16 @@ export default {
     courseRename,
     courseStats
   },
+  mixins: [
+    locale
+  ],
   props: {
     name: String,
     step: String
   },
   computed: {
     ...mapState(['edit']),
-    ...mapGetters(['profileLang', 'content', 'course']),
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 21, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
-    }
+    ...mapGetters(['content', 'course']),
   },
   methods: {
 

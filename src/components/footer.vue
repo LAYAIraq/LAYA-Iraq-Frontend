@@ -3,11 +3,14 @@ Filename: footer.vue
 Use: Shows the whole footer area
 Creator: core
 Date: unknown
-Dependencies: @/i18n/footer
+Dependencies: @/mixins/locale.vue
 -->
 
 <template>
-  <footer id="ly-footer">
+  <footer 
+    id="ly-footer"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
     <div class="container" style="border-top: 0.2rem solid black; padding-top: 1rem;">
       <div class="row">
         <div class="col-9 col-lg-9">
@@ -43,7 +46,7 @@ Dependencies: @/i18n/footer
                 <b>Powered by LAYA</b>
               </p>
               <p>
-                <b>{{ i18n.laya }}</b>
+                <b>{{ i18n['footer.laya'] }}</b>
               </p>
             </div>
           </div>
@@ -51,11 +54,11 @@ Dependencies: @/i18n/footer
           <div class="row">
             <div class="col">
               <router-link :to="{ name: 'imprint-view' }">
-                <u class="text-dark">{{ i18n.imprint }}</u>
+                <u class="text-dark">{{ i18n['imprint'] }}</u>
               </router-link>
               <span>/</span>
               <router-link :to="{ name: 'privacy-view' }">
-                <u class="text-dark">{{ i18n.privacy }}</u>
+                <u class="text-dark">{{ i18n['footer.privacy'] }}</u>
               </router-link>
             </div>
           </div>
@@ -77,19 +80,14 @@ Dependencies: @/i18n/footer
 </template>
 
 <script>
-import * as i18n from '@/i18n/footer'
+import { locale } from '@/mixins'
 
 export default {
-  name: "ly-footer",
-  data() {
-    return {}
-  },
-  computed: {
-    i18n() {
-      return i18n[this.$store.state.profile.lang]
-    }
-  },
-  components: {}
+  name: 'ly-footer',
+
+  mixins: [
+    locale
+  ]
 }
 </script>
 

@@ -6,21 +6,35 @@ Date: unknown
 Dependencies: 
   plyr,
   vuex,
-  @/i18n/plugins/misc/laya-plyr
+  @/mixins/locale.vue
 -->
 
 <template>
   <div class="ly-plyr-view">
 
-    <div :id="playerId" :data-plyr-provider="platform" :data-plyr-embed-id="src" class="plyr__video-embed">
+    <h4 v-if="showTitle">{{ title }}</h4>
+
+    <div 
+      :id="playerId" 
+      :data-plyr-provider="platform" 
+      :data-plyr-embed-id="src" 
+      class="plyr__video-embed">
     </div>
 
-    <button type="button"
-            class="btn btn-primary mt-3 d-block ml-auto"
-            @click="onFinish[0]() || {}">
-      <span>{{ i18n.nextContent }}<i class="fas fa-arrow-right"></i></span>
-    </button>
-  
+    <div class="row">
+      <button 
+        type="button"
+        class="btn btn-primary mt-3 d-block ml-auto"
+        :class="langIsAr? 'float-right': 'float-left'"
+        @click="onFinish[0]() || {}">
+        <span>
+          {{ i18n['nextContent'] }}
+          <i :class="langIsAr? 
+            'fas fa-arrow-left' :
+            'fas fa-arrow-right'"></i>
+        </span>
+      </button>
+    </div>
 
   </div>
 </template>
@@ -29,17 +43,24 @@ Dependencies:
 import Plyr from 'plyr'
 import { mapGetters } from 'vuex'
 import 'plyr/dist/plyr.css'
-import * as i18n from '@/i18n/plugins/misc/laya-plyr'
+import { locale } from '@/mixins'
 
 export default {
   name: 'laya-plyr',
+
+  mixins: [
+    locale
+  ],
+
   data() {
-    if (Object.entries(this.$attrs).length === 2) { // for 'preview' feature
+    if (Object.entries(this.$attrs).length === 4) { // for 'preview' feature
       return {...this.$attrs}
     }
     return {
       plyr: null,
-      src: ''
+      src: '',
+      title: '',
+      showTitle: false
     }
   },
   created() {
@@ -53,7 +74,7 @@ export default {
     onFinish: Array
   },
   computed: {
-    ...mapGetters(['content', 'profileLang']),
+    ...mapGetters(['content']),
 
     /**
      * playerId: returns id for html element
@@ -77,18 +98,6 @@ export default {
       if (this.src.includes('youtube')) return 'youtube'
       else if (this.src.includes('vimeo')) return 'vimeo'
       else return '' 
-    },
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 20, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
     }
 
   },
@@ -118,6 +127,8 @@ export default {
       let idx = this.$route.params.step - 1 
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.src = preData.src
+      this.showTitle = preData.showTitle
+      this.title = preData.title
     },
 
     /**

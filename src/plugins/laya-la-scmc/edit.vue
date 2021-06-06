@@ -5,19 +5,34 @@ Creator: core
 Date: unknown
 Dependencies:
   vuex,
-  @/i18n/plugins/laya-la-scmc
+  @/mixins/locale.vue
 -->
 
 <template>
-  <div class="laya-la-scms-edit ly-bg-author p-3">
+  <div 
+    class="laya-la-scms-edit ly-bg-author p-3"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
 
-    <label><h4>{{ i18n.edit.scmc }}</h4></label><i id ="questionmark" class="fas fa-question-circle" @click="toggleTip" 
-          :title="i18n.showTip" v-b-tooltip.left></i>
+    <label>
+      <h4>
+        {{ i18n['layaLaScmc.name'] }}
+      </h4>
+    </label>
+    <i 
+      id ="questionmark" 
+      class="fas fa-question-circle" 
+      @click="toggleTip" 
+      :title="i18n['showTip']" 
+      v-b-tooltip.left
+    ></i>
     <b-jumbotron 
-            v-if="tooltipOn"
-            :header="i18n.title" :lead="i18n.tipHeadline">
-          <hr class="my-4">
-          <span v-html="i18n.tooltip"></span>
+      v-if="tooltipOn"
+      :header="i18n['layaLaScmc.name']" 
+      :lead="i18n['tipHeadline']"
+    >
+      <hr class="my-4">
+      <span v-html="i18n['layaLaScmc.tooltip']"></span>
 
     </b-jumbotron>
     <hr>
@@ -25,74 +40,116 @@ Dependencies:
 
       <!-- type -->
       <div class="form-group row">
-        <label for="smcs-type" class="col-2 col-form-label">{{ i18n.type }}</label>
+        <label 
+          for="smcs-type" 
+          class="col-2 col-form-label"
+        >
+          {{ i18n['type'] }}
+        </label>
         <div class="col-10">
           <div class="form-check form-check-inline align-text-top">
-            <input id="scms-sc"
-                   class="form-check-input"
-                   type="radio"
-                   :value="false"
-                   v-model="multiple">
-            <label for="scms-sc" class="form-check-label">{{ i18n.edit.sc }}</label>
+            <input 
+              id="scms-sc"
+              class="form-check-input"
+              type="radio"
+              :value="false"
+              v-model="multiple"
+            >
+            <label 
+              for="scms-sc" 
+              class="form-check-label"
+            >
+              {{ i18n['layaLaScmc.edit.sc'] }}
+            </label>
           </div>
           <div class="form-check form-check-inline align-text-top">
             <input id="scms-mc"
-                   class="form-check-input"
-                   type="radio"
-                   name="multiple"
-                   :value="true"
-                   v-model="multiple">
-            <label for="scms-mc" class="form-check-label">{{ i18n.edit.mc }}</label>
+              class="form-check-input"
+              type="radio"
+              name="multiple"
+              :value="true"
+              v-model="multiple"
+            >
+            <label 
+              for="scms-mc" 
+              class="form-check-label"
+            >
+              {{ i18n['layaLaScmc.edit.mc'] }}
+            </label>
           </div>
         </div>
       </div>
 
       <!-- title -->
       <div class="form-group row">
-        <label for="scms-title" class="col-2 col-form-label">{{ i18n.edit.title }}</label>
+        <label 
+          for="scms-title" 
+          class="col-2 col-form-label"
+        >
+          {{ i18n['layaLaScmc.name'] }}
+        </label>
         <div class="col-10">
-          <input id="scms-title"
-                 type="text"
-                 v-model="title"
-                 class="form-control"
-                 :placeholder="i18n.edit.titlePlaceholder">
+          <input 
+            id="scms-title"
+            type="text"
+            v-model="title"
+            class="form-control"
+            :placeholder="i18n['titlePlaceholder']"
+          >
         </div>
       </div>
 
 
       <!-- task -->
       <div class="form-group row">
-        <label for="smcs-task" class="col-2 col-form-label">
-          {{ i18n.edit.task }}
+        <label 
+          for="smcs-task" 
+          class="col-2 col-form-label"
+        >
+          {{ i18n['task'] }}
         </label>
         <div class="col-10">
-          <textarea id="scms-task"
-                    v-model="task"
-                    class="w-100"
-                    :placeholder="i18n.edit.taskPlaceholder">
+          <textarea 
+            id="scms-task"
+            v-model="task"
+            class="w-100"
+            :placeholder="i18n['taskPlaceholder']">
           </textarea>
         </div>
       </div>
 
       <!-- task audio -->
       <div class="form-group row">
-        <label for="smcs-task-audio" class="col-2 col-form-label">
-          {{ i18n.edit.taskAudio }}
+        <label 
+          for="smcs-task-audio" 
+          class="col-2 col-form-label"
+        >
+          {{ i18n['taskAudio'] }}
         </label>
         <div class="col-10">
-          <input id="scms-task-audio"
-                 type="text"
-                 v-model="taskAudio"
-                 class="form-control"
-                 :placeholder="i18n.edit.taskAudioPlaceholder">
+          <input 
+            id="scms-task-audio"
+            type="text"
+            v-model="taskAudio"
+            class="form-control"
+            :placeholder="i18n['taskAudioPlaceholder']"
+          >
         </div>
       </div>
 
-      <p><b>{{ i18n.edit.items }}</b></p>
-      <div class="form-group row" v-for="(option, i) in options" :key="'item-'+i">
-
+      <p><b>{{ i18n['items'] }}</b></p>
+      <div 
+        class="form-group row" 
+        v-for="(option, i) in options" 
+        :key="'item-'+i"
+      >
         <!-- caption -->
-        <label class="col-form-label col-2" :for="'option-text-'+i">{{ i18n.edit.text }}</label>
+        <label 
+          class="col-form-label col-2" 
+          :for="'option-text-'+i"
+        >
+          {{ i18n['text'] }}
+        </label>
         <div class="col-7">
           <input :id="'option-text-'+i"
             class="form-control"
@@ -108,7 +165,7 @@ Dependencies:
             :true-value="i"
             v-model="solutions[i]">
           <label class="form-check-label" :for="'option-corr-'+i">
-            {{ i18n.edit.correct }}
+            {{ i18n['layaLaScmc.edit.correct'] }}
           </label>
         </div>
 
@@ -125,7 +182,7 @@ Dependencies:
       <button type="button"
               class="btn btn-primary btn-sm"
               @click="_addItem">
-        <i class="fas fa-plus"></i>{{ i18n.edit.itemAdd }}
+        <i class="fas fa-plus"></i>{{ i18n['itemAdd'] }}
       </button>
 
     </form>
@@ -135,10 +192,16 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import * as i18n from '@/i18n/plugins/laya-la-scmc'
+import { locale, tooltipIcon } from '@/mixins'
 
 export default {
   name: 'laya-la-scmc-edit',
+
+  mixins: [
+    locale,
+    tooltipIcon
+  ],
+
   data () {
     return {
       title: '',
@@ -147,28 +210,18 @@ export default {
       options: [],
       solutions: [],
       maxTries: 1,
-      multiple: false,
-      tooltipOn: false
+      multiple: false
     }
   },
+  
+  computed: {
+    ...mapGetters(['content'])
+  },
+
   created () {
     this.fetchData()
   },
-  computed: {
-    ...mapGetters(['content', 'profileLang']),
 
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 19, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
-    }
-  },
   methods: {
 
     /**
@@ -191,17 +244,6 @@ export default {
      */
     _addItem() {
       this.options.push('');
-    },
-
-    /**
-     * Function toggleTip: toggle tooltipOn boolean
-     * 
-     * Author: cmc
-     * 
-     * Last updated: unknown
-     */
-    toggleTip() {
-      this.tooltipOn = !this.tooltipOn
     },
 
     /**

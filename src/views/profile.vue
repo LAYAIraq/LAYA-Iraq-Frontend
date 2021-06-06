@@ -7,7 +7,7 @@ Dependencies:
   axios,
   vuex,
   vue-password-strength-meter,
-  @/i18n/profile,
+  @/mixins/locale.vue
   @/backend-url.ts,
   @/plugins/misc/laya-upload-avatar/avatar.vue
 -->
@@ -42,12 +42,14 @@ Dependencies:
     <div class="container">
       <div class="row">
         <form class="w-100" style="margin-top: 1rem">
-          <h1>{{ i18n.title }}</h1>
+          <h1 :class="langIsAr? 'text-right' : 'text-left'">
+            {{ i18n['profile.title'] }}
+          </h1>
           <hr>
 
           <!-- Name -->
           <div class="form-group row">
-            <label for="username" class="col-sm-3 col-form-label">{{ i18n.namePH }}</label>
+            <label for="username" class="col-sm-3 col-form-label">{{ i18n['namePH'] }}</label>
             <div class="col-sm-9">
               <input
                 id="username"
@@ -62,7 +64,7 @@ Dependencies:
 
           <!-- Email -->
           <div class="form-group row">
-            <label for="email" class="col-sm-3 col-form-label">{{ i18n.emailPH }}</label>
+            <label for="email" class="col-sm-3 col-form-label">{{ i18n['emailPH'] }}</label>
             <div class="col-sm-9">
               <input
                 id="email"
@@ -78,14 +80,14 @@ Dependencies:
           <hr>
           <!-- Old Password -->
           <div class="form-group row">
-            <label for="oldPwd" class="col-sm-3 col-form-label">{{ i18n.oldPwd }}</label>
+            <label for="oldPwd" class="col-sm-3 col-form-label">{{ i18n['profile.oldPwd'] }}</label>
             <div class="col-sm-9">
               <input
                 id="oldPwd"
                 type="password"
                 class="form-control"
                 v-model="oldPwd"
-                :placeholder="i18n.oldPwd"
+                :placeholder="i18n['profile.oldPwd']"
                 autocomplete="on"
               >
             </div>
@@ -94,14 +96,14 @@ Dependencies:
 
           <!-- New Password -->
           <div class="form-group row">
-            <label for="newPwd" class="col-sm-3 col-form-label">{{ i18n.newPwd }}</label>
+            <label for="newPwd" class="col-sm-3 col-form-label">{{ i18n['profile.newPwd'] }}</label>
             <div class="col-sm-9">
               <input
                 id="newPwd"
                 type="password"
                 class="form-control"
                 v-model="newPwd"
-                :placeholder="i18n.newPwd"
+                :placeholder="i18n['profile.newPwd']"
                 aria-describedby="pwdMsg"
               >
             </div>
@@ -109,20 +111,20 @@ Dependencies:
 
           <!-- repeat password -->
           <div class="form-group row">
-            <label for="repeatPwd" class="col-sm-3 col-form-label">{{ i18n.repeatPwd }}</label>
+            <label for="repeatPwd" class="col-sm-3 col-form-label">{{ i18n['pwd2PH'] }}</label>
             <div class="col-sm-9">
               <input
                 id="repeatPwd"
                 type="password"
                 class="form-control"
                 v-model="repeatPwd"
-                :placeholder="i18n.repeatPwd"
+                :placeholder="i18n['pwd2PH']"
                 aria-describedby="pwdStrength"
               >
             </div>
           </div>
           <div class="form-group row">
-            <label for="pwdMeter" class="col-sm-3 col-form-label">{{ i18n.pwdStrength }}</label>
+            <label for="pwdMeter" class="col-sm-3 col-form-label">{{ i18n['profile.pwdStrength'] }}</label>
             <div class="col-sm-9">
               
               <password id="pwdMeter" v-model="repeatPwd" :strength-meter-only="true"></password>
@@ -137,7 +139,7 @@ Dependencies:
 
           <div class="form-group row">
             <div class="col-sm-3">
-              {{ i18n.avatar }}
+              Avatar
             </div>
             <div class="col-sm-3" >
               <img :src="avatarURL">
@@ -155,13 +157,13 @@ Dependencies:
 
           <!-- Default Media Forms -->
           <div class="form-group row">
-            <label class="col-sm-3 col-form-label">{{ i18n.defmedia.label }}</label>
+            <label class="col-sm-3 col-form-label">{{ i18n['profile.defmedia.label'] }}</label>
             <div class="col-sm-9 d-inline-flex justify-content-between align-items-center">
               <!-- Text -->
               <div class="checkbox-inline">
                 <label>
                   <input type="checkbox" v-model="prefs.media.text">
-                  {{ i18n.defmedia.text }}
+                  {{ i18n['profile.defmedia.text'] }}
                 </label>
               </div>
 
@@ -169,7 +171,7 @@ Dependencies:
               <div class="checkbox-inline">
                 <label>
                   <input type="checkbox" v-model="prefs.media.simple">
-                  {{ i18n.defmedia.simple }}
+                  {{ i18n['profile.defmedia.simple'] }}
                 </label>
               </div>
 
@@ -177,7 +179,7 @@ Dependencies:
               <div class="checkbox-inline">
                 <label>
                   <input type="checkbox" v-model="prefs.media.video">
-                  {{ i18n.defmedia.video }}
+                  {{ i18n['profile.defmedia.video'] }}
                 </label>
               </div>
 
@@ -185,7 +187,7 @@ Dependencies:
               <div class="checkbox-inline">
                 <label>
                   <input type="checkbox" v-model="prefs.media.audio">
-                  {{ i18n.defmedia.audio }}
+                  {{ i18n['profile.defmedia.audio'] }}
                 </label>
               </div>
             </div>
@@ -201,27 +203,27 @@ Dependencies:
               style="border-width: 2px"
             >
               <i class="fas fa-check"></i>
-              {{ i18n.submit }}
+              {{ i18n['save'] }}
             </button>
           </div>
           <strong class="form-text text-center">{{ formMsg }}</strong>
         </form>
       </div>
     </div>
-    <b-toast variant="danger" id="submit-failed" :title="i18n.fail"
+    <b-toast variant="danger" id="submit-failed" :title="i18n['savingFailed']"
       class="author-toast" auto-hide-delay="1500" static>
-      {{ i18n.submitFailed}}
+      {{ i18n['profile.submitFail']}}
     </b-toast>
-    <b-toast variant="success" id="submit-ok" :title="i18n.success"
+    <b-toast variant="success" id="submit-ok" :title="i18n['layaUploadFileList.success']"
       class="author-toast" auto-hide-delay="1500" static>
-      {{ i18n.submitOk}}
+      {{ i18n['profile.submitOk']}}
     </b-toast>
   </div>
 </template>
 
 <script>
 import http from 'axios'
-import * as i18n from '@/i18n/profile'
+import { locale } from '@/mixins'
 import api from '../backend-url.ts'
 import Password from 'vue-password-strength-meter'
 import { mapState } from 'vuex'
@@ -229,6 +231,16 @@ import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
 
 export default {
   name: 'profile-view',
+
+  components: {
+    Password,
+    // LayaUploadAvatar
+  },
+
+  mixins: [
+    locale
+  ],
+
   data() {
     return {
       avatar: null,
@@ -241,20 +253,9 @@ export default {
       prefs: {}
     }
   },
+
   computed: {
     ...mapState(['profile']),
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 21, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profile.lang]
-    },
 
     /**
      * avatarURL: return URL of user avatar
@@ -287,9 +288,10 @@ export default {
      * Last Updated: March 24, 2021
      */
     pwdDiffMsg() {
-      return this.passwordsDiffer? this.i18n.pwdDiffer : ''
+      return this.passwordsDiffer? this.i18n['profile.pwdDiffer'] : ''
     }
   },
+
   beforeDestroy() {
     //save changes in profile
     this.$store.dispatch('saveProfile', {
@@ -297,11 +299,13 @@ export default {
       ...this.prefs
     })
   },
+
   created() {
     // make profile settings mutable 
     this.avatar = this.profile.avatar
     this.prefs = { ...this.profile.prefs }
   },
+
   methods: {
     
     /**
@@ -328,7 +332,7 @@ export default {
             })
             .catch(err => {
               console.error(err)
-              ctx.pwdMsg = ctx.i18n.pwdFail
+              ctx.pwdMsg = ctx.i18n['profile.pwdFail']
             })
         )
       }
@@ -338,7 +342,7 @@ export default {
         .all(requests)
         .then(
           http.spread(() => {
-            ctx.formMsg = ctx.i18n.submitOk
+            ctx.formMsg = ctx.i18n['profile.submitOk']
           })
         )
         .catch(function(err) {
@@ -359,10 +363,6 @@ export default {
     },
 
    
-  },
-  components: {
-    Password,
-    // LayaUploadAvatar
   }
 }
 </script>

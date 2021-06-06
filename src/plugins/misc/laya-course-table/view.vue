@@ -10,7 +10,7 @@ Dependencies: @/i18n/plugins/misc/laya-course-table
   <div class="laya-course-table">
 
     <h3 v-show="filtered.length === 0" class="text-center text-muted">
-      {{ i18n.noCourses }}
+      {{ i18n['noCourses'] }}
     </h3>
 
     <div v-for="(courses, category) in categories" :key="category"
@@ -61,10 +61,15 @@ Dependencies: @/i18n/plugins/misc/laya-course-table
 </template>
 
 <script>
-import * as i18n from '@/i18n/plugins/misc/laya-course-table'
+import { locale } from '@/mixins'
 
 export default {
   name: 'laya-course-table',
+
+  mixins: [
+    locale
+  ],
+
   data() {
     return {
       cats: {},
