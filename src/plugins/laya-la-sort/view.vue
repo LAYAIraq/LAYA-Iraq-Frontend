@@ -3,7 +3,7 @@ Filename: view.vue
 Use: view a Sort content block
 Creator: core
 Date: unknown
-Dependencies: @/i18n/plugins/laya-la-sort
+Dependencies: @/mixins/locale.vue
 -->
 
 <template>
@@ -11,13 +11,13 @@ Dependencies: @/i18n/plugins/laya-la-sort
     <div class="container">
       <div class="row mb-3">
         <div>
-          <h4>{{ i18n.task }}</h4>
+          <h4>{{ i18n['task'] }}</h4>
           <p>{{task}}</p>
         </div>
       </div>
       <div class="row py-2 ly-bg-grey">
         <div class="col-5">
-          <h4>{{ i18n.unsorted }}</h4>
+          <h4>{{ i18n['layaLaSort.unsorted'] }}</h4>
           <div class="d-flex flex-column">
             <button
               v-for="(us,i) in unsorted"
@@ -29,7 +29,7 @@ Dependencies: @/i18n/plugins/laya-la-sort
           </div>
         </div>
         <div class="col-5">
-          <h4>{{ i18n.sortHere }}</h4>
+          <h4>{{ i18n['layaLaSort.sortHere'] }}</h4>
           <div class="d-flex flex-column">
             <button
               v-for="(s,i) in solution"
@@ -41,7 +41,7 @@ Dependencies: @/i18n/plugins/laya-la-sort
           </div>
         </div>
         <div class="col-2">
-          <h4 style="color: transparent">{{ i18n.e }}</h4>
+          <h4 style="color: transparent">{{ i18n['layaLaSort.e'] }}</h4>
           <div class="d-flex flex-column">
             <i v-for="(r,i) in result"
                :key="i"
@@ -56,7 +56,7 @@ Dependencies: @/i18n/plugins/laya-la-sort
                 class="btn btn-primary btn-lg"
                 :disabled="unsorted.length !== 0"
                 @click="check">
-          {{ i18n.done }}
+          {{ i18n['layaLaSort.done'] }}
         </button>
       </div>
     </div>
@@ -64,13 +64,15 @@ Dependencies: @/i18n/plugins/laya-la-sort
 </template>
 
 <script>
-import * as i18n from '@/i18n/plugins/laya-la-sort';
+import { locale } from '@/mixins'
 
 export default {
   name: 'laya-quiz-sort',
-  created () {
-    this.unsorted = this.shuffle([...this.sorted])
-  },
+
+  mixins: [
+    locale
+  ],
+
   data () {
     return {
       unsorted: [], // the shuffled options from this.sorted
@@ -78,24 +80,16 @@ export default {
       result: [], // list of booleans 
     }
   },
+
   props: {
     task: String,
     sorted: Array,
   },
-  computed: {
 
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 19, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.$store.state.profile.lang]
-    }
+  created () {
+    this.unsorted = this.shuffle([...this.sorted])
   },
+  
   methods: {
 
     /**
@@ -143,14 +137,16 @@ export default {
      * 
      * Creator: core
      * 
-     * Last Updated: March 21, 2021
+     * Last Updated: May 6, 2021
      * 
      * @param {Array} arr array to be shuffled
      */
     shuffle(arr) {
       for (let i = arr.length-1; i>0; i--) {
-        const j = Math.floor(Math.random() * (i+1))
-        [arr[i], arr[j]] = [arr[j], arr[i]]
+        let j = Math.floor(Math.random() * (i+1))
+        const tmp = arr[j]
+        arr[j] = arr[i]
+        arr[i] = tmp
       }
       return arr
     }

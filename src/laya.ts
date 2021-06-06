@@ -6,20 +6,20 @@
  * Dependencies: vue
  */
 
-import _Vue from "vue";
-import { VueConstructor } from "vue";
+import _Vue from 'vue';
+import { VueConstructor } from 'vue';
 
 // copied from laya.d.ts
 // 2. Specify a file with the types you want to augment
 //    Vue has the constructor type in types/vue.d.ts
-declare module "vue/types/vue" {
+declare module 'vue/types/vue' {
   // 3. Declare augmentation for Vue
   interface Vue {
     $laya: Laya;
   }
 }
 
-declare module "vue/types/vue" {
+declare module 'vue/types/vue' {
   // Global properties can be declared
   // on the `VueConstructor` interface
   interface VueConstructor {
@@ -64,17 +64,18 @@ export class Laya {
   public registerLB<VC1, VC2, VC3 extends VueConstructor>(
     id: string,
     type: string,
-    i18n: object,
+    name: string,
+    icon: string,
     components: { new?: VC1; edit?: VC2; view: VC3 },
   ): void {
-    this._lb[id] = { id, type, i18n, components };
-    this._li[type] = { type: "block", id };
+    this._lb[id] = { id, type, name, components, icon };
+    this._li[type] = { type: 'block', id };
 
-    if ("new" in components) {
+    if ('new' in components) {
       this._vue.component(id, components.new);
     }
 
-    if ("edit" in components) {
+    if ('edit' in components) {
       this._vue.component(id, components.edit);
     }
 
@@ -84,17 +85,18 @@ export class Laya {
   public registerLA<VC1, VC2, VC3 extends VueConstructor>(
     id: string,
     type: string,
-    i18n: object,
+    name: string,
+    icon: string,
     components: { new?: VC1; edit?: VC2; view: VC3 },
   ): void {
-    this._la[id] = { id, type, i18n, components };
-    this._li[type] = { type: "assessment", id };
+    this._la[id] = { id, type, name, components, icon };
+    this._li[type] = { type: 'assessment', id };
 
-    if ("new" in components) {
+    if ('new' in components) {
       this._vue.component(id, components.new);
     }
 
-    if ("edit" in components) {
+    if ('edit' in components) {
       this._vue.component(id, components.edit);
     }
 
@@ -116,9 +118,9 @@ export default {
             lb: $laya.lb,
             la: $laya.la,
             li: $laya.li
-          },
+          }
         };
       },
     });
-  },
+  }
 };

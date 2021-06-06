@@ -4,30 +4,33 @@ Use: List all available courses, users can start or enroll
 Creator: core
 Date: unknown
 Dependencies: 
-  @/i18n/course-list,
+  @/mixins/locale.vue,
   axios,
   vuex
 -->
 
 <template>
-  <div class="laya-course-list">
+  <div 
+    class="laya-course-list"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
 
     <div class="container-fluid">
 
       <div class="row">
         <div class="col">
           <h3 v-show="filtered.length === 0" class="text-center text-muted">
-            {{ i18n.noCourses }}
+            {{ i18n['noCourses'] }}
           </h3>
         </div>
       </div>
 
       <div class="row header" v-if="filtered.length > 0">
         <div class="col">
-          <h4>{{ i18n.name }}</h4>
+          <h4>{{ i18n['namePH'] }}</h4>
         </div>
         <div class="col">
-          <h4>{{ i18n.category }}</h4>
+          <h4>{{ i18n['cat'] }}</h4>
         </div>
         <div class="col-3">
         </div>
@@ -50,10 +53,14 @@ Dependencies:
             :to="'/courses/'+course.name+'/1'"
             class="text-dark px-2 py-1 d-inline-block text-center"
             v-if="!enrollmentNeeded(course)" >
-            {{ i18n.start }} <i class="fas fa-arrow-right"></i>
+            {{ i18n['courseList.start'] }} 
+            <i class="fas fa-arrow-right"></i>
           </router-link>
           <a class="text-dark px-2 py-1 d-inline-block text-center" 
-            v-else @click="subscribe(course)" href="#">{{ i18n.subscribe }}</a>
+            v-else @click="subscribe(course)" href="#">
+            {{ i18n['courseList.subscribe'] }}
+            <i class="fas fa-file-signature"></i>  
+          </a>
         </div>
       </div>
 
@@ -62,33 +69,33 @@ Dependencies:
 </template>
 
 <script>
-import * as i18n from '@/i18n/course-list'
 import http from 'axios'
 import { 
   mapState, 
   mapGetters 
 } from 'vuex'
+import { locale } from '@/mixins'
 
 export default {
   name: 'laya-course-list',
+
+  mixins: [
+    locale
+  ],
+
   data() {
     return {
       filteredList: [],
       enrolledIn: []
     }
   },
+
   props: {
     filter: String,
   },
-  mounted() {
-    this.getSubs()
-    this.filteredList = [...this.courseList]
-  },
-  updated(){
-    // this.getSubs()
-  },
+
   computed: {
-    ...mapGetters(['profileLang', 'courseList']),
+    ...mapGetters(['courseList']),
     ...mapState(['note', 'auth']),
 
      /**
@@ -103,20 +110,18 @@ export default {
 
       const filterByCourseName = new RegExp(this.filter, 'i');
       return this.filteredList.filter(course => filterByCourseName.test(course.name))
-    },
-
-     /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: unknown
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
     }
   },
+
+  mounted() {
+    this.getSubs()
+    this.filteredList = [...this.courseList]
+  },
+
+  updated(){
+    // this.getSubs()
+  },
+
   methods: {
 
     /**

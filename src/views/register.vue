@@ -5,7 +5,7 @@ Creator: core
 Date: unknown
 Dependencies: 
   axios,
-  @/i18n/register
+  @/mixins/locale.vue
 -->
 
 <template>
@@ -18,86 +18,141 @@ Dependencies:
 
           <div style="height: 2rem"></div>
           <img src="../assets/anmelden.svg" alt="Login" class="w-50">
-          <h1 class="text-center">{{ i18n.title }}</h1>
+          <h1 class="text-center">{{ i18n['register.title'] }}</h1>
 
           <!-- name -->
-          <div class="ly-input" :class="{error: errName}">
-            <input id="register-focus" v-model="name" :placeholder="i18n.namePH"
-            type="text" :disabled="submitOk" @blur="isNameTaken" class="w-100"
-            aria-describedby="name-err">
+          <div class="form-group row" :class="{error: errName}">
+            <div class="col-1 col-form-label">
+              <i class="fas fa-signature"></i>
+            </div>
+            <div class="col">
+              <input 
+                id="register-focus" 
+                v-model="name" 
+                :placeholder="i18n['namePH']"
+                type="text" 
+                :disabled="submitOk" 
+                @blur="isNameTaken" 
+                class="w-100"
+                aria-describedby="name-err">
+            </div>
           </div>
-          <div class="text-center" :class="{'d-none': !errName}">
-            <span id="name-err" class="text-center" v-show="nameTaken"
-              :aria-hidden="!nameTaken">
-              {{ nameTaken ? i18n.nameTaken : i18n.nameErr }}
-            </span>
+
+          <div class="form-group row" :class="{'d-none': !errName}">
+            <div class="col text-center">
+              <span 
+                id="name-err" 
+                class="text-center" 
+                v-show="errName"
+                :aria-hidden="!nameTaken"
+              >
+                {{ nameTaken ? i18n['nameTaken'] : i18n['nameErr'] }}
+              </span>
+            </div>
           </div>
 
           <!-- email -->
-          <div class="ly-input" :class="{error: errEmail}">
-            <input v-model="email" :placeholder="i18n.emailPH" type="text"
-            :disabled="submitOk" @blur="isEmailTaken" class="w-100"
-            aria-describedby="email-err">
+          <div class="form-group row" :class="{error: errEmail}">
+            <div class="col-1 col-form-label">
+              <i class="fas fa-at"></i>
+            </div>
+            <div class="col">
+              <input v-model="email" :placeholder="i18n['emailPH']" type="text"
+              :disabled="submitOk" @blur="isEmailTaken" class="w-100"
+              aria-describedby="email-err">
+            </div>
           </div>
-          <div class="text-center" :class="{'d-none': !errEmail}">
-            <span id="email-err" class="text-center" v-show="emailTaken"
-              :aria-hidden="!emailTaken">
-              {{ emailTaken ? i18n.emailTaken : i18n.emailErr }}
-            </span>
+
+          <!-- email hint-->
+          <div class="form-group row text-center" :class="{'d-none': !errEmail}">
+            <div class="col text-center">
+                <span 
+                  id="email-err"
+                  v-show="errEmail"
+                  :aria-hidden="!emailTaken"
+                >
+                  {{ emailTaken ? i18n['emailTaken'] : i18n['emailErr'] }}
+                </span>
+            </div>
           </div>
 
           <!-- password -->
-          <div class="ly-input" :class="{error: errPwds}">
-            <input v-model="pwd1" :placeholder="i18n.pwd1PH" type="password"
-            :disabled="submitOk" class="w-100" aria-describedby="pwd-err">
+          <div class="form-group row" :class="{error: errPwds}">
+            <div class="col-1 col-form-label">
+              <label for="password">
+                <i class="fas fa-key"></i>
+              </label>
+            </div>
+            <div class="col">
+              <input 
+                v-model="pwd1" 
+                :placeholder="i18n['pwdPH']" 
+                type="password"
+                :disabled="submitOk" 
+                class="w-100" 
+                aria-describedby="pwd-err"
+              >
+            </div>
           </div>
-          <div class="ly-input" :class="{error: errPwds}">
-            <input v-model="pwd2" :placeholder="i18n.pwd2PH" type="password"
-            :disabled="submitOk" class="w-100" aria-describedby="pwd-err">
+          <div class="form-group row" :class="{error: errPwds}">
+            <div class="col-1 col-form-label">
+              <label for="password">
+                <i class="fas fa-redo-alt"></i>
+              </label>
+            </div>
+            <div class="col">
+              <input v-model="pwd2" :placeholder="i18n['pwd2PH']" type="password"
+              :disabled="submitOk" class="w-100" aria-describedby="pwd-err">
+            </div>
           </div>
-          <div id="pwd-err" class="text-center" :class="{'d-none': !errPwds}"
-            :aria-hidden="!errPwds">
-            {{ i18n.pwdErr }}
+          <div 
+            id="pwd-err" 
+            class="text-center" 
+            :class="{'d-none': !errPwds}"
+            :aria-hidden="!errPwds"
+            v-show="errPwds">
+            {{ i18n['register.pwdErr'] }}
           </div>
 
           <!-- profile pic -->
-          <!--
-          <div style="height: 2rem"></div>
+          
+          <!-- <div style="height: 2rem"></div>
           <div class="position-relative">
-            <div class="position-absolute">{{ i18n.profilePic }}</div>
+            <div class="position-absolute">{{ i18n['profilePic'] }}</div>
 
             <ly-input-img v-model="profileImg"
                           style="width: 7rem"
                           class="m-auto">
               <img src="../assets/hochladen.svg" alt="Profilbild wählen">
             </ly-input-img>
-          </div>
-          -->
+          </div> -->
+         
 
           <!-- submit -->
-          <div style="height: 4rem"></div>
+          <!-- <div style="height: 4rem"></div> -->
           <h4 :class="{'d-none': busy || submitOk}">
             <button v-if="!errForm"
-                    @click.prevent="submit"
-                    type="submit"
-                    class="btn btn-lg btn-block btn-outline-dark"
-                    style="border: 2px solid black">
-              {{ i18n.submit }} <i class="fas fa-arrow-right"></i>
+              @click.prevent="submit"
+              type="submit"
+              class="btn btn-lg btn-block btn-outline-dark"
+              style="border: 2px solid black">
+              {{ i18n['register.submit'] }} 
+              <i class="fas fa-user-plus"></i>
             </button>
           </h4>
           <!-- still form errors -->
           <h5 id="form-err" class="text-center" :class="{'d-none': !errForm}">
-            {{ i18n.formErr }}
+            {{ i18n['register.formErr'] }}
           </h5>
           <!-- busy note -->
           <h5 class="text-center" :class="{'d-none': !busy}">
-            {{ i18n.busy }} <i class="fas fa-spinner fa-spin"></i>
+            {{ i18n['busy'] }} <i class="fas fa-spinner fa-spin"></i>
           </h5>
           <!-- submit ok: goto login -->
           <h5 class="text-center" :class="{'d-none': !submitOk}">
             <router-link to="/login">
               <div>
-                <u>{{ i18n.success }}</u>
+                <u>{{ i18n['register.success'] }}</u>
               <img src="../assets/fertig.svg" alt="Erfolg" style="width: 3rem">
               </div>
             </router-link>
@@ -115,13 +170,15 @@ Dependencies:
 
 <script>
 import http from 'axios'
-import * as i18n from '@/i18n/register'
+import { locale } from '@/mixins'
 
 export default {
   name: 'register-view',
-  mounted () {
-    document.querySelector('#register-focus').focus()
-  },
+
+  mixins: [
+    locale
+  ],
+
   data () {
     return {
 
@@ -140,19 +197,8 @@ export default {
       emailTaken: false
     }
   },
-  computed: {
 
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 21, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.$store.state.profile.lang]
-    },
+  computed: {
 
     /**
      * errName: form validation for name
@@ -162,6 +208,7 @@ export default {
      * Last Updated: unknown
      */
     errName() {
+      if(this.name === '') return false
       return /\W/.test(this.name) || /^$/.test(this.name) ||
         this.nameTaken
     },
@@ -174,6 +221,7 @@ export default {
      * Last Updated: unknown
      */
     errEmail() {
+      if(this.email === '') return false
       return !(/^[^@\s]+[@][^@\s]+$/.test(this.email)) ||
         this.emailTaken
     },
@@ -186,8 +234,23 @@ export default {
      * Last Updated: unknown
      */
     errPwds() {
+      if(this.pwd1 === '') return false
       return (/^$/.test(this.pwd1) || /^$/.test(this.pwd2)) ||
         (this.pwd1 !== this.pwd2)
+    },
+
+    /**
+     * noInput: return true if no input is set
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: May 15, 2021
+     */
+    noInput() {
+      return (this.name === '' && 
+        this.email === '' && 
+        this.pwd1 === '' && 
+        this.pwd2 === '')
     },
 
     /**
@@ -198,9 +261,14 @@ export default {
      * Last Updated: unknown
      */
     errForm() {
-      return this.errName || this.errEmail || this.errPwds
+      return this.errName || this.errEmail || this.errPwds || this.noInput
     }
   },
+
+  mounted () {
+    document.querySelector('#register-focus').focus()
+  },
+
   methods: {
 
     /**
@@ -300,14 +368,12 @@ export default {
         }))
         .catch( (err) => {
           console.log(err)
-          ctx.errmsg = this.i18n.fail
+          ctx.errmsg = this.i18n['register.fail']
         })
         .finally( () => {
           ctx.busy = false
         })
     }
-  },
-  components: {
   }
 }
 </script>
@@ -319,7 +385,7 @@ export default {
 }
 
 form {
-  width: 21rem;
+  width: 30rem;
   margin: auto;
 }
 

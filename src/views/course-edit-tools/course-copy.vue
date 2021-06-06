@@ -6,7 +6,7 @@ Date: October 27, 2020
 Dependencies: 
 	axios,
 	vuex,
-	@/i18n/course-edit/copy
+	@/mixins/locale.vue
 -->
 
 <template>
@@ -15,50 +15,50 @@ Dependencies:
     <div class="col">
       <b-button size="sm"
         variant="warning"
-        class="float-right"
+        :class="langIsAr? 'float-left' : 'float-right'"
         @click="$bvModal.show('author-copyCourse-confirm')">
-        <i class="fas fa-exclamation-circle"></i> {{ i18n.copyCourse }}
+        <i class="fas fa-exclamation-circle"></i> {{ i18n['copyCourse'] }}
       </b-button>
     </div>
 
     <div class="col text-dark">
-      {{ i18n.copyCourseTip }}
+      {{ i18n['copy.copyCourseTip'] }}
     </div>
 
     <b-modal id="author-copyCourse-confirm"
-      :title="i18n.modal.title"
+      :title="i18n['copyCourse']"
       header-bg-variant="warning"
       ok-variant="warning"
-      :ok-title="i18n.modal.ok"
-      :cancel-title="i18n.modal.cancel"
+      :ok-title="i18n['copy.modal.ok']"
+      :cancel-title="i18n['cancel']"
       @ok="copyCourse"
       centered>
       <p>
-        {{ i18n.modal.text }}
+        {{ i18n['copy.modal.text'] }}
         <input
           type="text"
           v-model="copy"
           class="form-control"
-          :placeholder="i18n.modal.placeholder">
+          :placeholder="i18n['placeholder']">
       </p>
     </b-modal>
 
     <b-toast id="name-exists"
-      :title="i18n.toast.title"
+      :title="i18n['authorTools']"
       static
       variant="danger"
       auto-hide-delay="1500"
       class="author-toast">
-      {{ i18n.toast.text }}
+      {{ i18n['copy.toast.text'] }}
     </b-toast>
 
     <b-toast id="copy-success"
-      :title="i18n.toast.title"
+      :title="i18n['authorTools']"
       static
       variant="success"
       auto-hide-delay="1500"
       class="author-toast">
-      {{ i18n.toast.copySuccess }}
+      {{ i18n['copy.toast.copySuccess'] }}
     </b-toast>
 
 	</div>
@@ -66,25 +66,16 @@ Dependencies:
 
 <script>
 import http from 'axios'
-import * as i18n from '@/i18n/course-edit/copy'
-import { mapGetters, mapState } from 'vuex'
+import { locale } from '@/mixins'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'course-copy',
+  mixins: [
+    locale
+  ],
   computed: {
-    ...mapGetters(['profileLang', 'course']),
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 20, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
-    }
+    ...mapGetters(['course']),
   },
   data() {
     return{

@@ -2,14 +2,14 @@
   <div>
     <div v-if="type=='avatar'">
       <div v-show="$refs.upload && $refs.upload.dropActive" class="drop-active">
-        {{ i18n.dragFileHere }}
+        {{ i18n['layaUploadAvatar.dragFileHere'] }}
       </div>
       <div class="avatar-upload" v-show="!edit">
         <div class="text-center p-2">
           <label for="file">
             <img :src="files.length ? files[0].url : oldAvatar" 
               class="d-block rounded-circle avatar-preview">
-            <br>{{ i18n.dragAnywhere }}
+            <br>{{ i18n['layaUploadAvatar.dragAnywhere'] }}
           </label>
         </div>
         <div class="text-center p-2">
@@ -23,7 +23,7 @@
             @input-file="inputFile"
             v-model="files"
             >
-            {{ i18n.uploadAvatar }}
+            {{ i18n['layaUploadAvatar.uploadFile'] }}
           </file-upload>
         </div>
       </div>
@@ -35,11 +35,11 @@
         <div class="text-center p-4">
           <button type="button" class="btn btn-secondary" 
             @click.prevent="$refs.upload.clear">
-            {{ i18n.cancel }}
+            {{ i18n['cancel'] }}
           </button>
           <button type="submit" class="btn btn-primary"
             @click.prevent="editSave">
-            {{ i18n.save }}
+            {{ i18n['save'] }}
           </button>
         </div>
       </div>
@@ -53,38 +53,44 @@
         post-action=""
         @input-file="inputFile"
         @input-filter="inputFilter">
-        {{ i18n.uploadFile }} 
+        {{ i18n['layaUploadAvatar.uploadFile'] }} 
       </file-upload>
       <button v-show="!$refs.upload || !$refs.upload.active" 
         @click.prevent="$refs.upload.active = true" type="button">
-        {{ i18n.startUpload }}
+        {{ i18n['startUpload'] }}
       </button>
       <button v-show="$refs.upload && $refs.upload.active" 
         @click.prevent="$refs.upload.active = false" 
         type="button">
-        {{ i18n.stopUpload }}
+        {{ i18n['stopUpload'] }}
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex"
-import FileUpload from "vue-upload-component"
-import Cropper from "cropperjs"
-import "cropperjs/dist/cropper.min.css"
-import api from "../../../backend-url.ts";
-import * as i18n from "@/i18n/plugins/misc/laya-upload-avatar"
+import FileUpload from 'vue-upload-component'
+import Cropper from 'cropperjs'
+import 'cropperjs/dist/cropper.min.css'
+import api from '../../../backend-url.ts';
+import { locale } from '@/mixins'
 
 export default {
-  name: "laya-upload-avatar",
+  name: 'laya-upload-avatar',
+
   components: {
     FileUpload
   },
+
+  mixins: [
+    locale
+  ],
+
   props: {
     type: String,
     oldAvatar: String
   },
+
   data() {
     return {
       files: [],
@@ -92,15 +98,13 @@ export default {
       cropper: false
     }
   },
+
   computed: {
-    ...mapGetters(["profileLang"]),
-    i18n() {
-      return i18n[this.profileLang]
-    },
     postAvatar(){
       return `${api}/storage/img/upload`
     }
   },
+
   watch: {
     edit(value) {
       if(value) {
@@ -123,7 +127,9 @@ export default {
       }
     }
   },
+
   methods: {
+
     editSave() {
       // console.log(`editSave function entered`)
       this.edit = false
@@ -144,9 +150,11 @@ export default {
       })
       return false
     },
+
     alert(msg) {
       alert(msg)
     },
+
     inputFile(newFile, oldFile, prevent) {
       if (newFile && !oldFile) {
         this.$nextTick( () => {
@@ -162,7 +170,7 @@ export default {
       if (newFile && !oldFile) {
         // Filter non-image file
         if (!/\.(jpeg|jpe|jpg|gif|png|webp)$/i.test(newFile.name)) {
-          this.alert(this.i18n.noPicAlert)
+          this.alert(this.i18n['layaUploadAvatar.noPicAlert'])
           return prevent()
         }
       }

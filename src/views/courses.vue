@@ -8,7 +8,7 @@ Dependencies:
   vuex,
   @/components/authoring/course-update,
   @/components/ly-course-list,
-  @/i18n/courses,
+  @/mixins/locale.vue
   @/misc/utils.js
 -->
 
@@ -19,7 +19,7 @@ Dependencies:
       <div style="height: 2rem"></div>
 
       <div class="row">
-        <img class="mx-auto" src="../assets/kurse.svg" :alt="i18n.brain">
+        <img class="mx-auto" src="../assets/kurse.svg" :alt="i18n['courses.brain']">
       </div>
 
       <div style="height: 2rem"></div>
@@ -27,7 +27,7 @@ Dependencies:
       <div class="row">
         <div class="col">
           <h1 class="text-center">
-            <strong>{{ i18n.title }}</strong>
+            <strong>{{ i18n['courses.title'] }}</strong>
           </h1>
         </div>
       </div>
@@ -40,7 +40,7 @@ Dependencies:
             <input id="search-bar"
                    type="text"
                    v-model="search"
-                   :placeholder="i18n.searchPH">
+                   :placeholder="i18n['searchPH']">
             <i class="icon fas fa-search"></i>
           </div>
         </div>
@@ -78,16 +78,31 @@ Dependencies:
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import { locale } from '@/mixins'
 import http from 'axios'
 
 import lyCourseEdit from '@/components/authoring/course-update'
 import lyCourseList from '@/components/ly-course-list'
 
-import * as i18n from '@/i18n/courses'
 import utils from '../misc/utils.js'
 
 export default {
   name: 'courses-view',
+
+  components: {
+    lyCourseEdit,
+    lyCourseList
+  },
+
+  mixins: [
+    locale
+  ], 
+
+  computed: {
+    ...mapState(['note', 'auth']),
+    ...mapGetters(['courseList', 'isAuthor']),
+  },
+
   mounted() {
     document.querySelector('#search-bar').focus()
     this.fetchCourses()
@@ -98,22 +113,7 @@ export default {
       search: '',
     }
   },
-  computed: {
-    ...mapState(['note', 'auth']),
-    ...mapGetters(['courseList', 'isAuthor', 'profileLang']),
 
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 21, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.$store.state.profile.lang]
-    }
-  },
   methods: {
     ...utils,
 
@@ -144,10 +144,6 @@ export default {
         .then(fetchCourses)
     },
 
-  },
-  components: {
-    lyCourseEdit,
-    lyCourseList
   }
 }
 </script>

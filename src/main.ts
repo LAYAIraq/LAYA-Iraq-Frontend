@@ -6,37 +6,37 @@
  * Dependencies: see import statements
  */
 
-import Vue from "vue"
-import App from "./App.vue"
-import router from "./router.js"
-import store from "./store"
-import "./registerServiceWorker"
+import Vue from 'vue'
+import App from './App.vue'
+import router from './router.js'
+import store from './store'
+import './registerServiceWorker'
 
 /* set backend address */
-import backendUrl from "./backend-url"
-import httpClient from "axios"
+import backendUrl from './backend-url'
+import httpClient from 'axios'
 httpClient.defaults.baseURL = backendUrl
 
 /* bootstrap */
-import BootstrapVue from "bootstrap-vue"
-import "bootstrap/dist/css/bootstrap.min.css"
-import "bootstrap-vue/dist/bootstrap-vue.css"
+import BootstrapVue from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(BootstrapVue);
 
 /* Laya Interface */
-import Laya from "./laya";
+import Laya from './laya';
 Vue.use(Laya);
 
 /** LAYA core plugins */
-import * as plugins from "@/plugins"
+import * as plugins from '@/plugins'
 Object.values(plugins).map(plugin => Vue.use(plugin))
 
 /* icons */
-import "@fortawesome/fontawesome-free/css/all.css"
+import '@fortawesome/fontawesome-free/css/all.css'
 
 /* storage */
-import Storage from "vue-ls"
-Vue.use(Storage, { name: "ls", namespace: "vuejs__", storage: "local" });
+import Storage from 'vue-ls'
+Vue.use(Storage, { name: 'ls', namespace: 'vuejs__', storage: 'local' });
 
 Vue.config.productionTip = false;
 
@@ -46,4 +46,4 @@ new Vue({
   //@ts-ignore
   router,
   render: (h) => h(App),
-}).$mount("#app");
+}).$mount('#app');

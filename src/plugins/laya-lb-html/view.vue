@@ -6,17 +6,27 @@ Date: unknown
 Dependencies: 
   vuex,
   quill,
-  @/i18n/plugins/misc/laya-html
+  @/mixins/locale.vue
 -->
 
 <template>
   <div class="laya-wysiwyg-view">
+    <h4 v-if="showTitle">{{ title }}</h4>
     <div :id="editorId"></div>
-    <button type="button"
-            class="btn btn-primary mt-3 d-block ml-auto"
-            @click="onFinish[0]() || {}">
-      {{ i18n.nextContent }}<i class="fas fa-arrow-right"></i>
-    </button>
+    <div class="row">
+      <button 
+        type="button"
+        class="btn btn-primary mt-3 d-block ml-auto"
+        :class="langIsAr? 'float-right': 'float-left'"
+        @click="onFinish[0]() || {}">
+        {{ i18n['nextContent'] }}
+        <i 
+          :class="langIsAr? 
+            'fas fa-arrow-left': 
+            'fas fa-arrow-right'"
+        ></i>
+      </button>
+    </div>
   </div>
 
   
@@ -26,13 +36,18 @@ Dependencies:
 <script>
 import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
-import * as i18n from '@/i18n/plugins/misc/laya-html'
+import { locale } from '@/mixins'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'laya-wysiwyg',
+
+  mixins: [
+    locale
+  ],
+
   data() {
-    if(Object.entries(this.$attrs).length === 1) //for preview
+    if(Object.entries(this.$attrs).length === 3) //for preview
       return {...this.$attrs}
     return {
       contents: null
@@ -45,7 +60,7 @@ export default {
     this.fetchContent()
   },
   computed: {
-    ...mapGetters(['content', 'profileLang']),
+    ...mapGetters(['content']),
 
     /**
      * editorId: return id for html element
@@ -56,18 +71,6 @@ export default {
      */
     editorId() {
       return `laya-wysiwyg-readonly-${Date.now()}`
-    },
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 20, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
     }
   },
   methods: {
@@ -83,6 +86,8 @@ export default {
       let idx = this.$route.params.step -1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.contents = preData.contents
+      this.title = preData.title
+      this.showTitle = preData.showTitle
     },
     /**
      * Function fetchContent: fetch contents from quill

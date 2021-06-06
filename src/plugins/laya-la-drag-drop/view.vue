@@ -5,7 +5,7 @@ Creator: core
 Date: unknown
 Dependencies:
   vuex,
-  @/i18n/plugins/laya-la-drag-drop
+  @/mixins/locale.vue 
 -->
 
 <template>
@@ -56,12 +56,12 @@ Dependencies:
                 class="btn btn-link mt-3"
                 :disabled="checked"
                 @click="check">
-          {{ i18n.check }}
+          {{ i18n['check'] }}
         </button>
         <button type="button"
                 class="btn btn-primary mt-3 ml-auto"
                 @click="done">
-          {{ i18n.nextContent }} <i class="fas fa-arrow-right"></i>
+          {{ i18n['nextContent'] }} <i class="fas fa-arrow-right"></i>
         </button>
       </div>
 
@@ -71,14 +71,28 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import * as i18n from '@/i18n/plugins/laya-la-drag-drop'
+import { locale } from '@/mixins'
 
 export default {
   name: 'laya-quiz-drag-drop',
+
+  mixins: [
+    locale
+  ],
+
   created () {
     this.mapSolutions()
     this.fetchData()
   },
+  
+  props: {
+    onFinish: Array
+  },
+
+  computed: {
+    ...mapGetters(['content'])
+  },
+
   data () {
     if (Object.entries(this.$attrs).length === 5) //for showing preview
       return {
@@ -98,24 +112,7 @@ export default {
       categories: [],
     }
   },
-  props: {
-    onFinish: Array
-  },
-  computed: {
-    ...mapGetters(['content', 'profileLang']),
 
-     /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 12, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
-    }
-  },
   methods: {
 
     /**

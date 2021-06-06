@@ -4,9 +4,8 @@ Use: Provide tool to delete whole course
 Creator: cmc
 Date: October 27, 2020
 Dependencies: 
-  axios,
   vuex,
-  @/i18n/course-edit/delete-course
+  @/mixins/locale.vue
 -->
 
 <template>
@@ -14,24 +13,24 @@ Dependencies:
     <div class="col">
       <b-button size="sm"
           variant="danger"
-          class="float-right"
+          :class="langIsAr? 'float-left' : 'float-right'"
           @click="$bvModal.show('author-delCourse-confirm')">
         <i class="fas fa-exclamation-circle"></i> 
-        {{ i18n.deleteCourse }}
+        {{ i18n['deleteCourse'] }}
       </b-button>
     </div>
 
-    <div class="col text-dark" v-html="i18n.deleteCourseTip"></div>
+    <div class="col text-dark" v-html="i18n['deleteCourse.deleteCourseTip']"></div>
             
     <b-modal id="author-delCourse-confirm"
-        :title="i18n.modal.title"
+        :title="i18n['deleteCourse']"
         header-bg-variant="danger"
         ok-variant="danger"
-        :ok-title="i18n.modal.ok"
-        :cancel-title="i18n.modal.cancel"
+        :ok-title="i18n['delete']"
+        :cancel-title="i18n['cancel']"
         @ok="delCourse"
         centered>
-      <p v-html="i18n.modal.text"></p>
+      <p v-html="i18n['deleteCourse.modal.text']"></p>
     </b-modal>
 
   </div>
@@ -39,26 +38,17 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import * as i18n from '@/i18n/course-edit/delete-course'
-import http from 'axios'
+import { locale } from '@/mixins'
 
 export default {
   name: 'course-delete',
 
-  computed: {
-    ...mapGetters(['profileLang', 'course']),
+  mixins: [
+    locale
+  ],
 
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 20, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
-    }
+  computed: {
+    ...mapGetters(['course'])
   },
 
   methods: {

@@ -1,28 +1,31 @@
 <template>
-  <div class="file-list">
+  <div 
+    class="file-list"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
 
     <!-- title, tooltip-->
     <div class="file-explorer">
       <div>
         <label>
           <h2>
-            {{ i18n.filesInCourse }}
+            {{ i18n['layaUploadFileList.filesInCourse'] }}
           </h2>
         </label>
         <i 
           id ="questionmark" 
           class="fas fa-question-circle align-right" 
           @click="toggleTip" 
-          :title="i18n.showTip" 
+          :title="i18n['showTip']" 
           v-b-tooltip.left
         >
         </i>
         <b-jumbotron 
           v-if="tooltipOn"
-          :header="i18n.title"
-          :lead="i18n.tipHeadline">
+          :header="i18n['layaUploadFileList.addUpload']"
+          :lead="i18n['tipHeadline']">
           <hr>
-          <span v-html="i18n.tooltip"></span>
+          <span v-html="i18n['layaUploadFileList.tooltip']"></span>
         </b-jumbotron>
 
       </div>
@@ -36,7 +39,7 @@
             class="sort-list"
           >
             <i :class="sortIcon('type')"></i>
-            {{ i18n.fileType }}
+            {{ i18n['layaUploadFileList.fileType'] }}
           </span>
         </div>
         <div class="col-5">
@@ -47,7 +50,7 @@
             class="sort-list"
           >
             <i :class="sortIcon('originalFilename')"></i>
-            {{ i18n.fileName }}
+            {{ i18n['layaUploadFileList.fileName'] }}
           </span>
         </div>
         <div class="col-2">
@@ -57,14 +60,14 @@
             class="sort-list"
           >
             <i :class="sortIcon('size')"></i>
-            {{ i18n.fileSize }}
+            {{ i18n['layaUploadFileList.fileSize'] }}
           </span>
         </div>
         <div class="col-1">
-          {{ i18n.url }}
+          {{ i18n['layaUploadFileList.url'] }}
         </div>
         <div class="col">
-          {{ i18n.deleteFile }}
+          {{ i18n['layaUploadFileList.deleteFile'] }}
         </div>
         
       </div>
@@ -87,7 +90,7 @@
             <div class="col-2">
               <i 
               :class="fileIcon(file.type)"
-              :title="i18n.fileType"
+              :title="i18n['layaUploadFileList.fileType']"
               v-b-tooltip.left></i>
               {{ fileTypeString(file.type) }}
             </div>
@@ -103,7 +106,7 @@
             <div class="col-1">
               <i 
                 class="fas fa-copy copy"
-                :title="i18n.copyUrl"
+                :title="i18n['layaUploadFileList.copyUrl']"
                 v-b-tooltip.right
                 @click="copyUrl(getUrl(file.name))"
               ></i>
@@ -113,7 +116,7 @@
               <button
                 type="button"
                 class="btn btn-danger btn-sm"
-                :title="i18n.deleteFile"
+                :title="i18n['layaUploadFileList.deleteFile']"
                 v-b-tooltip.top
                 @click="deleteFile(file)"
               >
@@ -127,7 +130,7 @@
         </li>
       </ul>
       <div v-else class="row">
-        {{ i18n.noFiles }}
+        {{ i18n['layaUploadFileList.noFiles'] }}
       </div>
     
     </div>
@@ -138,7 +141,7 @@
         class="btn btn-primary btn-large"
         @click="addUpload = true">
           <i class="fas fa-upload"></i>
-          {{ i18n.addUpload }}
+          {{ i18n['addUpload'] }}
         </button>
     </div>
     <div class="file-list-upload" v-else>
@@ -153,14 +156,14 @@
               <div class="col-5"> {{ file.name }} </div>
               <div class="col-2 size"> {{ fileSize(file.size) }} </div>
               <div class="col-auto" v-if="file.error"> {{ file.error }} </div>
-              <div class="col-auto" v-else-if="file.success"> {{ i18n.success }} </div>
-              <div class="col-auto" v-else-if="file.active"> {{ i18n.active }} </div>
+              <div class="col-auto" v-else-if="file.success"> {{ i18n['layaUploadFileList.success'] }} </div>
+              <div class="col-auto" v-else-if="file.active"> {{ i18n['layaUploadFileList.active'] }} </div>
               <div class="col-auto" v-else></div>
               <div class="col-0 align-self-center" v-if="!file.success">
                 <button 
                   type="button"
                   class="btn btn-danger btn-sm"
-                  :title="i18n.removeUpload"
+                  :title="i18n['layaUploadFileList.removeUpload']"
                   v-b-tooltip.right
                   @click="_removeFile(i)"
                 >
@@ -176,18 +179,19 @@
 
         <ul v-else>
           <div class="text-center p-5">
-            <h4 v-html="i18n.dropOr"></h4>
+            <h4 v-html="i18n['layaUploadFileList.dropOr']"></h4>
             <label 
               for="file"
               class="btn btn-lg btn-primary"
             >
-              {{ i18n.selectFiles }}
+              <i class="fas fa-plus"></i>
+              {{ i18n['layaUploadFileList.selectFiles'] }}
             </label>
           </div>
         </ul>
 
         <div v-show="$refs.upload && $refs.upload.dropActive" class="drop-active">
-          <h3>{{ i18n.dropToUpload }}</h3>
+          <h3>{{ i18n['layaUploadFileList.dropToUpload'] }}</h3>
         </div>
 
         <div class="button-group">
@@ -202,7 +206,7 @@
               v-model="files"
               ref="upload">
               <i class="fas fa-plus"></i>
-              {{ i18n.selectFiles }}
+              {{ i18n['layaUploadFileList.selectFiles'] }}
             </file-upload>
             <button 
               type="button" 
@@ -211,7 +215,7 @@
               @click.prevent="$refs.upload.active = true"
             >
               <i class="fas fa-arrow-up" aria-hidden="true"></i>
-              {{ i18n.startUpload }}
+              {{ i18n['startUpload'] }}
             </button>
             <button 
               type="button" 
@@ -220,7 +224,7 @@
               @click.prevent="$refs.upload.active = false"
             >
               <i class="fas fa-stop" aria-hidden="true"></i>
-              {{ i18n.stopUpload }}
+              {{ i18n['stopUpload'] }}
             </button>
             <button 
               type="button"
@@ -228,7 +232,7 @@
               @click="addUpload = false"
             >
               <i class="fas fa-minus"></i>
-              {{ i18n.hideUploader }}
+              {{ i18n['layaUploadFileList.hideUploader'] }}
             </button>
           </b-button-group>
         </div>
@@ -238,14 +242,14 @@
 
     <b-modal 
       id="file-delete-confirm"
-      :title="i18n.deleteFile"
+      :title="i18n['layaUploadFileList.deleteFile']"
       centered
       header-bg-variant="danger"
       ok-variant="danger"
       @ok="confirmedFileDelete"
       @cancel="fileToDelete = null"
     >
-      {{ i18n.deleteFileConfirm }}
+      {{ i18n['layaUploadFileList.deleteFileConfirm'] }}
     </b-modal>
 
   </div>
@@ -254,8 +258,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import FileUpload from 'vue-upload-component'
-import { listSort, mimeTypes, tooltipIcon }  from '@/mixins'
-import * as i18n from '@/i18n/plugins/misc/laya-upload-file-list'
+import { listSort, locale, mimeTypes, tooltipIcon }  from '@/mixins'
 import api from '@/backend-url'
 import fileSize from '@/misc/utils.js'
 
@@ -268,28 +271,16 @@ export default {
 
   mixins: [
     listSort,
+    locale,
     mimeTypes,
     tooltipIcon
   ],
 
   computed: {
     ...mapGetters([
-        'profileLang',
         'courseFiles',
         'courseStorage'
       ]),
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 29, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
-    },
 
     sortedFiles() {
       return this.sortList(this.courseFiles)
@@ -426,7 +417,7 @@ export default {
     checkforSizeExcess(file) {
       if(file.size>500000) {
         // console.log('File too large!')
-        file.error = this.i18n.fileTooLarge
+        file.error = this.i18n['layaUploadFileList.fileTooLarge']
         return true
       }
       return false
@@ -446,7 +437,7 @@ export default {
     checkForDuplicate(file){
       if(file.success) {
         // console.log('This file has already been uploaded!')
-        file.error = this.i18n.duplicateFile
+        file.error = this.i18n['layaUploadFileList.duplicateFile']
         return true
       }
 
@@ -462,7 +453,7 @@ export default {
           entry.size == attrs.size &&
           entry.type === attrs.type ) {
             // console.log('This file already exists in this course!')
-            file.error = this.i18n.duplicateFile
+            file.error = this.i18n['layaUploadFileList.duplicateFile']
             return true
           } 
       }
@@ -523,7 +514,7 @@ export default {
      */
     copyUrl(url) {
       if (!url) {
-        alert(this.i18n.fileNameError)
+        alert(this.i18n['layaUploadFileList.fileNameError'])
       }
       const dummy = document.createElement('textarea')
       dummy.value = url
@@ -590,6 +581,11 @@ export default {
 </script>
 
 <style scoped>
+#questionmark {
+  float: inline-end;
+  cursor: pointer;
+}
+
 span.sort-list {
   cursor: pointer;
 }

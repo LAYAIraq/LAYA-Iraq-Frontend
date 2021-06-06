@@ -6,14 +6,17 @@ Date: unknown
 Dependencies: 
   vuex, 
   axios, 
-  @/i18n/header, 
+  @/mixins/locale, 
   @/components/scroll-to-top.vue, 
   @/misc/icons.js
 -->
 
 <template>
   
-  <div id="ly-header">
+  <div 
+    id="ly-header"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
     <ly-scroll-to-top></ly-scroll-to-top>
     <b-navbar toggleable="lg" type="light" variant="light">
 
@@ -29,32 +32,82 @@ Dependencies:
 
         <!-- left links -->
         <b-navbar-nav v-if="auth.online">
-          <b-nav-item to="/courses">{{i18n.courses}}</b-nav-item>
-          <!-- <b-nav-item to="/mycourses">{{i18n.myCourses}}</b-nav-item> -->
+          <b-nav-item to="/courses">
+            <i class="fas fa-chalkboard-teacher" size="2x"></i> 
+            {{ i18n['header.courses'] }}
+          </b-nav-item>
+          <!-- <b-nav-item to="/mycourses">{{ i18n['mycourses.title'] }}</b-nav-item> -->
         </b-navbar-nav>
 
-        <!-- right links -->
-        <b-navbar-nav v-if="!auth.online" class="ml-auto">
-          <b-nav-item to="/register">{{i18n.register}}</b-nav-item>
-          <b-nav-item to="/login">{{i18n.login}}</b-nav-item>
+        <!-- right links unauthorized -->
+        <b-navbar-nav 
+          v-if="!auth.online" 
+          :class="marginClass()"
+        >
+          <b-nav-item to="/register">
+          <i class="fas fa-user-plus"></i>
+            {{ i18n['header.register'] }}
+          </b-nav-item>
+          <b-nav-item to="/login">
+          <i class="fas fa-sign-in-alt"></i>
+            {{ i18n['login.title'] }}
+          </b-nav-item>
         </b-navbar-nav>
 
-        <b-navbar-nav v-if="auth.online" class="ml-auto">
-          <b-nav-item to="/profile">{{i18n.profile}}</b-nav-item>
-          <b-nav-item @click="logout">{{i18n.logout}}</b-nav-item>
+        <!-- right links authorized -->
+        <b-navbar-nav 
+          v-else 
+          :class="marginClass()"
+        >
+          <b-nav-item to="/profile">
+            <i class="fas fa-user-alt"></i>
+            {{ i18n['header.profile'] }}
+          </b-nav-item>
+          <b-nav-item @click="logout">
+            <i class="fas fa-sign-out-alt"></i>
+            {{ i18n['header.logout'] }}
+          </b-nav-item>
         </b-navbar-nav>
 
-        <b-navbar-nav>
+        <b-navbar-nav v-if="langIsAr">
+          <b-nav-item-dropdown>
+
+            <template v-slot:button-content>
+              <img :src="icons[profileLang]" class="lang-icon">
+            </template>
+
+            <b-dropdown-item-btn 
+              v-for="(svg, lang) in icons"
+              :key="lang"
+              @click="setLang(lang)"
+            >
+              <img 
+                :src="svg" 
+                :alt="lang" 
+                class="lang-icon lang-icon-list"
+              >
+            </b-dropdown-item-btn>
+
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
+
+        <b-navbar-nav v-else>
           <b-nav-item-dropdown right>
 
             <template v-slot:button-content>
               <img :src="icons[profileLang]" class="lang-icon">
             </template>
 
-            <b-dropdown-item-btn v-for="(svg, lang) in icons"
-                                 :key="lang"
-                                 @click="setLang(lang)">
-              <img :src="svg" :alt="lang" class="lang-icon lang-icon-list">
+            <b-dropdown-item-btn 
+              v-for="(svg, lang) in icons"
+              :key="lang"
+              @click="setLang(lang)"
+            >
+              <img 
+                :src="svg" 
+                :alt="lang" 
+                class="lang-icon lang-icon-list"
+              >
             </b-dropdown-item-btn>
 
           </b-nav-item-dropdown>
@@ -68,49 +121,46 @@ Dependencies:
 </template>
 
 <script>
-import { 
-  mapGetters,
-  mapState 
-} from 'vuex'
-
+import { mapGetters, mapState } from 'vuex'
 import http from 'axios'
 import { icons } from '@/misc/langs.js'
-import * as i18n from '@/i18n/header'
+import { locale } from '@/mixins'
 import lyScrollToTop from '@/components/scroll-to-top.vue'
 
 export default {
   name: 'ly-header',
+
+  components: {
+    lyScrollToTop
+  },
+
+  mixins: [
+    locale
+  ],
+
   data () {
     return {
       icons,
       isCourse: Boolean
     }
   },
+  
+  computed: {
+    ...mapState(['auth']),
+    ...mapGetters(['profileLang'])
+  },
+
   watch: {
     '$route': 'checkCourse'
   },
-  computed: {
-    ...mapState(['auth']),
-    ...mapGetters(['profileLang']),
-    
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 12, 2021
-     * 
-     */
-    i18n () {
-      return i18n[this.profileLang]
-    }
-  },
+
   mounted () {
     document.title = 'Laya'
     this.checkCourse()
     this.$forceUpdate()
     this.getLocale()
   },
+
   methods: {
     /**
      * Function getLocale: Get Browser locale for localization
@@ -190,10 +240,19 @@ export default {
       this.$ls.remove('auth')
       this.$store.commit('logout')
       this.$router.push('/login')
+    },
+
+    /**
+     * function marginClass: returns class for side margin depending on locale
+     * Author: cmc
+     * Last Updated: June 3, 2021
+     */
+    marginClass() {
+      if (this.langIsAr) {
+        return 'mr-auto'
+      }
+      return 'ml-auto'
     }
-  },
-  components: {
-    lyScrollToTop
   }
 }
 </script>
@@ -240,4 +299,5 @@ export default {
 .lang-icon-list {
   margin: 5px;
 }
+
 </style>

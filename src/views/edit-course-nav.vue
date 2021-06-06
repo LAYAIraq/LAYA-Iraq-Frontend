@@ -6,7 +6,7 @@ Date: unknown
 Dependencies: 
   vis-network,
   vuex,
-  @/i18n/course-nav-edit
+  @/mixins/locale.vue
 -->
 
 <template>
@@ -17,12 +17,12 @@ Dependencies:
       <div class="row title">
         <div class="col">
 
-          <h4>{{ i18n.title }}</h4>
-          <p v-html="i18n.text.p1">
+          <h4>{{ i18n['courseNavEdit.title'] }}</h4>
+          <p v-html="i18n['courseNavEdit.text.p1']">
           </p>
-          <p v-html="i18n.text.p2">
+          <p v-html="i18n['courseNavEdit.text.p2']">
           </p>
-          <p v-html="i18n.text.p3">
+          <p v-html="i18n['courseNavEdit.text.p3']">
           </p>
 
         </div>
@@ -34,24 +34,32 @@ Dependencies:
       <div class="row">
 
         <div class="col-2">
-          <b>{{ i18n.table.contentNo }}</b>
+          <b>{{ i18n['courseNavEdit.table.contentNo'] }}</b>
         </div>
 
         <div class="col">
-          <b>{{ i18n.table.contentType }}</b>
+          <b>{{ i18n['courseNavEdit.table.contentType'] }}</b>
+        </div>
+
+        <div class="col">
+          <b>{{ i18n['title'] }}</b>
         </div>
 
         <div class="col-3">
-          <b>{{ i18n.table.succContent }}</b>
+          <b>{{ i18n['courseNavEdit.table.succContent'] }}</b>
         </div>
 
         <div class="col-2">
-          <b>{{ i18n.table.swap }}</b>
+          <b>{{ i18n['courseNavEdit.table.swap'] }}</b>
         </div>
 
       </div>
 
-      <div class="row" v-for="(step,i) in courseContent" :key="'step-'+i">
+      <div 
+        class="row" 
+        v-for="(step,i) in courseContent" 
+        :key="'step-'+i"
+      >
 
         <div class="col-2">
           <b>{{ i+1 }}</b>
@@ -61,27 +69,34 @@ Dependencies:
           {{ typeName(step.name) }}
         </div>
 
+        <div class="col">
+          {{ step.input.title }}
+        </div>
+
         <div class="col-3">
-          <input class="form-control"
-                 :class="{'is-invalid': !step.nextStep}"
-                 type="text"
-                 v-model="step.nextStep"
-                 :placeholder="i18n.table.placeholder">
+          <input 
+            class="form-control"
+            :class="{'is-invalid': !step.nextStep}"
+            type="text"
+            v-model="step.nextStep"
+            :placeholder="i18n['courseNavEdit.table.placeholder']">
         </div>
 
         <div class="col-2">
           <!-- swap up -->
-          <button v-if="i > 0"
-                  type="button"
-                  class="btn btn-primary btn-sm"
-                  @click="swapUp(i)">
+          <button 
+            v-if="i > 0"
+            type="button"
+            class="btn btn-primary btn-sm"
+            @click="swapUp(i)">
             <i class="fas fa-level-up-alt"></i>
           </button>
           <!-- swap down -->
-          <button v-if="i < courseContent.length-1"
-                  type="button"
-                  class="btn btn-primary btn-sm float-right"
-                  @click="swapDown(i)">
+          <button 
+            v-if="i < courseContent.length-1"
+            type="button"
+            class="btn btn-primary btn-sm float-right"
+            @click="swapDown(i)">
             <i class="fas fa-level-down-alt"></i>
           </button>
         </div>
@@ -92,25 +107,31 @@ Dependencies:
 
         <!-- graph preview -->
         <div class="col">
-          <button type="button"
-                  class="btn btn-secondary"
-                  :disabled="formInvalid"
-                  @click="renderNavGraph">
+          <button 
+            type="button"
+            class="btn btn-secondary"
+            :disabled="formInvalid"
+            @click="renderNavGraph">
             <i class="fas fa-project-diagram"></i>
-            {{ i18n.table.renewGraph }}
+            {{ i18n['courseNavEdit.table.renewGraph'] }}
           </button>
         </div>
 
         <!-- store -->
         <div class="col text-right">
-          <button type="button"
-                  class="btn btn-primary"
-                  :disabled="formInvalid"
-                  @click="save">
+          <button 
+            type="button"
+            class="btn btn-primary"
+            :disabled="formInvalid"
+            @click="save">
             <span v-if="formInvalid">
-              <i class="fas fa-exclamation-triangle"></i> {{ i18n.table.missingInfo }}
+              <i class="fas fa-exclamation-triangle"></i> 
+              {{ i18n['courseNavEdit.table.missingInfo'] }}
             </span>
-            <span v-else><i class="fas fa-check"></i> {{ i18n.table.save }}</span>
+            <span v-else>
+              <i class="fas fa-check"></i> 
+              {{ i18n['save'] }}
+            </span>
           </button>
         </div>
 
@@ -122,9 +143,9 @@ Dependencies:
     <div class="container">
       <div class="row">
         <div class="col">
-          {{ i18n.graph }}
+          {{ i18n['courseNavEdit.graph'] }}
           <span class="text-muted">
-            {{ i18n.graphTip }}
+            {{ i18n['courseNavEdit.graphTip'] }}
           </span>
           <div :id="navGraphId" class="nav-graph"></div>
         </div>
@@ -138,30 +159,28 @@ Dependencies:
 <script>
 import vis from 'vis-network'
 import { mapGetters } from 'vuex'
-import * as i18n from '@/i18n/course-nav-edit'
+import { locale } from '@/mixins'
 
 export default {
   name: 'edit-course-nav-view',
-  created() {
-    //create deep copy of store object to manipulate in vue instance
-    let preData = JSON.parse(JSON.stringify(this.content))
-    this.courseContent = preData
+
+  mixins: [
+    locale
+  ],
+  
+  props: {
+    onnavupdate: Function
   },
-  mounted() {
-    if(!this.formInvalid)
-      this.renderNavGraph()
-  },
+
   data() {
     return {
       graph: null,
       courseContent: []
     }
   },
-  props: {
-    onnavupdate: Function
-  },
+
   computed: {
-    ...mapGetters(['content', 'profileLang']),
+    ...mapGetters(['content']),
 
     /**
      * formInvalid: checks if all contents have nextStep set
@@ -179,20 +198,20 @@ export default {
      */
     navGraphId() {
       return 'nav-graph'
-    },
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 21, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
     }
   },
+
+  created() {
+    //create deep copy of store object to manipulate in vue instance
+    let preData = JSON.parse(JSON.stringify(this.content))
+    this.courseContent = preData
+  },
+
+  mounted() {
+    if(!this.formInvalid)
+      this.renderNavGraph()
+  },
+
   methods: {
 
     /**
@@ -226,25 +245,22 @@ export default {
     },
 
     /**
-     * Function typeName: returns name of content block in locale,
-     *  de if locale not available
+     * Function typeName: returns name of content block in locale
      * 
      * Author: core
      * 
-     * Last Updated: January 20, 2021
+     * Last Updated: May 6, 2021
      * 
      * @param {string} compName name of content block
      */
-    typeName(compName) {
-      let lang = this.$store.state.profile.lang
-      let comps = {...this.$laya.la, ...this.$laya.lb}
-      if (comps[compName].i18n.hasOwnProperty(lang)) {
-        return comps[compName].i18n[lang].name
+    typeName(compName) {     
+      let comps = { ...this.$laya.la, ...this.$laya.lb }
+      for(let comp in comps) {
+        if (comps[comp].id === compName) {
+          return this.i18n[comps[comp].name + '.name']
+        }
       }
-        
-      else {
-        return comps[compName].i18n.de.name
-      }
+      return 'FAIL'
     },
 
     /**

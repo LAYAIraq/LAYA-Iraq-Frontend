@@ -3,18 +3,21 @@ Filename: imprint.vue
 Use: display imprint
 Creator: core
 Date: unknown
-Dependencies: @/i18n/imprint
+Dependencies: @/mixins/locale.vue
 -->
 
 <template>
-  <div class="imprint-view">
+  <div 
+    class="imprint-view"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
 
     <div class="container">
       <div class="row">
         <div class="col">
 
           <div style="height: 2rem"></div>
-          <h1><b>{{ i18n.title }}</b></h1>
+          <h1><b>{{ i18n['imprint'] }}</b></h1>
 
         </div>
       </div>
@@ -23,26 +26,17 @@ Dependencies: @/i18n/imprint
 </template>
 
 <script>
-import * as i18n from '@/i18n/imprint'
+import { locale } from '@/mixins'
 
 export default {
   name: 'imprint-view',
+
+  mixins: [
+    locale
+  ],
+
   mounted () {
     window.scroll(0, 0)
-  },
-  computed: {
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 21, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.$store.state.profile.lang]
-    }
   }
 }
 </script>

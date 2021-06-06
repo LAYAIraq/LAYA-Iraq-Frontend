@@ -22,10 +22,7 @@ Dependencies: none
     <div v-show="data.length === 0" class="p-3">
       <h3 class="empty text-center">
         <i class="far fa-frown"></i>
-        <span v-if="$store.state.profile.lang === 'de'">
-          Keine Kurse gefunden
-        </span>
-        <span v-else>No courses found</span>
+        <span>{{ i18n['noCourses'] }}</span>
       </h3>
     </div>
   </div>
@@ -33,8 +30,14 @@ Dependencies: none
 </template>
 
 <script>
+import { locale } from '@/mixins'
 export default {
   name: 'ly-accordion',
+
+  mixins: [
+    locale
+  ],
+
   props: {
     data: Array
   }

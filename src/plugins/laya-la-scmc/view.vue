@@ -5,11 +5,14 @@ Creator: core
 Date: unknown
 Dependencies:
   vuex,
-  @/i18n/plugins/laya-la-scmc
+  @/mixins/locale.vue
 -->
 
 <template>
-  <fieldset class="laya-la-scmc">
+  <fieldset 
+    class="laya-la-scmc"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
 
 
     <!-- render task -->
@@ -43,7 +46,10 @@ Dependencies:
           :disabled="freeze"
           v-bind:value="i">
 
-        <label :for="'mchoice-in-'+_uid+'-'+i" class="form-check-label">
+        <label 
+          :for="'mchoice-in-'+_uid+'-'+i" 
+          class="form-check-label"
+          :class="langIsAr? 'mr-4' : ''">
           {{ option }}
         </label>
         <i class="ml-2" :class="eval[i]"></i>
@@ -57,33 +63,71 @@ Dependencies:
     <!-- check -->
     <!--
     <div v-if="maxTries > 0" class="text-secondary my-2" tabindex="0">
-      <span>{{ i18n.triesLeft }}</span>
+      <span>{{ i18n['layaLaScmc.triesLeft'] }}</span>
       {{maxTries-tries}}
     </div>
     -->
-    <button type="button"
-            class="btn btn-link mt-3"
-            @click="diffSolution"
-            :disabled="freeze">
-      {{ i18n.check }}
-    </button>
-    <button type="button"
-            class="btn btn-primary mt-3 float-right"
-            @click="onFinish[0]() || {}">
-      <span>{{ i18n.nextContent }}<i class="fas fa-arrow-right"></i> </span>
-    </button>
-    <span :id="feedbackId" class="ml-2" aria-live="polite">{{ feedback }}</span>
+    <div>
+      <button type="button"
+        class="btn btn-link mt-3"
+        @click="diffSolution"
+        :disabled="freeze">
+        {{ i18n['check'] }}
+      </button>
+      <button type="button"
+        class="btn btn-primary mt-3"
+        :class="langIsAr? 'float-left': 'float-right'"
+        @click="onFinish[0]() || {}">
+        <span>
+          {{ i18n['nextContent'] }}
+          <i class="fas fa-arrow-right"></i> 
+        </span>
+      </button>
+      <span 
+        :id="feedbackId" 
+        class="ml-2" 
+        aria-live="polite"
+      >
+        {{ feedback }}
+      </span>
+    </div>
 
   </fieldset>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import * as i18n from '@/i18n/plugins/laya-la-scmc'
+import { locale } from '@/mixins'
 
 export default {
   name: 'laya-multiple-choice',
-  data () {
+
+  mixins: [
+    locale
+  ],
+
+  props: {
+    onFinish: Array
+  },
+
+  computed: {
+    ...mapGetters(['content']),
+
+    /**
+     * feedbackId: creates an identifier string
+     * 
+     * Author: core
+     * 
+     * Last Updated: unknown
+     */
+    feedbackId() {
+      return `mchoice-feedback-${this._uid}` 
+      //FIXME vm _uid is not supposed to be used as data
+      //source: https://github.com/vuejs/vue/issues/5886#issuecomment-308625735
+    }
+  },
+
+   data () {
     if (Object.entries(this.$attrs).length === 7) 
       return {
         ...this.$attrs,
@@ -110,42 +154,13 @@ export default {
       maxTries: ''
     }
   },
+
   created () {
     if (Object.entries(this.$attrs).length != 7) { // previewing newly created content
       this.fetchData()
     }
   },
-  props: {
-    onFinish: Array
-  },
-  computed: {
-    ...mapGetters(['content', 'profileLang']),
 
-    /**
-     * feedbackId: creates an identifier string
-     * 
-     * Author: core
-     * 
-     * Last Updated: unknown
-     */
-    feedbackId() {
-      return `mchoice-feedback-${this._uid}` 
-      //FIXME vm _uid is not supposed to be used as data
-      //source: https://github.com/vuejs/vue/issues/5886#issuecomment-308625735
-    },
-
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 19, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.profileLang]
-    }
-  },
   methods: {
 
     /**
