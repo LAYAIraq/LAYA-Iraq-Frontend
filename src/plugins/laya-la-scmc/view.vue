@@ -9,7 +9,10 @@ Dependencies:
 -->
 
 <template>
-  <fieldset class="laya-la-scmc">
+  <fieldset 
+    class="laya-la-scmc"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
 
 
     <!-- render task -->
@@ -43,7 +46,10 @@ Dependencies:
           :disabled="freeze"
           v-bind:value="i">
 
-        <label :for="'mchoice-in-'+_uid+'-'+i" class="form-check-label">
+        <label 
+          :for="'mchoice-in-'+_uid+'-'+i" 
+          class="form-check-label"
+          :class="langIsAr? 'mr-4' : ''">
           {{ option }}
         </label>
         <i class="ml-2" :class="eval[i]"></i>
@@ -61,27 +67,30 @@ Dependencies:
       {{maxTries-tries}}
     </div>
     -->
-    <button type="button"
-      class="btn btn-link mt-3"
-      @click="diffSolution"
-      :disabled="freeze">
-      {{ i18n['check'] }}
-    </button>
-    <button type="button"
-      class="btn btn-primary mt-3 float-right"
-      @click="onFinish[0]() || {}">
-      <span>
-        {{ i18n['nextContent'] }}
-        <i class="fas fa-arrow-right"></i> 
+    <div>
+      <button type="button"
+        class="btn btn-link mt-3"
+        @click="diffSolution"
+        :disabled="freeze">
+        {{ i18n['check'] }}
+      </button>
+      <button type="button"
+        class="btn btn-primary mt-3"
+        :class="langIsAr? 'float-left': 'float-right'"
+        @click="onFinish[0]() || {}">
+        <span>
+          {{ i18n['nextContent'] }}
+          <i class="fas fa-arrow-right"></i> 
+        </span>
+      </button>
+      <span 
+        :id="feedbackId" 
+        class="ml-2" 
+        aria-live="polite"
+      >
+        {{ feedback }}
       </span>
-    </button>
-    <span 
-      :id="feedbackId" 
-      class="ml-2" 
-      aria-live="polite"
-    >
-      {{ feedback }}
-    </span>
+    </div>
 
   </fieldset>
 </template>

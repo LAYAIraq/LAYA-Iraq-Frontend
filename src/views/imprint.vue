@@ -7,7 +7,10 @@ Dependencies: @/mixins/locale.vue
 -->
 
 <template>
-  <div class="imprint-view">
+  <div 
+    class="imprint-view"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
 
     <div class="container">
       <div class="row">

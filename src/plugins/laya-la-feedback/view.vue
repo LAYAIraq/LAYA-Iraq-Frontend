@@ -80,8 +80,14 @@ Dependencies: @/mixins/locale.vue
        
         <button type="button"
           class="btn btn-primary mt-3 ml-auto"
+          :class="langIsAr? 'float-right': 'float-left'"
           @click="done">
-          {{ i18n['nextContent'] }}<i class="fas fa-arrow-right"></i>
+          {{ i18n['nextContent'] }}
+          <i 
+            :class="langIsAr?
+            'fas fa-arrow-left':
+            'fas fa-arrow-right'"
+          ></i>
         </button>
       </div>
     </div>

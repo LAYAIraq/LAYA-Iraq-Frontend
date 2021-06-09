@@ -13,7 +13,7 @@ Dependencies:
     <div class="col">
       <b-button size="sm"
           variant="danger"
-          class="float-right"
+          :class="langIsAr? 'float-left' : 'float-right'"
           @click="$bvModal.show('author-delCourse-confirm')">
         <i class="fas fa-exclamation-circle"></i> 
         {{ i18n['deleteCourse'] }}

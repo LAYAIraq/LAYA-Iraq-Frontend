@@ -8,7 +8,10 @@ Dependencies: @/mixins/locale.vue
 
 <template>
 
-  <div class="laya-plyr-create">
+  <div 
+    class="laya-plyr-create"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
 
     <form>
       <div class="form-group">

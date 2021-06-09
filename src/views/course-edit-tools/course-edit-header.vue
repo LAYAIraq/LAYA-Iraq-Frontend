@@ -19,17 +19,27 @@ Dependencies:
           v-if="$route.name != 'course-detail-view'"
           variant="outline-secondary"
           size="sm"
+          :class="langIsAr? 'float-right' : 'float-left'"
           active-class="active" 
           :to="{name: 'course-detail-view', params: {name, step}}"
           exact> 
-          <i class="fas fa-chevron-left"></i> 
+          <i 
+            :class="langIsAr?
+              'fas fa-chevron-right':
+              'fas fa-chevron-left'"
+          ></i> 
           {{ i18n['header.overview'] }}
         </b-button>
 
           <!-- jump to content number -->
-          <span class="content-nav float-right" style="font-size: 120%">
-            
+          <span 
+            class="content-nav"
+            :class="langIsAr? 'float-left' : 'float-right'"
+            style="font-size: 120%"
+          >
+            <!-- dropdown for ltr locales -->
             <b-dropdown id="cid-dd"
+              v-if="!langIsAr"
               :text="i18n['header.jumpTo']"
               size="sm"
               variant="secondary"
@@ -43,6 +53,33 @@ Dependencies:
                   name: 'course-detail-view',
                   params: { name, step: id+1+'' }
                 }"
+              >
+                {{ i18n['header.listContent'] }} 
+                <b>
+                  {{ id+1 }}
+                </b>:
+                {{ c.input.title }}
+                ({{ typeName(c.name)}})
+              </b-dropdown-item>
+
+            </b-dropdown>
+
+            <b-dropdown id="cid-dd"
+              v-else
+              :text="i18n['header.jumpTo']"
+              size="sm"
+              variant="secondary"
+              no-flip
+            >
+              
+              <b-dropdown-item 
+                v-for="(c,id) in content" 
+                :key="id"
+                :to="{
+                  name: 'course-detail-view',
+                  params: { name, step: id+1+'' }
+                }"
+                class="text-right"
               >
                 {{ i18n['header.listContent'] }} 
                 <b>

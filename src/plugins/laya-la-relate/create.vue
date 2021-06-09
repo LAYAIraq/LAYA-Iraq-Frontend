@@ -7,7 +7,9 @@ Dependencies: @/mixins/locale.vue
 -->
 
 <template>
-  <div class="laya-la-relate-create">
+  <div class="laya-la-relate-create"
+  :class="langIsAr? 'text-right' : 'text-left'"
+  >
     <label>
       <h4>
         {{ i18n['layaLaRelate.name'] }}
@@ -130,8 +132,16 @@ Dependencies: @/mixins/locale.vue
         :key="'pair-'+i"
       >
 
+        <div 
+          v-if="langIsAr" 
+          class="col-2"
+        ></div>
+
         <!-- image -->
-        <div class="col-3 offset-2">
+        <div 
+          class="col-3"
+          :class="langIsAr? '' : 'offset-2'"
+        >
           <input 
             :id="'pair-text-'+i"
             class="form-control"

@@ -9,7 +9,10 @@ Dependencies:
 -->
 
 <template>
-  <div class="laya-quiz-relate">
+  <div 
+    class="laya-quiz-relate"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
     <div class="container">
 
       <div class="row mb-3">
@@ -29,10 +32,25 @@ Dependencies:
         <div class="col">
           
           <form>
-            <div v-for="(pair,i) in pairs" :key="i+'-'+uid" class="form-group row">
-              <label :for="pair.label+uid" class="col-sm-6 col-form-label">
-                <img v-if="pair.img" :src="pair.img" :alt="pair.label">
-                <laya-audio-inline class="ml-2" v-if="pair.audio" :src="pair.audio">
+            <div 
+              v-for="(pair,i) in pairs" 
+              :key="i+'-'+uid" 
+              class="form-group row"
+            >
+              <label 
+                :for="pair.label+uid" 
+                class="col-sm-6 col-form-label"
+              >
+                <img 
+                  v-if="pair.img" 
+                  :src="pair.img" 
+                  :alt="pair.label"
+                >
+                <laya-audio-inline 
+                  :class="langIsAr? 'mr-2' : 'ml-2'" 
+                  v-if="pair.audio" 
+                  :src="pair.audio"
+                >
                 </laya-audio-inline>
                 {{ pair.label }}
               </label>
@@ -41,9 +59,15 @@ Dependencies:
                   v-model="solution[i]"
                   :disabled="freeze"
                   class="custom-select">
-                  <option disabled>{{ defaultOption }}</option>
-                  <option v-for="opt in options" :key="opt" :disabled="solution.includes(opt)">
-                  {{opt}}
+                  <option disabled>
+                    {{ defaultOption }}
+                  </option>
+                  <option 
+                    v-for="opt in options" 
+                    :key="opt" 
+                    :disabled="solution.includes(opt)"
+                  >
+                  {{ opt }}
                   </option>
                 </select>
                 <div class="d-inline-block pt-3 w-100 text-center">
@@ -62,13 +86,23 @@ Dependencies:
           <u>Eingabe löschen</u>
         </button>
         -->
-        <button type="button" class="btn btn-link" @click="check" 
+        <button 
+          type="button" 
+          class="btn btn-link"
+          :class="langIsAr? 'float-right': 'float-left'"
+          @click="check" 
           :disabled="freeze">
           {{ i18n['check'] }}
         </button>
           
-        <button type="button" class="btn btn-primary ml-auto" @click="done">
-          {{ i18n['nextContent'] }}<i class="fas fa-arrow-right"></i>
+        <button 
+          type="button" 
+          class="btn btn-primary"
+          :class="langIsAr? 'mr-auto': 'ml-auto'"
+          @click="done"
+        >
+          {{ i18n['nextContent'] }}
+          <i class="fas fa-arrow-right"></i>
         </button>
       </div>
 

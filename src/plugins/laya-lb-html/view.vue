@@ -13,13 +13,20 @@ Dependencies:
   <div class="laya-wysiwyg-view">
     <h4 v-if="showTitle">{{ title }}</h4>
     <div :id="editorId"></div>
-    <button 
-      type="button"
-      class="btn btn-primary mt-3 d-block ml-auto"
-      @click="onFinish[0]() || {}">
-      {{ i18n['nextContent'] }}
-      <i class="fas fa-arrow-right"></i>
-    </button>
+    <div class="row">
+      <button 
+        type="button"
+        class="btn btn-primary mt-3 d-block ml-auto"
+        :class="langIsAr? 'float-right': 'float-left'"
+        @click="onFinish[0]() || {}">
+        {{ i18n['nextContent'] }}
+        <i 
+          :class="langIsAr? 
+            'fas fa-arrow-left': 
+            'fas fa-arrow-right'"
+        ></i>
+      </button>
+    </div>
   </div>
 
   

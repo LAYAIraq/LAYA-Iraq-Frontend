@@ -9,7 +9,10 @@ Dependencies:
 -->
 
 <template>
-  <div class="laya-ableplayer-edit">
+  <div 
+    class="laya-ableplayer-new"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
 
     <label>
       <h4>
@@ -17,9 +20,10 @@ Dependencies:
       </h4>
     </label>
     <i 
-      id ="questionmark" 
+      id ="questionmark"
       class="fas fa-question-circle" 
-      @click="toggleTip()" 
+      :class="langIsAr? 'mr-auto' : 'ml-auto'"
+      @click="toggleTip" 
       :title="i18n['showTip']" 
       v-b-tooltip.left
     ></i>
@@ -31,6 +35,7 @@ Dependencies:
       <hr class="my-4">
       <span v-html="i18n['layaAbleplayer.tooltip']"></span>
     </b-jumbotron>
+
     <hr>
 
     <form>
@@ -128,4 +133,6 @@ export default {
 #show-title-button {
   vertical-align: bottom;
 }
+
+
 </style>

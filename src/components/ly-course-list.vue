@@ -10,7 +10,10 @@ Dependencies:
 -->
 
 <template>
-  <div class="laya-course-list">
+  <div 
+    class="laya-course-list"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
 
     <div class="container-fluid">
 

@@ -9,20 +9,25 @@ Dependencies:
 -->
 
 <template>
-  <div class="laya-lb-dialog-new">
-     
-    <label>
-      <h4>
-        {{ i18n['layaLbDialog.name'] }}
-      </h4>
-    </label> 
-    <i 
-      id="questionmark" 
-      class="fas fa-question-circle" 
-      @click="toggleTip" 
-      :title="i18n['showTip']" 
-      v-b-tooltip.left
-    ></i>
+  <div 
+    class="laya-lb-dialog-new" 
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
+    <div class="row">
+      
+        <h4 >
+          {{ i18n['layaLbDialog.name'] }}
+        </h4>
+ 
+      <i 
+        id="questionmark" 
+        class="fas fa-question-circle" 
+        :class="langIsAr? 'mr-auto' : 'ml-auto'"
+        @click="toggleTip" 
+        :title="i18n['showTip']" 
+        v-b-tooltip.left
+      ></i>
+    </div>
     <hr>
     
     <b-jumbotron 
@@ -35,22 +40,37 @@ Dependencies:
     </b-jumbotron>
 
     <form>
-      <div class="form-group row">   
-        <label 
-          for="dialog-title" 
-        >
-          {{ i18n['title'] }}
-        </label>
+      <div class="form-group row" >
+        <div class="form-group col-10">
+          <p>
+            <b>{{ i18n['title'] }}</b>
+          </p>
+          
+          <input 
+            id="dialog-title"
+            type="text"
+            v-model="title"
+            class="form-control"
+            :placeholder="i18n['titlePlaceholder']"
+          >
+        </div>
+
+        <div class="form-group col" id="show-title-button">
+          <div style="height: calc(1.5em + .75rem + 2px);"></div>
+          <label
+            for="show-title-tick"
+            class="col"
+          >
+            {{ i18n['showTitle'] }}
+            <input
+              id="show-title-tick"
+              type="checkbox"
+              v-model="showTitle"
+            >
+          </label>
+        </div>
         
-        <input 
-          id="dialog-title"
-          type="text"
-          v-model="title"
-          class="form-control"
-          :placeholder="i18n['titlePlaceholder']"
-        >
       </div>
-      
       <div class="form-group row">
         <label 
           for="smcs-question" 
@@ -115,14 +135,17 @@ Dependencies:
         </div>
       </div>
 
-      <button 
-        type="button"
-        class="btn btn-primary btn-sm"
-        @click="_addItem">
-        <i class="fas fa-plus"></i>
-        {{ i18n['layaLbDialog.addAnswer'] }}
-      </button>
-
+      <div class="row">
+        <button 
+          type="button"
+          class="btn btn-primary btn-sm"
+          :class="langIsAr? 'float-right': 'float-left'"
+          @click="_addItem(i18n['layaLaScmc.edit.sampleOption'])"
+        >
+          <i class="fas fa-plus"></i>
+          {{ i18n['layaLbDialog.addAnswer'] }}
+        </button>
+      </div>
     </form>
 
   </div>
@@ -148,6 +171,11 @@ export default {
       showTitle: false
     }
   },
+
+  beforeMount() {
+    this._addItem(this.i18n['layaLaScmc.edit.sampleOption'])
+  },
+
   methods: {
     /**
      * Function _delItem: remove item at given index
@@ -164,28 +192,14 @@ export default {
 
     /**
      * Function _addItem: Add item
-     * 
      * Author: core
-     * 
-     * Last Updated: unknown
+     * Last Updated: June 6, 2021
      */
-    _addItem() {
-      this.answers.push('')
+    _addItem(str) {
+      this.answers.push(str)
     }
   },
-  computed: {
-
-    /**
-     * step: return step of content block
-     * 
-     * Author: cmc
-     * 
-     * Last Updated: January 16, 2021
-     */
-    step() {
-      return this.$route.params.step
-    }
-  }
+  
 }
 </script>
 

@@ -7,15 +7,18 @@ Dependencies: @/mixins/locale.vue
 -->
 
 <template>
-  <div class="laya-la-feedback-edit">
+  <div 
+    class="laya-la-feedback-edit"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
 
-     <label>
+    <label>
       <h4>
-         {{ i18n['layaLaFeedback.name'] }}
+        {{ i18n['layaLaFeedback.name'] }}
       </h4>
     </label>
     <i 
-      id ="questionmark" 
+      id="questionmark"
       class="fas fa-question-circle" 
       @click="toggleTip" 
       :title="i18n['showTip']" 
@@ -25,7 +28,7 @@ Dependencies: @/mixins/locale.vue
       v-if="tooltipOn"
       :header="i18n['layaLaFeedback.name']" 
       :lead="i18n['tipHeadline']">
-      <hr class="my-4">
+        <hr class="my-4">
         <span v-html="i18n['layaLaFeedback.tooltip']"></span>
 
     </b-jumbotron>

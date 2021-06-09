@@ -7,7 +7,10 @@ Dependencies: @/mixins/locale.vue
 -->
 
 <template>
-  <div class="privacy-view">
+  <div 
+    class="privacy-view"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
 
     <div class="container">
       <div class="row">

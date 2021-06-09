@@ -9,7 +9,10 @@ Dependencies:
 -->
 
 <template>
-  <div class="laya-la-scms-edit ly-bg-author p-3">
+  <div 
+    class="laya-la-scms-edit ly-bg-author p-3"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
 
     <label>
       <h4>
@@ -41,7 +44,7 @@ Dependencies:
           for="smcs-type" 
           class="col-2 col-form-label"
         >
-          Art
+          {{ i18n['type'] }}
         </label>
         <div class="col-10">
           <div class="form-check form-check-inline align-text-top">

@@ -42,7 +42,9 @@ Dependencies:
     <div class="container">
       <div class="row">
         <form class="w-100" style="margin-top: 1rem">
-          <h1>{{ i18n['profile.title'] }}</h1>
+          <h1 :class="langIsAr? 'text-right' : 'text-left'">
+            {{ i18n['profile.title'] }}
+          </h1>
           <hr>
 
           <!-- Name -->

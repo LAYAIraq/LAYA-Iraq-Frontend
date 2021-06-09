@@ -1,5 +1,8 @@
 <template>
-  <div class="file-list">
+  <div 
+    class="file-list"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
 
     <!-- title, tooltip-->
     <div class="file-explorer">

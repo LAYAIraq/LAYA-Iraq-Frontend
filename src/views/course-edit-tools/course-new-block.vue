@@ -13,7 +13,9 @@ Dependencies:
 
     <div class="col">
 
-      <b-dropdown id="new-content-dd"
+      <b-dropdown
+        v-if="!langIsAr"
+        id="new-content-dd"
         variant="primary"
         class="w-100"
         menu-class="drop-wrap"
@@ -74,6 +76,69 @@ Dependencies:
         </b-dropdown-item>
       </b-dropdown>
 
+      <b-dropdown
+        v-else
+        id="new-content-dd"
+        variant="primary"
+        class="w-100"
+        :class="text-right"
+        menu-class="drop-wrap"
+        dropleft
+      >
+        <template slot="button-content">
+          <i class="fas fa-plus"></i> 
+          {{ i18n['newBlock.newContent'] }}
+        </template>
+
+        <b-dropdown-header class="text-right">
+          {{ i18n['newBlock.newContentBlock'] }}
+        </b-dropdown-header>
+
+        <b-dropdown-item 
+          v-for="block in $laya.lb"
+          :key="block.id"
+          :to="'/courses/'+name+'/'+nextId+'/new/'+block.id"
+        >
+          <div class="dropitem text-right">
+            <i 
+              :class="block.icon"
+              id="icon"
+            ></i>
+            {{ getName(block) }} 
+            <i
+              id="questionmark" 
+              class="far fa-question-circle" 
+              v-b-tooltip.right 
+              :title="getCaption(block)"
+            ></i>
+          </div>
+        </b-dropdown-item>
+
+        <b-dropdown-divider></b-dropdown-divider>
+
+        <b-dropdown-header class="text-right">
+          {{ i18n['newBlock.newContentAssmnt'] }}
+        </b-dropdown-header>
+
+        <b-dropdown-item 
+          v-for="ass in $laya.la"
+          :key="ass.id"
+          :to="'/courses/'+name+'/'+nextId+'/new/'+ass.id"
+        >
+          <div class="dropitem text-right">
+            <i :class="ass.icon"></i>
+            {{ getName(ass) }}
+        
+            <i 
+              class="far fa-question-circle" 
+              v-b-tooltip.right 
+              :title="getCaption(ass)"
+            >
+            </i>
+          </div>
+              
+        </b-dropdown-item>
+      </b-dropdown>
     </div>
 
     <div class="col text-dark">

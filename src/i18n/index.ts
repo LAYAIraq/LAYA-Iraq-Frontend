@@ -13,4 +13,4 @@
  export { default as it } from './en.json'
  export { default as pl } from './en.json'
  export { default as nl } from './en.json'
- export { default as ar } from './en.json'
+ export { default as ar } from './ar.json'

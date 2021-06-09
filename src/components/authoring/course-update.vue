@@ -11,7 +11,9 @@ Dependencies:
 
 <template>
   <div class="laya-course-new-view">
-    <h3> {{ i18n['courseUpdate.createCourse'] }}</h3>
+    <h3 :class="langIsAr? 'text-right' : 'text-left'"> 
+      {{ i18n['courseUpdate.createCourse'] }}
+    </h3>
     <hr>
     <form class="mt-3">
       <div class="form-group row">
@@ -64,7 +66,8 @@ Dependencies:
             :disabled="!formValid"
             @click="duplicateCheck"
           >
-            <i class="fas fa-check"></i> {{ i18n['save'] }}
+            <i class="fas fa-check"></i> 
+            {{ i18n['save'] }}
           </button>
         </div>
       </div>

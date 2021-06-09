@@ -7,7 +7,10 @@ Dependencies: @/mixins/locale.vue
 -->
 
 <template>
-  <div class="laya-la-drag-drop-new">
+  <div 
+    class="laya-la-drag-drop-new" 
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
 
     <label>
       <h4>
@@ -137,9 +140,11 @@ Dependencies: @/mixins/locale.vue
       <div class="form-group row">
         <div class="col-10 offset-2">
           <button type="button"
-                  class="btn btn-primary btn-sm"
-                  @click="_addItem">
-            <i class="fas fa-plus"></i>{{ i18n['itemAdd'] }}
+            class="btn btn-primary btn-sm"
+            @click="_addItem(i18n['layaLaScmc.edit.sampleOption'])"
+          >
+            <i class="fas fa-plus"></i>
+            {{ i18n['itemAdd'] }}
           </button>
         </div>
       </div>
@@ -213,14 +218,12 @@ export default {
 
     /**
      * Function _addItem: Add new item to items
-     * 
      * Author: core
-     * 
-     * Last Updated: unknown
-     * 
+     * Last Updated: June 6, 2021
+     * @param {string} str string to be added
      */
-    _addItem() {
-      this.items.push({label: "", category: -1})
+    _addItem(str) {
+      this.items.push({label: str, category: -1})
     },
 
     /**

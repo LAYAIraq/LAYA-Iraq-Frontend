@@ -9,7 +9,7 @@ Dependencies:
 -->
 
 <template>
-  <div id="app">
+  <div id="app" :class="getReadingDir()">
     <ly-header></ly-header>
     <router-view></router-view>
     <ly-footer></ly-footer>
@@ -19,16 +19,42 @@ Dependencies:
 <script>
 import lyHeader from '@/components/header'
 import lyFooter from '@/components/footer'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'app',
+
+  components: { 
+    lyHeader, 
+    lyFooter 
+  },
+
+  computed: {
+    ...mapGetters(['profileLang'])
+  },
+
   watch: {
     $route: 'relocateUnauthorized'
   },
+
   created() {
     this.restoreAuth()
   },
+
   methods: {
+
+    /**
+     * Function getReadingDir: set dir prop depending on locale
+     *  (rtl if ar)
+     * Author: cmc
+     * Last Updated: June 3, 2021
+     */
+    getReadingDir() {
+      if (this.profileLang === 'ar') {
+        return 'right-to-left'
+      }
+      return 'left-to-right'
+    },
 
     /**
      * function relocateUnauthorized: relocate users that are not 
@@ -77,10 +103,6 @@ export default {
       this.$store.dispatch('fetchProfile')
       this.$store.dispatch('fetchRole')
     }
-  },
-  components: { 
-    lyHeader, 
-    lyFooter 
   }
 }
 </script>
@@ -106,4 +128,13 @@ body {
   min-width: 5rem;
   border-radius: 2px solid black;
 }
+
+.left-to-right {
+  direction: ltr;
+}
+
+.right-to-left {
+  direction: rtl;
+}
+
 </style>

@@ -11,7 +11,10 @@ Dependencies:
 
 <template>
 
-  <div>
+  <div 
+    id="laya-wysiwyg-edit"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
     <form>
       <div class="form-group row">  
         <div class="form-group col-10"> 
@@ -47,7 +50,10 @@ Dependencies:
         </div>
       </div>
     </form>
-    <div class="laya-wysiwyg-edit bg-light" >
+    <div 
+      class="laya-wysiwyg-edit bg-light"
+     :class="langIsAr? 'text-right' : 'text-left'"
+    >
       <label :for="editorId"> {{ i18n['content'] }} </label>
       <div :id="editorId"></div>
     </div>

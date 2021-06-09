@@ -7,7 +7,10 @@ Dependencies: @/mixins/locale.vue
 -->
 
 <template>
-  <footer id="ly-footer">
+  <footer 
+    id="ly-footer"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
     <div class="container" style="border-top: 0.2rem solid black; padding-top: 1rem;">
       <div class="row">
         <div class="col-9 col-lg-9">

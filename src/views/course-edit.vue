@@ -18,7 +18,11 @@ Dependencies:
     <!-- mounts course-edit-wrapper & edit-course-nav -->
     <router-view @saved="$bvToast.show('author-toast')"></router-view>
 
-    <div class="container" v-if="$route.name == 'course-detail-view'">
+    <div 
+      class="container"
+      :class="langIsAr ? 'text-right' : ''"
+      v-if="$route.name == 'course-detail-view'"
+    >
 
       <course-edit-content :name="name" :step="step"></course-edit-content>
       

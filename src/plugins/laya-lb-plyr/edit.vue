@@ -10,7 +10,10 @@ Dependencies:
 
 <template>
 
-  <div class="laya-plyr-create">
+  <div 
+    class="laya-plyr-edit"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
 
     <form>
       <div class="form-group">

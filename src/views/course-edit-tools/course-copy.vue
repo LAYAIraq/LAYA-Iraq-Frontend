@@ -15,7 +15,7 @@ Dependencies:
     <div class="col">
       <b-button size="sm"
         variant="warning"
-        class="float-right"
+        :class="langIsAr? 'float-left' : 'float-right'"
         @click="$bvModal.show('author-copyCourse-confirm')">
         <i class="fas fa-exclamation-circle"></i> {{ i18n['copyCourse'] }}
       </b-button>
