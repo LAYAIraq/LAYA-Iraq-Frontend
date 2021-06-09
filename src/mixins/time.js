@@ -1,4 +1,10 @@
-<script>
+/**
+ * Filename: time.js
+ * Use: provide localized timestamps
+ * Author: cmc
+ * Date: June 1, 2021
+ * Dependencies: none 
+*/
 export default {
 
   methods: {
@@ -116,4 +122,3 @@ export default {
     }
   }
 }
-</script>

@@ -1,5 +1,6 @@
 export { default as contentTypes } from './content-types'
-export { default as listSort } from './list-sort.vue'
+export { default as listSort } from './list-sort.js'
 export { default as locale } from './locale'
 export { default as mimeTypes } from './mime-types.vue'
+export { default as time } from './time.js'
 export { default as tooltipIcon } from './tooltip-icon.vue'

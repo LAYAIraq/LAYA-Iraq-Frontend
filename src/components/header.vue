@@ -59,6 +59,7 @@ Dependencies:
           v-else 
           :class="marginClass()"
         >
+          <ly-header-notifications></ly-header-notifications>
           <b-nav-item to="/profile">
             <i class="fas fa-user-alt"></i>
             {{ i18n['header.profile'] }}

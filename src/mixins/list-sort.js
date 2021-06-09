@@ -1,12 +1,12 @@
-<!-- 
-  Filename: list-sort.vue
-  Use: Define methods for sorting lists
-  Creator: cmc
-  Date: April 28, 2021
-  Dependencies: 
-    vuex
--->
-<script>
+/**
+*  Filename: list-sort.js
+*  Use: Define methods for sorting lists
+*  Creator: cmc
+*  Date: April 28, 2021
+*  Dependencies: 
+*   vuex
+*/
+
 import { mapGetters } from 'vuex'
 import * as locale from '@/i18n'
 export default {
@@ -114,10 +114,10 @@ export default {
     sortTooltip(prop) {
       let propClass = this.sortIcon(prop)
       if(propClass['fas fa-sort-up']){
-        return this.tooltips['listSort.sortDesc']
+        return this.tooltips['listSort.sortAsc']
       }
       else if (propClass['fas fa-sort-down']) {
-        return this.tooltips['listSort.sortAsc']
+        return this.tooltips['listSort.sortDesc']
       }
       else return this.tooltips['listSort.sort']
     },
@@ -134,4 +134,3 @@ export default {
     }
   }
 }
-</script>

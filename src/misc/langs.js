@@ -15,9 +15,9 @@ import pl from "language-icons/icons/pl.svg"
 import nl from "language-icons/icons/nl.svg"
 
 export const icons = {
-  de, en, ar/*, es, it, pl, nl */
+  de, en, /*ar, es, it, pl, nl */
 }
 
 export const ids = [
-  'de', 'en', 'ar'/*, 'es', 'it', 'pl', 'nl'*/
+  'de', 'en', /*'ar', 'es', 'it', 'pl', 'nl'*/
 ]

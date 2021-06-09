@@ -143,7 +143,7 @@ export default {
   },
 
   created() {
-    this.$store.dispatch('getNewMessages')
+    this.$store.dispatch('getInitialMessages')
     if (this.$route.query.hasOwnProperty('id')) {
       this.highlightId = this.$route.query.id
     }

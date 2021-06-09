@@ -6,5 +6,12 @@
  */
 
 export default {
-  newSubscription: 'kekw'
+  newSubscription: 'courseNewSub',
+  newFeedback: 'courseNewFeedback',
+  newFlag: 'courseNewFlag',
+  flagInteraction: 'myFlagInteraction',
+  newMaterial: 'myNewCourseMaterial',
+  creatorAsked: 'creatorInquiry',
+  editorApproval: 'editorAprovalRequired',
+  voteApproval: 'editorAprovalVoteInitiated'
 }
