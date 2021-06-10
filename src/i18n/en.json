@@ -234,6 +234,8 @@
 	"notifications.authorNewSub.cta": "Click to go to your Course!",
 	"notifications.authorNewSub.text": "You have a new Subscriber on your Course <CID>!",
 	"notifications.authorNewSub.title": "New Subscriber",
+	"notifications.loadMore": "Load more notifications",
+	"notifications.none": "You have no notifications",
 	"placeholder": "New Course Name",
 	"privacy.title": "Privacy",
 	"profile.defmedia.audio": "Audio",

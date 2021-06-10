@@ -231,6 +231,8 @@
 	"notifications.authorNewSub.cta": "Klicken, um zum Kurs zu gehen!",
 	"notifications.authorNewSub.text": "Sie haben einen neuen Kursteilnehmer im Kurs <CID>!",
 	"notifications.authorNewSub.title": "Neuer Kursteilnehmer",
+	"notifications.loadMore": "Weitere Benachrichtigungen laden",
+	"notifications.none": "Sie haben keine Benachrichtigungen!",
 	"placeholder": "Neuer Kursname",
 	"privacy.title": "Datenschutzbestimmungen",
 	"profile.defmedia.audio": "Audio",

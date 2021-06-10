@@ -19,24 +19,27 @@
           <i class="far fa-envelope"></i>
           {{ i18n['message'] }}
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
           <i class="fas fa-clock"></i>
           {{ i18n['timestamp'] }}
         </div>
-        <div class="col-sm-4 text-nowrap">
-            <i class="fas fa-eye"></i>
-            {{ i18n['message.read'] }}
+        <div class="col-sm-3 text-nowrap">
             <button
               type="button"
               class="btn btn-info ml-1"
+              :class="langIsAr? 'float-left' : 'float-right'"
               :disabled="!unreadMessages"
               @click="markAllAsRead"
             >
+              <i class="fas fa-eye"></i>
               {{ i18n['markAllAsRead'] }}
             </button>
         </div>
       </div>
-      <ul class="list-group">
+      <ul 
+        v-if="messages.length != 0"
+        class="list-group"
+      >
         <li
           class="list-group-item"
           v-for="(note ,i) in messages"
@@ -74,45 +77,30 @@
                 </span>
                 
               </div>
-              <div class="col-sm-4">
-                <b-button-group>
-                  <button
-                    type="button"
-                    class="btn btn-primary"
-                    variant="dark"
-                    v-b-toggle="`collapse-${i}`"
-                  >
-                    <small>
-                      {{ i18n['message.read'] }}
-                      <i class="fas fa-chevron-down"></i>
-                    </small>
-                  </button>
-                  <button
-                    type="button"
-                    class="btn"
-                    :class="note.data.read ? 
-                      'btn-light border-secondary' :
-                      'btn-secondary'"
-                    variant="dark"
-                    :disabled="note.data.read"
-                    @click="markAsRead(note)"
-                  >
-                    <small>
-                      {{ i18n['markAsRead'] }}
-                      <i 
-                        class="far fa-check-circle" 
-                        :class="note.data.read? 'text-success': ''"
-                      ></i>
-                    </small>
-                  </button>
-                </b-button-group>
+              <div class="col-sm-2">
+                <b-button
+                  variant="dark"
+                  :class="langIsAr? 'float-left' : 'float-right'"
+                  v-b-toggle="`collapse-${i}`"
+                >
+                  <small>
+                    {{ i18n['message.read'] }}
+                    <i class="when-open fas fa-chevron-down"></i>
+                    <i class="when-closed fas fa-chevron-left"></i>
+                  </small>
+                </b-button>
+
                  
               </div>
             </div>
             <div class="row">
               <b-collapse :id="`collapse-${i}`" class="w-100">
+                <button 
+                  :id="`collapse-${i}-btn`"
+                  class="d-none"
+                  @click="markAsRead(note)"
+                ></button>
                 <b-card class="mt-2 w-100">
-                
                   <span class="note-content">
                     {{ i18n[`notifications.${note.type}.text`] }}
                   </span>
@@ -126,14 +114,21 @@
           </div>
         </li>
       </ul>
+      <div 
+        v-else
+        class="m-5 p-2 text-center"
+      >
+        {{ i18n['notifications.none'] }}
+      </div>
       <div class="row mt-5">
         <b-button 
           variant="warning"
           class="m-auto"
           @click="loadMoreNotifications"
+          :disabled="!moreMessages"
         >
           <i :class="loading? 'fas fa-spinner fa-spin' : 'fas fa-plus'"></i>
-          Load more notifications
+          {{ i18n['notifications.loadMore'] }}
         </b-button>
       </div>
     </div>
@@ -165,7 +160,15 @@ export default {
 
   computed: {
     ...mapGetters(['messages', 'unreadMessages']),
-    ...mapState(['message'])
+    ...mapState(['message']),
+    /**
+     * moreMessages: return true if more messages can be loaded
+     * Author: cmc
+     * Last Updated: June 10, 2021
+     */
+    moreMessages() {
+      return (this.messages.length != 0 && this.messages.length % 10 == 0)
+    }
   },
 
   created() {
@@ -176,6 +179,12 @@ export default {
   },
 
   mounted() {
+    // watch collapse items to trigger markAsRead()
+    this.$root.$on('bv::collapse::state', (collapseId, isJustShown) => {
+      if (isJustShown) {
+        document.getElementById(`${collapseId}-btn`).click()
+      }
+    })
     // this.highlightMessage()
   },
 
@@ -205,7 +214,9 @@ export default {
     loadMoreNotifications() {
       this.loading = true
       this.$store.dispatch('getAdditionalMessages')
-        .catch( err => alert(err))
+        .catch( err => {
+          
+        })
         .finally(this.loading = false)
     },
     /**
@@ -257,6 +268,11 @@ export default {
 
 .noHighlight { 
   background-color: transparent;
+}
+
+.collapsed > small > .when-open,
+.not-collapsed > small > .when-closed {
+  display: none;
 }
 
 </style>

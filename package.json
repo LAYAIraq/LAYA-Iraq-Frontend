@@ -18,7 +18,7 @@
   "dependencies": {
     "ableplayer": "git+https://github.com/ableplayer/ableplayer.git",
     "axios": "^0.21.1",
-    "bootstrap-vue": "^2.15.0",
+    "bootstrap-vue": "^2.18.0",
     "core-js": "^2.6.11",
     "cropperjs": "^1.5.11",
     "language-icons": "^0.2.0",

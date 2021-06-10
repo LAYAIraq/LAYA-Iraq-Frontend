@@ -139,6 +139,11 @@ export default {
      * @param param0 state property 
      */
      getAdditionalMessages({ commit, state, rootState }) {
+      if (state.loadedMessages < 10) {
+        return new Promise((resolve, reject) => {
+          reject('No more messages')
+        })
+      }
       return new Promise((resolve, reject) => { 
         http.get('notifications', { 
           params: {
@@ -153,11 +158,13 @@ export default {
           }
         })
         .then(resp => {
-          commit('updateLoaded', state.loadedMessages + 10)
+          let no = 0
           resp.data.forEach((elem: object) => {
             commit('appendMsg', elem)
+            no++
           })
           resolve(resp)
+          commit('updateLoaded', state.loadedMessages + no)
         })
         .catch(err => reject(err))
       })
@@ -182,10 +189,13 @@ export default {
         }
       })
       .then(resp => {
-        commit('updateLoaded', 10)
+        let no = 0
+        
         resp.data.forEach((elem: object) => {
           commit('appendMsg', elem)
+          no++
         })
+        commit('updateLoaded', no)
       })
       .catch(err => console.error(err))
     },

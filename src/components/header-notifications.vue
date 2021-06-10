@@ -36,6 +36,10 @@
     
     </b-dropdown-item>
 
+    <b-dropdown-item v-if="!messagesPresent">
+      {{ i18n['notifications.none'] }}
+    </b-dropdown-item>
+
     <b-dropdown-divider></b-dropdown-divider>
 
     <b-dropdown-item>
@@ -44,7 +48,7 @@
       </router-link>
     </b-dropdown-item>
 
-    <b-dropdown-item>
+    <b-dropdown-item v-if="messagesPresent">
       <b-button
         variant="info"
         @click="markAllAsRead"
@@ -76,7 +80,15 @@ export default {
   ],
 
   computed: {
-    ...mapGetters(['messages', 'unreadMessages', 'unreadMsgNo'])
+    ...mapGetters(['messages', 'unreadMessages', 'unreadMsgNo']),
+    /**
+     * messagesPresent: returns true if there are notifications
+     * Author: cmc
+     * Last Updated: June 10, 2021
+     */
+    messagesPresent() {
+      return this.messages.length != 0
+    }
   },
 
   data() {
