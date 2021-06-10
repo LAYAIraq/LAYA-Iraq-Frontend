@@ -21,14 +21,19 @@
     <b-dropdown-item
       v-for="(note, i) in notifyShortList"
       :key="i"
+      class="text-nowrap"
     >
+
       <router-link
         :to="'/notifications?id=' + note.noteId"
         :highlight="note.noteId"
       >
-        {{ note.type }}
-        {{ timeSince(note.time) }}
+        {{ i18n[`notifications.${note.type}.title`] }}
+        <span class="timestamp">
+          {{ timeSince(note.time) }}
+        </span>
       </router-link>
+    
     </b-dropdown-item>
 
     <b-dropdown-divider></b-dropdown-divider>
@@ -154,6 +159,11 @@ export default {
   color: whitesmoke;
   background-color: tomato;
   min-width: 20px;
+}
+
+.timestamp {
+  color: rgba(0, 0, 0, 0.5);
+
 }
 
 </style>

@@ -14,6 +14,7 @@ import roles from '../../misc/roles';
 export default {
   state: {
     messages: [],
+    messagesLoaded: 0,
     unreadMessages: false,
     unreadMsgNo: 0
   },
@@ -123,14 +124,49 @@ export default {
           }
         }
       })
+    },
+    updateLoaded(state: { loadedMessages: number }, newNo: number) {
+      state.loadedMessages = newNo
     }
   },
   actions: {
 
     /**
+     * function getAdditionalMessages: get 10 more notifications 
+     *  for logged user
+     * Author: cmc
+     * Last Updated: June 10, 2021
+     * @param param0 state property 
+     */
+     getAdditionalMessages({ commit, state, rootState }) {
+      return new Promise((resolve, reject) => { 
+        http.get('notifications', { 
+          params: {
+            filter: {
+              skip: state.loadedMessages,
+              limit: 10,
+              order: 'time DESC',
+              where: {
+                userId: rootState.auth.userId
+              }
+            }
+          }
+        })
+        .then(resp => {
+          commit('updateLoaded', state.loadedMessages + 10)
+          resp.data.forEach((elem: object) => {
+            commit('appendMsg', elem)
+          })
+          resolve(resp)
+        })
+        .catch(err => reject(err))
+      })
+    },
+
+    /**
      * function getInitialMessages: get notifications for logged user
      * Author: cmc
-     * Last Updated: May 30, 2021
+     * Last Updated: June 10, 2021
      * @param param0 state property 
      */
     getInitialMessages({ commit, state, rootState }) {
@@ -146,6 +182,7 @@ export default {
         }
       })
       .then(resp => {
+        commit('updateLoaded', 10)
         resp.data.forEach((elem: object) => {
           commit('appendMsg', elem)
         })
@@ -153,6 +190,12 @@ export default {
       .catch(err => console.error(err))
     },
 
+    /**
+     * Function updateNoteData: updata data property for all notifications
+     * Author: cmc
+     * Last Updated: June 10, 2021
+     * @param state state variables 
+     */
     updateNoteData({ state }) {
         let requests = []
         state.messages.forEach((elem: { 

@@ -5,13 +5,15 @@
  * Date: May 26, 2021
  */
 
-export default {
-  newSubscription: 'courseNewSub',
-  newFeedback: 'courseNewFeedback',
-  newFlag: 'courseNewFlag',
-  flagInteraction: 'myFlagInteraction',
-  newMaterial: 'myNewCourseMaterial',
-  creatorAsked: 'creatorInquiry',
-  editorApproval: 'editorAprovalRequired',
-  voteApproval: 'editorAprovalVoteInitiated'
-}
+export default [
+  'authorNewSub',
+  'authorNewFeedback',
+  'authorNewFlag',
+  'studentFlagInteraction',
+  'studentNewCourseMaterial',
+  'studentNewCourseByAuthor',
+  'studentNewCourseByCategory',
+  'authorInquiry',
+  'editorAprovalRequired',
+  'editorAprovalVoteInitiated'
+]

@@ -1,13 +1,19 @@
 <template>
-  <div class="ly-notifications">
-    <div class="container">
-      <div class="row mt-5 mb-5">
-        <div class="col">
-          <h1 class="text-center">
-            {{ i18n['notifications'] }}
-          </h1>
-        </div>
-      </div>
+  <div 
+    class="ly-notifications"
+    :class="langIsAr? 'text-right': 'text-left'">
+    
+    <div class="container mt-5 mb-5">
+
+      <h1 class="text-center">
+        {{ i18n['notifications'] }}
+      </h1>
+        <!-- <a @click="randomNotifications">MAKE RANDOM NOTIFICATIONS</a> -->
+    </div>
+    <div 
+      class="container" 
+      id="message-list"
+    >
       <div class="row font-weight-bold mb-2">
         <div class="col">
           <i class="far fa-envelope"></i>
@@ -56,7 +62,7 @@
                   'fas fa-envelope-open': note.data.read,
                   'fas fa-envelope': !note.data.read
                 }"></i>
-                {{ i18n['placeholder'] }}
+                {{ i18n[`notifications.${note.type}.title`] }}
               </div>
               <div class="col-sm-3">
                 <span 
@@ -107,7 +113,12 @@
               <b-collapse :id="`collapse-${i}`" class="w-100">
                 <b-card class="mt-2 w-100">
                 
-                  KEKW
+                  <span class="note-content">
+                    {{ i18n[`notifications.${note.type}.text`] }}
+                  </span>
+                  <span class="note-cta">
+                    {{ i18n[`notifications.${note.type}.cta`] }}
+                  </span>
                 </b-card>
               </b-collapse>
                 
@@ -115,13 +126,26 @@
           </div>
         </li>
       </ul>
+      <div class="row mt-5">
+        <b-button 
+          variant="warning"
+          class="m-auto"
+          @click="loadMoreNotifications"
+        >
+          <i :class="loading? 'fas fa-spinner fa-spin' : 'fas fa-plus'"></i>
+          Load more notifications
+        </b-button>
+      </div>
     </div>
+   
+
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import { locale, time } from '@/mixins'
+import randomNotifications from '@/misc/fillnotifications.js'
 
 export default {
   name: 'laya-notifications',
@@ -133,13 +157,15 @@ export default {
 
   data() {
     return {
+      loading: false,
       msgList: [],
       showhighLight: true
     }
   },
 
   computed: {
-    ...mapGetters(['messages', 'unreadMessages'])
+    ...mapGetters(['messages', 'unreadMessages']),
+    ...mapState(['message'])
   },
 
   created() {
@@ -158,6 +184,7 @@ export default {
   },
 
   methods: {
+    ...randomNotifications,
     /**
      * function highlightMessage: scroll highlighted message into view
      * Author: cmc
@@ -168,6 +195,18 @@ export default {
         const [el] = this.$refs.highlight
         el.scrollIntoView()
       }
+    },
+
+    /**
+     * Function loadMoreNotifications: get more messages from database
+     * Author: cmc
+     * Last Updated: June 10, 2021
+     */
+    loadMoreNotifications() {
+      this.loading = true
+      this.$store.dispatch('getAdditionalMessages')
+        .catch( err => alert(err))
+        .finally(this.loading = false)
     },
     /**
      * Function markAsRead: set 'read' boolean in message's data
@@ -198,10 +237,6 @@ export default {
       return `${this.locDate(time)}, ${this.locTime(time)}`
     }
   }
-
-
-
-
 
 }
 </script>
