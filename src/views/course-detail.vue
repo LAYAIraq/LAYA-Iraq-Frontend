@@ -112,7 +112,7 @@ export default {
      * */
     onFinishDummy() {
       return new Proxy({}, {
-        get(target, name) {
+        get() {
           return ()=>{}
         }
       })
@@ -180,6 +180,7 @@ export default {
         })
         .catch( err => {
          ctx.$router.push('/courses')
+         console.error(err)
       })
     },
 

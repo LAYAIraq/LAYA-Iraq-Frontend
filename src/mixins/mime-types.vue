@@ -26,7 +26,8 @@ export default {
 
       // filter i18n file for key containing 'mimeTypes'
       for (let key in locale[this.profileLang]) {
-        if (locale[this.profileLang].hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty
+          .call(locale[this.profileLang], key)) {
           if (/mimeTypes/.test(key) === true) {
             // add to types in scope
             types[key] = locale[this.profileLang][key]
@@ -76,7 +77,7 @@ export default {
       }
 
       for (let key in iconClasses) {
-        if (iconClasses.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(iconClasses, key)) {
           if (type.search(key) === 0) {
             // Found it
             return iconClasses[key]
@@ -126,7 +127,7 @@ export default {
       }
 
       for (let key in fileClasses) {
-        if (fileClasses.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(fileClasses, key)) {
           if (type.search(key) === 0) {
             // Found it
             return this.types['mimeTypes.'+key]

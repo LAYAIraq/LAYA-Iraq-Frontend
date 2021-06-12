@@ -128,7 +128,7 @@ export default {
   created() {
     //console.log(Date.parse(this.feedback.created))
     const mid = Math.floor((this.categories.length-1)/2)
-    let s = this.items.map(i => mid)
+    let s = this.items.map(() => mid)
     this.choice = [...s]
     
     // this.getPreviousFeedback()
@@ -179,7 +179,6 @@ export default {
      * Last Updated: unknown
      */
     bundleFeedback() {
-      let now = Date.now()
       const newFeedback = {
           step: this.step,
           created: Date.now(),

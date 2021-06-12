@@ -7,7 +7,7 @@
         id="laya-on-off-switch" 
         tabindex="0" 
         v-model="check"
-        @click.prevent="check = !check">
+        @click.prevent="toggleCheck">
       <label class="onoffswitch-label" for="laya-on-off-switch">
         <span class="onoffswitch-inner"></span>
         <span class="onoffswitch-switch"></span>
@@ -19,8 +19,17 @@
 <script>
 export default {
   name: 'lyOnOff',
-  props: {
-    check: Boolean
+  data() {
+    return {
+      check: false
+    }
+  },
+
+  methods: {
+    toggleCheck() {
+      this.check = !this.check
+      this.$emit('checked', this.check)
+    }
   }
 }
 </script>

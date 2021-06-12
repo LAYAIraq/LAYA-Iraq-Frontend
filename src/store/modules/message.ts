@@ -75,7 +75,7 @@ export default {
       if(!present)
         {
           // message has been loaded to store before
-          if (msg.data.hasOwnProperty('read')) {
+          if (Object.prototype.hasOwnProperty.call(msg.data, 'read')) {
             state.messages.push(msg)
             if (!msg.data.read) {
               state.unreadMessages = true
@@ -207,7 +207,7 @@ export default {
      * @param state state variables 
      */
     updateNoteData({ state }) {
-        let requests = []
+        const requests = []
         state.messages.forEach((elem: { 
           noteId: string, 
           data: {

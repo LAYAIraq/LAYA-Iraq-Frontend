@@ -154,7 +154,7 @@ export default {
      */
     mapSolutions() {
       const mid = Math.floor((this.categories.length)/2)
-      let s = this.items.map(i => mid)
+      let s = this.items.map(() => mid)
       this.solution = [...s]
     },
 

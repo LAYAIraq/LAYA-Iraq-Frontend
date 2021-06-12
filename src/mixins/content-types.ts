@@ -17,8 +17,8 @@ export default {
       * @param {string} compName name of content block
       */
     typeName(compName: string) {     
-      let comps = { ...this.$laya.la, ...this.$laya.lb }
-      for(let comp in comps) {
+      const comps = { ...this.$laya.la, ...this.$laya.lb }
+      for(const comp in comps) {
         if (comps[comp].id === compName) {
           return this.i18n[comps[comp].name + '.name']
         }

@@ -89,7 +89,7 @@ export default {
     }
   },
   watch: {
-    content(newValue) {
+    content() {
       //FIXME doesn't actually watch the property
       this.refreshData()
     }

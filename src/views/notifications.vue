@@ -173,7 +173,7 @@ export default {
 
   created() {
     this.$store.dispatch('getInitialMessages')
-    if (this.$route.query.hasOwnProperty('id')) {
+    if (Object.prototype.hasOwnProperty.call(this.$route.query, 'id')) {
       this.highlightId = this.$route.query.id
     }
   },
@@ -200,7 +200,7 @@ export default {
      * Last Updated: May 30, 2021
      */
     highlightMessage() {
-      if (this.$route.query.hasOwnProperty('id')) {
+      if (Object.prototype.hasOwnProperty.call(this.$route.query, 'id')) {
         const [el] = this.$refs.highlight
         el.scrollIntoView()
       }
@@ -214,8 +214,8 @@ export default {
     loadMoreNotifications() {
       this.loading = true
       this.$store.dispatch('getAdditionalMessages')
-        .catch( err => {
-          
+        .catch(err => {
+          console.error(err)
         })
         .finally(this.loading = false)
     },

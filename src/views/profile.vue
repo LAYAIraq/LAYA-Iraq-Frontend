@@ -227,7 +227,7 @@ import { locale } from '@/mixins'
 import api from '../backend-url.ts'
 import Password from 'vue-password-strength-meter'
 import { mapState } from 'vuex'
-import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
+// import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
 
 export default {
   name: 'profile-view',

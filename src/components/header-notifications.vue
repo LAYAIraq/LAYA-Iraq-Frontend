@@ -81,6 +81,7 @@ export default {
 
   computed: {
     ...mapGetters(['messages', 'unreadMessages', 'unreadMsgNo']),
+    ...mapState(['message']),
     /**
      * messagesPresent: returns true if there are notifications
      * Author: cmc

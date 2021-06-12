@@ -134,6 +134,7 @@ export default {
           input[prop] = data[prop]
         }
       }
+      // eslint-disable-next-line
       return (({tooltipOn, ...o}) => o) (input) //strip tooltipOn var from data
     }
   },  

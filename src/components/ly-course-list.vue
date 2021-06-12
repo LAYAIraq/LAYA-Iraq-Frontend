@@ -144,8 +144,8 @@ export default {
           }
         })
         .catch(err => {
-          console.log(`No enrollments for ${studentId} found`)
-          // console.error(err)
+          // console.log(`No enrollments for ${studentId} found`)
+          console.error(err)
         })
       
     },

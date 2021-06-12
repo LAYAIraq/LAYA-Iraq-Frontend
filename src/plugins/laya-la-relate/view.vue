@@ -191,7 +191,7 @@ export default {
      * Last Updated: unknown
      */
     reset() {
-      this.solution = this.pairs.map(p => this.defaultOption)
+      this.solution = this.pairs.map(() => this.defaultOption)
     },
 
     /**

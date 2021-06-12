@@ -159,7 +159,7 @@ export default {
      * @param file file object to remove
      */
     delFile(state: { course: { files: object[] } }, file: { name: string, container: string } ) {
-      let idx = state.course.files.indexOf(file)
+      const idx = state.course.files.indexOf(file)
       // console.log(`${file.name} hat Stelle ${idx}`)
       state.course.files.splice(idx, 1)
       http.delete(`storage/${file.container}/files/${file.name}`)
@@ -239,8 +239,8 @@ export default {
     updateCourseFiles(state: { course: { files: Array<Object> } }, data: Array<Object>) {
       console.log('Start updating Course Files in Store')
       
-      let ids = new Set(state.course.files.map((d: {name: string}) => d.name))
-      let merged = [...state.course.files, ...data.filter( (d: {name: string}) => !ids.has(d.name) )]
+      const ids = new Set(state.course.files.map((d: {name: string}) => d.name))
+      const merged = [...state.course.files, ...data.filter( (d: {name: string}) => !ids.has(d.name) )]
 
       // console.log(merged)
       state.course.files = merged
@@ -295,15 +295,15 @@ export default {
      * @param param0 state variables
      */
     deleteCourse({ state }) {
-      let cid = state.course.courseId
-      let sid = state.course.storageId
-      let files = state.course.files
+      const cid = state.course.courseId
+      const sid = state.course.storageId
+      const files = state.course.files
 
       return new Promise ((resolve, reject) => {
         // collect delete requests for all course files
-        let requests = []
+        const requests = []
         if (files) {
-          for ( let file of files) {
+          for ( const file of files) {
             requests.push(
               http.delete(`storage/${sid}/files/${file.name}`)
                 .then( () => console.log(`removed ${file.originalFilename}`))
@@ -359,9 +359,9 @@ export default {
       console.log('Original Course Files:', state.course.files)
       // console.log(rootState)
       // create new course object
-      let newId = uuidv4()
-      let newStorage = uuidv4()
-      let copiedCourse = { ...state.course,
+      const newId = uuidv4()
+      const newStorage = uuidv4()
+      const copiedCourse = { ...state.course,
         name: newName,
         createDate: Date.now(),
         lastChanged: Date.now(),
@@ -371,9 +371,9 @@ export default {
       }
 
       // create new Storage
-      let store = http.post('storage', { name: newStorage })
-      let fileReqs = []
-      let newFiles = []
+      const store = http.post('storage', { name: newStorage })
+      const fileReqs = []
+      const newFiles = []
       store
 
       /* Files are not being copied because of a bug */
@@ -536,7 +536,7 @@ export default {
       commit('setBusy', true)
       http.get('courses?filter[include]=author')
         .then( ({data}) => {
-          for(let courseObject of data) {
+          for(const courseObject of data) {
             const listData = { 
               category: courseObject.category, 
               name: courseObject.name, 
@@ -563,8 +563,8 @@ export default {
      */
      fetchEnrollment({ commit, state, rootState }, courseId: String) {
       const self = this
-      let uid = rootState.auth.userId
-      let cid = courseId
+      const uid = rootState.auth.userId
+      const cid = courseId
       commit('setBusy', true)
       http.get('enrollments/findOne', { params: 
           { filter:
@@ -595,9 +595,9 @@ export default {
      * @returns Promise to save changes
      */
      storeCourse({ commit, state, rootState}) {
-      let updated = Date.now()
-      let cId = state.course.courseId
-      let cContent = state.course.content
+      const updated = Date.now()
+      const cId = state.course.courseId
+      const cContent = state.course.content
 
       return new Promise( (resolve, reject) => { 
         http.patch(`courses/${cId}`, {content: cContent, lastChanged: updated})
