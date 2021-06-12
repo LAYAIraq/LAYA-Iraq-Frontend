@@ -12,6 +12,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "deploy": "scp -r dist/ maufcons@gruenau2.informatik.hu-berlin.de:~/laya/frontend",
+    "test": "echo 'Testing...'",
     "test:unit": "vue-cli-service test:unit test/*.spec.js",
     "test:build": "./test-build.sh"
   },
