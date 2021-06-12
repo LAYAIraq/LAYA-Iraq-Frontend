@@ -18,11 +18,12 @@ sast:
 include:
 - template: Auto-DevOps.gitlab-ci.yml
 
-test:
+lint:
   image: node:lts
   before_script:
     - npm install --progress=false
   stage: test
+  allow_failure: true
   script: npm run lint
 
 build:

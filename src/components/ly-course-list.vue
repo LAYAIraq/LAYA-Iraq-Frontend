@@ -57,7 +57,9 @@ Dependencies:
             <i class="fas fa-arrow-right"></i>
           </router-link>
           <a class="text-dark px-2 py-1 d-inline-block text-center" 
-            v-else @click="subscribe(course)" href="#">
+            v-else 
+            @click="subscribe(course)" 
+          >
             {{ i18n['courseList.subscribe'] }}
             <i class="fas fa-file-signature"></i>  
           </a>
