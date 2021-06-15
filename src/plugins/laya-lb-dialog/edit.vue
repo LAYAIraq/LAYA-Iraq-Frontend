@@ -184,7 +184,8 @@ export default {
       bg: '',
       question: '',
       answers: [],
-      title: ''
+      title: '',
+      showTitle: false
     }
   },
 

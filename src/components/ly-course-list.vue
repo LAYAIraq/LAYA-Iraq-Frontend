@@ -190,9 +190,7 @@ export default {
       }
 
       /* create enrollment */
-      http.patch('enrollments', {
-        ...newEnrollment
-      }).then(() => {
+      http.post('enrollments/create', newEnrollment).then(() => {
         
       }).catch((err) => {
         console.log(err)
