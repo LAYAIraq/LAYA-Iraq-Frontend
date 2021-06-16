@@ -95,8 +95,6 @@ export default {
   data() {
     return {
       doNotDisturb: false,
-      newNotifications: false,
-      newNotesNumber: 0,
       notifyShortList: []
     }
   },
@@ -108,12 +106,12 @@ export default {
   },
 
   created() {
-    this.$store.dispatch('getInitialMessages')
+    this.$store.dispatch('getAllMessages')
     this.setShortlist()
   },
 
   beforeDestroy() {
-    this.$store.dispatch('updateNoteData')
+    this.$store.dispatch('updateReadProp')
   },
 
   methods: {

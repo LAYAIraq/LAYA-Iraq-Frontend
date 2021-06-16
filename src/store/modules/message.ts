@@ -44,9 +44,9 @@ export default {
       unreadMsgNo: number
     }) {
       state.messages.forEach((elem: { 
-        data: { read: boolean }
+       read: boolean 
       }) => {
-        elem.data.read = true
+        elem.read = true
       })
       state.unreadMessages = false
       state.unreadMsgNo = 0
@@ -64,7 +64,7 @@ export default {
       unreadMessages: boolean,
       unreadMsgNo: number
       },
-      msg: { noteId: string, data: { read: boolean } }) {
+      msg: { noteId: string, read: boolean }) {
       let present = false
       // check if message exists already
       state.messages.forEach((elem: { noteId: string }) => {
@@ -72,33 +72,13 @@ export default {
           present = true
         }
       })
-      if(!present)
-        {
-          // message has been loaded to store before
-          if (Object.prototype.hasOwnProperty.call(msg.data, 'read')) {
-            state.messages.push(msg)
-            if (!msg.data.read) {
-              state.unreadMessages = true
-              state.unreadMsgNo++
-            }
-          }
-          // first time store handles message,
-          // add 'read' boolean
-          else {
-            const newData = {
-              ...msg.data,
-              read: false
-            }
-            const newMsg = {
-              ...msg,
-              data: newData
-            }
-            state.messages.push(newMsg)
-            state.unreadMessages = true
-            state.unreadMsgNo++
-          }
-          
+      if(!present) {  
+        state.messages.push(msg)
+        if(!msg.read) {
+          state.unreadMessages = true
+          state.unreadMsgNo++
         }
+      }
     },
     /**
      * function readNotification: mark message as read
@@ -113,10 +93,10 @@ export default {
       unreadMsgNo: number 
     }, 
       msgId: string) {
-      state.messages.forEach((elem: { noteId: string, data: { read: boolean } }) => {
+      state.messages.forEach((elem: { noteId: string, read: boolean }) => {
         if(elem.noteId === msgId) {
-          if (!elem.data.read) {
-            elem.data.read = true
+          if (!elem.read) {
+            elem.read = true
             state.unreadMsgNo--
           }
           if (state.unreadMsgNo === 0) {
@@ -125,8 +105,8 @@ export default {
         }
       })
     },
-    updateLoaded(state: { loadedMessages: number }, newNo: number) {
-      state.loadedMessages = newNo
+    updateLoaded(state: { messagesLoaded: number }, newNo: number) {
+      state.messagesLoaded = newNo
     }
   },
   actions: {
@@ -139,7 +119,7 @@ export default {
      * @param param0 state property 
      */
      getAdditionalMessages({ commit, state, rootState }) {
-      if (state.loadedMessages < 10) {
+      if (state.messagesLoaded < 10) {
         return new Promise((resolve, reject) => {
           reject('No more messages')
         })
@@ -148,7 +128,7 @@ export default {
         http.get('notifications', { 
           params: {
             filter: {
-              skip: state.loadedMessages,
+              skip: state.messagesLoaded,
               limit: 10,
               order: 'time DESC',
               where: {
@@ -164,10 +144,37 @@ export default {
             no++
           })
           resolve(resp)
-          commit('updateLoaded', state.loadedMessages + no)
+          commit('updateLoaded', state.messagesLoaded + no)
         })
         .catch(err => reject(err))
       })
+    },
+
+    /**
+     * function getAllMessages: get all notifications for logged user
+     * Author: cmc
+     * Last Updated: June 16, 2021
+     * @param param0 state property 
+     */
+     getAllMessages({ commit, state, rootState }) {
+      http.get('notifications', { 
+        params: {
+          filter: {
+            order: 'time DESC',
+            where: {
+              userId: rootState.auth.userId
+            }
+          }
+        }
+      })
+      .then(resp => {
+        console.log(resp)
+        resp.data.forEach((elem: object) => {
+          commit('appendMsg', elem)
+        })
+        commit('updateLoaded', resp.data.length)
+      })
+      .catch(err => console.error(err))
     },
 
     /**
@@ -201,25 +208,22 @@ export default {
     },
 
     /**
-     * Function updateNoteData: updata data property for all notifications
+     * Function updateReadProp: updata read property for all notifications
      * Author: cmc
-     * Last Updated: June 10, 2021
+     * Last Updated: June 16, 2021
      * @param state state variables 
      */
-    updateNoteData({ state }) {
+    updateReadProp({ state }) {
         const requests = []
         state.messages.forEach((elem: { 
           noteId: string, 
-          data: {
-            read: boolean
-          } }) => {
-          const dataWrapper = {
-            data: {
-              read: elem.data.read
-            }
-          }
+          read: boolean
+        }) => {
           requests.push(
-            http.patch(`notifications/${elem.noteId}`, dataWrapper)
+            http.patch(
+              `notifications/${elem.noteId}`,
+              { read: elem.read }
+            )
           )
         })
         http.all(requests)

@@ -22,9 +22,6 @@ export default {
       const newNote = {
         noteId: uuidv4(),
         time: this.randTimeStamp(),
-        data: {
-          read: false
-        },
         type: noteType,
         userId: 1
       }
@@ -33,6 +30,5 @@ export default {
         .catch(err => console.error(err))
     }
   }
-  
   
 }

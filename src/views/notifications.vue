@@ -57,13 +57,13 @@
             <div class="row">
               <div class="col" 
                 :class="{
-                  'font-italic': note.data.read,
-                  'font-weight-bold': !note.data.read
+                  'font-italic': note.read,
+                  'font-weight-bold': !note.read
                 }"
               >
                 <i :class="{
-                  'fas fa-envelope-open': note.data.read,
-                  'fas fa-envelope': !note.data.read
+                  'fas fa-envelope-open': note.read,
+                  'fas fa-envelope': !note.read
                 }"></i>
                 {{ i18n[`notifications.${note.type}.title`] }}
               </div>
@@ -189,7 +189,7 @@ export default {
   },
 
   beforeDestroy() {
-    this.$store.dispatch('updateNoteData')
+    this.$store.dispatch('updateReadProp')
   },
 
   methods: {
