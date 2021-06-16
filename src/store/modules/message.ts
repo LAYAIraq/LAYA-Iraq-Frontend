@@ -168,7 +168,6 @@ export default {
         }
       })
       .then(resp => {
-        console.log(resp)
         resp.data.forEach((elem: object) => {
           commit('appendMsg', elem)
         })
@@ -205,6 +204,17 @@ export default {
         commit('updateLoaded', no)
       })
       .catch(err => console.error(err))
+    },
+
+    /**
+     * Function getNewMessages: get messages that 
+     *  are newer than loaded ones
+     * Author: cmc
+     * Last Updated: June 16, 2021
+     * @param param0 state variables
+     */
+    getNewMessages({state, rootState}) {
+      // TODO
     },
 
     /**
