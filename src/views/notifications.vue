@@ -185,9 +185,9 @@ export default {
         document.getElementById(`${collapseId}-btn`).click()
       }
     })
-    window.setInterval(() => {
-      this.getNotifications()
-    }, 10000)
+    // window.setInterval(() => {
+    //   this.getNotifications()
+    // }, 10000)
     // this.highlightMessage()
   },
 

@@ -31,6 +31,16 @@ export default {
      */
     isAuthor(state: { role: string }) {
       return state.role === roles.AUTHOR || state.role == roles.ADMIN
+    },
+
+    /**
+     * getter userId: return userId
+     * Author: cmc
+     * Last Updated: June 20, 2021
+     * @param state: state variables
+     */
+    userId(state: { userId: number }) {
+      return state.userId
     }
   },
   mutations: {

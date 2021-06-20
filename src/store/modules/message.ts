@@ -65,6 +65,7 @@ export default {
       unreadMsgNo: number
       },
       msg: { noteId: string, read: boolean }) {
+      console.log('new message: ', msg)
       let present = false
       // check if message exists already
       state.messages.forEach((elem: { noteId: string }) => {

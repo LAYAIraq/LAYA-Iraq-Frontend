@@ -63,6 +63,8 @@
 </template>
 
 <script>
+import api from '@/backend-url'
+import http from 'axios'
 import { locale, time } from '@/mixins'
 import { mapGetters, mapState } from 'vuex'
 // import lyOnOff from '@/components/on-off-switch.vue'
@@ -80,7 +82,12 @@ export default {
   ],
 
   computed: {
-    ...mapGetters(['messages', 'unreadMessages', 'unreadMsgNo']),
+    ...mapGetters([
+        'messages', 
+        'unreadMessages', 
+        'unreadMsgNo',
+        'userId'
+      ]),
     ...mapState(['message']),
     /**
      * messagesPresent: returns true if there are notifications
@@ -95,7 +102,9 @@ export default {
   data() {
     return {
       doNotDisturb: false,
-      notifyShortList: []
+      notifyShortList: [],
+      stream: null,
+      streamListener: null
     }
   },
 
@@ -106,15 +115,49 @@ export default {
   },
 
   created() {
-    this.$store.dispatch('getAllMessages')
+    // this.$store.dispatch('getAllMessages')
     this.setShortlist()
+    this.initiateEventStream()
   },
 
   beforeDestroy() {
     this.$store.dispatch('updateReadProp')
+    this.stream.close()
   },
 
   methods: {
+    /**
+     * Function initiateEventStream: add event listener for 
+     *  notification event stream to get updates
+     * Author: cmc
+     * Last Updated: June 20, 2021
+     */
+    initiateEventStream() {
+      const customStreamUrl = 
+        `${api}/notifications/change-stream?_format=event-stream`
+      // http.post(customStreamUrl)
+      this.stream = new EventSource(customStreamUrl)
+      this.stream.onerror = (err) => {
+        // console.log('Error on change stream!') 
+        console.error(err)
+      }
+      this.stream.addEventListener('data', (msg) => {
+        // helper function to make read property a boolean
+        const booleanizeString = (str) => {
+          return str === 'true' ? true:
+            str === 'false'? false: 
+            str
+        } 
+        let notification = JSON.parse(msg.data)
+        console.log('before:', notification.data)
+        notification.data.read = booleanizeString(notification.data.read)
+        console.log('after: ', notification.data)
+        if (notification.data.userId === this.userId) {
+          console.log('notification is for us!', notification.data)
+          this.$store.commit('appendMsg', notification.data)
+        }
+      })
+    }, 
     /** 
      * Function markAllAsRead: set allRead commit in store
      * Author: cmc
