@@ -234,6 +234,7 @@
 	"notifications.authorNewSub.cta": "Click to go to your Course!",
 	"notifications.authorNewSub.text": "You have a new Subscriber on your Course <CID>!",
 	"notifications.authorNewSub.title": "New Subscriber",
+	"notifications.getNew": "Fetch new notifications",
 	"notifications.loadMore": "Load more notifications",
 	"notifications.none": "You have no notifications",
 	"placeholder": "New Course Name",

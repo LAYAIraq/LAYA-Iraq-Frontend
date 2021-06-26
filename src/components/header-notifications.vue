@@ -27,6 +27,7 @@
       <router-link
         :to="'/notifications?id=' + note.noteId"
         :highlight="note.noteId"
+        :class="!note.read? 'font-weight-bold':''"
       >
         {{ i18n[`notifications.${note.type}.title`] }}
         <span class="timestamp">
@@ -50,12 +51,24 @@
 
     <b-dropdown-item v-if="messagesPresent">
       <b-button
+        class="w-100"
         variant="info"
         @click="markAllAsRead"
       >
         {{ i18n['markAllAsRead'] }}
       </b-button>
     </b-dropdown-item>
+
+    <b-dropdown-item >
+      <b-button
+        class="w-100"
+        variant="info"
+        @click="getNewNotifications"
+      >
+        {{ i18n['notifications.getNew'] }}
+      </b-button>
+    </b-dropdown-item>
+
     <!-- <b-dropdown-item>
       <ly-on-off :check="doNotDisturb"></ly-on-off>
     </b-dropdown-item> -->
@@ -64,8 +77,8 @@
 
 <script>
 import api from '@/backend-url'
-import http from 'axios'
-import { locale, time } from '@/mixins'
+// import http from 'axios'
+import { fetchNotifications, locale, time } from '@/mixins'
 import { mapGetters, mapState } from 'vuex'
 // import lyOnOff from '@/components/on-off-switch.vue'
 
@@ -77,6 +90,7 @@ export default {
   // },
 
   mixins: [
+    fetchNotifications,
     locale,
     time
   ],
@@ -103,8 +117,8 @@ export default {
     return {
       doNotDisturb: false,
       notifyShortList: [],
-      stream: null,
-      streamListener: null
+      // stream: null,
+      // streamListener: null
     }
   },
 
@@ -115,20 +129,20 @@ export default {
   },
 
   created() {
-    // this.$store.dispatch('getAllMessages')
+    this.$store.dispatch('getAllMessages')
     this.setShortlist()
-    this.initiateEventStream()
+    // this.initiateEventStream()
   },
 
   beforeDestroy() {
     this.$store.dispatch('updateReadProp')
-    this.stream.close()
+    // this.stream.close()
   },
 
   methods: {
     /**
      * Function initiateEventStream: add event listener for 
-     *  notification event stream to get updates
+     *  notification event stream to get updates // not used 
      * Author: cmc
      * Last Updated: June 20, 2021
      */
@@ -158,14 +172,7 @@ export default {
         }
       })
     }, 
-    /** 
-     * Function markAllAsRead: set allRead commit in store
-     * Author: cmc
-     * Last Updated: May 28, 2021
-    */
-    markAllAsRead() {
-      this.$store.commit('allRead')
-    },
+    
     /**
      * Function setShortList: take first 5 elements of
      *  notifications for dropdown
@@ -201,7 +208,6 @@ export default {
   position: relative;
 }
 
-
 .note-badge {
   position: absolute;
   right: 20px;
@@ -217,7 +223,6 @@ export default {
 
 .timestamp {
   color: rgba(0, 0, 0, 0.5);
-
 }
 
 </style>

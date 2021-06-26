@@ -4,10 +4,24 @@
     :class="langIsAr? 'text-right': 'text-left'">
     
     <div class="container mt-5 mb-5">
-
-      <h1 class="text-center">
-        {{ i18n['notifications'] }}
-      </h1>
+      <div class="row">
+        <div class="col">
+        <h1 class="text-center">
+          {{ i18n['notifications'] }}
+        </h1>
+        </div>
+        <div class="col-3">
+          <button
+            type="button"
+            class="btn btn-info"
+            :class="langIsAr? 'float-left' : 'float-right'"
+            @click="getNewNotifications"
+          >
+            <i class="fas fa-download"></i>
+            {{ i18n['notifications.getNew'] }}
+          </button>
+        </div>
+      </div>
         <!-- <a @click="randomNotifications">MAKE RANDOM NOTIFICATIONS</a> -->
     </div>
     <div 
@@ -102,11 +116,19 @@
                 ></button>
                 <b-card class="mt-2 w-100">
                   <span class="note-content">
-                    {{ i18n[`notifications.${note.type}.text`] }}
+                    {{ replaceStr(note.type, note.data.courseId) }}
                   </span>
-                  <span class="note-cta">
-                    {{ i18n[`notifications.${note.type}.cta`] }}
+                  <span 
+                    class="note-cta"
+                    v-if="!loading"
+                  >
+                    <router-link
+                      :to="displayReference(note)"
+                    >
+                      {{ i18n[`notifications.${note.type}.cta`] }}
+                    </router-link>
                   </span>
+                  <span v-else><i class="fas fa-spinner fa-spin"></i></span>
                 </b-card>
               </b-collapse>
                 
@@ -138,14 +160,16 @@
 </template>
 
 <script>
+import http from 'axios'
 import { mapGetters, mapState } from 'vuex'
-import { locale, time } from '@/mixins'
+import { fetchNotifications, locale, time } from '@/mixins'
 import randomNotifications from '@/misc/fillnotifications.js'
 
 export default {
   name: 'laya-notifications',
 
   mixins: [
+    fetchNotifications,
     locale,
     time
   ],
@@ -154,7 +178,8 @@ export default {
     return {
       loading: false,
       msgList: [],
-      showhighLight: true
+      showhighLight: true,
+      valueCache: {}
     }
   },
 
@@ -167,7 +192,7 @@ export default {
      * Last Updated: June 10, 2021
      */
     moreMessages() {
-      return (this.messages.length != 0 && this.messages.length % 10 == 0)
+      return (this.messages.length != 0 && !this.messages.length % 10 == 0)
     }
   },
 
@@ -176,6 +201,7 @@ export default {
     if (Object.prototype.hasOwnProperty.call(this.$route.query, 'id')) {
       this.highlightId = this.$route.query.id
     }
+    this.cacheValues()
   },
 
   mounted() {
@@ -188,7 +214,11 @@ export default {
     // window.setInterval(() => {
     //   this.getNotifications()
     // }, 10000)
+    // window.setInterval(() => {
+    //     this.loading = false
+    //   }, 5000)
     // this.highlightMessage()
+    if(!this.valueCache) console.log('error loading valueCache')
   },
 
   beforeDestroy() {
@@ -197,6 +227,87 @@ export default {
 
   methods: {
     ...randomNotifications,
+
+    /**
+     * Function cacheValues: get all referencing data for 
+     *  notifications, set loading to false if done
+     * Author: cmc 
+     * Last Updated: June 26, 2021
+     */
+    cacheValues() {
+      this.loading = true
+      let queries = []
+      this.messages.forEach(elem => {
+        if (!this.valueCache[elem.type]) {
+          this.valueCache[elem.type] = {}
+        }
+        queries.push(this.getReference(elem))
+        // console.log(queries)
+      })
+      Promise.all(queries)
+      .then( () => {
+        this.loading = false
+      })
+      
+    },
+    /**
+     * function displayReference: show referred value in notification
+     * Author: cmc
+     * Last Updated: June 26, 2021
+     * @param {object} note notification for which it's used
+     */
+    displayReference(note) {
+      // console.log("Rytna show href for: ", note)
+      switch(note.type) {
+        case 'authorNewSub': {
+          if (this.valueCache['authorNewSub'][note.data.courseId]) {
+            // console.log(note.data.courseId)
+            let val = this.valueCache['authorNewSub'][note.data.courseId]
+            // console.log(`href is ${val}`)
+            return(`/courses/${val}/1`)
+          } else {
+            return '/#'
+          }
+        }
+        default: {
+          return '/#'
+        }
+      }
+    },
+    /**
+     * function getReference: create href string for notification
+     *  target cache
+     * Author: cmc
+     * Last Updated: June 26, 2021
+     */
+    getReference(note) {
+      // console.log('we wanna get ref for: ', note)
+      switch(note.type) {
+        case 'authorNewSub': {
+          if(this.valueCache['authorNewSub'][note.data.courseId]) {
+            break;
+          } else {
+            return new Promise ((resolve, reject) => 
+             http.get(`courses/getCourseName?id=${note.data.courseId}`)
+              .then(resp => {
+                // console.log(resp)
+                this.valueCache['authorNewSub'][note.data.courseId] = 
+                  resp.data.name
+                resolve(resp)
+              })
+              .catch((err) => {
+                console.error(err)
+                reject(err)
+              })
+            )
+          }
+        }
+        default: {
+          console.log('We are in Default case!')
+          return '#'
+        }
+      }
+    },
     /**
      * function highlightMessage: scroll highlighted message into view
      * Author: cmc
@@ -222,6 +333,7 @@ export default {
         })
         .finally(this.loading = false)
     },
+
     /**
      * Function markAsRead: set 'read' boolean in message's data
      * Author: cmc
@@ -232,15 +344,6 @@ export default {
       this.$store.commit('readNotification', msg.noteId)
     },
 
-    /** 
-     * Function markAllAsRead: set allRead commit in store
-     * Author: cmc
-     * Last Updated: May 28, 2021
-    */
-    markAllAsRead() {
-      this.$store.commit('allRead')
-    },
-
     /**
      * Function noteTime: return timestamp in locale
      * Author: cmc
@@ -249,6 +352,21 @@ export default {
      */
     noteTime(time) {
       return `${this.locDate(time)}, ${this.locTime(time)}`
+    },
+
+    /**
+     * Function replaceString: replace place holder in notification
+     *  text with referenced value
+     * Author: cmc
+     * Last Updated: June 26, 2021
+     * @param {string} type notification type
+     * @param {string} id id of referenced value
+     */
+    replaceStr(type, id) {
+      // tryin to be generic in order to use if for all notification types
+      const repStr = this.i18n[`notifications.${type}.text`]
+        .replace('<CID>', this.valueCache[type][id])
+      return repStr
     }
   }
 

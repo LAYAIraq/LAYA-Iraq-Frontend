@@ -65,7 +65,7 @@ export default {
       unreadMsgNo: number
       },
       msg: { noteId: string, read: boolean }) {
-      console.log('new message: ', msg)
+      // console.log('new message: ', msg)
       let present = false
       // check if message exists already
       state.messages.forEach((elem: { noteId: string }) => {
@@ -106,8 +106,28 @@ export default {
         }
       })
     },
+
+    /**
+     * Function sortMessages: sort notifications from date in
+     *  descending order
+     * Author: cmc
+     * Last Updated: June 26, 2021
+     * @param state state variables
+     */
+    sortMessages(state: { messages: [{time: number}] }) {
+      state.messages.sort((a, b) => a.time - b.time)
+    },
+
+    /**
+     * function updateLoaded: update the number of messages loaded
+     *  in store
+     * Author: cmc
+     * Last Updated: June 26, 2021
+     * @param state state variables
+     * @param newNo new # of loaded messages
+     */
     updateLoaded(state: { messagesLoaded: number }, newNo: number) {
-      state.messagesLoaded = newNo
+      state.messagesLoaded += newNo
     }
   },
   actions: {
@@ -144,8 +164,9 @@ export default {
             commit('appendMsg', elem)
             no++
           })
-          resolve(resp)
           commit('updateLoaded', state.messagesLoaded + no)
+          commit('sortMessages')
+          resolve(resp)
         })
         .catch(err => reject(err))
       })
@@ -173,6 +194,7 @@ export default {
           commit('appendMsg', elem)
         })
         commit('updateLoaded', resp.data.length)
+        commit('sortMessages')
       })
       .catch(err => console.error(err))
     },
@@ -184,27 +206,29 @@ export default {
      * @param param0 state property 
      */
     getInitialMessages({ commit, state, rootState }) {
-      http.get('notifications', { 
-        params: {
-          filter: {
-            limit: 10,
-            order: 'time DESC',
-            where: {
-              userId: rootState.auth.userId
+      if (state.messages.length == 0) {
+        http.get('notifications', { 
+          params: {
+            filter: {
+              limit: 10,
+              order: 'time DESC',
+              where: {
+                userId: rootState.auth.userId
+              }
             }
           }
-        }
-      })
-      .then(resp => {
-        let no = 0
-        
-        resp.data.forEach((elem: object) => {
-          commit('appendMsg', elem)
-          no++
         })
-        commit('updateLoaded', no)
-      })
-      .catch(err => console.error(err))
+        .then(resp => {
+          let no = 0
+          
+          resp.data.forEach((elem: object) => {
+            commit('appendMsg', elem)
+            no++
+          })
+          commit('updateLoaded', no)
+        })
+        .catch(err => console.error(err))
+      }
     },
 
     /**
@@ -214,8 +238,32 @@ export default {
      * Last Updated: June 16, 2021
      * @param param0 state variables
      */
-    getNewMessages({state, rootState}) {
-      // TODO
+    getNewMessages({commit, state, rootState}) {
+      if (!state.messages) {
+        commit('getInitialMessages')
+      }
+      else {
+        http.get('notifications', { 
+        params: {
+          filter: {
+            where: {
+              userId: rootState.auth.userId,
+              time: { gt: state.messages[0].time }
+            }
+          }
+        }
+      })
+      .then( resp => {
+        let no = 0
+        resp.data.forEach((elem: object) => {
+          commit('appendMsg', elem)
+          no++
+        })
+        commit('updateLoaded', no)
+      })
+      .catch(err => console.error(err))
+      commit('sortMessages')
+      }
     },
 
     /**
