@@ -15,11 +15,11 @@ Dependencies:
       <div class="row mb-3">
         <div class="col">
           <h4>
-            {{title}}
+            {{ title.text }}
             <laya-audio-inline v-if="taskAudio" :src="taskAudio">
             </laya-audio-inline>
           </h4>
-          <p>{{task}}</p>
+          <p>{{ task.text }}</p>
         </div>
       </div>
 
@@ -27,7 +27,7 @@ Dependencies:
 
       <div class="row">
         <div class="col">
-          <div v-for="(item,i) in items" :key="item.label" class="item mb-5">
+          <div v-for="(item,i) in items" :key="item.id" class="item mb-5">
             <h4 class="text-center item-label">
               {{ item.label }}
               <i v-if="checked"

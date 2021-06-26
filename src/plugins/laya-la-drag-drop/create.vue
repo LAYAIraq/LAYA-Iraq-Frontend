@@ -40,7 +40,7 @@ Dependencies: @/mixins/locale.vue
         <div class="col-10">
           <input id="scms-title"
                  type="text"
-                 v-model="title"
+                 v-model="title.text"
                  class="form-control"
                  :placeholder="i18n['titlePlaceholder']">
         </div>
@@ -54,7 +54,7 @@ Dependencies: @/mixins/locale.vue
         </label>
         <div class="col-10">
           <textarea id="scms-task"
-                    v-model="task"
+                    v-model="task.text"
                     class="w-100"
                     :placeholder="i18n['taskPlaceholder']">
           </textarea>
@@ -69,7 +69,7 @@ Dependencies: @/mixins/locale.vue
         <div class="col-10">
           <input id="scms-task-audio"
                  type="text"
-                 v-model="taskAudio"
+                 v-model="taskAudio.text"
                  class="form-control"
                  :placeholder="i18n['taskAudioPlaceholder']">
         </div>
@@ -156,9 +156,10 @@ Dependencies: @/mixins/locale.vue
 
 <script>
 import { locale, tooltipIcon } from '@/mixins'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
-  name: 'laya-la-drag-drop-edit',
+  name: 'laya-la-drag-drop-new',
 
   mixins: [
     locale,
@@ -167,12 +168,13 @@ export default {
 
   created () {
     this.fillFormSamples()
+    this.populateVars()
   },
   data () {
     return {
-      title: "",
-      task: "",
-      taskAudio: "",
+      title: {},
+      task: {},
+      taskAudio: {},
       items: [],
       categories: []
     }
@@ -192,7 +194,9 @@ export default {
         let temp = this.i18n['layaLaDragDrop.answer'] + " 1"
         let tmpItem = {
           label: temp,
-          category: -1
+          category: -1,
+          flaggable: true,
+          id: uuidv4()
         }
         this.items.push(tmpItem)
 
@@ -200,6 +204,24 @@ export default {
           let tmp = this.i18n['cat'] + " " + i
           this.categories.push(tmp)
         }
+      }
+    },
+
+    populateVars() {
+      this.title = {
+        text: '',
+        flaggable: true,
+        id: uuidv4()
+      }
+      this.task = {
+        text: '',
+        flaggable: true,
+        id: uuidv4()
+      }
+      this.taskAudio = {
+        text: '',
+        flaggable: true,
+        id: uuidv4()
       }
     },
 
@@ -223,7 +245,7 @@ export default {
      * @param {string} str string to be added
      */
     _addItem(str) {
-      this.items.push({label: str, category: -1})
+      this.items.push({label: str, category: -1, flaggable: true, id: uuidv4()})
     },
 
     /**
