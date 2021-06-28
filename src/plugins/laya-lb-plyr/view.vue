@@ -12,7 +12,11 @@ Dependencies:
 <template>
   <div class="ly-plyr-view">
 
-    <h4 v-if="showTitle">{{ title }}</h4>
+    <div class="row" :id="title.id">
+      <h4 v-if="title.show">{{ title.text }}</h4>
+      <laya-flag v-if="title.flagged"></laya-flag>
+    </div>
+
 
     <div 
       :id="playerId" 
@@ -53,18 +57,17 @@ export default {
   ],
 
   data() {
-    if (Object.entries(this.$attrs).length === 4) { // for 'preview' feature
-      return {...this.$attrs}
+    if (this.previewData) { // for 'preview' feature
+      return {...this.previewData}
     }
     return {
       plyr: null,
       src: '',
-      title: '',
-      showTitle: false
+      title: ''
     }
   },
   created() {
-    this.fetchData()
+    if(!this.previewData) this.fetchData()
   },
   mounted() {
     this.initPlyr()

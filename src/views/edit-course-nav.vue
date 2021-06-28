@@ -70,7 +70,7 @@ Dependencies:
         </div>
 
         <div class="col">
-          {{ step.input.title }}
+          {{ step.input.title.text }}
         </div>
 
         <div class="col-3">

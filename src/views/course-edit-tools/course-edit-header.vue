@@ -58,7 +58,7 @@ Dependencies:
                 <b>
                   {{ id+1 }}
                 </b>:
-                {{ c.input.title }}
+                {{ c.input.title.text }}
                 ({{ typeName(c.name)}})
               </b-dropdown-item>
 
@@ -85,7 +85,7 @@ Dependencies:
                 <b>
                   {{ id+1 }}
                 </b>:
-                {{ c.input.title }}
+                {{ c.input.title.text }}
                 ({{ typeName(c.name)}})
               </b-dropdown-item>
 

@@ -11,7 +11,10 @@ Dependencies:
 
 <template>
   <div class="laya-wysiwyg-view">
-    <h4 v-if="showTitle">{{ title }}</h4>
+    <div class="row" :id="title.id">
+      <h4 v-if="title.show">{{ title.text }}</h4>
+      <laya-flag v-if="title.flagged"></laya-flag>
+    </div>
     <div :id="editorId"></div>
     <div class="row">
       <button 
@@ -47,14 +50,14 @@ export default {
   ],
 
   data() {
-    if(Object.entries(this.$attrs).length === 3) //for preview
-      return {...this.$attrs}
+    if(this.previewData) //for preview
+      return {...this.previewData}
     return {
       contents: null
     }
   },
   created() {
-    this.fetchData()
+    if (!this.previewData) this.fetchData()
   },
   mounted() {
     this.fetchContent()
@@ -105,7 +108,8 @@ export default {
     }
   },
   props: {
-    onFinish: Array
+    onFinish: Array,
+    previewData: Object
   }
 }
 </script>

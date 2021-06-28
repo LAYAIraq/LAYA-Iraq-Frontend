@@ -48,7 +48,7 @@ Dependencies: @/mixins/locale.vue
             <input 
               id="laya-plyr-title"
               type="text"
-              v-model="title"
+              v-model="title.text"
               class="form-control"
               :placeholder="i18n['titlePlaceholder']"
             >
@@ -63,7 +63,7 @@ Dependencies: @/mixins/locale.vue
               <input
                 id="show-title-tick"
                 type="checkbox"
-                v-model="showTitle"
+                v-model="title.show"
               >
             </label>
               
@@ -143,6 +143,7 @@ Dependencies: @/mixins/locale.vue
 
 <script>
 import { locale, tooltipIcon } from '@/mixins'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'laya-plyr-new',
@@ -181,8 +182,12 @@ export default {
     return {
       src: '',
       youtube: false,
-      title: '',
-      showTitle: false
+      title: {
+        text: '',
+        flagged: false,
+        show: false,
+        id: ''
+      }
     }
   },
   
@@ -196,10 +201,15 @@ export default {
      * Last Updated: January 17, 2021
      */
     checkURL() {
-      if (this.correctURL && this.src.includes('youtube')) this.youtube = true
-      else this.youtube = false
+      (this.correctURL && this.src.includes('youtube')) ?
+          this.youtube = true :
+          this.youtube = false
     }
   },
+
+  created() {
+    this.title.id = uuidv4()
+  }
 }
 </script>
 

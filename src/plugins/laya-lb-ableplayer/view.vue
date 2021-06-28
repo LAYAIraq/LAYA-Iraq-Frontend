@@ -12,7 +12,10 @@ Dependencies:
 <template>
   <div class="ly-ableplayer">
 
-    <h4 v-if="showTitle"> {{ title }}</h4>
+    <div class="row" :id="title.id">
+      <h4 v-if="title.show"> {{ title.text }}</h4>
+      <laya-flag v-if="title.flagged"></laya-flag>
+    </div>
 
     <video 
       :id="playerId"
@@ -56,10 +59,30 @@ export default {
     locale
   ],
 
+  props: {
+    onFinish: Array,
+    previewData: Object
+  },
+
+  computed: {
+    ...mapGetters(['content', 'profileLang']),
+
+    /**
+     * playerId: return an id for ableplayer html element
+     *
+     * Author: core
+     *
+     * Last Updated: unknown
+     */
+    playerId() {
+      return `laya-ableplayer-${Date.now()}`
+    }
+  },
+
   data() {
-    if (Object.entries(this.$attrs).length === 5)
+    if (this.previewData)
       return {
-        ...this.$attrs,
+        ...this.previewData,
         ableplayer: null
       }
     return {
@@ -67,33 +90,18 @@ export default {
       src: '',
       sign: '',
       sub: '',
-      showTitle: false,
       ableplayer: null
     }
   },
+
   created() {
-    this.fetchData()
+    if (!this.previewData) this.fetchData()
   },
+
   mounted() {
     this.ableplayer = new window.AblePlayer(`#${this.playerId}`)
   },
-  props: {
-    onFinish: Array
-  },
-  computed: {
-    ...mapGetters(['content', 'profileLang']),
 
-    /**
-     * playerId: return an id for ableplayer html element
-     * 
-     * Author: core
-     * 
-     * Last Updated: unknown
-     */
-    playerId() {
-      return `laya-ableplayer-${Date.now()}`
-    }
-  },
   methods: {
 
     /**
@@ -125,7 +133,7 @@ export default {
       this.title = preData.title
       this.showTitle = preData.showTitle
     }
-  },
+  }
 }
 </script>
 

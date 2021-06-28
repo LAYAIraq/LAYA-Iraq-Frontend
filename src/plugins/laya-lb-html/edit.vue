@@ -27,7 +27,7 @@ Dependencies:
           <input 
             id="laya-wysiwyg-title"
             type="text"
-            v-model="title"
+            v-model="title.text"
             class="form-control"
             :placeholder="i18n['titlePlaceholder']"
           >
@@ -149,7 +149,7 @@ export default {
       quill.on('text-change', (delta, oldDelta, source) => {
         if (source === 'user')
           self.contents = quill.getContents()
-          self.$forceUpdate
+          self.$forceUpdate()
       })
       quill.setContents(self.contents)
     }

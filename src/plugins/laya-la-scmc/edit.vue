@@ -103,7 +103,7 @@ Dependencies:
       <!-- task -->
       <div class="form-group row">
         <label 
-          for="smcs-task" 
+          for="scms-task"
           class="col-2 col-form-label"
         >
           {{ i18n['task'] }}
@@ -121,7 +121,7 @@ Dependencies:
       <!-- task audio -->
       <div class="form-group row">
         <label 
-          for="smcs-task-audio" 
+          for="scms-task-audio"
           class="col-2 col-form-label"
         >
           {{ i18n['taskAudio'] }}
@@ -154,7 +154,7 @@ Dependencies:
           <input :id="'option-text-'+i"
             class="form-control"
             type="text"
-            v-model="options[i].text">
+            v-model="option.text">
         </div>
 
         <!-- correct -->
@@ -193,6 +193,7 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import { locale, tooltipIcon } from '@/mixins'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'laya-la-scmc-edit',
@@ -257,7 +258,7 @@ export default {
      */
     fetchData() {
       let idx = this.$route.params.step - 1
-      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
+      const preData = JSON.parse(JSON.stringify(this.content[idx]['input']))
       this.multiple = preData.multiple
       this.title = preData.title
       this.task = preData.task

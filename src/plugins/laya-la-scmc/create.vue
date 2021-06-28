@@ -101,7 +101,7 @@ Dependencies: @/mixins/locale.vue
       <!-- task -->
       <div class="form-group row">
         <label 
-          for="smcs-task" 
+          for="scms-task"
           class="col-2 col-form-label"
         >
           {{ i18n['task'] }}

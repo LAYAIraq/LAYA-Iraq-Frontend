@@ -49,7 +49,7 @@ Dependencies:
           <input 
             id="dialog-title"
             type="text"
-            v-model="title"
+            v-model="title.text"
             class="form-control"
             :placeholder="i18n['titlePlaceholder']"
           >
@@ -65,7 +65,7 @@ Dependencies:
             <input
               id="show-title-tick"
               type="checkbox"
-              v-model="showTitle"
+              v-model="title.show"
             >
           </label>
         </div>
@@ -73,15 +73,15 @@ Dependencies:
       </div>
       <div class="form-group row">
         <label 
-          for="smcs-question" 
+          for="dialog-question"
           class="col-2 col-form-label"
         >
           {{ i18n['task'] }}
         </label>
         <div class="col-10">
           <textarea 
-            id="scms-question"
-            v-model="question"
+            id="dialog-question"
+            v-model="question.text"
             class="w-100"
             :placeholder="i18n['layaLbDialog.optional']">
           </textarea>
@@ -153,6 +153,7 @@ Dependencies:
 
 <script>
 import { locale, tooltipIcon } from '@/mixins'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'laya-lb-dialog-new',
@@ -165,11 +166,24 @@ export default {
   data() {
     return {
       bg: '',
-      question: '',
+      question: {
+        text: '',
+        flagged: false,
+        id: ''
+      },
       answers: [],
-      title: '',
-      showTitle: false
+      title: {
+        text: '',
+        flagged: false,
+        show: false,
+        id: ''
+      }
     }
+  },
+
+  created() {
+    this.title.id = uuidv4()
+    this.question.id = uuidv4()
   },
 
   beforeMount() {

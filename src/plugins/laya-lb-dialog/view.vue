@@ -8,10 +8,24 @@ Dependencies: @/mixins/locale.vue
 
 <template>
   <div class="laya-dialog">
+<!--    <div-->
+<!--      class="row"-->
+<!--      :id="title.id"-->
+<!--      v-if="title.show"-->
+<!--    >-->
+<!--      {{ title.text }}-->
+<!--    </div>-->
     <img v-if="bg" class="bg" :src="bg" alt="">
     <div v-else class="bg-fallback"></div>
     <div class="dialog-text">
-      <div v-if="question" class="question">{{ question }}</div>
+      <div
+        v-if="question"
+        class="question"
+        :id="question.id"
+      >
+        {{ question.text }}
+        <laya-flag v-if="question.flagged"></laya-flag>
+      </div>
       <div class="answers d-flex justify-content-around">
         <button 
           v-for="(answer,i) in answers"
@@ -32,20 +46,19 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'laya-dialog',
   data() {
-    if (Object.entries(this.$attrs).length === 5) { // for 'preview' feature
-      return {...this.$attrs}
+    if (this.previewData) { // for 'preview' feature
+      return {...this.previewData}
     }
     return {
       question: '',
       answers: [],
       bg: '',
-      title: '',
-      showTitle: false
+      title: ''
     }
   },
   beforeMount() {
     // fetch data from vuex if not preview
-    if (Object.entries(this.$attrs).length != 5) {
+    if (!this.previewData) {
       // No attributed Data --> actual view
       this.refreshData()
     }
@@ -66,7 +79,8 @@ export default {
     }
   },
   props: {
-    onFinish: Array
+    onFinish: Array,
+    previewData: Object
   },
   methods: {
 

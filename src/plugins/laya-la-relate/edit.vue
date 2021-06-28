@@ -226,6 +226,7 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
+import { v4 as uuidv4 } from 'uuid'
 import { locale, tooltipIcon } from '@/mixins'
 
 export default {

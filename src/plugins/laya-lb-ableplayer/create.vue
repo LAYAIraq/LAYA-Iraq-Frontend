@@ -53,7 +53,7 @@ Dependencies:
           <input 
             id="ableplayer-title"
             type="text"
-            v-model="title"
+            v-model="title.text"
             class="form-control"
             :placeholder="i18n['titlePlaceholder']"
           >
@@ -68,7 +68,7 @@ Dependencies:
             <input
               id="show-title-tick"
               type="checkbox"
-              v-model="showTitle"
+              v-model="title.show"
             >
           </label>
             
@@ -108,6 +108,7 @@ Dependencies:
 
 <script>
 import { locale, tooltipIcon } from '@/mixins'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'laya-ableplayer-create',
@@ -119,12 +120,20 @@ export default {
   
   data() {
     return {
-      title: '',
+      title: {
+        show: false,
+        text: '',
+        flagged: false,
+        id: ''
+      },
       src: '',
       sign: '',
-      showTitle: false,
       sub: ''
     }
+  },
+
+  created() {
+    this.title.id = uuidv4()
   }
 }
 </script>

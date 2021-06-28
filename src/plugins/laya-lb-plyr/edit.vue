@@ -50,7 +50,7 @@ Dependencies:
             <input 
               id="laya-wysiwyg-title"
               type="text"
-              v-model="title"
+              v-model="title.text"
               class="form-control"
               :placeholder="i18n['titlePlaceholder']"
             >
@@ -65,7 +65,7 @@ Dependencies:
               <input
                 id="show-title-tick"
                 type="checkbox"
-                v-model="showTitle"
+                v-model="title.show"
               >
             </label>
               
@@ -230,8 +230,7 @@ export default {
   cursor: pointer;
   }
   .helptext {
-    border: 1px;
-    border-color: green;
+    border: 1px green;
     padding: 5px;
   }
   .helptext i {
