@@ -36,9 +36,9 @@ Dependencies: @/mixins/locale.vue
 
       <!-- title -->
       <div class="form-group row">
-        <label for="scms-title" class="col-2 col-form-label">{{ i18n['title'] }}</label>
+        <label for="drag-drop-title" class="col-2 col-form-label">{{ i18n['title'] }}</label>
         <div class="col-10">
-          <input id="scms-title"
+          <input id="drag-drop-title"
                  type="text"
                  v-model="title.text"
                  class="form-control"
@@ -49,11 +49,11 @@ Dependencies: @/mixins/locale.vue
 
       <!-- task -->
       <div class="form-group row">
-        <label for="smcs-task" class="col-2 col-form-label">
+        <label for="drag-drop-task" class="col-2 col-form-label">
           {{ i18n['task'] }}
         </label>
         <div class="col-10">
-          <textarea id="scms-task"
+          <textarea id="drag-drop-task"
                     v-model="task.text"
                     class="w-100"
                     :placeholder="i18n['taskPlaceholder']">
@@ -67,11 +67,11 @@ Dependencies: @/mixins/locale.vue
           {{ i18n['taskAudio'] }}
         </label>
         <div class="col-10">
-          <input id="scms-task-audio"
-                 type="text"
-                 v-model="taskAudio.text"
-                 class="form-control"
-                 :placeholder="i18n['taskAudioPlaceholder']">
+          <input id="drag-drop-task-audio"
+            type="text"
+            v-model="taskAudio"
+            class="form-control"
+            :placeholder="i18n['taskAudioPlaceholder']">
         </div>
       </div>
 
@@ -174,7 +174,7 @@ export default {
     return {
       title: {},
       task: {},
-      taskAudio: {},
+      taskAudio: '',
       items: [],
       categories: []
     }
@@ -195,7 +195,7 @@ export default {
         let tmpItem = {
           label: temp,
           category: -1,
-          flaggable: true,
+          flagged: false,
           id: uuidv4()
         }
         this.items.push(tmpItem)
@@ -210,17 +210,12 @@ export default {
     populateVars() {
       this.title = {
         text: '',
-        flaggable: true,
+        flagged: false,
         id: uuidv4()
       }
       this.task = {
         text: '',
-        flaggable: true,
-        id: uuidv4()
-      }
-      this.taskAudio = {
-        text: '',
-        flaggable: true,
+        flagged: false,
         id: uuidv4()
       }
     },
@@ -245,7 +240,7 @@ export default {
      * @param {string} str string to be added
      */
     _addItem(str) {
-      this.items.push({label: str, category: -1, flaggable: true, id: uuidv4()})
+      this.items.push({label: str, category: -1, flagged: false, id: uuidv4()})
     },
 
     /**

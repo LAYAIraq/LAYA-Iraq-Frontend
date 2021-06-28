@@ -14,7 +14,7 @@ Dependencies:
       <div class="row">
         <div class="col">
           <!-- preview -->
-          <div v-if="preview" :is="comps.view" v-bind="stepData"></div>
+          <div v-if="preview" :is="comps.view" :previewData="stepData"></div>
 
           <!-- editing view -->
           <div v-show="!preview">

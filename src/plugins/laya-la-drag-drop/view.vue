@@ -12,41 +12,61 @@ Dependencies:
   <div class="laya-quiz-drag-drop">
     <div class="container">
 
-      <div class="row mb-3">
+      <div class="row mb-3" :id="title.id">
         <div class="col">
           <h4>
             {{ title.text }}
             <laya-audio-inline v-if="taskAudio" :src="taskAudio">
             </laya-audio-inline>
           </h4>
-          <p>{{ task.text }}</p>
         </div>
+        <laya-flag 
+          v-if="title.flagged"
+        ></laya-flag> <!-- idea on how to bind flags to the DOM -->
       </div>
 
+      <div class="row" :id="task.id">
+        <div class="col">
+          <p>{{ task.text }}</p>
+        </div>
+        <laya-flag 
+          v-if="task.flagged"
+        ></laya-flag>
+      </div>
       <hr>
 
       <div class="row">
         <div class="col">
-          <div v-for="(item,i) in items" :key="item.id" class="item mb-5">
+          <div 
+            v-for="(item,i) in items" 
+            :key="item.id"
+            :id="item.id" 
+            class="item mb-5"
+          >
             <h4 class="text-center item-label">
               {{ item.label }}
               <i v-if="checked"
-                 class="fas"
-                 :class="{
-                 'fa-check text-success': eval[i],
-                 'fa-times text-danger': !eval[i]}">
+                class="fas"
+                :class="{
+                'fa-check text-success': eval[i],
+                'fa-times text-danger': !eval[i]}">
               </i>
             </h4>
 
             <div class="d-flex justify-content-between">
               <b v-for="cat in categories" :key="cat">{{cat}}</b>
             </div>
-            <input type="range"
-                   class="custom-range"
-                   min="0"
-                   :max="categories.length-1"
-                   :disabled="checked"
-                   v-model.number="solution[i]">
+            <input 
+              type="range"
+              class="custom-range"
+              min="0"
+              :max="categories.length-1"
+              :disabled="checked"
+              v-model.number="solution[i]"
+            >
+            <laya-flag 
+              v-if="item.flagged"
+            ></laya-flag>
           </div>
         </div>
       </div>
@@ -82,11 +102,12 @@ export default {
 
   created () {
     this.mapSolutions()
-    this.fetchData()
+    if (!this.previewData) this.fetchData()
   },
   
   props: {
-    onFinish: Array
+    onFinish: Array,
+    previewData: Object
   },
 
   computed: {
@@ -94,9 +115,9 @@ export default {
   },
 
   data () {
-    if (Object.entries(this.$attrs).length === 5) //for showing preview
+    if (this.previewData) //for showing preview
       return {
-        ...this.$attrs,
+        ...this.previewData,
         checked: false,
         solution: [], // users solution as index
         eval: []
@@ -105,11 +126,11 @@ export default {
       checked: false,
       solution: [], // users solution as index
       eval: [], // list of booleans
-      title: '',
-      task: '',
+      title: {},
+      task: {},
       taskAudio: '',
       items: [],
-      categories: [],
+      categories: []
     }
   },
 

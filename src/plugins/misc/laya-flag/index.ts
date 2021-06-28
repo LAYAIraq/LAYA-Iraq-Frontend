@@ -1,13 +1,13 @@
 /**
  * Filename: index.ts
- * Use: expose Audio-Inline to $laya
- * Creator: core
- * Date: unknown
+ * Use: expose LayaFlag to $laya
+ * Creator: cmc
+ * Date: June 28, 2021
  * Dependencies: vue
  */
 
 import _Vue from 'vue'
-import _view from './view.vue'
+import _view from './flag.vue'
 
 export default {
   install(Vue: typeof _Vue, options?: any): void {
