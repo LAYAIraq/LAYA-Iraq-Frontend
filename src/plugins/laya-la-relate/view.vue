@@ -15,15 +15,26 @@ Dependencies:
   >
     <div class="container">
 
-      <div class="row mb-3">
+      <div class="row mb-3" :id="title.id">
         <div class="col">
           <h4>
-            {{title}}
+            {{ title.text }}
             <laya-audio-inline v-if="taskAudio" :src="taskAudio">
             </laya-audio-inline>
           </h4>
-          <p>{{task}}</p>
         </div>
+        <laya-flag 
+          v-if="title.flagged"
+        ></laya-flag>
+      </div>
+
+      <div class="row" :id="task.id">
+        <div class="col">
+          <p>{{ task.text }}</p>
+        </div>
+        <laya-flag 
+          v-if="task.flagged"
+        ></laya-flag>
       </div>
 
       <hr>
@@ -34,11 +45,12 @@ Dependencies:
           <form>
             <div 
               v-for="(pair,i) in pairs" 
-              :key="i+'-'+uid" 
+              :key="pair.id"
+              :id="pair.id" 
               class="form-group row"
             >
               <label 
-                :for="pair.label+uid" 
+                :for="pair.label+i" 
                 class="col-sm-6 col-form-label"
               >
                 <img 
@@ -55,7 +67,7 @@ Dependencies:
                 {{ pair.label }}
               </label>
               <div class="col-sm-6">
-                <select :id="pair.label+uid"
+                <select :id="pair.label+i"
                   v-model="solution[i]"
                   :disabled="freeze"
                   class="custom-select">
@@ -74,6 +86,9 @@ Dependencies:
                   <i :class="eval[i]"></i>
                 </div>
               </div>
+              <laya-flag
+                v-if="pair.flagged"
+              ></laya-flag>
             </div>
           </form>
           
@@ -81,11 +96,15 @@ Dependencies:
       </div>
 
       <div class="row pt-3">
-        <!--
-        <button type="button" class="btn btn-link" @click="reset">
-          <u>Eingabe löschen</u>
+        
+        <button 
+          type="button" 
+          class="btn btn-warning" 
+          @click="reset"
+        >
+          {{ i18n['layaLaRelate.removeInput']}}
         </button>
-        -->
+       
         <button 
           type="button" 
           class="btn btn-link"
@@ -122,17 +141,17 @@ export default {
   ],
   
   data () {
-    if (Object.entries(this.$attrs).length === 5) //preview
+    if (this.previewData) //preview
       return {
-        ...this.$attrs,
+        ...this.previewData,
         defaultOption: '',
         solution: [],
         eval: [],
         freeze: false
       }
     return {
-      title: '',
-      task: '',
+      title: {},
+      task: {},
       taskAudio: '',
       pairs: [],
       defaultOption: '',
@@ -143,26 +162,16 @@ export default {
   },
   created () {
     this.defaultOption = this.i18n['layaLaRelate.defaultOption']
-    if (Object.entries(this.$attrs).length != 5) { // no preview 
+    if (!this.previewData) { // no preview 
       this.fetchData()
     }
   },
   props: {
-    onFinish: Array
+    onFinish: Array,
+    previewData: Object
   },
   computed: {
     ...mapGetters(['content']),
-
-    /**
-     * uid: return date in ms
-     * 
-     * Author: core
-     * 
-     * Last Updated: unknown
-     */
-    uid() {
-      return Date.now()
-    },
 
     /**
      * options: map pairs to their relation
