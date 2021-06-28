@@ -92,7 +92,7 @@ Dependencies:
           <input 
             id="scms-title"
             type="text"
-            v-model="title"
+            v-model="title.text"
             class="form-control"
             :placeholder="i18n['titlePlaceholder']"
           >
@@ -111,7 +111,7 @@ Dependencies:
         <div class="col-10">
           <textarea 
             id="scms-task"
-            v-model="task"
+            v-model="task.text"
             class="w-100"
             :placeholder="i18n['taskPlaceholder']">
           </textarea>
@@ -154,7 +154,7 @@ Dependencies:
           <input :id="'option-text-'+i"
             class="form-control"
             type="text"
-            v-model="options[i]">
+            v-model="options[i].text">
         </div>
 
         <!-- correct -->
@@ -237,13 +237,15 @@ export default {
 
     /**
      * Function _addItem: Add item to options
-     * 
      * Author: core
-     * 
-     * Last Updated: unknown
+     * Last Updated: June 28, 2021
      */
     _addItem() {
-      this.options.push('');
+      this.options.push({
+        text: this.i18n['layaLaScmc.edit.sampleOption'],
+        flagged: false,
+        id: uuidv4()
+      })
     },
 
     /**

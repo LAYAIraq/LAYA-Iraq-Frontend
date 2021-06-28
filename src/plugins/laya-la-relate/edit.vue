@@ -271,15 +271,13 @@ export default {
 
     /**
      * Function _addPair: add an empty pair
-     * 
      * Author: core
-     * 
-     * Last Updated: unknown
+     * Last Updated: June 28, 2021
      * 
      * @param {*} idx index at which to remove
      */
     _addPair() {
-      this.pairs.push({img: '', audio: '', relation: -1})
+      this.pairs.push({img: '', audio: '', relation: -1, label: '', flagged: false, id: uuidv4()})
     },
 
     /**

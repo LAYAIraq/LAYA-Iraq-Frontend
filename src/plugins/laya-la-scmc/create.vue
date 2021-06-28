@@ -84,13 +84,13 @@ Dependencies: @/mixins/locale.vue
           for="scms-title" 
           class="col-2 col-form-label"
         >
-          {{ i18n['layaLaScmc.name'] }}
+          {{ i18n['title'] }}
         </label>
         <div class="col-10">
           <input 
             id="scms-title"
             type="text"
-            v-model="title"
+            v-model="title.text"
             class="form-control"
             :placeholder="i18n['titlePlaceholder']"
           >
@@ -109,7 +109,7 @@ Dependencies: @/mixins/locale.vue
         <div class="col-10">
           <textarea 
             id="scms-task"
-            v-model="task"
+            v-model="task.text"
             class="w-100"
             :placeholder="i18n['taskPlaceholder']">
           </textarea>
@@ -152,7 +152,7 @@ Dependencies: @/mixins/locale.vue
           <input :id="'option-text-'+i"
             class="form-control"
             type="text"
-            v-model="options[i]">
+            v-model="options[i].text">
         </div>
 
         <!-- correct -->
@@ -169,17 +169,19 @@ Dependencies: @/mixins/locale.vue
 
         <!-- delete -->
         <div class="col-auto align-self-center">
-          <button type="button"
-                  class="btn btn-danger btn-sm"
-                  @click="_delItem(i)">
+          <button 
+            type="button"
+            class="btn btn-danger btn-sm"
+            @click="_delItem(i)">
             <i class="fas fa-times"></i>
           </button>
         </div>
       </div>
 
-      <button type="button"
-              class="btn btn-primary btn-sm"
-              @click="_addItem">
+      <button 
+        type="button"
+        class="btn btn-primary btn-sm"
+        @click="_addItem">
         <i class="fas fa-plus"></i>{{ i18n['itemAdd'] }}
       </button>
 
@@ -190,9 +192,10 @@ Dependencies: @/mixins/locale.vue
 
 <script>
 import { locale, tooltipIcon } from '@/mixins'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
-  name: 'laya-la-scmc-edit',
+  name: 'laya-la-scmc-create',
   
   mixins: [
     locale,
@@ -201,8 +204,8 @@ export default {
 
   data () {
     return {
-      title: '',
-      task: '',
+      title: {},
+      task: {},
       taskAudio: '',
       options: [],
       solutions: [],
@@ -212,10 +215,32 @@ export default {
   },
 
   created () {
-    this.options.push(this.i18n['layaLaScmc.edit.sampleOption'])
+    this.populateData()
   },
   
   methods: {
+    /**
+     * function populateDate: create objects with ids
+     * Author: cmc
+     * Last Updated: June 28, 2021
+     */
+    populateData() {
+      this.options.push({
+        text: this.i18n['layaLaScmc.edit.sampleOption'],
+        flagged: false,
+        id: uuidv4()
+      })
+      this.task = {
+        text: '',
+        flagged: false,
+        id: uuidv4()
+      },
+      this.title = {
+        text: '',
+        flagged: false,
+        id: uuidv4()
+      }
+    },
 
     /**
      * Function _delItem(idx): Remove an item at given index
@@ -232,13 +257,15 @@ export default {
 
     /**
      * Function _addItem: add a new item to options
-     * 
      * Author: core
-     * 
-     * Last Update: unknown
+     * Last Update: June 28, 2021
      */
     _addItem() {
-      this.options.push('');
+      this.options.push({
+        text: this.i18n['layaLaScmc.edit.sampleOption'],
+        flagged: false,
+        id: uuidv4()
+      })
     }
   }
 }

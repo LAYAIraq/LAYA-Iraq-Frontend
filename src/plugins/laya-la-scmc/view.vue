@@ -17,29 +17,40 @@ Dependencies:
 
     <!-- render task -->
     <legend tabindex="0">
-      <h3 class="pb-3">
-        {{title}}
-        <laya-audio-inline v-if="taskAudio" :src="taskAudio">
-        </laya-audio-inline>
-      </h3>
-      {{task}}
+      <div class="row" :id="title.id">
+        <div class="col">
+          <h3 class="pb-3">
+            {{title.text}}
+            <laya-audio-inline v-if="taskAudio" :src="taskAudio">
+            </laya-audio-inline>
+          </h3>
+        </div>
+        <laya-flag v-if="title.flagged"></laya-flag>
+      </div>
+      <div class="row" :id="task.id">
+        <div class="col">
+          {{task.text}}
+        </div>
+        <laya-flag v-if="task.flagged"></laya-flag>
+      </div>
     </legend>
 
     <!-- render options -->
     <div class="p-3 bg-light">
       <div v-for="(option,i) in options"
-           class="form-check mb-3"
-           :key="'mchoice-'+_uid+'-option-'+i">
-
+        class="form-check mb-3"
+        :key="'mchoice-option-'+i"
+        :id="option.id"
+      >
         <input v-if="multiple"
-          :id="'mchoice-in-'+_uid+'-'+i"
+          :id="'mchoice-in-'+i"
           class="form-check-input"
           type="checkbox"
           v-model="answers"
           :disabled="freeze"
           v-bind:value="i">
         <input v-else
-          :id="'mchoice-in-'+_uid+'-'+i"
+          :id="'mchoice-in-'+i"
           class="form-check-input"
           type="radio"
           v-model="answers[0]"
@@ -47,16 +58,17 @@ Dependencies:
           v-bind:value="i">
 
         <label 
-          :for="'mchoice-in-'+_uid+'-'+i" 
+          :for="'mchoice-in-'+i" 
           class="form-check-label"
           :class="langIsAr? 'mr-4' : ''">
-          {{ option }}
+          {{ option.text }}
         </label>
         <i class="ml-2" :class="eval[i]"></i>
         <!--
         <i class="ml-2" :class="{'far fa-check-circle text-success': true}"></i>
         <i class="ml-2" :class="{'far fa-times-circle text-danger': true}"></i>
         -->
+        <laya-flag v-if="option.flagged"></laya-flag>
       </div>
     </div>
 
@@ -107,7 +119,8 @@ export default {
   ],
 
   props: {
-    onFinish: Array
+    onFinish: Array,
+    previewData: Object
   },
 
   computed: {
@@ -128,9 +141,9 @@ export default {
   },
 
    data () {
-    if (Object.entries(this.$attrs).length === 7) 
+    if (this.previewData) 
       return {
-        ...this.$attrs,
+        ...this.previewData,
         tries: 0,
         answers: [],
         checked: [],
@@ -146,17 +159,17 @@ export default {
       freeze: false,
       eval: [],
       multiple: false,
-      title: '',
-      task: '',
+      title: {},
+      task: {},
       taskAudio: '',
-      options: '',
-      solutions: '',
-      maxTries: ''
+      options: [],
+      solutions: [],
+      maxTries: 0
     }
   },
 
   created () {
-    if (Object.entries(this.$attrs).length != 7) { // previewing newly created content
+    if (!this.previewData) { // previewing newly created content
       this.fetchData()
     }
   },
