@@ -1,9 +1,9 @@
 <!--
-Filename: register.vue 
-Use: Allow users to register 
+Filename: register.vue
+Use: Allow users to register
 Creator: core
 Date: unknown
-Dependencies: 
+Dependencies:
   axios,
   @/mixins/locale.vue
 -->
@@ -26,13 +26,13 @@ Dependencies:
               <i class="fas fa-signature"></i>
             </div>
             <div class="col">
-              <input 
-                id="register-focus" 
-                v-model="name" 
+              <input
+                id="register-focus"
+                v-model="name"
                 :placeholder="i18n['namePH']"
-                type="text" 
-                :disabled="submitOk" 
-                @blur="isNameTaken" 
+                type="text"
+                :disabled="submitOk"
+                @blur="isNameTaken"
                 class="w-100"
                 aria-describedby="name-err">
             </div>
@@ -40,9 +40,9 @@ Dependencies:
 
           <div class="form-group row" :class="{'d-none': !errName}">
             <div class="col text-center">
-              <span 
-                id="name-err" 
-                class="text-center" 
+              <span
+                id="name-err"
+                class="text-center"
                 v-show="errName"
                 :aria-hidden="!nameTaken"
               >
@@ -66,7 +66,7 @@ Dependencies:
           <!-- email hint-->
           <div class="form-group row text-center" :class="{'d-none': !errEmail}">
             <div class="col text-center">
-                <span 
+                <span
                   id="email-err"
                   v-show="errEmail"
                   :aria-hidden="!emailTaken"
@@ -84,12 +84,12 @@ Dependencies:
               </label>
             </div>
             <div class="col">
-              <input 
-                v-model="pwd1" 
-                :placeholder="i18n['pwdPH']" 
+              <input
+                v-model="pwd1"
+                :placeholder="i18n['pwdPH']"
                 type="password"
-                :disabled="submitOk" 
-                class="w-100" 
+                :disabled="submitOk"
+                class="w-100"
                 aria-describedby="pwd-err"
               >
             </div>
@@ -105,17 +105,25 @@ Dependencies:
               :disabled="submitOk" class="w-100" aria-describedby="pwd-err">
             </div>
           </div>
-          <div 
-            id="pwd-err" 
-            class="text-center" 
+          <div
+            id="pwd-err"
+            class="text-center"
             :class="{'d-none': !errPwds}"
             :aria-hidden="!errPwds"
             v-show="errPwds">
             {{ i18n['register.pwdErr'] }}
           </div>
+          <div class="form-group row">
+            <label for="pwdMeter" class="col-sm-3 col-form-label">{{ i18n['profile.pwdStrength'] }}</label>
+            <div class="col-sm-9">
+
+              <password id="pwdMeter" v-model="pwd2" :strength-meter-only="true" @feedback="showFeedback"></password>
+              <strong id="testPwdMeter" class="form-text text-center"> </strong>
+            </div>
+          </div>
 
           <!-- profile pic -->
-          
+
           <!-- <div style="height: 2rem"></div>
           <div class="position-relative">
             <div class="position-absolute">{{ i18n['profilePic'] }}</div>
@@ -126,7 +134,7 @@ Dependencies:
               <img src="../assets/hochladen.svg" alt="Profilbild wählen">
             </ly-input-img>
           </div> -->
-         
+
 
           <!-- submit -->
           <!-- <div style="height: 4rem"></div> -->
@@ -136,7 +144,7 @@ Dependencies:
               type="submit"
               class="btn btn-lg btn-block btn-outline-dark"
               style="border: 2px solid black">
-              {{ i18n['register.submit'] }} 
+              {{ i18n['register.submit'] }}
               <i class="fas fa-user-plus"></i>
             </button>
           </h4>
@@ -170,13 +178,20 @@ Dependencies:
 
 <script>
 import http from 'axios'
-import { locale } from '@/mixins'
+import { locale, pwdStrength } from '@/mixins'
+import Password from 'vue-password-strength-meter'
 
 export default {
   name: 'register-view',
 
+  components: {
+    Password,
+    // LayaUploadAvatar
+  },
+
   mixins: [
-    locale
+    locale,
+    pwdStrength
   ],
 
   data () {
@@ -194,7 +209,18 @@ export default {
       busy: false,
       submitOk: false,
       nameTaken: false,
-      emailTaken: false
+      emailTaken: false,
+
+      possibleWarnings: ["Straight rows of keys are easy to guess", "Short keyboard patterns are easy to guess", "Repeats like \"aaa\" are easy to guess",
+        "Repeats like \"abcabcabc\" are only slightly harder to guess than \"abc\"", "Sequences like abc or 6543 are easy to guess",
+        "Recent years are easy to guess", "Dates are often easy to guess", "This is a top-10 common password", "This is a top-100 common password",
+        "This is a very common password", "This is similar to a commonly used password", "A word by itself is easy to guess",
+        "Names and surnames by themselves are easy to guess", "Common names and surnames are easy to guess"], //length = 14
+      possibleSuggestions: ["Use a few words, avoid common phrases", "No need for symbols, digits, or uppercase letters",
+        "Add another word or two. Uncommon words are better.", "Use a longer keyboard pattern with more turns", "Avoid repeated words and characters",
+        "Avoid sequences", "Avoid recent years", "Avoid years that are associated with you", "Avoid dates and years that are associated with you",
+        "Capitalization doesn't help very much", "All-uppercase is almost as easy to guess as all-lowercase", "Reversed words aren't much harder to guess",
+        "Predictable substitutions like '@' instead of 'a' don't help very much"]
     }
   },
 
@@ -202,9 +228,9 @@ export default {
 
     /**
      * errName: form validation for name
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     errName() {
@@ -215,9 +241,9 @@ export default {
 
     /**
      * errEmail: form validation for email
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     errEmail() {
@@ -228,9 +254,9 @@ export default {
 
     /**
      * errPwds: form validation for password input
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     errPwds() {
@@ -241,23 +267,23 @@ export default {
 
     /**
      * noInput: return true if no input is set
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: May 15, 2021
      */
     noInput() {
-      return (this.name === '' && 
-        this.email === '' && 
-        this.pwd1 === '' && 
+      return (this.name === '' &&
+        this.email === '' &&
+        this.pwd1 === '' &&
         this.pwd2 === '')
     },
 
     /**
      * errForm: form validation altogether
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     errForm() {
@@ -273,9 +299,9 @@ export default {
 
     /**
      * function focusImgInput: focus #image-input html element
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     focusImgInput() {
@@ -284,9 +310,9 @@ export default {
 
     /**
      * Function isNameTaken: return if chosen name is already taken
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     isNameTaken() {
@@ -303,10 +329,10 @@ export default {
 
     /**
      * Function isEmailTake: return if given email is already taken
-     * 
+     *
      * Author: core
-     * 
-     * Last Updated: unknown 
+     *
+     * Last Updated: unknown
      */
     isEmailTaken() {
       let ctx = this
@@ -322,9 +348,9 @@ export default {
 
     /**
      * Function submit: collect requests for changes, then shoot them
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     submit() {
@@ -373,6 +399,10 @@ export default {
         .finally( () => {
           ctx.busy = false
         })
+    },
+    showFeedback ({suggestions, warning}) {
+      this.pwdStrength({suggestions, warning})
+
     }
   }
 }

@@ -1,9 +1,9 @@
 <!--
-Filename: profile.vue 
+Filename: profile.vue
 Use: User Profile Settings, such as password and avatar
 Creator: core
 Date: unknown
-Dependencies: 
+Dependencies:
   axios,
   vuex,
   vue-password-strength-meter,
@@ -20,16 +20,16 @@ Dependencies:
         <div class="bg-dark w-100 pt-5 pb-3">
           <!-- avatar -->
           <img
-            v-if="avatar != ''"
-            :src="avatarURL"
-            alt="Avatar"
-            class="d-block rounded-circle mx-auto avatar"
+              v-if="avatar != ''"
+              :src="avatarURL"
+              alt="Avatar"
+              class="d-block rounded-circle mx-auto avatar"
           >
           <img
-            v-else
-            src="../assets/anmelden.svg"
-            alt="Avatar"
-            class="d-block rounded-circle mx-auto avatar"
+              v-else
+              src="../assets/anmelden.svg"
+              alt="Avatar"
+              class="d-block rounded-circle mx-auto avatar"
           >
 
           <h1 class="text-center text-light">{{ profile.name }}</h1>
@@ -52,12 +52,12 @@ Dependencies:
             <label for="username" class="col-sm-3 col-form-label">{{ i18n['namePH'] }}</label>
             <div class="col-sm-9">
               <input
-                id="username"
-                type="text"
-                class="form-control"
-                v-model="profile.name"
-                readonly
-                tabindex="-1"
+                  id="username"
+                  type="text"
+                  class="form-control"
+                  v-model="profile.name"
+                  readonly
+                  tabindex="-1"
               >
             </div>
           </div>
@@ -67,12 +67,12 @@ Dependencies:
             <label for="email" class="col-sm-3 col-form-label">{{ i18n['emailPH'] }}</label>
             <div class="col-sm-9">
               <input
-                id="email"
-                type="text"
-                class="form-control"
-                v-model="profile.email"
-                readonly
-                tabindex="-1"
+                  id="email"
+                  type="text"
+                  class="form-control"
+                  v-model="profile.email"
+                  readonly
+                  tabindex="-1"
               >
             </div>
           </div>
@@ -83,12 +83,12 @@ Dependencies:
             <label for="oldPwd" class="col-sm-3 col-form-label">{{ i18n['profile.oldPwd'] }}</label>
             <div class="col-sm-9">
               <input
-                id="oldPwd"
-                type="password"
-                class="form-control"
-                v-model="oldPwd"
-                :placeholder="i18n['profile.oldPwd']"
-                autocomplete="on"
+                  id="oldPwd"
+                  type="password"
+                  class="form-control"
+                  v-model="oldPwd"
+                  :placeholder="i18n['profile.oldPwd']"
+                  autocomplete="on"
               >
             </div>
             <strong id="pwdStoreMsg" class="form-text text-center">{{ pwdMsg }}</strong>
@@ -99,12 +99,12 @@ Dependencies:
             <label for="newPwd" class="col-sm-3 col-form-label">{{ i18n['profile.newPwd'] }}</label>
             <div class="col-sm-9">
               <input
-                id="newPwd"
-                type="password"
-                class="form-control"
-                v-model="newPwd"
-                :placeholder="i18n['profile.newPwd']"
-                aria-describedby="pwdMsg"
+                  id="newPwd"
+                  type="password"
+                  class="form-control"
+                  v-model="newPwd"
+                  :placeholder="i18n['profile.newPwd']"
+                  aria-describedby="pwdMsg"
               >
             </div>
           </div>
@@ -114,20 +114,21 @@ Dependencies:
             <label for="repeatPwd" class="col-sm-3 col-form-label">{{ i18n['pwd2PH'] }}</label>
             <div class="col-sm-9">
               <input
-                id="repeatPwd"
-                type="password"
-                class="form-control"
-                v-model="repeatPwd"
-                :placeholder="i18n['pwd2PH']"
-                aria-describedby="pwdStrength"
+                  id="repeatPwd"
+                  type="password"
+                  class="form-control"
+                  v-model="repeatPwd"
+                  :placeholder="i18n['pwd2PH']"
+                  aria-describedby="pwdStrength"
               >
             </div>
           </div>
           <div class="form-group row">
             <label for="pwdMeter" class="col-sm-3 col-form-label">{{ i18n['profile.pwdStrength'] }}</label>
             <div class="col-sm-9">
-              
-              <password id="pwdMeter" v-model="repeatPwd" :strength-meter-only="true"></password>
+
+              <password id="pwdMeter" v-model="repeatPwd" :strength-meter-only="true" @feedback="showFeedback"></password>
+              <strong id="testPwdMeter" class="form-text text-center"> </strong>
               <strong id="pwdDiffMsg" class="form-text text-center">{{ pwdDiffMsg }}</strong>
               <strong id="pwdStoreMsg" class="form-text text-center">{{ pwdMsg }}</strong>
             </div>
@@ -135,7 +136,7 @@ Dependencies:
 
           <hr>
 
-          <!-- avatar upload TODO: FIX Cropper Problems  
+          <!-- avatar upload TODO: FIX Cropper Problems
 
           <div class="form-group row">
             <div class="col-sm-3">
@@ -149,7 +150,7 @@ Dependencies:
             </div>
 
           </div>
-        
+
 
           <hr>
           -->
@@ -196,11 +197,11 @@ Dependencies:
           <!-- Save Button -->
           <div class="form-group">
             <button
-              type="submit"
-              @click="submit"
-              :disabled="busy"
-              class="btn btn-block btn-lg btn-outline-dark"
-              style="border-width: 2px"
+                type="submit"
+                @click="submit"
+                :disabled="busy"
+                class="btn btn-block btn-lg btn-outline-dark"
+                style="border-width: 2px"
             >
               <i class="fas fa-check"></i>
               {{ i18n['save'] }}
@@ -211,11 +212,11 @@ Dependencies:
       </div>
     </div>
     <b-toast variant="danger" id="submit-failed" :title="i18n['savingFailed']"
-      class="author-toast" auto-hide-delay="1500" static>
+             class="author-toast" auto-hide-delay="1500" static>
       {{ i18n['profile.submitFail']}}
     </b-toast>
     <b-toast variant="success" id="submit-ok" :title="i18n['layaUploadFileList.success']"
-      class="author-toast" auto-hide-delay="1500" static>
+             class="author-toast" auto-hide-delay="1500" static>
       {{ i18n['profile.submitOk']}}
     </b-toast>
   </div>
@@ -223,11 +224,11 @@ Dependencies:
 
 <script>
 import http from 'axios'
-import { locale } from '@/mixins'
+import { locale, pwdStrength } from '@/mixins'
 import api from '../backend-url.ts'
 import Password from 'vue-password-strength-meter'
 import { mapState } from 'vuex'
-// import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
+import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
 
 export default {
   name: 'profile-view',
@@ -238,7 +239,8 @@ export default {
   },
 
   mixins: [
-    locale
+    locale,
+    pwdStrength
   ],
 
   data() {
@@ -250,7 +252,17 @@ export default {
       pwdMsg: '',
       formMsg: '',
       busy: false,
-      prefs: {}
+      prefs: {},
+      possibleWarnings: ["Straight rows of keys are easy to guess", "Short keyboard patterns are easy to guess", "Repeats like \"aaa\" are easy to guess",
+        "Repeats like \"abcabcabc\" are only slightly harder to guess than \"abc\"", "Sequences like abc or 6543 are easy to guess",
+        "Recent years are easy to guess", "Dates are often easy to guess", "This is a top-10 common password", "This is a top-100 common password",
+        "This is a very common password", "This is similar to a commonly used password", "A word by itself is easy to guess",
+        "Names and surnames by themselves are easy to guess", "Common names and surnames are easy to guess"], //length = 14
+      possibleSuggestions: ["Use a few words, avoid common phrases", "No need for symbols, digits, or uppercase letters",
+        "Add another word or two. Uncommon words are better.", "Use a longer keyboard pattern with more turns", "Avoid repeated words and characters",
+        "Avoid sequences", "Avoid recent years", "Avoid years that are associated with you", "Avoid dates and years that are associated with you",
+        "Capitalization doesn't help very much", "All-uppercase is almost as easy to guess as all-lowercase", "Reversed words aren't much harder to guess",
+        "Predictable substitutions like '@' instead of 'a' don't help very much"] //length = 13
     }
   },
 
@@ -259,21 +271,21 @@ export default {
 
     /**
      * avatarURL: return URL of user avatar
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     avatarURL() {
       return (!this.avatar || this.avatar === '') ?
-        null : `${api}/storage/img/download/${this.avatar}`
+          null : `${api}/storage/img/download/${this.avatar}`
     },
 
     /**
      * passwordsDiffer: returns true if passwords differ
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 24, 2021
      */
     passwordsDiffer() {
@@ -282,35 +294,38 @@ export default {
 
     /**
      * pwdDiffMsg: returns a message if passwords differ
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 24, 2021
      */
     pwdDiffMsg() {
       return this.passwordsDiffer? this.i18n['profile.pwdDiffer'] : ''
-    }
+    },
   },
 
   beforeDestroy() {
     //save changes in profile
-    this.$store.commit('setPrefs', this.prefs)
-    this.$store.dispatch('saveProfile')
+    this.$store.dispatch('saveProfile', {
+      ...this.avatar,
+      ...this.prefs
+    })
   },
 
   created() {
-    // make profile settings mutable 
+    // make profile settings mutable
     this.avatar = this.profile.avatar
-    this.prefs =  JSON.parse(JSON.stringify(this.profile.prefs))
+    this.prefs = { ...this.profile.prefs }
   },
 
+
   methods: {
-    
+
     /**
      * Function submit: get password change request and fire it
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     submit() {
@@ -323,44 +338,47 @@ export default {
       /* change password request */
       if (ctx.oldPwd !== '' && ctx.newPwd !== '') {
         requests.push(
-          http
-            .post('accounts/change-password', {
-              oldPassword: ctx.oldPwd,
-              newPassword: ctx.newPwd
-            })
-            .catch(err => {
-              console.error(err)
-              ctx.pwdMsg = ctx.i18n['profile.pwdFail']
-            })
+            http
+                .post('accounts/change-password', {
+                  oldPassword: ctx.oldPwd,
+                  newPassword: ctx.newPwd
+                })
+                .catch(err => {
+                  console.error(err)
+                  ctx.pwdMsg = ctx.i18n['profile.pwdFail']
+                })
         )
       }
       console.log(requests)
       /* fire requests */
       http
-        .all(requests)
-        .then(
-          http.spread(() => {
-            ctx.formMsg = ctx.i18n['profile.submitOk']
+          .all(requests)
+          .then(
+              http.spread(() => {
+                ctx.formMsg = ctx.i18n['profile.submitOk']
+              })
+          )
+          .catch(function(err) {
+            console.log(err)
+            ctx.$bvToast.show('submit-failed')
           })
-        )
-        .catch(function(err) {
-          console.log(err)
-          ctx.$bvToast.show('submit-failed')
-        })
-        .then(() => {
-          ctx.busy = false
-          setTimeout(() => {
-            ctx.formMsg = ''
-          }, 2000)
-          ctx.$forceUpdate
-          ctx.$bvToast.show('submit-ok')
-        })
+          .then(() => {
+            ctx.busy = false
+            setTimeout(() => {
+              ctx.formMsg = ''
+            }, 2000)
+            ctx.$forceUpdate
+            ctx.$bvToast.show('submit-ok')
+          })
 
       /* update state */
       ctx.$store.commit('setPrefs', ctx.prefs)
     },
 
-   
+    showFeedback ({suggestions, warning}) {
+      this.pwdStrength({suggestions, warning})
+
+    }
   }
 }
 </script>
