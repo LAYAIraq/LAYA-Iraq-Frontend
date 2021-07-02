@@ -23,8 +23,7 @@ Dependencies:
             </laya-audio-inline>
           </h4>
         </div>
-        <laya-flag 
-          v-if="title.flagged"
+        <laya-flag :refData="title"
         ></laya-flag>
       </div>
 
@@ -32,8 +31,7 @@ Dependencies:
         <div class="col">
           <p>{{ task.text }}</p>
         </div>
-        <laya-flag 
-          v-if="task.flagged"
+        <laya-flag :refData="task"
         ></laya-flag>
       </div>
 
@@ -86,8 +84,7 @@ Dependencies:
                   <i :class="eval[i]"></i>
                 </div>
               </div>
-              <laya-flag
-                v-if="pair.flagged"
+              <laya-flag :refData="pair"
               ></laya-flag>
             </div>
           </form>

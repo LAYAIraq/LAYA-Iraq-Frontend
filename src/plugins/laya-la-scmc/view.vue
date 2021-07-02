@@ -25,13 +25,13 @@ Dependencies:
             </laya-audio-inline>
           </h3>
         </div>
-        <laya-flag v-if="title.flagged"></laya-flag>
+        <laya-flag :refData="title"></laya-flag>
       </div>
       <div class="row" :id="task.id">
         <div class="col">
           {{task.text}}
         </div>
-        <laya-flag v-if="task.flagged"></laya-flag>
+        <laya-flag :refData="task"></laya-flag>
       </div>
     </legend>
 
@@ -68,7 +68,7 @@ Dependencies:
         <i class="ml-2" :class="{'far fa-check-circle text-success': true}"></i>
         <i class="ml-2" :class="{'far fa-times-circle text-danger': true}"></i>
         -->
-        <laya-flag v-if="option.flagged"></laya-flag>
+        <laya-flag :refData="option"></laya-flag>
       </div>
     </div>
 

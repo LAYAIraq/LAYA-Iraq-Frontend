@@ -14,7 +14,7 @@ Dependencies:
 
     <div class="row" :id="title.id">
       <h4 v-if="title.show">{{ title.text }}</h4>
-      <laya-flag v-if="title.flagged"></laya-flag>
+      <laya-flag :refData="title"></laya-flag>
     </div>
 
 

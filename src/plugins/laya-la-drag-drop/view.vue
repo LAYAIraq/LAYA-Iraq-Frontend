@@ -20,8 +20,7 @@ Dependencies:
             </laya-audio-inline>
           </h4>
         </div>
-        <laya-flag 
-          v-if="title.flagged"
+        <laya-flag :refData="title"
         ></laya-flag> <!-- idea on how to bind flags to the DOM -->
       </div>
 
@@ -29,8 +28,7 @@ Dependencies:
         <div class="col">
           <p>{{ task.text }}</p>
         </div>
-        <laya-flag 
-          v-if="task.flagged"
+        <laya-flag :refData="task"
         ></laya-flag>
       </div>
       <hr>
@@ -64,8 +62,7 @@ Dependencies:
               :disabled="checked"
               v-model.number="solution[i]"
             >
-            <laya-flag 
-              v-if="item.flagged"
+            <laya-flag :refData="item"
             ></laya-flag>
           </div>
         </div>

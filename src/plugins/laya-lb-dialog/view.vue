@@ -24,7 +24,7 @@ Dependencies: @/mixins/locale.vue
         :id="question.id"
       >
         {{ question.text }}
-        <laya-flag v-if="question.flagged"></laya-flag>
+        <laya-flag :refData="question"></laya-flag>
       </div>
       <div class="answers d-flex justify-content-around">
         <button 
