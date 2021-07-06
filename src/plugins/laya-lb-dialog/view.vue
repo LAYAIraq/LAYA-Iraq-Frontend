@@ -113,7 +113,7 @@ export default {
 
 <style scoped>
 .laya-dialog {
-  position: relative;
+  /*position: relative;*/
   /* min-height: 20rem; */
   border: 1px solid grey;
 }
@@ -145,6 +145,7 @@ export default {
 }
 
 .question {
+  position: relative;
   font-size: 2rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
