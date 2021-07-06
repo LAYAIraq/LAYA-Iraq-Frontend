@@ -1,18 +1,27 @@
 <template>
-  <div class="laya-flag" :class="refData.flagged? 'flagged': 'unflagged'">
-    <div
-      class="flag-icon"
-      v-if="!clicked"
-      @click="toggleClicked"
-    >
-      <i class="fas fa-flag lg"></i>
-    </div>
-    <div
-      class="flag-body"
-      v-else
-      @blur="toggleClicked"
-    >
-      I am the flag body!
+  <div
+    class="laya-flag"
+    :class="{
+      'flagged': refData.flagged,
+      'unflagged': !refData.flagged,
+      'no-hov-bg': clicked
+    }"
+  >
+    <div class="flag-interface">
+      <div
+        class="flag-icon"
+        :class="clicked? 'collapsed' : 'expanded'"
+        @click="toggleClicked"
+      >
+        <i class="fas fa-flag lg"></i>
+      </div>
+      <div
+        class="flag-body"
+        :class="clicked? 'expanded' : 'collapsed'"
+        @click="toggleClicked"
+      >
+        I am the flag body!
+      </div>
     </div>
   </div>
 </template>
@@ -68,20 +77,22 @@ export default {
     width: 100%;
     height: 100%;
   }
-  .laya-flag.unflagged:hover>.flag-icon {
-    height: 60px;
-    width: 60px;
-    border-radius: 30px;
+  .laya-flag.no-hov-bg {
+    background: none;
+  }
+  .flag-interface {
+    margin-left: calc(100% - 15px);
+  }
+ .unflagged:hover>.flag-interface>.flag-icon {
     border: 1px solid tomato;
     background-color: tomato;
-    margin-left: calc(100% - 15px);
-    display: inline-block;
+    display: inline-block !important;
     vertical-align: middle; /* doesn't do anything */
     cursor: pointer;
   }
-  .laya-flag.unflagged>.flag-icon {
-    display: none;
-  }
+ .unflagged>.flag-interface>.flag-icon {
+   display: none;
+ }
   .laya-flag.flagged>.flag-icon {
     height: 50px;
     width: 50px;
@@ -93,6 +104,31 @@ export default {
   }
   .flag-icon>i {
     color: whitesmoke;
+  }
+  .flag-icon.collapsed {
+    transform:rotateY(90deg);
+    height: 0px;
+    transition: transform 0.2s ease-in;
+    display: block !important;
+  }
+  .flag-icon.expanded {
+    height: 60px;
+    width: 60px;
+    border-radius: 30px;
+    transform: none;
+    transition: transform 0.2s ease-out;
+  }
+  .flag-body.expanded {
+    height: 100px;
+    width: 100px;
+  }
+  .flag-body.collapsed {
+    transform: scaleY(0);
+    transition: transform 0.5s ease;
+  }
+  .flag-body.expanded {
+    transform: scaleY(1);
+    transition: transform 0.5s ease;
   }
 
 </style>
