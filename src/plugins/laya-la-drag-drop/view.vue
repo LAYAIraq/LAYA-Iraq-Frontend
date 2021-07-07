@@ -12,7 +12,7 @@ Dependencies:
   <div class="laya-quiz-drag-drop">
     <div class="container">
 
-      <div class="row mb-3" :id="title.id">
+      <div class="title row mb-3" :id="title.id">
         <div class="col">
           <h4>
             {{ title.text }}
@@ -24,7 +24,7 @@ Dependencies:
         ></laya-flag> <!-- idea on how to bind flags to the DOM -->
       </div>
 
-      <div class="row" :id="task.id">
+      <div class="task row" :id="task.id">
         <div class="col">
           <p>{{ task.text }}</p>
         </div>
@@ -197,6 +197,9 @@ export default {
 </script>
 
 <style scoped>
+.item, .task, .title {
+  position: relative;
+}
 .item {
   margin-bottom: 2rem;
 }

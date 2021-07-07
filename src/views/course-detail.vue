@@ -92,15 +92,17 @@ export default {
   },
   created() {
     this.fetchCourse()
-    this.fetchEnrollment()
+    // this.fetchEnrollment()
+    // this.fetchFlags()
     // this.fetchCourseStats()
   },
   beforeDestroy(){
     if(this.enrollment.length > 0) this.updateEnrollment()
+    this.updateCourseFlags()
   },
   computed: {
-    ...mapState(['auth', 'note', 'edit']),
-    ...mapGetters(['isAuthor', 'content', 'course']),
+    ...mapState(['auth', 'note', 'edit', 'flags']),
+    ...mapGetters(['isAuthor', 'content', 'course', 'courseFlags']),
 
 
     /**
@@ -175,8 +177,10 @@ export default {
       console.log('Fetching Course...')
       let fc = ctx.$store.dispatch('fetchCourse', ctx.name)
       fc.then( resp => { 
-          console.log(resp)
-          ctx.$forceUpdate()
+        console.log(resp)
+        ctx.$forceUpdate()
+        this.fetchEnrollment()
+        this.fetchFlags()
         })
         .catch( err => {
          ctx.$router.push('/courses')
@@ -192,7 +196,27 @@ export default {
      * Last Updated: October 27, 2020
      */
     fetchEnrollment() {
-      if(this.course.needsEnrollment) this.$store.dispatch('fetchEnrollment', this.course.courseId)
+      if(this.course.needsEnrollment) {
+        this.$store.dispatch('fetchEnrollment', this.course.courseId)
+      }
+    },
+
+    /**
+     * Function fetchFlags: Fetch flags for course from vuex
+     * Author: cmc
+     * Last Updated: July 7, 2021
+     */
+    fetchFlags() {
+      this.$store.dispatch('getCourseFlags', this.course.courseId)
+    },
+
+    /**
+     * function updateCourseFlags: persist flag state in database
+     * Author: cmc
+     * Last Updated: July 7, 2021
+     */
+    updateCourseFlags() {
+      this.$store.dispatch('saveFlags')
     },
 
     /**

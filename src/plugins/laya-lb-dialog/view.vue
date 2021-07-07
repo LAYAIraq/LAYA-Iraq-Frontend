@@ -42,29 +42,19 @@ Dependencies: @/mixins/locale.vue
 </template>
 
 <script>
+
+// import { checkFlags } from '@/mixins'
 import { mapGetters } from 'vuex'
+
 export default {
   name: 'laya-dialog',
-  data() {
-    if (this.previewData) { // for 'preview' feature
-      return {...this.previewData}
-    }
-    return {
-      question: '',
-      answers: [],
-      bg: '',
-      title: ''
-    }
-  },
-  beforeMount() {
-    // fetch data from vuex if not preview
-    if (!this.previewData) {
-      // No attributed Data --> actual view
-      this.refreshData()
-    }
-  },
+
+  // mixins: [
+  //     checkFlags
+  // ],
+
   computed: {
-    ...mapGetters(['content']),
+    ...mapGetters(['content', 'courseFlags']),
 
     /**
      * idx: Return index of content block in course array
@@ -78,17 +68,62 @@ export default {
       return this.$route.params.step -1 
     }
   },
+
   props: {
     onFinish: Array,
     previewData: Object
   },
+
+  data() {
+    if (this.previewData) { // for 'preview' feature
+      return {...this.previewData}
+    }
+    return {
+      question: '',
+      answers: [],
+      bg: '',
+      title: ''
+    }
+  },
+
+  created() {
+    // fetch data from vuex if not preview
+    if (!this.previewData) {
+      // No attributed Data --> actual view
+      this.refreshData()
+    }
+    this.checkFlags()
+  },
+
+  mounted() {
+    this.checkFlags()
+  },
+
   methods: {
+    /**
+     * function checkFlags: check if flaggable props have a flag, set
+     *  flagged to true if yes
+     * Author: cmc
+     * Last Updated: July 7, 2021
+     */
+    checkFlags() {
+      const flaggables = [ this.title, this.question ]
+      console.log(flaggables)
+      for (let elem of flaggables) {
+        for (const flag of this.courseFlags) {
+          console.log('checking ' + elem.id)
+          if (flag.referenceId === elem.id) {
+            console.log('match!')
+            elem.flagged = true
+            break
+          }
+        }
+      }
+    },
 
     /**
      * Function refreshData: make vuex store data mutable
-     * 
      * Author: cmc
-     * 
      * Last Updated: January 16, 2021
      */
     refreshData() {
@@ -99,7 +134,6 @@ export default {
       this.answers = preData.answers
       this.bg = preData.bg
       this.title = preData.title
-      this.showTitle = preData.showTitle
     }
   },
   watch: {

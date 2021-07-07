@@ -1,3 +1,4 @@
+export { default as checkFlags } from './check-flags.js'
 export { default as contentTypes } from './content-types'
 export { default as fetchNotifications } from './fetch-notifications'
 export { default as listSort } from './list-sort.js'

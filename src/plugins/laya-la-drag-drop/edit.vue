@@ -117,16 +117,17 @@ Dependencies:
       </div>
 
       <p><b>{{ i18n['items'] }}</b></p>
-      <div class="form-group row" v-for="(it, i) in items" :key="'item-'+i">
+      <div class="form-group row" v-for="(item,i) in items" :key="'item-'+item.id">
 
         <!-- text -->
-        <label class="col-form-label col-2" :for="'item-text-'+i">{{ i18n['text'] }}</label>
+        <label class="col-form-label col-2" :for="'item-text-'+item.id">{{ i18n['text']
+          }}</label>
         <div class="col-5">
           <input 
-            :id="'item-text-'+i"
+            :id="'item-text-'+item.id"
             class="form-control"
             type="text"
-            v-model="items[i].label">
+            v-model="item.label">
         </div>
 
         <!-- category -->

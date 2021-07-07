@@ -13,14 +13,70 @@
         :class="clicked? 'collapsed' : 'expanded'"
         @click="toggleClicked"
       >
-        <i class="fas fa-flag lg"></i>
+        <i class="fas fa-flag"></i>
       </div>
       <div
         class="flag-body"
         :class="clicked? 'expanded' : 'collapsed'"
-        @click="toggleClicked"
       >
-        I am the flag body!
+        <div
+          class="set-flag"
+          v-if="!refData.flagged"
+        >
+        </div>
+        <div
+          class="pick-up-flag"
+          v-else
+        >
+          <div class="row mt-1">
+            <div class="col">
+              Flag Title
+            </div>
+            <div
+              class="close-btn"
+              @click="toggleClicked"
+            >
+              <i class="fas fa-times"></i>
+            </div>
+          </div>
+          <div class="mt-1 flag-question">
+            <div class="question-text">
+              {{ showFlagQuestion() }}
+            </div>
+            <div class="question-meta">
+              By {{ flagAuthor }} at {{ timeSince(currentFlag.created)}}
+            </div>
+          </div>
+          <div class="flag-discussion">
+            <div
+              class="discussion-post"
+              v-for="(answer,i) in currentFlag.answers"
+              :key="'answer-'+i"
+            >
+              {{ answer }}
+            </div>
+            <div class="add-answer">
+              <form @submit.prevent="addAnswer">
+                <input
+                    id="my-answer"
+                    type="text"
+                    v-model="newAnswer"
+                    :disabled="answerSent"
+                    @focus="subFocus = true"
+                    @blur="subFocus = false"
+                    @submit="addAnswer"
+                >
+                <label
+                  for="my-answer"
+                  v-if="subFocus"
+                >
+                  Press Enter for submitting
+                </label>
+              </form>
+
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -29,13 +85,14 @@
 <script>
 // import http from 'axios'
 import { mapGetters, mapState } from 'vuex'
-import { locale } from '@/mixins'
+import { locale, time } from '@/mixins'
 
 export default {
   name: 'LayaFlag',
 
   mixins: [
-      locale
+      locale,
+      time
   ],
 
   props: {
@@ -44,16 +101,49 @@ export default {
 
   computed: {
     ...mapGetters(['courseFlags']),
-    ...mapState(['flags'])
+    ...mapState(['flags']),
+    currentFlag() {
+      const myFlagId = new RegExp(this.refData.id, 'i')
+      let arr = this.courseFlags
+        .filter(flag => myFlagId.test(flag.referenceId))
+      if (arr.length === 1) return arr[0]
+      else return null
+    },
+    flagAuthor() {
+      if (this.currentFlag) {
+        return this.currentFlag.authorId
+      } else {
+        return 'unknown'
+      }
+    }
   },
 
   data() {
     return{
+      answerSent: false,
       clicked: false,
+      newAnswer: '',
+      subFocus: false
     }
   },
 
   methods: {
+    addAnswer() {
+      this.$store.commit('appendFlagAnswer', {
+        answer: this.newAnswer,
+        id: this.currentFlag.referenceId
+      })
+      this.subFocus = false
+      this.newAnswer = ''
+      this.answerSent = true
+    },
+    showFlagQuestion() {
+      if (this.currentFlag) {
+        return this.currentFlag.question
+      } else {
+        return 'FAIL!'
+      }
+    },
     toggleClicked() {
       this.clicked = !this.clicked
     }
@@ -70,6 +160,8 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
+    font-size: 1rem;
+    /*max-height: 100px;*/
   }
   .laya-flag.unflagged:hover {
     background-color: rgba(108, 117, 125, 0.25);
@@ -78,24 +170,32 @@ export default {
     height: 100%;
   }
   .laya-flag.no-hov-bg {
-    background: none;
+    background-color: transparent !important;
   }
   .flag-interface {
-    margin-left: calc(100% - 15px);
+    width: 100%;
+    height: 100%;
+  }
+  /*.no-hov-bg:hover>.flag-interface {*/
+  /*  margin-top: -54px; !* hack for avoiding 'bouncing box' *!*/
+  /*}*/
+  .flag-icon {
+    cursor: pointer;
   }
  .unflagged:hover>.flag-interface>.flag-icon {
+    margin-left: calc(100% - 15px);
+    margin-top: auto;
     border: 1px solid tomato;
     background-color: tomato;
     display: inline-block !important;
     vertical-align: middle; /* doesn't do anything */
-    cursor: pointer;
   }
  .unflagged>.flag-interface>.flag-icon {
    display: none;
  }
-  .laya-flag.flagged>.flag-icon {
-    height: 50px;
-    width: 50px;
+  .flagged>.flag-interface>.flag-icon {
+    height: 60px;
+    width: 60px;
     border-radius: 25px;
     border: 1px solid fuchsia;
     background-color: #470047;
@@ -104,31 +204,54 @@ export default {
   }
   .flag-icon>i {
     color: whitesmoke;
+    font-size: 2rem;
+    padding: 12px;
   }
   .flag-icon.collapsed {
     transform:rotateY(90deg);
     height: 0px;
-    transition: transform 0.2s ease-in;
-    display: block !important;
+    width: 0px;
+    transition: transform 0.2s ease-out;
+    /*display: block !important;*/
   }
   .flag-icon.expanded {
     height: 60px;
     width: 60px;
     border-radius: 30px;
     transform: none;
-    transition: transform 0.2s ease-out;
+    transition: transform 0.5s ease-in;
   }
   .flag-body.expanded {
-    height: 100px;
-    width: 100px;
-  }
-  .flag-body.collapsed {
-    transform: scaleY(0);
-    transition: transform 0.5s ease;
-  }
-  .flag-body.expanded {
+    margin-left: 40vw;
+    margin-top: -60px; /* avoid bouncing on hover */
+    position: absolute;
+    z-index: 13000;
+    background-color: darkslateblue;
+    border-radius: 5px;
     transform: scaleY(1);
     transition: transform 0.5s ease;
+    box-sizing: content-box;
+    width: 35vw;
+    min-height: 60vh;
+  }
+  .flag-body.collapsed {
+    margin-left: calc(100% - 18vw);
+    margin-top: -60px;
+    transform: rotateY(90deg);
+    transition: transform 0.2s ease;
+  }
+
+  .close-btn {
+    margin-right: 25px;
+    margin-top: 5px;
+    margin-left: auto;
+    cursor: pointer;
+    border: tomato solid 1px;
+    border-radius: 25px;
+    background-color: firebrick;
+    color: antiquewhite;
+    width: 30px;
+    height: 30px;
   }
 
 </style>
