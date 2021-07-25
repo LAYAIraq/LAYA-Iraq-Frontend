@@ -57,21 +57,37 @@
             </div>
             <div class="add-answer">
               <form @submit.prevent="addAnswer">
-                <input
-                    id="my-answer"
-                    type="text"
-                    v-model="newAnswer"
-                    :disabled="answerSent"
-                    @focus="subFocus = true"
-                    @blur="subFocus = false"
-                    @submit="addAnswer"
-                >
-                <label
-                  for="my-answer"
-                  v-if="subFocus"
-                >
-                  Press Enter for submitting
-                </label>
+                <div class="row">
+                  <input
+                      id="my-answer"
+                      type="text"
+                      :class="{
+                        'ml-auto': subFocus,
+                        'm-auto': !subFocus
+                      }"
+                      v-model="newAnswer"
+                      :disabled="answerSent"
+                      @focus="subFocus = true"
+                      @blur="subFocus = false"
+                      @submit="addAnswer"
+                  >
+                  <b-button
+                    v-if="subFocus"
+                    @click="addAnswer"
+                    class="mr-auto"
+                  >
+                  Submit
+                  </b-button>
+                </div>
+                <div class="row">
+                  <label
+                    for="my-answer"
+                    class="m-auto"
+                    v-if="subFocus"
+                  >
+                    Press Enter for submitting
+                  </label>
+                </div>
               </form>
 
             </div>
@@ -100,7 +116,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['courseFlags']),
+    ...mapGetters(['courseFlags', 'userId']),
     ...mapState(['flags']),
     currentFlag() {
       const myFlagId = new RegExp(this.refData.id, 'i')
@@ -129,6 +145,11 @@ export default {
 
   methods: {
     addAnswer() {
+      const myAnswer = {
+        text: this.newAnswer,
+        authorId: this.userId,
+        timestamp: Date.now()
+      }
       this.$store.commit('appendFlagAnswer', {
         answer: this.newAnswer,
         id: this.currentFlag.referenceId

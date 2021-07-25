@@ -24,7 +24,7 @@ export default {
     appendFlag(state, flag) {
       state.courseFlags.push(flag)
     },
-    appendFlagAnswer(state, data: { id: string, answer: string }) {
+    appendFlagAnswer(state, data: { id: string, answer: Object }) {
       let arr = state.courseFlags.filter(flag => flag.referenceId === data.id);
       console.log(arr)
       arr[0].answers.push(data.answer)
