@@ -118,7 +118,7 @@ Dependencies:
             <div class="col-sm-9">
 
               <password id="pwdMeter" v-model="pwd2" :strength-meter-only="true" @feedback="showFeedback"></password>
-              <strong id="testPwdMeter" class="form-text text-center"> </strong>
+              <strong id="testPwdMeter" class="form-text text-center"> {{ warnings }} </strong>
             </div>
           </div>
 
@@ -209,18 +209,7 @@ export default {
       busy: false,
       submitOk: false,
       nameTaken: false,
-      emailTaken: false,
-
-      possibleWarnings: ["Straight rows of keys are easy to guess", "Short keyboard patterns are easy to guess", "Repeats like \"aaa\" are easy to guess",
-        "Repeats like \"abcabcabc\" are only slightly harder to guess than \"abc\"", "Sequences like abc or 6543 are easy to guess",
-        "Recent years are easy to guess", "Dates are often easy to guess", "This is a top-10 common password", "This is a top-100 common password",
-        "This is a very common password", "This is similar to a commonly used password", "A word by itself is easy to guess",
-        "Names and surnames by themselves are easy to guess", "Common names and surnames are easy to guess"], //length = 14
-      possibleSuggestions: ["Use a few words, avoid common phrases", "No need for symbols, digits, or uppercase letters",
-        "Add another word or two. Uncommon words are better.", "Use a longer keyboard pattern with more turns", "Avoid repeated words and characters",
-        "Avoid sequences", "Avoid recent years", "Avoid years that are associated with you", "Avoid dates and years that are associated with you",
-        "Capitalization doesn't help very much", "All-uppercase is almost as easy to guess as all-lowercase", "Reversed words aren't much harder to guess",
-        "Predictable substitutions like '@' instead of 'a' don't help very much"]
+      emailTaken: false
     }
   },
 

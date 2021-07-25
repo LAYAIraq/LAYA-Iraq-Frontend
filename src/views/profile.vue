@@ -20,16 +20,16 @@ Dependencies:
         <div class="bg-dark w-100 pt-5 pb-3">
           <!-- avatar -->
           <img
-              v-if="avatar != ''"
-              :src="avatarURL"
-              alt="Avatar"
-              class="d-block rounded-circle mx-auto avatar"
+            v-if="avatar != ''"
+            :src="avatarURL"
+            alt="Avatar"
+            class="d-block rounded-circle mx-auto avatar"
           >
           <img
-              v-else
-              src="../assets/anmelden.svg"
-              alt="Avatar"
-              class="d-block rounded-circle mx-auto avatar"
+            v-else
+            src="../assets/anmelden.svg"
+            alt="Avatar"
+            class="d-block rounded-circle mx-auto avatar"
           >
 
           <h1 class="text-center text-light">{{ profile.name }}</h1>
@@ -49,30 +49,32 @@ Dependencies:
 
           <!-- Name -->
           <div class="form-group row">
-            <label for="username" class="col-sm-3 col-form-label">{{ i18n['namePH'] }}</label>
+            <label for="username"
+                   class="col-sm-3 col-form-label">{{ i18n['namePH'] }}</label>
             <div class="col-sm-9">
               <input
-                  id="username"
-                  type="text"
-                  class="form-control"
-                  v-model="profile.name"
-                  readonly
-                  tabindex="-1"
+                id="username"
+                type="text"
+                class="form-control"
+                v-model="profile.name"
+                readonly
+                tabindex="-1"
               >
             </div>
           </div>
 
           <!-- Email -->
           <div class="form-group row">
-            <label for="email" class="col-sm-3 col-form-label">{{ i18n['emailPH'] }}</label>
+            <label for="email"
+                   class="col-sm-3 col-form-label">{{ i18n['emailPH'] }}</label>
             <div class="col-sm-9">
               <input
-                  id="email"
-                  type="text"
-                  class="form-control"
-                  v-model="profile.email"
-                  readonly
-                  tabindex="-1"
+                id="email"
+                type="text"
+                class="form-control"
+                v-model="profile.email"
+                readonly
+                tabindex="-1"
               >
             </div>
           </div>
@@ -83,12 +85,12 @@ Dependencies:
             <label for="oldPwd" class="col-sm-3 col-form-label">{{ i18n['profile.oldPwd'] }}</label>
             <div class="col-sm-9">
               <input
-                  id="oldPwd"
-                  type="password"
-                  class="form-control"
-                  v-model="oldPwd"
-                  :placeholder="i18n['profile.oldPwd']"
-                  autocomplete="on"
+                id="oldPwd"
+                type="password"
+                class="form-control"
+                v-model="oldPwd"
+                :placeholder="i18n['profile.oldPwd']"
+                autocomplete="on"
               >
             </div>
             <strong id="pwdStoreMsg" class="form-text text-center">{{ pwdMsg }}</strong>
@@ -99,12 +101,12 @@ Dependencies:
             <label for="newPwd" class="col-sm-3 col-form-label">{{ i18n['profile.newPwd'] }}</label>
             <div class="col-sm-9">
               <input
-                  id="newPwd"
-                  type="password"
-                  class="form-control"
-                  v-model="newPwd"
-                  :placeholder="i18n['profile.newPwd']"
-                  aria-describedby="pwdMsg"
+                id="newPwd"
+                type="password"
+                class="form-control"
+                v-model="newPwd"
+                :placeholder="i18n['profile.newPwd']"
+                aria-describedby="pwdMsg"
               >
             </div>
           </div>
@@ -114,12 +116,12 @@ Dependencies:
             <label for="repeatPwd" class="col-sm-3 col-form-label">{{ i18n['pwd2PH'] }}</label>
             <div class="col-sm-9">
               <input
-                  id="repeatPwd"
-                  type="password"
-                  class="form-control"
-                  v-model="repeatPwd"
-                  :placeholder="i18n['pwd2PH']"
-                  aria-describedby="pwdStrength"
+                id="repeatPwd"
+                type="password"
+                class="form-control"
+                v-model="repeatPwd"
+                :placeholder="i18n['pwd2PH']"
+                aria-describedby="pwdStrength"
               >
             </div>
           </div>
@@ -128,7 +130,7 @@ Dependencies:
             <div class="col-sm-9">
 
               <password id="pwdMeter" v-model="repeatPwd" :strength-meter-only="true" @feedback="showFeedback"></password>
-              <strong id="testPwdMeter" class="form-text text-center"> </strong>
+              <strong id="testPwdMeter" class="form-text text-center"> {{ warnings }} </strong>
               <strong id="pwdDiffMsg" class="form-text text-center">{{ pwdDiffMsg }}</strong>
               <strong id="pwdStoreMsg" class="form-text text-center">{{ pwdMsg }}</strong>
             </div>
@@ -197,11 +199,11 @@ Dependencies:
           <!-- Save Button -->
           <div class="form-group">
             <button
-                type="submit"
-                @click="submit"
-                :disabled="busy"
-                class="btn btn-block btn-lg btn-outline-dark"
-                style="border-width: 2px"
+              type="submit"
+              @click="submit"
+              :disabled="busy"
+              class="btn btn-block btn-lg btn-outline-dark"
+              style="border-width: 2px"
             >
               <i class="fas fa-check"></i>
               {{ i18n['save'] }}
@@ -252,17 +254,7 @@ export default {
       pwdMsg: '',
       formMsg: '',
       busy: false,
-      prefs: {},
-      possibleWarnings: ["Straight rows of keys are easy to guess", "Short keyboard patterns are easy to guess", "Repeats like \"aaa\" are easy to guess",
-        "Repeats like \"abcabcabc\" are only slightly harder to guess than \"abc\"", "Sequences like abc or 6543 are easy to guess",
-        "Recent years are easy to guess", "Dates are often easy to guess", "This is a top-10 common password", "This is a top-100 common password",
-        "This is a very common password", "This is similar to a commonly used password", "A word by itself is easy to guess",
-        "Names and surnames by themselves are easy to guess", "Common names and surnames are easy to guess"], //length = 14
-      possibleSuggestions: ["Use a few words, avoid common phrases", "No need for symbols, digits, or uppercase letters",
-        "Add another word or two. Uncommon words are better.", "Use a longer keyboard pattern with more turns", "Avoid repeated words and characters",
-        "Avoid sequences", "Avoid recent years", "Avoid years that are associated with you", "Avoid dates and years that are associated with you",
-        "Capitalization doesn't help very much", "All-uppercase is almost as easy to guess as all-lowercase", "Reversed words aren't much harder to guess",
-        "Predictable substitutions like '@' instead of 'a' don't help very much"] //length = 13
+      prefs: {}
     }
   },
 
@@ -278,7 +270,7 @@ export default {
      */
     avatarURL() {
       return (!this.avatar || this.avatar === '') ?
-          null : `${api}/storage/img/download/${this.avatar}`
+        null : `${api}/storage/img/download/${this.avatar}`
     },
 
     /**
@@ -301,23 +293,20 @@ export default {
      */
     pwdDiffMsg() {
       return this.passwordsDiffer? this.i18n['profile.pwdDiffer'] : ''
-    },
+    }
   },
 
   beforeDestroy() {
     //save changes in profile
-    this.$store.dispatch('saveProfile', {
-      ...this.avatar,
-      ...this.prefs
-    })
+    this.$store.commit('setPrefs', this.prefs)
+    this.$store.dispatch('saveProfile')
   },
 
-  created() {
+  created () {
     // make profile settings mutable
     this.avatar = this.profile.avatar
-    this.prefs = { ...this.profile.prefs }
+    this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
   },
-
 
   methods: {
 
@@ -338,48 +327,47 @@ export default {
       /* change password request */
       if (ctx.oldPwd !== '' && ctx.newPwd !== '') {
         requests.push(
-            http
-                .post('accounts/change-password', {
-                  oldPassword: ctx.oldPwd,
-                  newPassword: ctx.newPwd
-                })
-                .catch(err => {
-                  console.error(err)
-                  ctx.pwdMsg = ctx.i18n['profile.pwdFail']
-                })
+          http
+          .post('accounts/change-password', {
+            oldPassword: ctx.oldPwd,
+            newPassword: ctx.newPwd
+          })
+          .catch(err => {
+            console.error(err)
+            ctx.pwdMsg = ctx.i18n['profile.pwdFail']
+          })
         )
       }
       console.log(requests)
       /* fire requests */
       http
-          .all(requests)
-          .then(
-              http.spread(() => {
-                ctx.formMsg = ctx.i18n['profile.submitOk']
-              })
-          )
-          .catch(function(err) {
-            console.log(err)
-            ctx.$bvToast.show('submit-failed')
-          })
-          .then(() => {
-            ctx.busy = false
-            setTimeout(() => {
-              ctx.formMsg = ''
-            }, 2000)
-            ctx.$forceUpdate
-            ctx.$bvToast.show('submit-ok')
-          })
+      .all(requests)
+      .then(
+        http.spread(() => {
+          ctx.formMsg = ctx.i18n['profile.submitOk']
+        })
+      )
+      .catch(function(err) {
+        console.log(err)
+        ctx.$bvToast.show('submit-failed')
+      })
+      .then(() => {
+        ctx.busy = false
+        setTimeout(() => {
+          ctx.formMsg = ''
+        }, 2000)
+        ctx.$forceUpdate
+        ctx.$bvToast.show('submit-ok')
+      })
 
       /* update state */
       ctx.$store.commit('setPrefs', ctx.prefs)
     },
 
-    showFeedback ({suggestions, warning}) {
-      this.pwdStrength({suggestions, warning})
-
+    showFeedback({ suggestions, warning }) {
+      this.pwdStrength({ suggestions, warning })
     }
-  }
+  },
 }
 </script>
 
