@@ -23,6 +23,12 @@
           class="set-flag"
           v-if="!refData.flagged"
         >
+          <div
+              class="close-btn"
+              @click="toggleClicked"
+          >
+            <i class="fas fa-times"></i>
+          </div>
         </div>
         <div
           class="pick-up-flag"
@@ -205,10 +211,10 @@ export default {
   }
  .unflagged:hover>.flag-interface>.flag-icon {
     margin-left: calc(100% - 15px);
-    margin-top: auto;
+    /*margin-top: auto;*/
     border: 1px solid tomato;
     background-color: tomato;
-    display: inline-block !important;
+    display: block;
     vertical-align: middle; /* doesn't do anything */
   }
  .unflagged>.flag-interface>.flag-icon {
@@ -256,7 +262,7 @@ export default {
     min-height: 60vh;
   }
   .flag-body.collapsed {
-    margin-left: calc(100% - 18vw);
+    margin-left: calc(100% - 9vh);
     margin-top: -60px;
     transform: rotateY(90deg);
     transition: transform 0.2s ease;
