@@ -25,10 +25,10 @@ export default {
       state.courseFlags.push(flag)
     },
     appendFlagAnswer(state, data: { id: string, answer: Object }) {
-      let arr = state.courseFlags.filter(flag => flag.referenceId === data.id);
-      console.log(arr)
+      const arr = state.courseFlags.filter(flag => flag.referenceId === data.id)
+      if (arr.length > 1) console.error('More than one flag with same ID!')
       arr[0].answers.push(data.answer)
-      console.log(state.courseFlags)
+      // console.log(state.courseFlags)
     },
     clearFlagList(state: {courseFlags: Array<Object>}) {
       state.courseFlags = []

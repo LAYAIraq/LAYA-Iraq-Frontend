@@ -23,11 +23,39 @@
           class="set-flag"
           v-if="!refData.flagged"
         >
-          <div
-              class="close-btn"
-              @click="toggleClicked"
-          >
-            <i class="fas fa-times"></i>
+          <div class="row mt-1">
+            <div class="col">
+              Flag Title
+            </div>
+            <div
+                class="close-btn"
+                @click="toggleClicked"
+            >
+              <i class="fas fa-times"></i>
+            </div>
+          </div>
+          <div class="row">
+            <form
+                @submit="setFlagQuestion()"
+            >
+              <textarea
+                class=""
+                id="set-flag-question"
+                rows="5"
+                v-model="question"
+                placeholder="HERE QUESTION INSERT"
+              ></textarea>
+              <label
+                for="set-flag-question">
+                Type your question:
+              </label>
+              <b-button
+                for="set-flag-question"
+                @click="setFlagQuestion()"
+              >
+                Set Flag Question
+              </b-button>
+            </form>
           </div>
         </div>
         <div
@@ -50,7 +78,8 @@
               {{ showFlagQuestion() }}
             </div>
             <div class="question-meta">
-              By {{ flagAuthor }} at {{ timeSince(currentFlag.created)}}
+              <!--              By {{ flagAuthor }} at {{ timeSince(currentFlag.created)}}-->
+              {{ timeSince(currentFlag.created) }}
             </div>
           </div>
           <div class="flag-discussion">
@@ -59,7 +88,14 @@
               v-for="(answer,i) in currentFlag.answers"
               :key="'answer-'+i"
             >
-              {{ answer }}
+              <div class="text-center">
+                {{ answer.text }}
+              </div>
+              <div
+                :class="langIsAr? 'text-left': 'text-right'"
+              >
+                {{ timeAndDate(answer.timestamp) }}
+              </div>
             </div>
             <div class="add-answer">
               <form @submit.prevent="addAnswer">
@@ -145,7 +181,8 @@ export default {
       answerSent: false,
       clicked: false,
       newAnswer: '',
-      subFocus: false
+      subFocus: false,
+      question: ''
     }
   },
 
@@ -157,7 +194,7 @@ export default {
         timestamp: Date.now()
       }
       this.$store.commit('appendFlagAnswer', {
-        answer: this.newAnswer,
+        answer: myAnswer,
         id: this.currentFlag.referenceId
       })
       this.subFocus = false
@@ -170,6 +207,10 @@ export default {
       } else {
         return 'FAIL!'
       }
+    },
+    timeAndDate(timestamp) {
+      const time = new Date(timestamp)
+      return `${this.locDate(time)}, ${this.locTime(time)}`
     },
     toggleClicked() {
       this.clicked = !this.clicked
