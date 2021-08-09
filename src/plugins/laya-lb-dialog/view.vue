@@ -24,7 +24,7 @@ Dependencies: @/mixins/locale.vue
         :id="question.id"
       >
         {{ question.text }}
-        <laya-flag :refData="question"></laya-flag>
+        <laya-flag :refData="question" @flagged="question.flagged = true"></laya-flag>
       </div>
       <div class="answers d-flex justify-content-around">
         <button 
@@ -58,9 +58,7 @@ export default {
 
     /**
      * idx: Return index of content block in course array
-     * 
      * Author: cmc
-     * 
      * Last Updated: January 16, 2021
      */
     idx() {

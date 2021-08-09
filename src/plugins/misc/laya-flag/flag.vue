@@ -34,24 +34,39 @@
               <i class="fas fa-times"></i>
             </div>
           </div>
-          <div class="row">
+          <div class="form-group flag-question">
             <form
                 @submit="setFlagQuestion()"
             >
+              <label
+                  for="set-flag-question"
+                  class=""
+              >
+                Type your question
+              </label>
               <textarea
-                class=""
+                class="form-control"
                 id="set-flag-question"
                 rows="5"
                 v-model="question"
                 placeholder="HERE QUESTION INSERT"
               ></textarea>
-              <label
-                for="set-flag-question">
-                Type your question:
-              </label>
+
+<!--              Added if non-anonymous questions are possible-->
+<!--              <label-->
+<!--                for="anonymous-question"-->
+<!--                >-->
+<!--                Ask anonymously?-->
+<!--              </label>-->
+<!--              <input-->
+<!--                id ="anonymous-question"-->
+<!--                type="checkbox"-->
+<!--                v-model="anonymous"-->
+<!--              >-->
+
               <b-button
                 for="set-flag-question"
-                @click="setFlagQuestion()"
+                type="submit"
               >
                 Set Flag Question
               </b-button>
@@ -158,7 +173,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['courseFlags', 'userId']),
+    ...mapGetters(['courseFlags', 'courseId', 'userId']),
     ...mapState(['flags']),
     currentFlag() {
       const myFlagId = new RegExp(this.refData.id, 'i')
@@ -179,6 +194,7 @@ export default {
   data() {
     return{
       answerSent: false,
+      // anonymous: false,
       clicked: false,
       newAnswer: '',
       subFocus: false,
@@ -200,6 +216,19 @@ export default {
       this.subFocus = false
       this.newAnswer = ''
       this.answerSent = true
+    },
+    setFlagQuestion() {
+      const newFlag = {
+        question: this.question,
+        referenceId: this.refData.id,
+        courseId: this.courseId,
+        authorId: this.userId,
+        enrollmentId: (this.$store.state.enrollment )? this.$store.state.enrollment.id : null
+      }
+      this.$store.commit('setFlag', newFlag)
+      this.$store.dispatch('saveFlags')
+      this.$emit('flagged')
+
     },
     showFlagQuestion() {
       if (this.currentFlag) {
@@ -250,7 +279,12 @@ export default {
   .flag-icon {
     cursor: pointer;
   }
- .unflagged:hover>.flag-interface>.flag-icon {
+  .flag-question {
+    padding: 20px;
+    border: #4a5464 1px solid;
+    background-color: #9fcdff;
+  }
+  .unflagged:hover>.flag-interface>.flag-icon {
     margin-left: calc(100% - 15px);
     /*margin-top: auto;*/
     border: 1px solid tomato;

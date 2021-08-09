@@ -68,6 +68,16 @@ export default {
     },
 
     /**
+     * Function courseId: returns the courseId string
+     * Author: cmc
+     * Last Updated: August 9, 2021
+     * @param state
+     */
+    courseId( state: { course: { courseId: string } }) {
+      return state.course.courseId
+    },
+
+    /**
      * Function courseList: returns list of courses
      * 
      * Author: cmc

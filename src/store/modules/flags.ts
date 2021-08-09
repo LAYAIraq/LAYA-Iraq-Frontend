@@ -32,6 +32,12 @@ export default {
     },
     clearFlagList(state: {courseFlags: Array<Object>}) {
       state.courseFlags = []
+    },
+    clearFlagsToAddList(state: {flagsToAdd: Array<Object>}) {
+      state.flagsToAdd = []
+    },
+    setFlag(state, flag) {
+      state.flagsToAdd.push(flag)
     }
   },
 
@@ -65,6 +71,7 @@ export default {
       http.all(reqs)
         .then( () => console.log('Flags updated'))
         .catch((err) => console.error(err))
+      commit('clearFlagList')
     }
   }
 }
