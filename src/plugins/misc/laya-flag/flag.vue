@@ -226,7 +226,7 @@ export default {
         enrollmentId: (this.$store.state.enrollment )? this.$store.state.enrollment.id : null
       }
       this.$store.commit('setFlag', newFlag)
-      this.$store.dispatch('saveFlags')
+      this.$store.dispatch('updateCourseFlags')
       this.$emit('flagged')
 
     },

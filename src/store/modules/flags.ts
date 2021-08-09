@@ -61,9 +61,23 @@ export default {
         .catch(err => console.error(err))
     },
 
+    updateCourseFlags( {state, commit}) {
+      state.flagsToAdd.forEach(flag => {
+        console.log(flag)
+        http.post('flags', flag)
+          .then(resp => {
+            commit('appendFlag', resp.data)
+          })
+          .catch(err => console.error(err))
+      })
+
+
+    },
+
     saveFlags({commit, state}) {
       const reqs = []
       state.courseFlags.forEach(flag => {
+        console.log(flag)
         reqs.push(
           http.patch('flags', flag)
         )
