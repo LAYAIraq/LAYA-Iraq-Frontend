@@ -97,6 +97,13 @@ export default {
     this.checkFlags()
   },
 
+  beforeDestroy() {
+    let i = this.idx
+    const stepData = this.$data
+    console.log({i, stepData})
+    this.$store.commit('updateStep', {i, stepData} )
+  },
+
   methods: {
     /**
      * function checkFlags: check if flaggable props have a flag, set

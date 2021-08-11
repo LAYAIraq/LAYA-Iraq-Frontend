@@ -213,12 +213,14 @@ export default {
      * Author: core
      * 
      * Last Updated: unknown
-     * 
+     * @param commit commit property of vuex
      * @param state contains course
      * @param data course object
      */
-    setCourse(state: { course: object}, data: object) {
+    setCourse(state: {course: Object}, data: object) {
       state.course = data
+      // console.log(commit)
+      // commit('')
     },
 
     /**
@@ -274,16 +276,15 @@ export default {
 
     /**
      * Function updateStep: update content block at given index
-     * 
      * Author: core
-     * 
      * Last Updated: unknown
-     * 
      * @param state contains course, content
      * @param data contains step index, new content object 
      */
     updateStep( state: {course: {content: Array<object>}} , 
         data: { step: number, updatedStep: object } ) {
+      console.log(`updating step ${data.step} with this data:`)
+      console.log(data.updatedStep)
       state.course.content[data.step] = {
         ...state.course.content[data.step], 
         ...data.updatedStep
@@ -495,16 +496,13 @@ export default {
 
     /**
      * Function fetchCourse: load course into store
-     * 
      * Author: core
-     * 
      * Last Updated: unknown
-     * 
      * @param param0 state variables
      * @param name course identifier
      * @returns Promise to load course object
      */
-     fetchCourse ({ commit, state, rootState}, name: String) {
+     fetchCourse ({ commit, dispatch, state, rootState}, name: String) {
       //can you return router function? //TODO direkt hier 
       return new Promise( (resolve, reject) => {
         commit('setBusy', true)
@@ -517,12 +515,14 @@ export default {
             .then(({ data }) => {
               // console.log(data)
               commit('setCourse', data)
+              dispatch('getCourseFlags', state.course.courseId)
+                .then(() => dispatch('checkCourseFlags'))
+                .catch(err => console.error(err))
               resolve('Course loaded')
             })
             .catch( err => {
-              /*
-              * redirect off invalid course */
-              console.error(err);
+              /** redirect off invalid course */
+              console.error(err)
               reject(err)
             })
           })
@@ -553,8 +553,11 @@ export default {
               needsEnrollment: courseObject.needsEnrollment, 
               courseId: courseObject.courseId 
             }
-            state.courseList.some((e: { courseId: String }) => 
-              e.courseId === listData.courseId)? '' : commit('appendToCourseList', listData)
+            if (!state.courseList.some( // add to course list if not present
+                (e: { courseId: String }) => e.courseId === listData.courseId)
+            ) {
+              commit('appendToCourseList', listData)
+            }
           }
         })
         .catch(err => console.error(err))
