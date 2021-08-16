@@ -59,13 +59,43 @@ export default {
 
   actions: {
     checkCourseFlags({commit, rootState, state}) {
-      console.log('We are checking Course Flags!')
+      // console.log('We are checking Course Flags!')
       const course = rootState.edit.course
       const flags = rootState.flags.courseFlags
-      console.log(course)
-      console.log(flags)
-      for (let step in course.content) {
-        // TODO: continue here
+      // console.log(course)
+      // console.log(flags)
+      const checkIfFlagged = (elem) => { // helper function to check if a part is flagged
+        // console.log('checking: ')
+        // console.log(elem)
+        if (Object.prototype.hasOwnProperty.call(elem,'flagged')) {
+          const elemId = elem.id
+          for (const flag of flags) {
+            if (flag.referenceId === elemId) {
+              console.log(`${elemId} has a flag, trying to mutate it!`)
+              commit('flagFlaggableElement', elem)
+            } else {
+              // console.log(elem + ' can be flagged but no flag exists')
+            }
+          }
+        } else {
+          // console.log('flagged boolean doesn\'t exist!')
+        }
+      }
+      // console.log(course.content)
+      for (const step of course.content) {
+        const iterInput = Object.values(step.input)
+        // console.log(`iterInput: ${iterInput}`)
+        for (const elem of iterInput) {
+          if (typeof(elem) === 'object') {
+            if (Array.isArray(elem)) {
+              for (const iter of elem) {
+                checkIfFlagged(iter)
+              }
+            } else {
+              checkIfFlagged(elem)
+            }
+          }
+        }
       }
     },
 

@@ -178,6 +178,42 @@ export default {
         })
     },
 
+    flagFlaggableElement(state: { course: { content: Array<object> } }, elem: { id: string }){ //TODO: hier weiter!
+      const checkAndFlag = (o: any) => {
+        console.log(`we flag ${o}`)
+        if (Object.prototype.hasOwnProperty.call(o, 'flagged')) {
+          o.flagged = true
+          console.log('successs!!!')
+          return true
+        } else {
+          return false
+        }
+      }
+      console.log(state.course.content)
+      for (const el of state.course.content) {
+        const vals = Object.values(el.input)
+        for (const c of vals) {
+          console.log(c)
+          if (typeof(c) === 'object') {
+            if (Array.isArray(c)) {
+              console.log(`${c} is an array!`)
+              //@ts-ignore
+              for (const d in c) {
+                console.log(d)
+                if(checkAndFlag(d)) {
+                  break
+                }
+              }
+            } else {
+              if (checkAndFlag(c)) {
+                break
+              }
+            }
+          }
+        }
+      }
+    },
+
     /**
      * Function renameCourse: rename a Course
      * 
@@ -272,7 +308,6 @@ export default {
     updateCourseNav( state: {course: {content: Array<object>}}, data: Array<object>) {
       state.course.content = data
     },
-
 
     /**
      * Function updateStep: update content block at given index
