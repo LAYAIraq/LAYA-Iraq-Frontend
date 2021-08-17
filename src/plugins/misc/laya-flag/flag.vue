@@ -75,7 +75,7 @@
         </div>
         <div
           class="pick-up-flag"
-          v-else
+          v-if="currentFlag"
         >
           <div class="row mt-1">
             <div class="col">

@@ -27,14 +27,17 @@ Dependencies: @/mixins/locale.vue
         <laya-flag :refData="question" @flagged="question.flagged = true"></laya-flag>
       </div>
       <div class="answers d-flex justify-content-around">
-        <button 
+        <div
           v-for="(answer,i) in answers"
-          :key="i"
-          type="button"
-          class="btn btn-info btn-lg"
-          @click="onFinish[i]()">
-          {{ answer }}
-        </button>
+          :key="answer.id"
+        >
+          <button
+            type="button"
+            class="btn btn-info btn-lg"
+            @click="onFinish[i]()">
+            {{ answer }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -90,24 +93,26 @@ export default {
       // No attributed Data --> actual view
       this.refreshData()
     }
-    this.checkFlags()
-  },
+    // watcher for vuex store to update content if flagged
+    this.unwatch = this.$store.watch(
+      (state, getters) => getters.content,
+      () => {
+        // console.log(`trying to watch ${newVal} and ${oldVal}`)
+        this.refreshData()
 
-  mounted() {
-    this.checkFlags()
+      },
+      { deep: true }
+    )
   },
 
   beforeDestroy() {
-    let i = this.idx
-    const stepData = this.$data
-    console.log({i, stepData})
-    this.$store.commit('updateStep', {i, stepData} )
+    this.unwatch()
   },
 
   methods: {
     /**
      * function checkFlags: check if flaggable props have a flag, set
-     *  flagged to true if yes
+     *  flagged to true if yes, not used
      * Author: cmc
      * Last Updated: July 7, 2021
      */
@@ -139,12 +144,6 @@ export default {
       this.answers = preData.answers
       this.bg = preData.bg
       this.title = preData.title
-    }
-  },
-  watch: {
-    content() {
-      //FIXME doesn't actually watch the property
-      this.refreshData()
     }
   }
 }

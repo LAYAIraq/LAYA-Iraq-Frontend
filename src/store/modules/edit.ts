@@ -178,40 +178,52 @@ export default {
         })
     },
 
-    flagFlaggableElement(state: { course: { content: Array<object> } }, elem: { id: string }){ //TODO: hier weiter!
-      const checkAndFlag = (o: any) => {
-        console.log(`we flag ${o}`)
-        if (Object.prototype.hasOwnProperty.call(o, 'flagged')) {
-          o.flagged = true
-          console.log('successs!!!')
-          return true
-        } else {
-          return false
-        }
-      }
-      console.log(state.course.content)
-      for (const el of state.course.content) {
-        const vals = Object.values(el.input)
-        for (const c of vals) {
-          console.log(c)
-          if (typeof(c) === 'object') {
-            if (Array.isArray(c)) {
-              console.log(`${c} is an array!`)
-              //@ts-ignore
-              for (const d in c) {
-                console.log(d)
-                if(checkAndFlag(d)) {
-                  break
-                }
-              }
-            } else {
-              if (checkAndFlag(c)) {
-                break
-              }
-            }
-          }
-        }
-      }
+    /**
+     * function flagFlaggableElement(): mutate flagged boolean of element
+     * Author: cmc
+     * Last Updated: August 17, 2021
+     * @param state state variables
+     * @param elem the flaggable element to be mutated
+     */
+    flagFlaggableElement(
+        state: { course: { content: Array<object> } },
+        elem: { id: string, flagged: boolean }
+    ) {
+      // const checkAndFlag = (o: any) => {
+      //   console.log(`we flag ${o}`)
+      //   if (Object.prototype.hasOwnProperty.call(o, 'flagged')) {
+      //     o.flagged = true
+      //     console.log('successs!!!')
+      //     return true
+      //   } else {
+      //     return false
+      //   }
+      // }
+      // console.log(`we change ${elem.id}`)
+      elem.flagged = true
+      // console.log(state.course.content)
+      // for (const el of state.course.content) {
+      //   const vals = Object.values(el.input)
+      //   for (const c of vals) {
+      //     console.log(c)
+      //     if (typeof(c) === 'object') {
+      //       if (Array.isArray(c)) {
+      //         console.log(`${c} is an array!`)
+      //         //@ts-ignore
+      //         for (const d in c) {
+      //           console.log(d)
+      //           if(checkAndFlag(d)) {
+      //             break
+      //           }
+      //         }
+      //       } else {
+      //         if (checkAndFlag(c)) {
+      //           break
+      //         }
+      //       }
+      //     }
+      //   }
+      // }
     },
 
     /**
@@ -249,7 +261,6 @@ export default {
      * Author: core
      * 
      * Last Updated: unknown
-     * @param commit commit property of vuex
      * @param state contains course
      * @param data course object
      */
@@ -279,20 +290,18 @@ export default {
      * 
      * Author: cmc
      * 
-     * Last Updated: March 24, 2021
+     * Last Updated: August 17, 2021
      * 
      * @param state contains course object
      * @param data array of files
      */
     updateCourseFiles(state: { course: { files: Array<Object> } }, data: Array<Object>) {
-      console.log('Start updating Course Files in Store')
-      
+      // console.log('Start updating Course Files in Store')
       const ids = new Set(state.course.files.map((d: {name: string}) => d.name))
-      const merged = [...state.course.files, ...data.filter( (d: {name: string}) => !ids.has(d.name) )]
-
-      // console.log(merged)
-      state.course.files = merged
-
+      state.course.files = [
+        ...state.course.files,
+        ...data.filter((d: {name: string}) => !ids.has(d.name))
+      ] // add new files to state.course.files
     },
 
     /**
@@ -312,13 +321,13 @@ export default {
     /**
      * Function updateStep: update content block at given index
      * Author: core
-     * Last Updated: unknown
+     * Last Updated: August 17, 2021
      * @param state contains course, content
      * @param data contains step index, new content object 
      */
-    updateStep( state: {course: {content: Array<object>}} , 
+    updateStep( state: { course: { content: Array<object> } } ,
         data: { step: number, updatedStep: object } ) {
-      console.log(`updating step ${data.step} with this data:`)
+      console.log(data.step)
       console.log(data.updatedStep)
       state.course.content[data.step] = {
         ...state.course.content[data.step], 
@@ -416,11 +425,11 @@ export default {
         files: []
       }
 
-      // create new Storage
-      const store = http.post('storage', { name: newStorage })
-      const fileReqs = []
-      const newFiles = []
-      store
+      // create new Storage //TODO: fix here
+      // const store = http.post('storage', { name: newStorage })
+      // const fileReqs = []
+      // const newFiles = []
+      // store
 
       /* Files are not being copied because of a bug */
       // .then( () => {
@@ -499,7 +508,7 @@ export default {
           http.post(`courses`, copiedCourse)
             .then( (resp) => { 
               // console.log('This response we got: ', resp)
-              resolve('success')
+              resolve(resp.data)
               // FIXME: Copy File List to Course
               // let fileList = []
               // newFiles.forEach(elem => {
@@ -577,7 +586,7 @@ export default {
      * 
      * @param param0 state variables
      */
-    fetchCourseList({commit, state, rootState}) {
+    fetchCourseList({ commit, state }) {
       commit('setBusy', true)
       http.get('courses?filter[include]=author')
         .then( ({data}) => {
@@ -610,7 +619,6 @@ export default {
      * @param courseId identifier for enrollment
      */
      fetchEnrollment({ commit, state, rootState }, courseId: String) {
-      const self = this
       const uid = rootState.auth.userId
       const cid = courseId
       commit('setBusy', true)
@@ -637,12 +645,12 @@ export default {
      * 
      * Author: core
      * 
-     * Last Updated: March 24, 2021
+     * Last Updated: August 17, 2021
      * 
      * @param param0 state variables
      * @returns Promise to save changes
      */
-     storeCourse({ commit, state, rootState}) {
+     storeCourse({ state }) {
       const updated = Date.now()
       const cId = state.course.courseId
       const cContent = state.course.content
@@ -695,15 +703,15 @@ export default {
      * 
      * Author: cmc
      * 
-     * Last Updated: unknown
+     * Last Updated: August 17, 2021
      * 
      * @param param0 state variables 
      */
-     updateEnrollment({ commit, state, rootState } ) {
+     updateEnrollment({ state }: { state : { enrollment: { id: string } } } ) {
       const enrol = state.enrollment
 
       http.patch(`enrollments/${enrol.id}`, enrol)
-        .then(resp => {
+        .then(() => {
           console.log('Enrollment updated!')
         })
         .catch(err => {
@@ -716,12 +724,12 @@ export default {
      * 
      * Author: cmc
      * 
-     * Last Updated: March 24, 2021
+     * Last Updated: August 17, 2021
      * 
      * @param param0 state variables
      * @returns Promise to update renamed course
      */
-    updateRenamedCourse({ commit, state, rootState}) {   
+    updateRenamedCourse({ state }) {
 
       const newName = {
         lastChanged: Date.now(),
