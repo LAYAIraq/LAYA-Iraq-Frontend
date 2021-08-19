@@ -25,7 +25,7 @@
         >
           <div class="row mt-1">
             <div class="col">
-              Flag Title
+              {{ i18n['flag.title'] }}
             </div>
             <div
                 class="close-btn"
@@ -42,21 +42,21 @@
                   for="set-flag-question"
                   class=""
               >
-                Type your question
+                {{ i18n['flag.typeHere'] }}
               </label>
               <textarea
                 class="form-control"
                 id="set-flag-question"
                 rows="5"
                 v-model="question"
-                placeholder="HERE QUESTION INSERT"
+                :placeholder="i18n['questionPlaceholder']"
               ></textarea>
 
 <!--              Added if non-anonymous questions are possible-->
 <!--              <label-->
 <!--                for="anonymous-question"-->
 <!--                >-->
-<!--                Ask anonymously?-->
+<!--                {{ i18n['flag.anonymous'] }}-->
 <!--              </label>-->
 <!--              <input-->
 <!--                id ="anonymous-question"-->
@@ -68,7 +68,7 @@
                 for="set-flag-question"
                 type="submit"
               >
-                Set Flag Question
+                {{ i18n['flag.setQuestion'] }}
               </b-button>
             </form>
           </div>
@@ -79,7 +79,7 @@
         >
           <div class="row mt-1">
             <div class="col">
-              Flag Title
+              {{ i18n['flag.title'] }}
             </div>
             <div
               class="close-btn"
@@ -113,28 +113,18 @@
               </div>
             </div>
             <div class="add-answer">
-              <form @submit.prevent="addAnswer">
+              <form @submit="addAnswer">
                 <div class="row">
                   <input
                       id="my-answer"
                       type="text"
-                      :class="{
-                        'ml-auto': subFocus,
-                        'm-auto': !subFocus
-                      }"
+                      class="m-auto"
                       v-model="newAnswer"
                       :disabled="answerSent"
                       @focus="subFocus = true"
                       @blur="subFocus = false"
-                      @submit="addAnswer"
                   >
-                  <b-button
-                    v-if="subFocus"
-                    @click="addAnswer"
-                    class="mr-auto"
-                  >
-                  Submit
-                  </b-button>
+
                 </div>
                 <div class="row">
                   <label
@@ -142,7 +132,13 @@
                     class="m-auto"
                     v-if="subFocus"
                   >
-                    Press Enter for submitting
+                    {{ i18n['flag.enterToSubmit'] }}
+                  </label>
+                  <label
+                    class="m-auto"
+                    v-if="answerSent"
+                  >
+                    {{ i18n['flag.ty'] }}
                   </label>
                 </div>
               </form>
@@ -354,6 +350,9 @@ export default {
     color: antiquewhite;
     width: 30px;
     height: 30px;
+  }
+  #my-answer:disabled {
+    background: lightslategrey;
   }
 
 </style>
