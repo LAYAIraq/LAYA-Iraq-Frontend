@@ -109,7 +109,7 @@ export default {
      * Last updated: March 24, 2021 
      */
     filtered() {
-      if (!this.filter) return this.courseList;
+      if (!this.filter) return this.courseList
 
       const filterByCourseName = new RegExp(this.filter, 'i');
       return this.filteredList.filter(course => filterByCourseName.test(course.name))

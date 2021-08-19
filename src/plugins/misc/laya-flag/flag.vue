@@ -136,9 +136,15 @@
                   </label>
                   <label
                     class="m-auto"
-                    v-if="answerSent"
+                    v-else-if="answerSent"
                   >
                     {{ i18n['flag.ty'] }}
+                  </label>
+                  <label
+                    v-else
+                    class="m-auto"
+                    >
+                    {{ i18n['flag.postAnswer'] }}
                   </label>
                 </div>
               </form>
@@ -153,7 +159,7 @@
 
 <script>
 // import http from 'axios'
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import { locale, time } from '@/mixins'
 
 export default {
@@ -170,7 +176,7 @@ export default {
 
   computed: {
     ...mapGetters(['courseFlags', 'courseId', 'userId']),
-    ...mapState(['flags']),
+    // ...mapState(['flags']),
     currentFlag() {
       const myFlagId = new RegExp(this.refData.id, 'i')
       let arr = this.courseFlags
@@ -198,6 +204,17 @@ export default {
     }
   },
 
+  created() {
+    if (this.currentFlag) {
+      for (const answer of this.currentFlag.answers) {
+        if (answer.authorId === this.userId) {
+          this.answerSent = true
+          break
+        }
+      }
+    }
+  },
+
   methods: {
     addAnswer() {
       const myAnswer = {
@@ -219,7 +236,9 @@ export default {
         referenceId: this.refData.id,
         courseId: this.courseId,
         authorId: this.userId,
-        enrollmentId: (this.$store.state.enrollment )? this.$store.state.enrollment.id : null
+        enrollmentId: (this.$store.state.enrollment )?
+            this.$store.state.enrollment.id :
+            null
       }
       this.$store.commit('setFlag', newFlag)
       this.$store.dispatch('updateCourseFlags')

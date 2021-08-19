@@ -24,19 +24,28 @@ Dependencies: @/mixins/locale.vue
         :id="question.id"
       >
         {{ question.text }}
-        <laya-flag :refData="question" @flagged="question.flagged = true"></laya-flag>
+        <laya-flag
+          :refData="question"
+          @flagged="question.flagged = true"
+        ></laya-flag>
       </div>
       <div class="answers d-flex justify-content-around">
         <div
           v-for="(answer,i) in answers"
           :key="answer.id"
+          class="answer-item"
         >
           <button
             type="button"
             class="btn btn-info btn-lg"
             @click="onFinish[i]()">
-            {{ answer }}
+            {{ answer.text }}
           </button>
+          <laya-flag
+            :refData="answer"
+            @flagged="answer.flagged = true"
+          >
+          </laya-flag>
         </div>
       </div>
     </div>
@@ -91,14 +100,14 @@ export default {
     // fetch data from vuex if not preview
     if (!this.previewData) {
       // No attributed Data --> actual view
-      this.refreshData()
+      this.fetchData()
     }
     // watcher for vuex store to update content if flagged
     this.unwatch = this.$store.watch(
       (state, getters) => getters.content,
       () => {
         // console.log(`trying to watch ${newVal} and ${oldVal}`)
-        this.refreshData()
+        this.fetchData()
 
       },
       { deep: true }
@@ -132,11 +141,11 @@ export default {
     },
 
     /**
-     * Function refreshData: make vuex store data mutable
+     * Function fetchData: make vuex store data mutable
      * Author: cmc
      * Last Updated: January 16, 2021
      */
-    refreshData() {
+   fetchData() {
       // dereference store data
       let preData = JSON.parse(JSON.stringify(this.content[this.idx].input))
       //replace data stubs with stored data
@@ -189,15 +198,21 @@ export default {
   margin-bottom: 1rem;
   padding: 5px;
   text-align: center;
-  background-color: #ffffff78;
+  background-color: #ffffff;
   border-radius: 3px;
   line-height: 1.5;
+}
+
+.answer-item {
+  display: block;
+  position: relative;
 }
 
 .answers > button {
   border: 1px solid #222;
   margin-right: 1rem;
   font-size: 90%;
+  line-height: 1.5;
   /* background-color: white; */
 }
 .answers > button:last-child {
