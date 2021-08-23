@@ -26,7 +26,9 @@ Dependencies: @/mixins/locale.vue
         {{ question.text }}
         <laya-flag
           :refData="question"
+          :isOpen="flagOpen"
           @flagged="question.flagged = true"
+          @flagOpen="toggleFlagOpen"
         ></laya-flag>
       </div>
       <div class="answers d-flex justify-content-around">
@@ -43,7 +45,9 @@ Dependencies: @/mixins/locale.vue
           </button>
           <laya-flag
             :refData="answer"
+            :isOpen="flagOpen"
             @flagged="answer.flagged = true"
+            @flagOpen="toggleFlagOpen"
           >
           </laya-flag>
         </div>
@@ -55,15 +59,15 @@ Dependencies: @/mixins/locale.vue
 
 <script>
 
-import { watchContent } from '@/mixins'
+// import { watchContent } from '@/mixins'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'laya-dialog',
 
-  mixins: [
-    watchContent
-  ],
+  // mixins: [
+    // watchContent
+  // ],
 
   computed: {
     ...mapGetters(['content', 'courseFlags']),
@@ -93,7 +97,8 @@ export default {
       answers: [],
       bg: '',
       title: '',
-      unwatch: null
+      unwatch: null,
+      flagOpen: false
     }
   },
 
@@ -139,7 +144,7 @@ export default {
      * Author: cmc
      * Last Updated: January 16, 2021
      */
-   fetchData() {
+    fetchData() {
       // dereference store data
       let preData = JSON.parse(JSON.stringify(this.content[this.idx].input))
       //replace data stubs with stored data
@@ -147,7 +152,18 @@ export default {
       this.answers = preData.answers
       this.bg = preData.bg
       this.title = preData.title
+    },
+
+    /**
+     * function toggleFlagOpen: atomic to have only one open flag
+     * Author: cmc
+     * Last Updated: August 23, 2021
+     * @param val boolean
+     */
+    toggleFlagOpen(val) {
+      this.flagOpen = val
     }
+
   }
 }
 </script>

@@ -9,12 +9,16 @@
   >
     <div class="flag-interface">
       <div
+        v-if="!isOpen"
         class="flag-icon"
         :class="clicked? 'collapsed' : 'expanded'"
         @click="toggleClicked"
+        :title="refData.flagged? i18n['flag.seeDiscussion'] : i18n['flag.title']"
+        v-b-tooltip.bottom
       >
         <i class="fas fa-flag"></i>
       </div>
+
       <div
         class="flag-body"
         :class="clicked? 'expanded' : 'collapsed'"
@@ -113,17 +117,24 @@
               </div>
             </div>
             <div class="add-answer">
-              <form @submit="addAnswer">
+              <form @submit.prevent="addAnswer">
                 <div class="row">
                   <input
                       id="my-answer"
                       type="text"
-                      class="m-auto"
+                      class="ml-auto"
                       v-model="newAnswer"
                       :disabled="answerSent"
                       @focus="subFocus = true"
                       @blur="subFocus = false"
                   >
+                  <b-button
+                    type="submit"
+                    class="mr-auto"
+                    :disabled="answerSent"
+                    >
+                    {{ this.i18n['flag.enterToSubmit'] }}
+                  </b-button>
 
                 </div>
                 <div class="row">
@@ -171,7 +182,8 @@ export default {
   ],
 
   props: {
-    refData: Object
+    refData: Object,
+    isOpen: Boolean
   },
 
   computed: {
@@ -204,8 +216,14 @@ export default {
     }
   },
 
+  watch: {
+    clicked(val) { // avoid multiple open instances
+      this.$emit('flagOpen', val)
+    }
+  },
+
   created() {
-    if (this.currentFlag) {
+    if (this.currentFlag) { // check if user already answered
       for (const answer of this.currentFlag.answers) {
         if (answer.authorId === this.userId) {
           this.answerSent = true
@@ -273,6 +291,7 @@ export default {
     right: 0;
     bottom: 0;
     font-size: 1rem;
+    text-align: center;
     /*max-height: 100px;*/
   }
   .laya-flag.unflagged:hover {
@@ -294,13 +313,14 @@ export default {
   .flag-icon {
     cursor: pointer;
   }
+
   .flag-question {
     padding: 20px;
     border: #4a5464 1px solid;
     background-color: #9fcdff;
   }
   .unflagged:hover>.flag-interface>.flag-icon {
-    margin-left: calc(100% - 15px);
+    margin-left: calc(100% - 5px);
     /*margin-top: auto;*/
     border: 1px solid tomato;
     background-color: tomato;
@@ -316,7 +336,7 @@ export default {
     border-radius: 25px;
     border: 1px solid fuchsia;
     background-color: #470047;
-    margin-left: 100%;
+    margin-left: calc(100% - 5px);
     display: block;
   }
   .flag-icon>i {
@@ -325,10 +345,10 @@ export default {
     padding: 12px;
   }
   .flag-icon.collapsed {
-    transform:rotateY(90deg);
-    height: 0px;
-    width: 0px;
-    transition: transform 0.2s ease-out;
+    /*transform:rotateY(90deg);*/
+    height: 0;
+    width: 0;
+    /*transition: transform 0.2s ease-out;*/
     /*display: block !important;*/
   }
   .flag-icon.expanded {
@@ -339,23 +359,20 @@ export default {
     transition: transform 0.5s ease-in;
   }
   .flag-body.expanded {
-    margin-left: 40vw;
-    margin-top: -60px; /* avoid bouncing on hover */
-    position: absolute;
-    z-index: 13000;
+    margin: auto;
+    /*margin-top: -60px; !* avoid bouncing on hover *!*/
+    position: relative;
+    z-index: 11000;
     background-color: darkslateblue;
     border-radius: 5px;
-    transform: scaleY(1);
-    transition: transform 0.5s ease;
-    box-sizing: content-box;
+    /*transform: scaleY(1);*/
+    /*transition: transform 0.5s ease;*/
+    box-sizing: border-box;
     width: 35vw;
     min-height: 60vh;
   }
   .flag-body.collapsed {
-    margin-left: calc(100% - 9vh);
-    margin-top: -60px;
-    transform: rotateY(90deg);
-    transition: transform 0.2s ease;
+    display: none;
   }
 
   .close-btn {

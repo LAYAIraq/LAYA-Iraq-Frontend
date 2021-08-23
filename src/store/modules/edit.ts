@@ -327,8 +327,8 @@ export default {
      */
     updateStep( state: { course: { content: Array<object> } } ,
         data: { step: number, updatedStep: object } ) {
-      console.log(data.step)
-      console.log(data.updatedStep)
+      // console.log(data.step)
+      // console.log(data.updatedStep)
       state.course.content[data.step] = {
         ...state.course.content[data.step], 
         ...data.updatedStep
