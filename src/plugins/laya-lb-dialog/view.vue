@@ -55,15 +55,15 @@ Dependencies: @/mixins/locale.vue
 
 <script>
 
-// import { checkFlags } from '@/mixins'
+import { watchContent } from '@/mixins'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'laya-dialog',
 
-  // mixins: [
-  //     checkFlags
-  // ],
+  mixins: [
+    watchContent
+  ],
 
   computed: {
     ...mapGetters(['content', 'courseFlags']),
@@ -92,25 +92,19 @@ export default {
       question: '',
       answers: [],
       bg: '',
-      title: ''
+      title: '',
+      unwatch: null
     }
   },
 
   created() {
-    // fetch data from vuex if not preview
-    if (!this.previewData) {
-      // No attributed Data --> actual view
-      this.fetchData()
-    }
-    // watcher for vuex store to update content if flagged
+    if (!this.previewData) this.fetchData()
     this.unwatch = this.$store.watch(
-      (state, getters) => getters.content,
-      () => {
-        // console.log(`trying to watch ${newVal} and ${oldVal}`)
-        this.fetchData()
-
-      },
-      { deep: true }
+        (state, getters) => getters.content,
+        () => {
+          this.fetchData() // when updated, re-do deep copying
+        },
+        { deep: true }
     )
   },
 
