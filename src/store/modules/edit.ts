@@ -54,6 +54,20 @@ export default {
     },
 
     /**
+     * Function courseCreator: returns ID of course Creator
+     *
+     * Author: cmc
+     *
+     * Last Updated: August 24, 2021
+     *
+     * @param state course object
+     * @returns userId of course creator
+     */
+    courseCreator(state: { course: { authorId: number } }) {
+      return state.course.authorId
+    },
+
+    /**
      * Function courseFiles: returns array of stored files
      * 
      * Author: cmc 

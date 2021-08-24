@@ -13,8 +13,10 @@
         class="flag-icon"
         :class="clicked? 'collapsed' : 'expanded'"
         @click="toggleClicked"
+        @keypress="toggleClicked"
         :title="refData.flagged? i18n['flag.seeDiscussion'] : i18n['flag.title']"
         v-b-tooltip.bottom
+        tabindex="0"
       >
         <i class="fas fa-flag"></i>
       </div>
@@ -33,7 +35,10 @@
             </div>
             <div
                 class="close-btn"
+                tabindex="0"
                 @click="toggleClicked"
+                @keypress="toggleClicked"
+                @keydown.esc="toggleClicked"
             >
               <i class="fas fa-times"></i>
             </div>
@@ -84,16 +89,22 @@
         >
           <div class="flag-title">
             <div class="title-text">
-              {{ i18n['flag.title'] }}
+              {{ i18n['flag.provideClarification'] }}
             </div>
             <div
               class="close-btn"
+              tabindex="0"
               @click="toggleClicked"
+              @keypress="toggleClicked"
+              @keydown.esc="toggleClicked"
             >
               <i class="fas fa-times"></i>
             </div>
           </div>
           <div class="flag-question">
+            <div class="heading">
+              {{ i18n['flag.question'] }}
+            </div>
             <div class="question-text">
               {{ showFlagQuestion() }}
             </div>
@@ -103,9 +114,18 @@
             </div>
           </div>
           <div class="flag-discussion">
+            <div class="heading">
+              {{ i18n['layaLbDialog.answers']}}
+            </div>
             <div
               class="discussion-post"
               v-for="(answer,i) in currentFlag.answers"
+              :class="answer.authorId === courseCreator ? 'creator' : ''"
+              :title="answer.authorId === courseCreator ?
+                i18n['flag.creatorAnswer']
+                : ''
+              "
+              v-b-tooltip.bottom
               :key="'answer-'+i"
             >
               <div class="text-center">
@@ -120,8 +140,11 @@
               </div>
             </div>
             <div class="add-answer">
+              <div class="heading">
+                {{ i18n['flag.postAnswer'] }}
+              </div>
               <form @submit.prevent="addAnswer">
-                <div class="row">
+                <div>
                   <input
                       id="my-answer"
                       type="text"
@@ -140,7 +163,7 @@
                   </b-button>
 
                 </div>
-                <div class="row">
+                <div class="answer-hint">
                   <label
                     for="my-answer"
                     class="m-auto"
@@ -153,12 +176,6 @@
                     v-else-if="answerSent"
                   >
                     {{ i18n['flag.ty'] }}
-                  </label>
-                  <label
-                    v-else
-                    class="m-auto"
-                    >
-                    {{ i18n['flag.postAnswer'] }}
                   </label>
                 </div>
               </form>
@@ -190,7 +207,12 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['courseFlags', 'courseId', 'userId']),
+    ...mapGetters([
+      'courseFlags',
+      'courseCreator',
+      'courseId',
+      'userId'
+    ]),
     // ...mapState(['flags']),
     currentFlag() {
       const myFlagId = new RegExp(this.refData.id, 'i')
@@ -311,8 +333,20 @@ export default {
     height: 100%;
   }
 
+  .heading {
+    margin-bottom: 3vh;
+    font-weight: 600;
+    font-size: 1.3em;
+    color: #46494d;
+  }
+
   .flag-icon {
     cursor: pointer;
+  }
+
+  .flag-icon:focus {
+    outline: 2px dashed deepskyblue;
+    outline-offset: 5px;
   }
 
   .set-flag {
@@ -354,6 +388,7 @@ export default {
     padding-top: 3vh;
     /*border-top: #4a5464 solid 1px;*/
     background: #d3e8ff;
+    border-radius: 0 0 5px 5px;
   }
 
   .discussion-post {
@@ -362,6 +397,12 @@ export default {
     border: 1px dashed #4a5464;
     background: #8a9eb5;
     border-radius: 3px;
+    word-wrap: break-word;
+  }
+
+  .discussion-post.creator {
+    background: #8ab59d;
+    border: 2px dashed #007b37;
   }
 
   .unflagged:hover>.flag-interface>.flag-icon {
@@ -378,12 +419,18 @@ export default {
   .flagged>.flag-interface>.flag-icon {
     height: 60px;
     width: 60px;
-    border-radius: 25px;
-    border: 1px solid fuchsia;
+    border-radius: 30px;
+    /*border: 1px solid fuchsia;*/
     background-color: #470047;
     margin-left: calc(100% - 5px);
     display: block;
   }
+
+  .flagged>.flag-interface>.flag-icon:hover {
+    /*border: 1px solid fuchsia;*/
+    background: #b900b9 ;
+  }
+
   .flag-icon>i {
     color: whitesmoke;
     font-size: 2rem;
@@ -437,8 +484,8 @@ export default {
     font-size: 1.5em;
   }
   .close-btn {
-    margin-right: 25px;
-    margin-top: 5px;
+    margin-right: 15px;
+    margin-top: 10px;
     margin-left: auto;
     cursor: pointer;
     border: tomato solid 1px;
@@ -448,6 +495,36 @@ export default {
     width: 30px;
     height: 30px;
   }
+
+  .close-btn:focus {
+    outline: 2px dashed deepskyblue;
+    outline-offset: 5px;
+  }
+
+  .close-btn>i {
+    padding-top: 4px;
+  }
+
+  .add-answer {
+    padding: 3vh 3vw;
+    border-radius: 0 0 5px 5px;
+    border-top: 1px solid #4a5464;
+    background: #4479b3;
+  }
+
+  .add-answer .heading {
+    color: #f8f9fa;
+  }
+
+  .answer-hint {
+    padding-top: 1vh;
+    color: #f8f9fa;
+  }
+
+  .tooltip.b-tooltip { /* for correct positition of tooltip */
+    z-index: 11000;
+  }
+
   #my-answer:disabled {
     background: lightslategrey;
   }
