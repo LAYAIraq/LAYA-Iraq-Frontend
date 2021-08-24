@@ -27,8 +27,8 @@
           class="set-flag"
           v-if="!refData.flagged"
         >
-          <div class="row mt-1">
-            <div class="col">
+          <div class="flag-title">
+            <div class="title-text">
               {{ i18n['flag.title'] }}
             </div>
             <div
@@ -53,7 +53,8 @@
                 id="set-flag-question"
                 rows="5"
                 v-model="question"
-                :placeholder="i18n['questionPlaceholder']"
+                :placeholder="i18n['flag.' +
+                 'questionPlaceholder']"
               ></textarea>
 
 <!--              Added if non-anonymous questions are possible-->
@@ -79,10 +80,10 @@
         </div>
         <div
           class="pick-up-flag"
-          v-if="currentFlag"
+          v-else-if="currentFlag"
         >
-          <div class="row mt-1">
-            <div class="col">
+          <div class="flag-title">
+            <div class="title-text">
               {{ i18n['flag.title'] }}
             </div>
             <div
@@ -92,7 +93,7 @@
               <i class="fas fa-times"></i>
             </div>
           </div>
-          <div class="mt-1 flag-question">
+          <div class="flag-question">
             <div class="question-text">
               {{ showFlagQuestion() }}
             </div>
@@ -113,7 +114,9 @@
               <div
                 :class="langIsAr? 'text-left': 'text-right'"
               >
-                {{ timeAndDate(answer.timestamp) }}
+                <small>
+                  {{ timeAndDate(answer.timestamp) }}
+               </small>
               </div>
             </div>
             <div class="add-answer">
@@ -307,18 +310,60 @@ export default {
     width: 100%;
     height: 100%;
   }
-  /*.no-hov-bg:hover>.flag-interface {*/
-  /*  margin-top: -54px; !* hack for avoiding 'bouncing box' *!*/
-  /*}*/
+
   .flag-icon {
     cursor: pointer;
   }
 
+  .set-flag {
+    height: 100%;
+    margin: auto;
+  }
+  .set-flag>.form-group.flag-question {
+    height: 100% !important;
+  }
+
   .flag-question {
     padding: 20px;
-    border: #4a5464 1px solid;
+    border: 1px solid #4a5464;
     background-color: #9fcdff;
   }
+
+  .question-text {
+    background: #f8f9fa;
+    border: 1px solid #4a5464;
+    color: #4a5464;
+    padding: 20px;
+    font-size: 1.5em;
+    font-style: italic;
+  }
+
+  .question-text:before {
+    content: open-quote;
+  }
+
+  .question-text:after {
+    content: close-quote;
+  }
+
+  .question-meta {
+    margin-top: 2vh;
+  }
+
+  .flag-discussion {
+    padding-top: 3vh;
+    /*border-top: #4a5464 solid 1px;*/
+    background: #d3e8ff;
+  }
+
+  .discussion-post {
+    padding: 2vh;
+    margin: 0 1vw 2vh;
+    border: 1px dashed #4a5464;
+    background: #8a9eb5;
+    border-radius: 3px;
+  }
+
   .unflagged:hover>.flag-interface>.flag-icon {
     margin-left: calc(100% - 5px);
     /*margin-top: auto;*/
@@ -327,7 +372,7 @@ export default {
     display: block;
     vertical-align: middle; /* doesn't do anything */
   }
- .unflagged>.flag-interface>.flag-icon {
+  .unflagged>.flag-interface>.flag-icon {
    display: none;
  }
   .flagged>.flag-interface>.flag-icon {
@@ -358,13 +403,15 @@ export default {
     transform: none;
     transition: transform 0.5s ease-in;
   }
-  .flag-body.expanded {
+  .flag-body {
     margin: auto;
+    box-shadow: 0 0 3px black;
     /*margin-top: -60px; !* avoid bouncing on hover *!*/
     position: relative;
     z-index: 11000;
     background-color: darkslateblue;
     border-radius: 5px;
+    border: 1px #1b1e21;
     /*transform: scaleY(1);*/
     /*transition: transform 0.5s ease;*/
     box-sizing: border-box;
@@ -374,7 +421,21 @@ export default {
   .flag-body.collapsed {
     display: none;
   }
+  .flag-title {
+    background: #343a40;
+    color: #f8f9fa;
+    display: flex;
+    flex-wrap: nowrap;
+    border-radius: 5px 5px 0 0;
+  }
 
+  .title-text {
+    text-align: center;
+    margin-left: auto;
+    padding: 10px;
+    font-weight: bolder;
+    font-size: 1.5em;
+  }
   .close-btn {
     margin-right: 25px;
     margin-top: 5px;
@@ -389,6 +450,9 @@ export default {
   }
   #my-answer:disabled {
     background: lightslategrey;
+  }
+  #set-flag-question {
+    height: 100%;
   }
 
 </style>
