@@ -63,7 +63,7 @@ Dependencies: @/mixins/locale.vue
 
       <!-- task audio -->
       <div class="form-group row">
-        <label for="smcs-task-audio" class="col-2 col-form-label">
+        <label for="drag-drop-task-audio" class="col-2 col-form-label">
           {{ i18n['taskAudio'] }}
         </label>
         <div class="col-10">
@@ -264,7 +264,7 @@ export default {
      * 
      */
     _addCategory() {
-      this.categories.push("")
+      this.categories.push('')
     }
   }
 }

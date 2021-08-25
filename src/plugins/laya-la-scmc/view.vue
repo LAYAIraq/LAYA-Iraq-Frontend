@@ -17,28 +17,38 @@ Dependencies:
 
     <!-- render task -->
     <legend tabindex="0">
-      <div class="row" :id="title.id">
+      <div class="title row" :id="title.id">
         <div class="col">
           <h3 class="pb-3">
-            {{title.text}}
+            {{ title.text }}
             <laya-audio-inline v-if="taskAudio" :src="taskAudio">
             </laya-audio-inline>
           </h3>
         </div>
-        <laya-flag :refData="title"></laya-flag>
+        <laya-flag
+            :refData="title"
+            :isOpen="flagOpen"
+            @flagged="title.flagged = true"
+            @flagOpen="toggleFlagOpen"
+        ></laya-flag>
       </div>
-      <div class="row" :id="task.id">
+      <div class="task row" :id="task.id">
         <div class="col">
           {{task.text}}
         </div>
-        <laya-flag :refData="task"></laya-flag>
+        <laya-flag
+            :refData="task"
+            :isOpen="flagOpen"
+            @flagged="task.flagged = true"
+            @flagOpen="toggleFlagOpen"
+        ></laya-flag>
       </div>
     </legend>
 
     <!-- render options -->
     <div class="p-3 bg-light">
       <div v-for="(option,i) in options"
-        class="form-check mb-3"
+        class="option form-check mb-3"
         :key="'mchoice-option-'+i"
         :id="option.id"
       >
@@ -68,7 +78,12 @@ Dependencies:
         <i class="ml-2" :class="{'far fa-check-circle text-success': true}"></i>
         <i class="ml-2" :class="{'far fa-times-circle text-danger': true}"></i>
         -->
-        <laya-flag :refData="option"></laya-flag>
+        <laya-flag
+            :refData="option"
+            :isOpen="flagOpen"
+            @flagged="option.flagged = true"
+            @flagOpen="toggleFlagOpen"
+        ></laya-flag>
       </div>
     </div>
 
@@ -109,12 +124,13 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale } from '@/mixins'
+import { flagHandling, locale } from '@/mixins'
 
 export default {
   name: 'laya-multiple-choice',
 
   mixins: [
+    flagHandling,
     locale
   ],
 
@@ -322,6 +338,9 @@ export default {
 </script>
 
 <style scoped>
+.option, .task, .title {
+  position: relative;
+}
 *:focus {
   outline: 2px dashed deepskyblue;
   outline-offset: 5px;

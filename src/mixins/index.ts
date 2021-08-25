@@ -1,6 +1,7 @@
 export { default as checkFlags } from './check-flags.js'
 export { default as contentTypes } from './content-types'
 export { default as fetchNotifications } from './fetch-notifications'
+export { default as flagHandling } from './flag-handling'
 export { default as listSort } from './list-sort.js'
 export { default as locale } from './locale'
 export { default as mimeTypes } from './mime-types.vue'

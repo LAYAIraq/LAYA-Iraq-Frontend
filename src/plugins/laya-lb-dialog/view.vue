@@ -59,15 +59,16 @@ Dependencies: @/mixins/locale.vue
 
 <script>
 
-// import { watchContent } from '@/mixins'
+import { flagHandling, locale } from '@/mixins'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'laya-dialog',
 
-  // mixins: [
-    // watchContent
-  // ],
+  mixins: [
+    flagHandling,
+    locale
+  ],
 
   computed: {
     ...mapGetters(['content', 'courseFlags']),
@@ -97,8 +98,7 @@ export default {
       answers: [],
       bg: '',
       title: '',
-      unwatch: null,
-      flagOpen: false
+      unwatch: null
     }
   },
 
@@ -152,16 +152,6 @@ export default {
       this.answers = preData.answers
       this.bg = preData.bg
       this.title = preData.title
-    },
-
-    /**
-     * function toggleFlagOpen: atomic to have only one open flag
-     * Author: cmc
-     * Last Updated: August 23, 2021
-     * @param val boolean
-     */
-    toggleFlagOpen(val) {
-      this.flagOpen = val
     }
 
   }

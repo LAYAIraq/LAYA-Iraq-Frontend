@@ -20,15 +20,23 @@ Dependencies:
             </laya-audio-inline>
           </h4>
         </div>
-        <laya-flag :refData="title"
-        ></laya-flag> <!-- idea on how to bind flags to the DOM -->
+        <laya-flag
+            :refData="title"
+            :isOpen="flagOpen"
+            @flagged="title.flagged = true"
+            @flagOpen="toggleFlagOpen"
+        ></laya-flag>
       </div>
 
       <div class="task row" :id="task.id">
         <div class="col">
           <p>{{ task.text }}</p>
         </div>
-        <laya-flag :refData="task"
+        <laya-flag
+            :refData="task"
+            :isOpen="flagOpen"
+            @flagged="task.flagged = true"
+            @flagOpen="toggleFlagOpen"
         ></laya-flag>
       </div>
       <hr>
@@ -62,7 +70,11 @@ Dependencies:
               :disabled="checked"
               v-model.number="solution[i]"
             >
-            <laya-flag :refData="item"
+            <laya-flag
+                :refData="item"
+                :isOpen="flagOpen"
+                @flagged="item.flagged = true"
+                @flagOpen="toggleFlagOpen"
             ></laya-flag>
           </div>
         </div>
@@ -88,12 +100,13 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale } from '@/mixins'
+import { flagHandling, locale } from '@/mixins'
 
 export default {
   name: 'laya-quiz-drag-drop',
 
   mixins: [
+    flagHandling,
     locale
   ],
 

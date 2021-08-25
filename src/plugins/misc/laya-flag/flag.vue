@@ -317,6 +317,7 @@ export default {
     bottom: 0;
     font-size: 1rem;
     text-align: center;
+    z-index: 0;
     /*max-height: 100px;*/
   }
   .laya-flag.unflagged:hover {

@@ -15,7 +15,7 @@ Dependencies:
   >
     <div class="container">
 
-      <div class="row mb-3" :id="title.id">
+      <div class="title row mb-3" :id="title.id">
         <div class="col">
           <h4>
             {{ title.text }}
@@ -23,15 +23,23 @@ Dependencies:
             </laya-audio-inline>
           </h4>
         </div>
-        <laya-flag :refData="title"
+        <laya-flag
+            :refData="title"
+            :isOpen="flagOpen"
+            @flagged="title.flagged = true"
+            @flagOpen="toggleFlagOpen"
         ></laya-flag>
       </div>
 
-      <div class="row" :id="task.id">
+      <div class="task row" :id="task.id">
         <div class="col">
           <p>{{ task.text }}</p>
         </div>
-        <laya-flag :refData="task"
+        <laya-flag
+            :refData="task"
+            :isOpen="flagOpen"
+            @flagged="task.flagged = true"
+            @flagOpen="toggleFlagOpen"
         ></laya-flag>
       </div>
 
@@ -45,7 +53,7 @@ Dependencies:
               v-for="(pair,i) in pairs" 
               :key="pair.id"
               :id="pair.id" 
-              class="form-group row"
+              class="form-group row pair"
             >
               <label 
                 :for="pair.label+i" 
@@ -84,7 +92,11 @@ Dependencies:
                   <i :class="eval[i]"></i>
                 </div>
               </div>
-              <laya-flag :refData="pair"
+              <laya-flag
+                  :refData="pair"
+                  :isOpen="flagOpen"
+                  @flagged="pair.flagged = true"
+                  @flagOpen="toggleFlagOpen"
               ></laya-flag>
             </div>
           </form>
@@ -128,12 +140,13 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale } from '@/mixins'
+import { flagHandling, locale } from '@/mixins'
 
 export default {
   name: 'laya-quiz-relate',
 
   mixins: [
+    flagHandling,
     locale
   ],
   
@@ -268,5 +281,9 @@ img {
 }
 .form-group.row:nth-child(2) {
   background-color: #ebece7;
+}
+
+.pair, .task, .title {
+  position: relative;
 }
 </style>
