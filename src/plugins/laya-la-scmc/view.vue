@@ -17,7 +17,7 @@ Dependencies:
 
     <!-- render task -->
     <legend tabindex="0">
-      <div class="title row" :id="title.id">
+      <div class="flaggable row" :id="title.id">
         <div class="col">
           <h3 class="pb-3">
             {{ title.text }}
@@ -32,7 +32,7 @@ Dependencies:
             @flagOpen="toggleFlagOpen"
         ></laya-flag>
       </div>
-      <div class="task row" :id="task.id">
+      <div class="flaggable row" :id="task.id">
         <div class="col">
           {{task.text}}
         </div>
@@ -48,7 +48,7 @@ Dependencies:
     <!-- render options -->
     <div class="p-3 bg-light">
       <div v-for="(option,i) in options"
-        class="option form-check mb-3"
+        class="flaggable form-check mb-3"
         :key="'mchoice-option-'+i"
         :id="option.id"
       >
@@ -81,6 +81,7 @@ Dependencies:
         <laya-flag
             :refData="option"
             :isOpen="flagOpen"
+            :interactive="true"
             @flagged="option.flagged = true"
             @flagOpen="toggleFlagOpen"
         ></laya-flag>
@@ -125,6 +126,7 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import { flagHandling, locale } from '@/mixins'
+import '@/styles/flaggables.css'
 
 export default {
   name: 'laya-multiple-choice',
@@ -338,9 +340,8 @@ export default {
 </script>
 
 <style scoped>
-.option, .task, .title {
-  position: relative;
-}
+/*@import '@/styles/flaggables.css'*/
+
 *:focus {
   outline: 2px dashed deepskyblue;
   outline-offset: 5px;

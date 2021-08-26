@@ -4,7 +4,9 @@
     :class="{
       'flagged': refData.flagged,
       'unflagged': !refData.flagged,
-      'no-hov-bg': clicked
+      'no-hov-bg': clicked,
+      'interactive': interactive,
+      'normalize-z': isOpen
     }"
   >
     <div class="flag-interface">
@@ -203,6 +205,7 @@ export default {
 
   props: {
     refData: Object,
+    interactive: Boolean,
     isOpen: Boolean
   },
 
@@ -320,13 +323,17 @@ export default {
     z-index: 0;
     /*max-height: 100px;*/
   }
+  .laya-flag.interactive {
+    z-index: -1;
+  }
+
   .laya-flag.unflagged:hover {
     background-color: rgba(108, 117, 125, 0.25);
     border-radius: 5px;
     width: 100%;
     height: 100%;
   }
-  .laya-flag.no-hov-bg {
+  .laya-flag.no-hov-bg, .laya-flag.normalize-z {
     background-color: transparent !important;
   }
   .flag-interface {
@@ -427,7 +434,8 @@ export default {
     display: block;
   }
 
-  .flagged>.flag-interface>.flag-icon:hover {
+  .flagged>.flag-interface>.flag-icon:hover,
+  .flagged>.flag-interface>.flag-icon:focus {
     /*border: 1px solid fuchsia;*/
     background: #b900b9 ;
   }

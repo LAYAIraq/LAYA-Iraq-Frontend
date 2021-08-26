@@ -1,0 +1,14 @@
+/*
+ * Filename: flaggables.css
+ * Use: provide styles common to view.vue files
+ *  with flaggable elements
+ * Creator: cmc
+ * Date: August 26, 2021
+ * Dependencies: none
+ */
+
+.flaggable {
+  position: relative; /* to make flag icon work */
+  z-index: 10; /* for interactive elements */
+  padding: 30px !important; /* for usability */
+}

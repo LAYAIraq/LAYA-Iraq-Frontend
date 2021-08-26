@@ -20,7 +20,7 @@ Dependencies: @/mixins/locale.vue
     <div class="dialog-text">
       <div
         v-if="question"
-        class="question"
+        class="flaggable question"
         :id="question.id"
       >
         {{ question.text }}
@@ -35,9 +35,10 @@ Dependencies: @/mixins/locale.vue
         <div
           v-for="(answer,i) in answers"
           :key="answer.id"
-          class="answer-item"
+          class="flaggable answer-item"
         >
           <button
+            :class="{'d-none': flagOpen}"
             type="button"
             class="btn btn-info btn-lg"
             @click="onFinish[i]()">
@@ -46,6 +47,7 @@ Dependencies: @/mixins/locale.vue
           <laya-flag
             :refData="answer"
             :isOpen="flagOpen"
+            :interactive="true"
             @flagged="answer.flagged = true"
             @flagOpen="toggleFlagOpen"
           >
@@ -61,6 +63,7 @@ Dependencies: @/mixins/locale.vue
 
 import { flagHandling, locale } from '@/mixins'
 import { mapGetters } from 'vuex'
+import '@/styles/flaggables.css'
 
 export default {
   name: 'laya-dialog',

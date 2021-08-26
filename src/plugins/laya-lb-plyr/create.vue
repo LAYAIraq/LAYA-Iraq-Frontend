@@ -187,6 +187,10 @@ export default {
         flagged: false,
         show: false,
         id: ''
+      },
+      videoFlag: {
+        flagged: false,
+        id: ''
       }
     }
   },
@@ -209,6 +213,7 @@ export default {
 
   created() {
     this.title.id = uuidv4()
+    this.videoFlag.id = uuidv4()
   }
 }
 </script>

@@ -15,7 +15,7 @@ Dependencies:
   >
     <div class="container">
 
-      <div class="title row mb-3" :id="title.id">
+      <div class="flaggable row mb-3" :id="title.id">
         <div class="col">
           <h4>
             {{ title.text }}
@@ -31,7 +31,7 @@ Dependencies:
         ></laya-flag>
       </div>
 
-      <div class="task row" :id="task.id">
+      <div class="flaggable row" :id="task.id">
         <div class="col">
           <p>{{ task.text }}</p>
         </div>
@@ -53,7 +53,7 @@ Dependencies:
               v-for="(pair,i) in pairs" 
               :key="pair.id"
               :id="pair.id" 
-              class="form-group row pair"
+              class="form-group row flaggable"
             >
               <label 
                 :for="pair.label+i" 
@@ -95,6 +95,7 @@ Dependencies:
               <laya-flag
                   :refData="pair"
                   :isOpen="flagOpen"
+                  :interactive="true"
                   @flagged="pair.flagged = true"
                   @flagOpen="toggleFlagOpen"
               ></laya-flag>
@@ -141,6 +142,7 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import { flagHandling, locale } from '@/mixins'
+import '@/styles/flaggables.css'
 
 export default {
   name: 'laya-quiz-relate',
@@ -283,7 +285,4 @@ img {
   background-color: #ebece7;
 }
 
-.pair, .task, .title {
-  position: relative;
-}
 </style>

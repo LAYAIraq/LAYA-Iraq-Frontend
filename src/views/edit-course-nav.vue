@@ -278,7 +278,6 @@ export default {
       let _nodes = self.courseContent.map(
         (c,i) => ({id: i+1, label: `${i+1}. ${self.typeName(c.name)}`})
       )
-      console.log(_nodes)
 
       let _edges = []
       for(let i=0; i<self.courseContent.length; ++i) {
@@ -289,7 +288,6 @@ export default {
           _edges.push({from: i+1, to: steps[s]})
         }
       }
-      console.log(_edges)
 
       const graph = new Network(document.getElementById(self.navGraphId), {
         nodes: new DataSet(_nodes),
