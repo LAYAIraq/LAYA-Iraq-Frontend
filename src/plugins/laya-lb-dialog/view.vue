@@ -31,17 +31,15 @@ Dependencies: @/mixins/locale.vue
           @flagOpen="toggleFlagOpen"
         ></laya-flag>
       </div>
-      <div class="answers d-flex justify-content-around">
-        <div
-          v-for="(answer,i) in answers"
-          :key="answer.id"
-          class="answer-item"
-        >
+      <div class="answers-d-flex-justify-content-around"
+           v-for="(answer,i) in answers"
+           :key="i">
+        <div class="answer-item">
           <button
             type="button"
             class="btn btn-info btn-lg"
             @click="onFinish[i]()">
-            {{ answer.text }}
+            {{ answers[i] }}
           </button>
           <laya-flag
             :refData="answer"
@@ -80,7 +78,7 @@ export default {
      */
     idx() {
       //comply with array indexing in store
-      return this.$route.params.step -1 
+      return this.$route.params.step -1
     }
   },
 
@@ -170,14 +168,14 @@ export default {
 }
 .bg-fallback {
   /* min-height: 10em; */
-  
+
   text-align: center;
   padding-top: 1rem;
   /* background: linear-gradient(#e66465, #9198e5); */
 }
 
 .dialog-text {
-  
+
   width: stretch;
   /* height: max-content; */
   /* background-color: #ffffffd9; */
@@ -208,15 +206,14 @@ export default {
   position: relative;
 }
 
-.answers > button {
+.answers-d-flex-justify-content-around{
+  display: inline-block;
+  flex-direction: row;
   border: 1px solid #222;
-  margin-right: 1rem;
+  margin-left: 1em;
+  margin-bottom: 1em;
   font-size: 90%;
-  line-height: 1.5;
-  /* background-color: white; */
-}
-.answers > button:last-child {
-  margin-right: 0;
+  flex-wrap: wrap;
 }
 
 </style>
