@@ -327,14 +327,19 @@ export default {
     z-index: -1;
   }
 
+  .laya-flag.interactive.normalize-z {
+    z-index: 0 !important;
+  }
+
   .laya-flag.unflagged:hover {
     background-color: rgba(108, 117, 125, 0.25);
     border-radius: 5px;
     width: 100%;
     height: 100%;
   }
-  .laya-flag.no-hov-bg, .laya-flag.normalize-z {
+  .laya-flag.no-hov-bg {
     background-color: transparent !important;
+    z-index: 0 !important;
   }
   .flag-interface {
     width: 100%;

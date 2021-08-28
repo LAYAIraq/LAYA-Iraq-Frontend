@@ -12,3 +12,7 @@
   z-index: 10; /* for interactive elements */
   padding: 30px !important; /* for usability */
 }
+
+.flaggable.flat {
+  z-index: 0;
+}

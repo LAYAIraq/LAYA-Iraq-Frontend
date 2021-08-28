@@ -17,7 +17,9 @@ export default {
   getters: {
     /**
      * courseFlags: return courseFlags array
+     *
      * Author: cmc
+     *
      * Last Updated: August 17, 2021
      * @param state state variables
      */
@@ -29,7 +31,9 @@ export default {
   mutations: {
     /**
      * Function appendFlag(): append flag to courseFlags
+     *
      * Author: cmc
+     *
      * Last Updated: August 17, 2021
      * @param state state variable
      * @param flag flag to add
@@ -60,9 +64,11 @@ export default {
 
     /**
      * Function appendFlagAnswer(): add answer to answers array of a flag
+     *
      * Author: cmc
+     *
      * Last Updated: August 17, 2021
-     * @param state stae variables
+     * @param state state variables
      * @param data id for flag and answer object
      */
     appendFlagAnswer(state: { courseFlags: Array<any> }, data: { id: string, answer: object }) {
@@ -74,7 +80,9 @@ export default {
 
     /**
      * Function clearFlagList(): set courseFlags array to empty
+     *
      * Author: cmc
+     *
      * Last Updated: August 17, 2021
      * @param state state variables
      */
@@ -84,7 +92,9 @@ export default {
 
     /**
      * Function clearFlagsToAddList(): clear list of flags to add
+     *
      * Author: cmc
+     *
      * Last Updated: August 17, 2021
      * @param state state variables
      */
@@ -94,7 +104,9 @@ export default {
 
     /**
      * Function setFlag(): add Flag to flagsToAdd array
+     *
      * Author: cmc
+     *
      * Last Updated: August 17, 2021
      * @param state state variables
      * @param flag Object to be added
@@ -108,7 +120,9 @@ export default {
     /**
      * checkCourseFlags(): check if any parts of the course are
      *  flagged, mutate their properties accordingly
+     *
      * Author: cmc
+     *
      * Last Updated: August 17, 2021
      * @param commit state commit
      * @param rootState rootState to get course
@@ -157,7 +171,9 @@ export default {
 
     /**
      * Function getCourseFlags(): fetch course Flag for courseID from backend
+     *
      * Author: cmc
+     *
      * Last Updated: August 17, 2021
      * @param commit state commit
      * @param cid courseId for course
@@ -189,13 +205,15 @@ export default {
     },
 
     /**
-     * function updateCourseFlags(): persist flagsToAdd into backend
+     * function saveFlags(): persist flagsToAdd into backend
+     *
      * Author: cmc
+     *
      * Last Updated: August 17, 2021
      * @param state state variables
      * @param commit commit function
      */
-    updateCourseFlags({state, commit}) {
+    saveFlags({state, commit}) {
       state.flagsToAdd.forEach(flag => {
         // console.log(flag)
         http.post('flags', flag)
@@ -207,11 +225,11 @@ export default {
     },
 
     /**
-     * function saveFlags(): persist changes to courseFlags
+     * function updateFlags(): persist changes to courseFlags
      * @param commit commit function
      * @param state state variables
      */
-    saveFlags({ commit, state }) {
+    updateFlags({ commit, state }) {
       const reqs = []
       state.courseFlags.forEach(flag => {
         // console.log(flag)

@@ -48,6 +48,7 @@ Dependencies:
             :key="item.id"
             :id="item.id" 
             class="flaggable item mb-5"
+            :class="flagOpen? 'flat' : ''"
           >
             <h4 class="text-center item-label">
               {{ item.label }}
