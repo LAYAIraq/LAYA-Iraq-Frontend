@@ -54,7 +54,7 @@ Dependencies:
               :key="pair.id"
               :id="pair.id" 
               class="form-group row flaggable"
-              :class="{'flat': flagOpen}"
+              :class="{'flat': flagOpen != pair.id}"
             >
               <label 
                 :for="pair.label+i" 

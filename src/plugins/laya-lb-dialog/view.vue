@@ -36,9 +36,9 @@ Dependencies: @/mixins/locale.vue
           v-for="(answer,i) in answers"
           :key="answer.id"
           class="flaggable answer-item"
+          :class="{'flat': flagOpen != answer.id}"
         >
           <button
-            :class="{'d-none': flagOpen}"
             type="button"
             class="btn btn-info btn-lg"
             @click="onFinish[i]()">

@@ -4,9 +4,8 @@
     :class="{
       'flagged': refData.flagged,
       'unflagged': !refData.flagged,
-      'no-hov-bg': clicked ? true : !!isOpen,
-      'interactive': interactive,
-      'normalize-z': isOpen
+      'no-hov-bg': clicked,
+      'interactive': interactive
     }"
   >
     <div class="flag-interface">
@@ -206,7 +205,7 @@ export default {
   props: {
     refData: Object,
     interactive: Boolean,
-    isOpen: Boolean
+    isOpen: null
   },
 
   computed: {
@@ -246,7 +245,11 @@ export default {
 
   watch: {
     clicked(val) { // avoid multiple open instances
-      this.$emit('flagOpen', val)
+      if (val) {
+        this.$emit('flagOpen', this.refData.id)
+      } else {
+        this.$emit('flagOpen', false)
+      }
     }
   },
 
@@ -327,10 +330,6 @@ export default {
     z-index: -1;
   }
 
-  .laya-flag.interactive.normalize-z {
-    z-index: 0 !important;
-  }
-
   .laya-flag.unflagged:hover {
     background-color: rgba(108, 117, 125, 0.25);
     border-radius: 5px;
@@ -365,6 +364,7 @@ export default {
   .set-flag {
     height: 100%;
     margin: auto;
+    z-index: inherit;
   }
   .set-flag>.form-group.flag-question {
     height: 100% !important;

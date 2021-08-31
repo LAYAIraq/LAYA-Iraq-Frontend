@@ -49,6 +49,7 @@ Dependencies:
     <div class="p-3 bg-light">
       <div v-for="(option,i) in options"
         class="flaggable form-check mb-3"
+        :class="{'flat': flagOpen != option.id}"
         :key="'mchoice-option-'+i"
         :id="option.id"
       >
