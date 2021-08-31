@@ -288,11 +288,11 @@ export default {
             break;
           } else {
             return new Promise ((resolve, reject) => 
-             http.get(`courses/getCourseName?id=${note.data.courseId}`)
+             http.get(`courses/getCourseName?courseId=${note.data.courseId}`)
               .then(resp => {
-                // console.log(resp)
+                console.log(resp)
                 this.valueCache['authorNewSub'][note.data.courseId] = 
-                  resp.data.name
+                  resp.data.courseName
                 resolve(resp)
               })
               .catch((err) => {
