@@ -4,7 +4,7 @@
     :class="{
       'flagged': refData.flagged,
       'unflagged': !refData.flagged,
-      'no-hov-bg': clicked,
+      'no-hov-bg': clicked ? true : !!isOpen,
       'interactive': interactive,
       'normalize-z': isOpen
     }"
@@ -287,7 +287,7 @@ export default {
             null
       }
       this.$store.commit('setFlag', newFlag)
-      this.$store.dispatch('updateCourseFlags')
+      this.$store.dispatch('saveFlags')
       this.$emit('flagged')
 
     },

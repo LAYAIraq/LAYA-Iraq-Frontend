@@ -1,4 +1,4 @@
-<!--
+  <!--
 Filename: view.vue
 Use: View a Multiple Choice/Response content block
 Creator: core

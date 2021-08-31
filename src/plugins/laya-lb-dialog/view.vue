@@ -124,7 +124,9 @@ export default {
     /**
      * function checkFlags: check if flaggable props have a flag, set
      *  flagged to true if yes, not used
+     *
      * Author: cmc
+     *
      * Last Updated: July 7, 2021
      */
     checkFlags() {
@@ -144,7 +146,9 @@ export default {
 
     /**
      * Function fetchData: make vuex store data mutable
+     *
      * Author: cmc
+     *
      * Last Updated: January 16, 2021
      */
     fetchData() {
