@@ -123,7 +123,7 @@
                     v-if="!loading"
                   >
                     <router-link
-                      :to="displayReference(note)"
+                      :to="linkToCourse(note)"
                     >
                       {{ i18n[`notifications.${note.type}.cta`] }}
                     </router-link>
@@ -201,7 +201,13 @@ export default {
     if (Object.prototype.hasOwnProperty.call(this.$route.query, 'id')) {
       this.highlightId = this.$route.query.id
     }
-    this.cacheValues()
+    // this.cacheValues()
+    // this.messages.forEach(note => this.msgList.push(note))
+    // this.msgList.forEach(note => {
+    //   let courseName = this.getReference(note.data.courseId)
+    //   let courseHref = this.linkToCourse(note)
+    //   note['references'] = { courseName: courseName, courseLink: courseHref }
+    // })
   },
 
   mounted() {
@@ -238,75 +244,87 @@ export default {
       this.loading = true
       let queries = []
       this.messages.forEach(elem => {
-        if (!this.valueCache[elem.type]) {
-          this.valueCache[elem.type] = {}
-        }
-        queries.push(this.getReference(elem))
-        // console.log(queries)
+        this.valueCache[elem.data.courseId] =
+        this.getReference(elem.data.courseId).then(r => r)
       })
-      Promise.all(queries)
-      .then( () => {
-        this.loading = false
-      })
+
       
     },
     /**
-     * function displayReference: show referred value in notification
+     * function linkToCourse: return link to referred course id
+     *
      * Author: cmc
-     * Last Updated: June 26, 2021
+     *
+     * Last Updated: September 2, 2021
      * @param {object} note notification for which it's used
      */
-    displayReference(note) {
+    linkToCourse(note) { // FIXME
       // console.log("Rytna show href for: ", note)
-      switch(note.type) {
-        case 'authorNewSub': {
-          if (this.valueCache['authorNewSub'][note.data.courseId]) {
-            // console.log(note.data.courseId)
-            let val = this.valueCache['authorNewSub'][note.data.courseId]
-            // console.log(`href is ${val}`)
-            return(`/courses/${val}/1`)
-          } else {
-            return '/#'
-          }
-        }
-        default: {
-          return '/#'
-        }
-      }
+      return '/#'
+      // const courseName = await this.getReference(note.data.courseId)
+      // return(`/courses/${courseName}/1`)
+      // switch(note.type) {
+      //   case 'authorNewSub': {
+      //     if (this.valueCache['authorNewSub'][note.data.courseId]) {
+      //       // console.log(note.data.courseId)
+      //       let val = this.valueCache['authorNewSub'][note.data.courseId]
+      //       // console.log(`href is ${val}`)
+      //       return(`/courses/${val}/1`)
+      //     } else {
+      //       return '/#'
+      //     }
+      //   }
+      //   case 'authorNewFlag': {
+      //     if (this.valueCache['authorNewFlag'][note.data.courseId]) {
+      //       // console.log(note.data.courseId)
+      //       let val = this.valueCache['authorNewSub'][note.data.courseId]
+      //       // console.log(`href is ${val}`)
+      //       return(`/courses/${val}/1`)
+      //     } else {
+      //       return '/#'
+      //     }
+      //   }
+      //   default: {
+      //     return '/#'
+      //   }
+      // }
     },
     /**
-     * function getReference: create href string for notification
-     *  target cache
+     * function getReference: get course name for id
      * Author: cmc
      * Last Updated: June 26, 2021
      */
-    getReference(note) {
+    async getReference(id) {
       // console.log('we wanna get ref for: ', note)
-      switch(note.type) {
-        case 'authorNewSub': {
-          if(this.valueCache['authorNewSub'][note.data.courseId]) {
-            break;
-          } else {
-            return new Promise ((resolve, reject) => 
-             http.get(`courses/getCourseName?courseId=${note.data.courseId}`)
-              .then(resp => {
-                console.log(resp)
-                this.valueCache['authorNewSub'][note.data.courseId] = 
-                  resp.data.courseName
-                resolve(resp)
-              })
-              .catch((err) => {
-                console.error(err)
-                reject(err)
-              })
-            )
-          }
-        }
-        default: {
-          console.log('We are in Default case!')
-          return '#'
-        }
-      }
+      // switch(note.type) {
+      //   case 'authorNewSub': {
+      return await http.get(`courses/getCourseName?courseId=${id}`)
+          .then(resp => resp)
+
+
+    // if(this.valueCache['authorNewSub'][note.data.courseId]) {
+    //  return
+    // } else {
+    //   return new Promise ((resolve, reject) =>
+    //    http.get(`courses/getCourseName?courseId=${note.data.courseId}`)
+    //     .then(resp => {
+    //       console.log(resp)
+    //       this.valueCache['authorNewSub'][note.data.courseId] =
+    //         resp.data.courseName
+    //       resolve(resp)
+    //     })
+    //     .catch((err) => {
+    //       console.error(err)
+    //       reject(err)
+    //     })
+    //   )
+    // }
+      //   }
+      //   default: {
+      //     console.log('We are in Default case!')
+      //     return '#'
+      //   }
+      // }
     },
     /**
      * function highlightMessage: scroll highlighted message into view
@@ -336,7 +354,9 @@ export default {
 
     /**
      * Function markAsRead: set 'read' boolean in message's data
+     *
      * Author: cmc
+     *
      * Last Updated: May 27, 2021
      * @param {string} msg message to mark as read
      */
@@ -357,15 +377,18 @@ export default {
     /**
      * Function replaceString: replace place holder in notification
      *  text with referenced value
+     *
      * Author: cmc
-     * Last Updated: June 26, 2021
+     *
+     * Last Updated: September 2, 2021
      * @param {string} type notification type
      * @param {string} id id of referenced value
      */
-    replaceStr(type, id) {
+    replaceStr(type, id) { //FIXME
       // tryin to be generic in order to use if for all notification types
+      // const courseString = await this.getReference(id);
       const repStr = this.i18n[`notifications.${type}.text`]
-        .replace('<CID>', this.valueCache[type][id])
+        .replace('<CID>', 'Course Name')
       return repStr
     }
   }
