@@ -216,7 +216,7 @@ export default {
     saveFlags({state, commit}) {
       state.flagsToAdd.forEach(flag => {
         // console.log(flag)
-        http.post('flags', flag)
+        http.post('flags/create', flag)
           .then(resp => {
             commit('appendFlag', resp.data)
           })
@@ -232,10 +232,13 @@ export default {
     updateFlags({ commit, state }) {
       const reqs = []
       state.courseFlags.forEach(flag => {
-        // console.log(flag)
+        const id = flag.referenceId
         reqs.push(
           http.patch('flags', flag)
         )
+        // reqs.push(
+        //   http.post(`flags/${id}/`)
+        // )
       })
       http.all(reqs)
         .then( () => console.log('Flags updated'))
