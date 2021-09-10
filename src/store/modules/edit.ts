@@ -8,17 +8,29 @@ export default {
     enrollment: {},
     userEnrolled: false
   },
-  
+
   getters: {
+
+      /**
+       * Function getEnrollmentFeedback: returns the current feedback
+       *
+       * Author: pj
+       *
+       * @param state contains feedback array
+       * @returns feedback array
+       */
+      getEnrollmentFeedback(state: { enrollment: {feedback: Array<Object> } } ) {
+          return state.enrollment.feedback
+      },
 
     /**
      * Function isUserEnrolled: returns if user is enrolled
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: unknown
-     * 
-     * @param state contains userEnrolled boolean 
+     *
+     * @param state contains userEnrolled boolean
      * @returns true if user is enrolled
      */
     isUserEnrolled (state: { userEnrolled: boolean}) {
@@ -27,11 +39,11 @@ export default {
 
     /**
      * Function content: returns content of given course
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 24, 2021
-     * 
+     *
      * @param state contains course Object
      * @returns content Array
      */
@@ -41,11 +53,11 @@ export default {
 
     /**
      * Function course: returns course Object
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 24, 2021
-     * 
+     *
      * @param state contains course Object
      * @returns course Object
      */
@@ -54,26 +66,12 @@ export default {
     },
 
     /**
-     * Function courseCreator: returns ID of course Creator
+     * Function courseFiles: returns array of stored files
      *
      * Author: cmc
      *
-     * Last Updated: August 24, 2021
-     *
-     * @param state course object
-     * @returns userId of course creator
-     */
-    courseCreator(state: { course: { authorId: number } }) {
-      return state.course.authorId
-    },
-
-    /**
-     * Function courseFiles: returns array of stored files
-     * 
-     * Author: cmc 
-     * 
      * Last Updated: March 24, 2021
-     * 
+     *
      * @param state contains course object
      * @returns array of course files
      */
@@ -82,23 +80,13 @@ export default {
     },
 
     /**
-     * Function courseId: returns the courseId string
-     * Author: cmc
-     * Last Updated: August 9, 2021
-     * @param state
-     */
-    courseId( state: { course: { courseId: string } }) {
-      return state.course.courseId
-    },
-
-    /**
      * Function courseList: returns list of courses
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 24, 2021
-     * 
-     * @param state contains courseList 
+     *
+     * @param state contains courseList
      * @returns array of courses
      */
     courseList(state: { courseList: Array<Object>}) {
@@ -107,11 +95,11 @@ export default {
 
     /**
      * Function courseStorage: returns id of course storage
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 24, 2021
-     * 
+     *
      * @param state contains course object
      * @returns course storage id
      */
@@ -122,19 +110,54 @@ export default {
 
   mutations: {
 
+      /**
+       * appendFeedback: Append new Feedback to feedback-array or update existing feedback
+       *
+       * Author: pj
+       *
+       * Last Updated: September 10, 2021
+       *
+       * @param state contains feedback
+       * @param data contains data to be stored in feedback
+       */
+      appendFeedback (
+          state: { enrollment: { feedback: Array<Object> } },
+          data: {
+              step: any,
+              created: number,
+              choice: String,
+              freetext: String,
+              id: number,
+              numberOfFeedbacksEntries: number,
+              //options: Object
+              options: {
+                  questions: String,
+                  answers: String
+              }
+          }
+      ) {
+          const prevFeedback = state.enrollment.feedback
+          if (state.enrollment.feedback.length !== 0) {
+              state.enrollment.feedback[data.numberOfFeedbacksEntries] = data
+          }
+          else {
+              state.enrollment.feedback.push(data)
+          }
+      },
+
     /**
      * Function appendContent: add a content block to content array
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param state contains course containing content array
      * @param data content to add
      */
-    appendContent ( 
-      state: { course: { content: Array<Object> } }, 
-      data:{ name: String, nextStep: any, input: Object} 
+    appendContent (
+      state: { course: { content: Array<Object> } },
+      data:{ name: String, nextStep: any, input: Object}
       ) {
       state.course.content.push(data)
     },
@@ -142,43 +165,43 @@ export default {
     /**
      * Function appendToCourseList: add course object
      *  to courseList array
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 24, 2021
-     * 
+     *
      * @param state contains courseList array
      * @param data course objecte to be added to list
      */
     appendToCourseList(
-      state: { courseList: Array<Object> }, 
+      state: { courseList: Array<Object> },
       data: Object ) {
       state.courseList.push(data)
     },
 
     /**
      * Function delContent: remove Content at given index
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param state contains course object
      * @param step index of content to remove
      */
-    delContent( state: 
-        { course: { content: object[] } }, 
+    delContent( state:
+        { course: { content: object[] } },
         step: number ) {
       state.course.content.splice(step, 1)
     },
 
     /**
      * Function delFile: delete file from state and database
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: April 9, 2021
-     * 
+     *
      * @param state contains course file list
      * @param file file object to remove
      */
@@ -193,61 +216,13 @@ export default {
     },
 
     /**
-     * function flagFlaggableElement(): mutate flagged boolean of element
-     * Author: cmc
-     * Last Updated: August 17, 2021
-     * @param state state variables
-     * @param elem the flaggable element to be mutated
-     */
-    flagFlaggableElement(
-        state: { course: { content: Array<object> } },
-        elem: { id: string, flagged: boolean }
-    ) {
-      // const checkAndFlag = (o: any) => {
-      //   console.log(`we flag ${o}`)
-      //   if (Object.prototype.hasOwnProperty.call(o, 'flagged')) {
-      //     o.flagged = true
-      //     console.log('successs!!!')
-      //     return true
-      //   } else {
-      //     return false
-      //   }
-      // }
-      // console.log(`we change ${elem.id}`)
-      elem.flagged = true
-      // console.log(state.course.content)
-      // for (const el of state.course.content) {
-      //   const vals = Object.values(el.input)
-      //   for (const c of vals) {
-      //     console.log(c)
-      //     if (typeof(c) === 'object') {
-      //       if (Array.isArray(c)) {
-      //         console.log(`${c} is an array!`)
-      //         //@ts-ignore
-      //         for (const d in c) {
-      //           console.log(d)
-      //           if(checkAndFlag(d)) {
-      //             break
-      //           }
-      //         }
-      //       } else {
-      //         if (checkAndFlag(c)) {
-      //           break
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
-    },
-
-    /**
      * Function renameCourse: rename a Course
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
-     * @param state contains course 
+     *
+     * @param state contains course
      * @param newName string for new name
      */
     renameCourse( state: {course: {name: string}}, newName: string) {
@@ -256,11 +231,11 @@ export default {
 
     /**
      * Function setEnrollment: set an enrollment for current user
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param state contains enrollment, userEnrolled
      * @param data enrollment object
      */
@@ -271,26 +246,25 @@ export default {
 
     /**
      * Function setCourse: set state to given course
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
+     *
      * @param state contains course
      * @param data course object
      */
-    setCourse(state: {course: Object}, data: object) {
+    setCourse(state: { course: object}, data: object) {
       state.course = data
-      // console.log(commit)
-      // commit('')
     },
 
     /**
      * Function setCourseList: set list of courses in store
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 24, 2021
-     * 
+     *
      * @param state contains courseList array
      * @param data array of course objects
      */
@@ -301,30 +275,32 @@ export default {
 
     /**
      * Function updateCourseFiles: updates list of course files
-     * 
+     *
      * Author: cmc
-     * 
-     * Last Updated: August 17, 2021
-     * 
+     *
+     * Last Updated: March 24, 2021
+     *
      * @param state contains course object
      * @param data array of files
      */
     updateCourseFiles(state: { course: { files: Array<Object> } }, data: Array<Object>) {
-      // console.log('Start updating Course Files in Store')
+      console.log('Start updating Course Files in Store')
+
       const ids = new Set(state.course.files.map((d: {name: string}) => d.name))
-      state.course.files = [
-        ...state.course.files,
-        ...data.filter((d: {name: string}) => !ids.has(d.name))
-      ] // add new files to state.course.files
+      const merged = [...state.course.files, ...data.filter( (d: {name: string}) => !ids.has(d.name) )]
+
+      // console.log(merged)
+      state.course.files = merged
+
     },
 
     /**
      * Function updateCourseNav: replace content with input content array
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param state contains course, content
      * @param data new content array
      */
@@ -332,35 +308,37 @@ export default {
       state.course.content = data
     },
 
+
     /**
      * Function updateStep: update content block at given index
+     *
      * Author: core
-     * Last Updated: August 17, 2021
+     *
+     * Last Updated: unknown
+     *
      * @param state contains course, content
-     * @param data contains step index, new content object 
+     * @param data contains step index, new content object
      */
-    updateStep( state: { course: { content: Array<object> } } ,
+    updateStep( state: {course: {content: Array<object>}} ,
         data: { step: number, updatedStep: object } ) {
-      // console.log(data.step)
-      // console.log(data.updatedStep)
       state.course.content[data.step] = {
-        ...state.course.content[data.step], 
+        ...state.course.content[data.step],
         ...data.updatedStep
       }
     }
 
   },
-  
+
   actions: {
 
     /**
      * Function deleteCourse: delete Course, remove all files
      *   and storage
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Changed: April 9, 2021
-     * 
+     *
      * @param param0 state variables
      */
     deleteCourse({ state }) {
@@ -376,7 +354,7 @@ export default {
             requests.push(
               http.delete(`storage/${sid}/files/${file.name}`)
                 .then( () => console.log(`removed ${file.originalFilename}`))
-                .catch( (err) => { 
+                .catch( (err) => {
                   // console.error(err)
                   reject(err)
                 })
@@ -417,12 +395,12 @@ export default {
     /**
      * Function copyCourse: copy course and all the files
      *  FIXME: Files are not copied
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: April 21, 2021
-     * @param param0 
-     * @param newName 
+     * @param param0
+     * @param newName
      */
     copyCourse({commit, state, rootState}, newName: string) {
       console.log('Original Course Files:', state.course.files)
@@ -439,19 +417,19 @@ export default {
         files: []
       }
 
-      // create new Storage //TODO: fix here
-      // const store = http.post('storage', { name: newStorage })
-      // const fileReqs = []
-      // const newFiles = []
-      // store
+      // create new Storage
+      const store = http.post('storage', { name: newStorage })
+      const fileReqs = []
+      const newFiles = []
+      store
 
       /* Files are not being copied because of a bug */
       // .then( () => {
       //   // storage created, now copy files
       //   // therefore, we create an array of requests
-      //   state.course.files.forEach( (file: { 
-      //     name: string, 
-      //     container: string, 
+      //   state.course.files.forEach( (file: {
+      //     name: string,
+      //     container: string,
       //     originalFilename: string
       //   }) => {
       //     fileReqs.push(
@@ -467,7 +445,7 @@ export default {
       //           // console.log(blob)
       //           const formData = new FormData()
       //           formData.append('file', blob, file.originalFilename)
-                
+
       //           // re-upload file in new storage
       //           http.post(`storage/${newStorage}/upload/`, formData, {
       //             headers: {
@@ -493,11 +471,11 @@ export default {
       //     )
       //   })
       // })
-      .catch( err => { 
+      .catch( err => {
         // creating new storage failed, return reject
-        return new Promise((resolve, reject) => { 
-          reject(err) 
-        }) 
+        return new Promise((resolve, reject) => {
+          reject(err)
+        })
       })
 
       /* commented out because files are not being copied as of now */
@@ -510,19 +488,19 @@ export default {
       //   // console.log(resp)
       //   // console.log(newFiles)
       //   copiedCourse = {
-      //     ...copiedCourse, 
+      //     ...copiedCourse,
       //     files: newFiles
       //   }
       //   // console.log('NEW COPIED COURSE:', copiedCourse)
 
         return new Promise( (resolve,reject) => {
-          
+
           // console.log('again: this course should be posted ', copiedCourse)
           // FIXME: filelist is not pushed in database
           http.post(`courses`, copiedCourse)
-            .then( (resp) => { 
+            .then( (resp) => {
               // console.log('This response we got: ', resp)
-              resolve(resp.data)
+              resolve('success')
               // FIXME: Copy File List to Course
               // let fileList = []
               // newFiles.forEach(elem => {
@@ -544,24 +522,27 @@ export default {
             .catch( (err) => { reject(err)})
         })
       // })
-      // .catch(err => { 
+      // .catch(err => {
       //   // copying course files failed, return reject
-      //   return new Promise((resolve, reject) => { 
-      //     reject(err) 
+      //   return new Promise((resolve, reject) => {
+      //     reject(err)
       //   })
       // })
     },
 
     /**
      * Function fetchCourse: load course into store
+     *
      * Author: core
+     *
      * Last Updated: unknown
+     *
      * @param param0 state variables
      * @param name course identifier
      * @returns Promise to load course object
      */
-     fetchCourse ({ commit, dispatch, state, rootState}, name: String) {
-      //can you return router function? //TODO direkt hier 
+     fetchCourse ({ commit, state, rootState}, name: String) {
+      //can you return router function? //TODO direkt hier
       return new Promise( (resolve, reject) => {
         commit('setBusy', true)
 
@@ -573,14 +554,12 @@ export default {
             .then(({ data }) => {
               // console.log(data)
               commit('setCourse', data)
-              dispatch('getCourseFlags', state.course.courseId)
-                .then(() => dispatch('checkCourseFlags'))
-                .catch(err => console.error(err))
               resolve('Course loaded')
             })
             .catch( err => {
-              /** redirect off invalid course */
-              console.error(err)
+              /*
+              * redirect off invalid course */
+              console.error(err);
               reject(err)
             })
           })
@@ -593,29 +572,26 @@ export default {
 
     /**
      * Function fetchCourseList: get list of courses
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 24, 2021
-     * 
+     *
      * @param param0 state variables
      */
-    fetchCourseList({ commit, state }) {
+    fetchCourseList({commit, state, rootState}) {
       commit('setBusy', true)
       http.get('courses?filter[include]=author')
         .then( ({data}) => {
           for(const courseObject of data) {
-            const listData = { 
-              category: courseObject.category, 
-              name: courseObject.name, 
-              needsEnrollment: courseObject.needsEnrollment, 
-              courseId: courseObject.courseId 
+            const listData = {
+              category: courseObject.category,
+              name: courseObject.name,
+              needsEnrollment: courseObject.needsEnrollment,
+              courseId: courseObject.courseId
             }
-            if (!state.courseList.some( // add to course list if not present
-                (e: { courseId: String }) => e.courseId === listData.courseId)
-            ) {
-              commit('appendToCourseList', listData)
-            }
+            state.courseList.some((e: { courseId: String }) =>
+              e.courseId === listData.courseId)? '' : commit('appendToCourseList', listData)
           }
         })
         .catch(err => console.error(err))
@@ -624,22 +600,23 @@ export default {
 
     /**
      * Function fetchEnrollment: fetch enrollment created at given date
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param param0 state variables
      * @param courseId identifier for enrollment
      */
      fetchEnrollment({ commit, state, rootState }, courseId: String) {
+      const self = this
       const uid = rootState.auth.userId
       const cid = courseId
       commit('setBusy', true)
-      http.get('enrollments/findOne', { params: 
+      http.get('enrollments/findOne', { params:
           { filter:
-            { where: 
-              { studentId: uid, courseId: cid } 
+            { where:
+              { studentId: uid, courseId: cid }
             }
           }
         })
@@ -656,20 +633,20 @@ export default {
 
     /**
      * Function storeCourse: persist changes to store in database
-     * 
+     *
      * Author: core
-     * 
-     * Last Updated: August 17, 2021
-     * 
+     *
+     * Last Updated: March 24, 2021
+     *
      * @param param0 state variables
      * @returns Promise to save changes
      */
-     storeCourse({ state }) {
+     storeCourse({ commit, state, rootState}) {
       const updated = Date.now()
       const cId = state.course.courseId
       const cContent = state.course.content
 
-      return new Promise( (resolve, reject) => { 
+      return new Promise( (resolve, reject) => {
         http.patch(`courses/${cId}`, {content: cContent, lastChanged: updated})
           .catch(err => {
             console.error('Failed storing course content:', err)
@@ -679,17 +656,17 @@ export default {
             resolve('Course updated successfully')
           })
         })
-      
+
     },
 
     /**
-     * Function storeCourseFiles: persist list of course files 
+     * Function storeCourseFiles: persist list of course files
      *  into database
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 29, 2021
-     * 
+     *
      * @param param0 state variables
      */
     storeCourseFiles({ state }) {
@@ -709,23 +686,23 @@ export default {
             reject(err)
           })
       })
- 
+
     },
 
     /**
      * function updateEnrollment: update enrollment object
-     * 
+     *
      * Author: cmc
-     * 
-     * Last Updated: August 17, 2021
-     * 
-     * @param param0 state variables 
+     *
+     * Last Updated: unknown
+     *
+     * @param param0 state variables
      */
-     updateEnrollment({ state }: { state : { enrollment: { id: string } } } ) {
+     updateEnrollment({ commit, state, rootState } ) {
       const enrol = state.enrollment
 
       http.patch(`enrollments/${enrol.id}`, enrol)
-        .then(() => {
+        .then(resp => {
           console.log('Enrollment updated!')
         })
         .catch(err => {
@@ -735,15 +712,15 @@ export default {
 
     /**
      * Function updateRenamedCourse: rename old course
-     * 
+     *
      * Author: cmc
-     * 
-     * Last Updated: August 17, 2021
-     * 
+     *
+     * Last Updated: March 24, 2021
+     *
      * @param param0 state variables
      * @returns Promise to update renamed course
      */
-    updateRenamedCourse({ state }) {
+    updateRenamedCourse({ commit, state, rootState}) {
 
       const newName = {
         lastChanged: Date.now(),
@@ -758,7 +735,7 @@ export default {
           .catch( (err) => {
             reject(err)
           })
-      }) 
-    }      
+      })
+    }
   }
 }

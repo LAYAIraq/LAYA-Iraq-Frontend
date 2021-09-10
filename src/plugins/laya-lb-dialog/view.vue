@@ -8,13 +8,13 @@ Dependencies: @/mixins/locale.vue
 
 <template>
   <div class="laya-dialog">
-<!--    <div-->
-<!--      class="row"-->
-<!--      :id="title.id"-->
-<!--      v-if="title.show"-->
-<!--    >-->
-<!--      {{ title.text }}-->
-<!--    </div>-->
+    <!--    <div-->
+    <!--      class="row"-->
+    <!--      :id="title.id"-->
+    <!--      v-if="title.show"-->
+    <!--    >-->
+    <!--      {{ title.text }}-->
+    <!--    </div>-->
     <img v-if="bg" class="bg" :src="bg" alt="">
     <div v-else class="bg-fallback"></div>
     <div class="dialog-text">
@@ -24,32 +24,19 @@ Dependencies: @/mixins/locale.vue
         :id="question.id"
       >
         {{ question.text }}
-        <laya-flag
-          :refData="question"
-          :isOpen="flagOpen"
-          @flagged="question.flagged = true"
-          @flagOpen="toggleFlagOpen"
-        ></laya-flag>
+        <laya-flag :refData="question"></laya-flag>
       </div>
       <div class="answers-d-flex-justify-content-around"
            v-for="(answer,i) in answers"
            :key="i">
-        <div class="answer-item">
-          <button
-            type="button"
-            class="btn btn-info btn-lg"
-            @click="onFinish[i]()">
-            {{ answers[i] }}
-          </button>
-          <laya-flag
-            :refData="answer"
-            :isOpen="flagOpen"
-            @flagged="answer.flagged = true"
-            @flagOpen="toggleFlagOpen"
-          >
-          </laya-flag>
-        </div>
+        <button
+          type="button"
+          class="btn btn-info btn-lg"
+          @click="onFinish[i]()">
+          {{ answers[i] }}
+        </button>
       </div>
+
     </div>
   </div>
 
@@ -57,23 +44,24 @@ Dependencies: @/mixins/locale.vue
 
 <script>
 
-import { flagHandling, locale } from '@/mixins'
+// import { checkFlags } from '@/mixins'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'laya-dialog',
 
-  mixins: [
-    flagHandling,
-    locale
-  ],
+  // mixins: [
+  //     checkFlags
+  // ],
 
   computed: {
     ...mapGetters(['content', 'courseFlags']),
 
     /**
      * idx: Return index of content block in course array
+     *
      * Author: cmc
+     *
      * Last Updated: January 16, 2021
      */
     idx() {
@@ -96,29 +84,27 @@ export default {
       answers: [],
       bg: '',
       title: '',
-      unwatch: null
+      numAnswersPerRow: 4
     }
   },
 
   created() {
-    if (!this.previewData) this.fetchData()
-    this.unwatch = this.$store.watch(
-        (state, getters) => getters.content,
-        () => {
-          this.fetchData() // when updated, re-do deep copying
-        },
-        { deep: true }
-    )
+    // fetch data from vuex if not preview
+    if (!this.previewData) {
+      // No attributed Data --> actual view
+      this.refreshData()
+    }
+    this.checkFlags()
   },
 
-  beforeDestroy() {
-    this.unwatch()
+  mounted() {
+    this.checkFlags()
   },
 
   methods: {
     /**
      * function checkFlags: check if flaggable props have a flag, set
-     *  flagged to true if yes, not used
+     *  flagged to true if yes
      * Author: cmc
      * Last Updated: July 7, 2021
      */
@@ -138,11 +124,11 @@ export default {
     },
 
     /**
-     * Function fetchData: make vuex store data mutable
+     * Function refreshData: make vuex store data mutable
      * Author: cmc
      * Last Updated: January 16, 2021
      */
-    fetchData() {
+    refreshData() {
       // dereference store data
       let preData = JSON.parse(JSON.stringify(this.content[this.idx].input))
       //replace data stubs with stored data
@@ -151,7 +137,12 @@ export default {
       this.bg = preData.bg
       this.title = preData.title
     }
-
+  },
+  watch: {
+    content() {
+      //FIXME doesn't actually watch the property
+      this.refreshData()
+    }
   }
 }
 </script>
@@ -196,24 +187,31 @@ export default {
   margin-bottom: 1rem;
   padding: 5px;
   text-align: center;
-  background-color: #ffffff;
+  background-color: #ffffff78;
   border-radius: 3px;
   line-height: 1.5;
 }
+/*
+.answers > button {
+  border: 1px solid #222;
+  margin-right: 1rem;
+  font-size: 90%;
+  line-height: 1.5;
 
-.answer-item {
-  display: block;
-  position: relative;
 }
+
+.answers > button:last-child {
+  margin-right: 0;
+}*/
+
 
 .answers-d-flex-justify-content-around{
   display: inline-block;
   flex-direction: row;
   border: 1px solid #222;
   margin-left: 1em;
-  margin-bottom: 1em;
+  margin-bottom: 2em;
   font-size: 90%;
   flex-wrap: wrap;
 }
-
 </style>

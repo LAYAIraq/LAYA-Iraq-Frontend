@@ -120,7 +120,7 @@ Dependencies:
             :id="'answer-text-'+i"
             class="form-control"
             style="height: 6rem; font-size: 80%"
-            v-model="answers[i].text">
+            v-model="answers[i]">
           </textarea>
         </div>
 
@@ -210,12 +210,7 @@ export default {
      * Last Updated: June 6, 2021
      */
     _addItem(str) {
-      const newItem = {
-        text: str,
-        flagged: false,
-        id: uuidv4()
-      }
-      this.answers.push(newItem)
+      this.answers.push(str)
     }
   },
   

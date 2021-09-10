@@ -106,22 +106,22 @@ Dependencies:
       <p><b>{{ i18n['layaLbDialog.answers'] }}</b></p>
       <div 
         class="form-group row" 
-        v-for="(answer,i) in answers"
-        :key="'answer-'+ answer.id"
+        v-for="(it, i) in answers" 
+        :key="'answer-'+i"
       >
         <!-- text -->
         <label 
           class="col-form-label col-2" 
-          :for="'answer-text-'+ answer.id"
+          :for="'answer-text-'+i"
         >
           {{ i18n['text'] }}
         </label>
         <div class="col-5">
           <textarea 
-            :id="'answer-text-'+ answer.id"
+            :id="'answer-text-'+i"
             class="form-control"
             style="height: 6rem; font-size: 80%"
-            v-model="answer.text">
+            v-model="answers[i]">
           </textarea>
         </div>
 
@@ -155,7 +155,6 @@ Dependencies:
 <script>
 import { locale, tooltipIcon } from '@/mixins'
 import { mapGetters } from 'vuex'
-import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'laya-lb-dialog-edit',
@@ -213,12 +212,7 @@ export default {
      * Last Updated: June 6, 2021
      */
     _addItem(str) {
-      const newItem = {
-        text: str,
-        flagged: false,
-        id: uuidv4()
-      }
-      this.answers.push(newItem)
+      this.answers.push(str)
     },
 
     /**
