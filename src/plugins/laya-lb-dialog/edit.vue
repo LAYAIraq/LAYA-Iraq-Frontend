@@ -10,30 +10,30 @@ Dependencies:
 -->
 
 <template>
-  <div 
-    class="laya-lb-dialog-edit" 
+  <div
+    class="laya-lb-dialog-edit"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div class="row">
-      
-        <h4 >
-          {{ i18n['layaLbDialog.name'] }}
-        </h4>
- 
-      <i 
-        id="questionmark" 
-        class="fas fa-question-circle" 
+
+      <h4 >
+        {{ i18n['layaLbDialog.name'] }}
+      </h4>
+
+      <i
+        id="questionmark"
+        class="fas fa-question-circle"
         :class="langIsAr? 'mr-auto' : 'ml-auto'"
-        @click="toggleTip" 
-        :title="i18n['showTip']" 
+        @click="toggleTip"
+        :title="i18n['showTip']"
         v-b-tooltip.left
       ></i>
     </div>
     <hr>
-    
-    <b-jumbotron 
+
+    <b-jumbotron
       v-if="tooltipOn"
-      :header="i18n['layaLbDialog.name']" 
+      :header="i18n['layaLbDialog.name']"
       :lead="i18n['tipHeadline']">
       <hr class="my-4">
       <span v-html="i18n['layaLbDialog.tooltip']"></span>
@@ -46,8 +46,8 @@ Dependencies:
           <p>
             <b>{{ i18n['title'] }}</b>
           </p>
-          
-          <input 
+
+          <input
             id="dialog-title"
             type="text"
             v-model="title.text"
@@ -70,17 +70,17 @@ Dependencies:
             >
           </label>
         </div>
-        
+
       </div>
       <div class="form-group row">
-        <label 
+        <label
           for="dialog-question"
           class="col-2 col-form-label"
         >
           {{ i18n['task'] }}
         </label>
         <div class="col-10">
-          <textarea 
+          <textarea
             id="dialog-question"
             v-model="question.text"
             class="w-100"
@@ -91,43 +91,43 @@ Dependencies:
 
       <div class="form-group row">
         <label for="dialog-bg" class="col-2 col-form-label"
-          style="word-wrap: anywhere">
+               style="word-wrap: anywhere">
           {{ i18n['layaLbDialog.bgURL'] }}
         </label>
         <div class="col-10">
           <input id="dialog-bg"
-            type="text"
-            class="form-control"
-            v-model="bg"
-            :placeholder="i18n['layaLbDialog.bgPlaceholder']">
+                 type="text"
+                 class="form-control"
+                 v-model="bg"
+                 :placeholder="i18n['layaLbDialog.bgPlaceholder']">
         </div>
       </div>
 
       <p><b>{{ i18n['layaLbDialog.answers'] }}</b></p>
-      <div 
-        class="form-group row" 
-        v-for="(it, i) in answers" 
-        :key="'answer-'+i"
+      <div
+        class="form-group row"
+        v-for="(answer,i) in answers"
+        :key="'answer-'+ answer.id"
       >
         <!-- text -->
-        <label 
-          class="col-form-label col-2" 
-          :for="'answer-text-'+i"
+        <label
+          class="col-form-label col-2"
+          :for="'answer-text-'+ answer.id"
         >
           {{ i18n['text'] }}
         </label>
         <div class="col-5">
-          <textarea 
-            :id="'answer-text-'+i"
+          <textarea
+            :id="'answer-text-'+ answer.id"
             class="form-control"
             style="height: 6rem; font-size: 80%"
-            v-model="answers[i]">
+            v-model="answer.text">
           </textarea>
         </div>
 
         <!-- delete -->
         <div class="col-auto align-self-center">
-          <button 
+          <button
             type="button"
             class="btn btn-danger btn-sm"
             @click="_delItem(i)">
@@ -137,7 +137,7 @@ Dependencies:
       </div>
 
       <div class="row">
-        <button 
+        <button
           type="button"
           class="btn btn-primary btn-sm"
           :class="langIsAr? 'float-right': 'float-left'"
@@ -155,6 +155,7 @@ Dependencies:
 <script>
 import { locale, tooltipIcon } from '@/mixins'
 import { mapGetters } from 'vuex'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'laya-lb-dialog-edit',
@@ -169,9 +170,9 @@ export default {
 
     /**
      * step: return the step of the content block
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: January 16, 2021
      */
     step() {
@@ -195,11 +196,11 @@ export default {
   methods: {
     /**
      * Function _delItem: delete item at given index
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param {*} idx index of item
      */
     _delItem(idx) {
@@ -212,14 +213,19 @@ export default {
      * Last Updated: June 6, 2021
      */
     _addItem(str) {
-      this.answers.push(str)
+      const newItem = {
+        text: str,
+        flagged: false,
+        id: uuidv4()
+      }
+      this.answers.push(newItem)
     },
 
     /**
      * Function fetchData: Fetch data from vuex and make data property
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 19, 2021
      */
     fetchData() {
@@ -248,7 +254,7 @@ export default {
   position: absolute;
   bottom: 0px;
   left: 0px;
-  
+
   /* height: 50%; */
   width: stretch;
 
@@ -281,13 +287,13 @@ export default {
 }
 
 .helptext {
-    border: 1px;
-    border-color: green;
-    padding: 5px;
-  }
+  border: 1px;
+  border-color: green;
+  padding: 5px;
+}
 .helptext i {
-    float: inline-start;
-    margin-right: 10px;
-  }
+  float: inline-start;
+  margin-right: 10px;
+}
 
 </style>

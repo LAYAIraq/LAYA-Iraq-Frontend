@@ -24,19 +24,32 @@ Dependencies: @/mixins/locale.vue
         :id="question.id"
       >
         {{ question.text }}
-        <laya-flag :refData="question"></laya-flag>
+        <laya-flag
+          :refData="question"
+          :isOpen="flagOpen"
+          @flagged="question.flagged = true"
+          @flagOpen="toggleFlagOpen"
+        ></laya-flag>
       </div>
       <div class="answers-d-flex-justify-content-around"
            v-for="(answer,i) in answers"
            :key="i">
-        <button
-          type="button"
-          class="btn btn-info btn-lg"
-          @click="onFinish[i]()">
-          {{ answers[i] }}
-        </button>
+        <div class="answer-item">
+          <button
+            type="button"
+            class="btn btn-info btn-lg"
+            @click="onFinish[i]()">
+            {{ answers[i] }}
+          </button>
+          <laya-flag
+            :refData="answer"
+            :isOpen="flagOpen"
+            @flagged="answer.flagged = true"
+            @flagOpen="toggleFlagOpen"
+          >
+          </laya-flag>
+        </div>
       </div>
-
     </div>
   </div>
 
@@ -44,24 +57,23 @@ Dependencies: @/mixins/locale.vue
 
 <script>
 
-// import { checkFlags } from '@/mixins'
+import { flagHandling, locale } from '@/mixins'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'laya-dialog',
 
-  // mixins: [
-  //     checkFlags
-  // ],
+  mixins: [
+    flagHandling,
+    locale
+  ],
 
   computed: {
     ...mapGetters(['content', 'courseFlags']),
 
     /**
      * idx: Return index of content block in course array
-     *
      * Author: cmc
-     *
      * Last Updated: January 16, 2021
      */
     idx() {
@@ -84,27 +96,29 @@ export default {
       answers: [],
       bg: '',
       title: '',
-      numAnswersPerRow: 4
+      unwatch: null
     }
   },
 
   created() {
-    // fetch data from vuex if not preview
-    if (!this.previewData) {
-      // No attributed Data --> actual view
-      this.refreshData()
-    }
-    this.checkFlags()
+    if (!this.previewData) this.fetchData()
+    this.unwatch = this.$store.watch(
+      (state, getters) => getters.content,
+      () => {
+        this.fetchData() // when updated, re-do deep copying
+      },
+      { deep: true }
+    )
   },
 
-  mounted() {
-    this.checkFlags()
+  beforeDestroy() {
+    this.unwatch()
   },
 
   methods: {
     /**
      * function checkFlags: check if flaggable props have a flag, set
-     *  flagged to true if yes
+     *  flagged to true if yes, not used
      * Author: cmc
      * Last Updated: July 7, 2021
      */
@@ -124,11 +138,11 @@ export default {
     },
 
     /**
-     * Function refreshData: make vuex store data mutable
+     * Function fetchData: make vuex store data mutable
      * Author: cmc
      * Last Updated: January 16, 2021
      */
-    refreshData() {
+    fetchData() {
       // dereference store data
       let preData = JSON.parse(JSON.stringify(this.content[this.idx].input))
       //replace data stubs with stored data
@@ -137,12 +151,7 @@ export default {
       this.bg = preData.bg
       this.title = preData.title
     }
-  },
-  watch: {
-    content() {
-      //FIXME doesn't actually watch the property
-      this.refreshData()
-    }
+
   }
 }
 </script>
@@ -187,31 +196,24 @@ export default {
   margin-bottom: 1rem;
   padding: 5px;
   text-align: center;
-  background-color: #ffffff78;
+  background-color: #ffffff;
   border-radius: 3px;
   line-height: 1.5;
 }
-/*
-.answers > button {
-  border: 1px solid #222;
-  margin-right: 1rem;
-  font-size: 90%;
-  line-height: 1.5;
 
+.answer-item {
+  display: block;
+  position: relative;
 }
-
-.answers > button:last-child {
-  margin-right: 0;
-}*/
-
 
 .answers-d-flex-justify-content-around{
   display: inline-block;
   flex-direction: row;
   border: 1px solid #222;
   margin-left: 1em;
-  margin-bottom: 2em;
+  margin-bottom: 1em;
   font-size: 90%;
   flex-wrap: wrap;
 }
+
 </style>
