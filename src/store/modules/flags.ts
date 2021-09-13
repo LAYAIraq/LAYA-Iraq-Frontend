@@ -222,6 +222,7 @@ export default {
           })
           .catch(err => console.error(err))
       })
+      commit('clearFlagsToAddList')
     },
 
     /**
@@ -232,9 +233,9 @@ export default {
     updateFlags({ commit, state }) {
       const reqs = []
       state.courseFlags.forEach(flag => {
-        const id = flag.referenceId
+        // const id = flag.referenceId
         reqs.push(
-          http.patch('flags', flag)
+          http.post('flags/updateFlag', flag)
         )
         // reqs.push(
         //   http.post(`flags/${id}/`)

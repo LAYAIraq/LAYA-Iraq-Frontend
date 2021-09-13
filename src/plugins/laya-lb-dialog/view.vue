@@ -24,7 +24,7 @@ Dependencies: @/mixins/locale.vue
         :id="question.id"
       >
         {{ question.text }}
-        <laya-flag
+        <laya-flag v-if="!previewData"
           :refData="question"
           :isOpen="flagOpen"
           @flagged="question.flagged = true"
@@ -44,7 +44,7 @@ Dependencies: @/mixins/locale.vue
             @click="onFinish[i]()">
             {{ answer.text }}
           </button>
-          <laya-flag
+          <laya-flag v-if="!previewData"
             :refData="answer"
             :isOpen="flagOpen"
             :interactive="true"

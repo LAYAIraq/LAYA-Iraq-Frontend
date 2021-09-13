@@ -20,7 +20,7 @@ Dependencies:
             </laya-audio-inline>
           </h4>
         </div>
-        <laya-flag
+        <laya-flag v-if="!previewData"
             :refData="title"
             :isOpen="flagOpen"
             @flagged="title.flagged = true"
@@ -28,11 +28,15 @@ Dependencies:
         ></laya-flag>
       </div>
 
-      <div class="flaggable row" :id="task.id">
+      <div
+        class="flaggable row"
+        :class="{'flat': flagOpen != task.id}"
+        :id="task.id"
+      >
         <div class="col">
           <p>{{ task.text }}</p>
         </div>
-        <laya-flag
+        <laya-flag v-if="!previewData"
             :refData="task"
             :isOpen="flagOpen"
             @flagged="task.flagged = true"
@@ -73,6 +77,7 @@ Dependencies:
               v-model.number="solution[i]"
             >
             <laya-flag
+                v-if="!previewData"
                 :refData="item"
                 :isOpen="flagOpen"
                 :interactive="true"

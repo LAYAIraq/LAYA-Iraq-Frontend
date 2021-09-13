@@ -18,7 +18,7 @@ Dependencies:
       v-if="title.show"
     >
       <h4> {{ title.text }}</h4>
-      <laya-flag
+      <laya-flag v-if="!previewData"
         :refData="title"
         :isOpen="flagOpen"
         @flagged="title.flagged = true"

@@ -23,7 +23,7 @@ Dependencies:
             </laya-audio-inline>
           </h4>
         </div>
-        <laya-flag
+        <laya-flag v-if="!previewData"
             :refData="title"
             :isOpen="flagOpen"
             @flagged="title.flagged = true"
@@ -31,11 +31,15 @@ Dependencies:
         ></laya-flag>
       </div>
 
-      <div class="flaggable row" :id="task.id">
+      <div
+        class="flaggable row"
+        :class="{'flat': flagOpen != task.id}"
+        :id="task.id"
+      >
         <div class="col">
           <p>{{ task.text }}</p>
         </div>
-        <laya-flag
+        <laya-flag v-if="!previewData"
             :refData="task"
             :isOpen="flagOpen"
             @flagged="task.flagged = true"
@@ -93,7 +97,7 @@ Dependencies:
                   <i :class="eval[i]"></i>
                 </div>
               </div>
-              <laya-flag
+              <laya-flag v-if="!previewData"
                   :refData="pair"
                   :isOpen="flagOpen"
                   :interactive="true"
@@ -153,7 +157,7 @@ export default {
     locale
   ],
   
-  data () {
+  data() {
     if (this.previewData) //preview
       return {
         ...this.previewData,
@@ -173,7 +177,7 @@ export default {
       freeze: false
     }
   },
-  created () {
+  created() {
     this.defaultOption = this.i18n['layaLaRelate.defaultOption']
     if (!this.previewData) { // no preview 
       this.fetchData()
@@ -198,9 +202,9 @@ export default {
     }
   },
   watch: {
-    content() {
+    content(val) {
       this.fetchData
-      this.$forceUpdate
+      deep: true
     }
   },
   methods: {

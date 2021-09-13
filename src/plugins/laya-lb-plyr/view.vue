@@ -18,7 +18,7 @@ Dependencies:
       :id="title.id"
     >
       <h4 >{{ title.text }}</h4>
-      <laya-flag
+      <laya-flag v-if="!previewData"
           :refData="title"
           :isOpen="flagOpen"
           @flagged="title.flagged = true"
@@ -27,16 +27,14 @@ Dependencies:
     </div>
 
 
-    <div class="flaggable">
-      <div v-if="!flagOpen">
+    <div>
         <div
           :id="playerId"
           :data-plyr-provider="platform"
           :data-plyr-embed-id="src"
           class="plyr__video-embed"
         ></div>
-      </div>
-<!--      <laya-flag-->
+<!--      <laya-flag v-if="!previewData"-->
 <!--          :refData="videoFlag"-->
 <!--          :isOpen="flagOpen"-->
 <!--          :interactive="true"-->

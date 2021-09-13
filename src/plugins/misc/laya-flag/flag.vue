@@ -477,6 +477,7 @@ export default {
     /*transition: transform 0.5s ease;*/
     box-sizing: border-box;
     width: 35vw;
+    min-width: 200px;
     min-height: 60vh;
   }
   .flag-body.collapsed {
