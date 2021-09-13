@@ -59,8 +59,7 @@
                 id="set-flag-question"
                 rows="5"
                 v-model="question"
-                :placeholder="i18n['flag.' +
-                 'questionPlaceholder']"
+                :placeholder="i18n['flag.questionPlaceholder']"
               ></textarea>
 
 <!--              Added if non-anonymous questions are possible-->
@@ -216,13 +215,7 @@ export default {
       'userId'
     ]),
     // ...mapState(['flags']),
-    currentFlag() {
-      const myFlagId = new RegExp(this.refData.id, 'i')
-      let arr = this.courseFlags
-        .filter(flag => myFlagId.test(flag.referenceId))
-      if (arr.length === 1) return arr[0]
-      else return null
-    },
+
     flagAuthor() {
       if (this.currentFlag) {
         return this.currentFlag.authorId
@@ -237,6 +230,7 @@ export default {
       answerSent: false,
       // anonymous: false,
       clicked: false,
+      currentFlag: null,
       newAnswer: '',
       subFocus: false,
       question: ''
@@ -254,6 +248,7 @@ export default {
   },
 
   created() {
+    this.updateCurrentFlag()
     if (this.currentFlag) { // check if user already answered
       for (const answer of this.currentFlag.answers) {
         if (answer.authorId === this.userId) {
@@ -262,6 +257,10 @@ export default {
         }
       }
     }
+  },
+
+  onUpdate() {
+    // this.updateCurrentFlag()
   },
 
   methods: {
@@ -279,18 +278,34 @@ export default {
       this.newAnswer = ''
       this.answerSent = true
     },
+
+    updateCurrentFlag() {
+      const myFlagId = new RegExp(this.refData.id, 'i')
+      let arr = this.courseFlags
+          .filter(flag => myFlagId.test(flag.referenceId))
+      console.log('our array:')
+      console.log(arr)
+      this.currentFlag = (arr.length === 1) ? arr[0] : null
+    },
+
     setFlagQuestion() {
       const newFlag = {
         question: this.question,
         referenceId: this.refData.id,
         courseId: this.courseId,
         authorId: this.userId,
-        enrollmentId: (this.$store.state.enrollment )?
+        enrollmentId: (this.$store.state.enrollment)?
             this.$store.state.enrollment.id :
             null
       }
       this.$store.commit('setFlag', newFlag)
       this.$store.dispatch('saveFlags')
+        .then(() => {
+          console.log('new flag ihr hhhunde!')
+          this.updateCurrentFlag()
+        })
+
+      // this.updateCurrentFlag()
       this.$emit('flagged')
 
     },

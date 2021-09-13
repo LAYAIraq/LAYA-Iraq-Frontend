@@ -202,9 +202,11 @@ export default {
     }
   },
   watch: {
-    content(val) {
-      this.fetchData
-      deep: true
+    content: {
+      deep: true,
+      handler() {
+        this.fetchData
+      }
     }
   },
   methods: {
