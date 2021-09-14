@@ -150,7 +150,7 @@
                       type="text"
                       class="ml-auto"
                       v-model="newAnswer"
-                      :disabled="answerSent"
+                      :disabled="answerSent || unflagged"
                       @focus="subFocus = true"
                       @blur="subFocus = false"
                   >
@@ -216,6 +216,12 @@ export default {
     ]),
     // ...mapState(['flags']),
 
+    currentFlag() {
+      return this.unflagged?
+        this.newFlag:
+        this.courseFlags.filter(flag => flag.referenceId === this.refData.id)[0]
+    },
+
     flagAuthor() {
       if (this.currentFlag) {
         return this.currentFlag.authorId
@@ -230,10 +236,11 @@ export default {
       answerSent: false,
       // anonymous: false,
       clicked: false,
-      currentFlag: null,
+      newFlag: null,
       newAnswer: '',
       subFocus: false,
-      question: ''
+      question: '',
+      unflagged: false
     }
   },
 
@@ -248,7 +255,8 @@ export default {
   },
 
   created() {
-    this.updateCurrentFlag()
+    // this.updateCurrentFlag()
+    this.unflagged = !this.refData.flagged
     if (this.currentFlag) { // check if user already answered
       for (const answer of this.currentFlag.answers) {
         if (answer.authorId === this.userId) {
@@ -289,7 +297,7 @@ export default {
     },
 
     setFlagQuestion() {
-      const newFlag = {
+      const flag = {
         question: this.question,
         referenceId: this.refData.id,
         courseId: this.courseId,
@@ -298,13 +306,16 @@ export default {
             this.$store.state.enrollment.id :
             null
       }
-      this.$store.commit('setFlag', newFlag)
+      this.$store.commit('setFlag', flag)
       this.$store.dispatch('saveFlags')
-        .then(() => {
-          console.log('new flag ihr hhhunde!')
-          this.updateCurrentFlag()
-        })
-
+        // .then(() => {
+        //   console.log('new flag ihr hhhunde!')
+        //   this.updateCurrentFlag()
+        // })
+      this.newFlag = {
+        ...flag,
+        created: Date.now()
+      }
       // this.updateCurrentFlag()
       this.$emit('flagged')
 
