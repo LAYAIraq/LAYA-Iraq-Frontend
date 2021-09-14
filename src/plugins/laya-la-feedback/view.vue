@@ -97,7 +97,6 @@ Dependencies: @/mixins/locale.vue
 <script>
 import { locale } from '@/mixins'
 import { mapGetters } from 'vuex'
-import { mapState } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 
 //import layaWsyisyg from '../misc/laya-html'
@@ -130,16 +129,13 @@ export default {
 
   computed: {
     ...mapGetters(['content']),
-    ...mapGetters(['getEnrollmentFeedback']),
-    //...mapState(['edit'])
+    ...mapGetters(['getEnrollmentFeedback'])
   },
 
   created() {
     this.fetchData()
     this.mapSolutions()
     this.getPrevFeedback()
-
-
   },
   beforeDestroy() {
     //add saving feedback data
@@ -162,12 +158,16 @@ export default {
      */
     getPrevFeedback(){
       this.prevFeedback = JSON.parse(JSON.stringify(this.getEnrollmentFeedback))
-      if (this.prevFeedback.length !== 0) {
+      if (this.prevFeedback[this.numberOfFeedbacksEntries] !== null) {
         this.answered = true
         this.freetext = this.prevFeedback[this.numberOfFeedbacksEntries].freetext
         this.choice = this.prevFeedback[this.numberOfFeedbacksEntries].choice
         this.created = this.prevFeedback[this.numberOfFeedbacksEntries].choice
         this.step = this.prevFeedback[this.numberOfFeedbacksEntries].step
+        if (typeof this.choice === 'undefined'){
+          this.choice = []
+        }
+        console.log(this.choice)
       }
     },
 
@@ -263,13 +263,12 @@ export default {
      * Last Updated: September 10, 2021
      */
     fetchData() {
-      let idx = this.$route.params.step - 1
-      for (let i = 0; i < idx; i++){
+      for (let i = 0; i < this.step; i++){
         if (this.content[i].name === 'laya-course-feedback'){
           this.numberOfFeedbacksEntries++
         }
       }
-      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
+      const preData = JSON.parse(JSON.stringify(this.content[this.step].input))
       this.title = preData.title
       this.task = preData.task
       this.taskAudio = preData.taskAudio
