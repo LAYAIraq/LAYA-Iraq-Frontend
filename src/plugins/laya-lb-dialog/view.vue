@@ -8,13 +8,13 @@ Dependencies: @/mixins/locale.vue
 
 <template>
   <div class="laya-dialog">
-<!--    <div-->
-<!--      class="row"-->
-<!--      :id="title.id"-->
-<!--      v-if="title.show"-->
-<!--    >-->
-<!--      {{ title.text }}-->
-<!--    </div>-->
+    <!--    <div-->
+    <!--      class="row"-->
+    <!--      :id="title.id"-->
+    <!--      v-if="title.show"-->
+    <!--    >-->
+    <!--      {{ title.text }}-->
+    <!--    </div>-->
     <img v-if="bg" class="bg" :src="bg" alt="">
     <div v-else class="bg-fallback"></div>
     <div class="dialog-text">
@@ -103,11 +103,11 @@ export default {
   created() {
     if (!this.previewData) this.fetchData()
     this.unwatch = this.$store.watch(
-        (state, getters) => getters.content,
-        () => {
-          this.fetchData() // when updated, re-do deep copying
-        },
-        { deep: true }
+      (state, getters) => getters.content,
+      () => {
+        this.fetchData() // when updated, re-do deep copying
+      },
+      { deep: true }
     )
   },
 

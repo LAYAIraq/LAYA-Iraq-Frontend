@@ -3,7 +3,7 @@ Filename: view.vue
 Use: Display Course Feedback content block
 Creator: cmc
 Date: unknown
-Dependencies: @/mixins/locale.vue 
+Dependencies: @/mixins/locale.vue
 -->
 
 <template>
@@ -28,7 +28,7 @@ Dependencies: @/mixins/locale.vue
     </b-toast>
 
     <div class="feedback-container-main">
-    
+
       <div class="row mb-3">
         <div class="col">
           <h4>
@@ -37,7 +37,7 @@ Dependencies: @/mixins/locale.vue
           <p>{{ task }}</p>
         </div>
       </div>
-    
+
       <hr>
 
       <div class="row">
@@ -45,16 +45,16 @@ Dependencies: @/mixins/locale.vue
           <div v-for="(item, i) in items" :key="item" class="item">
             <h4 class="text-center item-label">
               {{ item }}
-              
+
             </h4>
 
             <div class="d-flex justify-content-between">
-              <b v-for="cat in categories" :key="cat">{{cat}}</b>
+              <b v-for="cat in categoriesLocal" :key="cat">{{cat}}</b>
             </div>
             <input type="range"
                    class="custom-range"
                    min="0"
-                   :max="categories.length-1"
+                   :max="categoriesLocal.length-1"
                    v-model.number="choice[i]">
           </div>
         </div>
@@ -74,16 +74,16 @@ Dependencies: @/mixins/locale.vue
           </button>
         </div>
       </div>
-      
+
 
       <div class="row">
-       
+
         <button type="button"
           class="btn btn-primary mt-3 ml-auto"
           :class="langIsAr? 'float-right': 'float-left'"
           @click="done">
           {{ i18n['nextContent'] }}
-          <i 
+          <i
             :class="langIsAr?
             'fas fa-arrow-left':
             'fas fa-arrow-right'"
@@ -96,6 +96,8 @@ Dependencies: @/mixins/locale.vue
 
 <script>
 import { locale } from '@/mixins'
+import { mapGetters } from 'vuex'
+import { v4 as uuidv4 } from 'uuid'
 
 //import layaWsyisyg from '../misc/laya-html'
 export default {
@@ -104,49 +106,72 @@ export default {
   mixins: [
     locale
   ],
-  
+
   data () {
     return {
       choice: [], // users choice as index
       freetext: '',
       answered: false,
-      step: this.init.fno
+      //step: this.init.fno,
+      step: this.$route.params.step - 1,
+      id: uuidv4(),
+      prevFeedback: '',
+      categoriesLocal: '',
+      numberOfFeedbacksEntries: 0
     }
 
   },
   props: {
-    title: String,
-    task: String,
-    taskAudio: String,
-    items: Array,
-    categories: Array,
     init: Object,
     onFinish: Array,
     onSave: Function
   },
 
+  computed: {
+    ...mapGetters(['content']),
+    ...mapGetters(['getEnrollmentFeedback'])
+  },
+
   created() {
-    //console.log(Date.parse(this.feedback.created))
-    const mid = Math.floor((this.categories.length-1)/2)
-    let s = this.items.map(() => mid)
-    this.choice = [...s]
-    
-    // this.getPreviousFeedback()
+    this.fetchData()
+    this.mapSolutions()
+    this.getPrevFeedback()
   },
   beforeDestroy() {
     //add saving feedback data
-    
+
   },
   methods: {
+    mapSolutions() {
+      this.categoriesLocal = this.categories
+      const mid = Math.floor((this.categories.length)/2)
+      let s = this.items.map(() => mid)
+      this.solution = [...s]
+    },
 
     /**
      * Function getPreviousFeedback: fetch eventual previous feedback
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: unknown
      */
-    getPreviousFeedback() { //unused b/c of different data model in development
+    getPrevFeedback(){
+      this.prevFeedback = JSON.parse(JSON.stringify(this.getEnrollmentFeedback))
+      if (this.prevFeedback[this.numberOfFeedbacksEntries] !== null) {
+        this.answered = true
+        this.freetext = this.prevFeedback[this.numberOfFeedbacksEntries].freetext
+        this.choice = this.prevFeedback[this.numberOfFeedbacksEntries].choice
+        this.created = this.prevFeedback[this.numberOfFeedbacksEntries].choice
+        this.step = this.prevFeedback[this.numberOfFeedbacksEntries].step
+        if (typeof this.choice === 'undefined'){
+          this.choice = []
+        }
+        console.log(this.choice)
+      }
+    },
+
+  /*  getPreviousFeedback() {
       for (var i of this.init) {
         if(i.step === this.step) {
           this.answered = true
@@ -156,15 +181,15 @@ export default {
           this.created = tmp.created
           this.step = tmp.step
           return
-        } 
+        }
       }
-    },
+    }, */
 
     /**
      * Function done: execute function from onFinish[0]
-     * 
+     *
      * Creator: cmc
-     * 
+     *
      * LastUpdated: unknown
      */
     done() {
@@ -173,10 +198,10 @@ export default {
 
     /**
      * function bundleFeedback: bundle input in Object to persist
-     * 
-     * Author: cmc
-     * 
-     * Last Updated: unknown
+     *
+     * Author: pj
+     *
+     * Last Updated: September 10, 2021
      */
     bundleFeedback() {
       const newFeedback = {
@@ -184,6 +209,8 @@ export default {
           created: Date.now(),
           choice: this.choice,
           freetext: this.freetext,
+          id: this.id,
+          numberOfFeedbacksEntries: this.numberOfFeedbacksEntries,
           options: {
             questions: this.items,
             answers: this.categories
@@ -192,23 +219,65 @@ export default {
         return newFeedback
     },
 
+    /*save() {
+      let step = this.step -1 // to comply to array indexing in store
+      const newInput = this.stepData
+      const updatedStep = {
+        name: this.cid,
+        nextStep: null,
+        input: newInput
+      }
+
+      // choose way depending on new or existing content
+      if(!this.editContent){
+        this.$store.commit('appendContent', updatedStep)
+      }
+      else{
+        this.$store.commit('updateStep', { step, updatedStep })
+      }
+      this.$emit('saved')
+    },*/
+
     /**
      * function storeFeedback: emit feedback to parent component, show toast
-     * 
+     *
      * Author: cmc
-     * 
-     * Last Updated: March 12, 2021  
+     *
+     * Last Updated: September 10, 2021
      */
     storeFeedback() {
       const newFeedback = this.bundleFeedback()
-      this.onSave(newFeedback)
+      this.$store.commit('appendFeedback', newFeedback)
       this.$forceUpdate()
-      !this.answered? 
-        this.$bvToast.show('feedback-new') : 
+      this.$store.dispatch('updateEnrollment')
+      !this.answered?
+        this.$bvToast.show('feedback-new') :
         this.$bvToast.show('feedback-updated')
-    }
+    },
 
-
+    /**
+     * Function fetchData(): fetch data from vuex and make data property
+     *
+     * Author: pj
+     *
+     * Last Updated: September 10, 2021
+     */
+    fetchData() {
+      for (let i = 0; i < this.step; i++){
+        if (this.content[i].name === 'laya-course-feedback'){
+          this.numberOfFeedbacksEntries++
+        }
+      }
+      const preData = JSON.parse(JSON.stringify(this.content[this.step].input))
+      this.title = preData.title
+      this.task = preData.task
+      this.taskAudio = preData.taskAudio
+      this.items = preData.items
+      this.categories = preData.categories
+    },
+    fetchEnrollment() {
+      this.$store.dispatch('fetchEnrollment', this.course.courseId)
+    },
   }
 }
 </script>

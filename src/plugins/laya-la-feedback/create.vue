@@ -1,8 +1,8 @@
 <!--
 Filename: edit.vue
 Use: Edit a Course Feedback content block
-Creator: pj
-Date: 17.08.2021
+Creator: cmc
+Date: unknown
 Dependencies: @/mixins/locale.vue
 -->
 
@@ -28,8 +28,8 @@ Dependencies: @/mixins/locale.vue
       v-if="tooltipOn"
       :header="i18n['layaLaFeedback.name']"
       :lead="i18n['tipHeadline']">
-      <hr class="my-4">
-      <span v-html="i18n['layaLaFeedback.tooltip']"></span>
+        <hr class="my-4">
+        <span v-html="i18n['layaLaFeedback.tooltip']"></span>
 
     </b-jumbotron>
     <hr>
@@ -60,8 +60,8 @@ Dependencies: @/mixins/locale.vue
         </label>
         <div class="col-10">
           <textarea id="feedback-task"
-                    v-model="task"
-                    class="w-100">
+            v-model="task"
+            class="w-100">
           </textarea>
         </div>
       </div>
@@ -133,9 +133,9 @@ Dependencies: @/mixins/locale.vue
         <label class="col-form-label col-2" :for="'item-text-'+i">{{ i18n['text'] }}</label>
         <div class="col-5">
           <input :id="item"
-                 class="form-control"
-                 type="text"
-                 v-model="items[i]">
+            class="form-control"
+            type="text"
+            v-model="items[i]">
         </div>
 
         <!-- delete -->
@@ -151,7 +151,7 @@ Dependencies: @/mixins/locale.vue
         <div class="col-10 offset-2">
           <button type="button"
                   class="btn btn-primary btn-sm"
-                  @click="_addItem('')">
+                  @click="_addItem">
             <i class="fas fa-plus"></i>{{ i18n['layaLaFeedback.edit.addQuestion'] }}
           </button>
         </div>
@@ -165,10 +165,9 @@ Dependencies: @/mixins/locale.vue
 <script>
 import { mapGetters } from 'vuex'
 import { locale, tooltipIcon } from '@/mixins'
-import { v4 as uuidv4 } from 'uuid'
 
 export default {
-  name: 'laya-la-feedback-edit',
+  name: 'laya-la-feedback-new',
 
   mixins: [
     locale,
@@ -219,8 +218,8 @@ export default {
      * Last Updated: unknown
      *
      */
-    _addItem(str) {
-      this.items.push({label: str, category: -1, flagged: false, id: uuidv4()})
+    _addItem() {
+      this.items.push('')
     },
 
     /**
@@ -255,22 +254,24 @@ export default {
      *
      * Last Updated: August 15, 2021
      */
-  /* fetchData() {
+      fetchData() {
       if (this.title === '') { //prefetch Data at creation
         this.title = this.i18n['layaLaFeedback.name']
         this.task = this.i18n['layaLaFeedback.prefetch.task']
         this.items = this.i18n['layaLaFeedback.prefetch.items'].split(',')
         this.categories = this.i18n['layaLaFeedback.prefetch.categories'].split(',')
       }
+    }
+
+
+   /* fetchData() {
+      let idx = this.$route.params.step - 1
+      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
+      this.title = preData.title
+      this.task = preData.task
+      this.items = preData.items
+      this.categories = preData.categories
     }*/
-    fetchData() {
-       let idx = this.$route.params.step - 1
-       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
-       this.title = preData.title
-       this.task = preData.task
-       this.items = preData.items
-       this.categories = preData.categories
-     }
   }
 }
 </script>

@@ -8,15 +8,15 @@
 
 import _Vue from 'vue'
 
-import _create from './edit.vue'
+import _create from './create.vue'
 import _edit from './edit.vue'
 import _view from './view.vue'
 
 export default {
   install(Vue: typeof _Vue, options?: any): void {
     Vue.$laya.registerLA(
-      'laya-course-feedback', 
-      'CourseFeedback', 
+      'laya-course-feedback',
+      'CourseFeedback',
       'layaLaFeedback',
       'fas fa-comment-dots',
       {
