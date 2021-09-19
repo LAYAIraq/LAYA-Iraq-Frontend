@@ -223,11 +223,9 @@ export default {
     },
 
     flagAuthor() {
-      if (this.currentFlag) {
-        return this.currentFlag.authorId
-      } else {
-        return 'unknown'
-      }
+      return this.currentFlag?
+        this.currentFlag.authorId :
+        'unknown'
     }
   },
 
@@ -250,6 +248,14 @@ export default {
         this.$emit('flagOpen', this.refData.id)
       } else {
         this.$emit('flagOpen', false)
+      }
+    },
+
+    courseFlags: {
+      deep: true,
+      handler() {
+        console.log('courseFlags changed!')
+        this.updateCurrentFlag()
       }
     }
   },
@@ -293,7 +299,7 @@ export default {
           .filter(flag => myFlagId.test(flag.referenceId))
       console.log('our array:')
       console.log(arr)
-      this.currentFlag = (arr.length === 1) ? arr[0] : null
+      arr.length === 1 ? this.currentFlag = arr[0] : null
     },
 
     setFlagQuestion() {

@@ -235,9 +235,10 @@ export default {
       const reqs = []
       state.courseFlags.forEach(flag => {
         // const id = flag.referenceId
-        const id = flag.referenceId
+        // const id = flag.referenceId
+        // const flagNoId = (({referenceId, ...o}) => (o)) (flag)
         reqs.push(
-          http.post('flags/update', flag, {params: {filter: {where: {referenceId: id}}}})
+          http.post('flags/updateFlag', flag)
         )
         // reqs.push(
         //   http.post(`flags/${id}/`)
