@@ -245,7 +245,7 @@ export default {
         // )
       })
       http.all(reqs)
-        .then( () => console.log('Flags updated'))
+        // .then( () => console.log('Flags updated'))
         .catch((err) => console.error(err))
       commit('clearFlagList')
     }

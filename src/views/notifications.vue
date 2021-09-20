@@ -237,12 +237,14 @@ export default {
     /**
      * Function cacheValues: get all referencing data for 
      *  notifications, set loading to false if done
-     * Author: cmc 
+     *
+     * Author: cmc
+     *
      * Last Updated: June 26, 2021
      */
     cacheValues() {
       this.loading = true
-      let queries = []
+      // let queries = []
       this.messages.forEach(elem => {
         this.valueCache[elem.data.courseId] =
         this.getReference(elem.data.courseId).then(r => r)
@@ -259,7 +261,7 @@ export default {
      * @param {object} note notification for which it's used
      */
     linkToCourse(note) { // FIXME
-      // console.log("Rytna show href for: ", note)
+      console.log("Rytna show href for: ", note)
       return '/#'
       // const courseName = await this.getReference(note.data.courseId)
       // return(`/courses/${courseName}/1`)
@@ -291,7 +293,9 @@ export default {
     },
     /**
      * function getReference: get course name for id
+     *
      * Author: cmc
+     *
      * Last Updated: June 26, 2021
      */
     async getReference(id) {
@@ -328,7 +332,9 @@ export default {
     },
     /**
      * function highlightMessage: scroll highlighted message into view
+     *
      * Author: cmc
+     *
      * Last Updated: May 30, 2021
      */
     highlightMessage() {
@@ -340,7 +346,9 @@ export default {
 
     /**
      * Function loadMoreNotifications: get more messages from database
+     *
      * Author: cmc
+     *
      * Last Updated: June 10, 2021
      */
     loadMoreNotifications() {
@@ -386,6 +394,7 @@ export default {
      */
     replaceStr(type, id) { //FIXME
       // tryin to be generic in order to use if for all notification types
+      console.log(id)
       // const courseString = await this.getReference(id);
       const repStr = this.i18n[`notifications.${type}.text`]
         .replace('<CID>', 'Course Name')
