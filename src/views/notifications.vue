@@ -201,7 +201,7 @@ export default {
     if (Object.prototype.hasOwnProperty.call(this.$route.query, 'id')) {
       this.highlightId = this.$route.query.id
     }
-    // this.cacheValues()
+    this.cacheValues()
     // this.messages.forEach(note => this.msgList.push(note))
     // this.msgList.forEach(note => {
     //   let courseName = this.getReference(note.data.courseId)
@@ -244,14 +244,21 @@ export default {
      */
     cacheValues() {
       this.loading = true
-      // let queries = []
+      let queries = []
       this.messages.forEach(elem => {
-        this.valueCache[elem.data.courseId] =
-        this.getReference(elem.data.courseId).then(r => r)
+        queries.push(
+        this.getReference(elem.data.courseId)
+          .then(r => {
+            // console.log(r)
+            if(!this.valueCache[elem.data.courseId]) {
+              this.valueCache[elem.data.courseId] = r
+            }
+          })
+        )
       })
-
-      
+      http.all(queries).finally(() => this.loading = false)
     },
+
     /**
      * function linkToCourse: return link to referred course id
      *
@@ -262,34 +269,34 @@ export default {
      */
     linkToCourse(note) { // FIXME
       console.log("Rytna show href for: ", note)
-      return '/#'
-      // const courseName = await this.getReference(note.data.courseId)
-      // return(`/courses/${courseName}/1`)
-      // switch(note.type) {
-      //   case 'authorNewSub': {
-      //     if (this.valueCache['authorNewSub'][note.data.courseId]) {
-      //       // console.log(note.data.courseId)
-      //       let val = this.valueCache['authorNewSub'][note.data.courseId]
-      //       // console.log(`href is ${val}`)
-      //       return(`/courses/${val}/1`)
-      //     } else {
-      //       return '/#'
-      //     }
-      //   }
-      //   case 'authorNewFlag': {
-      //     if (this.valueCache['authorNewFlag'][note.data.courseId]) {
-      //       // console.log(note.data.courseId)
-      //       let val = this.valueCache['authorNewSub'][note.data.courseId]
-      //       // console.log(`href is ${val}`)
-      //       return(`/courses/${val}/1`)
-      //     } else {
-      //       return '/#'
-      //     }
-      //   }
-      //   default: {
-      //     return '/#'
-      //   }
-      // }
+      // return '/#'
+      // // const courseName = await this.getReference(note.data.courseId)
+      // // return(`/courses/${courseName}/1`)
+      switch(note.type) {
+        case 'authorNewSub': {
+          if (this.valueCache[note.data.courseId]) {
+            console.log(note.data.courseId)
+            let val = this.valueCache[note.data.courseId]
+            console.log(`href is ${val}`)
+            return(`/courses/${val}/1`)
+          } else {
+            return null
+          }
+        }
+        case 'authorNewFlag': {
+          if (this.valueCache[note.data.courseId]) {
+            console.log(note.data.courseId)
+            let val = this.valueCache[note.data.courseId]
+            console.log(`href is ${val}`)
+            return(`/courses/${val}/1`)
+          } else {
+            return null
+          }
+        }
+        default: {
+          return '/#'
+        }
+      }
     },
     /**
      * function getReference: get course name for id
@@ -302,8 +309,17 @@ export default {
       // console.log('we wanna get ref for: ', note)
       // switch(note.type) {
       //   case 'authorNewSub': {
-      return await http.get(`courses/getCourseName?courseId=${id}`)
-          .then(resp => resp)
+      return new Promise((resolve, reject) => {
+        http.get(`courses/getCourseName?courseId=${id}`)
+            .then(resp => {
+              resolve(resp.data.courseName)
+            })
+            .catch(err => {
+              reject(err)
+            })
+      })
+
+
 
 
     // if(this.valueCache['authorNewSub'][note.data.courseId]) {
