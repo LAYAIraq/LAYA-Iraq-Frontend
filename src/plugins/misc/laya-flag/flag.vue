@@ -535,7 +535,7 @@ export default {
   }
 
   .unflagged:hover>.flag-interface>.flag-icon {
-    margin-left: calc(100% - 5px);
+    margin-left: calc(100% - 25px);
     /*margin-top: auto;*/
     border: 1px solid tomato;
     background-color: tomato;
@@ -551,7 +551,7 @@ export default {
     border-radius: 30px;
     /*border: 1px solid fuchsia;*/
     background-color: #470047;
-    margin-left: calc(100% - 5px);
+    margin-left: calc(100% - 25px);
     display: block;
   }
 

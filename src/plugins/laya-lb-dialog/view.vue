@@ -31,7 +31,7 @@ Dependencies: @/mixins/locale.vue
           @flagOpen="toggleFlagOpen"
         ></laya-flag>
       </div>
-      <div class="answers d-flex justify-content-around">
+      <div class="answers d-flex flex-wrap justify-content-around">
         <div
           v-for="(answer,i) in answers"
           :key="answer.id"
