@@ -123,7 +123,7 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: August 17, 2021
+     * Last Updated: Septemner 21, 2021
      * @param commit state commit
      * @param rootState rootState to get course
      * @param state state variables
@@ -137,7 +137,9 @@ export default {
       const checkIfFlagged = (elem) => { // helper function to check if a part is flagged
         // console.log('checking: ')
         // console.log(elem)
-        if (Object.prototype.hasOwnProperty.call(elem,'flagged')) {
+        if (!elem) {
+          console.error(`not an element: ${elem}`)
+        } else if (Object.prototype.hasOwnProperty.call(elem,'flagged')) {
           const elemId = elem.id
           for (const flag of flags) {
             if (flag.referenceId === elemId) {
@@ -159,9 +161,9 @@ export default {
           if (typeof(elem) === 'object') {
             if (Array.isArray(elem)) {
               for (const iter of elem) {
-                checkIfFlagged(iter)
+                if (iter) checkIfFlagged(iter)
               }
-            } else {
+            } else if (elem){
               checkIfFlagged(elem)
             }
           }
