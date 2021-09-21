@@ -98,7 +98,7 @@ export default {
   },
   beforeDestroy(){
     if(this.enrollment.length > 0) this.updateEnrollment()
-    this.updateCourseFlags()
+    this.saveFlags()
   },
   computed: {
     ...mapState(['auth', 'note', 'edit', 'flags']),
@@ -211,12 +211,12 @@ export default {
     },
 
     /**
-     * function updateCourseFlags: persist flag state in database
+     * function saveFlags: persist flag state in database
      * Author: cmc
      * Last Updated: July 7, 2021
      */
-    updateCourseFlags() {
-      this.$store.dispatch('saveFlags')
+    saveFlags() {
+      this.$store.dispatch('updateFlags')
     },
 
     /**

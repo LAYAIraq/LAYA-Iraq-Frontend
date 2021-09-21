@@ -42,7 +42,7 @@ Dependencies:
             <input
               id="show-title-tick"
               type="checkbox"
-              v-model="showTitle"
+              v-model="title.show"
             >
           </label>
             
@@ -92,8 +92,7 @@ export default {
   data() {
     return {
       contents: null,
-      title: '',
-      showTitle: false
+      title: { }
     }
   },
 
@@ -119,7 +118,6 @@ export default {
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.contents = preData.contents
       this.title = preData.title
-      this.showTitle = preData.showTitle
     },
 
     /**

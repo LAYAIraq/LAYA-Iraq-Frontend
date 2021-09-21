@@ -12,7 +12,7 @@ Dependencies:
   <div class="laya-quiz-drag-drop">
     <div class="container">
 
-      <div class="title row mb-3" :id="title.id">
+      <div class="flaggable row mb-3" :id="title.id">
         <div class="col">
           <h4>
             {{ title.text }}
@@ -20,7 +20,7 @@ Dependencies:
             </laya-audio-inline>
           </h4>
         </div>
-        <laya-flag
+        <laya-flag v-if="!previewData"
             :refData="title"
             :isOpen="flagOpen"
             @flagged="title.flagged = true"
@@ -28,11 +28,15 @@ Dependencies:
         ></laya-flag>
       </div>
 
-      <div class="task row" :id="task.id">
+      <div
+        class="flaggable row"
+        :class="{'flat': flagOpen != task.id}"
+        :id="task.id"
+      >
         <div class="col">
           <p>{{ task.text }}</p>
         </div>
-        <laya-flag
+        <laya-flag v-if="!previewData"
             :refData="task"
             :isOpen="flagOpen"
             @flagged="task.flagged = true"
@@ -47,15 +51,17 @@ Dependencies:
             v-for="(item,i) in items" 
             :key="item.id"
             :id="item.id" 
-            class="item mb-5"
+            class="flaggable item mb-5"
+            :class="{'flat' : flagOpen != item.id}"
           >
             <h4 class="text-center item-label">
               {{ item.label }}
               <i v-if="checked"
                 class="fas"
                 :class="{
-                'fa-check text-success': eval[i],
-                'fa-times text-danger': !eval[i]}">
+                  'fa-check text-success': eval[i],
+                  'fa-times text-danger': !eval[i]
+                }">
               </i>
             </h4>
 
@@ -71,8 +77,10 @@ Dependencies:
               v-model.number="solution[i]"
             >
             <laya-flag
+                v-if="!previewData"
                 :refData="item"
                 :isOpen="flagOpen"
+                :interactive="true"
                 @flagged="item.flagged = true"
                 @flagOpen="toggleFlagOpen"
             ></laya-flag>
@@ -101,6 +109,7 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import { flagHandling, locale } from '@/mixins'
+import '@/styles/flaggables.css'
 
 export default {
   name: 'laya-quiz-drag-drop',
@@ -210,9 +219,7 @@ export default {
 </script>
 
 <style scoped>
-.item, .task, .title {
-  position: relative;
-}
+
 .item {
   margin-bottom: 2rem;
 }

@@ -12,17 +12,35 @@ Dependencies:
 <template>
   <div class="ly-plyr-view">
 
-    <div class="row" :id="title.id">
-      <h4 v-if="title.show">{{ title.text }}</h4>
-      <laya-flag :refData="title"></laya-flag>
+    <div
+      v-if="title.show"
+      class="flaggable row"
+      :id="title.id"
+    >
+      <h4 >{{ title.text }}</h4>
+      <laya-flag v-if="!previewData"
+          :refData="title"
+          :isOpen="flagOpen"
+          @flagged="title.flagged = true"
+          @flagOpen="toggleFlagOpen"
+      ></laya-flag>
     </div>
 
 
-    <div 
-      :id="playerId" 
-      :data-plyr-provider="platform" 
-      :data-plyr-embed-id="src" 
-      class="plyr__video-embed">
+    <div>
+        <div
+          :id="playerId"
+          :data-plyr-provider="platform"
+          :data-plyr-embed-id="src"
+          class="plyr__video-embed"
+        ></div>
+<!--      <laya-flag v-if="!previewData"-->
+<!--          :refData="videoFlag"-->
+<!--          :isOpen="flagOpen"-->
+<!--          :interactive="true"-->
+<!--          @flagged="videoFlag.flagged = true"-->
+<!--          @flagOpen="toggleFlagOpen"-->
+<!--      ></laya-flag>-->
     </div>
 
     <div class="row">
@@ -47,12 +65,14 @@ Dependencies:
 import Plyr from 'plyr'
 import { mapGetters } from 'vuex'
 import 'plyr/dist/plyr.css'
-import { locale } from '@/mixins'
+import { flagHandling, locale } from '@/mixins'
+import '@/styles/flaggables.css'
 
 export default {
   name: 'laya-plyr',
 
   mixins: [
+    flagHandling,
     locale
   ],
 
@@ -63,7 +83,8 @@ export default {
     return {
       plyr: null,
       src: '',
-      title: ''
+      title: '',
+      videoFlag: {}
     }
   },
   created() {
@@ -132,6 +153,7 @@ export default {
       this.src = preData.src
       this.showTitle = preData.showTitle
       this.title = preData.title
+      this.videoFlag = preData.videoFlag
     },
 
     /**

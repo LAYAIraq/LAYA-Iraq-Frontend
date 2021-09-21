@@ -4,7 +4,8 @@
     :class="{
       'flagged': refData.flagged,
       'unflagged': !refData.flagged,
-      'no-hov-bg': clicked
+      'no-hov-bg': clicked,
+      'interactive': interactive
     }"
   >
     <div class="flag-interface">
@@ -58,8 +59,7 @@
                 id="set-flag-question"
                 rows="5"
                 v-model="question"
-                :placeholder="i18n['flag.' +
-                 'questionPlaceholder']"
+                :placeholder="i18n['flag.questionPlaceholder']"
               ></textarea>
 
 <!--              Added if non-anonymous questions are possible-->
@@ -150,7 +150,7 @@
                       type="text"
                       class="ml-auto"
                       v-model="newAnswer"
-                      :disabled="answerSent"
+                      :disabled="answerSent || unflagged"
                       @focus="subFocus = true"
                       @blur="subFocus = false"
                   >
@@ -203,7 +203,8 @@ export default {
 
   props: {
     refData: Object,
-    isOpen: Boolean
+    interactive: Boolean,
+    isOpen: null
   },
 
   computed: {
@@ -214,19 +215,33 @@ export default {
       'userId'
     ]),
     // ...mapState(['flags']),
+
+    /**
+     * function currentFlag: returns current flag if any is set
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 20, 2021
+     * @returns {null|object} current flag
+     */
     currentFlag() {
-      const myFlagId = new RegExp(this.refData.id, 'i')
-      let arr = this.courseFlags
-        .filter(flag => myFlagId.test(flag.referenceId))
-      if (arr.length === 1) return arr[0]
-      else return null
+      return this.unflagged?
+        this.newFlag:
+        this.filteredFlag
     },
+
+    /**
+     * function flagAuthor: return ID of flag author
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 20, 2021
+     * @returns {boolean|number|string|*}
+     */
     flagAuthor() {
-      if (this.currentFlag) {
-        return this.currentFlag.authorId
-      } else {
-        return 'unknown'
-      }
+      return this.currentFlag?
+        this.currentFlag.authorId :
+        'unknown'
     }
   },
 
@@ -235,19 +250,54 @@ export default {
       answerSent: false,
       // anonymous: false,
       clicked: false,
+      filteredFlag: null,
+      newFlag: null,
       newAnswer: '',
       subFocus: false,
-      question: ''
+      question: '',
+      unflagged: false
     }
   },
 
   watch: {
+
+    /**
+     * watcher clicked: emit flagOpen for parent component
+     *  to avoid multiple open windows
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 20, 2021
+     * @param {boolean} val clicked boolean
+     */
     clicked(val) { // avoid multiple open instances
-      this.$emit('flagOpen', val)
+      if (val) {
+        this.$emit('flagOpen', this.refData.id)
+      } else {
+        this.$emit('flagOpen', false)
+      }
+    },
+
+    /**
+     * watcher courseFlags: deep watcher to update currentFlag
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 20, 2021
+     */
+    courseFlags: {
+      deep: true,
+      handler() {
+        this.updateFilteredFlag()
+      }
     }
   },
 
   created() {
+    this.updateFilteredFlag()
+    this.unflagged = !this.refData.flagged // deep copy flagged boolean
+    this.filteredFlag = this.courseFlags
+        .filter(flag => flag.referenceId === this.refData.id)[0] // set flag if exists
     if (this.currentFlag) { // check if user already answered
       for (const answer of this.currentFlag.answers) {
         if (answer.authorId === this.userId) {
@@ -258,7 +308,19 @@ export default {
     }
   },
 
+  onUpdate() {
+    // this.updateFilteredFlag()
+  },
+
   methods: {
+
+    /**
+     * function addAnswer: send answer to store
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 20, 2021
+     */
     addAnswer() {
       const myAnswer = {
         text: this.newAnswer,
@@ -273,21 +335,56 @@ export default {
       this.newAnswer = ''
       this.answerSent = true
     },
+
+    /**
+     * function updateFilteredFlag: update filteredFlag
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 20, 2021
+     */
+    updateFilteredFlag() {
+      const myFlagId = new RegExp(this.refData.id, 'i')
+      let arr = this.courseFlags
+          .filter(flag => myFlagId.test(flag.referenceId))
+      arr.length === 1 ? this.filteredFlag = arr[0] : null
+    },
+
+    /**
+     * function setFlagQuestion: bundle flag info and store it
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 20, 2021
+     */
     setFlagQuestion() {
-      const newFlag = {
+      const flag = {
         question: this.question,
         referenceId: this.refData.id,
         courseId: this.courseId,
         authorId: this.userId,
-        enrollmentId: (this.$store.state.enrollment )?
+        enrollmentId: (this.$store.state.enrollment)?
             this.$store.state.enrollment.id :
             null
       }
-      this.$store.commit('setFlag', newFlag)
-      this.$store.dispatch('updateCourseFlags')
+      this.$store.commit('setFlag', flag)
+      this.$store.dispatch('saveFlags')
+      this.newFlag = {
+        ...flag,
+        created: Date.now()
+      }
       this.$emit('flagged')
 
     },
+
+    /**
+     * function showFlagQuestion: returns the question string if flag is set
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 20, 2021
+     * @returns {string|*} question
+     */
     showFlagQuestion() {
       if (this.currentFlag) {
         return this.currentFlag.question
@@ -295,10 +392,28 @@ export default {
         return 'FAIL!'
       }
     },
+
+    /**
+     * function timeAndDate: renders simple timestamp
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 20, 2021
+     * @param {number} timestamp answer timestamp
+     * @returns {string} hh:mm, dd-mm-yyyy
+     */
     timeAndDate(timestamp) {
       const time = new Date(timestamp)
       return `${this.locDate(time)}, ${this.locTime(time)}`
     },
+
+    /**
+     * function toggleClicked: toggle clicked boolean
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 20, 2021
+     */
     toggleClicked() {
       this.clicked = !this.clicked
     }
@@ -320,6 +435,10 @@ export default {
     z-index: 0;
     /*max-height: 100px;*/
   }
+  .laya-flag.interactive {
+    z-index: -1;
+  }
+
   .laya-flag.unflagged:hover {
     background-color: rgba(108, 117, 125, 0.25);
     border-radius: 5px;
@@ -328,6 +447,7 @@ export default {
   }
   .laya-flag.no-hov-bg {
     background-color: transparent !important;
+    z-index: 0 !important;
   }
   .flag-interface {
     width: 100%;
@@ -353,6 +473,7 @@ export default {
   .set-flag {
     height: 100%;
     margin: auto;
+    z-index: inherit;
   }
   .set-flag>.form-group.flag-question {
     height: 100% !important;
@@ -427,7 +548,8 @@ export default {
     display: block;
   }
 
-  .flagged>.flag-interface>.flag-icon:hover {
+  .flagged>.flag-interface>.flag-icon:hover,
+  .flagged>.flag-interface>.flag-icon:focus {
     /*border: 1px solid fuchsia;*/
     background: #b900b9 ;
   }
@@ -464,6 +586,7 @@ export default {
     /*transition: transform 0.5s ease;*/
     box-sizing: border-box;
     width: 35vw;
+    min-width: 200px;
     min-height: 60vh;
   }
   .flag-body.collapsed {

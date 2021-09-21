@@ -116,14 +116,14 @@
                 ></button>
                 <b-card class="mt-2 w-100">
                   <span class="note-content">
-                    {{ replaceStr(note.type, note.data.courseId) }}
+                    {{ replaceStr(note) }}
                   </span>
                   <span 
                     class="note-cta"
                     v-if="!loading"
                   >
                     <router-link
-                      :to="displayReference(note)"
+                      :to="linkToCourse(note)"
                     >
                       {{ i18n[`notifications.${note.type}.cta`] }}
                     </router-link>
@@ -202,6 +202,12 @@ export default {
       this.highlightId = this.$route.query.id
     }
     this.cacheValues()
+    // this.messages.forEach(note => this.msgList.push(note))
+    // this.msgList.forEach(note => {
+    //   let courseName = this.getReference(note.data.courseId)
+    //   let courseHref = this.linkToCourse(note)
+    //   note['references'] = { courseName: courseName, courseLink: courseHref }
+    // })
   },
 
   mounted() {
@@ -231,86 +237,114 @@ export default {
     /**
      * Function cacheValues: get all referencing data for 
      *  notifications, set loading to false if done
-     * Author: cmc 
+     *
+     * Author: cmc
+     *
      * Last Updated: June 26, 2021
      */
     cacheValues() {
       this.loading = true
       let queries = []
       this.messages.forEach(elem => {
-        if (!this.valueCache[elem.type]) {
-          this.valueCache[elem.type] = {}
-        }
-        queries.push(this.getReference(elem))
-        // console.log(queries)
+        queries.push(
+        this.getReference(elem.data.courseId)
+          .then(r => {
+            // console.log(r)
+            if(!this.valueCache[elem.data.courseId]) {
+              this.valueCache[elem.data.courseId] = r
+            }
+          })
+        )
       })
-      Promise.all(queries)
-      .then( () => {
-        this.loading = false
-      })
-      
+      http.all(queries).finally(() => this.loading = false)
     },
+
     /**
-     * function displayReference: show referred value in notification
+     * function linkToCourse: return link to referred course id
+     *
      * Author: cmc
-     * Last Updated: June 26, 2021
+     *
+     * Last Updated: September 2, 2021
      * @param {object} note notification for which it's used
      */
-    displayReference(note) {
+    linkToCourse(note) {
       // console.log("Rytna show href for: ", note)
+      // return '/#'
+      // // const courseName = await this.getReference(note.data.courseId)
+      // // return(`/courses/${courseName}/1`)
+      // TODO: for flag related notification, create link to flag
       switch(note.type) {
-        case 'authorNewSub': {
-          if (this.valueCache['authorNewSub'][note.data.courseId]) {
+        // case 'authorNewFlag' || 'studentFlagNewAnswer': {
+        //   if (this.valueCache[note.data.courseId]) {
+        //     // console.log(note.data.courseId)
+        //     let val = this.valueCache[note.data.courseId]
+        //     // console.log(`href is ${val}`)
+        //     return(`/courses/${val}/1`)
+        //   } else {
+        //     return '#'
+        //   }
+        // }
+        default: {
+          if (this.valueCache[note.data.courseId]) {
             // console.log(note.data.courseId)
-            let val = this.valueCache['authorNewSub'][note.data.courseId]
+            let val = this.valueCache[note.data.courseId]
             // console.log(`href is ${val}`)
             return(`/courses/${val}/1`)
           } else {
             return '/#'
           }
         }
-        default: {
-          return '/#'
-        }
       }
     },
     /**
-     * function getReference: create href string for notification
-     *  target cache
+     * function getReference: get course name for id
+     *
      * Author: cmc
-     * Last Updated: June 26, 2021
+     *
+     * Last Updated: September 20, 2021
      */
-    getReference(note) {
+    async getReference(id) {
       // console.log('we wanna get ref for: ', note)
-      switch(note.type) {
-        case 'authorNewSub': {
-          if(this.valueCache['authorNewSub'][note.data.courseId]) {
-            break;
-          } else {
-            return new Promise ((resolve, reject) => 
-             http.get(`courses/getCourseName?id=${note.data.courseId}`)
-              .then(resp => {
-                // console.log(resp)
-                this.valueCache['authorNewSub'][note.data.courseId] = 
-                  resp.data.name
-                resolve(resp)
-              })
-              .catch((err) => {
-                console.error(err)
-                reject(err)
-              })
-            )
-          }
-        }
-        default: {
-          console.log('We are in Default case!')
-          return '#'
-        }
-      }
+      // switch(note.type) {
+      //   case 'authorNewSub': {
+      return new Promise((resolve, reject) => {
+        http.get(`courses/getCourseName?courseId=${id}`)
+            .then(resp => {
+              resolve(resp.data.courseName)
+            })
+            .catch(err => {
+              reject(err)
+            })
+      })
+    // if(this.valueCache['authorNewSub'][note.data.courseId]) {
+    //  return
+    // } else {
+    //   return new Promise ((resolve, reject) =>
+    //    http.get(`courses/getCourseName?courseId=${note.data.courseId}`)
+    //     .then(resp => {
+    //       console.log(resp)
+    //       this.valueCache['authorNewSub'][note.data.courseId] =
+    //         resp.data.courseName
+    //       resolve(resp)
+    //     })
+    //     .catch((err) => {
+    //       console.error(err)
+    //       reject(err)
+    //     })
+    //   )
+    // }
+      //   }
+      //   default: {
+      //     console.log('We are in Default case!')
+      //     return '#'
+      //   }
+      // }
     },
     /**
      * function highlightMessage: scroll highlighted message into view
+     *
      * Author: cmc
+     *
      * Last Updated: May 30, 2021
      */
     highlightMessage() {
@@ -322,8 +356,10 @@ export default {
 
     /**
      * Function loadMoreNotifications: get more messages from database
+     *
      * Author: cmc
-     * Last Updated: June 10, 2021
+     *
+     * Last Updated: September 21, 2021
      */
     loadMoreNotifications() {
       this.loading = true
@@ -331,12 +367,14 @@ export default {
         .catch(err => {
           console.error(err)
         })
-        .finally(this.loading = false)
+        .finally(() => this.loading = false)
     },
 
     /**
      * Function markAsRead: set 'read' boolean in message's data
+     *
      * Author: cmc
+     *
      * Last Updated: May 27, 2021
      * @param {string} msg message to mark as read
      */
@@ -357,16 +395,22 @@ export default {
     /**
      * Function replaceString: replace place holder in notification
      *  text with referenced value
+     *
      * Author: cmc
-     * Last Updated: June 26, 2021
+     *
+     * Last Updated: September 2, 2021
      * @param {string} type notification type
      * @param {string} id id of referenced value
      */
-    replaceStr(type, id) {
-      // tryin to be generic in order to use if for all notification types
-      const repStr = this.i18n[`notifications.${type}.text`]
-        .replace('<CID>', this.valueCache[type][id])
-      return repStr
+    replaceStr(note) {
+      //TODO: be generic in order to use if for all notification types
+      // console.log(note)
+      switch (note.type) { // replace placeholders for different notifications, only CID as of now
+        default: {
+          return this.i18n[`notifications.${note.type}.text`]
+            .replace('<CID>', this.valueCache[note.data.courseId])
+        }
+      }
     }
   }
 

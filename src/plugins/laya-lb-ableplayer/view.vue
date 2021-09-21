@@ -12,9 +12,18 @@ Dependencies:
 <template>
   <div class="ly-ableplayer">
 
-    <div class="row" :id="title.id">
-      <h4 v-if="title.show"> {{ title.text }}</h4>
-      <laya-flag :refData="title"></laya-flag>
+    <div
+      class="flaggable row"
+      :id="title.id"
+      v-if="title.show"
+    >
+      <h4> {{ title.text }}</h4>
+      <laya-flag v-if="!previewData"
+        :refData="title"
+        :isOpen="flagOpen"
+        @flagged="title.flagged = true"
+        @flagOpen="toggleFlagOpen"
+      ></laya-flag>
     </div>
 
     <video 
@@ -46,16 +55,18 @@ Dependencies:
 </template>
 
 <script>
-// import 'ableplayer'
+// import 'ableplayer' FIXME: still broken
 import { mapGetters } from 'vuex'
 import 'ableplayer/build/ableplayer.min.css' //neccessary, otherwise ableplayer is butchered
-import { locale } from '@/mixins'
+import { flagHandling, locale } from '@/mixins'
+import '@/styles/flaggables.css'
 
 export default {
 
   name: 'laya-ableplayer',
 
   mixins: [
+    flagHandling,
     locale
   ],
 

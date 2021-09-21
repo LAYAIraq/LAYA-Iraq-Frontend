@@ -8,42 +8,46 @@ Dependencies: @/mixins/locale.vue
 
 <template>
   <div class="laya-dialog">
-    <!--    <div-->
-    <!--      class="row"-->
-    <!--      :id="title.id"-->
-    <!--      v-if="title.show"-->
-    <!--    >-->
-    <!--      {{ title.text }}-->
-    <!--    </div>-->
+<!--    <div-->
+<!--      class="row"-->
+<!--      :id="title.id"-->
+<!--      v-if="title.show"-->
+<!--    >-->
+<!--      {{ title.text }}-->
+<!--    </div>-->
     <img v-if="bg" class="bg" :src="bg" alt="">
     <div v-else class="bg-fallback"></div>
     <div class="dialog-text">
       <div
         v-if="question"
-        class="question"
+        class="flaggable question"
         :id="question.id"
       >
         {{ question.text }}
-        <laya-flag
+        <laya-flag v-if="!previewData"
           :refData="question"
           :isOpen="flagOpen"
           @flagged="question.flagged = true"
           @flagOpen="toggleFlagOpen"
         ></laya-flag>
       </div>
-      <div class="answers-d-flex-justify-content-around"
-           v-for="(answer,i) in answers"
-           :key="i">
-        <div class="answer-item">
+      <div class="answers d-flex justify-content-around">
+        <div
+          v-for="(answer,i) in answers"
+          :key="answer.id"
+          class="flaggable answer-item"
+          :class="{'flat': flagOpen != answer.id}"
+        >
           <button
             type="button"
             class="btn btn-info btn-lg"
             @click="onFinish[i]()">
-            {{ answers[i] }}
+            {{ answer.text }}
           </button>
-          <laya-flag
+          <laya-flag v-if="!previewData"
             :refData="answer"
             :isOpen="flagOpen"
+            :interactive="true"
             @flagged="answer.flagged = true"
             @flagOpen="toggleFlagOpen"
           >
@@ -59,6 +63,7 @@ Dependencies: @/mixins/locale.vue
 
 import { flagHandling, locale } from '@/mixins'
 import { mapGetters } from 'vuex'
+import '@/styles/flaggables.css'
 
 export default {
   name: 'laya-dialog',
@@ -103,11 +108,11 @@ export default {
   created() {
     if (!this.previewData) this.fetchData()
     this.unwatch = this.$store.watch(
-      (state, getters) => getters.content,
-      () => {
-        this.fetchData() // when updated, re-do deep copying
-      },
-      { deep: true }
+        (state, getters) => getters.content,
+        () => {
+          this.fetchData() // when updated, re-do deep copying
+        },
+        { deep: true }
     )
   },
 
@@ -119,7 +124,9 @@ export default {
     /**
      * function checkFlags: check if flaggable props have a flag, set
      *  flagged to true if yes, not used
+     *
      * Author: cmc
+     *
      * Last Updated: July 7, 2021
      */
     checkFlags() {
@@ -139,7 +146,9 @@ export default {
 
     /**
      * Function fetchData: make vuex store data mutable
+     *
      * Author: cmc
+     *
      * Last Updated: January 16, 2021
      */
     fetchData() {
@@ -168,14 +177,14 @@ export default {
 }
 .bg-fallback {
   /* min-height: 10em; */
-
+  
   text-align: center;
   padding-top: 1rem;
   /* background: linear-gradient(#e66465, #9198e5); */
 }
 
 .dialog-text {
-
+  
   width: stretch;
   /* height: max-content; */
   /* background-color: #ffffffd9; */
@@ -206,14 +215,15 @@ export default {
   position: relative;
 }
 
-.answers-d-flex-justify-content-around{
-  display: inline-block;
-  flex-direction: row;
+.answers > button {
   border: 1px solid #222;
-  margin-left: 1em;
-  margin-bottom: 1em;
+  margin-right: 1rem;
   font-size: 90%;
-  flex-wrap: wrap;
+  line-height: 1.5;
+  /* background-color: white; */
+}
+.answers > button:last-child {
+  margin-right: 0;
 }
 
 </style>

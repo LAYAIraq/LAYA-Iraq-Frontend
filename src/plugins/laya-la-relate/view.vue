@@ -15,7 +15,7 @@ Dependencies:
   >
     <div class="container">
 
-      <div class="title row mb-3" :id="title.id">
+      <div class="flaggable row mb-3" :id="title.id">
         <div class="col">
           <h4>
             {{ title.text }}
@@ -23,7 +23,7 @@ Dependencies:
             </laya-audio-inline>
           </h4>
         </div>
-        <laya-flag
+        <laya-flag v-if="!previewData"
             :refData="title"
             :isOpen="flagOpen"
             @flagged="title.flagged = true"
@@ -31,11 +31,15 @@ Dependencies:
         ></laya-flag>
       </div>
 
-      <div class="task row" :id="task.id">
+      <div
+        class="flaggable row"
+        :class="{'flat': flagOpen != task.id}"
+        :id="task.id"
+      >
         <div class="col">
           <p>{{ task.text }}</p>
         </div>
-        <laya-flag
+        <laya-flag v-if="!previewData"
             :refData="task"
             :isOpen="flagOpen"
             @flagged="task.flagged = true"
@@ -53,7 +57,8 @@ Dependencies:
               v-for="(pair,i) in pairs" 
               :key="pair.id"
               :id="pair.id" 
-              class="form-group row pair"
+              class="form-group row flaggable"
+              :class="{'flat': flagOpen != pair.id}"
             >
               <label 
                 :for="pair.label+i" 
@@ -92,9 +97,10 @@ Dependencies:
                   <i :class="eval[i]"></i>
                 </div>
               </div>
-              <laya-flag
+              <laya-flag v-if="!previewData"
                   :refData="pair"
                   :isOpen="flagOpen"
+                  :interactive="true"
                   @flagged="pair.flagged = true"
                   @flagOpen="toggleFlagOpen"
               ></laya-flag>
@@ -141,6 +147,7 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import { flagHandling, locale } from '@/mixins'
+import '@/styles/flaggables.css'
 
 export default {
   name: 'laya-quiz-relate',
@@ -150,7 +157,7 @@ export default {
     locale
   ],
   
-  data () {
+  data() {
     if (this.previewData) //preview
       return {
         ...this.previewData,
@@ -170,7 +177,7 @@ export default {
       freeze: false
     }
   },
-  created () {
+  created() {
     this.defaultOption = this.i18n['layaLaRelate.defaultOption']
     if (!this.previewData) { // no preview 
       this.fetchData()
@@ -195,9 +202,11 @@ export default {
     }
   },
   watch: {
-    content() {
-      this.fetchData
-      this.$forceUpdate
+    content: {
+      deep: true,
+      handler() {
+        this.fetchData
+      }
     }
   },
   methods: {
@@ -283,7 +292,4 @@ img {
   background-color: #ebece7;
 }
 
-.pair, .task, .title {
-  position: relative;
-}
 </style>
