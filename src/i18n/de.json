@@ -55,6 +55,8 @@
 	"flag.anonymous": "Frage anonym stellen",
 	"flag.creatorAnswer": "Antwort vom Kursersteller",
 	"flag.enterToSubmit": "Enter drücken zum Abschicken",
+	"flag.noQuestion": "Die Frage darf nicht leer sein!",
+	"flag.noQuestionTitle": "Leere Frage",
 	"flag.postAnswer": "Auf die Nachfrage anworten",
 	"flag.provideClarification": "Nachfrage beantworten",
 	"flag.question": "Frage",

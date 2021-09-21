@@ -355,26 +355,33 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: September 20, 2021
+     * Last Updated: September 21, 2021
      */
     setFlagQuestion() {
-      const flag = {
-        question: this.question,
-        referenceId: this.refData.id,
-        courseId: this.courseId,
-        authorId: this.userId,
-        enrollmentId: (this.$store.state.enrollment)?
-            this.$store.state.enrollment.id :
-            null
+      if (this.question === '') {
+        this.$bvToast.toast(this.i18n['flag.noQuestion'], {
+          title: this.i18n['flag.noQuestionTitle'],
+          toaster: 'b-toaster-bottom-center',
+          variant: 'warning'
+        })
+      } else {
+        const flag = {
+          question: this.question,
+          referenceId: this.refData.id,
+          courseId: this.courseId,
+          authorId: this.userId,
+          enrollmentId: (this.$store.state.enrollment) ?
+              this.$store.state.enrollment.id :
+              null
+        }
+        this.$store.commit('setFlag', flag)
+        this.$store.dispatch('saveFlags')
+        this.newFlag = {
+          ...flag,
+          created: Date.now()
+        }
+        this.$emit('flagged')
       }
-      this.$store.commit('setFlag', flag)
-      this.$store.dispatch('saveFlags')
-      this.newFlag = {
-        ...flag,
-        created: Date.now()
-      }
-      this.$emit('flagged')
-
     },
 
     /**

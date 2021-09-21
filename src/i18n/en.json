@@ -56,6 +56,8 @@
 	"flag.anonymous": "Ask question anonymously",
 	"flag.creatorAnswer": "Answer by Course Creator",
 	"flag.enterToSubmit": "Press enter to submit",
+	"flag.noQuestion": "Empty questions are not allowed!",
+	"flag.noQuestionTitle": "Empty Question",
 	"flag.postAnswer": "Give an answer",
 	"flag.provideClarification": "Provide clarification",
 	"flag.question": "Question",
