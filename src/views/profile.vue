@@ -93,7 +93,7 @@ Dependencies:
                 autocomplete="on"
               >
             </div>
-            <strong id="pwdStoreMsg" class="form-text text-center">{{ pwdMsg }}</strong>
+            <strong id="pwdMsg" class="form-text text-center">{{ pwdMsg }}</strong>
           </div>
 
           <!-- New Password -->
@@ -196,6 +196,34 @@ Dependencies:
             </div>
           </div>
 
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">
+              Font Options
+            </label>
+            <div
+              class="col-sm-9 d-inline-flex justify-content-between align-items-center">
+              <div>
+                <label>
+                  Font
+                  <b-form-select
+                    v-model="chosenFont"
+                    :options="fontOptions"
+                  >
+
+                  </b-form-select>
+                </label>
+              </div>
+              <div>
+                <label>
+                  Font Size
+                  <b-dropdown>
+                    10
+                  </b-dropdown>
+                </label>
+              </div>
+            </div>
+          </div>
+
           <!-- Save Button -->
           <div class="form-group">
             <button
@@ -253,6 +281,7 @@ export default {
       repeatPwd: '',
       pwdMsg: '',
       formMsg: '',
+      chosenFont: '',
       busy: false,
       prefs: {}
     }
@@ -356,7 +385,7 @@ export default {
         setTimeout(() => {
           ctx.formMsg = ''
         }, 2000)
-        ctx.$forceUpdate
+        ctx.$forceUpdate()
         ctx.$bvToast.show('submit-ok')
       })
 
