@@ -116,7 +116,7 @@
                 ></button>
                 <b-card class="mt-2 w-100">
                   <span class="note-content">
-                    {{ replaceStr(note.type, note.data.courseId) }}
+                    {{ replaceStr(note) }}
                   </span>
                   <span 
                     class="note-cta"
@@ -267,34 +267,32 @@ export default {
      * Last Updated: September 2, 2021
      * @param {object} note notification for which it's used
      */
-    linkToCourse(note) { // FIXME
-      console.log("Rytna show href for: ", note)
+    linkToCourse(note) {
+      // console.log("Rytna show href for: ", note)
       // return '/#'
       // // const courseName = await this.getReference(note.data.courseId)
       // // return(`/courses/${courseName}/1`)
+      // TODO: for flag related notification, create link to flag
       switch(note.type) {
-        case 'authorNewSub': {
-          if (this.valueCache[note.data.courseId]) {
-            console.log(note.data.courseId)
-            let val = this.valueCache[note.data.courseId]
-            console.log(`href is ${val}`)
-            return(`/courses/${val}/1`)
-          } else {
-            return null
-          }
-        }
-        case 'authorNewFlag': {
-          if (this.valueCache[note.data.courseId]) {
-            console.log(note.data.courseId)
-            let val = this.valueCache[note.data.courseId]
-            console.log(`href is ${val}`)
-            return(`/courses/${val}/1`)
-          } else {
-            return null
-          }
-        }
+        // case 'authorNewFlag' || 'studentFlagNewAnswer': {
+        //   if (this.valueCache[note.data.courseId]) {
+        //     // console.log(note.data.courseId)
+        //     let val = this.valueCache[note.data.courseId]
+        //     // console.log(`href is ${val}`)
+        //     return(`/courses/${val}/1`)
+        //   } else {
+        //     return '#'
+        //   }
+        // }
         default: {
-          return '/#'
+          if (this.valueCache[note.data.courseId]) {
+            // console.log(note.data.courseId)
+            let val = this.valueCache[note.data.courseId]
+            // console.log(`href is ${val}`)
+            return(`/courses/${val}/1`)
+          } else {
+            return '/#'
+          }
         }
       }
     },
@@ -303,7 +301,7 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: June 26, 2021
+     * Last Updated: September 20, 2021
      */
     async getReference(id) {
       // console.log('we wanna get ref for: ', note)
@@ -318,10 +316,6 @@ export default {
               reject(err)
             })
       })
-
-
-
-
     // if(this.valueCache['authorNewSub'][note.data.courseId]) {
     //  return
     // } else {
@@ -365,7 +359,7 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: June 10, 2021
+     * Last Updated: September 21, 2021
      */
     loadMoreNotifications() {
       this.loading = true
@@ -373,7 +367,7 @@ export default {
         .catch(err => {
           console.error(err)
         })
-        .finally(this.loading = false)
+        .finally(() => this.loading = false)
     },
 
     /**
@@ -408,13 +402,15 @@ export default {
      * @param {string} type notification type
      * @param {string} id id of referenced value
      */
-    replaceStr(type, id) { //FIXME
-      // tryin to be generic in order to use if for all notification types
-      console.log(id)
-      // const courseString = await this.getReference(id);
-      const repStr = this.i18n[`notifications.${type}.text`]
-        .replace('<CID>', 'Course Name')
-      return repStr
+    replaceStr(note) {
+      //TODO: be generic in order to use if for all notification types
+      // console.log(note)
+      switch (note.type) { // replace placeholders for different notifications, only CID as of now
+        default: {
+          return this.i18n[`notifications.${note.type}.text`]
+            .replace('<CID>', this.valueCache[note.data.courseId])
+        }
+      }
     }
   }
 

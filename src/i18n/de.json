@@ -249,7 +249,7 @@
 	"notifications.loadMore": "Weitere Benachrichtigungen laden",
 	"notifications.none": "Sie haben keine Benachrichtigungen!",
 	"notifications.studentNewFlagAnswer.cta": "Klicken, um die Antwort zu sehen!",
-	"notifications.studentNewFlagAnswer.text": "Sie haben eine neue Antwort auf Ihre Frage im Kurs <CID> erhalten: <ANS>.",
+	"notifications.studentNewFlagAnswer.text": "Sie haben eine neue Antwort auf Ihre Frage im Kurs <CID> erhalten.",
 	"notifications.studentNewFlagAnswer.title": "Neue Antwort auf Nachfrage",
 	"placeholder": "Neuer Kursname",
 	"privacy.title": "Datenschutzbestimmungen",

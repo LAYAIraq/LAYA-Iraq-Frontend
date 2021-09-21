@@ -252,7 +252,7 @@
 	"notifications.loadMore": "Load more notifications",
 	"notifications.none": "You have no notifications",
 	"notifications.studentNewFlagAnswer.cta": "Click to see the Answer!",
-	"notifications.studentNewFlagAnswer.text": "You have a new answer to your question in Course <CID>: <ANS>.",
+	"notifications.studentNewFlagAnswer.text": "You have a new answer to your question in Course <CID>.",
 	"notifications.studentNewFlagAnswer.title": "New clarification",
 	"placeholder": "New Course Name",
 	"privacy.title": "Privacy",
