@@ -8,19 +8,19 @@
 
 import { mapGetters } from 'vuex'
 export default {
-    ...mapGetters(['content']),
-    
-    created() { // watch content in vuex store
-        this.unwatch = this.$store.watch(
-            (state, getters) => getters.content,
-            () => {
-                this.fetchData() // when updated, re-do deep copying
-            },
-            { deep: true }
-        )
-    },
+  ...mapGetters(['content']),
 
-    beforeDestroy() {
-        this.unwatch()
-    }
+  created() { // watch content in vuex store
+    this.unwatch = this.$store.watch(
+      (state, getters) => getters.content,
+      () => {
+        this.fetchData() // when updated, re-do deep copying
+      },
+      { deep: true }
+    )
+  },
+
+  beforeDestroy() {
+    this.unwatch()
+  }
 }

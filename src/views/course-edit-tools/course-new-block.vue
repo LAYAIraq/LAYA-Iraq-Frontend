@@ -57,7 +57,7 @@ Dependencies:
         </b-dropdown-header>
 
         <b-dropdown-item 
-          v-for="ass in $laya.la"
+          v-for="ass in applicableAssessments"
           :key="ass.id"
           :to="'/courses/'+name+'/'+nextId+'/new/'+ass.id"
         >
@@ -160,7 +160,25 @@ export default {
   ],
 
   computed: {
-    ...mapGetters(['content']),
+    ...mapGetters(['content', 'course']),
+
+    /**
+     * function applicableAssessments(): strip feedback from course blocks
+     *  if no enrollment in course
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: September 21, 2021
+     */
+    applicableAssessments() {
+      if(this.course.needsEnrollment){
+        return this.$laya.la
+      } else {
+        // eslint-disable-next-line
+        const {['laya-course-feedback']: _, ...newData} = this.$laya.la // strip laya-course-feedback from la
+        return newData
+      }
+    },
 
     /**
      * nextId: return step # for next content
