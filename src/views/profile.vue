@@ -1,9 +1,9 @@
 <!--
-Filename: profile.vue 
+Filename: profile.vue
 Use: User Profile Settings, such as password and avatar
 Creator: core
 Date: unknown
-Dependencies: 
+Dependencies:
   axios,
   vuex,
   vue-password-strength-meter,
@@ -49,7 +49,8 @@ Dependencies:
 
           <!-- Name -->
           <div class="form-group row">
-            <label for="username" class="col-sm-3 col-form-label">{{ i18n['namePH'] }}</label>
+            <label for="username"
+                   class="col-sm-3 col-form-label">{{ i18n['namePH'] }}</label>
             <div class="col-sm-9">
               <input
                 id="username"
@@ -64,7 +65,8 @@ Dependencies:
 
           <!-- Email -->
           <div class="form-group row">
-            <label for="email" class="col-sm-3 col-form-label">{{ i18n['emailPH'] }}</label>
+            <label for="email"
+                   class="col-sm-3 col-form-label">{{ i18n['emailPH'] }}</label>
             <div class="col-sm-9">
               <input
                 id="email"
@@ -126,8 +128,9 @@ Dependencies:
           <div class="form-group row">
             <label for="pwdMeter" class="col-sm-3 col-form-label">{{ i18n['profile.pwdStrength'] }}</label>
             <div class="col-sm-9">
-              
-              <password id="pwdMeter" v-model="repeatPwd" :strength-meter-only="true"></password>
+
+              <password id="pwdMeter" v-model="repeatPwd" :strength-meter-only="true" @feedback="showFeedback"></password>
+              <strong id="testPwdMeter" class="form-text text-center"> {{ warnings }} </strong>
               <strong id="pwdDiffMsg" class="form-text text-center">{{ pwdDiffMsg }}</strong>
               <strong id="pwdStoreMsg" class="form-text text-center">{{ pwdMsg }}</strong>
             </div>
@@ -135,7 +138,7 @@ Dependencies:
 
           <hr>
 
-          <!-- avatar upload TODO: FIX Cropper Problems  
+          <!-- avatar upload TODO: FIX Cropper Problems
 
           <div class="form-group row">
             <div class="col-sm-3">
@@ -149,7 +152,7 @@ Dependencies:
             </div>
 
           </div>
-        
+
 
           <hr>
           -->
@@ -211,11 +214,11 @@ Dependencies:
       </div>
     </div>
     <b-toast variant="danger" id="submit-failed" :title="i18n['savingFailed']"
-      class="author-toast" auto-hide-delay="1500" static>
+             class="author-toast" auto-hide-delay="1500" static>
       {{ i18n['profile.submitFail']}}
     </b-toast>
     <b-toast variant="success" id="submit-ok" :title="i18n['layaUploadFileList.success']"
-      class="author-toast" auto-hide-delay="1500" static>
+             class="author-toast" auto-hide-delay="1500" static>
       {{ i18n['profile.submitOk']}}
     </b-toast>
   </div>
@@ -223,11 +226,11 @@ Dependencies:
 
 <script>
 import http from 'axios'
-import { locale } from '@/mixins'
+import { locale, pwdStrength } from '@/mixins'
 import api from '../backend-url.ts'
 import Password from 'vue-password-strength-meter'
 import { mapState } from 'vuex'
-// import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
+//import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
 
 export default {
   name: 'profile-view',
@@ -238,7 +241,8 @@ export default {
   },
 
   mixins: [
-    locale
+    locale,
+    pwdStrength
   ],
 
   data() {
@@ -259,9 +263,9 @@ export default {
 
     /**
      * avatarURL: return URL of user avatar
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     avatarURL() {
@@ -271,9 +275,9 @@ export default {
 
     /**
      * passwordsDiffer: returns true if passwords differ
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 24, 2021
      */
     passwordsDiffer() {
@@ -282,9 +286,9 @@ export default {
 
     /**
      * pwdDiffMsg: returns a message if passwords differ
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 24, 2021
      */
     pwdDiffMsg() {
@@ -298,19 +302,19 @@ export default {
     this.$store.dispatch('saveProfile')
   },
 
-  created() {
-    // make profile settings mutable 
+  created () {
+    // make profile settings mutable
     this.avatar = this.profile.avatar
-    this.prefs =  JSON.parse(JSON.stringify(this.profile.prefs))
+    this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
   },
 
   methods: {
-    
+
     /**
      * Function submit: get password change request and fire it
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     submit() {
@@ -324,44 +328,46 @@ export default {
       if (ctx.oldPwd !== '' && ctx.newPwd !== '') {
         requests.push(
           http
-            .post('accounts/change-password', {
-              oldPassword: ctx.oldPwd,
-              newPassword: ctx.newPwd
-            })
-            .catch(err => {
-              console.error(err)
-              ctx.pwdMsg = ctx.i18n['profile.pwdFail']
-            })
+          .post('accounts/change-password', {
+            oldPassword: ctx.oldPwd,
+            newPassword: ctx.newPwd
+          })
+          .catch(err => {
+            console.error(err)
+            ctx.pwdMsg = ctx.i18n['profile.pwdFail']
+          })
         )
       }
       console.log(requests)
       /* fire requests */
       http
-        .all(requests)
-        .then(
-          http.spread(() => {
-            ctx.formMsg = ctx.i18n['profile.submitOk']
-          })
-        )
-        .catch(function(err) {
-          console.log(err)
-          ctx.$bvToast.show('submit-failed')
+      .all(requests)
+      .then(
+        http.spread(() => {
+          ctx.formMsg = ctx.i18n['profile.submitOk']
         })
-        .then(() => {
-          ctx.busy = false
-          setTimeout(() => {
-            ctx.formMsg = ''
-          }, 2000)
-          ctx.$forceUpdate
-          ctx.$bvToast.show('submit-ok')
-        })
+      )
+      .catch(function(err) {
+        console.log(err)
+        ctx.$bvToast.show('submit-failed')
+      })
+      .then(() => {
+        ctx.busy = false
+        setTimeout(() => {
+          ctx.formMsg = ''
+        }, 2000)
+        ctx.$forceUpdate
+        ctx.$bvToast.show('submit-ok')
+      })
 
       /* update state */
       ctx.$store.commit('setPrefs', ctx.prefs)
     },
 
-   
-  }
+    showFeedback({ suggestions, warning }) {
+      this.pwdStrength({ suggestions, warning })
+    }
+  },
 }
 </script>
 
