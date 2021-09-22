@@ -316,6 +316,13 @@ export default {
         null : `${api}/storage/img/download/${this.avatar}`
     },
 
+    /**
+     * introFontOptions(): add placeholder in locale to fontOptions
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 22, 2021
+     */
     introFontOptions() {
       return [
         {value: null, text: 'YOUR INTRO TEXT HERE'},
@@ -417,6 +424,15 @@ export default {
       ctx.$store.commit('setPrefs', ctx.prefs)
     },
 
+    /**
+     * function showFeedback: load feedback for pwd strength
+     *
+     * Author: pj
+     *
+     * Last Updated: July 26, 2021
+     * @param suggestions
+     * @param warning
+     */
     showFeedback({ suggestions, warning }) {
       this.pwdStrength({ suggestions, warning })
     }
