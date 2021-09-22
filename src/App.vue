@@ -20,6 +20,8 @@ Dependencies:
 import lyHeader from '@/components/header'
 import lyFooter from '@/components/footer'
 import { mapGetters } from 'vuex'
+import 'open-dyslexic/open-dyslexic-regular.css'
+import '@/styles/fonts.css'
 
 export default {
   name: 'app',

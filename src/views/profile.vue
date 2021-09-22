@@ -196,30 +196,38 @@ Dependencies:
             </div>
           </div>
 
+          <hr>
+          <!-- Font Options -->
           <div class="form-group row">
             <label class="col-sm-3 col-form-label">
               Font Options
             </label>
             <div
               class="col-sm-9 d-inline-flex justify-content-between align-items-center">
-              <div>
+              <div class="input-inline">
                 <label>
                   Font
                   <b-form-select
                     v-model="chosenFont"
-                    :options="fontOptions"
+                    :options="introFontOptions"
                   >
-
                   </b-form-select>
                 </label>
               </div>
+              <!-- Font Size -->
               <div>
                 <label>
                   Font Size
-                  <b-dropdown>
-                    10
-                  </b-dropdown>
+                  <b-form-input type="range" v-model="chosenFontSize" min="0" :max="fontSizeOptions.length-1" ></b-form-input>
                 </label>
+                <div class="d-flex justify-content-between w-100">
+                  <div
+                    v-for="(opt, i) in fontSizeOptions"
+                    :key="`text-option-${i}`"
+                  >
+                    {{ opt }}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -258,6 +266,9 @@ import { locale, pwdStrength } from '@/mixins'
 import api from '../backend-url.ts'
 import Password from 'vue-password-strength-meter'
 import { mapState } from 'vuex'
+import fontOptions from '@/misc/font-options'
+import fontSizeOptions from '@/misc/font-options'
+import 'open-dyslexic/open-dyslexic-regular.css'
 //import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
 
 export default {
@@ -281,9 +292,12 @@ export default {
       repeatPwd: '',
       pwdMsg: '',
       formMsg: '',
-      chosenFont: '',
+      chosenFont: null,
+      chosenFontSize: '',
       busy: false,
-      prefs: {}
+      prefs: {},
+      ...fontOptions,
+      ...fontSizeOptions
     }
   },
 
@@ -300,6 +314,13 @@ export default {
     avatarURL() {
       return (!this.avatar || this.avatar === '') ?
         null : `${api}/storage/img/download/${this.avatar}`
+    },
+
+    introFontOptions() {
+      return [
+        {value: null, text: 'YOUR INTRO TEXT HERE'},
+        ...this.fontOptions
+      ]
     },
 
     /**
@@ -335,6 +356,9 @@ export default {
     // make profile settings mutable
     this.avatar = this.profile.avatar
     this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
+    if (!this.prefs.media) { // avoid render error when no prefs set
+      this.prefs.media = {}
+    }
   },
 
   methods: {
@@ -401,6 +425,7 @@ export default {
 </script>
 
 <style scoped>
+
 .avatar {
   width: 7rem;
   height: 7rem;
