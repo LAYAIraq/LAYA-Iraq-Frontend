@@ -25,8 +25,8 @@ export default {
   },
 
   methods: {
-    pwdStrength ({ suggestions, warning }) {
-      if (this.repeatPwd !== '') {
+    pwdSuggestions ({ suggestions, warning }) {
+      if (this.newPwd !== '') {
         let k, j// check for different language
         for (j = 0; j < this.possibleWarnings.length; j++) {
           if (warning === this.possibleWarnings[j]) {

@@ -20,6 +20,10 @@ export default {
         video: true,
         audio: false,
       },
+      font: {
+        chosen: 'standard',
+        size: 18
+      }
     },
     lang: 'de',
     avatar: '',
@@ -99,16 +103,9 @@ export default {
      * @param state contains preferences
      * @param media: object containing all possible options 
      */
-    setPrefs(state: { prefs: { media: object } }, 
-        prefs: {
-          media: { 
-            text: object,
-            simple: object,
-            video: object,
-            audio: object
-          } 
-        }) {
-      state.prefs.media = { ...prefs.media }
+    setPrefs(state: { prefs: object },
+        prefs: object) {
+      state.prefs = { ...prefs }
     },
 
     /**
@@ -205,6 +202,9 @@ export default {
           prefs: {
             media: {
               ...state.prefs.media
+            },
+            font: {
+              ...state.prefs.font
             }
           }
         })
