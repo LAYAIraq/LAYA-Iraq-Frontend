@@ -1,5 +1,10 @@
 # Changes
 
+## v1.4.0
+- Added Flag Feature
+- Added Password Strength Suggestions
+- Added Notifications for Flags
+
 ## v1.2.2
 
 - Added Arabic Localization
