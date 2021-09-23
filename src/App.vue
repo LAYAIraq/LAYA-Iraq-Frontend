@@ -9,7 +9,10 @@ Dependencies:
 -->
 
 <template>
-  <div id="app" :class="getReadingDir()">
+  <div
+      id="app"
+      :class="getClasses()"
+  >
     <ly-header></ly-header>
     <router-view></router-view>
     <ly-footer></ly-footer>
@@ -32,7 +35,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['profileLang'])
+    ...mapGetters(['fontOptions', 'profileLang'])
   },
 
   watch: {
@@ -45,11 +48,18 @@ export default {
 
   methods: {
 
+    getClasses() {
+      return this.getReadingDir() + ` laya-font-${this.fontOptions.chosen}`
+        + ` font-size-${this.fontOptions.size}`
+    },
     /**
      * Function getReadingDir: set dir prop depending on locale
      *  (rtl if ar)
+     *
      * Author: cmc
+     *
      * Last Updated: June 3, 2021
+     * @returns {string} class name for reading direction
      */
     getReadingDir() {
       if (this.profileLang === 'ar') {
@@ -112,10 +122,7 @@ export default {
 <style>
 html,
 body {
-  font-family: "Karla", sans-serif !important;
-
-  font-size: 18px;
-  line-height: 26px;
+  line-height: 1.5;
 }
 
 .ly-bg-grey {
@@ -128,7 +135,7 @@ body {
 
 .dropdown-menu {
   min-width: 5rem;
-  border-radius: 2px solid black;
+  border-radius: 2px;
 }
 
 .left-to-right {

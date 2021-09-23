@@ -265,8 +265,17 @@ Dependencies:
                   {{ i18n['profile.font'] }}
                   <b-form-select
                     v-model="prefs.font.chosen"
-                    :options="introFontOptions"
-                  > <!-- TODO refactor to b-dropdown to show fonts -->
+                  >
+                    <b-form-select-option
+                      v-for="(opt, i) in introFontOptions"
+                      :key="i"
+                      :value="opt.value"
+                      :class="`laya-font-${opt.value}`"
+                      >
+                      <span :class="opt.value? `laya-font-${opt.value}`:''">
+                        {{ opt.text }}
+                      </span>
+                    </b-form-select-option>
                   </b-form-select>
                 </label>
               </div>

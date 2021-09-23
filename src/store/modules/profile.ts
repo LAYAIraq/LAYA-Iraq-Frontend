@@ -31,6 +31,19 @@ export default {
   getters: {
 
     /**
+     * Functions fontOptions: return fontOptions for logged users
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 23, 2021
+     * @param state preferences as object
+     * @returns {object} fontOptions
+     */
+    fontOptions(state: { prefs: { font: object } }) {
+      return state.prefs.font
+    },
+
+    /**
      * Function profileLang: get stored language
      * 
      * Author: cmc
