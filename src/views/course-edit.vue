@@ -40,7 +40,9 @@ Dependencies:
 
       <course-delete :name="name"></course-delete>
 
-      <course-stats></course-stats>
+      <!--<course-stats></course-stats>-->
+
+      <course-preferences></course-preferences>
 
     </div>
 
@@ -70,8 +72,9 @@ import {
   courseEditNav, 
   courseEditType, 
   courseNewBlock,
+  coursePreferences,
   courseRename,
-  courseStats
+  // courseStats
   } from './course-edit-tools/'
 
 
@@ -86,8 +89,9 @@ export default {
     courseEditNav,
     courseEditType,
     courseNewBlock,
+    coursePreferences,
     courseRename,
-    courseStats
+    // courseStats
   },
   mixins: [
     locale
