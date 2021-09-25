@@ -150,7 +150,7 @@
                       type="text"
                       class="ml-auto"
                       v-model="newAnswer"
-                      :disabled="answerSent || unflagged"
+                      :disabled="answerSent || !refData.flagged"
                       @focus="subFocus = true"
                       @blur="subFocus = false"
                   >
@@ -225,9 +225,9 @@ export default {
      * @returns {null|object} current flag
      */
     currentFlag() {
-      return this.unflagged?
-        this.newFlag:
-        this.filteredFlag
+      return this.filteredFlag?
+        this.filteredFlag:
+        this.newFlag
     },
 
     /**
@@ -254,8 +254,7 @@ export default {
       newFlag: null,
       newAnswer: '',
       subFocus: false,
-      question: '',
-      unflagged: false
+      question: ''
     }
   },
 
@@ -295,7 +294,6 @@ export default {
 
   created() {
     this.updateFilteredFlag()
-    this.unflagged = !this.refData.flagged // deep copy flagged boolean
     this.filteredFlag = this.courseFlags
         .filter(flag => flag.referenceId === this.refData.id)[0] // set flag if exists
     if (this.currentFlag) { // check if user already answered

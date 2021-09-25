@@ -139,7 +139,7 @@ export default {
      */
     duplicateCheck() {
       for(let entry of this.courseList) {
-        if (this.newCourse.name == entry.name) {
+        if (this.newCourse.name === entry.name) {
           this.msg = this.i18n['courseUpdate.courseExists']
           return
         }
@@ -175,7 +175,7 @@ export default {
         ...newCourse,
         authorId: auth.userId,
         storageId: newId,
-        needsEnrollment: enrBool
+        settings: { enrollment: enrBool }
         }).then( () => {
           // console.log(resp)
           self.$router.push(`/courses/${newCourse.name}/1`)

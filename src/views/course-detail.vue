@@ -151,8 +151,8 @@ export default {
      */
     viewPermit() {
       if( this.contentToDisplay ) {
-        return this.course.needsEnrollment ? 
-          ((this.isAuthor || this.userEnrolled)? true : false) : true
+        return this.course.settings.enrollment ?
+          (!!(this.isAuthor || this.userEnrolled)) : true
       }
       return false
     },
@@ -196,7 +196,7 @@ export default {
      * Last Updated: October 27, 2020
      */
     fetchEnrollment() {
-      if(this.course.needsEnrollment) {
+      if(this.course.settings.enrollment) {
         this.$store.dispatch('fetchEnrollment', this.course.courseId)
       }
     },

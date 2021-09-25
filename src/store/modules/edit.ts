@@ -208,6 +208,19 @@ export default {
     },
 
     /**
+     * function changeCourseSettings: update course settings
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 25, 2021
+     * @param state contains course.settings object
+     * @param settings new settings
+     */
+    changeCourseSettings(state: { course: { settings: object } }, settings: object) {
+      state.course.settings = { ...settings }
+    },
+
+    /**
      * Function delContent: remove Content at given index
      *
      * Author: core
@@ -659,7 +672,7 @@ export default {
             const listData = {
               category: courseObject.category,
               name: courseObject.name,
-              needsEnrollment: courseObject.needsEnrollment,
+              needsEnrollment: courseObject.settings.enrollment,
               courseId: courseObject.courseId
             }
             if (!state.courseList.some( // add to course list if not present
@@ -719,9 +732,14 @@ export default {
       const updated = Date.now()
       const cId = state.course.courseId
       const cContent = state.course.content
+      const cSettings = state.course.settings
 
       return new Promise( (resolve, reject) => {
-        http.patch(`courses/${cId}`, {content: cContent, lastChanged: updated})
+        http.patch(`courses/${cId}`, {
+          content: cContent,
+          lastChanged: updated,
+          settings: cSettings
+        })
           .catch(err => {
             console.error('Failed storing course content:', err)
             reject(err)

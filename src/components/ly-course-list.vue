@@ -166,7 +166,7 @@ export default {
      */
     enrollmentNeeded(course) {
       if (course.needsEnrollment) {
-        return this.enrolledIn.find(x => x == course.courseId)? false : true
+        return !this.enrolledIn.find(x => x === course.courseId)
       }
       else {
         return false

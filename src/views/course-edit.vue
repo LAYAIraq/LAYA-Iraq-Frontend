@@ -21,7 +21,7 @@ Dependencies:
     <div 
       class="container"
       :class="langIsAr ? 'text-right' : ''"
-      v-if="$route.name == 'course-detail-view'"
+      v-if="$route.name === 'course-detail-view'"
     >
 
       <course-edit-content :name="name" :step="step"></course-edit-content>
@@ -42,7 +42,7 @@ Dependencies:
 
       <!--<course-stats></course-stats>-->
 
-      <course-preferences></course-preferences>
+      <course-preferences @settingsChanged="storeCourse"></course-preferences>
 
     </div>
 
@@ -62,7 +62,7 @@ Dependencies:
 
 <script>
 import { locale } from '@/mixins'
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import { 
   courseCopy,
   courseDelete,
@@ -101,7 +101,7 @@ export default {
     step: String
   },
   computed: {
-    ...mapState(['edit']),
+    // ...mapState(['edit']),
     ...mapGetters(['content', 'course']),
   },
   methods: {
