@@ -79,6 +79,7 @@
 	"imprint": "Imprint",
 	"itemAdd": "Add Item",
 	"items": "Items",
+    "langSelect": "Language selection",
 	"layaAbleplayer.caption": "Include an AblePlayer video from link.",
 	"layaAbleplayer.name": "Video via AblePlayer",
 	"layaAbleplayer.signVidPlaceholder": "e.g. https://laya.de/signlanguage.mp4",

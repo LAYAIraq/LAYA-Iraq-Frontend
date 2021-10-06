@@ -78,6 +78,7 @@
 	"imprint": "Impressum",
 	"itemAdd": "Item hinzufügen",
 	"items": "Items",
+    "langSelect": "Sprachauswahl",
 	"layaAbleplayer.caption": "Einbinden eines Able-Player-Videos per Link.",
 	"layaAbleplayer.name": "Video über AblePlayer",
 	"layaAbleplayer.signVidPlaceholder": "z.B. https://laya.de/gebärdensprache.mp4",

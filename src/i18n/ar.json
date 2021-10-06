@@ -79,6 +79,7 @@
 	"imprint": "هيئة التحرير",
 	"itemAdd": "إضافة عنصر",
 	"items": "عناصر",
+    "langSelect": "Language selection",
 	"layaAbleplayer.caption": "تضمين مقاطع فيديو Able Player عبر رابط.",
 	"layaAbleplayer.name": "مقطع فيديو عبر AblePlayer",
 	"layaAbleplayer.signVidPlaceholder": "مثل https://laya.de/gebärdensprache.mp4",

@@ -1,5 +1,5 @@
 <!--
-Filename: footer.vue 
+Filename: footer.vue
 Use: Shows the whole footer area
 Creator: core
 Date: unknown
@@ -7,7 +7,7 @@ Dependencies: @/mixins/locale.vue
 -->
 
 <template>
-  <footer 
+  <footer
     id="ly-footer"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
@@ -69,7 +69,7 @@ Dependencies: @/mixins/locale.vue
           <a href="#">
             <img
               src="../assets/logo.svg"
-              alt=""
+              alt="Laya - Learn as you are"
               class="w-100"
             >
           </a>
@@ -78,6 +78,7 @@ Dependencies: @/mixins/locale.vue
     </div>
   </footer>
 </template>
+
 
 <script>
 import { locale } from '@/mixins'
