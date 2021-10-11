@@ -322,6 +322,7 @@
 	"root.title": "Welcome to LAYA",
 	"save": "Save",
 	"savingFailed": "Saving failed",
+    "scrollUp": "Scroll to top",
 	"searchPH": "Search by course name",
 	"showTip": "Show help text.",
 	"showTitle": "Show Title",

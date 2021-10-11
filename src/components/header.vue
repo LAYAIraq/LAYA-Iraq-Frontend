@@ -17,7 +17,6 @@ Dependencies:
     id="ly-header"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
-    <ly-scroll-to-top></ly-scroll-to-top>
     <b-navbar toggleable="lg" type="light" variant="light">
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -119,6 +118,7 @@ Dependencies:
       </b-collapse>
 
     </b-navbar>
+
   </div>
 
 </template>
@@ -129,14 +129,12 @@ import http from 'axios'
 import { icons } from '@/misc/langs.js'
 import { locale } from '@/mixins'
 import lyHeaderNotifications from '@/components/header-notifications.vue'
-import lyScrollToTop from '@/components/scroll-to-top.vue'
 
 export default {
   name: 'ly-header',
 
   components: {
     lyHeaderNotifications,
-    lyScrollToTop
   },
 
   mixins: [
