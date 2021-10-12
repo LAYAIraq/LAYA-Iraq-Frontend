@@ -32,9 +32,9 @@ Dependencies: @/mixins/locale.vue
       <div class="row mb-3">
         <div class="col">
           <h4>
-            {{ title }}
+            {{ title.text }}
           </h4>
-          <p>{{ task }}</p>
+          <p>{{ task.text }}</p>
         </div>
       </div>
 
@@ -42,9 +42,9 @@ Dependencies: @/mixins/locale.vue
 
       <div class="row">
         <div class="col">
-          <div v-for="(item, i) in items" :key="item" class="item">
+          <div v-for="(item, i) in items" :key="item.text" class="item">
             <h4 class="text-center item-label">
-              {{ item }}
+              {{ item.text }}
 
             </h4>
 
@@ -157,17 +157,18 @@ export default {
      * Last Updated: unknown
      */
     getPrevFeedback(){
-      this.prevFeedback = JSON.parse(JSON.stringify(this.getEnrollmentFeedback))
-      if (this.prevFeedback[this.numberOfFeedbacksEntries] !== null) {
-        this.answered = true
-        this.freetext = this.prevFeedback[this.numberOfFeedbacksEntries].freetext
-        this.choice = this.prevFeedback[this.numberOfFeedbacksEntries].choice
-        this.created = this.prevFeedback[this.numberOfFeedbacksEntries].choice
-        this.step = this.prevFeedback[this.numberOfFeedbacksEntries].step
-        if (typeof this.choice === 'undefined'){
-          this.choice = []
+      if (typeof this.getEnrollmentFeedback !== 'undefined') {
+        this.prevFeedback = JSON.parse(JSON.stringify(this.getEnrollmentFeedback))
+        if ((this.prevFeedback[this.numberOfFeedbacksEntries] !== null) && this.prevFeedback.length !== 0) {
+          this.answered = true
+          this.freetext = this.prevFeedback[this.numberOfFeedbacksEntries].freetext
+          this.choice = this.prevFeedback[this.numberOfFeedbacksEntries].choice
+          this.created = this.prevFeedback[this.numberOfFeedbacksEntries].choice
+          this.step = this.prevFeedback[this.numberOfFeedbacksEntries].step
+          if (typeof this.choice === 'undefined') {
+            this.choice = []
+          }
         }
-        console.log(this.choice)
       }
     },
 
