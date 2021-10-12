@@ -18,6 +18,7 @@ Dependencies:
           <h1 class="text-center">{{ i18n['login.title'] }}</h1>
 
           <div class="ly-input" :class="{error: errEmail}">
+            <label>{{ i18n['emailPH'] }}
             <input
               id="email-input"
               v-model.trim="email"
@@ -26,10 +27,13 @@ Dependencies:
               autofocus
               autocomplete="on"
             >
+            </label>
           </div>
 
           <div class="ly-input" :class="{error: errPwd}">
+            <label>{{ i18n['pwdPH'] }}
             <input v-model.trim="pwd" :placeholder="i18n['pwdPH']" type="password" autocomplete="on">
+            </label>
           </div>
 
           <div style="height: 2rem"></div>
@@ -49,7 +53,7 @@ Dependencies:
             {{ i18n['busy'] }}
             <i class="fas fa-spinner fa-spin"></i>
           </h5>
-
+          <div aria-live="polite">
           <div id="login-error"
                v-if="submitFailed"
                :aria-hidden="!submitFailed"
@@ -57,6 +61,7 @@ Dependencies:
             <i class="fas fa-exclamation-triangle"></i>
             {{ errMsg }}
           </div>
+      </div>
 
           <hr>
           <div class="text-center">
