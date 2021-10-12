@@ -5,7 +5,7 @@ Creator: core
 Date: unknown
 Dependencies:
   axios,
-  @/mixins/locale.vue id="email-input-label" for="email-input"
+  @/mixins/locale.vue
 -->
 
 <template>
