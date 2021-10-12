@@ -18,10 +18,10 @@ Dependencies:
     <div class="container-fluid">
 
       <div class="row">
-        <div class="col">
-          <h1 v-show="filtered.length === 0" class="text-center text-muted">
+        <div class="col" aria-live="polite">
+          <h2 v-show="filtered.length === 0" class="text-center text-muted">
             {{ i18n['noCourses'] }}
-          </h1>
+          </h2>
         </div>
       </div>
 
