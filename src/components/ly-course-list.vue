@@ -3,14 +3,14 @@ Filename: ly-course-list.vue
 Use: List all available courses, users can start or enroll
 Creator: core
 Date: unknown
-Dependencies: 
+Dependencies:
   @/mixins/locale.vue,
   axios,
   vuex
 -->
 
 <template>
-  <div 
+  <div
     class="laya-course-list"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
@@ -19,18 +19,18 @@ Dependencies:
 
       <div class="row">
         <div class="col">
-          <h3 v-show="filtered.length === 0" class="text-center text-muted">
+          <h1 v-show="filtered.length === 0" class="text-center text-muted">
             {{ i18n['noCourses'] }}
-          </h3>
+          </h1>
         </div>
       </div>
 
       <div class="row header" v-if="filtered.length > 0">
         <div class="col">
-          <h4>{{ i18n['namePH'] }}</h4>
+          <h2>{{ i18n['namePH'] }}</h2>
         </div>
         <div class="col">
-          <h4>{{ i18n['cat'] }}</h4>
+          <h2>{{ i18n['cat'] }}</h2>
         </div>
         <div class="col-3">
         </div>
@@ -53,16 +53,16 @@ Dependencies:
             :to="'/courses/'+course.name+'/1'"
             class="btn text-dark px-2 py-1 d-inline-block text-center w-100"
             v-if="!enrollmentNeeded(course)" >
-            {{ i18n['courseList.start'] }} 
+            {{ i18n['courseList.start'] }}
             <i class="fas fa-arrow-right"></i>
           </router-link>
-          <a 
-            class="btn text-dark px-2 py-1 d-inline-block text-center w-100 text-break" 
-            v-else 
-            @click="subscribe(course)" 
+          <a
+            class="btn text-dark px-2 py-1 d-inline-block text-center w-100 text-break"
+            v-else
+            @click="subscribe(course)"
           >
             {{ i18n['courseList.subscribe'] }}
-            <i class="fas fa-file-signature"></i>  
+            <i class="fas fa-file-signature"></i>
           </a>
         </div>
       </div>
@@ -73,9 +73,9 @@ Dependencies:
 
 <script>
 import http from 'axios'
-import { 
-  mapState, 
-  mapGetters 
+import {
+  mapState,
+  mapGetters
 } from 'vuex'
 import { locale } from '@/mixins'
 
@@ -103,10 +103,10 @@ export default {
 
      /**
      * filtered: filter course list depending on user input
-     * 
+     *
      * Author: core
-     * 
-     * Last updated: March 24, 2021 
+     *
+     * Last updated: March 24, 2021
      */
     filtered() {
       if (!this.filter) return this.courseList
@@ -129,15 +129,15 @@ export default {
 
     /**
      * Function getSubs: get a list of all courses the user enrolled in
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: unkown
      */
     getSubs() {
       let self = this
       let studentId = this.auth.userId
-     
+
       http
         .get(`enrollments/getAllByStudentId/?uid=${studentId}`)
         .then(({ data }) => {
@@ -150,18 +150,18 @@ export default {
           // console.log(`No enrollments for ${studentId} found`)
           console.error(err)
         })
-      
+
     },
 
     /**
      * Function enrollmentNeeded: return true if course needs and enrollment, false if not
-     * 
+     *
      * @param course the Course object for which it's checked
-     * 
+     *
      * @returns true if course needs enrollment, false if not
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: unknown
      */
     enrollmentNeeded(course) {
@@ -175,13 +175,13 @@ export default {
 
     /**
      * Function subscribe: Lets user enroll in a course
-     * 
+     *
      * @param course the course the user wants to enroll in
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 12, 2021
-     * 
+     *
      */
     subscribe(course) {
       const self = this
