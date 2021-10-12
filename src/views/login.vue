@@ -1,9 +1,9 @@
 <!--
-Filename: login.vue 
+Filename: login.vue
 Use: Organize Login for Users
 Creator: core
 Date: unknown
-Dependencies: 
+Dependencies:
   axios,
   @/mixins/locale.vue
 -->
@@ -101,9 +101,9 @@ export default {
 
     /**
      * errEmail: return true of no email input
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     errEmail() {
@@ -112,9 +112,9 @@ export default {
 
     /**
      * errPwd: return true if no password input
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     errPwd() {
@@ -123,9 +123,9 @@ export default {
 
     /**
      * errForm: return true if password or email not put in
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     errForm() {
@@ -143,9 +143,9 @@ export default {
     /**
      * Function submit: submit login, on success load profile,
      *  set login state, store token in local storage, reroute
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     submit() {
