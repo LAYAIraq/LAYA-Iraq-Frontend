@@ -106,6 +106,8 @@
 	"layaLaFeedback.edit.answers": "Antwortmöglichkeiten",
 	"layaLaFeedback.edit.desc": "Beschreibung",
 	"layaLaFeedback.edit.questions": "Fragen",
+    "layaLaFeedback.label.freetext": "Freitextfeld zur Eingabe der Meinung",
+    "layaLaFeedback.label.slider": "Schieber zur Eingabe der Meinung",
 	"layaLaFeedback.name": "Kurs-Rückmeldung",
 	"layaLaFeedback.prefetch.categories": "Stimme nicht zu, Stimme eher nicht zu, Neutral, Stimme eher zu, Stimme zu",
 	"layaLaFeedback.prefetch.items": "Der Kurs ist klar strukturiert, Der Kurs ist inhaltlich interessant., Das Niveau des Kurses war angemessen., Ich fühlte mich an keiner Stelle unterfordert., Ich fühlte mich an keiner Stelle überfordert., Die Lernüberprüfungen haben zum Verständnis beigetragen., Ich würde den Kurs weiterempfehlen.",

@@ -108,6 +108,8 @@
 	"layaLaFeedback.edit.answers": "خيارات الأجوبة",
 	"layaLaFeedback.edit.desc": "الوصف",
 	"layaLaFeedback.edit.questions": "الأسئلة",
+    "layaLaFeedback.label.freetext": "Text field to input your feedback",
+    "layaLaFeedback.label.slider": "Slider to input your feedback",
 	"layaLaFeedback.name": "ملاحظات الدورة",
 	"layaLaFeedback.prefetch.categories": "لا أوافق, لا أوافق بالأحرى, محايد, أوافق بالأحرى, أوافق",
 	"layaLaFeedback.prefetch.items": "الدورة منظمة بشكلٍ واضح, محتوى الدورة شيق., مستوى الدورة كان مناسبًا., لم أشعر أبدًا أن المحتوى أقل من المستوى., لم أشعر أبدًا أن المحتوى أعلى من المستوى., ساهمت اختبارات مراجعة التعلم في فهم المحتوى., سأنصح زملائي بالدورة.",

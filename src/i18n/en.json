@@ -107,6 +107,8 @@
 	"layaLaFeedback.edit.answers": "Possible Answers",
 	"layaLaFeedback.edit.desc": "Description",
 	"layaLaFeedback.edit.questions": "Questions",
+    "layaLaFeedback.label.freetext": "Text field to input your feedback",
+    "layaLaFeedback.label.slider": "Slider to input your feedback",
 	"layaLaFeedback.name": "Course Feedback",
 	"layaLaFeedback.prefetch.categories": "Do not agree, Rather do not agree, Neutral, Rather agree, Agree",
 	"layaLaFeedback.prefetch.items": "The course has a discernible structure., The course has interesting contents, The course difficulty was adequate., I did not feel underchallenged at any point., I did not feel overwhelmed at any point., The assessment blocks helped me understand., I would recommend this course to others.",
