@@ -1,9 +1,9 @@
 <!--
-Filename: course-copy.vue 
+Filename: course-copy.vue
 Use: Provide tools for copying a course
 Creator: cmc
 Date: October 27, 2020
-Dependencies: 
+Dependencies:
 	axios,
 	vuex,
 	@/mixins/locale.vue
@@ -39,7 +39,8 @@ Dependencies:
           type="text"
           v-model="copy"
           class="form-control"
-          :placeholder="i18n['placeholder']">
+          :placeholder="i18n['placeholder']"
+          :aria-label="i18n['placeholder']">
       </p>
     </b-modal>
 
@@ -85,11 +86,11 @@ export default {
   methods: {
 
     /**
-     * Function copyCourse: copy course if no course with that name 
+     * Function copyCourse: copy course if no course with that name
      *  already exists
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: October 27, 2020
      */
     copyCourse() {
