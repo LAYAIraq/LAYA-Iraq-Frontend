@@ -26,17 +26,16 @@ Dependencies:
               <i class="fas fa-signature"></i>
             </div>
             <div class="col">
-              <label> {{ i18n['namePH'] }}
               <input
                 id="register-focus"
                 v-model="name"
                 :placeholder="i18n['namePH']"
+                :aria-label="i18n['namePH']"
                 type="text"
                 :disabled="submitOk"
                 @blur="isNameTaken"
                 class="w-100"
                 aria-describedby="name-err">
-              </label>
             </div>
           </div>
 
@@ -59,11 +58,9 @@ Dependencies:
               <i class="fas fa-at"></i>
             </div>
             <div class="col">
-              <label> {{ i18n['emailPH'] }}
-              <input v-model="email" :placeholder="i18n['emailPH']" type="text"
+              <input v-model="email" :placeholder="i18n['emailPH']" :aria-label="i18n['emailPH']" type="text"
               :disabled="submitOk" @blur="isEmailTaken" class="w-100"
               aria-describedby="email-err">
-              </label>
             </div>
           </div>
 
@@ -88,16 +85,15 @@ Dependencies:
 
             </div>
             <div class="col">
-              <label> {{ i18n['pwdPH'] }}
               <input
                 v-model="pwd1"
                 :placeholder="i18n['pwdPH']"
+                :aria-label="i18n['pwdPH']"
                 type="password"
                 :disabled="submitOk"
                 class="w-100"
                 aria-describedby="pwd-err"
               >
-              </label>
             </div>
           </div>
           <div class="form-group row" :class="{error: errPwds}">
@@ -105,10 +101,8 @@ Dependencies:
                 <i class="fas fa-redo-alt"></i>
             </div>
             <div class="col">
-              <label> {{ i18n['pwd2PH'] }}
-              <input v-model="pwd2" :placeholder="i18n['pwd2PH']" type="password"
+              <input v-model="pwd2" :placeholder="i18n['pwd2PH']" :aria-label="i18n['pwd2PH']" type="password"
               :disabled="submitOk" class="w-100" aria-describedby="pwd-err">
-              </label>
             </div>
           </div>
           <div

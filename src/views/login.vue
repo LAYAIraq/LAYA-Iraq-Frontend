@@ -18,7 +18,7 @@ Dependencies:
           <h1 class="text-center">{{ i18n['login.title'] }}</h1>
 
           <div class="ly-input" :class="{error: errEmail}">
-            <label>{{ i18n['emailPH'] }}
+
             <input
               id="email-input"
               v-model.trim="email"
@@ -26,14 +26,13 @@ Dependencies:
               type="text"
               autofocus
               autocomplete="on"
+              :aria-label="i18n['emailPH']"
             >
-            </label>
+
           </div>
 
           <div class="ly-input" :class="{error: errPwd}">
-            <label>{{ i18n['pwdPH'] }}
-            <input v-model.trim="pwd" :placeholder="i18n['pwdPH']" type="password" autocomplete="on">
-            </label>
+            <input v-model.trim="pwd" :placeholder="i18n['pwdPH']" type="password" autocomplete="on" :aria-label="i18n['pwdPH']">
           </div>
 
           <div style="height: 2rem"></div>

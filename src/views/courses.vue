@@ -36,12 +36,12 @@ Dependencies:
 
       <div class="row">
         <div class="col">
-          <label for="search-bar">{{ i18n['searchPH'] }}</label>
           <div class="ly-search-bar">
             <input id="search-bar"
                    type="text"
                    v-model="search"
-                   :placeholder="i18n['searchPH']">
+                   :placeholder="i18n['searchPH']"
+                   :aria-label="i18n['searchPH']">
             <i class="icon fas fa-search"></i>
           </div>
         </div>
