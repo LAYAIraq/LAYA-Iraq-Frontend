@@ -83,10 +83,10 @@ export default {
   computed: {
 
     /**
-     * filtered: Filter Course list 
-     * 
+     * filtered: Filter Course list
+     *
      * Author: Core
-     * 
+     *
      * Last Updated: unknown
      */
     filtered() {
@@ -98,9 +98,9 @@ export default {
 
     /**
      * categories: Return a List of Categories
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     categories() {
@@ -122,9 +122,9 @@ export default {
 
     /**
      * function collapse: supposedly collapse certain categories
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     collapse(category) {

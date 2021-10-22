@@ -1,15 +1,15 @@
 <!--
-Filename: course-rename.vue 
+Filename: course-rename.vue
 Use: Rename whole course
 Author: cmc
 Date: October 27, 2020
-Dependencies: 
+Dependencies:
   vuex,
   @/mixins/locale.vue
 -->
 
 <template>
-    
+
   <div class="row mt-3">
 
     <div class="col">
@@ -42,6 +42,7 @@ Dependencies:
         v-model="rename"
         class="form-control"
         :placeholder="i18n['placeholder']"
+        :aria-label="i18n['placeholder']"
         >
       </p>
 
@@ -58,7 +59,7 @@ export default {
   name: 'courseRename',
 
   mixins: [
-    locale 
+    locale
   ],
 
   computed: {
@@ -68,7 +69,7 @@ export default {
   data() {
     return {
       rename: '',
-      oldName: ''        
+      oldName: ''
     }
   },
 
@@ -77,9 +78,9 @@ export default {
     /**
      * Function duplicateCheck: check if rename already exists,
      *  call renameCourse() if it doesn't
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 24, 2021
      */
 
@@ -103,9 +104,9 @@ export default {
 
     /**
      * Function renameCourse: rename Course, change route to new name
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 24, 2021
      */
     renameCourse() {
@@ -114,7 +115,7 @@ export default {
       let step = this.$route.params.step
       this.$store.commit('renameCourse', newName)
       let renamed = this.$store.dispatch('updateRenamedCourse')
-      
+
       renamed.then( () => {
         this.$router.replace(`/courses/${newName}/${step}`)
         console.log('Renaming successful!')
@@ -124,7 +125,7 @@ export default {
         console.err(err)
         console.log('Renaming failed!')
       })
-    
+
     }
   }
 }
