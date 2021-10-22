@@ -47,7 +47,7 @@
 	"deleteBlock.modal.text": "Bist Du sicher, dass Du diesen Inhalt löschen willst?",
 	"deleteContent": "Inhalt löschen",
 	"deleteCourse": "Kurs löschen",
-	"deleteCourse.deleteCourseTip": "Der <u>gesamte Kurs</u> wird gelöscht.",
+	"deleteCourse.deleteCourseTip": "Der <b>gesamte Kurs</b> wird gelöscht.",
 	"deleteCourse.modal.text": "Bist Du sicher, dass Du den <u>gesamten</u> Kurs löschen willst?",
 	"emailErr": "Diese Email ist ungültig",
 	"emailPH": "Email",

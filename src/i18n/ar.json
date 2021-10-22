@@ -48,7 +48,7 @@
 	"deleteBlock.modal.text": "هل أنت متأكد من أنك تريد حذف هذا المحتوى؟",
 	"deleteContent": "حذف المحتوى",
 	"deleteCourse": "حذف الدورة",
-	"deleteCourse.deleteCourseTip": "جاري حذف <u>الدورة بأكملها</u>.",
+	"deleteCourse.deleteCourseTip": "جاري حذف <b>الدورة بأكملها</b>.",
 	"deleteCourse.modal.text": "هل أنت متأكد من أنك تريد حذف هذا المحتوى <u>بأكمله</u>؟",
 	"emailErr": "هذا البريد الإليكتروني غير صالح",
 	"emailPH": "بريد إليكتروني",
