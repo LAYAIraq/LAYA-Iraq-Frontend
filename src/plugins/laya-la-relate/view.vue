@@ -3,13 +3,13 @@ Filename: view.vue
 Use: View a Relate content block
 Creator: core
 Date: unknown
-Dependencies: 
+Dependencies:
   vuex,
   @/mixins/locale.vue
 -->
 
 <template>
-  <div 
+  <div
     class="laya-quiz-relate"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
@@ -24,10 +24,10 @@ Dependencies:
           </h4>
         </div>
         <laya-flag v-if="!previewData"
-            :refData="title"
-            :isOpen="flagOpen"
-            @flagged="title.flagged = true"
-            @flagOpen="toggleFlagOpen"
+                   :refData="title"
+                   :isOpen="flagOpen"
+                   @flagged="title.flagged = true"
+                   @flagOpen="toggleFlagOpen"
         ></laya-flag>
       </div>
 
@@ -40,10 +40,10 @@ Dependencies:
           <p>{{ task.text }}</p>
         </div>
         <laya-flag v-if="!previewData"
-            :refData="task"
-            :isOpen="flagOpen"
-            @flagged="task.flagged = true"
-            @flagOpen="toggleFlagOpen"
+                   :refData="task"
+                   :isOpen="flagOpen"
+                   @flagged="task.flagged = true"
+                   @flagOpen="toggleFlagOpen"
         ></laya-flag>
       </div>
 
@@ -51,27 +51,27 @@ Dependencies:
 
       <div class="row">
         <div class="col">
-          
+
           <form>
-            <div 
-              v-for="(pair,i) in pairs" 
+            <div
+              v-for="(pair,i) in pairs"
               :key="pair.id"
-              :id="pair.id" 
+              :id="pair.id"
               class="form-group row flaggable"
               :class="{'flat': flagOpen != pair.id}"
             >
-              <label 
-                :for="pair.label+i" 
+              <label
+                :for="pair.label+i"
                 class="col-sm-6 col-form-label"
               >
-                <img 
-                  v-if="pair.img" 
-                  :src="pair.img" 
+                <img
+                  v-if="pair.img"
+                  :src="pair.img"
                   :alt="pair.label"
                 >
-                <laya-audio-inline 
-                  :class="langIsAr? 'mr-2' : 'ml-2'" 
-                  v-if="pair.audio" 
+                <laya-audio-inline
+                  :class="langIsAr? 'mr-2' : 'ml-2'"
+                  v-if="pair.audio"
                   :src="pair.audio"
                 >
                 </laya-audio-inline>
@@ -79,18 +79,18 @@ Dependencies:
               </label>
               <div class="col-sm-6">
                 <select :id="pair.label+i"
-                  v-model="solution[i]"
-                  :disabled="freeze"
-                  class="custom-select">
+                        v-model="solution[i]"
+                        :disabled="freeze"
+                        class="custom-select">
                   <option disabled>
                     {{ defaultOption }}
                   </option>
-                  <option 
-                    v-for="opt in options" 
-                    :key="opt" 
+                  <option
+                    v-for="opt in options"
+                    :key="opt"
                     :disabled="solution.includes(opt)"
                   >
-                  {{ opt }}
+                    {{ opt }}
                   </option>
                 </select>
                 <div class="d-inline-block pt-3 w-100 text-center">
@@ -98,39 +98,48 @@ Dependencies:
                 </div>
               </div>
               <laya-flag v-if="!previewData"
-                  :refData="pair"
-                  :isOpen="flagOpen"
-                  :interactive="true"
-                  @flagged="pair.flagged = true"
-                  @flagOpen="toggleFlagOpen"
+                         :refData="pair"
+                         :isOpen="flagOpen"
+                         :interactive="true"
+                         @flagged="pair.flagged = true"
+                         @flagOpen="toggleFlagOpen"
               ></laya-flag>
             </div>
           </form>
-          
+
         </div>
       </div>
 
       <div class="row pt-3">
-        
-        <button 
-          type="button" 
-          class="btn btn-warning" 
+
+        <button
+          type="button"
+          class="btn btn-warning"
           @click="reset"
         >
           {{ i18n['layaLaRelate.removeInput']}}
         </button>
-       
-        <button 
-          type="button" 
+
+        <button
+          type="button"
           class="btn btn-link"
           :class="langIsAr? 'float-right': 'float-left'"
-          @click="check" 
+          @click="check"
           :disabled="freeze">
           {{ i18n['check'] }}
+          <div>
+            <div v-if="showSolutionsBool">
+              {{ i18n["layaLaScmc.showCorrect"] }}
+              <div v-for="(pair, index) in pairs"
+                   :key="index">
+                {{ pair.label }}: {{ pair.relation }},
+              </div>
+            </div>
+          </div>
         </button>
-          
-        <button 
-          type="button" 
+
+        <button
+          type="button"
           class="btn btn-primary"
           :class="langIsAr? 'mr-auto': 'ml-auto'"
           @click="done"
@@ -156,7 +165,7 @@ export default {
     flagHandling,
     locale
   ],
-  
+
   data() {
     if (this.previewData) //preview
       return {
@@ -174,12 +183,13 @@ export default {
       defaultOption: '',
       solution: [],
       eval: [],
-      freeze: false
+      freeze: false,
+      showSolutionsBool: false
     }
   },
   created() {
     this.defaultOption = this.i18n['layaLaRelate.defaultOption']
-    if (!this.previewData) { // no preview 
+    if (!this.previewData) { // no preview
       this.fetchData()
     }
   },
@@ -192,9 +202,9 @@ export default {
 
     /**
      * options: map pairs to their relation
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     options() {
@@ -213,9 +223,9 @@ export default {
 
     /**
      * Function reset: reset relations to default
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     reset() {
@@ -224,9 +234,9 @@ export default {
 
     /**
      * Function done: execute first function from onFinish
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     done() {
@@ -235,9 +245,9 @@ export default {
 
     /**
      * Function check: Check if User's solution is correct
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: March 19, 2021
      */
     check() {
@@ -245,19 +255,20 @@ export default {
         if(this.pairs[i].relation === this.solution[i]) {
           this.eval[i] = {'fa fa-check fa-2x text-success': true}
         } else {
-          this.solution[i] = this.pairs[i].relation 
+          this.solution[i] = this.pairs[i].relation
           this.eval[i] = {'fa fa-times fa-2x text-danger': true}
         }
       }
       this.freeze = true
+      this.showSolutionsBool = true
       this.$forceUpdate()
     },
 
     /**
      * Function fetchData: fethc data from vuex and create data property
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 19, 2021
      */
     fetchData() {
