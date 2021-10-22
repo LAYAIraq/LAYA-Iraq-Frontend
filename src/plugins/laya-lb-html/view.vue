@@ -1,9 +1,9 @@
 <!--
-Filename: view.vue 
+Filename: view.vue
 Use: View Freetext content block
 Creator: core
 Date: unknown
-Dependencies: 
+Dependencies:
   vuex,
   quill,
   @/mixins/locale.vue
@@ -16,7 +16,7 @@ Dependencies:
       class="flaggable row"
       :id="title.id"
     >
-      <h4 >{{ title.text }}</h4>
+      <h2 >{{ title.text }}</h2>
       <laya-flag v-if="!previewData"
           :refData="title"
           :isOpen="flagOpen"
@@ -26,22 +26,22 @@ Dependencies:
     </div>
     <div :id="editorId"></div>
     <div class="row">
-      <button 
+      <button
         type="button"
         class="btn btn-primary mt-3 d-block ml-auto"
         :class="langIsAr? 'float-right': 'float-left'"
         @click="onFinish[0]() || {}">
         {{ i18n['nextContent'] }}
-        <i 
-          :class="langIsAr? 
-            'fas fa-arrow-left': 
+        <i
+          :class="langIsAr?
+            'fas fa-arrow-left':
             'fas fa-arrow-right'"
         ></i>
       </button>
     </div>
   </div>
 
-  
+
 
 </template>
 
@@ -79,9 +79,9 @@ export default {
 
     /**
      * editorId: return id for html element
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     editorId() {
@@ -92,9 +92,9 @@ export default {
 
     /**
      * Function fetchData: fetch data from vuex and make data property
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 20, 2021
      */
     fetchData() {
@@ -105,9 +105,9 @@ export default {
     },
     /**
      * Function fetchContent: fetch contents from quill
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: March 20, 2021
      */
     fetchContent() {

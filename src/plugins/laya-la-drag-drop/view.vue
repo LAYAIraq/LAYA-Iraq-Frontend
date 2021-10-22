@@ -5,7 +5,7 @@ Creator: core
 Date: unknown
 Dependencies:
   vuex,
-  @/mixins/locale.vue 
+  @/mixins/locale.vue
 -->
 
 <template>
@@ -14,11 +14,11 @@ Dependencies:
 
       <div class="flaggable row mb-3" :id="title.id">
         <div class="col">
-          <h4>
+          <h2>
             {{ title.text }}
             <laya-audio-inline v-if="taskAudio" :src="taskAudio">
             </laya-audio-inline>
-          </h4>
+          </h2>
         </div>
         <laya-flag v-if="!previewData"
             :refData="title"
@@ -47,14 +47,14 @@ Dependencies:
 
       <div class="row">
         <div class="col">
-          <div 
-            v-for="(item,i) in items" 
+          <div
+            v-for="(item,i) in items"
             :key="item.id"
-            :id="item.id" 
+            :id="item.id"
             class="flaggable item mb-5"
             :class="{'flat' : flagOpen != item.id}"
           >
-            <h4 class="text-center item-label">
+            <h3 class="text-center item-label">
               {{ item.label }}
               <i v-if="checked"
                 class="fas"
@@ -63,18 +63,21 @@ Dependencies:
                   'fa-times text-danger': !eval[i]
                 }">
               </i>
-            </h4>
+            </h3>
 
             <div class="d-flex justify-content-between">
-              <b v-for="cat in categories" :key="cat">{{cat}}</b>
+              <b v-for="cat in categories" :key="cat" aria-hidden="true">{{cat}}</b>
             </div>
-            <input 
+            <input
               type="range"
               class="custom-range"
               min="0"
               :max="categories.length-1"
               :disabled="checked"
               v-model.number="solution[i]"
+              :aria-valuenow="solution[i]"
+              :aria-valuetext="categories[solution[i]]"
+              :aria-label="i18n['layaLaDragDrop.label.slider']"
             >
             <laya-flag
                 v-if="!previewData"
@@ -94,6 +97,15 @@ Dependencies:
                 :disabled="checked"
                 @click="check">
           {{ i18n['check'] }}
+          <div>
+          <div v-if="showSolutionsBool">
+            {{ i18n["layaLaScmc.showCorrect"] }}
+            <div v-for="(item, index) in items"
+                 :key="index">
+               {{ item.label }}: {{ categories[items[index].category] }},
+            </div>
+          </div>
+          </div>
         </button>
         <button type="button"
                 class="btn btn-primary mt-3 ml-auto"
@@ -123,7 +135,7 @@ export default {
     this.mapSolutions()
     if (!this.previewData) this.fetchData()
   },
-  
+
   props: {
     onFinish: Array,
     previewData: Object
@@ -149,17 +161,17 @@ export default {
       task: {},
       taskAudio: '',
       items: [],
-      categories: []
+      categories: [],
+      showSolutionsBool: false
     }
   },
 
   methods: {
-
     /**
      * Function done: execute function from onFinish[0]
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     done() {
@@ -168,9 +180,9 @@ export default {
 
     /**
      * Function check: check if given answers are correct
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     check() {
@@ -180,16 +192,16 @@ export default {
           this.eval[i] = (solution == this.items[i].category)
         }
       }
-      
       this.checked = !this.checked
+      this.showSolutionsBool = true
       //this.$forceUpdate()
     },
 
     /**
      * Function mapSolutions: initialize rendered ranges to the middle
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     mapSolutions() {
@@ -200,9 +212,9 @@ export default {
 
     /**
      * Function fetchData(): fetch data from vuex and make data property
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 12, 2021
      */
     fetchData() {
