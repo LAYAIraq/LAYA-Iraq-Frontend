@@ -34,9 +34,6 @@ Dependencies: @/mixins/locale.vue
               <a href="#" target="_blank" class="social-link">
                 <img src="../assets/vimeo.svg" alt="Vimeo Link">
               </a>
-              <a href="#" target="_blank" class="social-link">
-                <i class="fas fa-heart" style="color: red"></i>
-              </a>
             </div>
           </div>
 
