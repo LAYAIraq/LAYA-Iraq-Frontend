@@ -1,13 +1,12 @@
-<!--
-  Filename: mime-types.vue
-  Use: Return Strings and Icon for MIME Types
-  Creator: cmc
-  Date: April 28, 2021
-  Dependencies: 
-    vuex
--->
+/**
+ * Filename: mime-types.ts
+ * Use: Return Strings and Icon for MIME Types
+ * Creator: cmc
+ * Date: April 28, 2021
+ * Dependencies:
+ *  vuex
+ */
 
-<script>
 import { mapGetters } from 'vuex'
 import * as locale from '@/i18n'
 export default {
@@ -22,11 +21,12 @@ export default {
      * Last Updated: May 5, 2021
      */
     types() {
-      let types = {}
+      const types = {}
 
       // filter i18n file for key containing 'mimeTypes'
-      for (let key in locale[this.profileLang]) {
-        if (locale[this.profileLang].hasOwnProperty(key)) {
+      for (const key in locale[this.profileLang]) {
+        if (Object.prototype.hasOwnProperty
+          .call(locale[this.profileLang], key)) {
           if (/mimeTypes/.test(key) === true) {
             // add to types in scope
             types[key] = locale[this.profileLang][key]
@@ -75,8 +75,8 @@ export default {
         'application/zip': 'fas fa-file-archive'
       }
 
-      for (let key in iconClasses) {
-        if (iconClasses.hasOwnProperty(key)) {
+      for (const key in iconClasses) {
+        if (Object.prototype.hasOwnProperty.call(iconClasses, key)) {
           if (type.search(key) === 0) {
             // Found it
             return iconClasses[key]
@@ -125,8 +125,8 @@ export default {
         'application/zip': 'zip'
       }
 
-      for (let key in fileClasses) {
-        if (fileClasses.hasOwnProperty(key)) {
+      for (const key in fileClasses) {
+        if (Object.prototype.hasOwnProperty.call(fileClasses, key)) {
           if (type.search(key) === 0) {
             // Found it
             return this.types['mimeTypes.'+key]
@@ -137,4 +137,3 @@ export default {
     }
   }
 }
-</script>

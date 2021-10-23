@@ -26,7 +26,7 @@ Dependencies:
           <input 
             id="laya-wysiwyg-title"
             type="text"
-            v-model="title"
+            v-model="title.text"
             class="form-control"
             :placeholder="i18n['titlePlaceholder']"
           >
@@ -41,7 +41,7 @@ Dependencies:
             <input
               id="show-title-tick"
               type="checkbox"
-              v-model="showTitle"
+              v-model="title.show"
             >
           </label>
             
@@ -63,6 +63,7 @@ Dependencies:
 <script>
 import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
+import { v4 as uuidv4 } from 'uuid'
 import { locale } from '@/mixins'
 
 export default {
@@ -89,9 +90,17 @@ export default {
   data() {
     return {
       contents: null,
-      title: '',
-      showTitle: false
+      title: {
+        text: '',
+        id: '',
+        show: false,
+        flagged: false
+      }
     }
+  },
+
+  created() {
+    this.title.id = uuidv4()
   },
 
   mounted() {

@@ -47,7 +47,7 @@ Dependencies:
           <input 
             id="ableplayer-title"
             type="text"
-            v-model="title"
+            v-model="title.text"
             class="form-control"
             :placeholder="i18n['titlePlaceholder']"
           >
@@ -62,7 +62,7 @@ Dependencies:
             <input
               id="show-title-tick"
               type="checkbox"
-              v-model="showTitle"
+              v-model="title.show"
             >
           </label>
             
@@ -121,8 +121,7 @@ export default {
       src: '',
       sign: '',
       sub: '',
-      title: '',
-      showTitle: false
+      title: ''
     }
   },
 
@@ -141,12 +140,11 @@ export default {
      */
     fetchData() {
       let idx = this.$route.params.step - 1
-      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
+      const preData = JSON.parse(JSON.stringify(this.content[idx]['input']))
       this.src = preData.src
       this.sign = preData.sign
       this.sub = preData.sub
       this.title = preData.title
-      this.showTitle = preData.showTitle
     }
   }
 }

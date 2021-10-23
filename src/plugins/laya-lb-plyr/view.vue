@@ -12,13 +12,35 @@ Dependencies:
 <template>
   <div class="ly-plyr-view">
 
-    <h4 v-if="showTitle">{{ title }}</h4>
+    <div
+      v-if="title.show"
+      class="flaggable row"
+      :id="title.id"
+    >
+      <h4 >{{ title.text }}</h4>
+      <laya-flag-icon v-if="!previewData"
+          :refData="title"
 
-    <div 
-      :id="playerId" 
-      :data-plyr-provider="platform" 
-      :data-plyr-embed-id="src" 
-      class="plyr__video-embed">
+          @flagged="title.flagged = true"
+
+      ></laya-flag-icon>
+    </div>
+
+
+    <div>
+        <div
+          :id="playerId"
+          :data-plyr-provider="platform"
+          :data-plyr-embed-id="src"
+          class="plyr__video-embed"
+        ></div>
+<!--      <laya-flag-icon-icon v-if="!previewData"-->
+<!--          :refData="videoFlag"-->
+<!--          -->
+<!--          :interactive="true"-->
+<!--          @flagged="videoFlag.flagged = true"-->
+<!--          -->
+<!--      ></laya-flag-icon-icon>-->
     </div>
 
     <div class="row">
@@ -44,27 +66,29 @@ import Plyr from 'plyr'
 import { mapGetters } from 'vuex'
 import 'plyr/dist/plyr.css'
 import { locale } from '@/mixins'
+import '@/styles/flaggables.css'
 
 export default {
   name: 'laya-plyr',
 
   mixins: [
+
     locale
   ],
 
   data() {
-    if (Object.entries(this.$attrs).length === 4) { // for 'preview' feature
-      return {...this.$attrs}
+    if (this.previewData) { // for 'preview' feature
+      return {...this.previewData}
     }
     return {
       plyr: null,
       src: '',
       title: '',
-      showTitle: false
+      videoFlag: {}
     }
   },
   created() {
-    this.fetchData()
+    if(!this.previewData) this.fetchData()
   },
   mounted() {
     this.initPlyr()
@@ -129,6 +153,7 @@ export default {
       this.src = preData.src
       this.showTitle = preData.showTitle
       this.title = preData.title
+      this.videoFlag = preData.videoFlag
     },
 
     /**

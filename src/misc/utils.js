@@ -9,40 +9,6 @@
 export default {
 
   /**
-   * Function shortDate: Shorten date to DD-MM-YY
-   * 
-   * Author: core
-   * 
-   * Last Updated: March 12, 2021
-   * 
-   * @param {*} dateStr given date as string
-   * @param {*} lang interface language, hard set as 'de'
-   * @returns Localized date string
-   */
-  shortDate(dateStr, lang = 'de') {
-    return new Date(Date.parse(dateStr))
-      .toLocaleDateString(lang, {
-        day: '2-digit',
-        month: '2-digit',
-        year: '2-digit'
-      })
-  },
-
-  /**
-   * Function locDate: localize given date string
-   * 
-   * Author: core
-   * 
-   * Last Updated: March 12, 2021
-   * @param {*} dateStr date given as string
-   * @param {*} lang language given as string
-   */
-  locDate(dateStr, lang) {
-    return new Date(Date.parse(dateStr))
-      .toLocaleDateString(lang)
-  },
-
-  /**
    * Function categorize: push list from arr to target, if exists
    * 
    * Author: core
@@ -65,29 +31,6 @@ export default {
       }
       target[category][key].push(data)
     })
-  },
-
-  /**
-   * Function verbalizeTime: puts time that users spent in words (English only)
-   * 
-   * Author: cmc
-   * 
-   * Last Updated: March 12, 2021
-   * @param {*} time time in ms
-   */
-  verbalizeTime(time) {
-    var days = Math.floor(time/1000/60/60/24);
-    time -= days*1000*60*60*24
-
-    var hours = Math.floor(time/1000/60/60);
-    time -= hours*1000*60*60
-
-    var minutes = Math.floor(time/1000/60);
-    time -= minutes*1000*60
-
-    var seconds = Math.floor(time/1000);
-    return `${days}d ${hours}h ${minutes}m ${seconds}s`
-
   },
   
   /**
@@ -113,5 +56,3 @@ export default {
     }
   }
 }
-
-

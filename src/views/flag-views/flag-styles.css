@@ -1,0 +1,145 @@
+.flag-interface {
+  width: 100%;
+  height: 100%;
+}
+
+.heading {
+  margin-bottom: 3vh;
+  font-weight: 600;
+  font-size: 1.3em;
+  color: #46494d;
+}
+
+.set-flag {
+  height: 100%;
+  margin: auto;
+  z-index: inherit;
+}
+.set-flag>.form-group.flag-question {
+  height: 100% !important;
+}
+
+.flag-question {
+  padding: 20px;
+  border: 1px solid #4a5464;
+  background-color: #9fcdff;
+}
+
+.question-text {
+  background: #f8f9fa;
+  border: 1px solid #4a5464;
+  color: #4a5464;
+  padding: 20px;
+  font-size: 1.5em;
+  font-style: italic;
+}
+
+
+/*.question-text:before {*/
+/*  content: open-quote;*/
+/*}*/
+
+/*.question-text:after {*/
+/*  content: close-quote;*/
+/*}*/
+
+.question-meta {
+  margin-top: 2vh;
+}
+
+.flag-discussion {
+  padding: 20px;
+  /*border-top: #4a5464 solid 1px;*/
+  border-left: 1px solid #4a5464;
+  border-right: 1px solid #4a5464;
+  border-bottom: #4a5464 solid 1px;
+  background: #9fcdff;
+  border-radius: 0;
+}
+
+.discussion-post {
+  padding: 20px;
+  margin: 0 1vw 2vh;
+  border: 1px dashed #4a5464;
+  background: #8a9eb5;
+  border-radius: 3px;
+  word-wrap: break-word;
+  position: relative;
+}
+
+.discussion-post.creator {
+  background: #8ab59d;
+  border: 2px dashed #007b37;
+}
+
+.discussion-post.question {
+  border: 2px dotted #b81e00;
+}
+
+.flag-body {
+  margin: auto;
+  box-shadow: 0 0 3px black;
+  /*margin-top: -60px; !* avoid bouncing on hover *!*/
+  position: relative;
+  z-index: 11000;
+  background-color: darkslateblue;
+  border-radius: 5px;
+  border: 1px #1b1e21;
+  /*transform: scaleY(1);*/
+  /*transition: transform 0.5s ease;*/
+  box-sizing: border-box;
+  width: 35vw;
+  min-width: 200px;
+  min-height: 60vh;
+}
+.flag-body.collapsed {
+  display: none;
+}
+.flag-title {
+  background: #343a40;
+  color: #f8f9fa;
+  display: flex;
+  flex-wrap: nowrap;
+  border-radius: 5px 5px 0 0;
+  text-align: center;
+  /*margin-left: auto;*/
+  padding: 10px;
+  font-weight: bolder;
+  font-size: 1.5em;
+}
+
+.add-answer {
+  padding: 20px;
+  border-left: 1px solid #4a5464;
+  border-right: 1px solid #4a5464;
+  border-bottom: #4a5464 solid 1px;
+  background: #4479b3;
+}
+
+.add-answer .heading, .add-answer label {
+  color: #f8f9fa;
+}
+
+.answer-hint {
+  padding-top: 1vh;
+  color: #f8f9fa;
+}
+
+.tooltip.b-tooltip { /* for correct positition of tooltip */
+  z-index: 11000;
+}
+
+#my-answer:disabled {
+  background: lightslategrey;
+}
+#set-flag-question {
+  height: 100%;
+}
+
+.pre {
+  white-space: pre;
+}
+
+.eventful {
+  cursor: pointer;
+}

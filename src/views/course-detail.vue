@@ -32,13 +32,15 @@ Dependencies:
       <div class="row">
         <div class="col">
 
-          <div id="main-content-anchor" style="height: 7rem"></div>
+          <div id="main-content-anchor"></div>
 
           <component v-if="viewPermit"
                      :key="name+'-'+step"
                      :is="contentToDisplay.name"          
                      :onFinish="nextStep(contentToDisplay.nextStep)">
-          </component> 
+          </component>
+
+
           
           <!--<div v-else>-->
           <div v-else>
@@ -53,9 +55,10 @@ Dependencies:
       </div>
     </div>
 
-    <courseEdit v-if="isAuthor" :name="name" :step="step" @saved="$forceUpdate"></courseEdit>
+    <courseEdit v-if="isAuthor && content" :name="name" :step="step" @saved="$forceUpdate"></courseEdit>
 
   </div>
+
 </template>
 
 <script>
@@ -64,55 +67,50 @@ import { mapState, mapGetters } from 'vuex'
 import utils from '@/misc/utils.js'
 import lyScrollToTop from '@/components/scroll-to-top.vue'
 import courseEdit from '@/views/course-edit.vue'
-import { locale } from '@/mixins'
+import { locale, storeHandler } from '@/mixins'
 
 export default {
   name: 'course-detail-view',
+
+  components: {
+    lyScrollToTop,
+    courseEdit
+  },
+
   mixins: [
-    locale
+    locale,
+    storeHandler
   ],
+
   props: {
     name: String,
     step: String
   },
+
   data() {
     return {
       enrollment: {},
       rename: '',
       copy: '',
       changetype: null,
-      courseStats: {},
-      helpfulkey: 0
+      courseStats: {}
     }
   },
-  beforeRouteUpdate(to,from,next) {
-    document.getElementById('main-content-anchor').scrollIntoView()
-    next()
-    //new commit
-  },
-  created() {
-    this.fetchCourse()
-    this.fetchEnrollment()
-    // this.fetchCourseStats()
-  },
-  beforeDestroy(){
-    if(this.enrollment.length > 0) this.updateEnrollment()
-  },
-  computed: {
-    ...mapState(['auth', 'note', 'edit']),
-    ...mapGetters(['isAuthor', 'content', 'course']),
 
+  computed: {
+    ...mapState(['auth', 'note', 'edit', 'flags']),
+    ...mapGetters(['isAuthor', 'content', 'course', 'courseFlags']),
 
     /**
-     *  onFinishDummy: returns empty function on every [] invocation 
-     * 
+     *  onFinishDummy: returns empty function on every [] invocation
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      * */
     onFinishDummy() {
       return new Proxy({}, {
-        get(target, name) {
+        get() {
           return ()=>{}
         }
       })
@@ -120,9 +118,9 @@ export default {
 
     /**
      * userEnrolled: returns enrollment status
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: October 27, 2020
      */
     userEnrolled() {
@@ -131,78 +129,103 @@ export default {
 
     /**
      * contentToDisplay: return current content object
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 24, 2021
      */
     contentToDisplay() {
-      return this.content[this.step-1]
+      return this.content? this.content[this.step-1] : false
     },
 
     /**
      * viewPermit: returns true if user is allowed to see selected course
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: October 27, 2020
      */
     viewPermit() {
-      if( this.contentToDisplay ) {
-        return this.course.needsEnrollment ? 
-          ((this.isAuthor || this.userEnrolled)? true : false) : true
+      if (this.contentToDisplay) {
+        return this.course.needsEnrollment ?
+          (!!(this.isAuthor || this.userEnrolled)) : true
       }
       return false
     },
 
   },
- 
+
+  watch: {
+    /**
+     * watcher content: watch content for changes, updated when they occur
+     *
+     * Author: cmc
+     *
+     * Last Updated: October 22, 2021
+     */
+    content: {
+      deep: true,
+      handler() {
+       this.$forceUpdate()
+      }
+    },
+
+    /**
+     * watcher courseFlags: update when courseFlags change
+     *
+     * Author: cmc
+     *
+     * Last Updated: October 22, 2021
+     */
+    courseFlags: {
+      handler() {
+        this.$forceUpdate()
+      },
+      deep: true
+    }
+  },
+
+  beforeRouteUpdate(to,from,next) {
+    document.getElementById('main-content-anchor').scrollIntoView()
+    next()
+    //new commit
+  },
+
+  created() {
+    this.getCourse()
+    // this.fetchEnrollment()
+    // this.fetchFlags()
+    // this.fetchCourseStats()
+  },
+
+  beforeDestroy(){
+    if(this.enrollment.length > 0) this.updateEnrollment()
+    // this.saveFlags()
+  },
+
   methods: {
     ...utils,
 
     /**
-     * Function fetchCourse: get course from backend, set title
+     * Function getCourse: get course from backend, set title
      * 
      * Author: core
      * 
-     * Last Updated: October 27, 2020
+     * Last Updated: October 21, 2021
      */
-    fetchCourse() {
+    getCourse() {
       const ctx = this;
 
-      window.scrollTo(0,0)
+      // window.scrollTo({
+      //   top: 0,
+      //   left: 0,
+      //   behavior: 'smooth'
+      // })
       document.title = `Laya - ${ctx.name}`
-      console.log('Fetching Course...')
-      let fc = ctx.$store.dispatch('fetchCourse', ctx.name)
-      fc.then( resp => { 
-          console.log(resp)
-          ctx.$forceUpdate()
-        })
-        .catch( err => {
-         ctx.$router.push('/courses')
-      })
-    },
-
-    /**
-     * Function fetchEnrollment: load enrollment status of user 
-     * 
-     * Author: cmc
-     * 
-     * Last Updated: October 27, 2020
-     */
-    fetchEnrollment() {
-      if(this.course.needsEnrollment) this.$store.dispatch('fetchEnrollment', this.course.courseId)
-    },
-
-    /**
-     * Function updateEnrollment: update enrollment in store
-     * 
-     * Author: cmc
-     * 
-     * Last Updated: October 27, 2020
-     */
-    updateEnrollment() {
-      this.$store.dispatch('updateEnrollment')
+      if (!this.course || Object.keys(this.course).length === 0) {
+        console.log('Fetching Course...')
+        this.fetchCourse()
+      }
     },
 
     /**
@@ -224,12 +247,8 @@ export default {
           $router.push({name: 'course-detail-view', params: {name, step}})
         }
       })
-    },
+    }
 
-  },
-  components: {
-    lyScrollToTop,
-    courseEdit
   }
 }
 </script>
@@ -262,5 +281,9 @@ export default {
 
 .container.content {
   margin-bottom: 4rem;
+}
+
+#main-content-anchor {
+  height: 7rem;
 }
 </style>

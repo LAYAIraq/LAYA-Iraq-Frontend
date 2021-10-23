@@ -57,6 +57,23 @@ export default {
     },
 
     /**
+     * Function setMedia: set input media boolean
+     * 
+     * Author: cmc
+     * 
+     * Last Updated: May 24, 2021
+     * 
+     * @param state: contains user preferences
+     * @param type: one of 'audio', 'simple', 'text' and 'video'
+     * @param value: boolean
+     * 
+     */
+    setMedia(state: { prefs: { media: object } }, 
+        { type, value }) {
+      state.prefs.media[type] = value
+    },
+
+    /**
      * Function toggleMedia: toggle input media boolean
      * 
      * Author: core
@@ -83,13 +100,15 @@ export default {
      * @param media: object containing all possible options 
      */
     setPrefs(state: { prefs: { media: object } }, 
-        media: { 
-          text: object,
-          simple: object,
-          video: object,
-          audio: object
-        } ) {
-      state.prefs.media = { ...media }
+        prefs: {
+          media: { 
+            text: object,
+            simple: object,
+            video: object,
+            audio: object
+          } 
+        }) {
+      state.prefs.media = { ...prefs.media }
     },
 
     /**
@@ -103,7 +122,13 @@ export default {
      * @param settings contains the same key-value pairs to set 
      */
     setProfile(
-      state: object, 
+      state: {
+        name: string,
+        email: string,
+        prefs: object,
+        lang: string,
+        avatar: string
+      }, 
       settings: {
         username: string,
         email: string,
@@ -111,7 +136,12 @@ export default {
         lang: string,
         avatar: string
       }) {
-      state = { ...settings }
+      
+      state.name = settings.username
+      state.email = settings.email
+      state.avatar = settings.avatar
+      state.lang = settings.lang
+      state.prefs = settings.prefs
     },
 
     /**
@@ -154,7 +184,9 @@ export default {
      */
     fetchProfile({ commit, state, rootState }) {
       http.get(`accounts/${rootState.auth.userId}`)
-        .then(({ data }) => commit('setProfile', data))
+        .then(({ data }) => {
+          commit('setProfile', data)
+        })
         .catch((err) => console.error(err));
     },
 
@@ -168,7 +200,14 @@ export default {
      * @param param0 state variables
      */
     saveProfile({commit, state, rootState}) {
-      http.patch(`accounts/${rootState.auth.userId}`, {...state})
+      http.patch(`accounts/${rootState.auth.userId}`, { 
+          ...state, 
+          prefs: {
+            media: {
+              ...state.prefs.media
+            }
+          }
+        })
         .catch(err => {
           console.error(err)
         })

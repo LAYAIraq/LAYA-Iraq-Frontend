@@ -46,7 +46,7 @@ Dependencies: @/mixins/locale.vue
         <div class="col-10">
           <input id="relate-title"
             type="text"
-            v-model="title"
+            v-model="title.text"
             class="form-control"
             :placeholder="i18n['titlePlaceholder']">
         </div>
@@ -60,7 +60,7 @@ Dependencies: @/mixins/locale.vue
         </label>
         <div class="col-10">
           <textarea id="relate-task"
-            v-model="task"
+            v-model="task.text"
             class="w-100"
             :placeholder="i18n['taskPlaceholder']"
           >
@@ -139,7 +139,7 @@ Dependencies: @/mixins/locale.vue
 
         <!-- image -->
         <div 
-          class="col-3"
+          class="col"
           :class="langIsAr? '' : 'offset-2'"
         >
           <input 
@@ -150,13 +150,25 @@ Dependencies: @/mixins/locale.vue
             :placeholder="i18n['layaLaRelate.edit.imgPlaceholder']">
         </div>
 
+        <!-- alt text -->
+        <div 
+          class="col"
+        >
+          <input 
+            :id="'pair-label-'+i"
+            class="form-control"
+            type="text"
+            v-model="pairs[i].label"
+            :placeholder="i18n['layaLaRelate.edit.labelPlaceholder']">
+        </div>
+
         <!-- audio -->
-        <div class="col-3">
+        <div class="col">
           <input :id="'pair-text-'+i"
             class="form-control"
             type="text"
             v-model="pairs[i].audio"
-            :placeholder="i18n['taskAudioPlaceholder']">
+            :placeholder="i18n['layaLaRelate.edit.audioPlaceholder']">
         </div>
 
         <!-- relation -->
@@ -211,6 +223,7 @@ Dependencies: @/mixins/locale.vue
 
 <script>
 import { locale, tooltipIcon } from '@/mixins'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'laya-la-relate-create',
@@ -222,30 +235,43 @@ export default {
 
   data () {
     return {
-      title: '',
-      task: '',
+      title: {},
+      task: {},
       taskAudio: '',
-      pairs: [
-        {
-          img: '',
-          audio: '',
-          relation: -1
-        }
-      ],
+      pairs: [],
       relations: []
     }
   },
 
   created () {
-    if (this.relations.length == 0) {
+    this.populateData()
+  },
+
+  methods: {
+    populateData() {
       for (let i=1; i<3 ;i++) {
         let tmp = this.i18n['layaLaRelate.edit.solution'] + ' ' + i
         this.relations.push(tmp)
       }
-    }
-  },
-
-  methods: {
+      this.pairs.push({
+        img: '',
+        audio: '',
+        label: '',
+        relation: -1,
+        id: uuidv4(),
+        flagged: false
+      })
+      this.title = {
+        text: '',
+        id: uuidv4(),
+        flagged: false
+      }
+      this.task = {
+        text: '',
+        id: uuidv4(),
+        flagged: false
+      }
+    },
     /**
      * Function _delItem: remove item at position idx
      * 
@@ -261,15 +287,13 @@ export default {
     
     /**
      * Function _addPair: add an empty pair
-     * 
      * Author: core
-     * 
-     * Last Updated: unknown
+     * Last Updated: June 28, 2021
      * 
      * @param {*} idx index at which to remove
      */
     _addPair() {
-      this.pairs.push({img: '', audio: '', relation: -1})
+      this.pairs.push({img: '', audio: '', relation: -1, label: '', flagged: false, id: uuidv4()})
     },
 
     /**

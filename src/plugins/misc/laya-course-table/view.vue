@@ -116,18 +116,6 @@ export default {
         cats[category].push(course)
       })
       return cats
-    },
-    
-    /**
-     * i18n: Load translation files depending on user language
-     * 
-     * Author: cmc
-     * 
-     * Last updated: March 20, 2021
-     * 
-     */
-    i18n() {
-      return i18n[this.$store.state.profile.lang]
     }
   },
   methods: {

@@ -59,6 +59,7 @@ Dependencies:
           v-else 
           :class="marginClass()"
         >
+          <ly-header-notifications></ly-header-notifications>
           <b-nav-item to="/profile">
             <i class="fas fa-user-alt"></i>
             {{ i18n['header.profile'] }}
@@ -125,12 +126,14 @@ import { mapGetters, mapState } from 'vuex'
 import http from 'axios'
 import { icons } from '@/misc/langs.js'
 import { locale } from '@/mixins'
+import lyHeaderNotifications from '@/components/header-notifications.vue'
 import lyScrollToTop from '@/components/scroll-to-top.vue'
 
 export default {
   name: 'ly-header',
 
   components: {
+    lyHeaderNotifications,
     lyScrollToTop
   },
 
@@ -177,6 +180,8 @@ export default {
         .then(({data}) => {
           let lang = data.substring(0, data.indexOf('-'))
           store.commit('setLang', lang)
+          const html = document.documentElement
+          html.setAttribute('lang', lang)
         })
         .catch(() => {
           store.commit('setLang', 'de')

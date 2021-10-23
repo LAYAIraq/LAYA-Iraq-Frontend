@@ -27,7 +27,7 @@ Dependencies:
           <input 
             id="laya-wysiwyg-title"
             type="text"
-            v-model="title"
+            v-model="title.text"
             class="form-control"
             :placeholder="i18n['titlePlaceholder']"
           >
@@ -42,7 +42,7 @@ Dependencies:
             <input
               id="show-title-tick"
               type="checkbox"
-              v-model="showTitle"
+              v-model="title.show"
             >
           </label>
             
@@ -92,8 +92,7 @@ export default {
   data() {
     return {
       contents: null,
-      title: '',
-      showTitle: false
+      title: { }
     }
   },
 
@@ -119,7 +118,6 @@ export default {
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.contents = preData.contents
       this.title = preData.title
-      this.showTitle = preData.showTitle
     },
 
     /**
@@ -149,7 +147,7 @@ export default {
       quill.on('text-change', (delta, oldDelta, source) => {
         if (source === 'user')
           self.contents = quill.getContents()
-          self.$forceUpdate
+          self.$forceUpdate()
       })
       quill.setContents(self.contents)
     }

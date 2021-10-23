@@ -26,11 +26,12 @@ Dependencies:
       :title="i18n['showTip']" 
       v-b-tooltip.left></i>
     <b-jumbotron 
-            v-if="tooltipOn"
-            :header="i18n['layaLaDragDrop.name']" :lead="i18n['tipHeadline']">
-          <hr class="my-4">
-          <span v-html="i18n['layaLaDragDrop.tooltip']"></span>
-
+      v-if="tooltipOn"
+      :header="i18n['layaLaDragDrop.name']"
+      :lead="i18n['tipHeadline']"
+    >
+      <hr class="my-4">
+      <span v-html="i18n['layaLaDragDrop.tooltip']"></span>
     </b-jumbotron>
     <hr>
 
@@ -38,42 +39,45 @@ Dependencies:
 
       <!-- title -->
       <div class="form-group row">
-        <label for="scms-title" class="col-2 col-form-label">{{ i18n['title'] }}</label>
+        <label for="drag-drop-title" class="col-2 col-form-label">{{ i18n['title'] }}</label>
         <div class="col-10">
-          <input id="scms-title"
-                 type="text"
-                 v-model="title"
-                 class="form-control"
-                 :placeholder="i18n['titlePlaceholder']">
+          <input 
+            id="drag-drop-title"
+            type="text"
+            v-model="title.text"
+            class="form-control"
+            :placeholder="i18n['titlePlaceholder']">
         </div>
       </div>
 
 
       <!-- task -->
       <div class="form-group row">
-        <label for="smcs-task" class="col-2 col-form-label">
+        <label for="drag-drop-task" class="col-2 col-form-label">
           {{ i18n['task'] }}
         </label>
         <div class="col-10">
-          <textarea id="scms-task"
-                    v-model="task"
-                    class="w-100"
-                    :placeholder="i18n['taskPlaceholder']">
+          <textarea 
+            id="drag-drop-task"
+            v-model="task.text"
+            class="w-100"
+            :placeholder="i18n['taskPlaceholder']">
           </textarea>
         </div>
       </div>
 
       <!-- task audio -->
       <div class="form-group row">
-        <label for="smcs-task-audio" class="col-2 col-form-label">
+        <label for="drag-drop-task-audio" class="col-2 col-form-label">
           {{ i18n['taskAudio'] }}
         </label>
         <div class="col-10">
-          <input id="scms-task-audio"
-                 type="text"
-                 v-model="taskAudio"
-                 class="form-control"
-                 :placeholder="i18n['taskAudioPlaceholder']">
+          <input 
+            id="drag-drop-task-audio"
+            type="text"
+            v-model="taskAudio"
+            class="form-control"
+            :placeholder="i18n['taskAudioPlaceholder']">
         </div>
       </div>
 
@@ -91,33 +95,39 @@ Dependencies:
 
         <!-- delete -->
         <div class="col-auto align-self-center">
-          <button type="button"
-                  class="btn btn-danger btn-sm"
-                  @click="_delCategory(i)">
+          <button 
+            type="button"
+            class="btn btn-danger btn-sm"
+            @click="_delCategory(i)"
+          >
             <i class="fas fa-times"></i>
           </button>
         </div>
       </div>
       <div class="form-group row">
         <div class="col-10 offset-2">
-          <button type="button"
-                  class="btn btn-primary btn-sm"
-                  @click="_addCategory">
+          <button 
+            type="button"
+            class="btn btn-primary btn-sm"
+            @click="_addCategory"
+          >
             <i class="fas fa-plus"></i>{{ i18n['layaLaDragDrop.catAdd'] }}
           </button>
         </div>
       </div>
 
       <p><b>{{ i18n['items'] }}</b></p>
-      <div class="form-group row" v-for="(it, i) in items" :key="'item-'+i">
+      <div class="form-group row" v-for="(item,i) in items" :key="'item-'+item.id">
 
         <!-- text -->
-        <label class="col-form-label col-2" :for="'item-text-'+i">{{ i18n['text'] }}</label>
+        <label class="col-form-label col-2" :for="'item-text-'+item.id">{{ i18n['text']
+          }}</label>
         <div class="col-5">
-          <input :id="'item-text-'+i"
+          <input 
+            :id="'item-text-'+item.id"
             class="form-control"
             type="text"
-            v-model="items[i].label">
+            v-model="item.label">
         </div>
 
         <!-- category -->
@@ -132,9 +142,11 @@ Dependencies:
 
         <!-- delete -->
         <div class="col-auto align-self-center">
-          <button type="button"
-                  class="btn btn-danger btn-sm"
-                  @click="_delItem(i)">
+          <button 
+            type="button"
+            class="btn btn-danger btn-sm"
+            @click="_delItem(i)"
+          >
             <i class="fas fa-times"></i>
           </button>
         </div>
@@ -159,6 +171,7 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import { locale, tooltipIcon } from '@/mixins'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'laya-la-drag-drop-edit',
@@ -171,8 +184,8 @@ export default {
   
   data () {
     return {
-      title: '',
-      task: '',
+      title: {},
+      task: {},
       taskAudio: '',
       items: [],
       categories: []
@@ -208,7 +221,7 @@ export default {
      * @param {string} str string to be added
      */
     _addItem(str) {
-      this.items.push({label: str, category: -1})
+      this.items.push({label: str, category: -1, flagged: false, id: uuidv4()})
     },
 
     /**

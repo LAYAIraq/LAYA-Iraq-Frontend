@@ -58,7 +58,7 @@ Dependencies:
                 <b>
                   {{ id+1 }}
                 </b>:
-                {{ c.input.title }}
+                {{ c.input.title.text }}
                 ({{ typeName(c.name)}})
               </b-dropdown-item>
 
@@ -85,7 +85,7 @@ Dependencies:
                 <b>
                   {{ id+1 }}
                 </b>:
-                {{ c.input.title }}
+                {{ c.input.title.text }}
                 ({{ typeName(c.name)}})
               </b-dropdown-item>
 
@@ -100,13 +100,12 @@ Dependencies:
 <script>
 
 import { mapGetters } from 'vuex'
-import { contentTypes, locale } from '@/mixins'
+import { locale } from '@/mixins'
 
 export default {
   name: 'course-edit-header',
 
   mixins: [
-    contentTypes,
     locale 
   ],
 
@@ -118,6 +117,26 @@ export default {
   props: {
     name: String,
     step: String,
+  },
+
+  methods: {
+    /**
+     * Function typeName: returns name of content block in locale
+     *
+     * Author: core
+     *
+     * Last Updated: May 6, 2021
+     * @param {string} compName name of content block
+     */
+    typeName(compName) {
+      const comps = { ...this.$laya.la, ...this.$laya.lb }
+      for(const comp in comps) {
+        if (comps[comp].id === compName) {
+          return this.i18n[comps[comp].name + '.name']
+        }
+      }
+      return 'FAIL'
+    }
   }
     
 }

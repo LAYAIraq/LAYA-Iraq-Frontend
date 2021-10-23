@@ -8,19 +8,50 @@ Dependencies: @/mixins/locale.vue
 
 <template>
   <div class="laya-dialog">
+<!--    <div-->
+<!--      class="row"-->
+<!--      :id="title.id"-->
+<!--      v-if="title.show"-->
+<!--    >-->
+<!--      {{ title.text }}-->
+<!--    </div>-->
     <img v-if="bg" class="bg" :src="bg" alt="">
     <div v-else class="bg-fallback"></div>
     <div class="dialog-text">
-      <div v-if="question" class="question">{{ question }}</div>
-      <div class="answers d-flex justify-content-around">
-        <button 
+      <div
+        v-if="question"
+        class="flaggable question"
+        :id="question.id"
+      >
+        {{ question.text }}
+        <laya-flag-icon v-if="!previewData"
+          :refData="question"
+
+          @flagged="question.flagged = true"
+
+        ></laya-flag-icon>
+      </div>
+      <div class="answers d-flex flex-wrap justify-content-around">
+        <div
           v-for="(answer,i) in answers"
-          :key="i"
-          type="button"
-          class="btn btn-info btn-lg"
-          @click="onFinish[i]()">
-          {{ answer }}
-        </button>
+          :key="answer.id"
+          class="flaggable answer-item"
+        >
+          <button
+            type="button"
+            class="btn btn-info btn-lg"
+            @click="onFinish[i]()">
+            {{ answer.text }}
+          </button>
+          <laya-flag-icon v-if="!previewData"
+            :refData="answer"
+
+            :interactive="true"
+            @flagged="answer.flagged = true"
+
+          >
+          </laya-flag-icon>
+        </div>
       </div>
     </div>
   </div>
@@ -28,56 +59,73 @@ Dependencies: @/mixins/locale.vue
 </template>
 
 <script>
+
+import { locale } from '@/mixins'
 import { mapGetters } from 'vuex'
+import '@/styles/flaggables.css'
+
 export default {
   name: 'laya-dialog',
+
+  mixins: [ locale ],
+
+  computed: {
+    ...mapGetters(['content', 'courseFlags']),
+
+    /**
+     * idx: Return index of content block in course array
+     * Author: cmc
+     * Last Updated: January 16, 2021
+     */
+    idx() {
+      //comply with array indexing in store
+      return this.$route.params.step -1
+    }
+  },
+
+  props: {
+    onFinish: Array,
+    previewData: Object
+  },
+
   data() {
-    if (Object.entries(this.$attrs).length === 5) { // for 'preview' feature
-      return {...this.$attrs}
+    if (this.previewData) { // for 'preview' feature
+      return {...this.previewData}
     }
     return {
       question: '',
       answers: [],
       bg: '',
       title: '',
-      showTitle: false
+      unwatch: null
     }
   },
-  beforeMount() {
-    // fetch data from vuex if not preview
-    if (Object.entries(this.$attrs).length != 5) {
-      // No attributed Data --> actual view
-      this.refreshData()
-    }
-  },
-  computed: {
-    ...mapGetters(['content']),
 
-    /**
-     * idx: Return index of content block in course array
-     * 
-     * Author: cmc
-     * 
-     * Last Updated: January 16, 2021
-     */
-    idx() {
-      //comply with array indexing in store
-      return this.$route.params.step -1 
-    }
+  created() {
+    if (!this.previewData) this.fetchData()
+    // this.unwatch = this.$store.watch(
+    //     (state, getters) => getters.content,
+    //     () => {
+    //       this.fetchData() // when updated, re-do deep copying
+    //     },
+    //     { deep: true }
+    // )
   },
-  props: {
-    onFinish: Array
+
+  beforeDestroy() {
+    // this.unwatch()
   },
+
   methods: {
 
     /**
-     * Function refreshData: make vuex store data mutable
-     * 
+     * Function fetchData: make vuex store data mutable
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: January 16, 2021
      */
-    refreshData() {
+    fetchData() {
       // dereference store data
       let preData = JSON.parse(JSON.stringify(this.content[this.idx].input))
       //replace data stubs with stored data
@@ -85,21 +133,15 @@ export default {
       this.answers = preData.answers
       this.bg = preData.bg
       this.title = preData.title
-      this.showTitle = preData.showTitle
     }
-  },
-  watch: {
-    content(newValue) {
-      //FIXME doesn't actually watch the property
-      this.refreshData()
-    }
+
   }
 }
 </script>
 
 <style scoped>
 .laya-dialog {
-  position: relative;
+  /*position: relative;*/
   /* min-height: 20rem; */
   border: 1px solid grey;
 }
@@ -118,33 +160,40 @@ export default {
 .dialog-text {
   
   width: stretch;
-  /* height: max-content; */
+/*   height: max-content; */
   /* background-color: #ffffffd9; */
   margin: 1rem;
 }
 
 .dialog-text.absolute {
   position: absolute;
-  bottom: 0px;
-  left: 0px;
-  top: 0px;
+  bottom: 0;
+  left: 0;
+  top: 0;
 }
 
 .question {
+  position: relative;
   font-size: 2rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
   padding: 5px;
   text-align: center;
-  background-color: #ffffff78;
+  background-color: #ffffff;
   border-radius: 3px;
   line-height: 1.5;
+}
+
+.answer-item {
+  display: block;
+  position: relative;
 }
 
 .answers > button {
   border: 1px solid #222;
   margin-right: 1rem;
   font-size: 90%;
+  line-height: 1.5;
   /* background-color: white; */
 }
 .answers > button:last-child {

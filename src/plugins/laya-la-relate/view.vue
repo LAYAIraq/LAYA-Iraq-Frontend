@@ -15,15 +15,35 @@ Dependencies:
   >
     <div class="container">
 
-      <div class="row mb-3">
+      <div class="flaggable row mb-3" :id="title.id">
         <div class="col">
           <h4>
-            {{title}}
+            {{ title.text }}
             <laya-audio-inline v-if="taskAudio" :src="taskAudio">
             </laya-audio-inline>
           </h4>
-          <p>{{task}}</p>
         </div>
+        <laya-flag-icon v-if="!previewData"
+            :refData="title"
+
+            @flagged="title.flagged = true"
+
+        ></laya-flag-icon>
+      </div>
+
+      <div
+        class="flaggable row"
+        :id="task.id"
+      >
+        <div class="col">
+          <p>{{ task.text }}</p>
+        </div>
+        <laya-flag-icon v-if="!previewData"
+            :refData="task"
+
+            @flagged="task.flagged = true"
+
+        ></laya-flag-icon>
       </div>
 
       <hr>
@@ -34,11 +54,12 @@ Dependencies:
           <form>
             <div 
               v-for="(pair,i) in pairs" 
-              :key="i+'-'+uid" 
-              class="form-group row"
+              :key="pair.id"
+              :id="pair.id" 
+              class="form-group row flaggable"
             >
               <label 
-                :for="pair.label+uid" 
+                :for="pair.label+i" 
                 class="col-sm-6 col-form-label"
               >
                 <img 
@@ -55,7 +76,7 @@ Dependencies:
                 {{ pair.label }}
               </label>
               <div class="col-sm-6">
-                <select :id="pair.label+uid"
+                <select :id="pair.label+i"
                   v-model="solution[i]"
                   :disabled="freeze"
                   class="custom-select">
@@ -74,6 +95,13 @@ Dependencies:
                   <i :class="eval[i]"></i>
                 </div>
               </div>
+              <laya-flag-icon v-if="!previewData"
+                  :refData="pair"
+
+                  :interactive="true"
+                  @flagged="pair.flagged = true"
+
+              ></laya-flag-icon>
             </div>
           </form>
           
@@ -81,11 +109,15 @@ Dependencies:
       </div>
 
       <div class="row pt-3">
-        <!--
-        <button type="button" class="btn btn-link" @click="reset">
-          <u>Eingabe löschen</u>
+        
+        <button 
+          type="button" 
+          class="btn btn-warning" 
+          @click="reset"
+        >
+          {{ i18n['layaLaRelate.removeInput']}}
         </button>
-        -->
+       
         <button 
           type="button" 
           class="btn btn-link"
@@ -113,26 +145,28 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
+import '@/styles/flaggables.css'
 
 export default {
   name: 'laya-quiz-relate',
 
   mixins: [
+
     locale
   ],
   
-  data () {
-    if (Object.entries(this.$attrs).length === 5) //preview
+  data() {
+    if (this.previewData) //preview
       return {
-        ...this.$attrs,
+        ...this.previewData,
         defaultOption: '',
         solution: [],
         eval: [],
         freeze: false
       }
     return {
-      title: '',
-      task: '',
+      title: {},
+      task: {},
       taskAudio: '',
       pairs: [],
       defaultOption: '',
@@ -141,28 +175,18 @@ export default {
       freeze: false
     }
   },
-  created () {
+  created() {
     this.defaultOption = this.i18n['layaLaRelate.defaultOption']
-    if (Object.entries(this.$attrs).length != 5) { // no preview 
+    if (!this.previewData) { // no preview 
       this.fetchData()
     }
   },
   props: {
-    onFinish: Array
+    onFinish: Array,
+    previewData: Object
   },
   computed: {
     ...mapGetters(['content']),
-
-    /**
-     * uid: return date in ms
-     * 
-     * Author: core
-     * 
-     * Last Updated: unknown
-     */
-    uid() {
-      return Date.now()
-    },
 
     /**
      * options: map pairs to their relation
@@ -176,9 +200,11 @@ export default {
     }
   },
   watch: {
-    content() {
-      this.fetchData
-      this.$forceUpdate
+    content: {
+      deep: true,
+      handler() {
+        this.fetchData()
+      }
     }
   },
   methods: {
@@ -191,7 +217,7 @@ export default {
      * Last Updated: unknown
      */
     reset() {
-      this.solution = this.pairs.map(p => this.defaultOption)
+      this.solution = this.pairs.map(() => this.defaultOption)
     },
 
     /**
@@ -249,7 +275,7 @@ export default {
   margin-bottom: 2rem;
 }
 .item:last-child {
-  margin-bottom: 0rem;
+  margin-bottom: 0;
 }
 
 img {
@@ -263,4 +289,5 @@ img {
 .form-group.row:nth-child(2) {
   background-color: #ebece7;
 }
+
 </style>

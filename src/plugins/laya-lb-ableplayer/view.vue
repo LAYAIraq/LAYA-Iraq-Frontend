@@ -12,7 +12,19 @@ Dependencies:
 <template>
   <div class="ly-ableplayer">
 
-    <h4 v-if="showTitle"> {{ title }}</h4>
+    <div
+      class="flaggable row"
+      :id="title.id"
+      v-if="title.show"
+    >
+      <h4> {{ title.text }}</h4>
+      <laya-flag-icon v-if="!previewData"
+        :refData="title"
+
+        @flagged="title.flagged = true"
+
+      ></laya-flag-icon>
+    </div>
 
     <video 
       :id="playerId"
@@ -43,23 +55,45 @@ Dependencies:
 </template>
 
 <script>
-import 'ableplayer'
+// import 'ableplayer' FIXME: still broken
 import { mapGetters } from 'vuex'
 import 'ableplayer/build/ableplayer.min.css' //neccessary, otherwise ableplayer is butchered
 import { locale } from '@/mixins'
+import '@/styles/flaggables.css'
 
 export default {
 
   name: 'laya-ableplayer',
 
   mixins: [
+
     locale
   ],
 
+  props: {
+    onFinish: Array,
+    previewData: Object
+  },
+
+  computed: {
+    ...mapGetters(['content', 'profileLang']),
+
+    /**
+     * playerId: return an id for ableplayer html element
+     *
+     * Author: core
+     *
+     * Last Updated: unknown
+     */
+    playerId() {
+      return `laya-ableplayer-${Date.now()}`
+    }
+  },
+
   data() {
-    if (Object.entries(this.$attrs).length === 5)
+    if (this.previewData)
       return {
-        ...this.$attrs,
+        ...this.previewData,
         ableplayer: null
       }
     return {
@@ -67,33 +101,18 @@ export default {
       src: '',
       sign: '',
       sub: '',
-      showTitle: false,
       ableplayer: null
     }
   },
+
   created() {
-    this.fetchData()
+    if (!this.previewData) this.fetchData()
   },
+
   mounted() {
     this.ableplayer = new window.AblePlayer(`#${this.playerId}`)
   },
-  props: {
-    onFinish: Array
-  },
-  computed: {
-    ...mapGetters(['content', 'profileLang']),
 
-    /**
-     * playerId: return an id for ableplayer html element
-     * 
-     * Author: core
-     * 
-     * Last Updated: unknown
-     */
-    playerId() {
-      return `laya-ableplayer-${Date.now()}`
-    }
-  },
   methods: {
 
     /**
@@ -125,7 +144,7 @@ export default {
       this.title = preData.title
       this.showTitle = preData.showTitle
     }
-  },
+  }
 }
 </script>
 
