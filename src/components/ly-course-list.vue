@@ -32,6 +32,9 @@ Dependencies:
         <div class="col">
           <h4>{{ i18n['cat'] }}</h4>
         </div>
+        <div class="col">
+          <h4>{{ i18n['courseList.properties'] }}</h4>
+        </div>
         <div class="col-3">
         </div>
       </div>
@@ -46,6 +49,17 @@ Dependencies:
 
         <div class="col">
           {{ course.category }}
+        </div>
+
+        <div class="col">
+          <ul class="course-props">
+            <li
+              v-for="set in Object.entries(course.settings)"
+              :key="`setting-${set[0]}`"
+            >
+              <span v-if="set[1]">{{ set[0] }}</span>
+            </li>
+          </ul>
         </div>
 
         <div class="col-3">
@@ -165,7 +179,7 @@ export default {
      * Last Updated: unknown
      */
     enrollmentNeeded(course) {
-      if (course.needsEnrollment) {
+      if (course.settings.enrollment) {
         return !this.enrolledIn.find(x => x === course.courseId)
       }
       else {

@@ -17,6 +17,7 @@
 	"courseDetail.bToast.text": "Successfully Saved!",
 	"courseDetail.content": "There is no content yet",
 	"courseDetail.noPermit": "You are not allowed to see this content!",
+	"courseList.properties": "Properties",
 	"courseList.start": "Start",
 	"courseList.subscribe": "Subscribe",
 	"courseNavEdit.graph": "Graphical Preview:",

@@ -672,7 +672,7 @@ export default {
             const listData = {
               category: courseObject.category,
               name: courseObject.name,
-              needsEnrollment: courseObject.settings.enrollment,
+              settings: courseObject.settings,
               courseId: courseObject.courseId
             }
             if (!state.courseList.some( // add to course list if not present
