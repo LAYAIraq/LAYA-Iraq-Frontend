@@ -14,14 +14,14 @@ Dependencies: none
             @click="togglePlay">
       <i class="fas fa-volume-up"></i>
     </button>
-    <audio v-show="false" ref="player" @ended="playing = false" :src="src">
+    <audio v-show="!playing" ref="player" @ended="playing = false" :src="src">
     </audio>
   </span>
 </template>
 
 <script>
 export default {
-  name: "laya-audio-inline",
+  name: 'laya-audio-inline',
   data() {
     return {
       playing: false,

@@ -70,7 +70,7 @@ Dependencies:
         </div>
 
         <div class="col">
-          {{ step.input.title }}
+          {{ renderTitle(step) }}
         </div>
 
         <div class="col-3">
@@ -157,7 +157,8 @@ Dependencies:
 </template>
 
 <script>
-import vis from 'vis-network'
+import { Network } from 'vis-network/peer'
+import { DataSet } from 'vis-data/peer'
 import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 
@@ -203,8 +204,7 @@ export default {
 
   created() {
     //create deep copy of store object to manipulate in vue instance
-    let preData = JSON.parse(JSON.stringify(this.content))
-    this.courseContent = preData
+    this.courseContent = JSON.parse(JSON.stringify(this.content))
   },
 
   mounted() {
@@ -263,12 +263,14 @@ export default {
       return 'FAIL'
     },
 
+    renderTitle(step) {
+      return step.input.title? step.input.title.text : 'No title set'
+    },
+
     /**
      * Function renderNavGraph: render graph for course path
-     * 
      * Author: core
-     * 
-     * Last Updated: January 20, 2021
+     * Last Updated: August 3, 2021
      */
     renderNavGraph() {
       const self = this
@@ -287,9 +289,9 @@ export default {
         }
       }
 
-      const graph = new vis.Network(document.getElementById(self.navGraphId), {
-        nodes: new vis.DataSet(_nodes),
-        edges: new vis.DataSet(_edges)
+      const graph = new Network(document.getElementById(self.navGraphId), {
+        nodes: new DataSet(_nodes),
+        edges: new DataSet(_edges)
       }, {
         edges: {
           arrows: 'to'
@@ -305,8 +307,8 @@ export default {
           }
         },
         interaction: {
-          dragNodes: false,
-          selectable: false,
+          dragNodes: true,
+          selectable: true,
         },
         /*
         layout: {
@@ -322,9 +324,7 @@ export default {
 
     /**
      * Function save: save changes in store and db
-     * 
      * Author: core
-     * 
      * Last Updated: January 20, 2021
      */
     save() {

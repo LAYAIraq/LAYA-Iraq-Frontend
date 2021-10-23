@@ -128,7 +128,7 @@ export default {
       let ctx = this
       let stored = this.$store.dispatch('storeCourse') //returns promise
       stored
-      .then( (succ) => {
+      .then(() => {
         ctx.$bvToast.show('author-toast')
         // ctx.$emit('saved')
         })

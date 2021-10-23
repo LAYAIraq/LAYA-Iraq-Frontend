@@ -158,7 +158,7 @@ export default {
     storeNewCourse() {
       
       const self = this
-      const {$store, newCourse, auth} = this;
+      const { newCourse, auth } = this;
 
       let enrBool = self.needsEnrollment
       let newId = uuidv4()
@@ -176,7 +176,7 @@ export default {
         authorId: auth.userId,
         storageId: newId,
         needsEnrollment: enrBool
-        }).then( (resp) => {
+        }).then( () => {
           // console.log(resp)
           self.$router.push(`/courses/${newCourse.name}/1`)
 

@@ -11,7 +11,17 @@ Dependencies:
 
 <template>
   <div class="laya-wysiwyg-view">
-    <h4 v-if="showTitle">{{ title }}</h4>
+    <div
+      v-if="title.show"
+      class="flaggable row"
+      :id="title.id"
+    >
+      <h4 >{{ title.text }}</h4>
+      <laya-flag-icon v-if="!previewData"
+          :refData="title"
+          @flagged="title.flagged = true"
+      ></laya-flag-icon>
+    </div>
     <div :id="editorId"></div>
     <div class="row">
       <button 
@@ -38,23 +48,26 @@ import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
 import { locale } from '@/mixins'
 import { mapGetters } from 'vuex'
+import '@/styles/flaggables.css'
 
 export default {
   name: 'laya-wysiwyg',
 
   mixins: [
+
     locale
   ],
 
   data() {
-    if(Object.entries(this.$attrs).length === 3) //for preview
-      return {...this.$attrs}
+    if(this.previewData) //for preview
+      return {...this.previewData}
     return {
-      contents: null
+      contents: null,
+      title: {}
     }
   },
   created() {
-    this.fetchData()
+    if (!this.previewData) this.fetchData()
   },
   mounted() {
     this.fetchContent()
@@ -87,7 +100,6 @@ export default {
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.contents = preData.contents
       this.title = preData.title
-      this.showTitle = preData.showTitle
     },
     /**
      * Function fetchContent: fetch contents from quill
@@ -105,7 +117,8 @@ export default {
     }
   },
   props: {
-    onFinish: Array
+    onFinish: Array,
+    previewData: Object
   }
 }
 </script>

@@ -51,13 +51,16 @@ Dependencies:
         <div class="col-3">
           <router-link
             :to="'/courses/'+course.name+'/1'"
-            class="text-dark px-2 py-1 d-inline-block text-center"
+            class="btn text-dark px-2 py-1 d-inline-block text-center w-100"
             v-if="!enrollmentNeeded(course)" >
             {{ i18n['courseList.start'] }} 
             <i class="fas fa-arrow-right"></i>
           </router-link>
-          <a class="text-dark px-2 py-1 d-inline-block text-center" 
-            v-else @click="subscribe(course)" href="#">
+          <a 
+            class="btn text-dark px-2 py-1 d-inline-block text-center w-100 text-break" 
+            v-else 
+            @click="subscribe(course)" 
+          >
             {{ i18n['courseList.subscribe'] }}
             <i class="fas fa-file-signature"></i>  
           </a>
@@ -106,7 +109,7 @@ export default {
      * Last updated: March 24, 2021 
      */
     filtered() {
-      if (!this.filter) return this.courseList;
+      if (!this.filter) return this.courseList
 
       const filterByCourseName = new RegExp(this.filter, 'i');
       return this.filteredList.filter(course => filterByCourseName.test(course.name))
@@ -144,8 +147,8 @@ export default {
           }
         })
         .catch(err => {
-          console.log(`No enrollments for ${studentId} found`)
-          // console.error(err)
+          // console.log(`No enrollments for ${studentId} found`)
+          console.error(err)
         })
       
     },
@@ -188,17 +191,11 @@ export default {
       }
 
       /* create enrollment */
-      http.patch('enrollments', {
-        ...newEnrollment
-      }).then(() => {
-        
-      }).catch((err) => {
-        console.log(err)
-      })
-
-      self.$nextTick( () => {
-        self.getSubs()
-      })
+      http.post('enrollments/create', newEnrollment)
+        .then((resp) => {
+          self.enrolledIn.push(resp.data.enrol.courseId)
+        })
+        .catch((err) => console.error(err))
 
     }
   }

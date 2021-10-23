@@ -106,7 +106,6 @@ export default {
       let finished = 0
       let notFinished = 0
       let lostAt = []
-      let now = Date.now()
       let avgFeedback = []
 
       for (const enrol of listEnr) {
@@ -114,7 +113,7 @@ export default {
         if (enrol.finished) {
           let userTime = Date.parse(enrol.lastActivity) - Date.parse(enrol.created)
           console.log(`User time: ${userTime} `)
-          timespent += userTime
+          timeSpent += userTime
           finished ++
         }
 

@@ -40,6 +40,12 @@ export default new Router({
       component: views.login
     },
     {
+      path: '/notifications',
+      name: 'notification-view',
+      component: views.notifications,
+      props: true
+    },
+    {
       path: '/profile',
       name: 'profile-view',
       component: views.profile
@@ -75,6 +81,12 @@ export default new Router({
           component: views.editCourseNav
         }
       ]
+    },
+    {
+      path: '/courses/:name/:step/flag/:id',
+      name: 'flag-view',
+      component: views.flag,
+      props: true
     },
     // {
     //   path: '/mycourses',

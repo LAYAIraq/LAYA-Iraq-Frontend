@@ -155,7 +155,7 @@ export default {
       alert(msg)
     },
 
-    inputFile(newFile, oldFile, prevent) {
+    inputFile(newFile, oldFile) {
       if (newFile && !oldFile) {
         this.$nextTick( () => {
           this.edit = true

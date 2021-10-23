@@ -14,6 +14,8 @@ import Vuex from 'vuex';
 /* modules */
 import auth from './modules/auth';
 import edit from './modules/edit';
+import flags from './modules/flags';
+import message from './modules/message';
 import note from './modules/note';
 import profile from './modules/profile';
 
@@ -26,8 +28,10 @@ export default new Vuex.Store({
   modules: {
     auth,
     edit,
+    flags,
+    message,
     note,
-    profile,
+    profile
   },
   strict: debug,
 });

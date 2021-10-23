@@ -8,7 +8,7 @@
 
 export default {
   ADMIN: 'admin',
+  EDITOR: 'editor',
   AUTHOR: 'author',
-  TEACHER: 'teacher',
   STUDENT: 'student',
 }

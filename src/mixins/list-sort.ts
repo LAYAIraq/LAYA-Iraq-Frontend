@@ -1,12 +1,12 @@
-<!-- 
-  Filename: list-sort.vue
-  Use: Define methods for sorting lists
-  Creator: cmc
-  Date: April 28, 2021
-  Dependencies: 
-    vuex
--->
-<script>
+/**
+*  Filename: list-sort.ts
+*  Use: Define methods for sorting lists
+*  Creator: cmc
+*  Date: April 28, 2021
+*  Dependencies: 
+*   vuex
+*/
+
 import { mapGetters } from 'vuex'
 import * as locale from '@/i18n'
 export default {
@@ -29,7 +29,7 @@ export default {
       ]
 
       //filtered object from i18n
-      const myTips = Object.keys(locale[this.profileLang])
+      return Object.keys(locale[this.profileLang])
         .filter(key => needed.includes(key))
         .reduce((obj, key) => {
           return {
@@ -37,8 +37,6 @@ export default {
             [key]: locale[this.profileLang][key]
           }
         }, {})
-        
-      return myTips
     }
   },
   data() {
@@ -61,17 +59,17 @@ export default {
      *  null if input is undefined
      */
     sortList(_list) {
-      let list = [..._list]
+      const list = [..._list]
       const { sortBy, sortAsc } = this
       if (sortBy === '') {
         return _list ? _list : null
       }
       else {
         if (sortAsc) {
-          return list.sort((a,b) => a[sortBy] < b[sortBy])
+          return list.sort((a,b) => a[sortBy] - b[sortBy])
         }
         else {
-          return list.sort((a,b) => a[sortBy] >= b[sortBy])
+          return list.sort((a,b) => b[sortBy] - a[sortBy])
         }
       }
     },
@@ -112,12 +110,12 @@ export default {
     },
 
     sortTooltip(prop) {
-      let propClass = this.sortIcon(prop)
+      const propClass = this.sortIcon(prop)
       if(propClass['fas fa-sort-up']){
-        return this.tooltips['listSort.sortDesc']
+        return this.tooltips['listSort.sortAsc']
       }
       else if (propClass['fas fa-sort-down']) {
-        return this.tooltips['listSort.sortAsc']
+        return this.tooltips['listSort.sortDesc']
       }
       else return this.tooltips['listSort.sort']
     },
@@ -134,4 +132,3 @@ export default {
     }
   }
 }
-</script>

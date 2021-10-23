@@ -49,7 +49,7 @@ Dependencies:
         <div class="col-10">
           <input id="relate-title"
             type="text"
-            v-model="title"
+            v-model="title.text"
             class="form-control"
             :placeholder="i18n['titlePlaceholder']">
         </div>
@@ -63,7 +63,7 @@ Dependencies:
         </label>
         <div class="col-10">
           <textarea id="relate-task"
-            v-model="task"
+            v-model="task.text"
             class="w-100"
             :placeholder="i18n['taskPlaceholder']"
           >
@@ -142,7 +142,7 @@ Dependencies:
 
         <!-- image -->
         <div 
-          class="col-3"
+          class="col"
           :class="langIsAr? '' : 'offset-2'"
         >
           <input 
@@ -153,13 +153,25 @@ Dependencies:
             :placeholder="i18n['layaLaRelate.edit.imgPlaceholder']">
         </div>
 
+        <!-- alt text -->
+        <div 
+          class="col"
+        >
+          <input 
+            :id="'pair-label-'+i"
+            class="form-control"
+            type="text"
+            v-model="pairs[i].label"
+            :placeholder="i18n['layaLaRelate.edit.labelPlaceholder']">
+        </div>
+
         <!-- audio -->
-        <div class="col-3">
+        <div class="col">
           <input :id="'pair-text-'+i"
             class="form-control"
             type="text"
             v-model="pairs[i].audio"
-            :placeholder="i18n['taskAudioPlaceholder']">
+            :placeholder="i18n['layaLaRelate.edit.audioPlaceholder']">
         </div>
 
         <!-- relation -->
@@ -214,6 +226,7 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
+import { v4 as uuidv4 } from 'uuid'
 import { locale, tooltipIcon } from '@/mixins'
 
 export default {
@@ -230,16 +243,10 @@ export default {
 
   data() {
     return {
-      title: '',
-      task: '',
+      title: {},
+      task: {},
       taskAudio: '',
-      pairs: [
-        {
-          img: '',
-          audio: '',
-          relation: -1
-        }
-      ],
+      pairs: [],
       relations: []
     }
   },
@@ -265,15 +272,13 @@ export default {
 
     /**
      * Function _addPair: add an empty pair
-     * 
      * Author: core
-     * 
-     * Last Updated: unknown
+     * Last Updated: June 28, 2021
      * 
      * @param {*} idx index at which to remove
      */
     _addPair() {
-      this.pairs.push({img: '', audio: '', relation: -1})
+      this.pairs.push({img: '', audio: '', relation: -1, label: '', flagged: false, id: uuidv4()})
     },
 
     /**
