@@ -18,6 +18,8 @@
 	"courseDetail.content": "Dieser Inhalt ist noch leer",
 	"courseDetail.noPermit": "Sie sind nicht berechtigt, diesen Inhalt zu betrachten!",
 	"courseList.properties": "Eigenschaften",
+	"courseList.properties.enrollment": "Dieser Kurs benötigt eine Einschreibung",
+	"courseList.properties.simpleLanguage": "Dieser Kurs ist in Einfacher Sprache verfügbar",
 	"courseList.start": "Los",
 	"courseList.subscribe": "Einschreiben",
 	"courseNavEdit.graph": "Grafische Vorschau:",

@@ -18,6 +18,8 @@
 	"courseDetail.content": "There is no content yet",
 	"courseDetail.noPermit": "You are not allowed to see this content!",
 	"courseList.properties": "Properties",
+	"courseList.properties.enrollment": "This course requires enrolling",
+	"courseList.properties.simpleLanguage": "This course is available in Simple Language",
 	"courseList.start": "Start",
 	"courseList.subscribe": "Subscribe",
 	"courseNavEdit.graph": "Graphical Preview:",

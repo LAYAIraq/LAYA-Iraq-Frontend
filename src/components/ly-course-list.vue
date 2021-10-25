@@ -19,7 +19,10 @@ Dependencies:
 
       <div class="row">
         <div class="col">
-          <h3 v-show="filtered.length === 0" class="text-center text-muted">
+          <h3
+            v-show="filtered.length === 0"
+            class="text-center text-muted"
+          >
             {{ i18n['noCourses'] }}
           </h3>
         </div>
@@ -57,7 +60,22 @@ Dependencies:
               v-for="set in Object.entries(course.settings)"
               :key="`setting-${set[0]}`"
             >
-              <span v-if="set[1]">{{ set[0] }}</span>
+              <span
+                v-if="set[1]"
+                :title="i18n[`courseList.properties.${set[0]}`]"
+                v-b-tooltip.top
+              >
+                <b-icon
+                  :icon="getIcon(set[0])"
+                  :aria-describedby="`label-desc-${set[0]}`"
+                ></b-icon>
+                <span
+                  class="sr-only"
+                  :id="`label-desc-${set[0]}`"
+                >
+                  {{ i18n[`courseList.properties.${set[0]}`] }}
+                </span>
+              </span>
             </li>
           </ul>
         </div>
@@ -140,6 +158,17 @@ export default {
   },
 
   methods: {
+
+    getIcon(setting) {
+      switch (setting) {
+        case 'enrollment':
+          return 'key'
+        case 'simpleLanguage':
+          return 'check2-circle'
+        default:
+          return ''
+      }
+    },
 
     /**
      * Function getSubs: get a list of all courses the user enrolled in
@@ -228,6 +257,16 @@ export default {
 
 .course {
   border-bottom: 1px dashed black;
+}
+
+.course-props {
+  list-style-type: none;
+  padding: 0;
+}
+
+.course-props li {
+  display: inline-block;
+  margin-right: 1rem;
 }
 
 .course > div {
