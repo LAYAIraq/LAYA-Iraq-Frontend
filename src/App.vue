@@ -9,10 +9,7 @@ Dependencies:
 -->
 
 <template>
-  <div
-      id="app"
-      :class="getClasses()"
-  >
+  <div id="app">
     <ly-header></ly-header>
     <router-view></router-view>
     <ly-footer></ly-footer>
