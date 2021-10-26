@@ -35,8 +35,8 @@ Dependencies:
         <div class="col">
           <h4>{{ i18n['cat'] }}</h4>
         </div>
-        <div class="col">
-          <h4>{{ i18n['courseList.properties'] }}</h4>
+        <div class="col-2">
+          <h4 class="sr-only">{{ i18n['courseList.properties'] }}</h4>
         </div>
         <div class="col-3">
         </div>
@@ -54,20 +54,21 @@ Dependencies:
           {{ course.category }}
         </div>
 
-        <div class="col">
+        <div class="col-2">
           <ul class="course-props">
             <li
-              v-for="set in Object.entries(course.settings)"
+              v-for="set in Object.entries(course.properties)"
               :key="`setting-${set[0]}`"
+              v-show="set[1]"
             >
               <span
-                v-if="set[1]"
                 :title="i18n[`courseList.properties.${set[0]}`]"
                 v-b-tooltip.top
               >
                 <b-icon
                   :icon="getIcon(set[0])"
                   :aria-describedby="`label-desc-${set[0]}`"
+                  :animation="compliesWithUserPrefs(set[0])? '' : 'fade'"
                 ></b-icon>
                 <span
                   class="sr-only"
@@ -85,16 +86,16 @@ Dependencies:
             :to="'/courses/'+course.name+'/1'"
             class="btn text-dark px-2 py-1 d-inline-block text-center w-100"
             v-if="!enrollmentNeeded(course)" >
-            {{ i18n['courseList.start'] }} 
+            {{ i18n['courseList.start'] }}
             <i class="fas fa-arrow-right"></i>
           </router-link>
-          <a 
-            class="btn text-dark px-2 py-1 d-inline-block text-center w-100 text-break" 
-            v-else 
-            @click="subscribe(course)" 
+          <a
+            class="btn text-dark px-2 py-1 d-inline-block text-center w-100 text-break"
+            v-else
+            @click="subscribe(course)"
           >
             {{ i18n['courseList.subscribe'] }}
-            <i class="fas fa-file-signature"></i>  
+            <i class="fas fa-file-signature"></i>
           </a>
         </div>
       </div>
@@ -105,10 +106,7 @@ Dependencies:
 
 <script>
 import http from 'axios'
-import { 
-  mapState, 
-  mapGetters 
-} from 'vuex'
+import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 
 export default {
@@ -130,15 +128,18 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['courseList']),
-    ...mapState(['note', 'auth']),
+    ...mapGetters([
+      'courseList',
+      'mediaPrefs',
+      'userId'
+    ]),
 
      /**
      * filtered: filter course list depending on user input
-     * 
+     *
      * Author: core
-     * 
-     * Last updated: March 24, 2021 
+     *
+     * Last updated: March 24, 2021
      */
     filtered() {
       if (!this.filter) return this.courseList
@@ -148,23 +149,37 @@ export default {
     }
   },
 
-  mounted() {
+  created() {
     this.getSubs()
     this.filteredList = [...this.courseList]
   },
 
-  updated(){
-    // this.getSubs()
-  },
-
   methods: {
 
+    compliesWithUserPrefs(prop) {
+      return Object.prototype.hasOwnProperty.call(this.mediaPrefs, prop)?
+        this.mediaPrefs[prop] : true
+    },
+
+    /**
+     * function getIcon: return string for icon corresponding to setting prop
+     *
+     * Author: cmc
+     *
+     * Last Updated: October 26, 2021
+     * @param {string} setting prop that need icon
+     * @returns {string} icon name
+     */
     getIcon(setting) {
       switch (setting) {
         case 'enrollment':
           return 'key'
         case 'simpleLanguage':
           return 'check2-circle'
+        case 'text':
+          return 'textarea-t'
+        case 'video':
+          return 'play-btn'
         default:
           return ''
       }
@@ -175,11 +190,11 @@ export default {
      * 
      * Author: cmc
      * 
-     * Last Updated: unkown
+     * Last Updated: unknown
      */
     getSubs() {
       let self = this
-      let studentId = this.auth.userId
+      let studentId = this.userId
      
       http
         .get(`enrollments/getAllByStudentId/?uid=${studentId}`)
@@ -199,21 +214,16 @@ export default {
     /**
      * Function enrollmentNeeded: return true if course needs and enrollment, false if not
      * 
-     * @param course the Course object for which it's checked
-     * 
-     * @returns true if course needs enrollment, false if not
-     * 
      * Author: cmc
      * 
-     * Last Updated: unknown
+     * Last Updated: October 26, 2021
+     * @param course the Course object for which it's checked
+     * @returns true if course needs enrollment, false if not
      */
     enrollmentNeeded(course) {
-      if (course.settings.enrollment) {
-        return !this.enrolledIn.find(x => x === course.courseId)
-      }
-      else {
-        return false
-      }
+      return course.properties.enrollment?
+       this.enrolledIn.find(x => x === course.courseId) :
+       false
     },
 
     /**
@@ -230,7 +240,7 @@ export default {
       const self = this
       const newEnrollment = {
         courseId: course.courseId,
-        studentId: this.auth.userId
+        studentId: this.userId
       }
 
       /* create enrollment */

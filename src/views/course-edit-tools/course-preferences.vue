@@ -96,7 +96,7 @@ export default {
 
   created() {
     // deep copy course preferences from vuex
-    const prefs = JSON.parse(JSON.stringify(this.course.settings))
+    const prefs = JSON.parse(JSON.stringify(this.course.properties))
     // console.log('settings: ', prefs)
     this.enrollment = prefs.enrollment
     this.simpleLanguage = prefs.simpleLanguage
@@ -108,7 +108,7 @@ export default {
       //eslint-disable-next-line
       const prefs = (({$laya, ...o}) => o) (this.$data) // strip $laya from data property
       // console.log(prefs)
-      this.$store.commit('changeCourseSettings', prefs)
+      this.$store.commit('changeCourseProperties', prefs)
       this.$emit('settingsChanged')
     },
     toggleEnrollment()

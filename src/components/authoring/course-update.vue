@@ -175,7 +175,7 @@ export default {
         ...newCourse,
         authorId: auth.userId,
         storageId: newId,
-        settings: { enrollment: enrBool }
+        properties: { enrollment: enrBool }
         }).then( () => {
           // console.log(resp)
           self.$router.push(`/courses/${newCourse.name}/1`)

@@ -44,6 +44,18 @@ export default {
     },
 
     /**
+     * function mediaPrefs: return user's preferred media
+     *
+     * Author: cmc
+     *
+     * Last Updated: October 26, 2021
+     *
+     */
+    mediaPrefs(state: { prefs: { media: object } }) {
+      return state.prefs.media
+    },
+
+    /**
      * Function profileLang: get stored language
      * 
      * Author: cmc
