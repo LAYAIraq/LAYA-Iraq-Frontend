@@ -130,8 +130,7 @@ export default {
      *  */    
     storeCourse() {
       let ctx = this
-      let stored = this.$store.dispatch('storeCourse') //returns promise
-      stored
+      this.$store.dispatch('storeCourse')
       .then(() => {
         ctx.$bvToast.show('author-toast')
         // ctx.$emit('saved')

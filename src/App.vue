@@ -32,7 +32,10 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['fontOptions', 'profileLang'])
+    ...mapGetters([
+      // 'fontOptions', // commented out b/c is not implemented on this branch
+      'profileLang'
+    ])
   },
 
   watch: {
