@@ -212,19 +212,19 @@ export default {
       this.$forceUpdate()
     },
 
-     /**
-     * Function setLang: set a new User Language
-     * 
-     * @param newLang the new language (String)
-     * 
-     * Author: cmc
-     * 
-     * Last Updated: unknown
-     */
+    /**
+    * Function setLang: set a new User Language
+    *
+    *
+    * Author: cmc
+    *
+    * Last Updated: October 26, 2021
+     * @param {string} newlang 2-letter locale string
+    */
     setLang (newlang) {
       this.$store.commit('setLang', newlang)
       this.$nextTick(() => {
-        if(this.$store.state.auth.userId != -1) {
+        if(this.$store.state.auth.online) {
           const data = {
             lang: this.$store.state.profile.lang,
             uid: this.$store.state.auth.userId
