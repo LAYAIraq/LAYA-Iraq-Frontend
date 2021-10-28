@@ -68,7 +68,7 @@ Dependencies:
                 <b-icon
                   :icon="getIcon(set[0])"
                   :aria-describedby="`label-desc-${set[0]}`"
-                  :animation="compliesWithUserPrefs(set[0], course.name)? '' : 'fade'"
+                  :animation="compliesWithUserPrefs(set[0])? '' : 'fade'"
                   scale="1.5"
                 ></b-icon>
                 <span
@@ -83,10 +83,22 @@ Dependencies:
         </div>
 
         <div class="col-3">
+          <b-button
+            class="indicated-btn"
+            @click="decideButtonAction(course)"
+          >
+            {{
+              isEnrolled(course)?
+                i18n['courseList.start']:
+                i18n['courseList.subscribe']
+            }}
+          </b-button>
           <router-link
             :to="'/courses/'+course.name+'/1'"
             class="btn indicated-btn"
-            v-if="isEnrolled(course)" >
+            v-if="isEnrolled(course)"
+            @click="selectedCourse = course.name"
+          >
             {{ i18n['courseList.start'] }}
             <i class="fas fa-arrow-right"></i>
           </router-link>
@@ -99,6 +111,7 @@ Dependencies:
             <i class="fas fa-file-signature"></i>
           </a>
           <div
+            v-if="!complicitCourses.has(course.courseId)"
             class="indicate-icon"
             :title="i18n['courseList.notComplicit']"
             v-b-tooltip.top
@@ -115,13 +128,10 @@ Dependencies:
     </div>
     <b-modal
       id="noncomplicit-confirm"
-      :title="i18n['type.changeType']"
+      title="NONCOMPLICIT COURSE"
       header-bg-variant="warning"
-      ok-variant="warning"
-      :ok-title="i18n['type.modal.ok']"
-      :cancel-title="i18n['cancel']"
-      @ok="log('clicked OK')"
-      @cancel="log('wanted to go to settings')"
+      @ok="buttonAction()"
+      @cancel="$router.push('/profile')"
       centered
     >
       <p>
@@ -162,9 +172,11 @@ export default {
 
   data() {
     return {
+      buttonAction: null,
       complicitCourses: new Set(),
       enrolledIn: [],
-      filteredList: []
+      filteredList: [],
+      selectedCourse: ''
     }
   },
 
@@ -196,9 +208,7 @@ export default {
   created() {
     this.getSubs()
     this.filteredList = [...this.courseList]
-    for (const course of this.filteredList) {
-      this.complicitCourses.add(course.name)
-    }
+    this.getComplicitCourses()
   },
 
   methods: {
@@ -207,27 +217,54 @@ export default {
       console.log(str)
     },
 
+    getComplicitCourses() {
+      for (const course of this.filteredList) {
+        this.complicitCourses.add(course.courseId)
+        // eslint-disable-next-line
+        const props = (({enrollment, ...o}) => o) (course.properties)
+        console.log(props === this.mediaPrefs)
+        for (const thing of Object.keys(this.mediaPrefs)) {
+          console.log(thing)
+          if (Object.prototype.hasOwnProperty.call(props, thing)) {
+            if (props[thing] !== this.mediaPrefs[thing]) {
+              console.log('setting ' + thing + ' diverges')
+              this.complicitCourses.delete(course.courseId)
+              break
+            }
+          }
+        }
+      }
+    },
+
+    decideButtonAction(course) {
+      const complicit = this.complicitCourses.has(course.courseId)
+      this.buttonAction = this.isEnrolled(course) ?
+        () =>  { this.$router.push('/courses/'+course.name+'/1') }:
+        () => { this.subscribe(course) }
+      if (!complicit) {
+        console.log('not complicit, showing modal...')
+        this.$bvModal.show('noncomplicit-confirm')
+      } else {
+        console.log('complicit, doing button action...')
+        this.buttonAction()
+      }
+    },
+
     /**
      * function compliesWithUserPrefs(): returns true if user had set
      *  prop in their prefs
      *
-     *  Author: cmc
+     *  Author: cmcbeforer
      *
      *  Last Updated: October 28, 2021
      * @param {string} prop corresponding to setting in profile.prefs.media
-     * @param {string} courseId course that prop belongs to
      * @returns {boolean} true if user has set that prop in their preferences
      *  or it is not a user pref
      */
-    compliesWithUserPrefs(prop, courseId) {
+    compliesWithUserPrefs(prop) {
       if (Object.prototype.hasOwnProperty.call(this.mediaPrefs, prop)) {
         return this.mediaPrefs[prop]
-      } else if (prop === 'enrollment'){
-        return true
-      } else {
-        this.complicitCourses.delete(courseId)
-        return false
-      }
+      } else return prop === 'enrollment'
     },
 
     /**
