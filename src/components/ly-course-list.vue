@@ -68,7 +68,8 @@ Dependencies:
                 <b-icon
                   :icon="getIcon(set[0])"
                   :aria-describedby="`label-desc-${set[0]}`"
-                  :animation="compliesWithUserPrefs(set[0])? '' : 'fade'"
+                  :animation="compliesWithUserPrefs(set[0], course.name)? '' : 'fade'"
+                  scale="1.5"
                 ></b-icon>
                 <span
                   class="sr-only"
@@ -84,23 +85,66 @@ Dependencies:
         <div class="col-3">
           <router-link
             :to="'/courses/'+course.name+'/1'"
-            class="btn text-dark px-2 py-1 d-inline-block text-center w-100"
-            v-if="!enrollmentNeeded(course)" >
+            class="btn indicated-btn"
+            v-if="isEnrolled(course)" >
             {{ i18n['courseList.start'] }}
             <i class="fas fa-arrow-right"></i>
           </router-link>
           <a
-            class="btn text-dark px-2 py-1 d-inline-block text-center w-100 text-break"
+            class="btn indicated-btn"
             v-else
             @click="subscribe(course)"
           >
             {{ i18n['courseList.subscribe'] }}
             <i class="fas fa-file-signature"></i>
           </a>
+          <div
+            class="indicate-icon"
+            :title="i18n['courseList.notComplicit']"
+            v-b-tooltip.top
+          >
+            <b-icon
+            icon="exclamation-diamond-fill"
+            scale="2"
+            ></b-icon>
+          </div>
+
         </div>
       </div>
 
     </div>
+    <b-modal
+      id="noncomplicit-confirm"
+      :title="i18n['type.changeType']"
+      header-bg-variant="warning"
+      ok-variant="warning"
+      :ok-title="i18n['type.modal.ok']"
+      :cancel-title="i18n['cancel']"
+      @ok="log('clicked OK')"
+      @cancel="log('wanted to go to settings')"
+      centered
+    >
+      <p>
+        {{ i18n['type.modal.text'] }}
+      </p>
+      <template #modal-footer="{ ok, cancel, hide }">
+        <b-button
+          variant="success"
+          @click="ok"
+        >
+          GO FURTHER YOU MORON
+        </b-button>
+        <b-button
+          variant="warning"
+          @click="cancel"
+        >
+          GO TO SETTINGS
+        </b-button>
+        <b-button @click="hide">
+          {{ i18n['cancel'] }}
+        </b-button>
+      </template>
+    </b-modal>
   </div>
 </template>
 
@@ -118,8 +162,9 @@ export default {
 
   data() {
     return {
-      filteredList: [],
-      enrolledIn: []
+      complicitCourses: new Set(),
+      enrolledIn: [],
+      filteredList: []
     }
   },
 
@@ -143,7 +188,6 @@ export default {
      */
     filtered() {
       if (!this.filter) return this.courseList
-
       const filterByCourseName = new RegExp(this.filter, 'i');
       return this.filteredList.filter(course => filterByCourseName.test(course.name))
     }
@@ -152,13 +196,38 @@ export default {
   created() {
     this.getSubs()
     this.filteredList = [...this.courseList]
+    for (const course of this.filteredList) {
+      this.complicitCourses.add(course.name)
+    }
   },
 
   methods: {
 
-    compliesWithUserPrefs(prop) {
-      return Object.prototype.hasOwnProperty.call(this.mediaPrefs, prop)?
-        this.mediaPrefs[prop] : true
+    log(str) {
+      console.log(str)
+    },
+
+    /**
+     * function compliesWithUserPrefs(): returns true if user had set
+     *  prop in their prefs
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: October 28, 2021
+     * @param {string} prop corresponding to setting in profile.prefs.media
+     * @param {string} courseId course that prop belongs to
+     * @returns {boolean} true if user has set that prop in their preferences
+     *  or it is not a user pref
+     */
+    compliesWithUserPrefs(prop, courseId) {
+      if (Object.prototype.hasOwnProperty.call(this.mediaPrefs, prop)) {
+        return this.mediaPrefs[prop]
+      } else if (prop === 'enrollment'){
+        return true
+      } else {
+        this.complicitCourses.delete(courseId)
+        return false
+      }
     },
 
     /**
@@ -212,18 +281,20 @@ export default {
     },
 
     /**
-     * Function enrollmentNeeded: return true if course needs and enrollment, false if not
+     * Function isEnrolled: return true if course needs an enrollment
+     *  AND user is not enrolled, false if nono enrollment needed or user
+     *  is enrolled
      * 
      * Author: cmc
      * 
      * Last Updated: October 26, 2021
      * @param course the Course object for which it's checked
-     * @returns true if course needs enrollment, false if not
+     * @returns true if course needs enrollment and user is not enrolled
      */
-    enrollmentNeeded(course) {
+    isEnrolled(course) {
       return course.properties.enrollment?
        this.enrolledIn.find(x => x === course.courseId) :
-       false
+       true
     },
 
     /**
@@ -276,14 +347,29 @@ export default {
 
 .course-props li {
   display: inline-block;
-  margin-right: 1rem;
+  margin-right: 1.5rem;
 }
 
 .course > div {
   font-size: 120%;
 }
 
-.col-3 > a {
-  border: 2px solid black
+.indicated-btn {
+  border: 2px solid black;
+  color: #343a40;
+  display: inline-block;
+  padding: .25rem .5rem .25rem .5rem;
+  position: relative;
+  text-align: center;
+  width: 100%;
+  word-break: break-word;
+  word-wrap: break-word;
+}
+
+.indicate-icon {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  color: crimson;
 }
 </style>
