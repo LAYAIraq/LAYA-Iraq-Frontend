@@ -145,10 +145,10 @@ Dependencies:
       </p>
         <ul>
           <li
-            v-for="thing in nonComplicitSettings[0]"
+            v-for="thing in nonComplicitList"
             v-bind:key="thing"
           >
-            {{ thing }}
+            {{ i18n[`profile.defmedia.${thing}`] }}
           </li>
          </ul>
 
@@ -157,13 +157,13 @@ Dependencies:
           variant="success"
           @click="ok"
         >
-          GO FURTHER YOU MORON
+          {{ i18n['courseList.notComplicit.continue'] }}
         </b-button>
         <b-button
           variant="warning"
           @click="cancel"
         >
-          GO TO SETTINGS
+          {{ i18n['courseList.notComplicit.settings'] }}
         </b-button>
         <b-button @click="hide">
           {{ i18n['cancel'] }}
@@ -192,6 +192,7 @@ export default {
       enrolledIn: [],
       filteredList: [],
       nonComplicitSettings: {},
+      nonComplicitList: [],
       selectedCourse: ''
     }
   },
@@ -268,16 +269,27 @@ export default {
       }
     },
 
+    /**
+     * function decideButtonAction: redirect to course or show modal
+     *  depending on course status concerning media preferences
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: October 29, 2021
+     *  @param {object} course corresponding course to button
+     */
     decideButtonAction(course) {
       const complicit = this.complicitCourses.has(course.courseId)
       this.buttonAction = this.isEnrolled(course) ?
         () =>  { this.$router.push('/courses/'+course.name+'/1') }:
         () => { this.subscribe(course) }
       if (!complicit) {
-        console.log('not complicit, showing modal...')
+        console.log('not complicit, adding' +
+          this.nonComplicitSettings[course.courseId] + ' to list...')
+        this.nonComplicitList = this.nonComplicitSettings[course.courseId]
         this.$bvModal.show('noncomplicit-confirm')
       } else {
-        console.log('complicit, doing button action...')
+        // console.log('complicit, doing button action...')
         this.buttonAction()
       }
     },
