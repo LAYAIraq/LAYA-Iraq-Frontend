@@ -16,9 +16,9 @@ Dependencies:
   >
     <div class="row">
 
-      <h4 >
+      <h2>
         {{ i18n['layaLbDialog.name'] }}
-      </h4>
+      </h2>
 
       <i
         id="questionmark"
@@ -53,6 +53,7 @@ Dependencies:
             v-model="title.text"
             class="form-control"
             :placeholder="i18n['titlePlaceholder']"
+            :aria-label="i18n['titlePlaceholder']"
           >
         </div>
 
@@ -130,7 +131,8 @@ Dependencies:
           <button
             type="button"
             class="btn btn-danger btn-sm"
-            @click="_delItem(i)">
+            @click="_delItem(i)"
+            :aria-label="i18n['deleteField']">
             <i class="fas fa-times"></i>
           </button>
         </div>
