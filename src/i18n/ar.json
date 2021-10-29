@@ -263,6 +263,7 @@
 	"notifications.studentNewFlagAnswer.text": "You have a new answer to your question in Course <CID>.",
 	"notifications.studentNewFlagAnswer.title": "New clarification",
 	"placeholder": "اسم دورة جديدة",
+    "popupwarning": "A new window has been opened",
 	"privacy.title": "لوائح حماية البيانات",
 	"profile.defmedia.audio": "صوت",
 	"profile.defmedia.label": "أنماط العرض",

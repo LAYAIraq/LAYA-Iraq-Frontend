@@ -16,7 +16,8 @@ Dependencies:
       <b-button size="sm"
         variant="warning"
         :class="langIsAr? 'float-left' : 'float-right'"
-        @click="$bvModal.show('author-copyCourse-confirm')">
+        @click="$bvModal.show('author-copyCourse-confirm')"
+      aria-describedby="openPopup">
         <i class="fas fa-exclamation-circle"></i> {{ i18n['copyCourse'] }}
       </b-button>
     </div>
@@ -32,6 +33,7 @@ Dependencies:
       :ok-title="i18n['copy.modal.ok']"
       :cancel-title="i18n['cancel']"
       @ok="copyCourse"
+             :aria-label="i18n['popupwarning']"
       centered>
       <p>
         {{ i18n['copy.modal.text'] }}
@@ -43,6 +45,7 @@ Dependencies:
           :aria-label="i18n['placeholder']">
       </p>
     </b-modal>
+    <div id="openPopup" style="display:none" >{{ i18n['popupwarning'] }}</div>
 
     <b-toast id="name-exists"
       :title="i18n['authorTools']"

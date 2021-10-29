@@ -11,7 +11,6 @@ Dependencies:
 <template>
 
   <div class="row mt-3">
-
     <div class="col">
       <b-button size="sm"
         variant="warning"
@@ -34,6 +33,7 @@ Dependencies:
       :cancel-title="i18n['cancel']"
       @ok="renameCourse"
       centered
+             :aria-label="i18n['popupwarning']"
     >
       <p>
         {{ i18n['copy.modal.text'] }}
@@ -45,8 +45,8 @@ Dependencies:
         :aria-label="i18n['placeholder']"
         >
       </p>
-
     </b-modal>
+    <div id="openPopup" style="display:none" >{{ i18n['popupwarning'] }}</div>
   </div>
 
 </template>
@@ -130,3 +130,4 @@ export default {
   }
 }
 </script>
+
