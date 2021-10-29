@@ -118,6 +118,21 @@ export default {
     },
 
     /**
+     * function courseSimple: return true if course has simpleLanguage
+     *  setting enabled
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: October 29, 2021
+     * @param state contains course
+     */
+    courseSimple(state: { course:
+      { properties: { simpleLanguage: boolean} }
+    }) {
+      return state.course.properties.simpleLanguage
+    },
+
+    /**
      * Function courseStorage: returns id of course storage
      *
      * Author: cmc

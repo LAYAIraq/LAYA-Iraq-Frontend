@@ -15,32 +15,38 @@ Dependencies:
       <div class="flaggable row mb-3" :id="title.id">
         <div class="col">
           <h4>
-            {{ title.text }}
-            <laya-audio-inline v-if="taskAudio" :src="taskAudio">
-            </laya-audio-inline>
+            {{ courseSimple? title.simple : title.text }}
+            <laya-audio-inline
+              v-if="taskAudio"
+              :src="courseSimple?
+                taskAudio.simple :
+                taskAudio.text"
+            ></laya-audio-inline>
           </h4>
         </div>
-        <laya-flag v-if="!previewData"
-            :refData="title"
-            :isOpen="flagOpen"
-            @flagged="title.flagged = true"
-            @flagOpen="toggleFlagOpen"
+        <laya-flag
+          v-if="!previewData"
+          :refData="title"
+          :isOpen="flagOpen"
+          @flagged="title.flagged = true"
+          @flagOpen="toggleFlagOpen"
         ></laya-flag>
       </div>
 
       <div
         class="flaggable row"
-        :class="{'flat': flagOpen != task.id}"
+        :class="{'flat': flagOpen !== task.id}"
         :id="task.id"
       >
         <div class="col">
-          <p>{{ task.text }}</p>
+          <p>{{ courseSimple? task.simple : task.text }}</p>
         </div>
-        <laya-flag v-if="!previewData"
-            :refData="task"
-            :isOpen="flagOpen"
-            @flagged="task.flagged = true"
-            @flagOpen="toggleFlagOpen"
+        <laya-flag
+          v-if="!previewData"
+          :refData="task"
+          :isOpen="flagOpen"
+          @flagged="task.flagged = true"
+          @flagOpen="toggleFlagOpen"
         ></laya-flag>
       </div>
       <hr>
@@ -52,10 +58,10 @@ Dependencies:
             :key="item.id"
             :id="item.id" 
             class="flaggable item mb-5"
-            :class="{'flat' : flagOpen != item.id}"
+            :class="{'flat' : flagOpen !== item.id}"
           >
             <h4 class="text-center item-label">
-              {{ item.label }}
+              {{ courseSimple? item.simple : item.label }}
               <i v-if="checked"
                 class="fas"
                 :class="{
@@ -66,7 +72,9 @@ Dependencies:
             </h4>
 
             <div class="d-flex justify-content-between">
-              <b v-for="cat in categories" :key="cat">{{cat}}</b>
+              <b v-for="cat in categories" :key="cat.text">
+                {{ courseSimple? cat.simple : cat.text }}
+              </b>
             </div>
             <input 
               type="range"
@@ -89,16 +97,21 @@ Dependencies:
       </div>
 
       <div class="row">
-        <button type="button"
-                class="btn btn-link mt-3"
-                :disabled="checked"
-                @click="check">
+        <button
+          type="button"
+          class="btn btn-link mt-3"
+          :disabled="checked"
+          @click="check"
+        >
           {{ i18n['check'] }}
         </button>
-        <button type="button"
-                class="btn btn-primary mt-3 ml-auto"
-                @click="done">
-          {{ i18n['nextContent'] }} <i class="fas fa-arrow-right"></i>
+        <button
+          type="button"
+          class="btn btn-primary mt-3 ml-auto"
+          @click="done"
+        >
+          {{ i18n['nextContent'] }}
+          <i class="fas fa-arrow-right"></i>
         </button>
       </div>
 
@@ -130,7 +143,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['content'])
+    ...mapGetters(['content', 'courseSimple'])
   },
 
   data () {

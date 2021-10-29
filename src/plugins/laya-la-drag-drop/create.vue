@@ -11,130 +11,290 @@ Dependencies: @/mixins/locale.vue
     class="laya-la-drag-drop-new" 
     :class="langIsAr? 'text-right' : 'text-left'"
   >
-
-    <label>
-      <h4>
+    <div class="d-flex">
+      <h4 class="d-inline-block mr-auto">
         {{ i18n['layaLaDragDrop.name'] }}
-        </h4>
-    </label>
-    <i 
-      id ="questionmark" 
-      class="fas fa-question-circle" 
-      @click="toggleTip" 
-      :title="i18n['showTip']" 
-      v-b-tooltip.left></i>
-    <b-jumbotron 
-            v-if="tooltipOn"
-            :header="i18n['layaLaDragDrop.name']" :lead="i18n['tipHeadline']">
-          <hr class="my-4">
-          <span v-html="i18n['layaLaDragDrop.tooltip']"></span>
+      </h4>
+      <i
+        id ="questionmark"
+        class="fas fa-question-circle"
+        @click="toggleTip"
+        :title="i18n['showTip']"
+        v-b-tooltip.left
+      ></i>
+    </div>
 
+    <b-jumbotron
+      v-if="tooltipOn"
+      :header="i18n['layaLaDragDrop.name']"
+      :lead="i18n['tipHeadline']"
+    >
+      <hr class="my-4">
+      <span v-html="i18n['layaLaDragDrop.tooltip']"></span>
     </b-jumbotron>
+
     <hr>
 
     <form>
 
       <!-- title -->
       <div class="form-group row">
-        <label for="drag-drop-title" class="col-2 col-form-label">{{ i18n['title'] }}</label>
+        <label
+          for="drag-drop-title"
+          class="col-2 col-form-label"
+        >
+          {{ i18n['title'] }}
+        </label>
         <div class="col-10">
-          <input id="drag-drop-title"
-                 type="text"
-                 v-model="title.text"
-                 class="form-control"
-                 :placeholder="i18n['titlePlaceholder']">
+          <input
+            id="drag-drop-title"
+            type="text"
+            v-model="title.text"
+            class="form-control"
+            :placeholder="i18n['titlePlaceholder']"
+          >
+        </div>
+      </div>
+      <!-- simple language alt -->
+      <div
+        class="form-group row"
+        v-if="courseSimple"
+      >
+        <label
+          for="drag-drop-title-simple"
+          class="col-2 col-form-label"
+        >
+          <span class="sr-only">
+            {{ i18n['simpleAlt'] }}
+          </span>
+        </label>
+        <div class="col-10">
+          <input
+            id="drag-drop-title-simple"
+            type="text"
+            v-model="title.simple"
+            class="form-control"
+            :placeholder="i18n['simpleAlt']"
+          >
         </div>
       </div>
 
 
       <!-- task -->
       <div class="form-group row">
-        <label for="drag-drop-task" class="col-2 col-form-label">
+        <label
+          for="drag-drop-task"
+          class="col-2 col-form-label"
+        >
           {{ i18n['task'] }}
         </label>
         <div class="col-10">
-          <textarea id="drag-drop-task"
-                    v-model="task.text"
-                    class="w-100"
-                    :placeholder="i18n['taskPlaceholder']">
-          </textarea>
+          <textarea
+            id="drag-drop-task"
+            v-model="task.text"
+            class="w-100"
+            :placeholder="i18n['taskPlaceholder']"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- task simple -->
+      <div
+        class="form-group row"
+        v-if="courseSimple"
+      >
+        <label
+          for="drag-drop-task-simple"
+          class="col-2 col-form-label"
+        >
+          <span class="sr-only">
+            {{ i18n['simpleAlt'] }}
+          </span>
+        </label>
+        <div class="col-10">
+          <textarea
+            id="drag-drop-task-simple"
+            v-model="task.simple"
+            class="w-100"
+            :placeholder="i18n['simpleAlt']"
+          ></textarea>
         </div>
       </div>
 
       <!-- task audio -->
       <div class="form-group row">
-        <label for="drag-drop-task-audio" class="col-2 col-form-label">
+        <label
+          for="drag-drop-task-audio"
+          class="col-2 col-form-label"
+        >
           {{ i18n['taskAudio'] }}
         </label>
         <div class="col-10">
           <input id="drag-drop-task-audio"
             type="text"
-            v-model="taskAudio"
+            v-model="taskAudio.regular"
             class="form-control"
             :placeholder="i18n['taskAudioPlaceholder']">
         </div>
       </div>
 
-      <p><b>{{ i18n['layaLaDragDrop.cats'] }}</b></p>
-      <div class="form-group row" v-for="(cat, i) in categories" :key="'cat-'+i">
-
-        <!-- text -->
-        <label class="col-form-label col-2" :for="'cat-text-'+i">{{ i18n['text'] }}</label>
-        <div class="col-7">
-          <input :id="'cat-text-'+i"
-            class="form-control"
+      <!-- task audio simple -->
+      <div
+        class="form-group row"
+        v-if="courseSimple"
+      >
+        <label
+          for="drag-drop-task-audio-simple"
+          class="col-2 col-form-label"
+        >
+          <span class="sr-only">
+            {{ i18n['simpleAlt'] }}
+          </span>
+        </label>
+        <div class="col-10">
+          <input
+            id="drag-drop-task-audio-simple"
             type="text"
-            v-model="categories[i]">
-        </div>
-
-        <!-- delete -->
-        <div class="col-auto align-self-center">
-          <button type="button"
-                  class="btn btn-danger btn-sm"
-                  @click="_delCategory(i)">
-            <i class="fas fa-times"></i>
-          </button>
+            v-model="taskAudio.simple"
+            class="form-control"
+            :placeholder="i18n['simpleAlt']">
         </div>
       </div>
+
+      <p><b>{{ i18n['layaLaDragDrop.cats'] }}</b></p>
+      <div class="form-group" v-for="(cat, i) in categories" :key="'cat-'+i">
+
+        <!-- text -->
+        <div class="row">
+          <label class="col-form-label col-2" :for="'cat-text-'+i">{{ i18n['text'] }}</label>
+          <div class="col-7">
+            <input
+              :id="'cat-text-'+i"
+              class="form-control"
+              type="text"
+              v-model="cat.text"
+            >
+          </div>
+          <!-- delete -->
+          <div class="col-auto align-self-center">
+            <button
+              type="button"
+              class="btn btn-danger btn-sm"
+              @click="_delCategory(i)"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- simple alt -->
+        <div class="row">
+          <label
+            class="col-form-label col-2"
+            :for="'cat-simple-'+i"
+          >
+            <span class="sr-only">
+            {{ i18n['simpleAlt'] }}
+          </span>
+          </label>
+          <div class="col-7">
+            <input
+              :id="'cat-simple-'+i"
+              class="form-control"
+              type="text"
+              v-model="cat.simple"
+            >
+          </div>
+        </div>
+
+      </div>
+
+      <!-- add category -->
       <div class="form-group row">
         <div class="col-10 offset-2">
-          <button type="button"
-                  class="btn btn-primary btn-sm"
-                  @click="_addCategory">
-            <i class="fas fa-plus"></i>{{ i18n['layaLaDragDrop.catAdd'] }}
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            @click="_addCategory">
+            <i class="fas fa-plus"></i>
+            {{ i18n['layaLaDragDrop.catAdd'] }}
           </button>
         </div>
       </div>
 
-      <p><b>{{ i18n['items'] }}</b></p>
-      <div class="form-group row" v-for="(it, i) in items" :key="'item-'+i">
+      <!-- items -->
+      <p>
+        <b>{{ i18n['items'] }}</b>
+      </p>
+      <div
+        class="form-group"
+        v-for="(it, i) in items"
+        :key="'item-'+i"
+      >
+        <div class="row">
+          <!-- text -->
+          <label
+            class="col-form-label col-2"
+            :for="'item-text-'+i"
+          >
+            {{ i18n['text'] }}
+          </label>
+          <div class="col-5">
+            <input
+              :id="'item-text-'+i"
+              class="form-control"
+              type="text"
+              v-model="items[i].label"
+            >
+          </div>
 
-        <!-- text -->
-        <label class="col-form-label col-2" :for="'item-text-'+i">{{ i18n['text'] }}</label>
-        <div class="col-5">
-          <input :id="'item-text-'+i"
-            class="form-control"
-            type="text"
-            v-model="items[i].label">
+          <!-- category -->
+          <div class="col-3">
+            <select
+              class="custom-select"
+              v-model="items[i].category"
+            >
+              <option disabled :value="-1">{{ i18n['cat'] }}</option>
+              <option
+                v-for="(cat,j) in categories"
+                :value="j"
+                :key="cat.text"
+              >
+                {{ cat.text }}
+              </option>
+            </select>
+          </div>
+
+          <!-- delete -->
+          <div class="col-auto align-self-center">
+            <button
+              type="button"
+              class="btn btn-danger btn-sm"
+              @click="_delItem(i)"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
         </div>
 
-        <!-- category -->
-        <div class="col-3">
-          <select class="custom-select" v-model="items[i].category">
-            <option disabled :value="-1">{{ i18n['cat'] }}</option>
-            <option v-for="(cat,j) in categories" :value="j" :key="cat">
-            {{ cat }}
-            </option>
-          </select>
-        </div>
-
-        <!-- delete -->
-        <div class="col-auto align-self-center">
-          <button type="button"
-                  class="btn btn-danger btn-sm"
-                  @click="_delItem(i)">
-            <i class="fas fa-times"></i>
-          </button>
+        <div class="row">
+          <!-- simple item -->
+          <label
+            class="col-form-label col-2"
+            :for="'item-simple-'+i"
+          >
+            <span class="sr-only">
+            {{ i18n['simpleAlt'] }}
+          </span>
+          </label>
+          <div class="col-5">
+            <input
+              :id="'item-simple-'+i"
+              class="form-control"
+              type="text"
+              v-model="it.simple"
+            >
+          </div>
         </div>
       </div>
       <div class="form-group row">
@@ -166,10 +326,6 @@ export default {
     tooltipIcon
   ],
 
-  created () {
-    this.fillFormSamples()
-    this.populateVars()
-  },
   data () {
     return {
       title: {},
@@ -178,6 +334,11 @@ export default {
       items: [],
       categories: []
     }
+  },
+
+  created () {
+    this.fillFormSamples()
+    this.populateVars()
   },
 
   methods: {
@@ -190,10 +351,11 @@ export default {
      */
     fillFormSamples() {
       // fill item and category props with localized tokens
-      if (this.categories.length == 0) {
+      if (this.categories.length === 0) {
         let temp = this.i18n['layaLaDragDrop.answer'] + " 1"
         let tmpItem = {
           label: temp,
+          simple: 'simple lang alternative',
           category: -1,
           flagged: false,
           id: uuidv4()
@@ -202,7 +364,10 @@ export default {
 
         for (let i = 1; i<3; i++) {
           let tmp = this.i18n['cat'] + " " + i
-          this.categories.push(tmp)
+          this.categories.push({
+            text: tmp,
+            simple: 'simple language alternative'
+          })
         }
       }
     },
@@ -280,7 +445,4 @@ legend {
   font-size: 1rem;
 }
 
-#questionmark {
-  float: inline-end;
-}
 </style>
