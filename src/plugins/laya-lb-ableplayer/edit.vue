@@ -3,7 +3,7 @@ Filename: edit.vue
 Use: Edit Ableplayer content block
 Creator: core
 Date: unknown
-Dependencies: 
+Dependencies:
   vuex,
   @/mixins/locale.vue,
   @/mixins/tooltipIcon.vue
@@ -17,16 +17,16 @@ Dependencies:
         {{ i18n['layaAbleplayer.name'] }}
       </h4>
     </label>
-    <i 
-      id ="questionmark" 
-      class="fas fa-question-circle" 
-      @click="toggleTip()" 
-      :title="i18n['showTip']" 
+    <i
+      id ="questionmark"
+      class="fas fa-question-circle"
+      @click="toggleTip()"
+      :title="i18n['showTip']"
       v-b-tooltip.left
     ></i>
-    <b-jumbotron 
+    <b-jumbotron
       v-if="tooltipOn"
-      :header="i18n['layaAbleplayer.name']" 
+      :header="i18n['layaAbleplayer.name']"
       :lead="i18n['tipHeadline']"
     >
       <hr class="my-4">
@@ -37,14 +37,14 @@ Dependencies:
     <form>
       <div class="form-group row">
         <div class="form-group col-10">
-          <label 
-            for="ableplayer-title" 
+          <label
+            for="ableplayer-title"
           >
             {{ i18n['title'] }}
           </label>
-          
-          
-          <input 
+
+
+          <input
             id="ableplayer-title"
             type="text"
             v-model="title.text"
@@ -65,8 +65,8 @@ Dependencies:
               v-model="title.show"
             >
           </label>
-            
-          
+
+
         </div>
       </div>
       <div class="form-group">
@@ -128,14 +128,14 @@ export default {
   created() {
     this.fetchData()
   },
-  
+
   methods: {
 
     /**
      * Function fetchData: fetch data from vuex and make data property
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 19, 2021
      */
     fetchData() {

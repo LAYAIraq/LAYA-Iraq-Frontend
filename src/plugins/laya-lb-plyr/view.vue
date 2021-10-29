@@ -1,9 +1,9 @@
 <!--
-Filename: view.vue 
+Filename: view.vue
 Use: View Plyr content block
 Creator: core
 Date: unknown
-Dependencies: 
+Dependencies:
   plyr,
   vuex,
   @/mixins/locale.vue
@@ -17,7 +17,7 @@ Dependencies:
       class="flaggable row"
       :id="title.id"
     >
-      <h4 >{{ title.text }}</h4>
+      <h2 >{{ title.text }}</h2>
       <laya-flag v-if="!previewData"
           :refData="title"
           :isOpen="flagOpen"
@@ -44,14 +44,14 @@ Dependencies:
     </div>
 
     <div class="row">
-      <button 
+      <button
         type="button"
         class="btn btn-primary mt-3 d-block ml-auto"
         :class="langIsAr? 'float-right': 'float-left'"
         @click="onFinish[0]() || {}">
         <span>
           {{ i18n['nextContent'] }}
-          <i :class="langIsAr? 
+          <i :class="langIsAr?
             'fas fa-arrow-left' :
             'fas fa-arrow-right'"></i>
         </span>
@@ -93,7 +93,7 @@ export default {
   mounted() {
     this.initPlyr()
   },
-  
+
   props: {
     onFinish: Array
   },
@@ -102,9 +102,9 @@ export default {
 
     /**
      * playerId: returns id for html element
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     playerId() {
@@ -113,15 +113,15 @@ export default {
 
     /**
      * platform: returns 'youtube' or 'vimeo' depending in src
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: January 17, 2021
      */
     platform() {
       if (this.src.includes('youtube')) return 'youtube'
       else if (this.src.includes('vimeo')) return 'vimeo'
-      else return '' 
+      else return ''
     }
 
   },
@@ -129,11 +129,11 @@ export default {
 
     /**
      * Function notEmpty: checks if String is not empty
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param {string} str string to check
      */
     notEmpty(str) {
@@ -142,13 +142,13 @@ export default {
 
     /**
      * Function fetchData: fetch data from vuex and make data property
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 20, 2021
      */
     fetchData() {
-      let idx = this.$route.params.step - 1 
+      let idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.src = preData.src
       this.showTitle = preData.showTitle
@@ -158,9 +158,9 @@ export default {
 
     /**
      * function initPlyr: initialize Plyr instance
-     * 
+     *
      * Author: core
-     * 
+     *
      * Updated: March 20, 2021
      */
     initPlyr() {

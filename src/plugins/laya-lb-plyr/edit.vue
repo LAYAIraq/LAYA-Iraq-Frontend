@@ -1,5 +1,5 @@
 <!--
-Filename: edit.vue 
+Filename: edit.vue
 Use: View Plyr content block
 Creator: core
 Date: unknown
@@ -10,7 +10,7 @@ Dependencies:
 
 <template>
 
-  <div 
+  <div
     class="laya-plyr-edit"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
@@ -18,36 +18,36 @@ Dependencies:
     <form>
       <div class="form-group">
         <label for="vid-id">
-          <h4>
+          <h3>
             {{ i18n['layaPlyr.name'] }}
-          </h4>
-        </label> 
-        <i 
-          id="questionmark" 
-          class="fas fa-question-circle" 
-          @click="toggleTip" 
-          :title="i18n['showTip']" 
+          </h3>
+        </label>
+        <i
+          id="questionmark"
+          class="fas fa-question-circle"
+          @click="toggleTip"
+          :title="i18n['showTip']"
           v-b-tooltip.left
         ></i>
 
-        <b-jumbotron 
+        <b-jumbotron
             v-if="tooltipOn"
-            :header="i18n['layaPlyr.name']" 
+            :header="i18n['layaPlyr.name']"
             :lead="i18n['tipHeadline']">
           <hr class="my-4">
           <p v-html="i18n['layaPlyr.tooltip']"></p>
 
         </b-jumbotron>
-        
-        <div class="form-group row">  
-          <div class="form-group col-10"> 
-            <label 
-              for="laya-wysiwyg-title" 
+
+        <div class="form-group row">
+          <div class="form-group col-10">
+            <label
+              for="laya-wysiwyg-title"
             >
               {{ i18n['title'] }}
             </label>
-            
-            <input 
+
+            <input
               id="laya-wysiwyg-title"
               type="text"
               v-model="title.text"
@@ -68,8 +68,8 @@ Dependencies:
                 v-model="title.show"
               >
             </label>
-              
-            
+
+
           </div>
         </div>
 
@@ -83,19 +83,18 @@ Dependencies:
               >
         </div>
 
-        
+
 
 
         <div class="form-group row">
-          <label 
-            for="platform-vimeo" 
+          <label
             class="col-2 col-form-label"
           >
             {{ i18n['layaPlyr.platform'] }}
           </label>
-          
+
           <div class="col-2 form-check form-check-inline align-text-top">
-            <input 
+            <input
               id="platform-vimeo"
               class="form-check-input"
               type="radio"
@@ -104,15 +103,15 @@ Dependencies:
               v-model="youtube"
               disabled
             >
-            <label 
-              for="platform-vimeo" 
+            <label
+              for="platform-vimeo"
               class="form-check-label"
             >
               {{ i18n['layaPlyr.vimeo'] }}
             </label>
           </div>
           <div class="col-2 form-check form-check-inline align-text-top">
-            <input 
+            <input
               id="platform-yt"
               class="form-check-input"
               type="radio"
@@ -121,8 +120,8 @@ Dependencies:
               v-model="youtube"
               disabled
             >
-            <label 
-              for="platform-yt" 
+            <label
+              for="platform-yt"
               class="form-check-label"
             >
               {{ i18n['layaPlyr.youtube'] }}
@@ -131,7 +130,7 @@ Dependencies:
 
           <div class="col form-check form-check-inline align-text-top">
             <span class="text-danger form-control-plaintext text-right"> {{ urlMsg }}</span>
-          </div> 
+          </div>
         </div>
       </div>
     </form>
@@ -165,9 +164,9 @@ export default {
 
     /**
      * urlMsg: return warning if URL not supported
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: January 17, 2021
      */
     urlMsg () {
@@ -176,9 +175,9 @@ export default {
 
     /**
      * correctURL: checks if video is on yt or vimeo
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: January 17, 2021
      */
     correctURL() {
@@ -194,9 +193,9 @@ export default {
 
     /**
      * function checkURL: checks if URL is on yt, sets boolean if it is
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: January 17, 2021
      */
     checkURL() {
@@ -206,9 +205,9 @@ export default {
 
     /**
      * Function fetchData: fetch data from vuex and make data property
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 20, 2021
      */
     fetchData() {
