@@ -1,15 +1,15 @@
-<!-- 
+<!--
 Filename: edit.vue
 Use: Edit existing Drag & Drop content block
 Creator: core
 Date: unknown
 Dependencies:
   vuex,
-  @/mixins/locale.vue 
+  @/mixins/locale.vue
 -->
 
 <template>
-  <div 
+  <div
     class="laya-la-drag-drop-edit"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
@@ -19,13 +19,13 @@ Dependencies:
         {{ i18n['layaLaDragDrop.name'] }}
         </h4>
     </label>
-    <i 
-      id ="questionmark" 
-      class="fas fa-question-circle" 
-      @click="toggleTip" 
-      :title="i18n['showTip']" 
+    <i
+      id ="questionmark"
+      class="fas fa-question-circle"
+      @click="toggleTip"
+      :title="i18n['showTip']"
       v-b-tooltip.left></i>
-    <b-jumbotron 
+    <b-jumbotron
       v-if="tooltipOn"
       :header="i18n['layaLaDragDrop.name']"
       :lead="i18n['tipHeadline']"
@@ -41,7 +41,7 @@ Dependencies:
       <div class="form-group row">
         <label for="drag-drop-title" class="col-2 col-form-label">{{ i18n['title'] }}</label>
         <div class="col-10">
-          <input 
+          <input
             id="drag-drop-title"
             type="text"
             v-model="title.text"
@@ -57,7 +57,7 @@ Dependencies:
           {{ i18n['task'] }}
         </label>
         <div class="col-10">
-          <textarea 
+          <textarea
             id="drag-drop-task"
             v-model="task.text"
             class="w-100"
@@ -72,7 +72,7 @@ Dependencies:
           {{ i18n['taskAudio'] }}
         </label>
         <div class="col-10">
-          <input 
+          <input
             id="drag-drop-task-audio"
             type="text"
             v-model="taskAudio"
@@ -95,10 +95,11 @@ Dependencies:
 
         <!-- delete -->
         <div class="col-auto align-self-center">
-          <button 
+          <button
             type="button"
             class="btn btn-danger btn-sm"
             @click="_delCategory(i)"
+            :aria-label="i18n['deleteField']"
           >
             <i class="fas fa-times"></i>
           </button>
@@ -106,7 +107,7 @@ Dependencies:
       </div>
       <div class="form-group row">
         <div class="col-10 offset-2">
-          <button 
+          <button
             type="button"
             class="btn btn-primary btn-sm"
             @click="_addCategory"
@@ -123,7 +124,7 @@ Dependencies:
         <label class="col-form-label col-2" :for="'item-text-'+item.id">{{ i18n['text']
           }}</label>
         <div class="col-5">
-          <input 
+          <input
             :id="'item-text-'+item.id"
             class="form-control"
             type="text"
@@ -132,7 +133,7 @@ Dependencies:
 
         <!-- category -->
         <div class="col-3">
-          <select class="custom-select" v-model="items[i].category">
+          <select class="custom-select" v-model="items[i].category" :aria-label="i18n['layaLaDragDrop.catSelect']">
             <option disabled :value="-1">{{ i18n['cat'] }}</option>
             <option v-for="(cat,j) in categories" :value="j" :key="cat">
             {{ cat }}
@@ -142,10 +143,11 @@ Dependencies:
 
         <!-- delete -->
         <div class="col-auto align-self-center">
-          <button 
+          <button
             type="button"
             class="btn btn-danger btn-sm"
             @click="_delItem(i)"
+            :aria-label="i18n['deleteField']"
           >
             <i class="fas fa-times"></i>
           </button>
@@ -181,7 +183,7 @@ export default {
     tooltipIcon
   ],
 
-  
+
   data () {
     return {
       title: {},
@@ -203,11 +205,11 @@ export default {
   methods: {
     /**
      * Function _delItem: remove item at position idx
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param {*} idx index at which to remove
      */
     _delItem(idx) {
@@ -226,11 +228,11 @@ export default {
 
     /**
      * Function _delCategory: delete category at position idx
-     * 
+     *
      * Author: core
      *
      * Last Updated: unknown
-     * 
+     *
      * @param {*} idx index at which to remove the category
      */
     _delCategory(idx) {
@@ -239,11 +241,11 @@ export default {
 
     /**
      * Function _addCategory: Add new category to categories
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      */
     _addCategory() {
       this.categories.push('')
@@ -251,9 +253,9 @@ export default {
 
     /**
      * Function fetchData(): fetch data from vuex and make data property
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 12, 2021
      */
     fetchData() {
