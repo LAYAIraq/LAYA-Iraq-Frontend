@@ -9,26 +9,26 @@ Dependencies:
 -->
 
 <template>
-  <div 
+  <div
     class="laya-la-scms-edit ly-bg-author p-3"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
 
     <label>
-      <h4>
+      <h3>
         {{ i18n['layaLaScmc.name'] }}
-      </h4>
+      </h3>
     </label>
-    <i 
-      id ="questionmark" 
-      class="fas fa-question-circle" 
-      @click="toggleTip" 
-      :title="i18n['showTip']" 
+    <i
+      id ="questionmark"
+      class="fas fa-question-circle"
+      @click="toggleTip"
+      :title="i18n['showTip']"
       v-b-tooltip.left
     ></i>
-    <b-jumbotron 
+    <b-jumbotron
       v-if="tooltipOn"
-      :header="i18n['layaLaScmc.name']" 
+      :header="i18n['layaLaScmc.name']"
       :lead="i18n['tipHeadline']"
     >
       <hr class="my-4">
@@ -40,23 +40,22 @@ Dependencies:
 
       <!-- type -->
       <div class="form-group row">
-        <label 
-          for="smcs-type" 
+        <label
           class="col-2 col-form-label"
         >
           {{ i18n['type'] }}
         </label>
         <div class="col-10">
           <div class="form-check form-check-inline align-text-top">
-            <input 
+            <input
               id="scms-sc"
               class="form-check-input"
               type="radio"
               :value="false"
               v-model="multiple"
             >
-            <label 
-              for="scms-sc" 
+            <label
+              for="scms-sc"
               class="form-check-label"
             >
               {{ i18n['layaLaScmc.edit.sc'] }}
@@ -70,8 +69,8 @@ Dependencies:
               :value="true"
               v-model="multiple"
             >
-            <label 
-              for="scms-mc" 
+            <label
+              for="scms-mc"
               class="form-check-label"
             >
               {{ i18n['layaLaScmc.edit.mc'] }}
@@ -82,14 +81,14 @@ Dependencies:
 
       <!-- title -->
       <div class="form-group row">
-        <label 
-          for="scms-title" 
+        <label
+          for="scms-title"
           class="col-2 col-form-label"
         >
           {{ i18n['layaLaScmc.name'] }}
         </label>
         <div class="col-10">
-          <input 
+          <input
             id="scms-title"
             type="text"
             v-model="title.text"
@@ -102,14 +101,14 @@ Dependencies:
 
       <!-- task -->
       <div class="form-group row">
-        <label 
+        <label
           for="scms-task"
           class="col-2 col-form-label"
         >
           {{ i18n['task'] }}
         </label>
         <div class="col-10">
-          <textarea 
+          <textarea
             id="scms-task"
             v-model="task.text"
             class="w-100"
@@ -120,14 +119,14 @@ Dependencies:
 
       <!-- task audio -->
       <div class="form-group row">
-        <label 
+        <label
           for="scms-task-audio"
           class="col-2 col-form-label"
         >
           {{ i18n['taskAudio'] }}
         </label>
         <div class="col-10">
-          <input 
+          <input
             id="scms-task-audio"
             type="text"
             v-model="taskAudio"
@@ -138,14 +137,14 @@ Dependencies:
       </div>
 
       <p><b>{{ i18n['items'] }}</b></p>
-      <div 
-        class="form-group row" 
-        v-for="(option, i) in options" 
+      <div
+        class="form-group row"
+        v-for="(option, i) in options"
         :key="'item-'+i"
       >
         <!-- caption -->
-        <label 
-          class="col-form-label col-2" 
+        <label
+          class="col-form-label col-2"
           :for="'option-text-'+i"
         >
           {{ i18n['text'] }}
@@ -173,7 +172,8 @@ Dependencies:
         <div class="col-auto align-self-center">
           <button type="button"
                   class="btn btn-danger btn-sm"
-                  @click="_delItem(i)">
+                  @click="_delItem(i)"
+                  :aria-label="i18n['deleteField']">
             <i class="fas fa-times"></i>
           </button>
         </div>
@@ -214,7 +214,7 @@ export default {
       multiple: false
     }
   },
-  
+
   computed: {
     ...mapGetters(['content'])
   },
@@ -227,9 +227,9 @@ export default {
 
     /**
      * Function _delItem(idx): Delete item at given index
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     _delItem(idx) {
@@ -251,9 +251,9 @@ export default {
 
     /**
      * Function fetchData: fetch data from vuex and make data property
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 19, 2021
      */
     fetchData() {
