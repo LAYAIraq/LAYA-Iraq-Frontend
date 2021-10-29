@@ -18,6 +18,8 @@
 	"courseDetail.content": "Dieser Inhalt ist noch leer",
 	"courseDetail.noPermit": "Sie sind nicht berechtigt, diesen Inhalt zu betrachten!",
 	"courseList.notComplicit": "Dieser Kurs entspricht nicht Ihren Media-Einstellungen",
+	"courseList.notComplicit.text": "Nicht übereinstimmende Kurseigenschaften",
+	"courseList.notComplicit.title": "Kurswarnung",
 	"courseList.properties": "Eigenschaften",
 	"courseList.properties.enrollment": "Dieser Kurs benötigt eine Einschreibung",
 	"courseList.properties.simpleLanguage": "Dieser Kurs ist in Einfacher Sprache verfügbar",

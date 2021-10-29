@@ -42,10 +42,11 @@ Dependencies:
         </div>
       </div>
 
-      <div v-for="course in filtered"
-           :key="course.category+'-'+course.name"
-           class="row py-3 course">
-
+      <div
+        v-for="course in filtered"
+        :key="course.category+'-'+course.name"
+        class="row py-3 course"
+      >
         <div class="col">
           {{ course.name }}
         </div>
@@ -68,7 +69,6 @@ Dependencies:
                 <b-icon
                   :icon="getIcon(set[0])"
                   :aria-describedby="`label-desc-${set[0]}`"
-                  :animation="compliesWithUserPrefs(set[0])? '' : 'fade'"
                   scale="1.5"
                 ></b-icon>
                 <span
@@ -83,8 +83,8 @@ Dependencies:
         </div>
 
         <div class="col-3">
-          <b-button
-            class="indicated-btn"
+          <a
+            class="btn indicated-btn"
             @click="decideButtonAction(course)"
           >
             {{
@@ -92,24 +92,29 @@ Dependencies:
                 i18n['courseList.start']:
                 i18n['courseList.subscribe']
             }}
-          </b-button>
-          <router-link
-            :to="'/courses/'+course.name+'/1'"
-            class="btn indicated-btn"
-            v-if="isEnrolled(course)"
-            @click="selectedCourse = course.name"
-          >
-            {{ i18n['courseList.start'] }}
-            <i class="fas fa-arrow-right"></i>
-          </router-link>
-          <a
-            class="btn indicated-btn"
-            v-else
-            @click="subscribe(course)"
-          >
-            {{ i18n['courseList.subscribe'] }}
-            <i class="fas fa-file-signature"></i>
+            <i
+              :class="isEnrolled(course)?
+                'fas fa-arrow-right':
+                'fas fa-file-signature'"
+            ></i>
           </a>
+<!--          <router-link-->
+<!--            :to="'/courses/'+course.name+'/1'"-->
+<!--            class="btn indicated-btn"-->
+<!--            v-if="isEnrolled(course)"-->
+<!--            @click="selectedCourse = course.name"-->
+<!--          >-->
+<!--            {{ i18n['courseList.start'] }}-->
+<!--            <i class="fas fa-arrow-right"></i>-->
+<!--          </router-link>-->
+<!--          <a-->
+<!--            class="btn indicated-btn"-->
+<!--            v-else-->
+<!--            @click="subscribe(course)"-->
+<!--          >-->
+<!--            {{ i18n['courseList.subscribe'] }}-->
+<!--            <i class="fas fa-file-signature"></i>-->
+<!--          </a>-->
           <div
             v-if="!complicitCourses.has(course.courseId)"
             class="indicate-icon"
@@ -128,15 +133,25 @@ Dependencies:
     </div>
     <b-modal
       id="noncomplicit-confirm"
-      title="NONCOMPLICIT COURSE"
+      :title="i18n['courseList.notComplicit.title']"
       header-bg-variant="warning"
       @ok="buttonAction()"
       @cancel="$router.push('/profile')"
       centered
     >
       <p>
-        {{ i18n['type.modal.text'] }}
+        {{ i18n['courseList.notComplicit'] }}.
+        {{ i18n['courseList.notComplicit.text'] }}:
       </p>
+        <ul>
+          <li
+            v-for="thing in nonComplicitSettings[0]"
+            v-bind:key="thing"
+          >
+            {{ thing }}
+          </li>
+         </ul>
+
       <template #modal-footer="{ ok, cancel, hide }">
         <b-button
           variant="success"
@@ -176,6 +191,7 @@ export default {
       complicitCourses: new Set(),
       enrolledIn: [],
       filteredList: [],
+      nonComplicitSettings: {},
       selectedCourse: ''
     }
   },
@@ -217,21 +233,37 @@ export default {
       console.log(str)
     },
 
+    /**
+     * function getComplicitCourses: check user's preferences and
+     *  check if course complies to them, if not, remove from
+     *  complicitCourses and add list to nonComplicitSettings
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: October 29, 2021
+     */
     getComplicitCourses() {
       for (const course of this.filteredList) {
         this.complicitCourses.add(course.courseId)
+        const markAsNoncomplicit = (thing) => {
+          if(!this.nonComplicitSettings[course.courseId]) {
+            this.nonComplicitSettings[course.courseId] = []
+          }
+          this.nonComplicitSettings[course.courseId].push(thing)
+          this.complicitCourses.delete(course.courseId)
+        }
         // eslint-disable-next-line
-        const props = (({enrollment, ...o}) => o) (course.properties)
-        console.log(props === this.mediaPrefs)
-        for (const thing of Object.keys(this.mediaPrefs)) {
-          console.log(thing)
+        const props = (({enrollment, ...o}) => o) (course.properties) // filter enrollment
+        for (const thing of Object.keys(this.mediaPrefs)) { //check each user pref
+          // console.log(thing)
           if (Object.prototype.hasOwnProperty.call(props, thing)) {
             if (props[thing] !== this.mediaPrefs[thing]) {
-              console.log('setting ' + thing + ' diverges')
-              this.complicitCourses.delete(course.courseId)
-              break
+              markAsNoncomplicit(thing)
             }
           }
+          // } else {
+          //   if markAsNoncomplicit(thing)
+          // }
         }
       }
     },
