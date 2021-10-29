@@ -28,7 +28,7 @@
 	"courseNavEdit.table.renewGraph": "Reload Graphical Preview",
 	"courseNavEdit.table.succContent": "No. of succeeding Content",
 	"courseNavEdit.table.swap": "Swap",
-	"courseNavEdit.text.p1": "In the table below, you see all of your created content blocks. You have to assign one or several successors to <u>every</u> content block (i.e. every table row). Fill in the number of the content block (see first column). That way, you set the display order of your content blocks.",
+	"courseNavEdit.text.p1": "In the table below, you see all of your created content blocks. You have to assign one or several successors to <b>every</b> content block (i.e. every table row). Fill in the number of the content block (see first column). That way, you set the display order of your content blocks.",
 	"courseNavEdit.text.p2": "If you want content no. <b>1</b> be followed by content no. <b>4</b>, you write in row <b>1</b>, column 3 the number <b>4</b>",
 	"courseNavEdit.text.p3": "Note, that Dialogs usually link to different blocks, depending of the answer. <br> In this case, fill in the numbers (plural) of the succeeding blocks, comma-separated:For example, <b class='bg-light rounded py-1 px-2'>3, 4</b> means that the first answer leads to content block no. <b>3</b>, while the second answer leads to content block no. <b>4</b>.",
 	"courseNavEdit.title": "Table of Contents",
@@ -49,7 +49,7 @@
 	"deleteContent": "Delete Content",
 	"deleteCourse": "Delete Course",
 	"deleteCourse.deleteCourseTip": "The  <b>entire</b> course will be deleted.",
-	"deleteCourse.modal.text": "Are you sure that you want to delete the <u>entire</u> course?",
+	"deleteCourse.modal.text": "Are you sure that you want to delete the <b>entire</b> course?",
     "deleteField": "Delete this field",
 	"emailErr": "This email is invalid",
 	"emailPH": "Email",
@@ -365,7 +365,7 @@
 	"type": "Type",
 	"type.changeType": "Change Content Type",
 	"type.changeTypeText": "Choose New Type",
-	"type.changeTypeTip": "You can change the type of this content permanently. <u>Beware:</u> All data input will be lost.",
+	"type.changeTypeTip": "You can change the type of this content permanently. <b>Beware:</b> All data input will be lost.",
 	"type.modal.ok": "Change Type",
 	"type.modal.text": "New Type*"
 }
