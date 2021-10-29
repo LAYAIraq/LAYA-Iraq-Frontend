@@ -333,6 +333,7 @@
 	"savingFailed": "حدث خطأ أثناء الحفظ",
     "scrollUp": "Scroll to top",
 	"searchPH": "بحث عن اسم دورة",
+   "searchPH.label": "Suche nach Kursname. Gefundene Kurse werden unter der Suchleiste angezeigt",
 	"showTip": "إظهار النص المساعد.",
 	"showTitle": "Show Title",
 	"startUpload": "بدء الرفع",

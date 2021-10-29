@@ -331,6 +331,7 @@
 	"savingFailed": "Saving failed",
     "scrollUp": "Scroll to top",
 	"searchPH": "Search by course name",
+    "searchPH.label": "Suche nach Kursname. Gefundene Kurse werden unter der Suchleiste angezeigt",
 	"showTip": "Show help text.",
 	"showTitle": "Show Title",
 	"startUpload": "Start upload",

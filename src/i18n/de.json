@@ -329,6 +329,7 @@
 	"savingFailed": "Beim Speichern ist ein Fehler aufgetreten",
     "scrollUp": "Nach oben scrollen",
 	"searchPH": "Suche nach Kursnamen",
+    "searchPH.label": "Suche nach Kursname. Gefundene Kurse werden unter der Suchleiste angezeigt",
 	"showTip": "Hilfetext anzeigen.",
 	"showTitle": "Titel anzeigen",
 	"startUpload": "Hochladen beginnen",

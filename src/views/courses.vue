@@ -41,7 +41,7 @@ Dependencies:
                    type="text"
                    v-model="search"
                    :placeholder="i18n['searchPH']"
-                   :aria-label="i18n['searchPH']">
+                   :aria-label="i18n['searchPH.label']">
             <i class="icon fas fa-search"></i>
           </div>
         </div>
