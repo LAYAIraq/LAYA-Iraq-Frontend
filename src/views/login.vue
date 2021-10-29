@@ -138,8 +138,6 @@ export default {
   },
 
   mounted() {
-    // focus email input field on mount
-    document.querySelector('#email-input').focus()
   },
 
   methods: {

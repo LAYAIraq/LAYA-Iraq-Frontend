@@ -280,7 +280,6 @@ export default {
   },
 
   mounted () {
-    document.querySelector('#register-focus').focus()
   },
 
   methods: {

@@ -105,7 +105,6 @@ export default {
   },
 
   mounted() {
-    document.querySelector('#search-bar').focus()
     this.fetchCourses()
   },
   data() {
