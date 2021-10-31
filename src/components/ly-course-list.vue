@@ -230,10 +230,6 @@ export default {
 
   methods: {
 
-    log(str) {
-      console.log(str)
-    },
-
     /**
      * function getComplicitCourses: check user's preferences and
      *  check if course complies to them, if not, remove from
@@ -284,8 +280,8 @@ export default {
         () =>  { this.$router.push('/courses/'+course.name+'/1') }:
         () => { this.subscribe(course) }
       if (!complicit) {
-        console.log('not complicit, adding' +
-          this.nonComplicitSettings[course.courseId] + ' to list...')
+        // console.log('not complicit, adding' +
+        //   this.nonComplicitSettings[course.courseId] + ' to list...')
         this.nonComplicitList = this.nonComplicitSettings[course.courseId]
         this.$bvModal.show('noncomplicit-confirm')
       } else {
