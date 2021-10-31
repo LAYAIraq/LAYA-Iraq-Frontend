@@ -16,7 +16,7 @@ Dependencies:
       class="flaggable row"
       :id="title.id"
     >
-      <h4 >{{ title.text }}</h4>
+      <h4 >{{ courseSimple? title.simple : title.text }}</h4>
       <laya-flag v-if="!previewData"
           :refData="title"
           :isOpen="flagOpen"
@@ -75,7 +75,7 @@ export default {
     this.fetchContent()
   },
   computed: {
-    ...mapGetters(['content']),
+    ...mapGetters(['content', 'courseSimple']),
 
     /**
      * editorId: return id for html element

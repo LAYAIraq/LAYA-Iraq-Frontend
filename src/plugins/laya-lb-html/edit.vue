@@ -10,49 +10,71 @@ Dependencies:
 -->
 
 <template>
-
-  <div 
-    id="laya-wysiwyg-edit"
+  <div
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <form>
-      <div class="form-group row">  
-        <div class="form-group col-10"> 
-          <label 
-            for="laya-wysiwyg-title" 
+      <div class="form-group">
+        <div class="row">
+          <!-- title -->
+          <label
+            for="laya-wysiwyg-title"
+            class="col-2 col-form-label"
           >
             {{ i18n['title'] }}
           </label>
-          
-          <input 
-            id="laya-wysiwyg-title"
-            type="text"
-            v-model="title.text"
-            class="form-control"
-            :placeholder="i18n['titlePlaceholder']"
-          >
-        </div>
-        <div class="form-group col" id="show-title-button">
-          <div style="height: calc(1.5em + .75rem + 2px);"></div>
-          <label
-            for="show-title-tick"
-            class="col"
-          >
-            {{ i18n['showTitle'] }}
+          <div class="col-8">
             <input
-              id="show-title-tick"
-              type="checkbox"
-              v-model="title.show"
+              id="laya-wysiwyg-title"
+              type="text"
+              v-model="title.text"
+              class="form-control"
+              :placeholder="i18n['titlePlaceholder']"
             >
+          </div>
+          <!-- show title button -->
+          <div class="form-group col">
+            <label
+              for="show-title-tick"
+              class="col-form-label"
+            >
+              {{ i18n['showTitle'] }}
+              <input
+                id="show-title-tick"
+                type="checkbox"
+                v-model="title.show"
+              >
+            </label>
+          </div>
+        </div>
+        <div
+          class="row"
+          v-if="courseSimple"
+        >
+          <!-- simple title -->
+          <label
+            for="laya-wysiwyg-title-simple"
+            class="col-2 col-form-label"
+          >
+            <span class="sr-only">
+              {{ i18n['simpleAlt'] }}
+            </span>
           </label>
-            
-          
+          <div class="col-8">
+            <input
+              id="laya-wysiwyg-title-simple"
+              type="text"
+              v-model="title.simple"
+              class="form-control"
+              :placeholder="i18n['simpleAlt']"
+            >
+          </div>
         </div>
       </div>
     </form>
-    <div 
+    <div
       class="laya-wysiwyg-edit bg-light"
-     :class="langIsAr? 'text-right' : 'text-left'"
+      :class="langIsAr? 'text-right' : 'text-left'"
     >
       <label :for="editorId"> {{ i18n['content'] }} </label>
       <div :id="editorId"></div>
@@ -75,7 +97,7 @@ export default {
   ],
 
   computed: {
-    ...mapGetters(['content']),
+    ...mapGetters(['content', 'courseSimple']),
 
     /**
      * editorId: return ID for html element
