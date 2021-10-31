@@ -23,7 +23,7 @@ Dependencies: @/mixins/locale.vue
         class="flaggable question"
         :id="question.id"
       >
-        {{ question.text }}
+        {{ courseSimple? question.simple: question.text }}
         <laya-flag v-if="!previewData"
           :refData="question"
           :isOpen="flagOpen"
@@ -42,7 +42,7 @@ Dependencies: @/mixins/locale.vue
             type="button"
             class="btn btn-info btn-lg"
             @click="onFinish[i]()">
-            {{ answer.text }}
+            {{ courseSimple? answer.simple : answer.text }}
           </button>
           <laya-flag v-if="!previewData"
             :refData="answer"
@@ -74,7 +74,7 @@ export default {
   ],
 
   computed: {
-    ...mapGetters(['content', 'courseFlags']),
+    ...mapGetters(['content', 'courseFlags', 'courseSimple']),
 
     /**
      * idx: Return index of content block in course array
