@@ -330,7 +330,7 @@ export default {
     return {
       title: {},
       task: {},
-      taskAudio: '',
+      taskAudio: {},
       items: [],
       categories: []
     }

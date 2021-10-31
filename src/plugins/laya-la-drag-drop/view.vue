@@ -17,7 +17,7 @@ Dependencies:
           <h4>
             {{ courseSimple? title.simple : title.text }}
             <laya-audio-inline
-              v-if="taskAudio"
+              v-if="taskAudioExists"
               :src="courseSimple?
                 taskAudio.simple :
                 taskAudio.text"
@@ -143,7 +143,22 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['content', 'courseSimple'])
+    ...mapGetters(['content', 'courseSimple']),
+
+    /**
+     * function taskAudioExists: returns true if taskAudio object doesn't
+     *  contain empty strings
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: October 31, 2021
+     * @returns {boolean} true if strings are set
+     */
+    taskAudioExists() {
+      return this.courseSimple?
+        this.taskAudio.regular !== '':
+        this.taskAudio.regular !== '' && this.taskAudio.simple !== ''
+    }
   },
 
   data () {
@@ -187,10 +202,10 @@ export default {
      * Last Updated: unknown
      */
     check() {
-      if (this.eval.length == 0) {
+      if (this.eval.length === 0) {
         for(let i=0; i<this.solution.length; i++) {
           let solution = this.solution[i]
-          this.eval[i] = (solution == this.items[i].category)
+          this.eval[i] = (solution === this.items[i].category)
         }
       }
       
@@ -237,6 +252,6 @@ export default {
   margin-bottom: 2rem;
 }
 .item:last-child {
-  margin-bottom: 0rem;
+  margin-bottom: 0;
 }
 </style>

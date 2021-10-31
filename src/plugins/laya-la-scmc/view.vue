@@ -14,46 +14,48 @@ Dependencies:
     :class="langIsAr? 'text-right' : 'text-left'"
   >
 
-
     <!-- render task -->
-    <legend tabindex="0">
-      <div class="flaggable row" :id="title.id">
-        <div class="col">
-          <h3 class="pb-3">
-            {{ title.text }}
-            <laya-audio-inline v-if="taskAudio" :src="taskAudio">
-            </laya-audio-inline>
-          </h3>
-        </div>
-        <laya-flag v-if="!previewData"
-            :refData="title"
-            :isOpen="flagOpen"
-            @flagged="title.flagged = true"
-            @flagOpen="toggleFlagOpen"
-        ></laya-flag>
+    <div class="flaggable row" :id="title.id">
+      <div class="col">
+        <h3 class="pb-3">
+          {{ courseSimple? title.simple : title.text }}
+          <laya-audio-inline
+            v-if="taskAudioExists"
+            :src="courseSimple?
+            taskAudio.regular:
+            taskAudio.simple"
+          >
+          </laya-audio-inline>
+        </h3>
       </div>
-      <div
-        class="flaggable row"
-        :id="task.id"
-        :class="{'flat': flagOpen != task.id}"
-      >
-        <div class="col">
-          {{task.text}}
-        </div>
-        <laya-flag v-if="!previewData"
-            :refData="task"
-            :isOpen="flagOpen"
-            @flagged="task.flagged = true"
-            @flagOpen="toggleFlagOpen"
-        ></laya-flag>
+      <laya-flag v-if="!previewData"
+          :refData="title"
+          :isOpen="flagOpen"
+          @flagged="title.flagged = true"
+          @flagOpen="toggleFlagOpen"
+      ></laya-flag>
+    </div>
+    <div
+      class="flaggable row"
+      :id="task.id"
+      :class="{'flat': flagOpen !== task.id}"
+    >
+      <div class="col">
+        {{ courseSimple? task.simple: task.text }}
       </div>
-    </legend>
+      <laya-flag v-if="!previewData"
+          :refData="task"
+          :isOpen="flagOpen"
+          @flagged="task.flagged = true"
+          @flagOpen="toggleFlagOpen"
+      ></laya-flag>
+    </div>
 
     <!-- render options -->
     <div class="p-3 bg-light">
       <div v-for="(option,i) in options"
         class="flaggable form-check mb-3"
-        :class="{'flat': flagOpen != option.id}"
+        :class="{'flat': flagOpen !== option.id}"
         :key="'mchoice-option-'+i"
         :id="option.id"
       >
@@ -76,7 +78,7 @@ Dependencies:
           :for="'mchoice-in-'+i" 
           class="form-check-label"
           :class="langIsAr? 'mr-4' : ''">
-          {{ option.text }}
+          {{ courseSimple? option.simple: option.text }}
         </label>
         <i class="ml-2" :class="eval[i]"></i>
         <!--
@@ -147,7 +149,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['content']),
+    ...mapGetters(['content', 'courseSimple']),
 
     /**
      * feedbackId: creates an identifier string
@@ -160,6 +162,21 @@ export default {
       return `mchoice-feedback-${this._uid}` 
       //FIXME vm _uid is not supposed to be used as data
       //source: https://github.com/vuejs/vue/issues/5886#issuecomment-308625735
+    },
+
+    /**
+     * function taskAudioExists: returns true if taskAudio object doesn't
+     *  contain empty strings
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: October 31, 2021
+     * @returns {boolean} true if strings are set
+     */
+    taskAudioExists() {
+      return this.courseSimple?
+        this.taskAudio.regular !== '':
+        this.taskAudio.regular !== '' && this.taskAudio.simple !== ''
     }
   },
 
