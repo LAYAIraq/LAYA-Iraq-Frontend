@@ -81,7 +81,7 @@ import { mapState, mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 import http from 'axios'
 
-import lyCourseEdit from '@/components/authoring/course-update'
+import lyCourseEdit from '@/components/authoring/course-create'
 import lyCourseList from '@/components/ly-course-list'
 
 import utils from '../misc/utils.js'
