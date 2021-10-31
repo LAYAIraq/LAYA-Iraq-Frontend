@@ -172,6 +172,7 @@
 	"layaPlyr.placeholder": "z.B. https://vimeo.com/346694402",
 	"layaPlyr.platform": "Platform",
 	"layaPlyr.tooltip": "<p>With this component, you can insert a video from two platforms, Youtube and Vimeo. You only have to give the link to the video you want to insert.</p><p>After input, we check if the video comes from one of the two supported platforms.</p><p>Afterwards, we provide a player that allows the video to be played within the course interface.</p>",
+	"layaPlyr.url": "Video URL",
 	"layaPlyr.vimeo": "Vimeo",
 	"layaPlyr.wrongURL": "Wrong URL! Please input a link to Youtube or Vimeo!",
 	"layaPlyr.youtube": "Youtube",
