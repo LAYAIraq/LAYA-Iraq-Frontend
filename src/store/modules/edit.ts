@@ -118,6 +118,21 @@ export default {
     },
 
     /**
+     * function courseSimple: return true if course has simpleLanguage
+     *  setting enabled
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: October 29, 2021
+     * @param state contains course
+     */
+    courseSimple(state: { course:
+      { properties: { simpleLanguage: boolean} }
+    }) {
+      return state.course.properties.simpleLanguage
+    },
+
+    /**
      * Function courseStorage: returns id of course storage
      *
      * Author: cmc
@@ -185,7 +200,7 @@ export default {
      */
     appendContent (
       state: { course: { content: Array<Object> } },
-      data:{ name: String, nextStep: any, input: Object}
+      data:{ name: string, nextStep: any, input: Object}
     ) {
       state.course.content.push(data)
     },
@@ -208,6 +223,25 @@ export default {
     },
 
     /**
+     * function changeCourseProperties: update course properties
+     *
+     * Author: cmc
+     *
+     * Last Updated: October 26, 2021
+     * @param state contains course.properties object
+     * @param properties new properties
+     */
+    changeCourseProperties(
+      state: { course: { properties: object } },
+      properties: object
+    ) {
+      state.course.properties = {
+        ...state.course.properties,
+        ...properties
+      }
+    },
+
+    /**
      * Function delContent: remove Content at given index
      *
      * Author: core
@@ -217,9 +251,9 @@ export default {
      * @param state contains course object
      * @param step index of content to remove
      */
-    delContent( state:
-                  { course: { content: object[] } },
-                step: number ) {
+    delContent( state: {
+      course: { content: object[] }
+      }, step: number ) {
       state.course.content.splice(step, 1)
     },
 
@@ -245,7 +279,9 @@ export default {
 
     /**
      * function flagFlaggableElement(): mutate flagged boolean of element
+     *
      * Author: cmc
+     *
      * Last Updated: August 17, 2021
      * @param state state variables
      * @param elem the flaggable element to be mutated
@@ -385,7 +421,9 @@ export default {
 
     /**
      * Function updateStep: update content block at given index
+     *
      * Author: core
+     *
      * Last Updated: August 17, 2021
      * @param state contains course, content
      * @param data contains step index, new content object
@@ -659,9 +697,59 @@ export default {
             const listData = {
               category: courseObject.category,
               name: courseObject.name,
-              needsEnrollment: courseObject.needsEnrollment,
+              properties: courseObject.properties,
               courseId: courseObject.courseId
             }
+            courseObject.content.forEach(block => {
+              if (courseObject.properties.simpleLanguage) {
+                // following is duplicate of checkForSimpleLanguage() in
+                // @/views/course-edit-tools/course-preferences.vue
+                // might be refactored to reduce redundancy
+                const hasSimple = (elem) => {
+                  return Object.prototype.hasOwnProperty.call(elem, 'simple')?
+                    elem.simple !== '' : false
+                }
+                const iterInput = Object.values(block)
+                for (const elem of iterInput) {
+                  if (typeof(elem) === 'object') {
+                    if (Array.isArray(elem)) {
+                      for (const iter of elem) {
+                        if (iter) {
+                          if (!hasSimple(iter)) {
+                            // console.log(iter)
+                            // console.log(' doesnt have simple')
+                            courseObject.properties.simple = false
+                            break
+                          }
+                        }
+                      }
+                    } else if (elem){
+                      if (!hasSimple(elem)) {
+                        // console.log(elem)
+                        // console.log(' doesnt have simple')
+                        courseObject.properties.simple = false
+                        break
+                      }
+                    }
+                  }
+                }
+
+              }
+              switch (block.name) { // check content for text and video
+                // TODO: what about audio? obsolete b/c screenreaders?
+                case 'laya-plyr':
+                  listData.properties.video = true
+                  break
+                case 'laya-wysiwyg':
+                  listData.properties.text = true
+                  break
+                case 'laya-ableplayer':
+                  listData.properties.video = true
+                  break
+                case 'laya-dialog':
+                  listData.properties.text = true
+              }
+            })
             if (!state.courseList.some( // add to course list if not present
               (e: { courseId: String }) => e.courseId === listData.courseId)
             ) {
@@ -719,9 +807,14 @@ export default {
       const updated = Date.now()
       const cId = state.course.courseId
       const cContent = state.course.content
+      const cproperties = state.course.properties
 
       return new Promise( (resolve, reject) => {
-        http.patch(`courses/${cId}`, {content: cContent, lastChanged: updated})
+        http.patch(`courses/${cId}`, {
+          content: cContent,
+          lastChanged: updated,
+          properties: cproperties
+        })
           .catch(err => {
             console.error('Failed storing course content:', err)
             reject(err)

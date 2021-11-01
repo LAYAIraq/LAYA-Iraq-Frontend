@@ -17,13 +17,13 @@ Dependencies:
       class="flaggable row"
       :id="title.id"
     >
-      <h4 >{{ title.text }}</h4>
-      <laya-flag-icon v-if="!previewData"
+      <h4 >{{ courseSimple? title.simple : title.text }}</h4>
+      <laya-flag v-if="!previewData"
           :refData="title"
-
+          :isOpen="flagOpen"
           @flagged="title.flagged = true"
-
-      ></laya-flag-icon>
+          @flagOpen="toggleFlagOpen"
+      ></laya-flag>
     </div>
 
 
@@ -34,13 +34,13 @@ Dependencies:
           :data-plyr-embed-id="src"
           class="plyr__video-embed"
         ></div>
-<!--      <laya-flag-icon-icon v-if="!previewData"-->
+<!--      <laya-flag v-if="!previewData"-->
 <!--          :refData="videoFlag"-->
-<!--          -->
+<!--          :isOpen="flagOpen"-->
 <!--          :interactive="true"-->
 <!--          @flagged="videoFlag.flagged = true"-->
-<!--          -->
-<!--      ></laya-flag-icon-icon>-->
+<!--          @flagOpen="toggleFlagOpen"-->
+<!--      ></laya-flag>-->
     </div>
 
     <div class="row">
@@ -72,7 +72,6 @@ export default {
   name: 'laya-plyr',
 
   mixins: [
-
     locale
   ],
 
@@ -98,7 +97,7 @@ export default {
     onFinish: Array
   },
   computed: {
-    ...mapGetters(['content']),
+    ...mapGetters(['content', 'courseSimple']),
 
     /**
      * playerId: returns id for html element

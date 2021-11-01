@@ -54,7 +54,7 @@ export default {
      * @param state state variable
      * @param flag flag to add
      */
-    appendFlag (
+    appendFlag(
       state: { courseFlags: Array<object> },
       flag: {
        courseId: String,
@@ -348,12 +348,10 @@ export default {
      * @param state state variables
      */
     updateFlags({ commit, state }) {
-      // console.log('trying to update flags...')
       const reqs = []
       state.courseFlags.forEach(flag => {
         // const id = flag.referenceId
         // const id = flag.referenceId
-        // console.log('updating flag ' + flag.referenceId)
         // const flagNoId = (({referenceId, ...o}) => (o)) (flag)
         reqs.push(
           http.post('flags/updateFlag', flag)
@@ -365,7 +363,7 @@ export default {
       http.all(reqs)
         // .then( () => console.log('Flags updated'))
         .catch((err) => console.error(err))
-      // commit('clearFlagList') /* why was this useful? */
+      commit('clearFlagList')
     }
   }
 }

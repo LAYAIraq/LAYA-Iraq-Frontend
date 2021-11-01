@@ -1,5 +1,5 @@
 <!-- 
-Filename: course-update.vue
+Filename: course-create.vue
 Use: This file implements the form to add a new course
 Creator: core
 Date: unknown
@@ -12,20 +12,20 @@ Dependencies:
 <template>
   <div class="laya-course-new-view">
     <h3 :class="langIsAr? 'text-right' : 'text-left'"> 
-      {{ i18n['courseUpdate.createCourse'] }}
+      {{ i18n['courseCreate.createCourse'] }}
     </h3>
     <hr>
     <form class="mt-3">
       <div class="form-group row">
         <label for="new-course-name" class="col-3 col-form-label">
-          {{ i18n['courseUpdate.courseName'] }}
+          {{ i18n['courseCreate.courseName'] }}
         </label>
         <div class="col">
           <input id="new-course-name"
                  type="text"
                  class="form-control"
                  v-model="newCourse.name"
-                 :placeholder="i18n['courseUpdate.courseName']">
+                 :placeholder="i18n['courseCreate.courseName']">
         </div>
       </div>     
       <div class="form-group row">
@@ -42,7 +42,7 @@ Dependencies:
       </div>
       <div class="form-group row">
         <label for="new-course-enrollment" class="col-3 col-form-label">
-          {{ i18n['courseUpdate.enrollment'] }}
+          {{ i18n['courseCreate.enrollment'] }}
         </label>
         <div class="col">
           <input 
@@ -84,7 +84,7 @@ import { locale } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 
 export default {
-  name: 'course-update',
+  name: 'course-create',
 
   mixins: [
     locale
@@ -127,6 +127,7 @@ export default {
     }
 
   },
+
   methods: {
 
 
@@ -139,8 +140,8 @@ export default {
      */
     duplicateCheck() {
       for(let entry of this.courseList) {
-        if (this.newCourse.name == entry.name) {
-          this.msg = this.i18n['courseUpdate.courseExists']
+        if (this.newCourse.name === entry.name) {
+          this.msg = this.i18n['courseCreate.courseExists']
           return
         }
       }
@@ -156,7 +157,7 @@ export default {
      * last updated: March 24, 2021
      *  */    
     storeNewCourse() {
-      
+      this.trimNames()
       const self = this
       const { newCourse, auth } = this;
 
@@ -175,7 +176,7 @@ export default {
         ...newCourse,
         authorId: auth.userId,
         storageId: newId,
-        needsEnrollment: enrBool
+        properties: { enrollment: enrBool }
         }).then( () => {
           // console.log(resp)
           self.$router.push(`/courses/${newCourse.name}/1`)
@@ -198,6 +199,19 @@ export default {
           self.msg = self.i18n['savingFailed']
       })
 
+    },
+
+    /**
+     * function trimNames: remove whitespace from beginning and end
+     *  of newCourse properties
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: October 31, 2021
+     */
+    trimNames() {
+      this.newCourse.name = this.newCourse.name.trim()
+      this.newCourse.category = this.newCourse.category.trim()
     }
   }
 }

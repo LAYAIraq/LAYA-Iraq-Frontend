@@ -38,9 +38,7 @@ Dependencies:
                      :key="name+'-'+step"
                      :is="contentToDisplay.name"          
                      :onFinish="nextStep(contentToDisplay.nextStep)">
-          </component>
-
-
+          </component> 
           
           <!--<div v-else>-->
           <div v-else>
@@ -58,7 +56,6 @@ Dependencies:
     <courseEdit v-if="isAuthor && content" :name="name" :step="step" @saved="$forceUpdate"></courseEdit>
 
   </div>
-
 </template>
 
 <script>
@@ -93,13 +90,15 @@ export default {
       rename: '',
       copy: '',
       changetype: null,
-      courseStats: {}
+      courseStats: {},
+      helpfulkey: 0
     }
   },
 
   computed: {
     ...mapState(['auth', 'note', 'edit', 'flags']),
     ...mapGetters(['isAuthor', 'content', 'course', 'courseFlags']),
+
 
     /**
      *  onFinishDummy: returns empty function on every [] invocation
@@ -146,8 +145,8 @@ export default {
      * Last Updated: October 27, 2020
      */
     viewPermit() {
-      if (this.contentToDisplay) {
-        return this.course.needsEnrollment ?
+      if( this.contentToDisplay ) {
+        return this.course.properties.enrollment ?
           (!!(this.isAuthor || this.userEnrolled)) : true
       }
       return false
@@ -216,11 +215,7 @@ export default {
     getCourse() {
       const ctx = this;
 
-      // window.scrollTo({
-      //   top: 0,
-      //   left: 0,
-      //   behavior: 'smooth'
-      // })
+      window.scrollTo(0,0)
       document.title = `Laya - ${ctx.name}`
       if (!this.course || Object.keys(this.course).length === 0) {
         console.log('Fetching Course...')
@@ -248,7 +243,6 @@ export default {
         }
       })
     }
-
   }
 }
 </script>

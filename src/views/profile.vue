@@ -93,12 +93,17 @@ Dependencies:
                 autocomplete="on"
               >
             </div>
-            <strong id="pwdStoreMsg" class="form-text text-center">{{ pwdMsg }}</strong>
           </div>
 
           <!-- New Password -->
           <div class="form-group row">
-            <label for="newPwd" class="col-sm-3 col-form-label">{{ i18n['profile.newPwd'] }}</label>
+            <label
+              id="new-pwd-label"
+              for="newPwd"
+              class="col-sm-3 col-form-label"
+            >
+              {{ i18n['profile.newPwd'] }}
+            </label>
             <div class="col-sm-9">
               <input
                 id="newPwd"
@@ -106,14 +111,20 @@ Dependencies:
                 class="form-control"
                 v-model="newPwd"
                 :placeholder="i18n['profile.newPwd']"
-                aria-describedby="pwdMsg"
+                aria-describedby="new-pwd-label"
               >
             </div>
           </div>
 
           <!-- repeat password -->
           <div class="form-group row">
-            <label for="repeatPwd" class="col-sm-3 col-form-label">{{ i18n['pwd2PH'] }}</label>
+            <label
+              id="repeat-label"
+              for="repeatPwd"
+              class="col-sm-3 col-form-label"
+            >
+              {{ i18n['pwd2PH'] }}
+            </label>
             <div class="col-sm-9">
               <input
                 id="repeatPwd"
@@ -121,21 +132,66 @@ Dependencies:
                 class="form-control"
                 v-model="repeatPwd"
                 :placeholder="i18n['pwd2PH']"
-                aria-describedby="pwdStrength"
+                aria-describedby="repeat-label"
               >
             </div>
           </div>
           <div class="form-group row">
-            <label for="pwdMeter" class="col-sm-3 col-form-label">{{ i18n['profile.pwdStrength'] }}</label>
+            <label
+              for="pwdMeter"
+              class="col-sm-3 col-form-label"
+            >
+              {{ i18n['profile.pwdStrength'] }}
+            </label>
             <div class="col-sm-9">
-
-              <password id="pwdMeter" v-model="repeatPwd" :strength-meter-only="true" @feedback="showFeedback"></password>
-              <strong id="testPwdMeter" class="form-text text-center"> {{ warnings }} </strong>
-              <strong id="pwdDiffMsg" class="form-text text-center">{{ pwdDiffMsg }}</strong>
-              <strong id="pwdStoreMsg" class="form-text text-center">{{ pwdMsg }}</strong>
+              <password
+                id="pwdMeter"
+                v-model="newPwd"
+                :strength-meter-only="true"
+                :secure-length="8"
+                @feedback="showFeedback"
+                @score="setPwdStrength"
+              ></password>
+              <strong class="form-text text-center">
+                {{ wordedPwdStrength }}
+              </strong>
             </div>
           </div>
 
+
+          <div
+            v-if="showSuggestions"
+            class="form-group row"
+          >
+            <div
+              class="col-sm-3"
+            >
+              {{ i18n['profile.pwdSuggestion'] }}
+            </div>
+            <div
+              class="col-sm-9"
+              id="pwd-suggestions"
+            >
+              <strong
+                id="testPwdMeter"
+                class="form-text text-center">
+                {{ warnings }}
+              </strong>
+
+              <strong
+                id="pwdDiffMsg"
+                class="form-text text-center"
+              >
+                {{ pwdDiffMsg }}
+              </strong>
+              <strong
+                id="pwdStoreMsg"
+                class="form-text text-center"
+              >
+                {{ pwdMsg }}
+              </strong>
+            </div>
+          </div>
           <hr>
 
           <!-- avatar upload TODO: FIX Cropper Problems
@@ -196,6 +252,56 @@ Dependencies:
             </div>
           </div>
 
+          <hr>
+          <!-- Font Options -->
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">
+              {{ i18n['profile.fontOptions'] }}
+            </label>
+            <div
+              class="col-sm-9 d-inline-flex justify-content-between align-items-center">
+              <div class="input-inline">
+                <label>
+                  {{ i18n['profile.font'] }}
+                  <b-form-select
+                    v-model="prefs.font.chosen"
+                  >
+                    <b-form-select-option
+                      v-for="(opt, i) in introFontOptions"
+                      :key="i"
+                      :value="opt.value"
+                      :class="`laya-font-${opt.value}`"
+                      >
+                      <span :class="opt.value? `laya-font-${opt.value}`:''">
+                        {{ opt.text }}
+                      </span>
+                    </b-form-select-option>
+                  </b-form-select>
+                </label>
+              </div>
+              <!-- Font Size -->
+              <div>
+                <label>
+                  {{ i18n['profile.fontSize'] }}
+                  <b-form-input
+                    type="range"
+                    v-model="chosenSize"
+                    min="0"
+                    :max="fontSizeOptions.length-1"
+                  ></b-form-input>
+                </label>
+                <div class="d-flex justify-content-between w-100">
+                  <div
+                    v-for="(opt, i) in fontSizeOptions"
+                    :key="`text-option-${i}`"
+                  >
+                    {{ opt }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Save Button -->
           <div class="form-group">
             <button
@@ -230,6 +336,10 @@ import { locale, pwdStrength } from '@/mixins'
 import api from '../backend-url.ts'
 import Password from 'vue-password-strength-meter'
 import { mapState } from 'vuex'
+import fontOptions from '@/misc/font-options'
+import fontSizeOptions from '@/misc/font-options'
+import 'open-dyslexic/open-dyslexic-regular.css'
+import '@/styles/fonts.css'
 //import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
 
 export default {
@@ -254,7 +364,10 @@ export default {
       pwdMsg: '',
       formMsg: '',
       busy: false,
-      prefs: {}
+      passwordStrength: null,
+      prefs: {},
+      ...fontOptions,
+      ...fontSizeOptions
     }
   },
 
@@ -271,6 +384,38 @@ export default {
     avatarURL() {
       return (!this.avatar || this.avatar === '') ?
         null : `${api}/storage/img/download/${this.avatar}`
+    },
+
+    /**
+     * chosenSize: returns index of chosen size in fontSizeOptions,
+     *  sets pref.font.size when changed
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 22, 2021
+     * @returns {number} index in fontSizeOptions array
+     */
+    chosenSize: {
+      get() {
+        return this.fontSizeOptions.indexOf(this.prefs.font.size)
+      },
+      set(newVal) {
+        this.prefs.font.size = this.fontSizeOptions[newVal]
+      }
+    },
+
+    /**
+     * introFontOptions(): add placeholder in locale to fontOptions
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 22, 2021
+     */
+    introFontOptions() {
+      return [
+        {value: null, text: this.i18n['profile.fontChoose']},
+        ...this.fontOptions
+      ]
     },
 
     /**
@@ -293,6 +438,32 @@ export default {
      */
     pwdDiffMsg() {
       return this.passwordsDiffer? this.i18n['profile.pwdDiffer'] : ''
+    },
+
+    /**
+     * showSuggestions: boolean to show suggestions row
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 22, 2021
+     * @returns {boolean} true if any of the suggestions aren't empty
+     */
+    showSuggestions() {
+      return this.warnings != '' || this.pwdDiffMsg != '' || this.pwdMsg != ''
+    },
+
+    /**
+     * wordedPwdStrength(): word pwd strength for linguistic support
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 22, 2021
+     * @returns {string} password strength in locale
+     */
+    wordedPwdStrength() {
+      return this.passwordStrength != null?
+        this.i18n[`pwdStrength${this.passwordStrength}`]:
+        ''
     }
   },
 
@@ -306,9 +477,29 @@ export default {
     // make profile settings mutable
     this.avatar = this.profile.avatar
     this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
+    if (!this.prefs.media) { // avoid render error when no prefs set
+      this.prefs.media = {}
+    }
+    if (!this.prefs.font) {
+      this.prefs.font = {
+        chosen: 'standard',
+        size: 18
+      }
+    }
   },
 
   methods: {
+
+    /**
+     * function setPwdStrength: set passwordStrength data property
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 22, 2021
+     */
+    setPwdStrength(num) {
+      this.passwordStrength = num
+    },
 
     /**
      * Function submit: get password change request and fire it
@@ -338,7 +529,7 @@ export default {
           })
         )
       }
-      console.log(requests)
+      // console.log(requests)
       /* fire requests */
       http
       .all(requests)
@@ -356,7 +547,7 @@ export default {
         setTimeout(() => {
           ctx.formMsg = ''
         }, 2000)
-        ctx.$forceUpdate
+        ctx.$forceUpdate()
         ctx.$bvToast.show('submit-ok')
       })
 
@@ -364,14 +555,24 @@ export default {
       ctx.$store.commit('setPrefs', ctx.prefs)
     },
 
+    /**
+     * function showFeedback: load feedback for pwd strength
+     *
+     * Author: pj
+     *
+     * Last Updated: July 26, 2021
+     * @param suggestions
+     * @param warning
+     */
     showFeedback({ suggestions, warning }) {
-      this.pwdStrength({ suggestions, warning })
+      this.pwdSuggestions({ suggestions, warning })
     }
   },
 }
 </script>
 
 <style scoped>
+
 .avatar {
   width: 7rem;
   height: 7rem;

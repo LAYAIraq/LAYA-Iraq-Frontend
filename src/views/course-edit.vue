@@ -21,7 +21,7 @@ Dependencies:
     <div 
       class="container"
       :class="langIsAr ? 'text-right' : ''"
-      v-if="$route.name == 'course-detail-view'"
+      v-if="$route.name === 'course-detail-view'"
     >
 
       <course-edit-content :name="name" :step="step"></course-edit-content>
@@ -40,7 +40,9 @@ Dependencies:
 
       <course-delete :name="name"></course-delete>
 
-      <course-stats></course-stats>
+      <!--<course-stats></course-stats>-->
+
+      <course-preferences @settingsChanged="storeCourse"></course-preferences>
 
     </div>
 
@@ -60,7 +62,7 @@ Dependencies:
 
 <script>
 import { locale } from '@/mixins'
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import { 
   courseCopy,
   courseDelete,
@@ -70,8 +72,9 @@ import {
   courseEditNav, 
   courseEditType, 
   courseNewBlock,
+  coursePreferences,
   courseRename,
-  courseStats
+  // courseStats
   } from './course-edit-tools/'
 
 
@@ -86,8 +89,9 @@ export default {
     courseEditNav,
     courseEditType,
     courseNewBlock,
+    coursePreferences,
     courseRename,
-    courseStats
+    // courseStats
   },
   mixins: [
     locale
@@ -97,7 +101,7 @@ export default {
     step: String
   },
   computed: {
-    ...mapState(['edit']),
+    // ...mapState(['edit']),
     ...mapGetters(['content', 'course']),
   },
   methods: {
@@ -126,8 +130,7 @@ export default {
      *  */    
     storeCourse() {
       let ctx = this
-      let stored = this.$store.dispatch('storeCourse') //returns promise
-      stored
+      this.$store.dispatch('storeCourse')
       .then(() => {
         ctx.$bvToast.show('author-toast')
         // ctx.$emit('saved')

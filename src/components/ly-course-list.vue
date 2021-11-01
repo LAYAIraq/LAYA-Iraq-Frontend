@@ -19,7 +19,10 @@ Dependencies:
 
       <div class="row">
         <div class="col">
-          <h3 v-show="filtered.length === 0" class="text-center text-muted">
+          <h3
+            v-show="filtered.length === 0"
+            class="text-center text-muted"
+          >
             {{ i18n['noCourses'] }}
           </h3>
         </div>
@@ -32,14 +35,18 @@ Dependencies:
         <div class="col">
           <h4>{{ i18n['cat'] }}</h4>
         </div>
+        <div class="col-2">
+          <h4 class="sr-only">{{ i18n['courseList.properties'] }}</h4>
+        </div>
         <div class="col-3">
         </div>
       </div>
 
-      <div v-for="course in filtered"
-           :key="course.category+'-'+course.name"
-           class="row py-3 course">
-
+      <div
+        v-for="course in filtered"
+        :key="course.category+'-'+course.name"
+        class="row py-3 course"
+      >
         <div class="col">
           {{ course.name }}
         </div>
@@ -48,35 +55,128 @@ Dependencies:
           {{ course.category }}
         </div>
 
+        <div class="col-2">
+          <ul class="course-props">
+            <li
+              v-for="set in Object.entries(course.properties)"
+              :key="`setting-${set[0]}`"
+              v-show="set[1]"
+            >
+              <span
+                :title="i18n[`courseList.properties.${set[0]}`]"
+                v-b-tooltip.top
+              >
+                <b-icon
+                  :icon="getIcon(set[0])"
+                  :aria-describedby="`label-desc-${set[0]}`"
+                  scale="1.5"
+                ></b-icon>
+                <span
+                  class="sr-only"
+                  :id="`label-desc-${set[0]}`"
+                >
+                  {{ i18n[`courseList.properties.${set[0]}`] }}
+                </span>
+              </span>
+            </li>
+          </ul>
+        </div>
+
         <div class="col-3">
-          <router-link
-            :to="'/courses/'+course.name+'/1'"
-            class="btn text-dark px-2 py-1 d-inline-block text-center w-100"
-            v-if="!enrollmentNeeded(course)" >
-            {{ i18n['courseList.start'] }} 
-            <i class="fas fa-arrow-right"></i>
-          </router-link>
-          <a 
-            class="btn text-dark px-2 py-1 d-inline-block text-center w-100 text-break" 
-            v-else 
-            @click="subscribe(course)" 
+          <a
+            class="btn indicated-btn"
+            @click="decideButtonAction(course)"
           >
-            {{ i18n['courseList.subscribe'] }}
-            <i class="fas fa-file-signature"></i>  
+            {{
+              isEnrolled(course)?
+                i18n['courseList.start']:
+                i18n['courseList.subscribe']
+            }}
+            <i
+              :class="isEnrolled(course)?
+                'fas fa-arrow-right':
+                'fas fa-file-signature'"
+            ></i>
           </a>
+<!--          <router-link-->
+<!--            :to="'/courses/'+course.name+'/1'"-->
+<!--            class="btn indicated-btn"-->
+<!--            v-if="isEnrolled(course)"-->
+<!--            @click="selectedCourse = course.name"-->
+<!--          >-->
+<!--            {{ i18n['courseList.start'] }}-->
+<!--            <i class="fas fa-arrow-right"></i>-->
+<!--          </router-link>-->
+<!--          <a-->
+<!--            class="btn indicated-btn"-->
+<!--            v-else-->
+<!--            @click="subscribe(course)"-->
+<!--          >-->
+<!--            {{ i18n['courseList.subscribe'] }}-->
+<!--            <i class="fas fa-file-signature"></i>-->
+<!--          </a>-->
+          <div
+            v-if="!complicitCourses.has(course.courseId)"
+            class="indicate-icon"
+            :title="i18n['courseList.notComplicit']"
+            v-b-tooltip.top
+          >
+            <b-icon
+            icon="exclamation-diamond-fill"
+            scale="2"
+            ></b-icon>
+          </div>
+
         </div>
       </div>
 
     </div>
+    <b-modal
+      id="noncomplicit-confirm"
+      :title="i18n['courseList.notComplicit.title']"
+      header-bg-variant="warning"
+      @ok="buttonAction()"
+      @cancel="$router.push('/profile')"
+      centered
+    >
+      <p>
+        {{ i18n['courseList.notComplicit'] }}.
+        {{ i18n['courseList.notComplicit.text'] }}:
+      </p>
+        <ul>
+          <li
+            v-for="thing in nonComplicitList"
+            v-bind:key="thing"
+          >
+            <strong>{{ i18n[`profile.defmedia.${thing}`] }}</strong>:
+            {{ i18n[`courseList.notComplicit.${thing}Hint`]}}
+          </li>
+         </ul>
+
+      <template #modal-footer="{ ok, cancel, hide }">
+        <b-button
+          variant="success"
+          @click="ok"
+        >
+          {{ i18n['courseList.notComplicit.continue'] }}
+        </b-button>
+        <b-button
+          variant="warning"
+          @click="cancel"
+        >
+          {{ i18n['courseList.notComplicit.settings'] }}
+        </b-button>
+        <b-button @click="hide">
+          {{ i18n['cancel'] }}
+        </b-button>
+      </template>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import http from 'axios'
-import { 
-  mapState, 
-  mapGetters 
-} from 'vuex'
+import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 
 export default {
@@ -88,8 +188,13 @@ export default {
 
   data() {
     return {
+      buttonAction: null,
+      complicitCourses: new Set(),
+      enrolledIn: [],
       filteredList: [],
-      enrolledIn: []
+      nonComplicitSettings: {},
+      nonComplicitList: [],
+      selectedCourse: ''
     }
   },
 
@@ -98,45 +203,147 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['courseList']),
-    ...mapState(['note', 'auth']),
+    ...mapGetters([
+      'courseList',
+      'mediaPrefs',
+      'userId'
+    ]),
 
      /**
      * filtered: filter course list depending on user input
-     * 
+     *
      * Author: core
-     * 
-     * Last updated: March 24, 2021 
+     *
+     * Last updated: March 24, 2021
      */
     filtered() {
       if (!this.filter) return this.courseList
-
       const filterByCourseName = new RegExp(this.filter, 'i');
       return this.filteredList.filter(course => filterByCourseName.test(course.name))
     }
   },
 
-  mounted() {
+  created() {
     this.getSubs()
     this.filteredList = [...this.courseList]
-  },
-
-  updated(){
-    // this.getSubs()
+    this.getComplicitCourses()
   },
 
   methods: {
+
+    /**
+     * function getComplicitCourses: check user's preferences and
+     *  check if course complies to them, if not, remove from
+     *  complicitCourses and add list to nonComplicitSettings
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: October 29, 2021
+     */
+    getComplicitCourses() {
+      for (const course of this.filteredList) {
+        this.complicitCourses.add(course.courseId)
+        const markAsNoncomplicit = (thing) => {
+          if(!this.nonComplicitSettings[course.courseId]) {
+            this.nonComplicitSettings[course.courseId] = []
+          }
+          this.nonComplicitSettings[course.courseId].push(thing)
+          this.complicitCourses.delete(course.courseId)
+        }
+        // eslint-disable-next-line
+        const props = (({enrollment, ...o}) => o) (course.properties) // filter enrollment
+        for (const thing of Object.keys(this.mediaPrefs)) { //check each user pref
+          // console.log(thing)
+          if (Object.prototype.hasOwnProperty.call(props, thing)) {
+            if (props[thing] !== this.mediaPrefs[thing]) {
+              markAsNoncomplicit(thing)
+            }
+          }
+          // } else {
+          //   if markAsNoncomplicit(thing)
+          // }
+        }
+      }
+    },
+
+    /**
+     * function decideButtonAction: redirect to course or show modal
+     *  depending on course status concerning media preferences
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: October 29, 2021
+     *  @param {object} course corresponding course to button
+     */
+    decideButtonAction(course) {
+      const complicit = this.complicitCourses.has(course.courseId)
+      this.buttonAction = this.isEnrolled(course) ?
+        () =>  { this.$router.push('/courses/'+course.name+'/1') }:
+        () => { this.subscribe(course) }
+      if (!complicit) {
+        // console.log('not complicit, adding' +
+        //   this.nonComplicitSettings[course.courseId] + ' to list...')
+        this.nonComplicitList = this.nonComplicitSettings[course.courseId]
+        this.$bvModal.show('noncomplicit-confirm')
+      } else {
+        // console.log('complicit, doing button action...')
+        this.buttonAction()
+      }
+    },
+
+    /**
+     * function compliesWithUserPrefs(): returns true if user had set
+     *  prop in their prefs
+     *
+     *  Author: cmcbeforer
+     *
+     *  Last Updated: October 28, 2021
+     * @param {string} prop corresponding to setting in profile.prefs.media
+     * @returns {boolean} true if user has set that prop in their preferences
+     *  or it is not a user pref
+     */
+    compliesWithUserPrefs(prop) {
+      if (Object.prototype.hasOwnProperty.call(this.mediaPrefs, prop)) {
+        return this.mediaPrefs[prop]
+      } else {
+        return prop === 'enrollment'
+      }
+    },
+
+    /**
+     * function getIcon: return string for icon corresponding to setting prop
+     *
+     * Author: cmc
+     *
+     * Last Updated: October 26, 2021
+     * @param {string} setting prop that need icon
+     * @returns {string} icon name
+     */
+    getIcon(setting) {
+      switch (setting) {
+        case 'enrollment':
+          return 'key'
+        case 'simpleLanguage':
+          return 'check2-circle'
+        case 'text':
+          return 'textarea-t'
+        case 'video':
+          return 'play-btn'
+        default:
+          return ''
+      }
+    },
 
     /**
      * Function getSubs: get a list of all courses the user enrolled in
      * 
      * Author: cmc
      * 
-     * Last Updated: unkown
+     * Last Updated: unknown
      */
     getSubs() {
       let self = this
-      let studentId = this.auth.userId
+      let studentId = this.userId
      
       http
         .get(`enrollments/getAllByStudentId/?uid=${studentId}`)
@@ -154,23 +361,20 @@ export default {
     },
 
     /**
-     * Function enrollmentNeeded: return true if course needs and enrollment, false if not
-     * 
-     * @param course the Course object for which it's checked
-     * 
-     * @returns true if course needs enrollment, false if not
+     * Function isEnrolled: return true if course needs an enrollment
+     *  AND user is not enrolled, false if nono enrollment needed or user
+     *  is enrolled
      * 
      * Author: cmc
-     * 
-     * Last Updated: unknown
+     *
+     * Last Updated: October 26, 2021
+     * @param course the Course object for which it's checked
+     * @returns true if course needs enrollment and user is not enrolled
      */
-    enrollmentNeeded(course) {
-      if (course.needsEnrollment) {
-        return this.enrolledIn.find(x => x == course.courseId)? false : true
-      }
-      else {
-        return false
-      }
+    isEnrolled(course) {
+      return course.properties.enrollment?
+       this.enrolledIn.find(x => x === course.courseId) :
+       true
     },
 
     /**
@@ -187,7 +391,7 @@ export default {
       const self = this
       const newEnrollment = {
         courseId: course.courseId,
-        studentId: this.auth.userId
+        studentId: this.userId
       }
 
       /* create enrollment */
@@ -216,11 +420,36 @@ export default {
   border-bottom: 1px dashed black;
 }
 
+.course-props {
+  list-style-type: none;
+  padding: 0;
+}
+
+.course-props li {
+  display: inline-block;
+  margin-right: 1.5rem;
+}
+
 .course > div {
   font-size: 120%;
 }
 
-.col-3 > a {
-  border: 2px solid black
+.indicated-btn {
+  border: 2px solid black;
+  color: #343a40;
+  display: inline-block;
+  padding: .25rem .5rem .25rem .5rem;
+  position: relative;
+  text-align: center;
+  width: 100%;
+  word-break: break-word;
+  word-wrap: break-word;
+}
+
+.indicate-icon {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  color: crimson;
 }
 </style>

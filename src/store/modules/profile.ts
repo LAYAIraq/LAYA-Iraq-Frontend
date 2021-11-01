@@ -20,11 +20,40 @@ export default {
         video: true,
         audio: false,
       },
+      font: {
+        chosen: 'standard',
+        size: 18
+      }
     },
     lang: 'de',
     avatar: '',
   },
   getters: {
+
+    /**
+     * Functions fontOptions: return fontOptions for logged users
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 23, 2021
+     * @param state preferences as object
+     * @returns {object} fontOptions
+     */
+    fontOptions(state: { prefs: { font: object } }) {
+      return state.prefs.font
+    },
+
+    /**
+     * function mediaPrefs: return user's preferred media
+     *
+     * Author: cmc
+     *
+     * Last Updated: October 26, 2021
+     *
+     */
+    mediaPrefs(state: { prefs: { media: object } }) {
+      return state.prefs.media
+    },
 
     /**
      * Function profileLang: get stored language
@@ -58,17 +87,17 @@ export default {
 
     /**
      * Function setMedia: set input media boolean
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: May 24, 2021
-     * 
+     *
      * @param state: contains user preferences
      * @param type: one of 'audio', 'simple', 'text' and 'video'
      * @param value: boolean
-     * 
+     *
      */
-    setMedia(state: { prefs: { media: object } }, 
+    setMedia(state: { prefs: { media: object } },
         { type, value }) {
       state.prefs.media[type] = value
     },
@@ -99,16 +128,9 @@ export default {
      * @param state contains preferences
      * @param media: object containing all possible options 
      */
-    setPrefs(state: { prefs: { media: object } }, 
-        prefs: {
-          media: { 
-            text: object,
-            simple: object,
-            video: object,
-            audio: object
-          } 
-        }) {
-      state.prefs.media = { ...prefs.media }
+    setPrefs(state: { prefs: object },
+        prefs: object) {
+      state.prefs = { ...prefs }
     },
 
     /**
@@ -128,7 +150,7 @@ export default {
         prefs: object,
         lang: string,
         avatar: string
-      }, 
+      },
       settings: {
         username: string,
         email: string,
@@ -136,7 +158,7 @@ export default {
         lang: string,
         avatar: string
       }) {
-      
+
       state.name = settings.username
       state.email = settings.email
       state.avatar = settings.avatar
@@ -200,11 +222,14 @@ export default {
      * @param param0 state variables
      */
     saveProfile({commit, state, rootState}) {
-      http.patch(`accounts/${rootState.auth.userId}`, { 
-          ...state, 
+      http.patch(`accounts/${rootState.auth.userId}`, {
+          ...state,
           prefs: {
             media: {
               ...state.prefs.media
+            },
+            font: {
+              ...state.prefs.font
             }
           }
         })

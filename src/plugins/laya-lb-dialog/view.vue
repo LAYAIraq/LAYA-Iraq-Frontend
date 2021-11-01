@@ -23,34 +23,35 @@ Dependencies: @/mixins/locale.vue
         class="flaggable question"
         :id="question.id"
       >
-        {{ question.text }}
-        <laya-flag-icon v-if="!previewData"
+        {{ courseSimple? question.simple: question.text }}
+        <laya-flag v-if="!previewData"
           :refData="question"
-
+          :isOpen="flagOpen"
           @flagged="question.flagged = true"
-
-        ></laya-flag-icon>
+          @flagOpen="toggleFlagOpen"
+        ></laya-flag>
       </div>
       <div class="answers d-flex flex-wrap justify-content-around">
         <div
           v-for="(answer,i) in answers"
           :key="answer.id"
           class="flaggable answer-item"
+          :class="{'flat': flagOpen != answer.id}"
         >
           <button
             type="button"
             class="btn btn-info btn-lg"
             @click="onFinish[i]()">
-            {{ answer.text }}
+            {{ courseSimple? answer.simple : answer.text }}
           </button>
-          <laya-flag-icon v-if="!previewData"
+          <laya-flag v-if="!previewData"
             :refData="answer"
-
+            :isOpen="flagOpen"
             :interactive="true"
             @flagged="answer.flagged = true"
-
+            @flagOpen="toggleFlagOpen"
           >
-          </laya-flag-icon>
+          </laya-flag>
         </div>
       </div>
     </div>
@@ -117,6 +118,28 @@ export default {
   },
 
   methods: {
+    /**
+     * function checkFlags: check if flaggable props have a flag, set
+     *  flagged to true if yes, not used
+     *
+     * Author: cmc
+     *
+     * Last Updated: July 7, 2021
+     */
+    checkFlags() {
+      const flaggables = [ this.title, this.question ]
+      console.log(flaggables)
+      for (let elem of flaggables) {
+        for (const flag of this.courseFlags) {
+          console.log('checking ' + elem.id)
+          if (flag.referenceId === elem.id) {
+            console.log('match!')
+            elem.flagged = true
+            break
+          }
+        }
+      }
+    },
 
     /**
      * Function fetchData: make vuex store data mutable

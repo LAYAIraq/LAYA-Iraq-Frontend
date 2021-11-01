@@ -66,7 +66,6 @@ export default {
   name: 'laya-ableplayer',
 
   mixins: [
-
     locale
   ],
 

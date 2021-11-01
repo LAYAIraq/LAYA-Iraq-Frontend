@@ -171,7 +171,7 @@ export default {
      *  Last Updated: September 21, 2021
      */
     applicableAssessments() {
-      if(this.course.needsEnrollment){
+      if(this.course.properties.enrollment){
         return this.$laya.la
       } else {
         // eslint-disable-next-line
@@ -240,7 +240,7 @@ export default {
 }
 
 .far {
-  float: inline-end;
+  float: end;
 }
     
 </style>

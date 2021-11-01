@@ -10,45 +10,47 @@ Dependencies:
 
 <template>
 
-  <div 
-    class="laya-plyr-edit"
+  <div
     :class="langIsAr? 'text-right' : 'text-left'"
   >
 
     <form>
-      <div class="form-group">
-        <label for="vid-id">
-          <h4>
-            {{ i18n['layaPlyr.name'] }}
-          </h4>
-        </label> 
-        <i 
-          id="questionmark" 
-          class="fas fa-question-circle" 
-          @click="toggleTip" 
-          :title="i18n['showTip']" 
+      <div class="form-group row">
+        <h4 class="d-inline-block mr-auto">
+          {{ i18n['layaPlyr.name'] }}
+        </h4>
+        <i
+          id="questionmark"
+          class="fas fa-question-circle"
+          @click="toggleTip"
+          :title="i18n['showTip']"
           v-b-tooltip.left
         ></i>
+      </div>
 
-        <b-jumbotron 
-            v-if="tooltipOn"
-            :header="i18n['layaPlyr.name']" 
-            :lead="i18n['tipHeadline']">
-          <hr class="my-4">
-          <p v-html="i18n['layaPlyr.tooltip']"></p>
+      <b-jumbotron
+        v-if="tooltipOn"
+        :header="i18n['layaPlyr.name']"
+        :lead="i18n['tipHeadline']">
+        <hr class="my-4">
+        <p v-html="i18n['layaPlyr.tooltip']"></p>
 
-        </b-jumbotron>
-        
-        <div class="form-group row">  
-          <div class="form-group col-10"> 
-            <label 
-              for="laya-wysiwyg-title" 
-            >
-              {{ i18n['title'] }}
-            </label>
-            
-            <input 
-              id="laya-wysiwyg-title"
+      </b-jumbotron>
+
+      <hr>
+
+      <div class="form-group">
+        <div class="row">
+          <!-- title -->
+          <label
+            for="laya-plyr-title"
+            class="col col-form-label"
+          >
+            {{ i18n['title'] }}
+          </label>
+          <div class="form-group col-8">
+            <input
+              id="laya-plyr-title"
               type="text"
               v-model="title.text"
               class="form-control"
@@ -56,10 +58,9 @@ Dependencies:
             >
           </div>
           <div class="form-group col" id="show-title-button">
-            <div style="height: calc(1.5em + .75rem + 2px);"></div>
             <label
               for="show-title-tick"
-              class="col"
+              class="col col-form-label"
             >
               {{ i18n['showTitle'] }}
               <input
@@ -68,73 +69,107 @@ Dependencies:
                 v-model="title.show"
               >
             </label>
-              
-            
           </div>
+
         </div>
-
-        <div class="form-group-row">
-          <input id="vid-id"
-              type="text"
-              v-model="src"
-              class="form-control"
-              :placeholder="i18n['layaPlyr.placeholder']"
-              @blur="checkURL"
-              >
-        </div>
-
-        
-
-
-        <div class="form-group row">
-          <label 
-            for="platform-vimeo" 
+        <div
+          class="row"
+          v-if="courseSimple"
+        >
+          <!-- simple title -->
+          <label
+            for="laya-plyr-title-simple"
             class="col-2 col-form-label"
           >
-            {{ i18n['layaPlyr.platform'] }}
+              <span class="sr-only">
+                {{ i18n['simpleAlt'] }}
+              </span>
           </label>
-          
-          <div class="col-2 form-check form-check-inline align-text-top">
-            <input 
-              id="platform-vimeo"
-              class="form-check-input"
-              type="radio"
-              name="platform"
-              :value="false"
-              v-model="youtube"
-              disabled
+          <div class="form-group col-8">
+            <input
+              id="laya-plyr-title-simple"
+              type="text"
+              v-model="title.simple"
+              class="form-control"
+              :placeholder="i18n['simpleAlt']"
             >
-            <label 
-              for="platform-vimeo" 
-              class="form-check-label"
-            >
-              {{ i18n['layaPlyr.vimeo'] }}
-            </label>
           </div>
-          <div class="col-2 form-check form-check-inline align-text-top">
-            <input 
-              id="platform-yt"
-              class="form-check-input"
-              type="radio"
-              name="platform"
-              :value="true"
-              v-model="youtube"
-              disabled
-            >
-            <label 
-              for="platform-yt" 
-              class="form-check-label"
-            >
-              {{ i18n['layaPlyr.youtube'] }}
-            </label>
-          </div>
-
-          <div class="col form-check form-check-inline align-text-top">
-            <span class="text-danger form-control-plaintext text-right"> {{ urlMsg }}</span>
-          </div> 
         </div>
       </div>
+
+      <!-- video url -->
+      <div class="form-group row">
+        <label
+          for="vid-id"
+          class="col-2 col-form-label"
+        >
+          {{ i18n['layaPlyr.url'] }}
+        </label>
+        <div class="col">
+          <input
+            id="vid-id"
+            type="text"
+            v-model="src"
+            class="form-control"
+            :placeholder="i18n['layaPlyr.placeholder']"
+            @blur="checkURL"
+          >
+        </div>
+      </div>
+
+      <!-- video props -->
+      <div class="form-group row">
+        <label
+          for="platform-vimeo"
+          class="col-2 col-form-label"
+        >
+          {{ i18n['layaPlyr.platform'] }}
+        </label>
+
+        <div class="col-2 form-check form-check-inline align-text-top">
+          <input
+            id="platform-vimeo"
+            class="form-check-input"
+            type="radio"
+            name="platform"
+            :value="false"
+            v-model="youtube"
+            disabled
+          >
+          <label
+            for="platform-vimeo"
+            class="form-check-label"
+          >
+            {{ i18n['layaPlyr.vimeo'] }}
+          </label>
+        </div>
+        <div class="col-2 form-check form-check-inline align-text-top">
+          <input
+            id="platform-yt"
+            class="form-check-input"
+            type="radio"
+            name="platform"
+            :value="true"
+            v-model="youtube"
+            disabled
+          >
+          <label
+            for="platform-yt"
+            class="form-check-label"
+          >
+            {{ i18n['layaPlyr.youtube'] }}
+          </label>
+        </div>
+
+        <div class="col form-check form-check-inline align-text-top">
+          <span class="text-danger form-control-plaintext text-right"> {{ urlMsg }}</span>
+        </div>
+
+
+      </div>
+
     </form>
+
   </div>
 
 </template>
@@ -161,7 +196,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['content']),
+    ...mapGetters(['content', 'courseSimple']),
 
     /**
      * urlMsg: return warning if URL not supported
@@ -200,8 +235,7 @@ export default {
      * Last Updated: January 17, 2021
      */
     checkURL() {
-      if (this.correctURL && this.src.includes('youtube')) this.youtube = true
-      else this.youtube = false
+      this.youtube = !!(this.correctURL && this.src.includes('youtube'))
     },
 
     /**
@@ -226,7 +260,7 @@ export default {
 
 <style scoped>
   #questionmark {
-  float: inline-end;
+  float: end;
   cursor: pointer;
   }
   .helptext {
@@ -234,7 +268,7 @@ export default {
     padding: 5px;
   }
   .helptext i {
-    float: inline-start;
+    float: start;
     margin-right: 10px;
   }
   .form-check-input[disabled] ~ .form-check-label{

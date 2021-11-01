@@ -9,31 +9,36 @@ Dependencies:
 -->
 
 <template>
-  <div class="laya-quiz-drag-drop">
-    <div class="container">
+  <div class="container">
 
       <div class="flaggable row mb-3" :id="title.id">
         <div class="col">
           <h4>
-            {{ title.text }}
-            <laya-audio-inline v-if="taskAudio" :src="taskAudio">
-            </laya-audio-inline>
+            {{ courseSimple? title.simple : title.text }}
+            <laya-audio-inline
+              v-if="taskAudioExists"
+              :src="courseSimple?
+                taskAudio.simple :
+                taskAudio.text"
+            ></laya-audio-inline>
           </h4>
         </div>
-        <laya-flag-icon v-if="!previewData"
-            :refData="title"
-
-            @flagged="title.flagged = true"
-
-        ></laya-flag-icon>
+        <laya-flag
+          v-if="!previewData"
+          :refData="title"
+          :isOpen="flagOpen"
+          @flagged="title.flagged = true"
+          @flagOpen="toggleFlagOpen"
+        ></laya-flag>
       </div>
 
       <div
         class="flaggable row"
+        :class="{'flat': flagOpen !== task.id}"
         :id="task.id"
       >
         <div class="col">
-          <p>{{ task.text }}</p>
+          <p>{{ courseSimple? task.simple : task.text }}</p>
         </div>
         <laya-flag-icon v-if="!previewData"
             :refData="task"
@@ -46,14 +51,14 @@ Dependencies:
 
       <div class="row">
         <div class="col">
-          <div 
-            v-for="(item,i) in items" 
+          <div
+            v-for="(item,i) in items"
             :key="item.id"
-            :id="item.id" 
+            :id="item.id"
             class="flaggable item mb-5"
           >
             <h4 class="text-center item-label">
-              {{ item.label }}
+              {{ courseSimple? item.simple : item.label }}
               <i v-if="checked"
                 class="fas"
                 :class="{
@@ -64,9 +69,11 @@ Dependencies:
             </h4>
 
             <div class="d-flex justify-content-between">
-              <b v-for="cat in categories" :key="cat">{{cat}}</b>
+              <b v-for="cat in categories" :key="cat.text">
+                {{ courseSimple? cat.simple : cat.text }}
+              </b>
             </div>
-            <input 
+            <input
               type="range"
               class="custom-range"
               min="0"
@@ -85,22 +92,24 @@ Dependencies:
           </div>
         </div>
       </div>
-
       <div class="row">
-        <button type="button"
-                class="btn btn-link mt-3"
-                :disabled="checked"
-                @click="check">
+        <button
+          type="button"
+          class="btn btn-link mt-3"
+          :disabled="checked"
+          @click="check"
+        >
           {{ i18n['check'] }}
         </button>
-        <button type="button"
-                class="btn btn-primary mt-3 ml-auto"
-                @click="done">
-          {{ i18n['nextContent'] }} <i class="fas fa-arrow-right"></i>
+        <button
+          type="button"
+          class="btn btn-primary mt-3 ml-auto"
+          @click="done"
+        >
+          {{ i18n['nextContent'] }}
+          <i class="fas fa-arrow-right"></i>
         </button>
       </div>
-
-    </div>
   </div>
 </template>
 
@@ -128,7 +137,22 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['content'])
+    ...mapGetters(['content', 'courseSimple']),
+
+    /**
+     * function taskAudioExists: returns true if taskAudio object doesn't
+     *  contain empty strings
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: October 31, 2021
+     * @returns {boolean} true if strings are set
+     */
+    taskAudioExists() {
+      return this.courseSimple?
+        this.taskAudio.regular !== '':
+        this.taskAudio.regular !== '' && this.taskAudio.simple !== ''
+    }
   },
 
   data () {
@@ -172,10 +196,10 @@ export default {
      * Last Updated: unknown
      */
     check() {
-      if (this.eval.length == 0) {
+      if (this.eval.length === 0) {
         for(let i=0; i<this.solution.length; i++) {
           let solution = this.solution[i]
-          this.eval[i] = (solution == this.items[i].category)
+          this.eval[i] = (solution === this.items[i].category)
         }
       }
       
@@ -222,6 +246,6 @@ export default {
   margin-bottom: 2rem;
 }
 .item:last-child {
-  margin-bottom: 0rem;
+  margin-bottom: 0;
 }
 </style>

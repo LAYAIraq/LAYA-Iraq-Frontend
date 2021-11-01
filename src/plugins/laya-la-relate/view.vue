@@ -55,11 +55,11 @@ Dependencies:
             <div 
               v-for="(pair,i) in pairs" 
               :key="pair.id"
-              :id="pair.id" 
+              :id="pair.id"
               class="form-group row flaggable"
             >
               <label 
-                :for="pair.label+i" 
+                :for="pair.label+i"
                 class="col-sm-6 col-form-label"
               >
                 <img 
@@ -109,15 +109,15 @@ Dependencies:
       </div>
 
       <div class="row pt-3">
-        
-        <button 
-          type="button" 
-          class="btn btn-warning" 
+
+        <button
+          type="button"
+          class="btn btn-warning"
           @click="reset"
         >
           {{ i18n['layaLaRelate.removeInput']}}
         </button>
-       
+
         <button 
           type="button" 
           class="btn btn-link"
@@ -177,7 +177,7 @@ export default {
   },
   created() {
     this.defaultOption = this.i18n['layaLaRelate.defaultOption']
-    if (!this.previewData) { // no preview 
+    if (!this.previewData) { // no preview
       this.fetchData()
     }
   },

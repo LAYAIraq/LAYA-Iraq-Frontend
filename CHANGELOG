@@ -1,5 +1,13 @@
 # Changes
 
+## v1.5.1
+- Added propertie setting in course edit toolbox
+- Added Icons to display courses' content
+- Introduced warning if course doesn't comply with user's preferences
+
+## v1.5.0
+Added Option to change text font and size
+
 ## v1.4.1
 - Moved Flag to own view
 - Small Improvements to Flag Features

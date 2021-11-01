@@ -7,12 +7,17 @@
 -->
 
 <script>
+  import { mapGetters } from 'vuex'
   export default {
 
     data() {
       return {
         tooltipOn: false
       }
+    },
+
+    computed: {
+      ...mapGetters(['courseSimple'])
     },
 
     methods: {
@@ -33,7 +38,7 @@
 <style scoped>
 
 #questionmark {
-  float: inline-end;
+  float: end;
   cursor: pointer;
 }
 
