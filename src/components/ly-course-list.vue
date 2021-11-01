@@ -148,7 +148,8 @@ Dependencies:
             v-for="thing in nonComplicitList"
             v-bind:key="thing"
           >
-            {{ i18n[`profile.defmedia.${thing}`] }}
+            <strong>{{ i18n[`profile.defmedia.${thing}`] }}</strong>:
+            {{ i18n[`courseList.notComplicit.${thing}Hint`]}}
           </li>
          </ul>
 
@@ -304,7 +305,9 @@ export default {
     compliesWithUserPrefs(prop) {
       if (Object.prototype.hasOwnProperty.call(this.mediaPrefs, prop)) {
         return this.mediaPrefs[prop]
-      } else return prop === 'enrollment'
+      } else {
+        return prop === 'enrollment'
+      }
     },
 
     /**

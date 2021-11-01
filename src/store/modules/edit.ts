@@ -701,8 +701,39 @@ export default {
               courseId: courseObject.courseId
             }
             courseObject.content.forEach(block => {
-              if (courseObject.properties.simpleLanguage) { // TODO
-                // method to determine if every block has simple language
+              if (courseObject.properties.simpleLanguage) {
+                // following is duplicate of checkForSimpleLanguage() in
+                // @/views/course-edit-tools/course-preferences.vue
+                // might be refactored to reduce redundancy
+                const hasSimple = (elem) => {
+                  return Object.prototype.hasOwnProperty.call(elem, 'simple')?
+                    elem.simple !== '' : false
+                }
+                const iterInput = Object.values(block)
+                for (const elem of iterInput) {
+                  if (typeof(elem) === 'object') {
+                    if (Array.isArray(elem)) {
+                      for (const iter of elem) {
+                        if (iter) {
+                          if (!hasSimple(iter)) {
+                            // console.log(iter)
+                            // console.log(' doesnt have simple')
+                            courseObject.properties.simple = false
+                            break
+                          }
+                        }
+                      }
+                    } else if (elem){
+                      if (!hasSimple(elem)) {
+                        // console.log(elem)
+                        // console.log(' doesnt have simple')
+                        courseObject.properties.simple = false
+                        break
+                      }
+                    }
+                  }
+                }
+
               }
               switch (block.name) { // check content for text and video
                 // TODO: what about audio? obsolete b/c screenreaders?
@@ -715,6 +746,8 @@ export default {
                 case 'laya-ableplayer':
                   listData.properties.video = true
                   break
+                case 'laya-dialog':
+                  listData.properties.text = true
               }
             })
             if (!state.courseList.some( // add to course list if not present
