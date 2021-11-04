@@ -1,38 +1,38 @@
 <!--
-Filename: course-edit-header.vue 
+Filename: course-edit-header.vue
 Use: Provide navigation buttons on top of edit tools
 Creator: cmc
 Date: October 27, 2020
-Dependencies: 
+Dependencies:
   vuex,
   @/mixins/locale.vue
 -->
 
 <template>
   <div class="container mb-4">
-
+s
     <div class="row">
 
       <div class="col">
-        
+
         <b-button
           v-if="$route.name != 'course-detail-view'"
           variant="outline-secondary"
           size="sm"
           :class="langIsAr? 'float-right' : 'float-left'"
-          active-class="active" 
+          active-class="active"
           :to="{name: 'course-detail-view', params: {name, step}}"
-          exact> 
-          <i 
+          exact>
+          <i
             :class="langIsAr?
               'fas fa-chevron-right':
               'fas fa-chevron-left'"
-          ></i> 
+          ></i>
           {{ i18n['header.overview'] }}
         </b-button>
 
           <!-- jump to content number -->
-          <span 
+          <span
             class="content-nav"
             :class="langIsAr? 'float-left' : 'float-right'"
             style="font-size: 120%"
@@ -44,17 +44,18 @@ Dependencies:
               size="sm"
               variant="secondary"
               no-flip
-              right>
-              
-              <b-dropdown-item 
-                v-for="(c,id) in content" 
+              right
+              :disabled="this.checkEmpty === true">
+
+              <b-dropdown-item
+                v-for="(c,id) in content"
                 :key="id"
                 :to="{
                   name: 'course-detail-view',
                   params: { name, step: id+1+'' }
                 }"
               >
-                {{ i18n['header.listContent'] }} 
+                {{ i18n['header.listContent'] }}
                 <b>
                   {{ id+1 }}
                 </b>:
@@ -71,9 +72,9 @@ Dependencies:
               variant="secondary"
               no-flip
             >
-              
-              <b-dropdown-item 
-                v-for="(c,id) in content" 
+
+              <b-dropdown-item
+                v-for="(c,id) in content"
                 :key="id"
                 :to="{
                   name: 'course-detail-view',
@@ -81,7 +82,7 @@ Dependencies:
                 }"
                 class="text-right"
               >
-                {{ i18n['header.listContent'] }} 
+                {{ i18n['header.listContent'] }}
                 <b>
                   {{ id+1 }}
                 </b>:
@@ -106,12 +107,21 @@ export default {
   name: 'course-edit-header',
 
   mixins: [
-    locale 
+    locale
   ],
+
+  created () {
+    this.checkForEmptyCourse()
+  },
+
+  data () {
+    return {
+      checkEmpty: false
+    }
+  },
 
   computed: {
     ...mapGetters(['content']),
-
   },
 
   props: {
@@ -136,8 +146,22 @@ export default {
         }
       }
       return 'FAIL'
+    },
+
+    /**
+     * function checkForEmptyCourse: returns true if no content in course
+     *
+     * Author: pj
+     *
+     * Last Updated: November 4, 2021
+     * @returns {boolean} true if no content
+     */
+    checkForEmptyCourse(){
+      if(this.content.length === 0){
+        this.checkEmpty = true
+      }
     }
   }
-    
+
 }
 </script>

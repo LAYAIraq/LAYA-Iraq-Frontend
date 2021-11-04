@@ -30,6 +30,7 @@ Dependencies:
                 id="register-focus"
                 v-model="name"
                 :placeholder="i18n['namePH']"
+                :aria-label="i18n['namePH']"
                 type="text"
                 :disabled="submitOk"
                 @blur="isNameTaken"
@@ -57,7 +58,7 @@ Dependencies:
               <i class="fas fa-at"></i>
             </div>
             <div class="col">
-              <input v-model="email" :placeholder="i18n['emailPH']" type="text"
+              <input v-model="email" :placeholder="i18n['emailPH']" :aria-label="i18n['emailPH']" type="text"
               :disabled="submitOk" @blur="isEmailTaken" class="w-100"
               aria-describedby="email-err">
             </div>
@@ -79,14 +80,15 @@ Dependencies:
           <!-- password -->
           <div class="form-group row" :class="{error: errPwds}">
             <div class="col-1 col-form-label">
-              <label for="password">
+
                 <i class="fas fa-key"></i>
-              </label>
+
             </div>
             <div class="col">
               <input
                 v-model="pwd1"
                 :placeholder="i18n['pwdPH']"
+                :aria-label="i18n['pwdPH']"
                 type="password"
                 :disabled="submitOk"
                 class="w-100"
@@ -96,12 +98,10 @@ Dependencies:
           </div>
           <div class="form-group row" :class="{error: errPwds}">
             <div class="col-1 col-form-label">
-              <label for="password">
                 <i class="fas fa-redo-alt"></i>
-              </label>
             </div>
             <div class="col">
-              <input v-model="pwd2" :placeholder="i18n['pwd2PH']" type="password"
+              <input v-model="pwd2" :placeholder="i18n['pwd2PH']" :aria-label="i18n['pwd2PH']" type="password"
               :disabled="submitOk" class="w-100" aria-describedby="pwd-err">
             </div>
           </div>
@@ -114,9 +114,8 @@ Dependencies:
             {{ i18n['register.pwdErr'] }}
           </div>
           <div class="form-group row">
-            <label for="pwdMeter" class="col-sm-3 col-form-label">{{ i18n['profile.pwdStrength'] }}</label>
             <div class="col-sm-9">
-
+              <label for="pwdMeter" class="col-sm-3 col-form-label">{{ i18n['profile.pwdStrength'] }}</label>
               <password id="pwdMeter" v-model="pwd2" :strength-meter-only="true" @feedback="showFeedback"></password>
               <strong id="testPwdMeter" class="form-text text-center"> {{ warnings }} </strong>
             </div>
@@ -138,7 +137,7 @@ Dependencies:
 
           <!-- submit -->
           <!-- <div style="height: 4rem"></div> -->
-          <h4 :class="{'d-none': busy || submitOk}">
+          <h2 :class="{'d-none': busy || submitOk}">
             <button v-if="!errForm"
               @click.prevent="submit"
               type="submit"
@@ -147,26 +146,26 @@ Dependencies:
               {{ i18n['register.submit'] }}
               <i class="fas fa-user-plus"></i>
             </button>
-          </h4>
+          </h2>
           <!-- still form errors -->
-          <h5 id="form-err" class="text-center" :class="{'d-none': !errForm}">
+          <h3 id="form-err" class="text-center" :class="{'d-none': !errForm}">
             {{ i18n['register.formErr'] }}
-          </h5>
+          </h3>
           <!-- busy note -->
-          <h5 class="text-center" :class="{'d-none': !busy}">
+          <h3 class="text-center" :class="{'d-none': !busy}">
             {{ i18n['busy'] }} <i class="fas fa-spinner fa-spin"></i>
-          </h5>
+          </h3>
           <!-- submit ok: goto login -->
-          <h5 class="text-center" :class="{'d-none': !submitOk}">
+          <h3 class="text-center" :class="{'d-none': !submitOk}">
             <router-link to="/login">
               <div>
                 <u>{{ i18n['register.success'] }}</u>
               <img src="../assets/fertig.svg" alt="Erfolg" style="width: 3rem">
               </div>
             </router-link>
-          </h5>
+          </h3>
           <!-- submit not ok -->
-          <h5 class="text-center">{{ errmsg }}</h5>
+          <h3 class="text-center">{{ errmsg }}</h3>
 
         </form>
 
@@ -281,7 +280,6 @@ export default {
   },
 
   mounted () {
-    document.querySelector('#register-focus').focus()
   },
 
   methods: {

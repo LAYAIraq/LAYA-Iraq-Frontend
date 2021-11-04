@@ -1,5 +1,5 @@
 <!--
-Filename: footer.vue 
+Filename: footer.vue
 Use: Shows the whole footer area
 Creator: core
 Date: unknown
@@ -7,7 +7,7 @@ Dependencies: @/mixins/locale.vue
 -->
 
 <template>
-  <footer 
+  <footer
     id="ly-footer"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
@@ -33,9 +33,6 @@ Dependencies: @/mixins/locale.vue
               </a>
               <a href="#" target="_blank" class="social-link">
                 <img src="../assets/vimeo.svg" alt="Vimeo Link">
-              </a>
-              <a href="#" target="_blank" class="social-link">
-                <i class="fas fa-heart" style="color: red"></i>
               </a>
             </div>
           </div>
@@ -69,21 +66,28 @@ Dependencies: @/mixins/locale.vue
           <a href="#">
             <img
               src="../assets/logo.svg"
-              alt=""
+              alt="Laya - Learn as you are"
               class="w-100"
             >
           </a>
         </div>
       </div>
+      <ly-scroll-to-top tabindex="0"></ly-scroll-to-top>
     </div>
   </footer>
 </template>
 
+
 <script>
 import { locale } from '@/mixins'
+import lyScrollToTop from '@/components/scroll-to-top.vue'
 
 export default {
   name: 'ly-footer',
+
+  components: {
+    lyScrollToTop
+  },
 
   mixins: [
     locale

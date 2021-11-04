@@ -3,14 +3,14 @@ Filename: ly-course-list.vue
 Use: List all available courses, users can start or enroll
 Creator: core
 Date: unknown
-Dependencies: 
+Dependencies:
   @/mixins/locale.vue,
   axios,
   vuex
 -->
 
 <template>
-  <div 
+  <div
     class="laya-course-list"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
@@ -18,25 +18,28 @@ Dependencies:
     <div class="container-fluid">
 
       <div class="row">
-        <div class="col">
-          <h3
+        <div
+          class="col"
+          aria-live="polite"
+        >
+          <h2
             v-show="filtered.length === 0"
             class="text-center text-muted"
           >
             {{ i18n['noCourses'] }}
-          </h3>
+          </h2>
         </div>
       </div>
 
       <div class="row header" v-if="filtered.length > 0">
         <div class="col">
-          <h4>{{ i18n['namePH'] }}</h4>
+          <h2>{{ i18n['namePH'] }}</h2>
         </div>
         <div class="col">
           <h4>{{ i18n['cat'] }}</h4>
         </div>
         <div class="col-2">
-          <h4 class="sr-only">{{ i18n['courseList.properties'] }}</h4>
+          <h2 class="sr-only">{{ i18n['courseList.properties'] }}</h2>
         </div>
         <div class="col-3">
         </div>
@@ -336,9 +339,9 @@ export default {
 
     /**
      * Function getSubs: get a list of all courses the user enrolled in
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: unknown
      */
     getSubs() {
@@ -357,14 +360,14 @@ export default {
           // console.log(`No enrollments for ${studentId} found`)
           console.error(err)
         })
-      
+
     },
 
     /**
      * Function isEnrolled: return true if course needs an enrollment
      *  AND user is not enrolled, false if nono enrollment needed or user
      *  is enrolled
-     * 
+     *
      * Author: cmc
      *
      * Last Updated: October 26, 2021
@@ -379,13 +382,13 @@ export default {
 
     /**
      * Function subscribe: Lets user enroll in a course
-     * 
+     *
      * @param course the course the user wants to enroll in
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 12, 2021
-     * 
+     *
      */
     subscribe(course) {
       const self = this

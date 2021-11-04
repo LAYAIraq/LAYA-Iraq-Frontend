@@ -1,5 +1,5 @@
 <!--
-Filename: courses.vue 
+Filename: courses.vue
 Use: Wrap course list and adding courses
 Creator: core
 Date: unknown
@@ -40,7 +40,8 @@ Dependencies:
             <input id="search-bar"
                    type="text"
                    v-model="search"
-                   :placeholder="i18n['searchPH']">
+                   :placeholder="i18n['searchPH']"
+                   :aria-label="i18n['searchPH.label']">
             <i class="icon fas fa-search"></i>
           </div>
         </div>
@@ -96,7 +97,7 @@ export default {
 
   mixins: [
     locale
-  ], 
+  ],
 
   computed: {
     ...mapState(['note', 'auth']),
@@ -104,7 +105,6 @@ export default {
   },
 
   mounted() {
-    document.querySelector('#search-bar').focus()
     this.fetchCourses()
   },
   data() {
@@ -119,9 +119,9 @@ export default {
 
     /**
      * Function fetchCourses: fetch all courses from database
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: January 20, 2021
      */
     fetchCourses() {
@@ -130,11 +130,11 @@ export default {
 
     /**
      * Function delCourse: remove course
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: January 20, 2021
-     * 
+     *
      * @param {string} name name of course to delete
      */
     delCourse(name) { //FIXME never called

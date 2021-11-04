@@ -1,7 +1,10 @@
 # Changes
 
+## v1.5.2
+- Started Screenready compatibility
+
 ## v1.5.1
-- Added propertie setting in course edit toolbox
+- Added properties setting in course edit toolbox
 - Added Icons to display courses' content
 - Introduced warning if course doesn't comply with user's preferences
 

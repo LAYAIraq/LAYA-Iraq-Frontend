@@ -8,27 +8,34 @@ Dependencies: none
 
 <template>
   <div v-show="show" class="ly-scroll-to-top">
-    <button type="button" class="btn btn-secondary btn-lg" @click="scrollTop">
+    <button :aria-label="i18n['scrollUp']" type="button" class="btn btn-secondary btn-lg" @click="scrollTop">
       <i class="fas fa-chevron-up"></i>
     </button>
   </div>
 </template>
 
 <script>
+import { locale } from '@/mixins'
+
 export default {
   name: 'ly-scroll-to-top',
+
+  mixins: [
+    locale
+  ],
+
   data () {
     return {
-      show: true
+      show: false
     }
   },
   methods: {
 
     /**
      * Function scrollTreshold: sets show to true if scrolled more than 200px
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: March 12, 2021
      */
     scrollTreshold() {
@@ -37,9 +44,9 @@ export default {
 
     /**
      * Function scrollTop: scrolls to top of window
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: March 12, 2021
      */
     scrollTop() {

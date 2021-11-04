@@ -31,9 +31,9 @@ Dependencies: @/mixins/locale.vue
 
       <div class="row mb-3">
         <div class="col">
-          <h4>
+          <h2>
             {{ title.text }}
-          </h4>
+          </h2>
           <p>{{ task.text }}</p>
         </div>
       </div>
@@ -42,26 +42,34 @@ Dependencies: @/mixins/locale.vue
 
       <div class="row">
         <div class="col">
-          <div v-for="(item, i) in items" :key="item.text" class="item flaggable interactive">
-            <h4 class="text-center item-label">
+          <div
+            v-for="(item, i) in items"
+            :key="item.text"
+            class="item flaggable interactive"
+          >
+            <h3 class="text-center item-label">
               {{ item.text }}
 
-            </h4>
-
+            </h3>
             <div class="d-flex justify-content-between">
-              <b v-for="cat in categoriesLocal" :key="cat">{{cat}}</b>
+              <b v-for="cat in categoriesLocal" :key="cat" aria-hidden="true">{{cat}}</b>
             </div>
+
             <input type="range"
                    class="custom-range"
                    min="0"
                    :max="categoriesLocal.length-1"
                    v-model.number="choice[i]">
+                   v-model.number="choice[i]"
+                   :aria-valuenow="choice[i]"
+                   :aria-valuetext="categoriesLocal[choice[i]]"
+                   :aria-label="i18n['layaLaFeedback.label.slider']"
+            >
             <laya-flag-icon
               :refData="item"
               :flagged="item.flagged"
               :interactive="true"
             >
-
             </laya-flag-icon>
           </div>
 
@@ -71,7 +79,7 @@ Dependencies: @/mixins/locale.vue
       <div class="row mt-5">
         <div class="col">
           <h4>{{ i18n['layaLaFeedback.addFreetext'] }}</h4>
-          <textarea class="w-100 mt-1" rows="5" v-model="freetext">
+          <textarea class="w-100 mt-1" rows="5" v-model="freetext" :aria-label="i18n['layaLaFeedback.label.freetext']">
           </textarea>
         </div>
       </div>

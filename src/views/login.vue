@@ -1,9 +1,9 @@
 <!--
-Filename: login.vue 
+Filename: login.vue
 Use: Organize Login for Users
 Creator: core
 Date: unknown
-Dependencies: 
+Dependencies:
   axios,
   @/mixins/locale.vue
 -->
@@ -18,6 +18,7 @@ Dependencies:
           <h1 class="text-center">{{ i18n['login.title'] }}</h1>
 
           <div class="ly-input" :class="{error: errEmail}">
+
             <input
               id="email-input"
               v-model.trim="email"
@@ -25,11 +26,13 @@ Dependencies:
               type="text"
               autofocus
               autocomplete="on"
+              :aria-label="i18n['emailPH']"
             >
+
           </div>
 
           <div class="ly-input" :class="{error: errPwd}">
-            <input v-model.trim="pwd" :placeholder="i18n['pwdPH']" type="password" autocomplete="on">
+            <input v-model.trim="pwd" :placeholder="i18n['pwdPH']" type="password" autocomplete="on" :aria-label="i18n['pwdPH']">
           </div>
 
           <div style="height: 2rem"></div>
@@ -49,7 +52,7 @@ Dependencies:
             {{ i18n['busy'] }}
             <i class="fas fa-spinner fa-spin"></i>
           </h5>
-
+          <div aria-live="polite">
           <div id="login-error"
                v-if="submitFailed"
                :aria-hidden="!submitFailed"
@@ -57,6 +60,7 @@ Dependencies:
             <i class="fas fa-exclamation-triangle"></i>
             {{ errMsg }}
           </div>
+      </div>
 
           <hr>
           <div class="text-center">
@@ -101,9 +105,9 @@ export default {
 
     /**
      * errEmail: return true of no email input
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     errEmail() {
@@ -112,9 +116,9 @@ export default {
 
     /**
      * errPwd: return true if no password input
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     errPwd() {
@@ -123,9 +127,9 @@ export default {
 
     /**
      * errForm: return true if password or email not put in
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     errForm() {
@@ -134,8 +138,6 @@ export default {
   },
 
   mounted() {
-    // focus email input field on mount
-    document.querySelector('#email-input').focus()
   },
 
   methods: {
@@ -143,9 +145,9 @@ export default {
     /**
      * Function submit: submit login, on success load profile,
      *  set login state, store token in local storage, reroute
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     submit() {

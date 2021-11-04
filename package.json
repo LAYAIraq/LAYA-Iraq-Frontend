@@ -1,6 +1,6 @@
 {
   "name": "laya-vechta-frontend",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Frontend For LAYA",
   "engines": {
     "node": "16.x"

@@ -1,15 +1,15 @@
-  <!--
+<!--
 Filename: view.vue
 Use: View a Multiple Choice/Response content block
 Creator: core
 Date: unknown
 Dependencies:
-  vuex,
-  @/mixins/locale.vue
+vuex,
+@/mixins/locale.vue
 -->
 
 <template>
-  <fieldset 
+  <fieldset
     class="laya-la-scmc"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
@@ -17,7 +17,7 @@ Dependencies:
     <!-- render task -->
     <div class="flaggable row" :id="title.id">
       <div class="col">
-        <h3 class="pb-3">
+        <h2 class="pb-3">
           {{ courseSimple? title.simple : title.text }}
           <laya-audio-inline
             v-if="taskAudioExists"
@@ -26,14 +26,13 @@ Dependencies:
             taskAudio.simple"
           >
           </laya-audio-inline>
-        </h3>
+        </h2>
       </div>
-      <laya-flag v-if="!previewData"
-          :refData="title"
-          :isOpen="flagOpen"
-          @flagged="title.flagged = true"
-          @flagOpen="toggleFlagOpen"
-      ></laya-flag>
+      <laya-flag-icon
+        v-if="!previewData"
+        :refData="title"
+        @flagged="title.flagged = true"
+      ></laya-flag-icon>
     </div>
     <div
       class="flaggable row"
@@ -59,20 +58,23 @@ Dependencies:
         :key="'mchoice-option-'+i"
         :id="option.id"
       >
-        <input v-if="multiple"
+        <input
+          v-if="multiple"
           :id="'mchoice-in-'+i"
           class="form-check-input"
           type="checkbox"
           v-model="answers"
           :disabled="freeze"
-          v-bind:value="i">
+          v-bind:value="i"
+        >
         <input v-else
           :id="'mchoice-in-'+i"
           class="form-check-input"
           type="radio"
           v-model="answers[0]"
           :disabled="freeze"
-          v-bind:value="i">
+          v-bind:value="i"
+        >
 
         <label 
           :for="'mchoice-in-'+i"
@@ -87,10 +89,8 @@ Dependencies:
         -->
         <laya-flag-icon v-if="!previewData"
             :refData="option"
-
             :interactive="true"
             @flagged="option.flagged = true"
-
         ></laya-flag-icon>
       </div>
     </div>
@@ -109,18 +109,27 @@ Dependencies:
         :disabled="freeze">
         {{ i18n['check'] }}
       </button>
+      <div aria-live="polite">
+      <div v-if="showSolutionsBool">
+        {{ i18n["layaLaScmc.showCorrect"] }}
+        <div v-for="(showSolution, index) in showSolutions"
+             :key="index">
+          {{ showSolution }}
+        </div>
+      </div>
+      </div>
       <button type="button"
         class="btn btn-primary mt-3"
         :class="langIsAr? 'float-left': 'float-right'"
         @click="onFinish[0]() || {}">
         <span>
           {{ i18n['nextContent'] }}
-          <i class="fas fa-arrow-right"></i> 
+          <i class="fas fa-arrow-right"></i>
         </span>
       </button>
-      <span 
-        :id="feedbackId" 
-        class="ml-2" 
+      <span
+        :id="feedbackId"
+        class="ml-2"
         aria-live="polite"
       >
         {{ feedback }}
@@ -139,7 +148,6 @@ export default {
   name: 'laya-multiple-choice',
 
   mixins: [
-
     locale
   ],
 
@@ -153,13 +161,13 @@ export default {
 
     /**
      * feedbackId: creates an identifier string
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     feedbackId() {
-      return `mchoice-feedback-${this._uid}` 
+      return `mchoice-feedback-${this._uid}`
       //FIXME vm _uid is not supposed to be used as data
       //source: https://github.com/vuejs/vue/issues/5886#issuecomment-308625735
     },
@@ -204,7 +212,9 @@ export default {
       taskAudio: '',
       options: [],
       solutions: [],
-      maxTries: 0
+      maxTries: 0,
+      showSolutions: [],
+      showSolutionsBool: false
     }
   },
 
@@ -212,17 +222,32 @@ export default {
     if (!this.previewData) { // previewing newly created content
       this.fetchData()
     }
+    this.populateShowSolutions()
   },
 
   methods: {
+    /**
+     *Function populateShowSolutions: Fills the showSolutions array to be used when the used clicks the 'show solutions' button
+     *
+     * Author: pj
+     *
+     * Last Updated: October 22, 2021
+     */
+    populateShowSolutions(){
+      for(let i = 0; i < this.options.length; i++){
+        if (this.solutions[i] === null || this.solutions[i] === false){
+          this.showSolutions.push(this.options[i].text)
+        }
+      }
+    },
 
     /**
      * Function correct: returns true if user choice is correct
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: March 19, 2021
-     * 
+     *
      * @param {*} i index of answer
      */
     correct(i) {
@@ -232,11 +257,11 @@ export default {
 
     /**
      * Function incorrect: returns true if answer is incorrect
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: March 19, 2021
-     * 
+     *
      * @param {*} i index of answer
      */
     incorrect(i) {
@@ -246,9 +271,9 @@ export default {
 
     /**
      * Function markAnswers: marks questions that have been checked
-     * 
-     * Author: core 
-     * 
+     *
+     * Author: core
+     *
      * Last Updated: March 19, 2021
      */
     markAnswers() {
@@ -259,15 +284,14 @@ export default {
     },
 
     /**
-     * Function diffSolution: check if given answers are correct, 
+     * Function diffSolution: check if given answers are correct,
      *  mark with check if yes, cross if not
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: March 19, 2021
      */
     diffSolution() {
-
       for(let i=0; i<this.options.length; ++i) {
         // is solution ?
         if(this.solutions.includes(i)) {
@@ -287,14 +311,15 @@ export default {
         }
       }
       this.freeze = true
+      this.showSolutionsBool = true
       this.$forceUpdate()
     },
 
     /**
      * Function check: check user's answers, give feedback accordingly
-     * 
+     *
      * Author: core
-     * 
+     *
      * Updated: March 21, 2021
      */
     check() {
@@ -311,7 +336,7 @@ export default {
       /*
        * check given answers */
       this.markAnswers()
-      
+
       /*
        * check if solutions === answers */
       if (this.solutions.every(s => this.answers.includes(s)) &&
@@ -341,9 +366,9 @@ export default {
 
     /**
      * Function fetchData: Fetch data from vuex and make data property
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 19, 2021
      */
     fetchData() {

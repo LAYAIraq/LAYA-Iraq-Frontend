@@ -1,9 +1,9 @@
 <!--
-Filename: course-copy.vue 
+Filename: course-copy.vue
 Use: Provide tools for copying a course
 Creator: cmc
 Date: October 27, 2020
-Dependencies: 
+Dependencies:
 	axios,
 	vuex,
 	@/mixins/locale.vue
@@ -16,7 +16,8 @@ Dependencies:
       <b-button size="sm"
         variant="warning"
         :class="langIsAr? 'float-left' : 'float-right'"
-        @click="$bvModal.show('author-copyCourse-confirm')">
+        @click="$bvModal.show('author-copyCourse-confirm')"
+      aria-describedby="openPopup">
         <i class="fas fa-exclamation-circle"></i> {{ i18n['copyCourse'] }}
       </b-button>
     </div>
@@ -32,6 +33,7 @@ Dependencies:
       :ok-title="i18n['copy.modal.ok']"
       :cancel-title="i18n['cancel']"
       @ok="copyCourse"
+             :aria-label="i18n['popupwarning']"
       centered>
       <p>
         {{ i18n['copy.modal.text'] }}
@@ -39,9 +41,11 @@ Dependencies:
           type="text"
           v-model="copy"
           class="form-control"
-          :placeholder="i18n['placeholder']">
+          :placeholder="i18n['placeholder']"
+          :aria-label="i18n['placeholder']">
       </p>
     </b-modal>
+    <div id="openPopup" style="display:none" >{{ i18n['popupwarning'] }}</div>
 
     <b-toast id="name-exists"
       :title="i18n['authorTools']"
@@ -85,11 +89,11 @@ export default {
   methods: {
 
     /**
-     * Function copyCourse: copy course if no course with that name 
+     * Function copyCourse: copy course if no course with that name
      *  already exists
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: October 27, 2020
      */
     copyCourse() {

@@ -14,9 +14,9 @@ Dependencies:
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div class="d-flex">
-      <h4 class="d-inline-block mr-auto">
+      <h3 class="d-inline-block mr-auto">
         {{ i18n['layaLaScmc.name'] }}
-      </h4>
+      </h3>
       <i
         id ="questionmark"
         class="fas fa-question-circle"
@@ -200,7 +200,6 @@ Dependencies:
             >
           </div>
         </div>
-
       </div>
 
       <p><b>{{ i18n['items'] }}</b></p>
@@ -243,7 +242,9 @@ Dependencies:
             <button
               type="button"
               class="btn btn-danger btn-sm"
-              @click="_delItem(i)">
+              @click="_delItem(i)"
+              :aria-label="i18n['deleteField']"
+            >
               <i class="fas fa-times"></i>
             </button>
           </div>
@@ -305,7 +306,7 @@ export default {
       multiple: false
     }
   },
-  
+
   computed: {
     ...mapGetters(['content', 'courseSimple'])
   },
@@ -318,9 +319,9 @@ export default {
 
     /**
      * Function _delItem(idx): Delete item at given index
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     _delItem(idx) {
@@ -342,9 +343,9 @@ export default {
 
     /**
      * Function fetchData: fetch data from vuex and make data property
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 19, 2021
      */
     fetchData() {

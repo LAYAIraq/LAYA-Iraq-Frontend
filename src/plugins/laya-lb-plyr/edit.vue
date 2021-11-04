@@ -1,5 +1,5 @@
 <!--
-Filename: edit.vue 
+Filename: edit.vue
 Use: View Plyr content block
 Creator: core
 Date: unknown
@@ -16,9 +16,9 @@ Dependencies:
 
     <form>
       <div class="form-group row">
-        <h4 class="d-inline-block mr-auto">
+        <h3 class="d-inline-block mr-auto">
           {{ i18n['layaPlyr.name'] }}
-        </h4>
+        </h3>
         <i
           id="questionmark"
           class="fas fa-question-circle"
@@ -70,7 +70,6 @@ Dependencies:
               >
             </label>
           </div>
-
         </div>
         <div
           class="row"
@@ -120,7 +119,6 @@ Dependencies:
       <!-- video props -->
       <div class="form-group row">
         <label
-          for="platform-vimeo"
           class="col-2 col-form-label"
         >
           {{ i18n['layaPlyr.platform'] }}
@@ -164,12 +162,8 @@ Dependencies:
         <div class="col form-check form-check-inline align-text-top">
           <span class="text-danger form-control-plaintext text-right"> {{ urlMsg }}</span>
         </div>
-
-
       </div>
-
     </form>
-
   </div>
 
 </template>
@@ -200,9 +194,9 @@ export default {
 
     /**
      * urlMsg: return warning if URL not supported
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: January 17, 2021
      */
     urlMsg () {
@@ -211,9 +205,9 @@ export default {
 
     /**
      * correctURL: checks if video is on yt or vimeo
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: January 17, 2021
      */
     correctURL() {
@@ -229,9 +223,9 @@ export default {
 
     /**
      * function checkURL: checks if URL is on yt, sets boolean if it is
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: January 17, 2021
      */
     checkURL() {
@@ -240,9 +234,9 @@ export default {
 
     /**
      * Function fetchData: fetch data from vuex and make data property
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 20, 2021
      */
     fetchData() {

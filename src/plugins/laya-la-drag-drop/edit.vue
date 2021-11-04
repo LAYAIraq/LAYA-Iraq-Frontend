@@ -1,22 +1,22 @@
-<!-- 
+<!--
 Filename: edit.vue
 Use: Edit existing Drag & Drop content block
 Creator: core
 Date: unknown
 Dependencies:
   vuex,
-  @/mixins/locale.vue 
+  @/mixins/locale.vue
 -->
 
 <template>
-  <div 
+  <div
     class="laya-la-drag-drop-edit"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div class="d-flex">
-      <h4 class="d-inline-block mr-auto">
+      <h3 class="d-inline-block mr-auto">
         {{ i18n['layaLaDragDrop.name'] }}
-      </h4>
+      </h3>
       <i
         id ="questionmark"
         class="fas fa-question-circle"
@@ -34,7 +34,6 @@ Dependencies:
       <hr class="my-4">
       <span v-html="i18n['layaLaDragDrop.tooltip']"></span>
     </b-jumbotron>
-
     <hr>
 
     <form>
@@ -132,11 +131,12 @@ Dependencies:
           {{ i18n['taskAudio'] }}
         </label>
         <div class="col-10">
-          <input id="drag-drop-task-audio"
-                 type="text"
-                 v-model="taskAudio.regular"
-                 class="form-control"
-                 :placeholder="i18n['taskAudioPlaceholder']">
+          <input
+            id="drag-drop-task-audio"
+            type="text"
+            v-model="taskAudio.regular"
+            class="form-control"
+            :placeholder="i18n['taskAudioPlaceholder']">
         </div>
       </div>
 
@@ -183,6 +183,7 @@ Dependencies:
               type="button"
               class="btn btn-danger btn-sm"
               @click="_delCategory(i)"
+              :aria-label="i18n['deleteField']"
             >
               <i class="fas fa-times"></i>
             </button>
@@ -230,14 +231,14 @@ Dependencies:
       </p>
       <div
         class="form-group"
-        v-for="(it, i) in items"
+        v-for="(item, i) in items"
         :key="'item-'+i"
       >
         <div class="row">
           <!-- text -->
           <label
             class="col-form-label col-2"
-            :for="'item-text-'+i"
+            :for="'item-text-'+item.id"
           >
             {{ i18n['text'] }}
           </label>
@@ -246,7 +247,7 @@ Dependencies:
               :id="'item-text-'+i"
               class="form-control"
               type="text"
-              v-model="items[i].label"
+              v-model="item.label"
             >
           </div>
 
@@ -273,6 +274,7 @@ Dependencies:
               type="button"
               class="btn btn-danger btn-sm"
               @click="_delItem(i)"
+              :aria-label="i18n['deleteField']"
             >
               <i class="fas fa-times"></i>
             </button>
@@ -294,16 +296,17 @@ Dependencies:
               :id="'item-simple-'+i"
               class="form-control"
               type="text"
-              v-model="it.simple"
+              v-model="item.simple"
             >
           </div>
         </div>
       </div>
       <div class="form-group row">
         <div class="col-10 offset-2">
-          <button type="button"
-                  class="btn btn-primary btn-sm"
-                  @click="_addItem(i18n['layaLaScmc.edit.sampleOption'])"
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            @click="_addItem(i18n['layaLaScmc.edit.sampleOption'])"
           >
             <i class="fas fa-plus"></i>
             {{ i18n['itemAdd'] }}
@@ -329,7 +332,7 @@ export default {
     tooltipIcon
   ],
 
-  
+
   data () {
     return {
       title: {},
@@ -351,11 +354,11 @@ export default {
   methods: {
     /**
      * Function _delItem: remove item at position idx
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param {*} idx index at which to remove
      */
     _delItem(idx) {
@@ -374,11 +377,11 @@ export default {
 
     /**
      * Function _delCategory: delete category at position idx
-     * 
+     *
      * Author: core
      *
      * Last Updated: unknown
-     * 
+     *
      * @param {*} idx index at which to remove the category
      */
     _delCategory(idx) {
@@ -387,11 +390,11 @@ export default {
 
     /**
      * Function _addCategory: Add new category to categories
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      */
     _addCategory() {
       this.categories.push('')
@@ -399,9 +402,9 @@ export default {
 
     /**
      * Function fetchData(): fetch data from vuex and make data property
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 12, 2021
      */
     fetchData() {

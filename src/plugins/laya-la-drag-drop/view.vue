@@ -5,7 +5,7 @@ Creator: core
 Date: unknown
 Dependencies:
   vuex,
-  @/mixins/locale.vue 
+  @/mixins/locale.vue
 -->
 
 <template>
@@ -13,7 +13,7 @@ Dependencies:
 
       <div class="flaggable row mb-3" :id="title.id">
         <div class="col">
-          <h4>
+          <h2>
             {{ courseSimple? title.simple : title.text }}
             <laya-audio-inline
               v-if="taskAudioExists"
@@ -21,7 +21,7 @@ Dependencies:
                 taskAudio.simple :
                 taskAudio.text"
             ></laya-audio-inline>
-          </h4>
+          </h2>
         </div>
         <laya-flag
           v-if="!previewData"
@@ -57,7 +57,7 @@ Dependencies:
             :id="item.id"
             class="flaggable item mb-5"
           >
-            <h4 class="text-center item-label">
+            <h3 class="text-center item-label">
               {{ courseSimple? item.simple : item.label }}
               <i v-if="checked"
                 class="fas"
@@ -66,7 +66,7 @@ Dependencies:
                   'fa-times text-danger': !eval[i]
                 }">
               </i>
-            </h4>
+            </h3>
 
             <div class="d-flex justify-content-between">
               <b v-for="cat in categories" :key="cat.text">
@@ -80,6 +80,9 @@ Dependencies:
               :max="categories.length-1"
               :disabled="checked"
               v-model.number="solution[i]"
+              :aria-valuenow="solution[i]"
+              :aria-valuetext="categories[solution[i]]"
+              :aria-label="i18n['layaLaDragDrop.label.slider']"
             >
             <laya-flag-icon
                 v-if="!previewData"
@@ -110,6 +113,15 @@ Dependencies:
           <i class="fas fa-arrow-right"></i>
         </button>
       </div>
+    <div v-if="showSolutionsBool">
+      {{ i18n["layaLaScmc.showCorrect"] }}
+      <div
+        v-for="(item, index) in items"
+        :key="index"
+      >
+        {{ item.label }}: {{ categories[items[index].category] }},
+      </div>
+    </div>
   </div>
 </template>
 
@@ -130,7 +142,7 @@ export default {
     this.mapSolutions()
     if (!this.previewData) this.fetchData()
   },
-  
+
   props: {
     onFinish: Array,
     previewData: Object
@@ -171,17 +183,17 @@ export default {
       task: {},
       taskAudio: '',
       items: [],
-      categories: []
+      categories: [],
+      showSolutionsBool: false
     }
   },
 
   methods: {
-
     /**
      * Function done: execute function from onFinish[0]
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     done() {
@@ -190,9 +202,9 @@ export default {
 
     /**
      * Function check: check if given answers are correct
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     check() {
@@ -202,16 +214,16 @@ export default {
           this.eval[i] = (solution === this.items[i].category)
         }
       }
-      
       this.checked = !this.checked
+      this.showSolutionsBool = true
       //this.$forceUpdate()
     },
 
     /**
      * Function mapSolutions: initialize rendered ranges to the middle
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     mapSolutions() {
@@ -222,9 +234,9 @@ export default {
 
     /**
      * Function fetchData(): fetch data from vuex and make data property
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 12, 2021
      */
     fetchData() {
