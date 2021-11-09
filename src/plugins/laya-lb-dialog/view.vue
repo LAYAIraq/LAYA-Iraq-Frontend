@@ -127,12 +127,12 @@ export default {
      */
     checkFlags() {
       const flaggables = [ this.title, this.question ]
-      console.log(flaggables)
+      // console.log(flaggables)
       for (let elem of flaggables) {
         for (const flag of this.courseFlags) {
-          console.log('checking ' + elem.id)
+          // console.log('checking ' + elem.id)
           if (flag.referenceId === elem.id) {
-            console.log('match!')
+            // console.log('match!')
             elem.flagged = true
             break
           }

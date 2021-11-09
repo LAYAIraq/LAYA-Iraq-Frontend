@@ -34,26 +34,31 @@ Dependencies:
 
           <div id="main-content-anchor"></div>
 
-          <component v-if="viewPermit"
-                     :key="name+'-'+step"
-                     :is="contentToDisplay.name"          
-                     :onFinish="nextStep(contentToDisplay.nextStep)">
+          <!-- v-if="viewPermit()" removed, readd when enrollment is reactivated -->
+          <component
+            :key="name+'-'+step"
+            :is="contentToDisplay.name"
+            :onFinish="nextStep(contentToDisplay.nextStep)">
           </component> 
           
-          <!--<div v-else>-->
-          <div v-else>
-            <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">
-              {{ i18n['courseDetail.content'] }}
-            </h2>
-            <h2 v-else class="mt-5 text-center text-muted">
-              {{ i18n['courseDetail.noPermit'] }}
-            </h2>
-          </div>
+          <!-- reactivate when enrollment is back -->
+<!--          <div v-else>-->
+<!--            <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">-->
+<!--              {{ i18n['courseDetail.content'] }}-->
+<!--            </h2>-->
+<!--            <h2 v-else class="mt-5 text-center text-muted">-->
+<!--              {{ i18n['courseDetail.noPermit'] }}-->
+<!--            </h2>-->
+<!--          </div>-->
         </div>
       </div>
     </div>
 
-    <courseEdit v-if="isAuthor && content" :name="name" :step="step" @saved="$forceUpdate"></courseEdit>
+    <courseEdit
+      v-if="isAuthor && content"
+      :name="name" :step="step"
+      @saved="$forceUpdate"
+    ></courseEdit>
 
   </div>
 </template>
@@ -86,12 +91,12 @@ export default {
 
   data() {
     return {
-      enrollment: {},
+      // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
+      // enrollment: {},
       rename: '',
       copy: '',
       changetype: null,
-      courseStats: {},
-      helpfulkey: 0
+      // courseStats: {}
     }
   },
 
@@ -115,16 +120,17 @@ export default {
       })
     },
 
-    /**
-     * userEnrolled: returns enrollment status
-     *
-     * Author: cmc
-     *
-     * Last Updated: October 27, 2020
-     */
-    userEnrolled() {
-      return this.$store.state.edit.userEnrolled
-    },
+    // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
+    // /**
+    //  * userEnrolled: returns enrollment status
+    //  *
+    //  * Author: cmc
+    //  *
+    //  * Last Updated: October 27, 2020
+    //  */
+    // userEnrolled() {
+    //   return this.$store.state.edit.userEnrolled
+    // },
 
     /**
      * contentToDisplay: return current content object
@@ -137,20 +143,21 @@ export default {
       return this.content? this.content[this.step-1] : false
     },
 
-    /**
-     * viewPermit: returns true if user is allowed to see selected course
-     *
-     * Author: core
-     *
-     * Last Updated: October 27, 2020
-     */
-    viewPermit() {
-      if( this.contentToDisplay ) {
-        return this.course.properties.enrollment ?
-          (!!(this.isAuthor || this.userEnrolled)) : true
-      }
-      return false
-    },
+    // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
+    // /**
+    //  * viewPermit: returns true if user is allowed to see selected course
+    //  *
+    //  * Author: core
+    //  *
+    //  * Last Updated: October 27, 2020
+    //  */
+    // viewPermit() {
+    //   if( this.contentToDisplay ) {
+    //     return this.course.properties.enrollment ?
+    //       (!!(this.isAuthor || this.userEnrolled)) : true
+    //   }
+    //   return false
+    // },
 
   },
 
@@ -197,8 +204,9 @@ export default {
     // this.fetchCourseStats()
   },
 
-  beforeDestroy(){
-    if(this.enrollment.length > 0) this.updateEnrollment()
+  beforeDestroy() {
+    // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
+    // if(this.enrollment.length > 0) this.updateEnrollment()
     // this.saveFlags()
   },
 
@@ -238,7 +246,7 @@ export default {
       const {name, $router} = this
       return steps.split(',').map(step => {
         return () =>{
-          if(this.enrollment.length >0) this.enrollment.progress = Number(step)
+          // if(this.enrollment.length >0) this.enrollment.progress = Number(step)
           $router.push({name: 'course-detail-view', params: {name, step}})
         }
       })
