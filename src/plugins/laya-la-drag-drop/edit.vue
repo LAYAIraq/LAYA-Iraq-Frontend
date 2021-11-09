@@ -344,7 +344,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['content']),
+    ...mapGetters(['content', 'courseSimple']),
   },
 
   created () {
@@ -397,7 +397,7 @@ export default {
      *
      */
     _addCategory() {
-      this.categories.push('')
+      this.categories.push({})
     },
 
     /**

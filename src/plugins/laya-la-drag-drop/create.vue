@@ -81,6 +81,7 @@ Dependencies: @/mixins/locale.vue
 
       <!-- task -->
       <div class="form-group row">
+        <!--suppress XmlInvalidId -->
         <label
           for="drag-drop-task"
           class="col-2 col-form-label"
@@ -102,6 +103,7 @@ Dependencies: @/mixins/locale.vue
         class="form-group row"
         v-if="courseSimple"
       >
+        <!--suppress XmlInvalidId -->
         <label
           for="drag-drop-task-simple"
           class="col-2 col-form-label"
@@ -315,6 +317,7 @@ Dependencies: @/mixins/locale.vue
 
 <script>
 import { locale, tooltipIcon } from '@/mixins'
+import { mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 
 export default {
@@ -333,6 +336,10 @@ export default {
       items: [],
       categories: []
     }
+  },
+
+  computed: {
+    ...mapGetters(['courseSimple'])
   },
 
   created () {

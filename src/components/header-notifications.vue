@@ -109,7 +109,7 @@ export default {
      * Last Updated: June 10, 2021
      */
     messagesPresent() {
-      return this.messages.length != 0
+      return this.messages.length !== 0
     }
   },
 
@@ -182,7 +182,7 @@ export default {
     setShortlist() {
       const createShortList = () => {
         let tempList = [...this.messages]
-        tempList.sort((a, b) => a.time < b.time)
+        tempList.sort((a, b) => a.time - b.time)
         if (tempList.length > 5) {
           tempList.length = 5
         }
@@ -208,11 +208,15 @@ export default {
   position: relative;
 }
 
+#notifications-list > * {
+  font-size: 1em !important;
+}
+
 .note-badge {
   position: absolute;
   right: 20px;
   top: -5px;
-  font-size: 0.7em;
+  font-size: .7em;
   font-weight: bold;
   border-radius: 50%;
   padding: 3px;

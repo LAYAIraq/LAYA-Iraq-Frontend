@@ -23,18 +23,15 @@ Dependencies:
             ></laya-audio-inline>
           </h2>
         </div>
-        <laya-flag
+        <laya-flag-icon
           v-if="!previewData"
           :refData="title"
-          :isOpen="flagOpen"
           @flagged="title.flagged = true"
-          @flagOpen="toggleFlagOpen"
-        ></laya-flag>
+        ></laya-flag-icon>
       </div>
 
       <div
         class="flaggable row"
-        :class="{'flat': flagOpen !== task.id}"
         :id="task.id"
       >
         <div class="col">
@@ -87,10 +84,8 @@ Dependencies:
             <laya-flag-icon
                 v-if="!previewData"
                 :refData="item"
-
                 :interactive="true"
                 @flagged="item.flagged = true"
-
             ></laya-flag-icon>
           </div>
         </div>

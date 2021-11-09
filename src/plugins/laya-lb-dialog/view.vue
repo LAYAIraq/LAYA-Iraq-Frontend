@@ -24,19 +24,16 @@ Dependencies: @/mixins/locale.vue
         :id="question.id"
       >
         {{ courseSimple? question.simple: question.text }}
-        <laya-flag v-if="!previewData"
+        <laya-flag-icon v-if="!previewData"
           :refData="question"
-          :isOpen="flagOpen"
           @flagged="question.flagged = true"
-          @flagOpen="toggleFlagOpen"
-        ></laya-flag>
+        ></laya-flag-icon>
       </div>
       <div class="answers d-flex flex-wrap justify-content-around">
         <div
           v-for="(answer,i) in answers"
           :key="answer.id"
           class="flaggable answer-item"
-          :class="{'flat': flagOpen != answer.id}"
         >
           <button
             type="button"
@@ -44,14 +41,12 @@ Dependencies: @/mixins/locale.vue
             @click="onFinish[i]()">
             {{ courseSimple? answer.simple : answer.text }}
           </button>
-          <laya-flag v-if="!previewData"
+          <laya-flag-icon
+            v-if="!previewData"
             :refData="answer"
-            :isOpen="flagOpen"
             :interactive="true"
             @flagged="answer.flagged = true"
-            @flagOpen="toggleFlagOpen"
-          >
-          </laya-flag>
+          ></laya-flag-icon>
         </div>
       </div>
     </div>
@@ -71,7 +66,11 @@ export default {
   mixins: [ locale ],
 
   computed: {
-    ...mapGetters(['content', 'courseFlags']),
+    ...mapGetters([
+      'content',
+      'courseFlags',
+      'courseSimple'
+    ]),
 
     /**
      * idx: Return index of content block in course array
@@ -182,7 +181,7 @@ export default {
 
 .dialog-text {
   
-  width: stretch;
+  width: auto;
 /*   height: max-content; */
   /* background-color: #ffffffd9; */
   margin: 1rem;

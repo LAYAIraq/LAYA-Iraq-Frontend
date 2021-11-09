@@ -20,7 +20,7 @@ Dependencies:
         <div class="bg-dark w-100 pt-5 pb-3">
           <!-- avatar -->
           <img
-            v-if="avatar != ''"
+            v-if="avatar !== ''"
             :src="avatarURL"
             alt="Avatar"
             class="d-block rounded-circle mx-auto avatar"
@@ -137,6 +137,7 @@ Dependencies:
             </div>
           </div>
           <div class="form-group row">
+            <!--suppress XmlInvalidId -->
             <label
               for="pwdMeter"
               class="col-sm-3 col-form-label"
@@ -449,7 +450,7 @@ export default {
      * @returns {boolean} true if any of the suggestions aren't empty
      */
     showSuggestions() {
-      return this.warnings != '' || this.pwdDiffMsg != '' || this.pwdMsg != ''
+      return this.warnings !== '' || this.pwdDiffMsg !== '' || this.pwdMsg !== ''
     },
 
     /**

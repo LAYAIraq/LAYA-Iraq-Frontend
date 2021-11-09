@@ -17,12 +17,10 @@ Dependencies:
       :id="title.id"
     >
       <h2>{{ courseSimple? title.simple : title.text }}</h2>
-      <laya-flag v-if="!previewData"
+      <laya-flag-icon v-if="!previewData"
           :refData="title"
-          :isOpen="flagOpen"
           @flagged="title.flagged = true"
-          @flagOpen="toggleFlagOpen"
-      ></laya-flag>
+      ></laya-flag-icon>
     </div>
     <div :id="editorId"></div>
     <div class="row">

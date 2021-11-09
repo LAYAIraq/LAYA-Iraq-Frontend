@@ -119,7 +119,7 @@ Dependencies:
 <!--            <i class="fas fa-file-signature"></i>-->
 <!--          </a>-->
           <div
-            v-if="!complicitCourses.has(course.courseId)"
+            v-if="complicitReady && !complicitCourses.has(course.courseId)"
             class="indicate-icon"
             :title="i18n['courseList.notComplicit']"
             v-b-tooltip.top
@@ -212,6 +212,18 @@ export default {
       'userId'
     ]),
 
+    /**
+     * function complicitReady(): returns true if complicit Set has any members
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 9, 2021
+     * @returns {boolean} true if complicitCourses set has at least one member
+     */
+    complicitReady() {
+      return this.complicitCourses.size > 0
+    },
+
      /**
      * filtered: filter course list depending on user input
      *
@@ -244,7 +256,7 @@ export default {
      *  Last Updated: October 29, 2021
      */
     getComplicitCourses() {
-      for (const course of this.filteredList) {
+      for (const course of this.filtered) {
         this.complicitCourses.add(course.courseId)
         const markAsNoncomplicit = (thing) => {
           if(!this.nonComplicitSettings[course.courseId]) {
@@ -283,7 +295,7 @@ export default {
       this.buttonAction = this.isEnrolled(course) ?
         () =>  { this.$router.push('/courses/'+course.name+'/1') }:
         () => { this.subscribe(course) }
-      if (!complicit) {
+      if (this.complicitReady && !complicit) {
         // console.log('not complicit, adding' +
         //   this.nonComplicitSettings[course.courseId] + ' to list...')
         this.nonComplicitList = this.nonComplicitSettings[course.courseId]

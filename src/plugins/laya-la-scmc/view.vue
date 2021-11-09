@@ -37,24 +37,21 @@ vuex,
     <div
       class="flaggable row"
       :id="task.id"
-      :class="{'flat': flagOpen !== task.id}"
     >
       <div class="col">
         {{ courseSimple? task.simple: task.text }}
       </div>
-      <laya-flag v-if="!previewData"
-          :refData="task"
-          :isOpen="flagOpen"
-          @flagged="task.flagged = true"
-          @flagOpen="toggleFlagOpen"
-      ></laya-flag>
+      <laya-flag-icon
+        v-if="!previewData"
+        :refData="task"
+        @flagged="task.flagged = true"
+      ></laya-flag-icon>
     </div>
 
     <!-- render options -->
     <div class="p-3 bg-light">
       <div v-for="(option,i) in options"
         class="flaggable form-check mb-3"
-        :class="{'flat': flagOpen !== option.id}"
         :key="'mchoice-option-'+i"
         :id="option.id"
       >
@@ -87,10 +84,11 @@ vuex,
         <i class="ml-2" :class="{'far fa-check-circle text-success': true}"></i>
         <i class="ml-2" :class="{'far fa-times-circle text-danger': true}"></i>
         -->
-        <laya-flag-icon v-if="!previewData"
-            :refData="option"
-            :interactive="true"
-            @flagged="option.flagged = true"
+        <laya-flag-icon
+          v-if="!previewData"
+          :refData="option"
+          :interactive="true"
+          @flagged="option.flagged = true"
         ></laya-flag-icon>
       </div>
     </div>
@@ -404,5 +402,11 @@ legend {
 
 .form-check:last-child {
   margin-bottom: 0 !important;
+}
+
+input[type='radio'] {
+  height: 15px;
+  width: 15px;
+  vertical-align: middle;
 }
 </style>

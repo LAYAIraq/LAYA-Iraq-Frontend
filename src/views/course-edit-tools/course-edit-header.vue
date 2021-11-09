@@ -10,13 +10,10 @@ Dependencies:
 
 <template>
   <div class="container mb-4">
-s
     <div class="row">
-
       <div class="col">
-
         <b-button
-          v-if="$route.name != 'course-detail-view'"
+          v-if="$route.name !== 'course-detail-view'"
           variant="outline-secondary"
           size="sm"
           :class="langIsAr? 'float-right' : 'float-left'"

@@ -59,7 +59,6 @@ Dependencies: @/mixins/locale.vue
                    class="custom-range"
                    min="0"
                    :max="categoriesLocal.length-1"
-                   v-model.number="choice[i]">
                    v-model.number="choice[i]"
                    :aria-valuenow="choice[i]"
                    :aria-valuetext="categoriesLocal[choice[i]]"
@@ -79,14 +78,23 @@ Dependencies: @/mixins/locale.vue
       <div class="row mt-5">
         <div class="col">
           <h4>{{ i18n['layaLaFeedback.addFreetext'] }}</h4>
-          <textarea class="w-100 mt-1" rows="5" v-model="freetext" :aria-label="i18n['layaLaFeedback.label.freetext']">
-          </textarea>
+          <textarea
+            class="w-100 mt-1"
+            rows="5"
+            v-model="freetext"
+            :aria-label="i18n['layaLaFeedback.label.freetext']"
+          ></textarea>
         </div>
       </div>
       <div class="row mt-1">
         <div class="col">
-          <button type="button" class="btn btn-outline-success btn-block" @click="storeFeedback">
-          <i class="fas fa-check"></i>{{ i18n['save'] }}
+          <button
+            type="button"
+            class="btn btn-outline-success btn-block"
+            @click="storeFeedback"
+          >
+            <i class="fas fa-check"></i>
+            {{ i18n['save'] }}
           </button>
         </div>
       </div>
@@ -222,7 +230,7 @@ export default {
      * Last Updated: September 10, 2021
      */
     bundleFeedback() {
-      const newFeedback = {
+      return {
           step: this.step,
           created: Date.now(),
           choice: this.choice,
@@ -234,7 +242,6 @@ export default {
             answers: this.categories
           }
         }
-        return newFeedback
     },
 
     /*save() {
@@ -309,7 +316,7 @@ export default {
   margin-bottom: 2rem;
 }
 .item:last-child {
-  margin-bottom: 0rem;
+  margin-bottom: 0;
 }
 
 .feedback-toast {
