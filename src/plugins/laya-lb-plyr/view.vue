@@ -18,12 +18,10 @@ Dependencies:
       :id="title.id"
     >
       <h2>{{ courseSimple? title.simple : title.text }}</h2>
-      <laya-flag v-if="!previewData"
+      <laya-flag-icon v-if="!previewData"
           :refData="title"
-          :isOpen="flagOpen"
           @flagged="title.flagged = true"
-          @flagOpen="toggleFlagOpen"
-      ></laya-flag>
+      ></laya-flag-icon>
     </div>
 
 
@@ -34,13 +32,11 @@ Dependencies:
           :data-plyr-embed-id="src"
           class="plyr__video-embed"
         ></div>
-<!--      <laya-flag v-if="!previewData"-->
+<!--      <laya-flag-icon v-if="!previewData"-->
 <!--          :refData="videoFlag"-->
-<!--          :isOpen="flagOpen"-->
 <!--          :interactive="true"-->
 <!--          @flagged="videoFlag.flagged = true"-->
-<!--          @flagOpen="toggleFlagOpen"-->
-<!--      ></laya-flag>-->
+<!--      ></laya-flag-icon>-->
     </div>
 
     <div class="row">
@@ -97,7 +93,10 @@ export default {
     onFinish: Array
   },
   computed: {
-    ...mapGetters(['content', 'courseSimple']),
+    ...mapGetters([
+      'content',
+      'courseSimple'
+    ]),
 
     /**
      * playerId: returns id for html element

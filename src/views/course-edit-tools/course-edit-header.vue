@@ -10,13 +10,10 @@ Dependencies:
 
 <template>
   <div class="container mb-4">
-s
     <div class="row">
-
       <div class="col">
-
         <b-button
-          v-if="$route.name != 'course-detail-view'"
+          v-if="$route.name !== 'course-detail-view'"
           variant="outline-secondary"
           size="sm"
           :class="langIsAr? 'float-right' : 'float-left'"
@@ -110,18 +107,20 @@ export default {
     locale
   ],
 
-  created () {
-    this.checkForEmptyCourse()
-  },
-
-  data () {
-    return {
-      checkEmpty: false
-    }
-  },
-
   computed: {
     ...mapGetters(['content']),
+
+    /**
+     * function checkEmpty(): returns true if no content in course
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 9, 2021
+     * @returns {boolean} true if no content in course
+     */
+    checkEmpty() {
+      return this.content.length === 0
+    }
   },
 
   props: {
@@ -146,20 +145,6 @@ export default {
         }
       }
       return 'FAIL'
-    },
-
-    /**
-     * function checkForEmptyCourse: returns true if no content in course
-     *
-     * Author: pj
-     *
-     * Last Updated: November 4, 2021
-     * @returns {boolean} true if no content
-     */
-    checkForEmptyCourse(){
-      if(this.content.length === 0){
-        this.checkEmpty = true
-      }
     }
   }
 

@@ -9,7 +9,10 @@ Dependencies:
 -->
 
 <template>
-  <div id="app">
+  <div
+    id="app"
+    :class="getClasses()"
+  >
     <ly-header></ly-header>
     <router-view></router-view>
     <ly-footer></ly-footer>
@@ -33,7 +36,7 @@ export default {
 
   computed: {
     ...mapGetters([
-      // 'fontOptions', // commented out b/c is not implemented on this branch
+      'fontOptions', // commented out b/c is not implemented on this branch
       'profileLang'
     ])
   },

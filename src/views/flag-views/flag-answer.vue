@@ -15,7 +15,7 @@
         v-if="!editQuestion"
         class="question-text"
       >
-        <span class="pre">{{ currentFlag.question }}</span><!-- no indenting b/c of pre-->
+        <span class="pre">{{ currentFlag.question.text }}</span><!-- no indenting b/c of pre-->
       </div>
       <div
         v-else

@@ -141,7 +141,10 @@ Dependencies:
           </div>
         </div>
         <!-- task simple -->
-        <div class="row">
+        <div
+          class="row"
+          v-if="courseSimple"
+        >
           <label
             for="scmc-task-simple"
             class="col-2 col-form-label"
@@ -181,7 +184,10 @@ Dependencies:
           </div>
         </div>
         <!-- task audio simple -->
-        <div class="row">
+        <div
+          class="row"
+          v-if="courseSimple"
+        >
           <label
             for="scmc-task-audio-simple"
             class="col-2 col-form-label"
@@ -249,7 +255,10 @@ Dependencies:
             </button>
           </div>
         </div>
-        <div class="row">
+        <div
+          class="row"
+          v-if="courseSimple"
+        >
           <label
             :for="`item-${i}-simple`"
             class="col-form-label col-2"

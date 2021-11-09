@@ -7,14 +7,14 @@ Dependencies: @/mixins/locale.vue
 -->
 
 <template>
-  <div 
+  <div
     class="ly-bg-author p-3"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div class="d-flex">
-      <h4 class="d-inline-block mr-auto">
+      <h3 class="d-inline-block mr-auto">
         {{ i18n['layaLaScmc.name'] }}
-      </h4>
+      </h3>
       <i
         id ="questionmark"
         class="fas fa-question-circle"
@@ -24,9 +24,9 @@ Dependencies: @/mixins/locale.vue
       ></i>
     </div>
 
-    <b-jumbotron 
+    <b-jumbotron
       v-if="tooltipOn"
-      :header="i18n['layaLaScmc.name']" 
+      :header="i18n['layaLaScmc.name']"
       :lead="i18n['tipHeadline']"
     >
       <hr class="my-4">
@@ -95,7 +95,7 @@ Dependencies: @/mixins/locale.vue
             >
           </div>
         </div>
-          <!-- simple title-->
+        <!-- simple title-->
         <div
           class="row"
           v-if="courseSimple"
@@ -139,7 +139,10 @@ Dependencies: @/mixins/locale.vue
           </div>
         </div>
         <!-- task simple -->
-        <div class="row">
+        <div
+          class="row"
+          v-if="courseSimple"
+        >
           <label
             for="scmc-task-simple"
             class="col-2 col-form-label"
@@ -179,7 +182,10 @@ Dependencies: @/mixins/locale.vue
           </div>
         </div>
         <!-- task audio simple -->
-        <div class="row">
+        <div
+          class="row"
+          v-if="courseSimple"
+        >
           <label
             for="scmc-task-audio-simple"
             class="col-2 col-form-label"
@@ -198,13 +204,12 @@ Dependencies: @/mixins/locale.vue
             >
           </div>
         </div>
-
       </div>
 
       <p><b>{{ i18n['items'] }}</b></p>
-      <div 
+      <div
         class="form-group"
-        v-for="(option, i) in options" 
+        v-for="(option, i) in options"
         :key="'item-'+i"
       >
         <div class="row">
@@ -241,12 +246,17 @@ Dependencies: @/mixins/locale.vue
             <button
               type="button"
               class="btn btn-danger btn-sm"
-              @click="_delItem(i)">
+              @click="_delItem(i)"
+              :aria-label="i18n['deleteField']"
+            >
               <i class="fas fa-times"></i>
             </button>
           </div>
         </div>
-        <div class="row">
+        <div
+          class="row"
+          v-if="courseSimple"
+        >
           <label
             :for="`item-${i}-simple`"
             class="col-form-label col-2"

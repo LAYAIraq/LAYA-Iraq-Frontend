@@ -13,26 +13,27 @@
         <strong>{{ i18n['coursePreferences.title']}}</strong>
       </div>
 
-      <div class="col text-dark">
-        <label
-          for="course-enrollment"
-          class="col-form-label"
-        >
-          {{ i18n['coursePreferences.enrollment' ]}}
-        </label>
-        <input
-          id="course-enrollment"
-          class="mr-2 ml-2"
-          type="checkbox"
-          v-model="enrollment"
-          @click="toggleEnrollment"
-        >
-        <i
-          class="fas fa-question-circle"
-          :title="i18n['coursePreferences.enrollment.hint']"
-          v-b-tooltip.bottom
-        ></i>
-      </div>
+<!--      COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)  -->
+<!--      <div class="col text-dark">-->
+<!--        <label-->
+<!--          for="course-enrollment"-->
+<!--          class="col-form-label"-->
+<!--        >-->
+<!--          {{ i18n['coursePreferences.enrollment' ]}}-->
+<!--        </label>-->
+<!--        <input-->
+<!--          id="course-enrollment"-->
+<!--          class="mr-2 ml-2"-->
+<!--          type="checkbox"-->
+<!--          v-model="enrollment"-->
+<!--          @click="toggleEnrollment"-->
+<!--        >-->
+<!--        <i-->
+<!--          class="fas fa-question-circle"-->
+<!--          :title="i18n['coursePreferences.enrollment.hint']"-->
+<!--          v-b-tooltip.bottom-->
+<!--        ></i>-->
+<!--      </div>-->
 
 
       <div class="col text-dark form-check">

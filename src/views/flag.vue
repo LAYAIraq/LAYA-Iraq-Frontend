@@ -52,7 +52,7 @@ export default {
     courseFlags: {
       deep: true,
       handler() {
-        this.$store.dispatch('updateFlags')
+        // this.$store.dispatch('updateFlags')
         this.flag = this.$store.getters.singleFlag(this.$attrs.id)
       }
     }
