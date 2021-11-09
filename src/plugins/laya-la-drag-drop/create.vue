@@ -189,7 +189,10 @@ Dependencies: @/mixins/locale.vue
         </div>
 
         <!-- simple alt -->
-        <div class="row">
+        <div
+          class="row"
+          v-if="courseSimple"
+        >
           <label
             class="col-form-label col-2"
             :for="'cat-simple-'+i"
@@ -278,7 +281,10 @@ Dependencies: @/mixins/locale.vue
           </div>
         </div>
 
-        <div class="row">
+        <div
+          class="row"
+          v-if="courseSimple"
+        >
           <!-- simple item -->
           <label
             class="col-form-label col-2"

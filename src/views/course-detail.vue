@@ -36,20 +36,20 @@ Dependencies:
 
           <!-- v-if="viewPermit()" removed, readd when enrollment is reactivated -->
           <component
+            v-if="contentToDisplay"
             :key="name+'-'+step"
             :is="contentToDisplay.name"
             :onFinish="nextStep(contentToDisplay.nextStep)">
           </component> 
-          
-          <!-- reactivate when enrollment is back -->
-<!--          <div v-else>-->
+
+          <div v-else>
 <!--            <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">-->
-<!--              {{ i18n['courseDetail.content'] }}-->
+              {{ i18n['courseDetail.content'] }}
 <!--            </h2>-->
 <!--            <h2 v-else class="mt-5 text-center text-muted">-->
 <!--              {{ i18n['courseDetail.noPermit'] }}-->
 <!--            </h2>-->
-<!--          </div>-->
+          </div>
         </div>
       </div>
     </div>
