@@ -225,7 +225,10 @@ export default {
 
       window.scrollTo(0,0)
       document.title = `Laya - ${ctx.name}`
-      if (!this.course || Object.keys(this.course).length === 0) {
+      if (!this.course ||
+        this.course.name !== this.$route.params.name ||
+        Object.keys(this.course).length === 0)
+      {
         console.log('Fetching Course...')
         this.fetchCourse()
       }
