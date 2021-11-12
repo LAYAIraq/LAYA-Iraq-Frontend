@@ -51,7 +51,7 @@ build_img:
     IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   script:
     - docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD $CI_REGISTRY
-    - docker build --pull
+    #- docker build --pull
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
   only:
