@@ -95,8 +95,10 @@ Dependencies:
           <b-nav-item-dropdown right>
 
             <template v-slot:button-content>
-              <img :src="icons[profileLang]" class="lang-icon"
-              :alt="i18n['langSelect']"
+              <img
+                :src="icons[profileLang]"
+                class="lang-icon"
+                :alt="i18n['langSelect']"
               >
             </template>
 
