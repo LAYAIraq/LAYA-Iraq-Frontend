@@ -65,7 +65,7 @@ export default {
      * @returns {string} class name for reading direction
      */
     getReadingDir() {
-      if (this.profileLang === 'ar') {
+      if (this.profileLang === 'ar' || this.profileLang === 'ku') {
         return 'right-to-left'
       }
       return 'left-to-right'
