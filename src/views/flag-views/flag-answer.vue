@@ -4,7 +4,9 @@
   >
     <div class="flag-title">
       <div class="title-text">
+        <h1>
         {{ i18n['flag.provideClarification'] }}
+        </h1>
       </div>
     </div>
     <div class="flag-question">
@@ -50,12 +52,6 @@
           {{ i18n['edited'] }} {{ timeSince(currentFlag.question.editTime) }}
         </div>
         <div class="col" v-if="userId === currentFlag.authorId">
-          <label
-            for="edit-question"
-            class="sr-only"
-          >
-            {{ i18n['flag.editQuestion'] }}
-          </label>
           <i
             id="edit-question"
             class="fas fa-edit eventful"
@@ -65,6 +61,7 @@
             tabindex="0"
             :title="i18n['flag.editQuestion']"
             v-b-tooltip.bottom
+            :aria-label="i18n['flag.editQuestion']"
           >
           </i>
         </div>
@@ -278,9 +275,9 @@
 
     </div>
     <div class="add-answer">
-      <div class="heading">
+      <h2 class="heading">
         {{ i18n['flag.postAnswer'] }}
-      </div>
+      </h2>
       <form @submit.prevent="addAnswer">
         <div class="form-group">
           <div class="form-group row">
