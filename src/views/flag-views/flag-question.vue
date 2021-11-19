@@ -1,7 +1,9 @@
 <template>
   <div class="set-flag">
     <div class="flag-title">
+      <h1>
         {{ i18n['flag.title'] }}
+      </h1>
     </div>
 
     <div class="form-group flag-question">
@@ -13,7 +15,6 @@
             id="question-hint"
             class="sr-only"
           >
-            {{ i18n['flag.typeHere'] }}
           </span>
           <textarea
             aria-labelledby="question-hint"
@@ -22,26 +23,31 @@
             rows="5"
             v-model="question"
             :placeholder="i18n['flag.questionPlaceholder']"
+
           ></textarea>
         </div>
         <div class="form-group row">
-          <label
-            class="form-check-label"
-            for="anonymous-question"
-          >
+
             {{ i18n['flag.anonymous'] }}
             <i
+              id="questionmark"
               class="fas fa-question-circle"
-              :title="i18n['flag.anonHint']"
-              v-b-tooltip.top
-              tabindex="0"
+              :class="langIsAr? 'mr-3': 'ml-3'"
+              @click="toggleTip"
+              :title="i18n['showTip']"
             ></i>
-          </label>
+            <div aria-live="polite">
+              <b-jumbotron
+                v-if="tooltipOn">
+                <div>{{ i18n['flag.anonHint'] }}</div>
+              </b-jumbotron>
+            </div>
           <input
             id ="anonymous-question"
             type="checkbox"
             v-model="anonymous"
             :class="langIsAr? 'mr-3': 'ml-3'"
+            :aria-label="i18n['flag.anonymous']"
           >
         </div>
 
@@ -59,14 +65,15 @@
 </template>
 
 <script>
-import { locale } from '@/mixins'
+import { locale, tooltipIcon } from '@/mixins'
 import { mapGetters } from 'vuex'
 import './flag-styles.css'
 export default {
   name: 'flag-question',
 
   mixins: [
-      locale
+      locale,
+    tooltipIcon
   ],
 
   computed: {
