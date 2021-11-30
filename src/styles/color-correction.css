@@ -1,0 +1,17 @@
+.btn-primary {
+    color: white;
+    background: #010150 !important;
+}
+
+.btn-success {
+    background: green !important;
+}
+
+.btn-info{
+    background: #4479b3 !important;
+}
+
+.btn-link{
+    color:blue !important;
+    background: lightyellow !important;
+}

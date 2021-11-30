@@ -42,7 +42,7 @@ Dependencies:
     <div class="row">
       <button
         type="button"
-        class="btn btn-primary mt-3 d-block ml-auto"
+        class="btn btn-primary btn-lg mt-3 d-block ml-auto"
         :class="langIsAr? 'float-right': 'float-left'"
         @click="onFinish[0]() || {}">
         <span>

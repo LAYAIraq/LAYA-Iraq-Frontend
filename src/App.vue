@@ -1,9 +1,9 @@
 <!--
-Filename: App.vue 
+Filename: App.vue
 Use: render Laya
 Creator: core
 Date: unknown
-Dependencies: 
+Dependencies:
   @/components/header,
   @/components/footer
 -->
@@ -25,13 +25,14 @@ import lyFooter from '@/components/footer'
 import { mapGetters } from 'vuex'
 import 'open-dyslexic/open-dyslexic-regular.css'
 import '@/styles/fonts.css'
+import '@/styles/color-correction.css'
 
 export default {
   name: 'app',
 
-  components: { 
-    lyHeader, 
-    lyFooter 
+  components: {
+    lyHeader,
+    lyFooter
   },
 
   computed: {
@@ -72,15 +73,15 @@ export default {
     },
 
     /**
-     * function relocateUnauthorized: relocate users that are not 
+     * function relocateUnauthorized: relocate users that are not
      *  authenticated
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     relocateUnauthorized() {
-      /* 
+      /*
        * pass access if auth true */
       if (this.$ls.get('auth', false)) return
 
@@ -105,9 +106,9 @@ export default {
     /**
      * Function restoreAuth: restore authentication from local
      *  storage, set vuex store
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     restoreAuth() {
