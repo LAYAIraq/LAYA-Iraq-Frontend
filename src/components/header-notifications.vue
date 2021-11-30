@@ -9,9 +9,9 @@
       {{ i18n['notifications'] }} -->
         {{ i18n['notifications'] }}
         <i class="fas fa-bell fa-lg"></i>
-    
+
       <span
-        v-if="unreadMessages" 
+        v-if="unreadMessages"
         class="note-badge"
       >
         {{ unreadMsgNo }}
@@ -34,7 +34,7 @@
           {{ timeSince(note.time) }}
         </span>
       </router-link>
-    
+
     </b-dropdown-item>
 
     <b-dropdown-item v-if="!messagesPresent">
@@ -62,7 +62,6 @@
     <b-dropdown-item >
       <b-button
         class="w-100"
-        variant="info"
         @click="getNewNotifications"
       >
         {{ i18n['notifications.getNew'] }}
@@ -97,8 +96,8 @@ export default {
 
   computed: {
     ...mapGetters([
-        'messages', 
-        'unreadMessages', 
+        'messages',
+        'unreadMessages',
         'unreadMsgNo',
         'userId'
       ]),
@@ -141,27 +140,27 @@ export default {
 
   methods: {
     /**
-     * Function initiateEventStream: add event listener for 
-     *  notification event stream to get updates // not used 
+     * Function initiateEventStream: add event listener for
+     *  notification event stream to get updates // not used
      * Author: cmc
      * Last Updated: June 20, 2021
      */
     initiateEventStream() {
-      const customStreamUrl = 
+      const customStreamUrl =
         `${api}/notifications/change-stream?_format=event-stream`
       // http.post(customStreamUrl)
       this.stream = new EventSource(customStreamUrl)
       this.stream.onerror = (err) => {
-        // console.log('Error on change stream!') 
+        // console.log('Error on change stream!')
         console.error(err)
       }
       this.stream.addEventListener('data', (msg) => {
         // helper function to make read property a boolean
         const booleanizeString = (str) => {
           return str === 'true' ? true:
-            str === 'false'? false: 
+            str === 'false'? false:
             str
-        } 
+        }
         let notification = JSON.parse(msg.data)
         console.log('before:', notification.data)
         notification.data.read = booleanizeString(notification.data.read)
@@ -171,8 +170,8 @@ export default {
           this.$store.commit('appendMsg', notification.data)
         }
       })
-    }, 
-    
+    },
+
     /**
      * Function setShortList: take first 5 elements of
      *  notifications for dropdown
@@ -228,5 +227,7 @@ export default {
 .timestamp {
   color: rgba(0, 0, 0, 0.5);
 }
+
+
 
 </style>

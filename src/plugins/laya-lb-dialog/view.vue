@@ -173,14 +173,12 @@ export default {
 }
 .bg-fallback {
   /* min-height: 10em; */
-  
   text-align: center;
   padding-top: 1rem;
   /* background: linear-gradient(#e66465, #9198e5); */
 }
 
 .dialog-text {
-  
   width: auto;
 /*   height: max-content; */
   /* background-color: #ffffffd9; */
@@ -221,5 +219,4 @@ export default {
 .answers > button:last-child {
   margin-right: 0;
 }
-
 </style>
