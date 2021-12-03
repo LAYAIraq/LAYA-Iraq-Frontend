@@ -23,14 +23,16 @@ Dependencies:
     <div class="col text-dark" v-html="i18n['type.changeTypeTip']">
     </div>
 
-    <b-modal id="author-changeContentType-confirm"
-        :title="i18n['type.changeType']"
-        header-bg-variant="warning"
-        ok-variant="warning"
-        :ok-title="i18n['type.modal.ok']"
-        :cancel-title="i18n['cancel']"
-        @ok="changeContentType"
-        centered>
+    <b-modal
+      id="author-changeContentType-confirm"
+      :title="i18n['type.changeType']"
+      header-bg-variant="warning"
+      ok-variant="warning"
+      :ok-title="i18n['type.modal.ok']"
+      :cancel-title="i18n['cancel']"
+      @ok="changeContentType"
+      centered
+    >
       <p>
         {{ i18n['type.modal.text'] }}
         <b-form-select

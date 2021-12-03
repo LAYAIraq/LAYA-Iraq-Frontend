@@ -20,6 +20,19 @@ export default {
   getters: {
 
     /**
+     * getter isAdmin: return true if user is in admin role
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 6, 2021
+     * @param state holds role string
+     * @returns {boolean} true if user is admin
+     */
+    isAdmin(state: { role: string }) {
+      return state.role === roles.ADMIN
+    },
+
+    /**
      * Function isAuthor: return true if user can create courses
      * 
      * Author: core

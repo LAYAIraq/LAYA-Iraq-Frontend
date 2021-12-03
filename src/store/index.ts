@@ -18,6 +18,7 @@ import flags from './modules/flags';
 import message from './modules/message';
 import note from './modules/note';
 import profile from './modules/profile';
+import users from './modules/users';
 
 Vue.use(Vuex);
 
@@ -31,7 +32,8 @@ export default new Vuex.Store({
     flags,
     message,
     note,
-    profile
+    profile,
+    users
   },
   strict: debug,
 });

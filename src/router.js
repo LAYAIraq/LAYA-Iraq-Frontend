@@ -30,6 +30,11 @@ export default new Router({
       component: views.root
     },
     {
+      path: '/admin',
+      name: 'admin-panel',
+      component: views.adminPanel
+    },
+    {
       path: '/register',
       name: 'register-view',
       component: views.register
