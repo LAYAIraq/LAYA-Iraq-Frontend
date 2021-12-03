@@ -13,9 +13,11 @@ export { default as courses } from './courses.vue'
 export { default as notifications } from './notifications.vue'
 
 export { default as courseDetailView } from './course-detail.vue'
-export { default as courseEdit } from './course-edit.vue'
+
 export { default as profile } from './profile.vue'
 
+export { default as adminPanel } from './admin-panel.vue'
+export { default as courseEdit } from './course-edit.vue'
 export { default as editCourseNav } from './edit-course-nav.vue'
 export { default as editCourseWrapper } from './course-edit-wrapper.vue'
 
