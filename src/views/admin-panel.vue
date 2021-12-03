@@ -1,0 +1,797 @@
+<!--suppress ALL -->
+<template>
+  <div :class="langIsAr? 'text-right': 'text-left'">
+    <!-- title -->
+    <div class="container-fluid mt-5 mb-5">
+      <div class="row">
+        <div class="col">
+          <h1 class="text-center">
+            {{ i18n['adminPanel.title'] }}
+          </h1>
+        </div>
+      </div>
+    </div>
+    <!-- filter options -->
+    <div class="container">
+      <div
+        class="row mb-5 pt-3 pb-4 bg-dark text-light"
+        id="filter-criteria"
+      >
+        <div class="col-2">
+          <strong>
+            {{ i18n['adminPanel.filterList'] }}
+          </strong>
+        </div>
+        <div class="col">
+          {{ i18n['adminPanel.email'] }}
+          <label
+            id="email-filter-label"
+            for="email-filter-input"
+            class="sr-only"
+          >
+            {{ i18n['adminPanel.filterListByEmail'] }}
+          </label>
+          <div class="input-group">
+            <input
+              id="email-filter-input"
+              v-model="emailFilter"
+              aria-describedby="email-filter-label"
+              @keypress.enter="setFilter(emailFilter)"
+              @blur="setFilter(null)"
+            >
+          </div>
+        </div>
+        <div class="col">
+          {{ i18n['namePH'] }}
+          <label
+            id="name-filter-label"
+            for="name-filter-input"
+            class="sr-only"
+          >
+            {{ i18n['adminPanel.filterListByName'] }}
+          </label>
+          <div class="input-group">
+            <input
+              id="name-filter-input"
+              v-model="usernameFilter"
+              aria-describedby="name-filter-label"
+              @keypress.enter="setFilter(usernameFilter)"
+              @blur="setFilter(null)"
+            >
+          </div>
+
+        </div>
+        <div class="col">
+          {{ i18n['adminPanel.role'] }}
+          <span
+            id="role-filter-label"
+            class="sr-only"
+          >
+            {{ i18n['adminPanel.filterListByRole'] }}
+          </span>
+          <div class="input-group">
+            <b-select
+              v-model="roleFilter"
+              id="role-filter-select"
+              aria-describedby="role-filter-label"
+              @blur="setFilter(null)"
+            >
+              <b-select-option
+                value="null"
+              >
+                {{ i18n['adminPanel.chooseRole'] }}
+              </b-select-option>
+              <b-select-option
+                v-for="(role, i) in Object.values(roles)"
+                :key="i"
+                :value="role"
+              >
+                {{ capitalizeFirstLetter(role) }}
+              </b-select-option>
+            </b-select>
+          </div>
+        </div>
+        <div class="col pt-4">
+          <b-button
+            :class="langIsAr? 'ml-3': 'mr-3'"
+            @click="setFilter(true)"
+            :title="i18n['adminPanel.filterList']"
+            v-b-tooltip.bottom
+          >
+            <b-icon icon="filter" scale="1.5"></b-icon>
+            <span class="sr-only">
+              {{ i18n['adminPanel.filterList'] }}
+            </span>
+          </b-button>
+          <b-button
+            :class="langIsAr? 'ml-3': 'mr-3'"
+            variant="warning"
+            @click="setFilter(false)"
+            :title="i18n['adminPanel.resetFilters']"
+            v-b-tooltip.bottom
+          >
+            <b-icon icon="x-circle" scale="1.5"></b-icon>
+            <span class="sr-only">
+              {{ i18n['adminPanel.resetFilters'] }}
+            </span>
+          </b-button>
+        </div>
+      </div>
+    </div>
+    <!-- user list -->
+    <div class="container">
+      <!-- head -->
+      <div
+        class="row font-weight-bold mb-3"
+        id="user-list"
+      >
+        <div class="col">
+          {{ i18n['adminPanel.user'] }}
+        </div>
+        <div class="col-2">
+          {{ i18n['adminPanel.role'] }}
+        </div>
+        <div class="col">
+          {{ i18n['adminPanel.email'] }}
+        </div>
+        <div class="col-1">
+          {{ i18n['adminPanel.emailVerified'] }}
+        </div>
+        <div class="col">
+          {{ i18n['adminPanel.actions'] }}
+        </div>
+      </div>
+      <!-- body -->
+      <div v-if="pagedList.length !== 0">
+        <div
+          class="row mb-2"
+          v-for="user in pagedList[pageSelected]"
+          :key="user.id"
+        >
+          <!-- properties -->
+          <div class="col">
+            {{ user.username }}
+          </div>
+          <div class="col-2">
+            {{ capitalizeFirstLetter(user.role) }}
+          </div>
+          <div class="col">
+            {{ user.email }}
+          </div>
+          <div class="col-1">
+            {{ user.emailVerified }}
+          </div>
+          <!-- user management -->
+          <div class="col" id="user-management-buttons">
+            <!-- promote user -->
+            <b-button
+              class="user-mgmt-btn"
+              :disabled="user.id === userId"
+              :class="langIsAr? 'ml-3': 'mr-3'"
+              :title="i18n['adminPanel.promoteUser']"
+              @click="openModal(user.id, 'promote-user')"
+              v-b-tooltip.top
+            >
+              <b-icon
+                icon="box-arrow-up"
+                scale="1.5"
+              ></b-icon>
+              <span class="sr-only">
+              {{ i18n['adminPanel.promoteUser']   }}
+            </span>
+            </b-button>
+            <!-- edit email -->
+            <b-button
+              class="user-mgmt-btn"
+              :disabled="user.id === userId"
+              :class="langIsAr? 'ml-3': 'mr-3'"
+              :title="i18n['adminPanel.editEmail']"
+              variant="info"
+              v-b-tooltip.top
+              @click="openModal(user.id, 'edit-email')"
+            >
+              <b-icon
+                icon="pen-fill"
+                scale="1.5"
+              ></b-icon>
+              <span class="sr-only">
+             {{ i18n['adminPanel.editEmail'] }}
+            </span>
+            </b-button>
+            <!-- reset password -->
+            <b-button
+              class="user-mgmt-btn"
+              :disabled="user.id === userId"
+              :class="langIsAr? 'ml-3': 'mr-3'"
+              :title="i18n['adminPanel.resetPassword']"
+              variant="warning"
+              v-b-tooltip.top
+              @click="openModal(user.id, 'reset-password')"
+            >
+              <b-icon
+                icon="screwdriver"
+                scale="1.5"
+              ></b-icon>
+              <span class="sr-only">
+              {{ i18n['adminPanel.resetPassword'] }}
+            </span>
+            </b-button>
+            <!-- delete user -->
+            <b-button
+              class="user-mgmt-btn"
+              :disabled="user.id === userId"
+              :class="langIsAr? 'ml-3': 'mr-3'"
+              :title="i18n['adminPanel.deleteUser']"
+              variant="danger"
+              v-b-tooltip.top
+              @click="openModal(user.id, 'delete-user')"
+            >
+              <b-icon
+                icon="x-circle-fill"
+                scale="1.5"
+              ></b-icon>
+              <span class="sr-only">
+              {{ i18n['adminPanel.deleteUser'] }}
+            </span>
+            </b-button>
+          </div>
+        </div>
+      </div>
+      <!-- placeholder if no filter matches -->
+      <div
+        class="text-center"
+        v-else
+      >
+        {{ i18n['adminPanel.noMatch'] }}
+      </div>
+
+      <!-- pages -->
+      <div class="row mt-5 pt-3 pb-2 bg-dark text-light">
+        <div class="col-3">
+          {{ i18n['adminPanel.itemsPerPage'] }}
+        </div>
+        <div class="col-2">
+          <b-select
+            v-model="pageSize"
+            :options="pageOptions"
+          >
+          </b-select>
+        </div>
+        <div class="col">
+          <ul class="pages m-auto">
+            <li
+              v-for="i in pagedList.length"
+              :key="i"
+            >
+              <b-button
+                :variant="pageSelected !== i-1? 'outline-primary': 'primary'"
+                :class="langIsAr? 'ml-2': 'mr-2'"
+                class="mb-1"
+                @click="pageSelected = i-1"
+              >
+                {{ i }}
+              </b-button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- create user button -->
+    <div class="row mt-3">
+      <b-button
+        variant="warning"
+        class="m-auto"
+        @click="openModal(-1, 'create-user')"
+      >
+        <b-icon icon="plus-circle"></b-icon>
+        {{ i18n['adminPanel.createUser'] }}
+      </b-button>
+    </div>
+    <!-- wrap modals -->
+    <div id="modals">
+      <!-- change role modal -->
+      <b-modal
+        id="promote-user"
+        :title="i18n['adminPanel.promoteUser']"
+        header-bg-variant="warning"
+        ok-variant="warning"
+        :ok-title="i18n['adminPanel.promoteUser']"
+        :cancel-title="i18n['cancel']"
+        @ok="changeUserRole"
+        centered
+      >
+        <p>
+          {{ i18n['adminPanel.modal.promoteUser'] }}
+        </p>
+        <b-select v-model="changeRole">
+          <b-select-option value="null">
+            {{ i18n['adminPanel.chooseRole'] }}
+          </b-select-option>
+          <b-select-option
+            v-for="role in Object.values(assignableRoles)"
+            :key="role"
+            :value="role"
+          >
+            {{ capitalizeFirstLetter(role) }}
+          </b-select-option>
+        </b-select>
+
+      </b-modal>
+      <!-- edit email modal -->
+      <b-modal
+        id="edit-email"
+        :title="i18n['adminPanel.editEmail']"
+        header-bg-variant="warning"
+        ok-variant="warning"
+        :ok-title="i18n['adminPanel.editEmail']"
+        :cancel-title="i18n['cancel']"
+        @ok="editUserEmail"
+        centered
+      >
+        <p>
+          {{ i18n['adminPanel.modal.editEmail'] }}
+        </p>
+        <label
+          for="email-change-input"
+          class="sr-only"
+        >
+          {{ i18n['adminPanel.modal.newEmail'] }}
+        </label>
+        <input
+          id="email-change-input"
+          type="text"
+          v-model="changeEmail"
+          :placeholder="i18n['adminPanel.modal.newEmail']"
+        >
+      </b-modal>
+      <!-- reset password modal -->
+      <b-modal
+        id="reset-password"
+        :title="i18n['adminPanel.resetPassword']"
+        header-bg-variant="warning"
+        ok-variant="warning"
+        :ok-title="i18n['adminPanel.resetPassword']"
+        :cancel-title="i18n['cancel']"
+        @ok="resetUserPassword"
+        centered
+      >
+        <p>
+          {{ i18n['adminPanel.modal.resetPassword'] }}
+        </p>
+      </b-modal>
+      <!-- delete user modal -->
+      <b-modal
+        id="delete-user"
+        :title="i18n['adminPanel.deleteUser']"
+        header-bg-variant="danger"
+        ok-variant="danger"
+        :ok-title="i18n['adminPanel.deleteUser']"
+        :cancel-title="i18n['cancel']"
+        @ok="deleteUser"
+        centered
+      >
+        <p>
+          {{ i18n['adminPanel.modal.deleteUser'] }}
+        </p>
+      </b-modal>
+      <!-- create user modal -->
+      <b-modal
+        id="create-user"
+        :title="i18n['adminPanel.createUser']"
+        header-bg-variant="warning"
+        ok-variant="warning"
+        :ok-title="i18n['adminPanel.createUser']"
+        :cancel-title="i18n['cancel']"
+        @ok="handleCreateUser"
+        centered
+      >
+        <p>
+          {{ i18n['adminPanel.modal.createUser'] }}
+        </p>
+
+        <p>
+          <label
+            for="create-user-name"
+            :class="langIsAr? 'ml-auto': 'mr-auto'"
+          >
+            {{ i18n['namePH'] }}
+          </label>
+          <input
+            :class="{
+            'mr-2': langIsAr,
+            'ml-2': !langIsAr,
+            'highlight-border': emptyCreateInput
+          }"
+            id="create-user-name"
+            :placeholder="i18n['namePH']"
+            v-model="createUserName"
+          >
+
+        </p>
+        <p>
+          <label
+            for="create-user-email"
+            :class="langIsAr? 'ml-auto': 'mr-auto'"
+          >
+            {{ i18n['adminPanel.email'] }}
+          </label>
+
+          <input
+            :class="{
+            'mr-2': langIsAr,
+            'ml-2': !langIsAr,
+            'highlight-border': emptyCreateInput || noEmailFormat
+          }"
+            id="create-user-email"
+            :placeholder="i18n['adminPanel.email']"
+            v-model="createUserEmail"
+          >
+        </p>
+        <p v-if="emptyCreateInput">
+          {{ i18n['courseNavEdit.table.missingInfo'] }}
+        </p>
+        <p v-if="noEmailFormat">
+          {{ i18n['emailErr'] }}
+        </p>
+      </b-modal>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapGetters} from 'vuex'
+import { locale } from '@/mixins'
+import roles from '@/misc/roles'
+
+export default {
+  name: 'admin-dashboard',
+
+  mixins: [
+    locale
+  ],
+
+  data() {
+    return {
+      createUserEmail: '',
+      createUserName: '',
+      changeEmail: '',
+      changeRole: null,
+      changingUserId: null,
+      emailFilter: '',
+      emptyCreateInput: false,
+      filter: null,
+      listPages: [],
+      pageSelected: 0,
+      pageSize: 25,
+      pageOptions: [
+        { value: 10, text: '10'},
+        { value: 25, text: '25'},
+        { value: 50, text: '50'},
+        { value: 100, text: '100'},
+        { value: 250, text: '250'},
+        { value: 500, text: '500'}
+      ],
+      regexArr: [],
+      roleFilter: null,
+      usernameFilter: ''
+    }
+  },
+
+  computed: {
+    ...mapGetters([
+      'isAdmin',
+      'userId',
+      'users'
+    ]),
+
+    /**
+     * function assignableRoles: return roles barring admin to
+     *  prevent having multiple admins accidentally
+     *
+     * Author: cmc
+     *
+     * Last Updated: December 3, 2021
+     * @returns {object} roles without admin
+     */
+    assignableRoles() {
+      // eslint-disable-next-line
+      return (({ ADMIN, ...o}) => o) (roles)
+    },
+
+    /**
+     * function filteredList: filters list according to regexes array
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 27, 2021
+     */
+    filteredList() {
+      // check each filter set if element matches
+      if (this.regexes.length !== 0) {
+        return this.users.filter(user => {
+          let match = true
+          this.regexes.forEach(pair => {
+            if(!pair[1].test(user[pair[0]])) {
+              match = false
+            }
+          })
+          return match
+        })
+      } else {
+        return this.users
+      }
+    },
+
+    /**
+     * function noEmailFormat: returns true if string doesn't contain
+     *  a stop or @
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: November 23, 2021
+     * @returns true if no stop or @ in createUserEmail
+     */
+    noEmailFormat() {
+      return !(this.createUserEmail.includes('@') &&
+        this.createUserEmail.includes('.'))
+    },
+
+    pagedList: {
+      get() {
+        return this.listPages
+      },
+      set(val) {
+        this.listPages = []
+        // page list in slices of pageSize
+        for (let i = 0; i < this.filteredList.length / val; i++) {
+          const page = this.filteredList.slice(val * i, val * (i + 1))
+          this.listPages.push(page)
+        }
+      }
+    },
+
+    /**
+     * function regexes: returns an array of regexes for filtering
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 27, 2021
+     */
+    regexes: {
+      get() {
+        return this.regexArr
+      },
+      set() {
+        const regexes = []
+        if (!this.filter) {
+          this.regexArr = regexes
+        } else {
+          if (this.emailFilter !== '') {
+            regexes.push(['email', new RegExp(this.emailFilter, 'i')])
+          }
+          if (this.roleFilter) {
+            regexes.push(['role', new RegExp(this.roleFilter, 'i')])
+          }
+          if (this.usernameFilter !== '') {
+            regexes.push(['username', new RegExp(this.usernameFilter, 'i')])
+          }
+          this.regexArr = regexes
+        }
+      }
+    },
+
+    roles() {
+      return roles
+    }
+  },
+
+  watch: {
+    filter(val) {
+      if (val !== null) {
+        this.regexes = val
+      }
+    },
+    filteredList() {
+      this.pagedList = this.pageSize
+    },
+    pageSize(val) {
+      this.pagedList = val
+    }
+  },
+
+  created() {
+    this.relocateNonAdmin()
+    this.getUserList()
+    this.pagedList = 25
+  },
+
+  methods: {
+    randomUsers(num) {
+      for (let i = 0; i < num ; i++) {
+        this.createUserName = `randomUser${i+1}`
+        this.createUserEmail = `random-${i}@laya.de`
+        this.createUser()
+      }
+    },
+
+    /**
+     * function capitalizeFirstLetter(): returns string with capitalized
+     *  first letter
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 18, 2021
+     * @param {string} str string to be capitalized
+     */
+    capitalizeFirstLetter(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1)
+    },
+
+    /**
+     * function changeUserRole: send user role change to store
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 19, 2021
+     */
+    changeUserRole() {
+      this.$store.dispatch('changeRole', {
+        id: this.changingUserId,
+        role: this.changeRole
+      })
+    },
+
+    /**
+     * function createUser: dispatch create user to store
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 23, 2021
+     */
+    createUser() {
+      this.$store.dispatch('createUser', {
+        username: this.createUserName,
+        email: this.createUserEmail
+      })
+    },
+
+    /**
+     * function deleteUser: dispatch delete user to store
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 19, 2021
+     */
+    deleteUser() {
+      this.$store.dispatch('deleteUser', this.changingUserId)
+    },
+
+    /**
+     * function editUserEmail: change user's email address
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 19, 2021
+     */
+    editUserEmail() {
+      this.$store.dispatch('changeEmail', {
+        id: this.changingUserId,
+        email: this.changeEmail
+      })
+    },
+
+    /**
+     * function getUserList: fetch user list if not present in store
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 18, 2021
+     */
+    getUserList() {
+      if (this.users.length === 0) {
+        this.$store.dispatch('fetchUserList')
+      }
+    },
+
+    /**
+     * function handleCreateUser: prevent modal from closing if inputs are empty,
+     *  email has wrong format, fire createUser() when not
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 23, 2021
+     * @param e modal event
+     */
+    handleCreateUser(e) {
+      e.preventDefault()
+      if (this.createUserName !== '' && this.createUserEmail !== '') {
+        this.emptyCreateInput = false
+        if(!this.noEmailFormat) {
+          this.createUser()
+          this.$nextTick(() => this.$bvModal.hide('create-user'))
+        }
+      } else {
+        this.emptyCreateInput = true
+      }
+    },
+
+    /**
+     * function openModal: set changingUserId, open modal with id 'type'
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 19, 2021
+     * @param {number} id userId that is getting a new role
+     * @param {string} type id of modal to open
+     */
+    openModal(id, type) {
+      this.changingUserId = id
+      this.$bvModal.show(type)
+    },
+
+    /**
+     * function relocateNonAdmin: return to start page when user is not admin
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 11, 2021
+     */
+    relocateNonAdmin() {
+      if(!this.isAdmin) this.$router.push('/')
+    },
+
+    /**
+     * function resetUserPassword: reset user's password
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 19, 2021
+     */
+    resetUserPassword() {
+      this.$store.dispatch('resetPassword', this.changingUserId)
+    },
+
+    /**
+     * function setFilter: set filter data prop
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 18, 2021
+     * @param {any} property what will set as filter
+     */
+    setFilter(property) {
+      this.filter = property
+    }
+  }
+}
+</script>
+
+<style scoped>
+.input-group {
+  flex-wrap: nowrap;
+}
+
+.highlight-border {
+  border: 1px crimson solid;
+}
+
+ul.pages {
+  list-style-type: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+.pages li {
+  display: flex;
+}
+.pages li>button {
+  min-width: 55px;
+}
+.btn-outline-primary {
+  color: #69affb;
+  border-color: #69affb;
+}
+
+.user-mgmt-btn[disabled] {
+  cursor: not-allowed;
+}
+</style>

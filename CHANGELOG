@@ -1,10 +1,13 @@
 # Changes
 
+## v1.7.0
+- Added Admin Panel
+
 ## v1.6.0
 - Added Kurdish Localization
 
 ## v1.5.2
-- Started Screenready compatibility
+- Started Screenreader compatibility
 
 ## v1.5.1
 - Added properties setting in course edit toolbox

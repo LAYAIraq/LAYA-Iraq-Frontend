@@ -58,6 +58,12 @@ Dependencies:
           v-else
           :class="marginClass()"
         >
+          <b-nav-item
+            to="/admin"
+            v-if="isAdmin"
+          >
+            {{ i18n['adminPanel.title']}}
+          </b-nav-item>
           <ly-header-notifications></ly-header-notifications>
           <b-nav-item to="/profile">
             <i class="fas fa-user-alt"></i>
@@ -152,7 +158,10 @@ export default {
 
   computed: {
     ...mapState(['auth']),
-    ...mapGetters(['profileLang'])
+    ...mapGetters([
+      'isAdmin',
+      'profileLang'
+    ])
   },
 
   watch: {
@@ -290,7 +299,7 @@ export default {
   top: 0;
 
   z-index: 11001;
-  box-shadow: 0px 0px 3px black;
+  box-shadow: 0 0 3px black;
 }
 
 .router-link-exact-active {

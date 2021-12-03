@@ -225,7 +225,7 @@ export default {
      */
     filtered() {
       if (!this.filter) return this.courseList
-      const filterByCourseName = new RegExp(this.filter, 'i');
+      const filterByCourseName = new RegExp(this.filter, 'i')
       return this.filteredList.filter(course => filterByCourseName.test(course.name))
     }
   },
