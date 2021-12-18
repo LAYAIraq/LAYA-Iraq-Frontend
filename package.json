@@ -17,7 +17,6 @@
     "test:build": "./test-build.sh"
   },
   "dependencies": {
-    "ableplayer": "git+https://github.com/ableplayer/ableplayer.git",
     "axios": "^0.21.1",
     "bootstrap-vue": "^2.18.0",
     "cropperjs": "^1.5.11",
