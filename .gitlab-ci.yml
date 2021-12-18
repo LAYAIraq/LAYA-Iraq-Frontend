@@ -51,6 +51,8 @@ build_img:
     IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   script:
     - echo $CI_REGISTRY
+<<<<<<<<< Temporary merge branch 1
+=========
     - echo $CI_DEPLOY_USER
     - docker login -u 'docker-builder' -p 'jcFNe-8kT1c_qgF5FaFq' $CI_REGISTRY
     #- docker build --pull
