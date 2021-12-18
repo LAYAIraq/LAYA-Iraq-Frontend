@@ -52,7 +52,7 @@ build_img:
   script:
     - echo $CI_REGISTRY
     - echo $CI_DEPLOY_USER
-    - docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD $CI_REGISTRY
+    - docker login -u 'docker-builder' -p 'jcFNe-8kT1c_qgF5FaFq' $CI_REGISTRY
     #- docker build --pull
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
