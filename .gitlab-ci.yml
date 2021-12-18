@@ -48,11 +48,11 @@ build_img:
   services:
     - docker:19.03.12-dind
   variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:latest
   script:
     - echo $CI_REGISTRY
     - echo $CI_DEPLOY_USER
-    - docker login -u 'gitlab+deploy-token-79' -p 'jcFNe-8kT1c_qgF5FaFq' $CI_REGISTRY
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t $IMAGE_TAG --pull .
     - docker push $IMAGE_TAG
   only:
