@@ -275,6 +275,7 @@
 	"login.registerHint1": "Don't have an account yet ?",
 	"login.registerHint2": "Register here",
 	"login.title": "Login",
+	"login.verified": "Verification successful, you can now log on.",
 	"markAllAsRead": "Mark all as read",
 	"markAsRead": "Mark as read",
 	"message": "Message",
@@ -457,5 +458,6 @@
 	"type.changeTypeTip": "You can change the type of this content permanently. <b>Beware:</b> All data input will be lost.",
 	"type.modal.ok": "Change Type",
 	"type.modal.text": "New Type*",
-	"type.modal.title": "Change content type"
+	"type.modal.title": "Change content type",
+	"verify.success": "Verification successful! Please wait to be redirected to the login page..."
 }

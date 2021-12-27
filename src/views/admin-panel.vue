@@ -1,7 +1,16 @@
-<!--suppress ALL -->
+<!--
+  Filename: admin-panel.vue
+  Use: manage users, assign roles, change email addresses, fire pw
+     change request
+  Creator: cmc
+  Date: November 1, 2021
+  Dependencies:
+    @/mixins,
+    @/misc/roles,
+    vuex
+-->
 <template>
   <div :class="langIsAr? 'text-right': 'text-left'">
-    <!-- title -->
     <div class="container-fluid mt-5 mb-5">
       <div class="row">
         <div class="col">
@@ -125,19 +134,19 @@
         class="row font-weight-bold mb-3"
         id="user-list"
       >
-        <div class="col">
+        <div class="col-3">
           {{ i18n['adminPanel.user'] }}
         </div>
         <div class="col-2">
           {{ i18n['adminPanel.role'] }}
         </div>
-        <div class="col">
+        <div class="col-3">
           {{ i18n['adminPanel.email'] }}
         </div>
         <div class="col-1">
           {{ i18n['adminPanel.emailVerified'] }}
         </div>
-        <div class="col">
+        <div class="col-3">
           {{ i18n['adminPanel.actions'] }}
         </div>
       </div>
@@ -148,21 +157,23 @@
           v-for="user in pagedList[pageSelected]"
           :key="user.id"
         >
-          <!-- properties -->
-          <div class="col">
+          <div class="col-3">
             {{ user.username }}
           </div>
           <div class="col-2">
             {{ capitalizeFirstLetter(user.role) }}
           </div>
-          <div class="col">
+          <div class="col-3 text-break">
             {{ user.email }}
           </div>
           <div class="col-1">
             {{ user.emailVerified }}
           </div>
           <!-- user management -->
-          <div class="col" id="user-management-buttons">
+          <div
+            class="col-3"
+            id="user-management-buttons"
+          >
             <!-- promote user -->
             <b-button
               class="user-mgmt-btn"
@@ -427,6 +438,29 @@
             v-model="createUserEmail"
           >
         </p>
+        <p>
+          <label
+            id="user-create-role"
+            :class="langIsAr? 'ml-auto': 'mr-auto'"
+          >
+            {{ i18n['adminPanel.role'] }}
+          </label>
+          <b-select
+            v-model="createUserRole"
+            aria-describedby="user-create-role"
+          >
+            <b-select-option value="null">
+              {{ i18n['adminPanel.chooseRole'] }}
+            </b-select-option>
+            <b-select-option
+              v-for="role in Object.values(assignableRoles)"
+              :key="role"
+              :value="role"
+            >
+              {{ capitalizeFirstLetter(role) }}
+            </b-select-option>
+          </b-select>
+        </p>
         <p v-if="emptyCreateInput">
           {{ i18n['courseNavEdit.table.missingInfo'] }}
         </p>
@@ -454,6 +488,7 @@ export default {
     return {
       createUserEmail: '',
       createUserName: '',
+      createUserRole: null,
       changeEmail: '',
       changeRole: null,
       changingUserId: null,
@@ -536,6 +571,13 @@ export default {
         this.createUserEmail.includes('.'))
     },
 
+    /**
+     * pagedList: split list into pages
+     *
+     * Author: cmc
+     *
+     * Last Updated: December 3, 2021
+     **/
     pagedList: {
       get() {
         return this.listPages
@@ -586,14 +628,17 @@ export default {
   },
 
   watch: {
+    // reset regexes when filter changes
     filter(val) {
-      if (val !== null) {
+      if (val !== null) { // explicily because false is used to reset filter
         this.regexes = val
       }
     },
+    // repage list if filters change
     filteredList() {
       this.pagedList = this.pageSize
     },
+    // repage list if page size changes
     pageSize(val) {
       this.pagedList = val
     }
@@ -606,13 +651,22 @@ export default {
   },
 
   methods: {
-    randomUsers(num) {
-      for (let i = 0; i < num ; i++) {
-        this.createUserName = `randomUser${i+1}`
-        this.createUserEmail = `random-${i}@laya.de`
-        this.createUser()
-      }
-    },
+    // /**
+    //  * function randomUsers: create random users, only for dev test
+    //  *  purposes
+    //  *
+    //  * Author: cmc
+    //  *
+    //  * Last Updated: December 3, 2021
+    //  * @param {number} num number of user to be created
+    //  **/
+    // randomUsers(num) {
+    //   for (let i = 0; i < num ; i++) {
+    //     this.createUserName = `randomUser${i+1}`
+    //     this.createUserEmail = `random-${i}@laya.de`
+    //     this.createUser()
+    //   }
+    // },
 
     /**
      * function capitalizeFirstLetter(): returns string with capitalized
@@ -651,7 +705,8 @@ export default {
     createUser() {
       this.$store.dispatch('createUser', {
         username: this.createUserName,
-        email: this.createUserEmail
+        email: this.createUserEmail,
+        role: this.createUserRole
       })
     },
 
@@ -766,6 +821,7 @@ export default {
 }
 </script>
 
+<!--suppress CssUnusedSymbol -->
 <style scoped>
 .input-group {
   flex-wrap: nowrap;

@@ -11,6 +11,12 @@ Dependencies:
 <template>
   <div class="login-view ly-nav-margin">
     <div class="container">
+      <div
+        class="text-center"
+        v-if="$route.params.verified"
+      >
+        {{ i18n['login.verified']}}
+      </div>
       <div class="row">
         <form class="d-flex flex-column align-items-center">
           <div style="height: 2rem"></div>
@@ -32,7 +38,13 @@ Dependencies:
           </div>
 
           <div class="ly-input" :class="{error: errPwd}">
-            <input v-model.trim="pwd" :placeholder="i18n['pwdPH']" type="password" autocomplete="on" :aria-label="i18n['pwdPH']">
+            <input
+              v-model.trim="pwd"
+              :placeholder="i18n['pwdPH']"
+              type="password"
+              autocomplete="on"
+              :aria-label="i18n['pwdPH']"
+            >
           </div>
 
           <div style="height: 2rem"></div>
@@ -53,10 +65,12 @@ Dependencies:
             <i class="fas fa-spinner fa-spin"></i>
           </h5>
           <div aria-live="polite">
-          <div id="login-error"
-               v-if="submitFailed"
-               :aria-hidden="!submitFailed"
-               class="font-weight-bold text-center mt-3">
+          <div
+            id="login-error"
+            v-if="submitFailed"
+            :aria-hidden="!submitFailed? 'false' : 'true'"
+            class="font-weight-bold text-center mt-3"
+          >
             <i class="fas fa-exclamation-triangle"></i>
             {{ errMsg }}
           </div>
@@ -158,35 +172,37 @@ export default {
 
       console.log('Submitting...')
       this.busy = true
-      let ctx = this
+      const { $data, $ls, $router, $store, i18n } = this
 
       http.post('accounts/login', {
-        email: ctx.email,
-        password: ctx.pwd
-      }).then(({ data }) => {
-        /*
-         * set login state */
-        ctx.$store.commit('login', data)
+        email: $data.email,
+        password: $data.pwd
+      })
+      .then(({ data }) => {
+        /* set login state */
+        $store.commit('login', data)
 
         /* load profile */
-        ctx.$store.dispatch('fetchProfile')
-        ctx.$store.dispatch('fetchRole')
+        $store.dispatch('fetchProfile')
+        $store.dispatch('fetchRole')
 
         /* store auth for reloads */
         const { id, userId, created, ttl } = data
         let expire = new Date(created)
         expire.setSeconds(expire.getSeconds() + ttl)
         console.log('Auth expires on', expire)
-        ctx.$ls.set('auth', { id: id, userId: userId }, expire.getTime())
+        $ls.set('auth', { id: id, userId: userId }, expire.getTime())
 
         /* move to view */
-        ctx.$router.push('/courses')
-      }).catch(err => {
+        $router.push('/courses')
+      })
+      .catch(err => {
         console.log(err)
-        ctx.submitFailed = true
-        ctx.errMsg = ctx.i18n['login.errMsg']
-      }).then(() => {
-        ctx.busy = false
+        $data.submitFailed = true
+        $data.errMsg = i18n['login.errMsg']
+      })
+      .finally(() => {
+        $data.busy = false
       })
     }
   }

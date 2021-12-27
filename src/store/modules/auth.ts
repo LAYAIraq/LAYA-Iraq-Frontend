@@ -34,13 +34,13 @@ export default {
 
     /**
      * Function isAuthor: return true if user can create courses
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
-     * @param state contains role string 
-     * @returns true if role is author or admin 
+     *
+     * @param state contains role string
+     * @returns true if role is author or admin
      */
     isAuthor(state: { role: string }) {
       return state.role === roles.AUTHOR || state.role == roles.ADMIN
@@ -60,11 +60,11 @@ export default {
 
     /**
      * Function setRole: set role of logged user
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param state contains role string
      * @param role new role
      */
@@ -74,13 +74,13 @@ export default {
 
     /**
      * Function login: log user into laya and place auth token in axios instance
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param state contains online and userId
-     * @param data response from post request to backend, contains token and userId 
+     * @param data response from post request to backend, contains token and userId
      */
     login(state: { online: boolean, userId: any }, { id, userId }: any) {
       state.online = true
@@ -91,11 +91,11 @@ export default {
 
     /**
      * Function logout: log user out of laya, remove auth token
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param state contains boolean online, userId, role string
      */
     logout(state: { online: boolean, userId: number, role: string }) {
@@ -109,12 +109,12 @@ export default {
   actions: {
 
     /**
-     * Function fetchRole: fetch role of logged user 
-     * 
+     * Function fetchRole: fetch role of logged user
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param data vuex state and commit handles
      */
     fetchRole({ commit, state }) {
