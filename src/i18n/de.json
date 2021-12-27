@@ -275,6 +275,7 @@
 	"login.registerHint1": "Noch keinen Account ?",
 	"login.registerHint2": "Hier geht es zur Anmeldung",
 	"login.title": "Einloggen",
+	"login.verified": "Bestätigung erfolgreich, du kannst dich jetzt einloggen!",
 	"markAllAsRead": "Alle als gelesen markieren",
 	"markAsRead": "Als gelesen markieren",
 	"message": "Nachricht",
@@ -453,5 +454,6 @@
 	"type.changeTypeTip": "Damit kannst Du den Typ des Inhalts permanent ändern. <b>Achtung:</b> Dabei gehen die aktuellen Eingaben verloren.",
 	"type.modal.ok": "Typ ändern",
 	"type.modal.text": "Neuer Typ*",
-	"type.modal.title": "Inhalts-Typ ändern"
+	"type.modal.title": "Inhalts-Typ ändern",
+	"verify.success": "Bestätigung erfolgreich, du wirst zum Login weitergeleitet..."
 }

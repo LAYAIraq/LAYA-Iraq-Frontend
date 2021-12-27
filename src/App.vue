@@ -8,6 +8,7 @@ Dependencies:
   @/components/footer
 -->
 
+<!--suppress ALL -->
 <template>
   <div
     id="app"
@@ -37,7 +38,7 @@ export default {
 
   computed: {
     ...mapGetters([
-      'fontOptions', // commented out b/c is not implemented on this branch
+      'fontOptions',
       'profileLang'
     ])
   },
@@ -81,8 +82,7 @@ export default {
      * Last Updated: unknown
      */
     relocateUnauthorized() {
-      /*
-       * pass access if auth true */
+      /* pass access if auth true */
       if (this.$ls.get('auth', false)) return
 
       const publicURLs = [
@@ -100,7 +100,9 @@ export default {
       if (/courses/.test(location.hash)) return
 
       /* auth first */
-      this.$router.push('/login')
+      if (this.$route.path !== '/login') {
+        this.$router.push('/login')
+      }
     },
 
     /**

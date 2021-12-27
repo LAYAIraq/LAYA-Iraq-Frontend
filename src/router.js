@@ -16,7 +16,7 @@ import * as views from './views';
 Vue.use(Router);
 export default new Router({
   mode: 'hash',
-  base: process.env.BASE_URL,
+  base: '/',
   routes: [
     /* {
       path: '/test',
@@ -107,6 +107,16 @@ export default new Router({
       path: '/privacy',
       name: 'privacy-view',
       component: views.privacy
+    },
+    {
+      path: '/verify',
+      name: 'verify-view',
+      component: views.verify
+    },
+    {
+      path: '/:catchAll(.*)',
+      component: views.notFound,
+      name: 'not-found'
     }
   ]
 })

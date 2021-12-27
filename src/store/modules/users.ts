@@ -153,17 +153,19 @@ export default {
      * @param commit commit function
      * @param username new user's name
      * @param email new user's email
+     * @param role new user's role
      */
-    createUser({state, commit}, {username, email}) {
-      http.post(`accounts/student`, {
+    createUser({state, commit}, {username, email, role}) {
+      http.post(`accounts/create`, {
         username: username,
-        email: email
+        email: email,
+        role: role
       })
         .then(resp => {
           console.log(resp)
           commit('addUser', {
             ...resp.data,
-            role: 'student'
+            role: role
           })
         })
         .catch(err => console.error(err))
