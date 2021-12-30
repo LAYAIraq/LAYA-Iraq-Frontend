@@ -23,9 +23,11 @@ Dependencies:
 
       <b-collapse id="nav-collapse" is-nav>
 
-        <b-navbar-brand to="/">
+        <b-navbar-brand
+          id="header-logo"
+          to="/">
           <img style="height: inherit"
-               src="../assets/laya-logo-iraq.png"
+               src="../assets/logo-iraq-xs.png"
                alt="Laya - Learn as you are">
         </b-navbar-brand>
 
@@ -276,6 +278,10 @@ export default {
 <style scoped>
 *:focus {
   outline: 2px dashed deepskyblue;
+}
+
+#header-logo {
+  border: none;
 }
 
 #rtl {
