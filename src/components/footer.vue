@@ -17,25 +17,7 @@ Dependencies: @/mixins/locale.vue
           <!-- socials row -->
          <div class="row no-gutters">
             <!-- social media links -->
-            <div class="col" style="padding-bottom: 1rem">
-              <a
-                href="#"
-                target="_blank"
-                class="social-link"
-              >
-                <img src="../assets/facebook.svg" alt="Facebook Link">
-              </a>
-              <a href="#" target="_blank" class="social-link">
-                <img src="../assets/twitter.svg" alt="Twitter Link">
-              </a>
-              <a href="mailto:yesil.diren@uni-vechta.de" target="_blank" class="social-link">
-                <img src="../assets/email.svg" alt="Email">
-              </a>
-              <a href="#" target="_blank" class="social-link">
-                <img src="../assets/vimeo.svg" alt="Vimeo Link">
-              </a>
-            </div>
-          </div>
+         </div>
 
           <div class="row">
             <div class="col">
@@ -65,7 +47,7 @@ Dependencies: @/mixins/locale.vue
         <div class="col-3 col-lg-3">
           <a href="#">
             <img
-              src="../assets/logo.svg"
+              src="../assets/laya-logo-iraq.png"
               alt="Laya - Learn as you are"
               class="w-100"
             >
