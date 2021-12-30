@@ -47,7 +47,7 @@ Dependencies: @/mixins/locale.vue
         <div class="col-3 col-lg-3">
           <a href="#">
             <img
-              src="../assets/laya-logo-iraq.png"
+              src="../assets/logo-iraq-m.png"
               alt="Laya - Learn as you are"
               class="w-100"
             >
