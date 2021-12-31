@@ -1,5 +1,5 @@
-/*
- * this exists to build all assets with relative paths */
+/* this exists to build all assets with relative paths */
+
 module.exports = {
-  publicPath: ""
+  publicPath: ''
 }

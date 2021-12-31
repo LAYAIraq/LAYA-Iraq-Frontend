@@ -1,5 +1,9 @@
 # Changes
 
+## v1.7.1
+- Added verification view, 404 page
+- Set Backend URL with environment variables for production
+
 ## v1.7.0
 - Added Admin Panel
 
