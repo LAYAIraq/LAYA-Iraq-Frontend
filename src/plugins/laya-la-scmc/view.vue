@@ -73,7 +73,7 @@ vuex,
           v-bind:value="i"
         >
 
-        <label 
+        <label
           :for="'mchoice-in-'+i"
           class="form-check-label"
           :class="langIsAr? 'mr-4' : ''">
@@ -122,7 +122,7 @@ vuex,
         @click="onFinish[0]() || {}">
         <span>
           {{ i18n['nextContent'] }}
-          <i class="fas fa-arrow-right"></i>
+          <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
         </span>
       </button>
       <span
