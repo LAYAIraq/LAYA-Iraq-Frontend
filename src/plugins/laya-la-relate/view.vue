@@ -54,7 +54,7 @@ Dependencies:
               :id="pair.id"
               class="form-group row flaggable"
             >
-              <label 
+              <label
                 :for="pair.label+i"
                 class="col-sm-6 col-form-label"
               >
@@ -136,8 +136,7 @@ Dependencies:
           :class="langIsAr? 'mr-auto': 'ml-auto'"
           @click="done"
         >
-          {{ i18n['nextContent'] }}
-          <i class="fas fa-arrow-right"></i>
+          saveFlags
         </button>
       </div>
 

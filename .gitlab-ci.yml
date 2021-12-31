@@ -48,7 +48,7 @@ build_img:
   services:
     - docker:19.03.12-dind
   variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE:latest
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
   script:
     - echo $CI_REGISTRY
     - echo $CI_DEPLOY_USER

@@ -94,6 +94,7 @@ Dependencies:
         <button
           type="button"
           class="btn btn-link mt-3"
+          :class="langIsAr? 'float-right': 'float-left'"
           :disabled="checked"
           @click="check"
         >
@@ -101,11 +102,12 @@ Dependencies:
         </button>
         <button
           type="button"
-          class="btn btn-primary mt-3 ml-auto"
+          class="btn btn-primary mt-3"
+          :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
           @click="done"
         >
           {{ i18n['nextContent'] }}
-          <i class="fas fa-arrow-right"></i>
+          <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
         </button>
       </div>
     <div v-if="showSolutionsBool">

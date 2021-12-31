@@ -42,8 +42,8 @@ Dependencies:
     <div class="row">
       <button
         type="button"
-        class="btn btn-primary btn-lg mt-3 d-block ml-auto"
-        :class="langIsAr? 'float-right': 'float-left'"
+        class="btn btn-primary btn-lg mt-3 d-block"
+        :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
         @click="onFinish[0]() || {}">
         <span>
           {{ i18n['nextContent'] }}
