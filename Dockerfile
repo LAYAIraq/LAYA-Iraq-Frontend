@@ -1,14 +1,14 @@
 #build frontend in npm
 
-FROM node:lts-alpine as builder
+FROM node:16-alpine as builder
 WORKDIR /laya-frontend
 
-RUN apk add --update git
+#RUN apk add --update git
 
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN npm run build
+RUN npm run build --mode=production
 
 # Build has to be done in NPM Project
 FROM nginx:stable-alpine as production
