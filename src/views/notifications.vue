@@ -1,8 +1,8 @@
 <template>
-  <div 
+  <div
     class="ly-notifications"
     :class="langIsAr? 'text-right': 'text-left'">
-    
+
     <div class="container mt-5 mb-5">
       <div class="row">
         <div class="col">
@@ -24,8 +24,8 @@
       </div>
         <!-- <a @click="randomNotifications">MAKE RANDOM NOTIFICATIONS</a> -->
     </div>
-    <div 
-      class="container" 
+    <div
+      class="container"
       id="message-list"
     >
       <div class="row font-weight-bold mb-2">
@@ -50,8 +50,8 @@
             </button>
         </div>
       </div>
-      <ul 
-        v-if="messages.length != 0"
+      <ul
+        v-if="messages.length !== 0"
         class="list-group"
       >
         <li
@@ -63,13 +63,13 @@
             'highlighted': $route.query.id === note.noteId,
             'noHighlight': showhighLight
           }"
-          @click="$route.query.id === note.noteId? 
+          @click="$route.query.id === note.noteId?
             showhighLight = !showhighLight:
             false"
         >
           <div class="message-toggle" >
             <div class="row">
-              <div class="col" 
+              <div class="col"
                 :class="{
                   'font-italic': note.read,
                   'font-weight-bold': !note.read
@@ -82,14 +82,14 @@
                 {{ i18n[`notifications.${note.type}.title`] }}
               </div>
               <div class="col-sm-3">
-                <span 
+                <span
                   class="time-note"
                   :title="noteTime(note.time)"
                   v-b-tooltip.top
                 >
                   {{ timeSince(note.time) }}
                 </span>
-                
+
               </div>
               <div class="col-sm-2">
                 <b-button
@@ -104,12 +104,12 @@
                   </small>
                 </b-button>
 
-                 
+
               </div>
             </div>
             <div class="row">
               <b-collapse :id="`collapse-${i}`" class="w-100">
-                <button 
+                <button
                   :id="`collapse-${i}-btn`"
                   class="d-none"
                   @click="markAsRead(note)"
@@ -118,7 +118,7 @@
                   <span class="note-content">
                     {{ replaceStr(note) }}
                   </span>
-                  <span 
+                  <span
                     class="note-cta"
                     v-if="!loading"
                   >
@@ -131,19 +131,19 @@
                   <span v-else><i class="fas fa-spinner fa-spin"></i></span>
                 </b-card>
               </b-collapse>
-                
+
             </div>
           </div>
         </li>
       </ul>
-      <div 
+      <div
         v-else
         class="m-5 p-2 text-center"
       >
         {{ i18n['notifications.none'] }}
       </div>
       <div class="row mt-5">
-        <b-button 
+        <b-button
           variant="warning"
           class="m-auto"
           @click="loadMoreNotifications"
@@ -154,7 +154,7 @@
         </b-button>
       </div>
     </div>
-   
+
 
   </div>
 </template>
@@ -192,7 +192,7 @@ export default {
      * Last Updated: June 10, 2021
      */
     moreMessages() {
-      return (this.messages.length != 0 && !this.messages.length % 10 == 0)
+      return (this.messages.length !== 0 && !this.messages.length % 10 === 0)
     }
   },
 
@@ -235,7 +235,7 @@ export default {
     ...randomNotifications,
 
     /**
-     * Function cacheValues: get all referencing data for 
+     * Function cacheValues: get all referencing data for
      *  notifications, set loading to false if done
      *
      * Author: cmc
@@ -399,14 +399,14 @@ export default {
      * Author: cmc
      *
      * Last Updated: September 2, 2021
-     * @param {string} type notification type
-     * @param {string} id id of referenced value
+     * @param {object} note notification object
      */
     replaceStr(note) {
       //TODO: be generic in order to use if for all notification types
       // console.log(note)
       switch (note.type) { // replace placeholders for different notifications, only CID as of now
         default: {
+          console.log(note)
           return this.i18n[`notifications.${note.type}.text`]
             .replace('<CID>', this.valueCache[note.data.courseId])
         }
@@ -431,7 +431,7 @@ export default {
   background-color: transparent;
 }
 
-.noHighlight { 
+.noHighlight {
   background-color: transparent;
 }
 

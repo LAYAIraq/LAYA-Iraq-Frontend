@@ -279,7 +279,9 @@ export default {
     }
   },
 
-  mounted () {
+  created () {
+    // relocate logged users
+    if (this.$ls.get('auth', false)) this.$router.replace('/')
   },
 
   methods: {

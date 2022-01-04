@@ -44,11 +44,18 @@ export default {
   },
 
   watch: {
-    $route: 'relocateUnauthorized'
+    $route(){
+      this.relocateUnauthorized()
+    }
   },
 
   created() {
     this.restoreAuth()
+    this.relocateUnauthorized()
+  },
+
+  beforeRouteUpdate() {
+    this.relocateUnauthorized()
   },
 
   methods: {
@@ -86,23 +93,25 @@ export default {
       if (this.$ls.get('auth', false)) return
 
       const publicURLs = [
-        '#/',
-        '#/login',
-        '#/register',
-        '#/imprint',
-        '#/privacy'
+        '/',
+        '/login',
+        '/register',
+        '/imprint',
+        '/privacy'
       ]
 
       /* target url is public */
-      if (publicURLs.includes(location.hash)) return
-
-      /* temporary allow public course access */
-      if (/courses/.test(location.hash)) return
-
-      /* auth first */
-      if (this.$route.path !== '/login') {
+      if (publicURLs.includes(location.pathname)) {
+        return
+      } else if (this.$route.path !== '/login') {
         this.$router.push('/login')
       }
+
+      /* temporary allow public course access */
+      // if (/courses/.test(location.hash)) return
+
+      /* auth first */
+
     },
 
     /**
