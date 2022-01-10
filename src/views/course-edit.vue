@@ -1,9 +1,9 @@
 <!--
-Filename: course-edit.vue 
+Filename: course-edit.vue
 Use: wrap all course edit tools
 Creator: cmc
 Date: October 27, 2020
-Dependencies: 
+Dependencies:
   vuex,
   @/mixins/locale.vue,
   ./course-edit-tools
@@ -13,21 +13,21 @@ Dependencies:
   <div class="ly-bg-author py-4">
     <course-edit-header
     :name="name" :step="step">
-    </course-edit-header> 
+    </course-edit-header>
 
     <!-- mounts course-edit-wrapper & edit-course-nav -->
     <router-view @saved="$bvToast.show('author-toast')"></router-view>
 
-    <div 
+    <div
       class="container"
       :class="langIsAr ? 'text-right' : ''"
       v-if="$route.name === 'course-detail-view'"
     >
 
       <course-edit-content :name="name" :step="step"></course-edit-content>
-      
+
       <course-edit-type :name="name" :step="step" @changedType="storeCourse"></course-edit-type>
-      
+
       <course-new-block :name="name" :step="step"> </course-new-block>
 
       <course-edit-nav></course-edit-nav>
@@ -46,14 +46,14 @@ Dependencies:
 
     </div>
 
-    <b-toast 
+    <b-toast
       id="author-toast"
       :title="i18n['authorTools']"
       static
       variant="success"
       auto-hide-delay="1500"
       class="author-toast"
-    > 
+    >
       {{ i18n['successfulSave'] }}
     </b-toast>
 
@@ -63,14 +63,14 @@ Dependencies:
 <script>
 import { locale } from '@/mixins'
 import { mapGetters } from 'vuex'
-import { 
+import {
   courseCopy,
   courseDelete,
   courseDeleteBlock,
   courseEditContent,
-  courseEditHeader, 
-  courseEditNav, 
-  courseEditType, 
+  courseEditHeader,
+  courseEditNav,
+  courseEditType,
   courseNewBlock,
   coursePreferences,
   courseRename,
@@ -107,10 +107,10 @@ export default {
   methods: {
 
     /**
-     * Function updateContent: update current Content 
-     * 
+     * Function updateContent: update current Content
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: October 27, 2020
      */
     updateContent(changedContent) {
@@ -123,19 +123,19 @@ export default {
 
     /**
      * Function storeCourse: store course in database
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: October 27, 2020
-     *  */    
+     *  */
     storeCourse() {
       let ctx = this
       this.$store.dispatch('storeCourse')
       .then(() => {
         ctx.$bvToast.show('author-toast')
-        // ctx.$emit('saved')
+        ctx.$emit('saved')
         })
-      .catch( (err) => console.error(err))            
+      .catch( (err) => console.error(err))
   }
 
   }

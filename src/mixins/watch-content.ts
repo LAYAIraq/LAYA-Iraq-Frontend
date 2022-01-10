@@ -8,7 +8,18 @@
 
 import { mapGetters } from 'vuex'
 export default {
-  ...mapGetters(['content']),
+  computed: {
+    ...mapGetters(['content'])
+  },
+  // watch: {
+  //   content: {
+  //     deep: true,
+  //     handler() {
+  //       console.log('content changed!')
+  //       this.fetchData()
+  //     }
+  //   }
+  // }
 
   created() { // watch content in vuex store
     this.unwatch = this.$store.watch(

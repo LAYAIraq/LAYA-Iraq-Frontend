@@ -131,7 +131,6 @@ export default {
   name: 'laya-quiz-drag-drop',
 
   mixins: [
-
     locale
   ],
 

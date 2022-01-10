@@ -1,9 +1,9 @@
 <!--
-Filename: course-detail.vue 
-Use: Show Course Content 
+Filename: course-detail.vue
+Use: Show Course Content
 Creator: core
 Date: unknown
-Dependencies: 
+Dependencies:
   vuex,
   @/mixins/locale.vue,
   @/misc/utils.js,
@@ -40,7 +40,7 @@ Dependencies:
             :key="name+'-'+step"
             :is="contentToDisplay.name"
             :onFinish="nextStep(contentToDisplay.nextStep)">
-          </component> 
+          </component>
 
           <div v-else>
 <!--            <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">-->
@@ -172,7 +172,8 @@ export default {
     content: {
       deep: true,
       handler() {
-       this.$forceUpdate()
+        // console.log('updating...')
+        this.$nextTick(() => this.$forceUpdate)
       }
     },
 
@@ -215,9 +216,9 @@ export default {
 
     /**
      * Function getCourse: get course from backend, set title
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: October 21, 2021
      */
     getCourse() {
@@ -236,11 +237,11 @@ export default {
 
     /**
      * Function nextStep: map 'steps' string to components
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: October 27, 2020
-     * 
+     *
      * @param {string} steps next steps
      */
     nextStep(steps) { // string e.g. '1,2'

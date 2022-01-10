@@ -78,9 +78,9 @@ Dependencies:
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
-import http from 'axios'
+// import http from 'axios'
 
 import lyCourseEdit from '@/components/authoring/course-create'
 import lyCourseList from '@/components/ly-course-list'
@@ -100,11 +100,13 @@ export default {
   ],
 
   computed: {
-    ...mapState(['note', 'auth']),
-    ...mapGetters(['courseList', 'isAuthor']),
+    ...mapGetters([
+      'courseList',
+      'isAuthor'
+    ]),
   },
 
-  mounted() {
+  created() {
     this.fetchCourses()
   },
   data() {
@@ -126,23 +128,7 @@ export default {
      */
     fetchCourses() {
       this.$store.dispatch('fetchCourseList')
-    },
-
-    /**
-     * Function delCourse: remove course
-     *
-     * Author: core
-     *
-     * Last Updated: January 20, 2021
-     *
-     * @param {string} name name of course to delete
-     */
-    delCourse(name) { //FIXME never called
-      const { fetchCourses } = this
-      http.delete(`courses/${name}`)
-        .catch(err => console.error(err))
-        .then(fetchCourses)
-    },
+    }
 
   }
 }

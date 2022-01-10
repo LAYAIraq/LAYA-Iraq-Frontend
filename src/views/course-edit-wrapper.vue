@@ -1,10 +1,10 @@
 <!--
-Filename: course-edit-wrapper.vue 
+Filename: course-edit-wrapper.vue
 Use: wrap components needed for course editing
 Creator: core
 Date: unknown
-Dependencies: 
-  vuex, 
+Dependencies:
+  vuex,
   @/mixins/locale.vue
 -->
 
@@ -20,7 +20,7 @@ Dependencies:
           <div v-show="!preview">
             <component v-if="!editContent" :is="comps.new" ref="new"></component>
             <component v-else :is="comps.edit" ref="edit"></component>
-            
+
           </div>
           <hr>
 
@@ -32,10 +32,10 @@ Dependencies:
               <span v-if="preview">
                 <i class="fas fa-edit"></i>
                 {{ i18n['courseWrapper.edit'] }}
-              </span> 
+              </span>
               <span v-else>
                 <i class="fas fa-eye"></i>
-                {{ i18n['courseWrapper.preview'] }} 
+                {{ i18n['courseWrapper.preview'] }}
               </span>
             </button>
             <button type="button" class="btn btn-primary" @click="save">
@@ -68,7 +68,7 @@ export default {
   mixins: [
     locale
   ],
-  
+
   props: {
     name: String,
     step: String,
@@ -87,9 +87,9 @@ export default {
 
     /**
      * cid: returns the type of content
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: January 20, 2021
      */
     cid() {
@@ -98,9 +98,9 @@ export default {
 
     /**
      * comps: return create, edit, view components for given content type
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: January 20, 2021
      */
     comps() {
@@ -110,9 +110,9 @@ export default {
 
     /**
      * editContent: returns true if it's editing an existing content
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: January 20, 2021
      */
     editContent() {
@@ -121,9 +121,9 @@ export default {
 
     /**
      * stepData: return input data for content
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: January 20, 2021
      */
     stepData() {
@@ -137,7 +137,7 @@ export default {
       // eslint-disable-next-line
       return (({tooltipOn, ...o}) => o) (input) //strip tooltipOn var from data
     }
-  },  
+  },
 
   beforeDestroy() {
     // persist changes in database
@@ -156,9 +156,9 @@ export default {
 
     /**
      * Function save: write changes to content to store
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: January 20, 2021
      */
     save() {
@@ -166,13 +166,12 @@ export default {
       const newInput = this.stepData
       const updatedStep = {
         name: this.cid,
-        nextStep: null,
         input: newInput
       }
-      
+
       // choose way depending on new or existing content
       if(!this.editContent){
-        this.$store.commit('appendContent', updatedStep)
+        this.$store.commit('appendContent', { ...updatedStep, nextStep: null })
       }
       else{
         this.$store.commit('updateStep', { step, updatedStep })
@@ -180,7 +179,7 @@ export default {
       this.$emit('saved')
     }
   }
-  
+
 }
 </script>
 

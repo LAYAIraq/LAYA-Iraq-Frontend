@@ -56,14 +56,17 @@ Dependencies: @/mixins/locale.vue
 
 <script>
 
-import { locale } from '@/mixins'
+import { locale, watchContent } from '@/mixins'
 import { mapGetters } from 'vuex'
 import '@/styles/flaggables.css'
 
 export default {
   name: 'laya-dialog',
 
-  mixins: [ locale ],
+  mixins: [
+    locale,
+    watchContent
+  ],
 
   computed: {
     ...mapGetters([
@@ -103,17 +106,18 @@ export default {
 
   created() {
     if (!this.previewData) this.fetchData()
-    // this.unwatch = this.$store.watch(
-    //     (state, getters) => getters.content,
-    //     () => {
-    //       this.fetchData() // when updated, re-do deep copying
-    //     },
-    //     { deep: true }
-    // )
+    this.unwatch = this.$store.watch(
+        (state, getters) => getters.content,
+        (bfr, ftr) => {
+          console.log('update, update!', bfr, ftr)
+          this.fetchData() // when updated, re-do deep copying
+        },
+        { deep: true }
+    )
   },
 
   beforeDestroy() {
-    // this.unwatch()
+    this.unwatch()
   },
 
   methods: {

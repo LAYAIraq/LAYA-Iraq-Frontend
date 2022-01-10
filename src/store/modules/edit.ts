@@ -750,6 +750,7 @@ export default {
                   break
                 case 'laya-dialog':
                   listData.properties.text = true
+                  break
               }
             })
             if (!state.courseList.some( // add to course list if not present
