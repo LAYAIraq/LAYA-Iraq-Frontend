@@ -12,7 +12,7 @@ Dependencies:
 -->
 
 <template>
-  <div v-if="!note.busy" class="course-detail-view">
+  <div v-if="!storeBusy" class="course-detail-view">
 
     <!-- course header -->
     <div class="container-fluid bg-dark">
@@ -57,14 +57,15 @@ Dependencies:
     <courseEdit
       v-if="isAuthor && content"
       :name="name" :step="step"
-      @saved="$forceUpdate"
     ></courseEdit>
 
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import {
+  mapGetters
+} from 'vuex'
 
 import utils from '@/misc/utils.js'
 import lyScrollToTop from '@/components/scroll-to-top.vue'
@@ -101,8 +102,13 @@ export default {
   },
 
   computed: {
-    ...mapState(['auth', 'note', 'edit', 'flags']),
-    ...mapGetters(['isAuthor', 'content', 'course', 'courseFlags']),
+    ...mapGetters([
+      'isAuthor',
+      'content',
+      'course',
+      'courseFlags',
+      'storeBusy'
+    ]),
 
 
     /**
@@ -226,11 +232,13 @@ export default {
 
       window.scrollTo(0,0)
       document.title = `Laya - ${ctx.name}`
-      if (!this.course ||
-        this.course.name !== this.$route.params.name ||
-        Object.keys(this.course).length === 0)
+      if (
+        !this.course || // course is undefined in store
+        this.course.name !== this.$route.params.name || // course in store doesn't match the route params
+        Object.keys(this.course).length === 0 // course in store has no properties
+      )
       {
-        console.log('Fetching Course...')
+        // console.log('Fetching Course...')
         this.fetchCourse()
       }
     },

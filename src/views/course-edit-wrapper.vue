@@ -54,7 +54,7 @@ Dependencies:
 
 <script>
 import { locale } from '@/mixins'
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import LayaUploadFileList from '@/plugins/misc/laya-upload-file-list/file-list.vue'
 
 
@@ -83,7 +83,6 @@ export default {
 
   computed: {
     ...mapGetters(['content']),
-    ...mapState(['edit']),
 
     /**
      * cid: returns the type of content
@@ -159,11 +158,12 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: January 20, 2021
+     * Last Updated: January 11, 2022
      */
     save() {
       let step = this.step -1 // to comply to array indexing in store
-      const newInput = this.stepData
+      // deep copy to get rid of store references
+      const newInput = JSON.parse(JSON.stringify(this.stepData))
       const updatedStep = {
         name: this.cid,
         input: newInput
@@ -176,6 +176,8 @@ export default {
       else{
         this.$store.commit('updateStep', { step, updatedStep })
       }
+      // set courseUpdated to trigger watchers
+      this.$store.commit('setCourseUpdated')
       this.$emit('saved')
     }
   }

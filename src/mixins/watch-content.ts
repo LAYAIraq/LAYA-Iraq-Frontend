@@ -9,7 +9,7 @@
 import { mapGetters } from 'vuex'
 export default {
   computed: {
-    ...mapGetters(['content'])
+    ...mapGetters(['courseUpdated', 'storeBusy'])
   },
   // watch: {
   //   content: {
@@ -21,17 +21,20 @@ export default {
   //   }
   // }
 
-  created() { // watch content in vuex store
-    this.unwatch = this.$store.watch(
-      (state, getters) => getters.content,
-      () => {
-        this.fetchData() // when updated, re-do deep copying
-      },
-      { deep: true }
-    )
+  watch: {
+    courseUpdated(val) {
+      if (val) { // set to true
+        this.fetchData()
+        this.$store.commit('unsetCourseUpdated')
+      }
+    },
+    storeBusy(val) {
+      if(!val) {
+        console.log('store finished loading!!')
+      }
+    }
   },
-
-  beforeDestroy() {
-    this.unwatch()
-  }
+  // created() {
+  //   this.$store.commit('unsetCourseUpdated')
+  // }
 }

@@ -106,18 +106,6 @@ export default {
 
   created() {
     if (!this.previewData) this.fetchData()
-    this.unwatch = this.$store.watch(
-        (state, getters) => getters.content,
-        (bfr, ftr) => {
-          console.log('update, update!', bfr, ftr)
-          this.fetchData() // when updated, re-do deep copying
-        },
-        { deep: true }
-    )
-  },
-
-  beforeDestroy() {
-    this.unwatch()
   },
 
   methods: {

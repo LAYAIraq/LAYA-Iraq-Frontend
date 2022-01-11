@@ -107,34 +107,16 @@ export default {
   methods: {
 
     /**
-     * Function updateContent: update current Content
-     *
-     * Author: cmc
-     *
-     * Last Updated: October 27, 2020
-     */
-    updateContent(changedContent) {
-      // TODO: alters vuex property
-      // also is never called
-      this.course.content = [...changedContent]
-      this.storeCourse()
-      this.$forceUpdate()
-    },
-
-    /**
      * Function storeCourse: store course in database
      *
      * Author: cmc
      *
-     * Last Updated: October 27, 2020
+     * Last Updated: January 11, 2021
      *  */
     storeCourse() {
       let ctx = this
       this.$store.dispatch('storeCourse')
-      .then(() => {
-        ctx.$bvToast.show('author-toast')
-        ctx.$emit('saved')
-        })
+      .then(() => ctx.$bvToast.show('author-toast'))
       .catch( (err) => console.error(err))
   }
 

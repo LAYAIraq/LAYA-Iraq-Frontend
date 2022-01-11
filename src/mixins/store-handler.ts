@@ -20,11 +20,9 @@ export default {
     fetchCourse(name) {
       const courseName = name || this.$route.params.name // use argument if given, otherwise use router params
       this.$store.dispatch('fetchCourse', courseName)
-      .then(resp => {
-        console.log(resp)
+      .then(() => {
         // this.fetchEnrollment() // commented out b/c no enrollment
-        this.fetchFlags()
-        this.$forceUpdate()
+        this.$store.commit('unsetCourseUpdated')
       })
       .catch(err => {
         this.$router.push('/courses')
