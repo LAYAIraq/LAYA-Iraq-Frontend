@@ -61,14 +61,15 @@ Dependencies:
 import Plyr from 'plyr'
 import { mapGetters } from 'vuex'
 import 'plyr/dist/plyr.css'
-import { locale } from '@/mixins'
+import { locale, watchContent } from '@/mixins'
 import '@/styles/flaggables.css'
 
 export default {
   name: 'laya-plyr',
 
   mixins: [
-    locale
+    locale,
+    watchContent
   ],
 
   data() {

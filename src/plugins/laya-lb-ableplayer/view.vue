@@ -26,21 +26,21 @@ Dependencies:
       ></laya-flag-icon>
     </div>
 
-    <video 
+    <video
       :id="playerId"
       preload="auto"
       data-debug
       :data-lang="profileLang" data-force-lang>
 
-      <source 
+      <source
         type="video/mp4"
         :src="notEmpty(src)"
         :data-sign-src="notEmpty(sign)"
       />
 
-      <track 
-        kind="captions" 
-        :src="notEmpty(sub)" 
+      <track
+        kind="captions"
+        :src="notEmpty(sub)"
         default/>
     </video>
 
@@ -58,7 +58,7 @@ Dependencies:
 // import 'ableplayer' FIXME: still broken
 import { mapGetters } from 'vuex'
 import 'ableplayer/build/ableplayer.min.css' //neccessary, otherwise ableplayer is butchered
-import { locale } from '@/mixins'
+import { locale, watchContent } from '@/mixins'
 import '@/styles/flaggables.css'
 
 export default {
@@ -66,7 +66,8 @@ export default {
   name: 'laya-ableplayer',
 
   mixins: [
-    locale
+    locale,
+    watchContent
   ],
 
   props: {
@@ -116,11 +117,11 @@ export default {
 
     /**
      * Function notEmpty: returns the string if it's not empty, false otherwise
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param {string} str string to be checked
      */
     notEmpty(str) {
@@ -129,9 +130,9 @@ export default {
 
     /**
      * Function fetchData: fetch data from vuex and make data property
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 19, 2021
      */
     fetchData() {
