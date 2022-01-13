@@ -283,21 +283,18 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: November 19, 2021
+     * Last Updated: January 13, 2022
      * @param commit commit function
      * @param state state variables
      * @param {number} id user Id
      */
     resetPassword({ commit, state }, id) {
-      for (const user of state.users) {
-        if (user.id === id) {
-          console.log('changing ', id, 's password')
-          // http.patch(`accounts/${id}`, user) // TODO: create backend method for resetting password
-          //   .then(() => console.log('user role changed!'))
-          //   .catch(err => console.error(err))
-          break
-        }
+      if (state.users.some(x => x.id === id)) {
+        console.log('changing ', id, 's password')
+        http.post(`accounts/pwd-reset/${id}`)
+          .catch(err => console.error(err))
       }
+      // else statement omitted b/c only called for existing ids
     },
   }
 }
