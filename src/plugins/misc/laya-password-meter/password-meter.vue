@@ -1,15 +1,37 @@
-/**
- * Filename: passwordStrength.js
- * Use: Provide feedback regarding password strength
- * Author: pj
- * Date: June 28, 2021
- * Dependencies: none
- */
+<template>
+  <div class="col">
+    <password
+      id="pwdMeter"
+      v-model="pwd"
+      :strength-meter-only="true"
+      :secure-length="8"
+      @feedback="pwdStrength"
+      @score="setPwdStrength"
+    ></password>
+    <strong class="form-text text-center">
+      {{ wordedPwdStrength }}
+    </strong>
+  </div>
+</template>
+
+<script>
+import Password from 'vue-password-strength-meter'
+import { locale } from '@/mixins'
 
 export default {
-
+  name: 'LayaPasswordStrength',
+  components: {
+    Password
+  },
+  mixins: [
+    locale
+  ],
+  props: {
+    newPwd: String
+  },
   data() {
     return {
+      passwordStrength: null,
       possibleWarnings: ['Straight rows of keys are easy to guess', 'Short keyboard patterns are easy to guess', 'Repeats like "aaa" are easy to guess',
         'Repeats like "abcabcabc" are only slightly harder to guess than "abc"', 'Sequences like abc or 6543 are easy to guess',
         'Recent years are easy to guess', 'Dates are often easy to guess', 'This is a top-10 common password', 'This is a top-100 common password',
@@ -24,9 +46,37 @@ export default {
     }
   },
 
+  computed: {
+    pwd() {
+      return this.newPwd
+    },
+    /**
+     * wordedPwdStrength(): word pwd strength for linguistic support
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 22, 2021
+     * @returns {string} password strength in locale
+     */
+    wordedPwdStrength() {
+      return this.passwordStrength != null?
+        this.i18n[`pwdStrength${this.passwordStrength}`]:
+        ''
+    }
+  },
+
   methods: {
-    pwdSuggestions ({ suggestions, warning }) {
-      if (this.newPwd !== '') {
+    /**
+     * function pwdStrength: word zxvn warnings, suggestions in user locale
+     *
+     * Author: pj
+     *
+     * Last Updated: June 28, 2021
+     * @param suggestions
+     * @param warning
+     */
+    pwdStrength ({ suggestions, warning }) {
+      if (this.repeatPwd !== '') {
         let k, j// check for different language
         for (j = 0; j < this.possibleWarnings.length; j++) {
           if (warning === this.possibleWarnings[j]) {
@@ -56,6 +106,19 @@ export default {
       } else {
         this.warnings = ''
       }
-    }
+    },
+    /**
+     * function setPwdStrength: set passwordStrength data property
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 22, 2021
+     */
+    setPwdStrength(num) {
+      this.passwordStrength = num
+    },
+
   }
 }
+
+</script>

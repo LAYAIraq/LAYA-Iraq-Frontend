@@ -114,9 +114,15 @@ Dependencies:
             {{ i18n['register.pwdErr'] }}
           </div>
           <div class="form-group row">
+            <div class="col-1 col-form-label">
+              <i
+                class="fas fa-lock"
+                :title="i18n['profile.pwdStrength']"
+                v-b-tooltip.left
+              ></i>
+            </div>
             <div class="col-sm-9">
-              <label for="pwdMeter" class="col-sm-3 col-form-label">{{ i18n['profile.pwdStrength'] }}</label>
-              <password id="pwdMeter" v-model="pwd2" :strength-meter-only="true" @feedback="showFeedback"></password>
+              <password class="mx-auto" id="pwdMeter" v-model="pwd2" :strength-meter-only="true" @feedback="showFeedback"></password>
               <strong id="testPwdMeter" class="form-text text-center"> {{ warnings }} </strong>
             </div>
           </div>

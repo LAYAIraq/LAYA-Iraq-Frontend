@@ -144,7 +144,7 @@ Dependencies:
             >
               {{ i18n['profile.pwdStrength'] }}
             </label>
-            <div class="col-sm-9">
+            <div class="col">
               <password
                 id="pwdMeter"
                 v-model="newPwd"
@@ -566,7 +566,7 @@ export default {
      * @param warning
      */
     showFeedback({ suggestions, warning }) {
-      this.pwdSuggestions({ suggestions, warning })
+      this.pwdStrength({ suggestions, warning })
     }
   },
 }
