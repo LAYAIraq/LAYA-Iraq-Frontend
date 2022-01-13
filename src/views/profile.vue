@@ -157,9 +157,10 @@ Dependencies:
                 {{ wordedPwdStrength }}
               </strong>
             </div>
+            <password v-model="newPwd"></password>
           </div>
 
-
+          <!-- password suggestions -->
           <div
             v-if="showSuggestions"
             class="form-group row"
@@ -193,6 +194,7 @@ Dependencies:
               </strong>
             </div>
           </div>
+
           <hr>
 
           <!-- avatar upload TODO: FIX Cropper Problems
