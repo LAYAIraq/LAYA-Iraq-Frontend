@@ -172,19 +172,21 @@ Dependencies:
 <script>
 // import http from 'axios'
 import { mapGetters } from 'vuex'
-import { locale } from '@/mixins'
+import { locale, storeHandler } from '@/mixins'
 
 export default {
   name: 'laya-course-list',
 
   mixins: [
-    locale
+    locale,
+    storeHandler
   ],
 
   data() {
     return {
       buttonAction: null,
-      complicitCourses: new Set(),
+      complicitCourses: null,
+      complicitCheck: null,
       // enrolledIn: [],
       filteredList: [],
       nonComplicitSettings: {},
@@ -199,6 +201,7 @@ export default {
 
   computed: {
     ...mapGetters([
+      'course',
       'courseList',
       'mediaPrefs',
       'userId'
@@ -213,7 +216,7 @@ export default {
      * @returns {boolean} true if complicitCourses set has at least one member
      */
     complicitReady() {
-      return this.complicitCourses.size > 0
+      return this.complicitCourses !== null
     },
 
      /**
@@ -230,6 +233,13 @@ export default {
     }
   },
 
+  watch: {
+    // watch course list in order to have non-complicit indicator at first load
+    courseList(){
+      this.getComplicitCourses()
+    }
+  },
+
   created() {
     // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
     // this.getSubs()
@@ -238,6 +248,35 @@ export default {
   },
 
   methods: {
+    // TEST
+    debounce(fn, delay) {
+      let timeoutID = null
+      return () => {
+        clearTimeout(timeoutID)
+        const args = arguments
+        const ctx = this
+        timeoutID = setTimeout( () => {
+          fn.apply(ctx, args)
+        }, delay)
+      }
+    },
+
+
+    /**
+     * function markAsNonComplicit: add array in nonComplicitSettings if not
+     *  present for courseId, add property to array
+     * @param courseId id of course that is non-complicit
+     * @param property property to be added
+     */
+    markAsNonComplicit(courseId, property) {
+
+      if(!this.nonComplicitSettings[courseId]) {
+        this.nonComplicitSettings[courseId] = []
+      }
+      this.nonComplicitSettings[courseId].push(property)
+      // this.complicitCourses.delete(courseId)
+
+    },
 
     /**
      * function getComplicitCourses: check user's preferences and
@@ -249,29 +288,26 @@ export default {
      *  Last Updated: October 29, 2021
      */
     getComplicitCourses() {
-      for (const course of this.filtered) {
-        this.complicitCourses.add(course.courseId)
-        const markAsNoncomplicit = (thing) => {
-          if(!this.nonComplicitSettings[course.courseId]) {
-            this.nonComplicitSettings[course.courseId] = []
-          }
-          this.nonComplicitSettings[course.courseId].push(thing)
-          this.complicitCourses.delete(course.courseId)
-        }
-        // eslint-disable-next-line
-        const props = (({enrollment, ...o}) => o) (course.properties) // filter enrollment
-        for (const thing of Object.keys(this.mediaPrefs)) { //check each user pref
-          // console.log(thing)
-          if (Object.prototype.hasOwnProperty.call(props, thing)) {
-            if (props[thing] !== this.mediaPrefs[thing]) {
-              markAsNoncomplicit(thing)
+      this.complicitCourses = new Set()
+      // check all courses for complicity with user preferences
+      for (const course of this.courseList) {
+          // eslint-disable-next-line
+          const props = (({enrollment, ...o}) => o) (course.properties) // filter enrollment, can be removed when it is reinstated
+          let complicit = true
+          for (const prop of Object.keys(this.mediaPrefs)) { //check each user pref
+            // check prop settings in course's props array
+            if (Object.prototype.hasOwnProperty.call(props, prop)) { // setting is found in props
+              if (props[prop] !== this.mediaPrefs[prop]) { // if not the same as user's pref, mark non complicit
+                complicit = false
+                this.markAsNonComplicit(course.courseId, prop)
+              }
             }
+            // else statement omitted b/c prop not present in course, no valid assessment can be made
           }
-          // } else {
-          //   if markAsNoncomplicit(thing)
-          // }
+          if (complicit) {
+            this.complicitCourses.add(course.courseId)
+          }
         }
-      }
     },
 
     /**
@@ -284,9 +320,15 @@ export default {
      *  @param {object} course corresponding course to button
      */
     decideButtonAction(course) {
+      // boolean if course is complicit w/ user settings
       const complicit = this.complicitCourses.has(course.courseId)
       this.buttonAction = // this.isEnrolled(course) ? // commented out case of enrollment
-        () =>  { this.$router.push('/courses/'+course.name+'/1') } // :
+        () =>  {
+          if (course.name !== this.course.name) {
+            this.fetchCourse(course.name)
+          }
+          this.$router.push('/courses/'+course.name+'/1')
+        } // :
         // () => { this.subscribe(course) }
       if (this.complicitReady && !complicit) {
         // console.log('not complicit, adding' +
@@ -296,25 +338,6 @@ export default {
       } else {
         // console.log('complicit, doing button action...')
         this.buttonAction()
-      }
-    },
-
-    /**
-     * function compliesWithUserPrefs(): returns true if user had set
-     *  prop in their prefs
-     *
-     *  Author: cmc
-     *
-     *  Last Updated: October 28, 2021
-     * @param {string} prop corresponding to setting in profile.prefs.media
-     * @returns {boolean} true if user has set that prop in their preferences
-     *  or it is not a user pref
-     */
-    compliesWithUserPrefs(prop) {
-      if (Object.prototype.hasOwnProperty.call(this.mediaPrefs, prop)) {
-        return this.mediaPrefs[prop]
-      } else {
-        return prop === 'enrollment'
       }
     },
 
@@ -459,7 +482,7 @@ export default {
 .indicate-icon {
   position: absolute;
   top: 3px;
-  left: 3px;
+  left: 1px;
   color: crimson;
 }
 </style>

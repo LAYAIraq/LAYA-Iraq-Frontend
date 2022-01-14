@@ -119,7 +119,7 @@ Dependencies: @/mixins/locale.vue
 </template>
 
 <script>
-import { locale } from '@/mixins'
+import { locale, watchContent } from '@/mixins'
 import { mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -128,7 +128,8 @@ export default {
   name: 'laya-feedback',
 
   mixins: [
-    locale
+    locale,
+    watchContent
   ],
 
   data () {

@@ -46,7 +46,7 @@ Dependencies:
 <script>
 import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
-import { locale } from '@/mixins'
+import { locale, watchContent } from '@/mixins'
 import { mapGetters } from 'vuex'
 import '@/styles/flaggables.css'
 
@@ -54,8 +54,8 @@ export default {
   name: 'laya-wysiwyg',
 
   mixins: [
-
-    locale
+    locale,
+    watchContent
   ],
 
   data() {

@@ -146,15 +146,15 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale } from '@/mixins'
+import { locale, watchContent } from '@/mixins'
 import '@/styles/flaggables.css'
 
 export default {
   name: 'laya-quiz-relate',
 
   mixins: [
-
-    locale
+    locale,
+    watchContent
   ],
 
   data() {

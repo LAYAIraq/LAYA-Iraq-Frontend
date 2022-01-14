@@ -17,13 +17,12 @@ export default {
      *
      * Last Updated: October 21, 2021
      */
-    fetchCourse() {
-      this.$store.dispatch('fetchCourse', this.$route.params.name)
-      .then(resp => {
-        console.log(resp)
-        this.fetchEnrollment()
-        // this.fetchFlags()
-        this.$forceUpdate()
+    fetchCourse(name) {
+      const courseName = name || this.$route.params.name // use argument if given, otherwise use router params
+      this.$store.dispatch('fetchCourse', courseName)
+      .then(() => {
+        // this.fetchEnrollment() // commented out b/c no enrollment
+        this.$store.commit('unsetCourseUpdated')
       })
       .catch(err => {
         this.$router.push('/courses')
