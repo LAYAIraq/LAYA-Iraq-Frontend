@@ -8,19 +8,33 @@
 
 import { mapGetters } from 'vuex'
 export default {
-  ...mapGetters(['content']),
-
-  created() { // watch content in vuex store
-    this.unwatch = this.$store.watch(
-      (state, getters) => getters.content,
-      () => {
-        this.fetchData() // when updated, re-do deep copying
-      },
-      { deep: true }
-    )
+  computed: {
+    ...mapGetters(['courseUpdated', 'storeBusy'])
   },
+  // watch: {
+  //   content: {
+  //     deep: true,
+  //     handler() {
+  //       console.log('content changed!')
+  //       this.fetchData()
+  //     }
+  //   }
+  // }
 
-  beforeDestroy() {
-    this.unwatch()
-  }
+  watch: {
+    courseUpdated(val) {
+      if (val) { // set to true
+        this.fetchData()
+        this.$store.commit('unsetCourseUpdated')
+      }
+    },
+    storeBusy(val) {
+      if(!val) {
+        console.log('store finished loading!!')
+      }
+    }
+  },
+  // created() {
+  //   this.$store.commit('unsetCourseUpdated')
+  // }
 }

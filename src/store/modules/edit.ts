@@ -7,6 +7,7 @@ export default {
       properties: {}
     },
     courseList: [],
+    courseUpdated: false,
     enrollment: {},
     userEnrolled: false
   },
@@ -146,8 +147,23 @@ export default {
      */
     courseStorage(state: { course: { storageId: string } }) {
       return state.course.storageId
+    },
+
+    /**
+     * Function courseUpdated: returns courseUpdated,
+     *  used to circumvent unresponsive deep content watchers
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 11, 2021
+     * @param state contains boolean courseUpdated
+     * @returns true
+     */
+    courseUpdated(state: { courseUpdated: boolean }) {
+      return state.courseUpdated
     }
-  },
+  }
+  ,
 
   mutations: {
 
@@ -369,8 +385,6 @@ export default {
      */
     setCourse(state: {course: Object}, data: object) {
       state.course = data
-      // console.log(commit)
-      // commit('')
     },
 
     /**
@@ -386,6 +400,30 @@ export default {
     setCourseList(state: { courseList: Array<Object> }, data: Array<Object>) {
       console.log(data)
       state.courseList = data
+    },
+
+    /**
+     * Function setCourseUpdated: set courseUpdated to true
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 11, 2021
+     * @param state contains boolean courseUpdated
+     */
+    setCourseUpdated(state: { courseUpdated: boolean }) {
+      state.courseUpdated = true
+    },
+
+    /**
+     * Function unsetCourseUpdated: set courseUpdated to false
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 11, 2021
+     * @param state contains boolean courseUpdated
+     */
+    unsetCourseUpdated(state: { courseUpdated: boolean }) {
+      state.courseUpdated = false
     },
 
     /**
@@ -645,14 +683,16 @@ export default {
 
     /**
      * Function fetchCourse: load course into store
+     *
      * Author: core
-     * Last Updated: unknown
+     *
+     * Last Updated: January 11, 2022
      * @param param0 state variables
      * @param name course identifier
-     * @returns Promise to load course object
+     * @returns Promise to load course object, null if already being loaded
      */
     fetchCourse ({ commit, dispatch, state, rootState}, name: String) {
-      //can you return router function? //TODO direkt hier
+      if (rootState.note.busy) return null
       return new Promise( (resolve, reject) => {
         commit('setBusy', true)
 
@@ -664,19 +704,18 @@ export default {
               .then(({ data }) => {
                 // console.log(data)
                 commit('setCourse', data)
+                commit('setCourseUpdated')
                 dispatch('getCourseFlags', state.course.courseId)
-                  .then(() => dispatch('checkCourseFlags'))
-                  .catch(err => console.error(err))
                 resolve('Course loaded')
               })
               .catch( err => {
-                /** redirect off invalid course */
                 console.error(err)
                 reject(err)
               })
           })
           .catch( err => {
-            console.log(err)
+            console.error(err)
+            reject(err)
           })
           .finally( () => commit('setBusy', false))
       })
@@ -750,6 +789,7 @@ export default {
                   break
                 case 'laya-dialog':
                   listData.properties.text = true
+                  break
               }
             })
             if (!state.courseList.some( // add to course list if not present
@@ -800,12 +840,12 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: August 17, 2021
+     * Last Updated: January 11, 2022
      *
      * @param param0 state variables
      * @returns Promise to save changes
      */
-    storeCourse({ state }) {
+    storeCourse({ commit, state }) {
       const updated = Date.now()
       const cId = state.course.courseId
       const cContent = state.course.content
@@ -822,6 +862,7 @@ export default {
             reject(err)
           })
           .finally(()  => {
+            commit('unsetCourseUpdated')
             resolve('Course updated successfully')
           })
       })

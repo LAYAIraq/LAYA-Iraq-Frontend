@@ -1,9 +1,9 @@
 <!--
-Filename: course-detail.vue 
-Use: Show Course Content 
+Filename: course-detail.vue
+Use: Show Course Content
 Creator: core
 Date: unknown
-Dependencies: 
+Dependencies:
   vuex,
   @/mixins/locale.vue,
   @/misc/utils.js,
@@ -12,7 +12,7 @@ Dependencies:
 -->
 
 <template>
-  <div v-if="!note.busy" class="course-detail-view">
+  <div v-if="!storeBusy" class="course-detail-view">
 
     <!-- course header -->
     <div class="container-fluid bg-dark">
@@ -40,7 +40,7 @@ Dependencies:
             :key="name+'-'+step"
             :is="contentToDisplay.name"
             :onFinish="nextStep(contentToDisplay.nextStep)">
-          </component> 
+          </component>
 
           <div v-else>
 <!--            <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">-->
@@ -57,14 +57,15 @@ Dependencies:
     <courseEdit
       v-if="isAuthor && content"
       :name="name" :step="step"
-      @saved="$forceUpdate"
     ></courseEdit>
 
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import {
+  mapGetters
+} from 'vuex'
 
 import utils from '@/misc/utils.js'
 import lyScrollToTop from '@/components/scroll-to-top.vue'
@@ -101,8 +102,13 @@ export default {
   },
 
   computed: {
-    ...mapState(['auth', 'note', 'edit', 'flags']),
-    ...mapGetters(['isAuthor', 'content', 'course', 'courseFlags']),
+    ...mapGetters([
+      'isAuthor',
+      'content',
+      'course',
+      'courseFlags',
+      'storeBusy'
+    ]),
 
 
     /**
@@ -172,7 +178,8 @@ export default {
     content: {
       deep: true,
       handler() {
-       this.$forceUpdate()
+        // console.log('updating...')
+        this.$nextTick(() => this.$forceUpdate)
       }
     },
 
@@ -215,9 +222,9 @@ export default {
 
     /**
      * Function getCourse: get course from backend, set title
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: October 21, 2021
      */
     getCourse() {
@@ -225,22 +232,24 @@ export default {
 
       window.scrollTo(0,0)
       document.title = `Laya - ${ctx.name}`
-      if (!this.course ||
-        this.course.name !== this.$route.params.name ||
-        Object.keys(this.course).length === 0)
+      if (
+        !this.course || // course is undefined in store
+        this.course.name !== this.$route.params.name || // course in store doesn't match the route params
+        Object.keys(this.course).length === 0 // course in store has no properties
+      )
       {
-        console.log('Fetching Course...')
+        // console.log('Fetching Course...')
         this.fetchCourse()
       }
     },
 
     /**
      * Function nextStep: map 'steps' string to components
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: October 27, 2020
-     * 
+     *
      * @param {string} steps next steps
      */
     nextStep(steps) { // string e.g. '1,2'
