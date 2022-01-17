@@ -92,65 +92,8 @@ Dependencies:
             :input-pwd-repeat="pwd2"
             :label-icons-only="true"
             :label-width="1"
-            @compliantPwd="setFinalPwd"
+            @compliantLength="setPwdCompliance"
           ></LayaPasswordInput>
-
-<!--          &lt;!&ndash; test with less depth WORKS &ndash;&gt;-->
-<!--          <password-->
-<!--            :class="langIsAr? 'reverse': ''"-->
-<!--            v-model="pwd1"-->
-<!--            :defaultClass="'form-control'"-->
-<!--            :label-hide="i18n['password.hide']"-->
-<!--            :label-show="i18n['password.show']"-->
-<!--            :secure-length="8"-->
-<!--            :toggle="!langIsAr"-->
-<!--            :badge="!langIsAr"-->
-<!--            aria-describedby="pwd-label"-->
-<!--            @feedback="pwdStrength"-->
-<!--            @score="setPwdStrength"-->
-<!--          ></password>-->
-
-          <!-- password -->
-<!--          <div class="form-group row" :class="{error: errPwds}">-->
-<!--            <div class="col-1 col-form-label">-->
-
-<!--                <i class="fas fa-key"></i>-->
-
-<!--            </div>-->
-<!--            <div class="col">-->
-<!--              <input-->
-<!--                v-model="pwd1"-->
-<!--                :placeholder="i18n['pwdPH']"-->
-<!--                :aria-label="i18n['pwdPH']"-->
-<!--                type="password"-->
-<!--                :disabled="submitOk"-->
-<!--                class="w-100"-->
-<!--                aria-describedby="pwd-err"-->
-<!--              >-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <div class="form-group row" :class="{error: errPwds}">-->
-<!--            <div class="col-1 col-form-label">-->
-<!--                <i class="fas fa-redo-alt"></i>-->
-<!--            </div>-->
-<!--            <div class="col">-->
-<!--              <input v-model="pwd2" :placeholder="i18n['pwd2PH']" :aria-label="i18n['pwd2PH']" type="password"-->
-<!--              :disabled="submitOk" class="w-100" aria-describedby="pwd-err">-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <div class="form-group row">-->
-<!--            <div class="col-1 col-form-label">-->
-<!--              <i-->
-<!--                class="fas fa-lock"-->
-<!--                :title="i18n['profile.pwdStrength']"-->
-<!--                v-b-tooltip.left-->
-<!--              ></i>-->
-<!--            </div>-->
-<!--            <div class="col-sm-9">-->
-<!--              <password class="mx-auto" id="pwdMeter" v-model="pwd2" :strength-meter-only="true" @feedback="showFeedback"></password>-->
-<!--              <strong id="testPwdMeter" class="form-text text-center"> {{ warnings }} </strong>-->
-<!--            </div>-->
-<!--          </div>-->
 
           <!-- profile pic -->
 
@@ -165,27 +108,18 @@ Dependencies:
             </ly-input-img>
           </div> -->
 
-
           <!-- submit -->
           <!-- <div style="height: 4rem"></div> -->
           <h2 :class="{'d-none': busy || submitOk}">
             <button v-if="!errForm"
-              @click="submit"
-              type="submit"
+              @click.prevent="submit"
               class="btn btn-lg btn-block btn-outline-dark"
               style="border: 2px solid black">
               {{ i18n['register.submit'] }}
               <i class="fas fa-user-plus"></i>
             </button>
           </h2>
-<!--          <div-->
-<!--            id="pwd-err"-->
-<!--            class="text-center"-->
-<!--            :class="{'d-none': !errPwds}"-->
-<!--            :aria-hidden="!errPwds"-->
-<!--            v-show="errPwds">-->
-<!--            {{ i18n['register.pwdErr'] }}-->
-<!--          </div>-->
+
           <!-- still form errors -->
           <h3 id="form-err" class="text-center" :class="{'d-none': !errForm}">
             {{ i18n['register.formErr'] }}
@@ -218,10 +152,10 @@ Dependencies:
 import http from 'axios'
 import { locale } from '@/mixins'
 import LayaPasswordInput from '@/plugins/misc/laya-password-input/password-input.vue'
-import passwordStrength from '@/mixins/passwordStrength'
+import { mapGetters } from 'vuex'
 
 export default {
-  name: 'register-view',
+  name: 'RegisterView',
 
   components: {
     LayaPasswordInput,
@@ -229,8 +163,7 @@ export default {
   },
 
   mixins: [
-    locale,
-    passwordStrength
+    locale
   ],
 
   data () {
@@ -239,28 +172,22 @@ export default {
       /* form model */
       name: '',
       email: '',
-      finalPwd: '',
       pwd1: '',
       pwd2: '',
       profileImg: null,
 
-      /* temp */
+      /* helpers for input checking */
       errmsg: '',
       busy: false,
       submitOk: false,
       nameTaken: false,
-      emailTaken: false
+      emailTaken: false,
+      sufficientPwdLength: false
     }
   },
 
   computed: {
-
-    pw() {
-      return this.pwd1
-    },
-    rpw() {
-      return this.pwd2
-    },
+    ...mapGetters(['passwordSet']),
 
     /**
      * errName: form validation for name
@@ -307,10 +234,10 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: unknown
+     * Last Updated: January 17, 2021
      */
     errForm() {
-      return this.errName || this.errEmail || this.noInput
+      return this.errName || this.errEmail || this.noInput || !this.sufficientPwdLength
     }
   },
 
@@ -320,11 +247,6 @@ export default {
   },
 
   methods: {
-    setFinalPwd(str) {
-      console.log('final pwd is: ', str)
-      this.finalPwd = str
-    },
-
 
     /**
      * function focusImgInput: focus #image-input html element
@@ -376,6 +298,18 @@ export default {
     },
 
     /**
+     * function setPwdCompliance: set sufficientPwdLength to bool
+     *
+     * Author cmc
+     *
+     * Last Updated: January 17, 2021
+     * @param bool if password matches required length
+     */
+    setPwdCompliance(bool) {
+      this.sufficientPwdLength = bool
+    },
+
+    /**
      * Function submit: collect requests for changes, then shoot them
      *
      * Author: core
@@ -388,7 +322,7 @@ export default {
         return
       }
 
-      console.log('Submitting...')
+      // console.log('Submitting...')
       this.busy = true
       let ctx = this
 
@@ -399,18 +333,18 @@ export default {
         http.post(`accounts/student`, {
           email: ctx.email,
           username: ctx.name,
-          password: ctx.pwd1,
+          password: ctx.passwordSet,
           // avatar: avatarFileName,
           lang: ctx.$store.state.profile.lang
         })
-        .then(() => {
+          .then(() => {
             ctx.submitOk = true
           })
-        .catch( (err) => {
-            console.log(err)
+          .catch((err) => {
+            console.error(err)
             ctx.errmsg = this.i18n['register.fail']
           })
-        .finally( () => {
+          .finally(() => {
             ctx.busy = false
           })
       // ]

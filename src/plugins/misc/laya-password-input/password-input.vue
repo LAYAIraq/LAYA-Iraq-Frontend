@@ -22,7 +22,7 @@
       <div class="col">
         <password
           :class="langIsAr? 'reverse': ''"
-          v-model="inputPwd"
+          v-model="pwdSet"
           :defaultClass="'form-control'"
           :label-hide="i18n['password.hide']"
           :label-show="i18n['password.show']"
@@ -67,7 +67,7 @@
           id="repeatPwd"
           type="password"
           class="form-control w-100"
-          v-model="inputPwdRepeat"
+          v-model="pwdRepeat"
           :placeholder="i18n['pwd2PH']"
           aria-describedby="repeat-label"
         >
@@ -112,24 +112,13 @@
         </strong>
       </div>
     </div>
-
-<!--    <password-->
-<!--      id="pwdMeter-2"-->
-<!--      v-model="pwd"-->
-<!--      :strength-meter-only="true"-->
-<!--      :secure-length="Number(8)"-->
-<!--      @feedback="pwdStrength"-->
-<!--      @score="setPwdStrength"-->
-<!--    ></password>-->
-<!--    <strong class="form-text text-center">-->
-<!--      {{ wordedPwdStrength }}-->
-<!--    </strong>-->
   </div>
 </template>
 
 <script>
 import Password from 'vue-password-strength-meter'
 import { locale } from '@/mixins'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'LayaPasswordInput',
@@ -140,38 +129,49 @@ export default {
     locale
   ],
   props: {
-    /* input passwords to calculate strength */
-    inputPwd: String,
-    inputPwdRepeat: String,
+    /* input password */
+    inputPwd: {
+      type: String,
+      default() {
+        return ''
+      }
+    },
+    /* repeat input password */
+    inputPwdRepeat: {
+      type: String,
+      default() {
+        return ''
+      }
+    },
     /* boolean for label output */
     labelIconsOnly: {
       type: Boolean,
-      default: false
+      default() { return false }
     },
     /* width of labeling, uses bootstrap col widths */
     labelWidth: {
       type: Number,
-      default: 3
+      default() { return 3 }
     },
     /* boolean if it's a new password */
     newInput: {
       type: Boolean,
-      default: false
+      default() { return false }
     },
     /* secure pwd length, shows indicator if input is below */
     secureLength: {
       type: Number,
-      default: 8
+      default() { return 8 }
     },
     /* boolean for showing verbal output */
     showWordedStrength: {
       type: Boolean,
-      default: true
+      default() { return true }
     },
     /* boolean for showing suggestions to improve password */
     showPasswordSuggestions: {
       type: Boolean,
-      default: true
+      default() { return true }
     }
 
   },
@@ -193,6 +193,7 @@ export default {
   },
 
   computed: {
+    ...mapGetters(['passwordRepeat', 'passwordSet']),
 
     /**
      * pwdDiffMsg: returns a message if passwords differ
@@ -201,12 +202,54 @@ export default {
      *
      * Last Updated: March 24, 2021
      */
-    pwdDiffMsg() {
+    pwdDiffMsg () {
       return !this.pwdMatch? this.i18n['profile.pwdDiffer'] : ''
     },
 
-    pwdMatch() {
-      return this.inputPwd === this.inputPwdRepeat
+    /**
+     * pwdMatch: returns true if passwords are identical
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 17, 2021
+     * @returns {boolean} true if passwords match
+     */
+    pwdMatch () {
+      return this.pwdSet === this.pwdRepeat
+    },
+
+    /**
+     * pwdRepeat: get and set store property passwordRepeat
+     *  this is used b/c of unusual behavior when using props
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: January 17, 2021
+     */
+    pwdRepeat: {
+      get () {
+        return this.passwordRepeat
+      },
+      set (input) {
+        this.$store.commit('setPwdRepeat', input)
+      }
+    },
+
+    /**
+     * pwdSet: get and set store property passwordSet
+     *  this is used b/c of unusual behavior when using props
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: January 17, 2021
+     */
+    pwdSet: {
+      get () {
+        return this.passwordSet
+      },
+      set (input) {
+        this.$store.commit('setPwd', input)
+      }
     },
 
     /**
@@ -220,12 +263,12 @@ export default {
      */
     showSuggestions() {
       return (
-        this.warnings !== '' ||
-        this.pwdDiffMsg !== '' ||
-        this.pwdMsg !== '') &&
+          this.warnings !== '' ||
+          this.pwdDiffMsg !== '' ||
+          this.pwdMsg !== '') &&
         (this.warnings !== this.pwdDiffMsg)
-
     },
+
     /**
      * wordedPwdStrength(): word pwd strength for linguistic support
      *
@@ -244,7 +287,7 @@ export default {
   watch: {
     pwdMatch(val) {
       if (val) {
-        this.$emit('compliantPwd', this.inputPwd)
+        this.$emit('compliantLength', this.pwdSet.length >= this.secureLength)
       }
     }
   },
