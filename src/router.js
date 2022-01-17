@@ -114,6 +114,11 @@ export default new Router({
       component: views.verify
     },
     {
+      path: '/reset-password',
+      name: 'ResetPassword',
+      component: views.pwdReset
+    },
+    {
       path: '/:catchAll(.*)',
       component: views.notFound,
       name: 'not-found'

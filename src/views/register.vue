@@ -151,7 +151,7 @@ Dependencies:
 <script>
 import http from 'axios'
 import { locale } from '@/mixins'
-import LayaPasswordInput from '@/plugins/misc/laya-password-input/password-input.vue'
+import LayaPasswordInput from '@/components/password-input.vue'
 import { mapGetters } from 'vuex'
 
 export default {

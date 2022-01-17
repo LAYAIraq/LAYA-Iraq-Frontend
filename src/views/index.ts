@@ -21,6 +21,9 @@ export { default as flag } from './flag.vue'
 export { default as notFound } from './not-found.vue'
 export { default as notifications } from './notifications.vue'
 export { default as profile } from './profile.vue'
+
+// views for verification links
+export { default as pwdReset } from './pwd-reset.vue'
 export { default as verify } from './verify.vue'
 
 // views for teachers
