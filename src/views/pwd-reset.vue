@@ -27,7 +27,7 @@
           type="submit"
           variant="info"
           :disabled="!pwdCompliant"
-          @click.prevent="resetAndVerify"
+          @click.prevent="resetPassword"
         >
           <i
             v-if="busy"
@@ -39,7 +39,7 @@
     </div>
     <!-- redirect message after successful change request -->
     <div v-else>
-      Changing successful! Redirecting to Login...
+      {{ i18n['password.redirectMsg'] }}
     </div>
 
   </div>
@@ -65,8 +65,7 @@ export default {
       resetSuccess: false,
       pwd: '',
       pwdCompliant: false,
-      pwdRepeat: '',
-      toastMessage: ''
+      pwdRepeat: ''
     }
   },
 
@@ -75,79 +74,103 @@ export default {
   },
 
   watch: {
+    /**
+     * watcher resetSuccess: push route to login when it turns true
+     *
+     * Author cmc
+     *
+     * Last Updated: January 18, 2022
+     * @param val boolean
+     */
     resetSuccess(val) {
       if (val) { // val is boolean
-          this.$router.push('/login')
+        // this.$router.push('/login')
       }
     }
   },
 
   created () {
-    if (Object.keys(this.$route.query).length === 0) {
-      console.log('no params!')
-    } else {
-      console.log(this.$route.query)
-    }
     this.removeAuthenticated()
   },
 
   methods: {
 
-    setCompliance (bool) {
-      this.pwdCompliant = bool
-    },
-
-    showToast (type) { // FIXME: doesn't work yet
-      this.$bvToast.toast(this.toastMessage, {
-        title: String.capitalize(type),
-        toaster: 'b-toaster-bottom-center',
-        variant: type
-      })
-    },
-
+    /**
+     * function removeAuthenticated: remove auth if other user than
+     *  the one coming to this view is logged on
+     *
+     * Author cmc
+     *
+     * Last Updated: January 18, 2022
+     */
     removeAuthenticated () {
       const auth = this.$ls.get('auth')
-      if (auth && auth.userId !== this.$route.query.uid) {
-        // console.log('user in query is not the one that is logged on!')
+      if (auth && auth.userId !== this.$route.query.uid) { // someone is logged on, not matching uid
         this.$ls.remove('auth')
         this.$store.commit('logout')
       }
     },
 
-    resetAndVerify () {
+    /**
+     * function resetPassword: fire set-pwd request that validates
+     *  the token and sets the new password
+     *
+     * Author cmc
+     *
+     * Last Updated: January 18, 2022
+     */
+    resetPassword () {
       this.busy = true
+      http.post('/accounts/set-pwd/', {
+        userId: this.$route.query.uid,
+        verificationToken: this.$route.query.token,
+        password: this.passwordSet
+      })
+      .then(() => {
+        this.showToast('success')
+        this.resetSuccess = true
+        this.$store.commit('setPwd', '')
+      })
+      .catch((err) => {
+        console.error(err)
+        this.showToast('error')
+      })
+      .finally(() => {
+        this.busy = false
+      })
+    },
 
-      // http.get(`/accounts/confirm?uid=${this.$route.query.uid}&token=${this.$route.query.token}`)
-      //   .then(() => { // it's really a verified token thus allowed to set password
-          http.post('/accounts/set-pwd/', {
-            userId: this.$route.query.uid,
-            verificationToken: this.$route.query.token,
-            password: this.passwordSet
-          })
-          .then(() => {
-            this.toastMessage('Password successfully changed!')
-            this.showToast('success')
-            this.resetSuccess = true
-            this.$store.commit('setPwd', '')
-          })
-          .catch((err) => {
-            this.toastMessage = err
-            this.showToast('error')
-          })
-        // })
-        // .catch(err => {
-        //   this.errorMessage = err
-        //   this.showFailToast()
-        // })
-        .finally(() => {
-          this.busy = false
-        })
+    /**
+     * function setCompliance: set pwdCompliant to given value
+     *
+     * Author cmc
+     *
+     * Last Updated: January 18, 2022
+     * @param bool boolean for password compliant to security requirements
+     */
+    setCompliance (bool) {
+      this.pwdCompliant = bool
+    },
+
+    /**
+     * function showToast: show a toast in root instance depending on type,
+     *  is used for bootstrap variant and message
+     *
+     * Author cmc
+     *
+     * Last Updated: January 18, 2022
+     * @param type {'error', 'success'}
+     */
+    showToast (type) {
+      this.$root.$bvToast.toast(this.i18n[`password.${type}Msg`], {
+        title: this.i18n[`password.${type}`],
+        toaster: 'b-toaster-bottom-center',
+        variant: type === 'success'? type : 'danger'
+      })
     }
   }
-
 }
 </script>
-
 <style scoped>
 
 </style>
