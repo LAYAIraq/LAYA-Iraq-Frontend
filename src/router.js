@@ -125,3 +125,13 @@ export default new Router({
     }
   ]
 })
+
+export const publicRoutes =
+ [
+  '/',
+  '/login',
+  '/register',
+  '/imprint',
+  '/privacy',
+  '/reset-password'
+ ]
