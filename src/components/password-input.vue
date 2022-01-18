@@ -1,5 +1,5 @@
 <template>
-  <div class="laya-pwd-input">
+  <div class="laya-pwd-input pwd-row">
     <!-- Password -->
     <div class="form-group">
       <span
@@ -21,6 +21,7 @@
       </span>
       <div class="col">
         <password
+          class="pwd-row"
           :class="langIsAr? 'reverse': ''"
           v-model="pwdSet"
           :defaultClass="'form-control'"
@@ -48,7 +49,7 @@
       <label
         id="repeat-label"
         for="repeatPwd"
-        :class="`col-sm-${labelWidth}`"
+        :class="`col-${labelWidth}`"
         class="col-form-label"
       >
         <span v-if="labelIconsOnly">
@@ -66,7 +67,7 @@
         <input
           id="repeatPwd"
           type="password"
-          class="form-control w-100"
+          class="form-control pwd-row"
           v-model="pwdRepeat"
           :placeholder="i18n['pwd2PH']"
           aria-describedby="repeat-label"
@@ -76,7 +77,7 @@
 
     <!-- password suggestions -->
     <div
-      v-if="showSuggestions"
+      v-if="showPasswordSuggestions && warnings.length !== 0"
       class="form-group"
     >
       <div
@@ -95,20 +96,52 @@
         </span>
       </div>
       <div
-        class="col"
-        id="pwd-suggestions"
+        class="col pwd-row"
+        id="suggestions"
       >
         <strong
-          id="testPwdMeter"
+          id="pwd-suggestions"
           class="form-text text-center">
           {{ warnings }}
         </strong>
+      </div>
+    </div>
 
+    <!-- error messages -->
+    <div
+      class="form-group"
+      v-if="!pwdSecureLength || !pwdMatch"
+    >
+      <div
+        :class="`col-${labelWidth}`"
+        class="col-form-label d-inline-block"
+      >
+        <span v-if="labelIconsOnly">
+           <i
+             class="fas fa-exclamation-triangle"
+             :title="i18n['password.error']"
+             v-b-tooltip.auto
+           ></i>
+        </span>
+        <span v-else>
+          {{ i18n['password.error'] }}
+        </span>
+      </div>
+      <div
+        class="col pwd-row"
+        id="errors"
+      >
         <strong
-          id="pwdDiffMsg"
+          id="pwd-diff-msg"
           class="form-text text-center"
         >
           {{ pwdDiffMsg }}
+        </strong>
+        <strong
+          id="pwd-not-secure"
+          class="form-text text-center"
+        >
+          {{ pwdSecureLengthNotReachedMsg }}
         </strong>
       </div>
     </div>
@@ -196,6 +229,18 @@ export default {
     ...mapGetters(['passwordRepeat', 'passwordSet']),
 
     /**
+     * inputWidth: returns number for matching label in bootstrap
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 18, 2021
+     * @returns {number} 12 - labelWidth
+     */
+    inputWidth() {
+      return 12 - this.labelWidth
+    },
+
+    /**
      * pwdDiffMsg: returns a message if passwords differ
      *
      * Author: cmc
@@ -233,6 +278,32 @@ export default {
       set (input) {
         this.$store.commit('setPwdRepeat', input)
       }
+    },
+
+    /**
+     * pwdSecureLength: return true if password exceeds minimum length
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 18, 2022
+     * @returns {boolean} true if password if sufficiently long
+     */
+    pwdSecureLength() {
+      return this.pwdSet.length >= this.secureLength
+    },
+
+    /**
+     * pwdSecureLengthNotReachedMsg: return message if password is not long enough
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 18, 2022
+     * @returns {string} message that pwd is not long enough
+     */
+    pwdSecureLengthNotReachedMsg() {
+      return !this.pwdSecureLength
+        ? this.i18n['password.secureLengthNotReached']
+        : ''
     },
 
     /**
@@ -287,7 +358,7 @@ export default {
   watch: {
     pwdMatch(val) {
       if (val) {
-        this.$emit('compliantLength', this.pwdSet.length >= this.secureLength)
+        this.$emit('compliantLength', this.pwdSecureLength)
       }
     }
   },
@@ -303,7 +374,7 @@ export default {
      * @param warning
      */
     pwdStrength ({ suggestions, warning }) {
-      if (this.repeatPwd !== '') {
+      if (this.repeatPwd !== '') { // start checking when user repeated password
         let k, j// check for different language
         for (j = 0; j < this.possibleWarnings.length; j++) {
           if (warning === this.possibleWarnings[j]) {
@@ -321,8 +392,7 @@ export default {
         if (warning.length !== 0) {
           warning = warning.concat('. ') // fix punctuation
         }
-        let i
-        for (i = 0; i < suggestions.length; i++) {
+        for (let i = 0; i < suggestions.length; i++) {
           warning = warning.concat(' ' + suggestions[i])
           if (warning[warning.length - 1] !== '.') {
             warning = warning.concat('.') // fix punctuation
@@ -358,5 +428,9 @@ export default {
 
 .reverse > * > * {
   right: 85% !important;
+}
+
+.laya-pwd-input {
+  width: 450px;
 }
 </style>
