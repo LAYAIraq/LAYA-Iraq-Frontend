@@ -15,7 +15,7 @@ import Router from 'vue-router';
 import * as views from './views';
 Vue.use(Router);
 export default new Router({
-  mode: 'history',
+  mode: 'hash',
   base: '/',
   routes: [
     /* {
