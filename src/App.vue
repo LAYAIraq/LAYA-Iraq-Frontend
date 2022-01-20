@@ -102,7 +102,7 @@ export default {
       // ]
 
       /* target url is public */
-      if (publicRoutes.includes(location.pathname)) {
+      if (publicRoutes.includes(location.hash)) {
         return
       } else if (this.$route.path !== '/login') {
         this.$router.push('/login')

@@ -157,7 +157,6 @@ Dependencies:
                 {{ wordedPwdStrength }}
               </strong>
             </div>
-            <password v-model="newPwd"></password>
           </div>
 
           <!-- password suggestions -->
@@ -309,7 +308,7 @@ Dependencies:
           <div class="form-group">
             <button
               type="submit"
-              @click="submit"
+              @click.prevent="submit"
               :disabled="busy"
               class="btn btn-block btn-lg btn-outline-dark"
               style="border-width: 2px"

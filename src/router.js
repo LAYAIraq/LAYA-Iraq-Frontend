@@ -15,7 +15,7 @@ import Router from 'vue-router';
 import * as views from './views';
 Vue.use(Router);
 export default new Router({
-  mode: 'history',
+  mode: 'hash',
   base: '/',
   routes: [
     /* {
@@ -129,9 +129,10 @@ export default new Router({
 export const publicRoutes =
  [
   '/',
-  '/login',
-  '/register',
-  '/imprint',
-  '/privacy',
-  '/reset-password'
+  '#/login',
+  '#/register',
+  '#/imprint',
+  '#/privacy',
+  '#/reset-password',
+  '#/verify'
  ]
