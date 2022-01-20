@@ -3,12 +3,12 @@ Filename: create.vue
 Use: Creating a new Drag & Drop content block
 Creator: core
 Date: unknown
-Dependencies: @/mixins/locale.vue 
+Dependencies: @/mixins/locale.vue
 -->
 
 <template>
-  <div 
-    class="laya-la-drag-drop-new" 
+  <div
+    class="laya-la-drag-drop-new"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div class="d-flex">
@@ -81,13 +81,11 @@ Dependencies: @/mixins/locale.vue
 
       <!-- task -->
       <div class="form-group row">
-        <!--suppress XmlInvalidId -->
-        <label
-          for="drag-drop-task"
+        <span
           class="col-2 col-form-label"
         >
           {{ i18n['task'] }}
-        </label>
+        </span>
         <div class="col-10">
           <textarea
             id="drag-drop-task"
@@ -103,15 +101,11 @@ Dependencies: @/mixins/locale.vue
         class="form-group row"
         v-if="courseSimple"
       >
-        <!--suppress XmlInvalidId -->
-        <label
-          for="drag-drop-task-simple"
-          class="col-2 col-form-label"
+        <span
+          class="col-2 col-form-labelsr-only"
         >
-          <span class="sr-only">
             {{ i18n['simpleAlt'] }}
-          </span>
-        </label>
+        </span>
         <div class="col-10">
           <textarea
             id="drag-drop-task-simple"
@@ -356,9 +350,9 @@ export default {
   methods: {
     /**
      * Function fillFormSamples: fill form with example names in locale
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 12, 2021
      */
     fillFormSamples() {
@@ -399,11 +393,11 @@ export default {
 
     /**
      * Function _delItem: remove item at position idx
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param {*} idx index at which to remove
      */
     _delItem(idx) {
@@ -422,11 +416,11 @@ export default {
 
     /**
      * Function _delCategory: delete category at position idx
-     * 
+     *
      * Author: core
      *
      * Last Updated: unknown
-     * 
+     *
      * @param {*} idx index at which to remove the category
      */
     _delCategory(idx) {
@@ -434,14 +428,14 @@ export default {
     },
     /**
      * Function _addCategory: Add new category to categories
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      */
     _addCategory() {
-      this.categories.push('')
+      this.categories.push({})
     }
   }
 }
