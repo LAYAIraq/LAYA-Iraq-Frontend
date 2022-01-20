@@ -240,7 +240,7 @@ export default {
      */
     checkCourseFlags({commit, rootState, state}) {
       // console.log('We are checking Course Flags!')
-      const course = rootState.edit.course
+      const content = rootState.edit.course.content
       const flags = state.courseFlags
       // console.log(course)
       // console.log(flags)
@@ -264,7 +264,8 @@ export default {
         }
       }
       // console.log(course.content)
-      for (const step of course.content) {
+      for (const step of content) {
+        // console.log(step)
         const iterInput = Object.values(step.input)
         // console.log(`iterInput: ${iterInput}`)
         for (const elem of iterInput) {

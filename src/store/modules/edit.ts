@@ -318,7 +318,7 @@ export default {
       //     return false
       //   }
       // }
-      // console.log(`we change ${elem.id}`)
+      // console.log('trying to flag: ', elem.id, ', flagged status: ', elem.flagged )
       elem.flagged = true
       // console.log(state.course.content)
       // for (const el of state.course.content) {

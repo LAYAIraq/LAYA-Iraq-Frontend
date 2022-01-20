@@ -188,13 +188,11 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: October 22, 2021
+     * Last Updated: January 20, 2022
      */
-    courseFlags: {
-      handler() {
-        this.$forceUpdate()
-      },
-      deep: true
+    courseFlags () {
+      // console.log(val)
+      this.$store.dispatch('checkCourseFlags')
     }
   },
 
