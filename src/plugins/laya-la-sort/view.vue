@@ -64,20 +64,21 @@ Dependencies: @/mixins/locale.vue
 </template>
 
 <script>
-import { locale } from '@/mixins'
+import { locale, watchContent } from '@/mixins'
 
 export default {
   name: 'laya-quiz-sort',
 
   mixins: [
-    locale
+    locale,
+    watchContent
   ],
 
   data () {
     return {
       unsorted: [], // the shuffled options from this.sorted
       solution: [], // the solution of the user
-      result: [], // list of booleans 
+      result: [], // list of booleans
     }
   },
 
@@ -89,16 +90,16 @@ export default {
   created () {
     this.unsorted = this.shuffle([...this.sorted])
   },
-  
+
   methods: {
 
     /**
      * Function moveToSorted: remove an item from unsorted and push to solutions
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: March 19, 2021
-     * 
+     *
      * @param {*} i index of item
      */
     moveToSorted(i) {
@@ -107,11 +108,11 @@ export default {
 
     /**
      * Function moveToUnsorted: remove an item from solution and push to unsorted
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: March 19, 2021
-     * 
+     *
      * @param {*} i index of item
      */
     moveToUnsorted(i) {
@@ -120,9 +121,9 @@ export default {
 
     /**
      * Function check: check if the solution order is correct
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: March 19, 2021
      */
     check() {
@@ -134,11 +135,11 @@ export default {
 
     /**
      * Function shuffle: shuffle any array
-     * 
+     *
      * Creator: core
-     * 
+     *
      * Last Updated: May 6, 2021
-     * 
+     *
      * @param {Array} arr array to be shuffled
      */
     shuffle(arr) {
