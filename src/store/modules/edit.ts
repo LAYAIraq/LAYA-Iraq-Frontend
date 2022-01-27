@@ -19,10 +19,16 @@ export default {
      *
      * Author: pj
      *
+     * Last Updated: January 27, 2022
      * @param state contains feedback array
      * @returns feedback array
      */
-    getEnrollmentFeedback(state: { enrollment: {feedback: Array<Object> } } ) {
+    getEnrollmentFeedback(
+      state: {
+        enrollment: {
+          feedback: Array<object>
+        }
+      } ) {
       return state.enrollment.feedback
     },
 
@@ -36,7 +42,7 @@ export default {
      * @param state contains userEnrolled boolean
      * @returns true if user is enrolled
      */
-    isUserEnrolled (state: { userEnrolled: boolean}) {
+    isUserEnrolled (state: { userEnrolled: boolean }) {
       return state.userEnrolled
     },
 
@@ -45,24 +51,28 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: March 24, 2021
+     * Last Updated: January 27, 2022
      *
-     * @param state contains course Object
+     * @param state contains course object
      * @returns content Array
      */
-    content(state: { course: { content: Array<object> } } ) {
+    content(state: {
+      course: {
+        content: Array<object>
+      }
+    } ) {
       return state.course.content
     },
 
     /**
-     * Function course: returns course Object
+     * Function course: returns course object
      *
      * Author: cmc
      *
      * Last Updated: March 24, 2021
      *
-     * @param state contains course Object
-     * @returns course Object
+     * @param state contains course object
+     * @returns course object
      */
     course(state: { course: object } ) {
       return state.course
@@ -73,12 +83,16 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: August 24, 2021
+     * Last Updated: January 27, 2022
      *
      * @param state course object
      * @returns userId of course creator
      */
-    courseCreator(state: { course: { authorId: number } }) {
+    courseCreator(state: {
+      course: {
+        authorId: number
+      }
+    }) {
       return state.course.authorId
     },
 
@@ -87,22 +101,30 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: March 24, 2021
+     * Last Updated: January 27, 2022
      *
      * @param state contains course object
      * @returns array of course files
      */
-    courseFiles(state: { course: { files: Array<Object> } }) {
+    courseFiles(state: {
+      course: {
+        files: Array<object>
+      }
+    } ) {
       return state.course.files
     },
 
     /**
      * Function courseId: returns the courseId string
      * Author: cmc
-     * Last Updated: August 9, 2021
+     * Last Updated: January 27, 2022
      * @param state
      */
-    courseId( state: { course: { courseId: string } }) {
+    courseId(state: {
+      course: {
+        courseId: string
+      }
+    }) {
       return state.course.courseId
     },
 
@@ -111,12 +133,12 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: March 24, 2021
+     * Last Updated: January 27, 2022
      *
      * @param state contains courseList
      * @returns array of courses
      */
-    courseList(state: { courseList: Array<Object>}) {
+    courseList(state: { courseList: Array<Object> }) {
       return state.courseList
     },
 
@@ -129,8 +151,12 @@ export default {
      *  Last Updated: October 29, 2021
      * @param state contains course
      */
-    courseSimple(state: { course:
-      { properties: { simpleLanguage: boolean} }
+    courseSimple(state: {
+      course: {
+        properties: {
+          simpleLanguage: boolean
+        }
+      }
     }) {
       return state.course.properties.simpleLanguage
     },
@@ -140,12 +166,16 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: March 24, 2021
+     * Last Updated: January 27, 2022
      *
      * @param state contains course object
      * @returns course storage id
      */
-    courseStorage(state: { course: { storageId: string } }) {
+    courseStorage(state: {
+      course: {
+        storageId: string
+      }
+    }) {
       return state.course.storageId
     },
 
@@ -172,37 +202,41 @@ export default {
      *
      * Author: pj
      *
-     * Last Updated: September 10, 2021
+     * Last Updated: January 27, 2022
      *
      * @param state contains feedback
-     * @param data contains data to be stored in feedback
+     * @param feedbackData contains feedbackData to be stored in feedback
      */
     appendFeedback (
-      state: { enrollment: { feedback: Array<Object> } },
-      data: {
+      state: {
+        enrollment: {
+          feedback: Array<object>
+        }
+      },
+      feedbackData: {
         step: any,
         created: number,
         choice: String,
         freetext: String,
         id: number,
         numberOfFeedbacksEntries: number,
-        //options: Object
+        //options: object
         options: {
           questions: String,
           answers: String
         }
       }
     ) {
-      if (data.numberOfFeedbacksEntries+1 > state.enrollment.feedback.length){
-        for (let i = state.enrollment.feedback.length; i < data.numberOfFeedbacksEntries+1; i++){
+      if (feedbackData.numberOfFeedbacksEntries+1 > state.enrollment.feedback.length){
+        for (let i = state.enrollment.feedback.length; i < feedbackData.numberOfFeedbacksEntries+1; i++){
           state.enrollment.feedback.push(null)
         }
       }
       if (state.enrollment.feedback.length !== 0) {
-        state.enrollment.feedback[data.numberOfFeedbacksEntries] = data
+        state.enrollment.feedback[feedbackData.numberOfFeedbacksEntries] = feedbackData
       }
       else {
-        state.enrollment.feedback.push(data)
+        state.enrollment.feedback.push(feedbackData)
       }
     },
 
@@ -211,16 +245,23 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: unknown
+     * Last Updated: January 27, 2022
      *
      * @param state contains course containing content array
-     * @param data content to add
+     * @param contentToAdd content to add
      */
     appendContent (
-      state: { course: { content: Array<Object> } },
-      data:{ name: string, nextStep: any, input: Object}
-    ) {
-      state.course.content.push(data)
+      state: {
+        course: {
+          content: Array<object>
+        }
+      },
+      contentToAdd:{
+        name: string,
+        nextStep: any,
+        input: object
+      } ) {
+      state.course.content.push(contentToAdd)
     },
 
     /**
@@ -229,15 +270,16 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: March 24, 2021
+     * Last Updated: January 27, 2022
      *
      * @param state contains courseList array
-     * @param data course objecte to be added to list
+     * @param courseListItem course object to be added to list
      */
     appendToCourseList(
-      state: { courseList: Array<Object> },
-      data: Object ) {
-      state.courseList.push(data)
+      state: { courseList: Array<object> },
+      courseListItem: object
+    ) {
+      state.courseList.push(courseListItem)
     },
 
     /**
@@ -245,12 +287,16 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: October 26, 2021
+     * Last Updated: January 27, 2022
      * @param state contains course.properties object
      * @param properties new properties
      */
     changeCourseProperties(
-      state: { course: { properties: object } },
+      state: {
+        course: {
+          properties: object
+        }
+      },
       properties: object
     ) {
       state.course.properties = {
@@ -264,14 +310,19 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: unknown
+     * Last Updated: January 27, 2022
      *
      * @param state contains course object
      * @param step index of content to remove
      */
-    delContent( state: {
-      course: { content: object[] }
-      }, step: number ) {
+    delContent(
+      state: {
+        course: {
+          content: Array<object>
+        }
+      },
+      step: number
+    ) {
       state.course.content.splice(step, 1)
     },
 
@@ -280,12 +331,21 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: April 9, 2021
+     * Last Updated: January 27, 2022
      *
      * @param state contains course file list
      * @param file file object to remove
      */
-    delFile(state: { course: { files: object[] } }, file: { name: string, container: string } ) {
+    delFile(
+      state: {
+        course: {
+          files: Array<object>
+        }
+      },
+      file: {
+        name: string,
+        container: string
+      } ) {
       const idx = state.course.files.indexOf(file)
       // console.log(`${file.name} hat Stelle ${idx}`)
       state.course.files.splice(idx, 1)
@@ -300,17 +360,23 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: August 17, 2021
+     * Last Updated: January 27, 2022
      * @param state state variables
      * @param elem the flaggable element to be mutated
      */
     flagFlaggableElement(
-      state: { course: { content: Array<object> } },
-      elem: { id: string, flagged: boolean }
-    ) {
+      state: {
+        course: {
+          content: Array<object>
+        }
+      },
+      elem: {
+        id: string,
+        flagged: boolean
+      } ) {
       // const checkAndFlag = (o: any) => {
       //   console.log(`we flag ${o}`)
-      //   if (Object.prototype.hasOwnProperty.call(o, 'flagged')) {
+      //   if (object.prototype.hasOwnProperty.call(o, 'flagged')) {
       //     o.flagged = true
       //     console.log('successs!!!')
       //     return true
@@ -322,7 +388,7 @@ export default {
       elem.flagged = true
       // console.log(state.course.content)
       // for (const el of state.course.content) {
-      //   const vals = Object.values(el.input)
+      //   const vals = object.values(el.input)
       //   for (const c of vals) {
       //     console.log(c)
       //     if (typeof(c) === 'object') {
@@ -350,12 +416,19 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: unknown
+     * Last Updated: January 27, 2022
      *
      * @param state contains course
      * @param newName string for new name
      */
-    renameCourse( state: {course: {name: string}}, newName: string) {
+    renameCourse(
+      state: {
+        course: {
+          name: string
+        }
+      },
+      newName: string
+    ) {
       state.course.name = newName
     },
 
@@ -364,13 +437,19 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: unknown
+     * Last Updated: January 27, 2022
      *
      * @param state contains enrollment, userEnrolled
-     * @param data enrollment object
+     * @param enrollmentData enrollment object
      */
-    setEnrollment(state: {enrollment: object, userEnrolled: boolean }, data: object) {
-      state.enrollment = data
+    setEnrollment(
+      state: {
+        enrollment: object,
+        userEnrolled: boolean
+      },
+      enrollmentData: object
+    ) {
+      state.enrollment = enrollmentData
       state.userEnrolled = true
     },
 
@@ -379,12 +458,17 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: unknown
+     * Last Updated: January 27, 2022
      * @param state contains course
-     * @param data course object
+     * @param courseData course object
      */
-    setCourse(state: {course: Object}, data: object) {
-      state.course = data
+    setCourse(
+      state: {
+        course: object
+      },
+      courseData: object
+    ) {
+      state.course = courseData
     },
 
     /**
@@ -392,14 +476,18 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: March 24, 2021
+     * Last Updated: January 27, 2022
      *
      * @param state contains courseList array
-     * @param data array of course objects
+     * @param courseList array of course objects
      */
-    setCourseList(state: { courseList: Array<Object> }, data: Array<Object>) {
-      console.log(data)
-      state.courseList = data
+    setCourseList(
+      state: {
+        courseList: Array<object>
+      },
+      courseList: Array<object>
+    ) {
+      state.courseList = courseList
     },
 
     /**
@@ -431,17 +519,24 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: August 17, 2021
+     * Last Updated: January 27, 2022
      *
      * @param state contains course object
-     * @param data array of files
+     * @param courseFiles array of files
      */
-    updateCourseFiles(state: { course: { files: Array<Object> } }, data: Array<Object>) {
+    updateCourseFiles(
+      state: {
+        course: {
+          files: Array<object>
+        }
+      },
+      courseFiles: Array<object>
+    ) {
       // console.log('Start updating Course Files in Store')
       const ids = new Set(state.course.files.map((d: {name: string}) => d.name))
       state.course.files = [
         ...state.course.files,
-        ...data.filter((d: {name: string}) => !ids.has(d.name))
+        ...courseFiles.filter((d: {name: string}) => !ids.has(d.name))
       ] // add new files to state.course.files
     },
 
@@ -450,13 +545,20 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: unknown
+     * Last Updated: January 27, 2022
      *
      * @param state contains course, content
-     * @param data new content array
+     * @param courseData new content array
      */
-    updateCourseNav( state: {course: {content: Array<object>}}, data: Array<object>) {
-      state.course.content = data
+    updateCourseNav(
+      state: {
+        course: {
+          content: Array<object>
+        }
+      },
+      courseData: Array<object>
+    ) {
+      state.course.content = courseData
     },
 
     /**
@@ -464,102 +566,64 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: August 17, 2021
+     * Last Updated: January 27, 2022
      * @param state contains course, content
-     * @param data contains step index, new content object
+     * @param stepData contains step index, new content object
      */
-    updateStep( state: { course: { content: Array<object> } } ,
-                data: { step: number, updatedStep: object } ) {
+    updateStep(
+      state: {
+        course: {
+          content: Array<object>
+        }
+      },
+      stepData: {
+        step: number,
+        updatedStep: object
+      } ) {
       // console.log(data.step)
       // console.log(data.updatedStep)
-      state.course.content[data.step] = {
-        ...state.course.content[data.step],
-        ...data.updatedStep
+      state.course.content[stepData.step] = {
+        ...state.course.content[stepData.step],
+        ...stepData.updatedStep
       }
     }
 
   },
 
   actions: {
-
-    /**
-     * Function deleteCourse: delete Course, remove all files
-     *   and storage
-     *
-     * Author: cmc
-     *
-     * Last Changed: April 9, 2021
-     *
-     * @param param0 state variables
-     */
-    deleteCourse({ state }) {
-      const cid = state.course.courseId
-      const sid = state.course.storageId
-      const files = state.course.files
-
-      return new Promise ((resolve, reject) => {
-        // collect delete requests for all course files
-        const requests = []
-        if (files) {
-          for ( const file of files) {
-            requests.push(
-              http.delete(`storage/${sid}/files/${file.name}`)
-                .then( () => console.log(`removed ${file.originalFilename}`))
-                .catch( (err) => {
-                  // console.error(err)
-                  reject(err)
-                })
-            )
-          }
-        }
-        http.all(requests)
-          .then(
-            http.spread( () => console.log('FILES REMOVED'))
-          )
-          .catch(err => {
-            // console.error(err)
-            reject(err)
-          })
-          .finally( () => {
-            // delete course storage
-            http.delete(`storage/${sid}`)
-              .then( () => console.log('Container removed!'))
-              .catch( (err) => {
-                // console.error(err)
-                reject(err)
-              })
-          })
-
-        // delete course itself
-        http.delete(`courses/${cid}`)
-          .then( () => {
-            // console.log("REMOVED COURSE", cid)
-            resolve('all good')
-          })
-          .catch(err => {
-            // console.error('Failed to delete course:', err)
-            reject(err)
-          })
-      })
-    },
-
     /**
      * Function copyCourse: copy course and all the files
      *  FIXME: Files are not copied
      *
      * Author: cmc
      *
-     * Last Updated: April 21, 2021
+     * Last Updated: January 27, 2022
      * @param param0
      * @param newName
      */
-    copyCourse({commit, state, rootState}, newName: string) {
+    copyCourse(
+      { commit, state, rootState }: {
+        commit: Function,
+        state: {
+          course: {
+            files: Array<object>
+          }
+        },
+        rootState: {
+          note: {
+            busy: boolean
+          }
+        }
+      },
+      newName: string
+      ) {
       console.log('Original Course Files:', state.course.files)
       // console.log(rootState)
       // create new course object
       const newId = uuidv4()
       const newStorage = uuidv4()
-      const copiedCourse = { ...state.course,
+      const copiedCourse = {
+        ...state.course,
         name: newName,
         createDate: Date.now(),
         lastChanged: Date.now(),
@@ -568,66 +632,66 @@ export default {
         files: []
       }
 
-        // create new Storage //TODO: fix here
-        // const store = http.post('storage', { name: newStorage })
-        // const fileReqs = []
-        // const newFiles = []
-        // store
+      // create new Storage //TODO: fix here
+      // const store = http.post('storage', { name: newStorage })
+      // const fileReqs = []
+      // const newFiles = []
+      // store
 
-        /* Files are not being copied because of a bug */
-        // .then( () => {
-        //   // storage created, now copy files
-        //   // therefore, we create an array of requests
-        //   state.course.files.forEach( (file: {
-        //     name: string,
-        //     container: string,
-        //     originalFilename: string
-        //   }) => {
-        //     fileReqs.push(
-        //       // download file
-        //       new Promise((resolve, reject) => {
-        //         http.get(`storage/${file.container}/download/${file.name}`)
-        //         .then( resp => {
-        //           //file was downloaded, extract values
-        //           // console.log('new data: ', resp)
-        //           let mimeType = JSON.parse(JSON.stringify(resp.headers))['content-type']
-        //           // console.log(mimeType)
-        //           let blob = new Blob([resp.data], {type: mimeType})
-        //           // console.log(blob)
-        //           const formData = new FormData()
-        //           formData.append('file', blob, file.originalFilename)
+      /* Files are not being copied because of a bug */
+      // .then( () => {
+      //   // storage created, now copy files
+      //   // therefore, we create an array of requests
+      //   state.course.files.forEach( (file: {
+      //     name: string,
+      //     container: string,
+      //     originalFilename: string
+      //   }) => {
+      //     fileReqs.push(
+      //       // download file
+      //       new Promise((resolve, reject) => {
+      //         http.get(`storage/${file.container}/download/${file.name}`)
+      //         .then( resp => {
+      //           //file was downloaded, extract values
+      //           // console.log('new data: ', resp)
+      //           let mimeType = JSON.parse(JSON.stringify(resp.headers))['content-type']
+      //           // console.log(mimeType)
+      //           let blob = new Blob([resp.data], {type: mimeType})
+      //           // console.log(blob)
+      //           const formData = new FormData()
+      //           formData.append('file', blob, file.originalFilename)
 
-        //           // re-upload file in new storage
-        //           http.post(`storage/${newStorage}/upload/`, formData, {
-        //             headers: {
-        //               'Content-Type': 'multipart/form-data'
-        //             }
-        //             })
-        //             .then( resp => {
-        //               // file was re-uploaded, push values to newFiles
-        //               let newFile = resp.data.result.files.file[0]
-        //               // console.log(newFile)
-        //               // console.log('File uploaded: ', resp)
-        //               newFiles.push(newFile)
-        //               // console.log('New files:', newFiles)
-        //               resolve('done')
-        //             })
-        //             .catch( err => {
-        //               // file re-upload failed
-        //               // console.error('Hier geht nix: ', err)
-        //               reject('nox')
-        //             })
-        //         })
-        //       })
-        //     )
-        //   })
-        // })
-        .catch( err => {
-          // creating new storage failed, return reject
-          return new Promise((resolve, reject) => {
-            reject(err)
-          })
-        })
+      //           // re-upload file in new storage
+      //           http.post(`storage/${newStorage}/upload/`, formData, {
+      //             headers: {
+      //               'Content-Type': 'multipart/form-data'
+      //             }
+      //             })
+      //             .then( resp => {
+      //               // file was re-uploaded, push values to newFiles
+      //               let newFile = resp.data.result.files.file[0]
+      //               // console.log(newFile)
+      //               // console.log('File uploaded: ', resp)
+      //               newFiles.push(newFile)
+      //               // console.log('New files:', newFiles)
+      //               resolve('done')
+      //             })
+      //             .catch( err => {
+      //               // file re-upload failed
+      //               // console.error('Hier geht nix: ', err)
+      //               reject('nox')
+      //             })
+      //         })
+      //       })
+      //     )
+      //   })
+      // })
+      // .catch( err => {
+      //   // creating new storage failed, return reject
+      //   return new Promise((resolve, reject) => {
+      //     reject(err)
+      //   })
+      // })
 
       /* commented out because files are not being copied as of now */
       // // fire all requests for new files
@@ -682,16 +746,102 @@ export default {
     },
 
     /**
+     * Function deleteCourse: delete Course, remove all files
+     *   and storage
+     *
+     * Author: cmc
+     *
+     * Last Changed: January 27, 2022
+     *
+     * @param state contains course object
+     */
+    deleteCourse(state: {
+      course: {
+        courseId: string,
+        storageId: string,
+        files: Array<{
+          name: string,
+          originalFilename: string
+        }>
+      }
+    } ) {
+      const cid = state.course.courseId
+      const sid = state.course.storageId
+      const files = state.course.files
+
+      return new Promise ((resolve, reject) => {
+        // collect delete requests for all course files
+        const requests = []
+        if (files) {
+          for ( const file of files) {
+            requests.push(
+              http.delete(`storage/${sid}/files/${file.name}`)
+                // .then( () => console.log(`removed ${file.originalFilename}`))
+                .catch( (err) => {
+                  // console.error(err)
+                  reject(err)
+                })
+            )
+          }
+        }
+        http.all(requests)
+          .then(
+            http.spread( () => console.log('FILES REMOVED'))
+          )
+          .catch(err => {
+            // console.error(err)
+            reject(err)
+          })
+          .finally( () => {
+            // delete course storage
+            http.delete(`storage/${sid}`)
+              .then( () => console.log('Container removed!'))
+              .catch( (err) => {
+                // console.error(err)
+                reject(err)
+              })
+          })
+
+        // delete course itself
+        http.delete(`courses/${cid}`)
+          .then( () => {
+            // console.log("REMOVED COURSE", cid)
+            resolve('all good')
+          })
+          .catch(err => {
+            // console.error('Failed to delete course:', err)
+            reject(err)
+          })
+      })
+    },
+
+    /**
      * Function fetchCourse: load course into store
      *
      * Author: core
      *
-     * Last Updated: January 11, 2022
+     * Last Updated: January 27, 2022
      * @param param0 state variables
      * @param name course identifier
      * @returns Promise to load course object, null if already being loaded
      */
-    fetchCourse ({ commit, dispatch, state, rootState}, name: String) {
+    fetchCourse (
+      { commit, dispatch, state, rootState }: {
+        commit: Function,
+        dispatch: Function,
+        state: {
+          course: {
+            courseId: string
+          }
+        },
+        rootState: {
+          note: {
+            busy: boolean
+          }
+        }
+      },
+      name: string
+    ) {
       if (rootState.note.busy) return null
       return new Promise( (resolve, reject) => {
         commit('setBusy', true)
@@ -726,11 +876,18 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: March 24, 2021
+     * Last Updated: January 27, 2022
      *
      * @param param0 state variables
      */
-    fetchCourseList({ commit, state }) {
+    fetchCourseList(
+      { commit, state }: {
+        commit: Function,
+        state: {
+          courseList: Array<object>
+        }
+      }
+    ) {
       commit('setBusy', true)
       http.get('courses?filter[include]=author')
         .then( ({data}) => {
@@ -743,6 +900,7 @@ export default {
             }
             courseObject.content.forEach(block => {
               if (courseObject.properties.simpleLanguage) {
+                // TODO:
                 // following is duplicate of checkForSimpleLanguage() in
                 // @/views/course-edit-tools/course-preferences.vue
                 // might be refactored to reduce redundancy
@@ -804,32 +962,44 @@ export default {
     },
 
     /**
-     * Function fetchEnrollment: fetch enrollment created at given date
+     * Function fetchEnrollment: fetch user's enrollment associated with courseId
      *
      * Author: cmc
      *
-     * Last Updated: unknown
+     * Last Updated: January 27, 2022
      *
      * @param param0 state variables
      * @param courseId identifier for enrollment
      */
-    fetchEnrollment({ commit, state, rootState }, courseId: String) {
+    fetchEnrollment(
+      { commit, rootState }: {
+        commit: Function,
+        rootState: {
+          auth: {
+            userId: string
+          }
+        }
+      },
+      courseId: String) {
       const uid = rootState.auth.userId
       const cid = courseId
       commit('setBusy', true)
-      http.get('enrollments/findOne', { params:
-          { filter:
-              { where:
-                  { studentId: uid, courseId: cid }
-              }
+      http.get('enrollments/findOne', {
+        params: {
+          filter: {
+            where: {
+              studentId: uid,
+              courseId: cid
+            }
           }
+        }
       })
         .then(({data}) => {
-          console.log('Enrollment exists!')
+          // console.log('Enrollment exists!')
           commit('setEnrollment', data)
         })
         .catch(err => {
-          console.log('No enrollment found!')
+          // console.log('No enrollment found!')
           console.error(err)
         })
         .finally( () => { commit('setBusy', false) })
@@ -840,25 +1010,31 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: January 11, 2022
+     * Last Updated: January 27, 2022
      *
      * @param param0 state variables
      * @returns Promise to save changes
      */
-    storeCourse({ commit, state }) {
-      const updated = Date.now()
-      const cId = state.course.courseId
-      const cContent = state.course.content
-      const cproperties = state.course.properties
+    storeCourse(
+      { commit, state } : {
+        commit: Function,
+        state: {
+          course: {
+            courseId: string,
+            content: Array<object>,
+            properties: object
+          }
+        }
+      }) {
 
       return new Promise( (resolve, reject) => {
-        http.patch(`courses/${cId}`, {
-          content: cContent,
-          lastChanged: updated,
-          properties: cproperties
+        http.patch(`courses/${state.course.courseId}`, {
+          content: state.course.content,
+          lastChanged: Date.now(),
+          properties: state.course.properties
         })
           .catch(err => {
-            console.error('Failed storing course content:', err)
+            // console.error('Failed storing course content:', err)
             reject(err)
           })
           .finally(()  => {
@@ -875,24 +1051,36 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: March 29, 2021
+     * Last Updated: January 27, 2022
      *
      * @param param0 state variables
      */
-    storeCourseFiles({ state }) {
+    storeCourseFiles(
+      { state }: {
+        state: {
+          course: {
+            courseId: string
+            files: Array<object>
+          }
+        }
+      }
+    ) {
       const newFileData = {
         files: state.course.files,
         lastChanged: Date.now()
       }
       // console.log(newFileData)
       return new Promise( (resolve, reject) => {
-        http.patch(`courses/${state.course.courseId}`, newFileData)
+        http.patch(
+          `courses/${state.course.courseId}`,
+          newFileData
+        )
           .then( (resp) => {
             // console.log(resp)
             resolve(resp)
           })
           .catch( err => {
-            console.error(err)
+            // console.error(err)
             reject(err)
           })
       })
@@ -904,14 +1092,25 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: August 17, 2021
+     * Last Updated: January 27, 2022
      *
      * @param param0 state variables
      */
-    updateEnrollment({ state }: { state : { enrollment: { id: string } } } ) {
+    updateEnrollment(
+      { state }: {
+        state: {
+          enrollment: {
+            id: string
+          }
+        }
+      } ) {
       const enrol = state.enrollment
 
-      http.patch(`enrollments/${enrol.id}`, enrol)
+      // TODO: why is this not returning a Promise?
+      http.patch(
+        `enrollments/${enrol.id}`,
+        enrol
+      )
         .then(() => {
           console.log('Enrollment updated!')
         })
@@ -925,20 +1124,32 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: August 17, 2021
+     * Last Updated: January 27, 2022
      *
      * @param param0 state variables
      * @returns Promise to update renamed course
      */
-    updateRenamedCourse({ state }) {
+    updateRenamedCourse(
+      { state }: {
+        state: {
+          course: {
+            courseId: string,
+            name: string
+          }
+        }
+      }
+    ) {
 
-      const newName = {
+      const newNameData = {
         lastChanged: Date.now(),
         name: state.course.name
       }
 
       return new Promise( (resolve, reject) => {
-        http.patch(`courses/${state.course.courseId}`, newName)
+        http.patch(
+      `courses/${state.course.courseId}`,
+          newNameData
+        )
           .then( () => {
             resolve('Updated Course name!')
           })
