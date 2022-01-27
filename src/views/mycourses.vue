@@ -1,9 +1,9 @@
 <!--
-Filename: mycourses.vue 
-Use: show courses for certain user 
+Filename: mycourses.vue
+Use: show courses for certain user
 Creator: core
 Date: unknown
-Dependencies: 
+Dependencies:
   vuex,
   axios,
   @/mixins/locale.vue
@@ -27,7 +27,7 @@ Dependencies:
         alt="Avatar"
         class="d-block rounded-circle mx-auto avatar"
       >
-      <h1 class="text-center text-light">{{ profile.name }}</h1>
+      <h1 class="text-center text-light">{{ profile.username }}</h1>
     </div>
 
     <!-- filter and search -->
@@ -41,7 +41,7 @@ Dependencies:
           </div>
           <div class="sep"></div>
           <div id="filters" class="d-flex justify-content-start flex-wrap">
-            <a 
+            <a
               href
               v-for="cat in cats"
               v-bind:key="cat"
@@ -174,9 +174,9 @@ export default {
 
     /**
      * avatarURL: return url of profile avatar
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: March 21, 2021
      */
     avatarURL() {
@@ -185,9 +185,9 @@ export default {
 
     /**
      * nameSortIcon: return icon css class depending on how names are sorted
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     nameSortIcon() {
@@ -200,9 +200,9 @@ export default {
 
     /**
      * dateSortIcon: return icon css class depending on how dates are sorted
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     dateSortIcon() {
@@ -231,11 +231,11 @@ export default {
 
     /**
      * Function search: filter courses with given input
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param {array} courses course array
      * @returns {array} filtered course list
      */
@@ -250,11 +250,11 @@ export default {
 
     /**
      * Function filter: filter courses by category
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param {array} courses course array
      * @returns {array} filtered course list
      */
@@ -266,12 +266,12 @@ export default {
     },
 
     /**
-     * Function sort: sort courses 
-     * 
+     * Function sort: sort courses
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param {array} _courses course array
      * @returns {array} sorted course array
      */
@@ -295,9 +295,9 @@ export default {
 
     /**
      * Function sortByName: sort courses by name
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     sortByName() {
@@ -314,9 +314,9 @@ export default {
 
     /**
      * Function sortByDate: sort courses by date
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     sortByDate() {
@@ -330,13 +330,13 @@ export default {
       }
       this.sortBy = 'dateDESC'
     },
-    
+
     /**
      * Function fetchCourses: fetch courses from database,
      *  create categories
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
     fetchCourses() {

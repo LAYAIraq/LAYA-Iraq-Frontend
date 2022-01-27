@@ -236,15 +236,13 @@ export default {
     */
     setLang (newlang) {
       this.$store.commit('setLang', newlang)
-      this.$nextTick(() => {
-        if(this.$store.state.auth.online) {
-          const data = {
-            lang: this.$store.state.profile.lang,
-            uid: this.$store.state.auth.userId
-          }
-          this.$store.commit('setUserLang', data)
+      if(this.$store.state.auth.online) {
+        const data = {
+          lang: this.$store.state.profile.lang,
+          uid: this.$store.state.auth.userId
         }
-      })
+        this.$store.dispatch('setUserLang', data)
+      }
     },
 
     /**
