@@ -287,33 +287,28 @@ export default {
      * Author: cmc
      *
      * Last Updated: August 17, 2021
-     * @param commit state commit
+     * @param param0 store functions
      * @param cid courseId for course
      * @returns Promise for backend http request
      */
-    getCourseFlags({ commit }: { commit: Function }, cid: string) {
+    getCourseFlags({ commit, dispatch }: { commit: Function, dispatch: Function }, cid: string) {
       commit('clearFlagList')
       // console.log('getting elements for courseId: ', cid)
-      return new Promise((resolve, reject) => {
-        http.get('flags', {
-          params: {
-            filter: { where: { courseId: cid }}
-          }
-        })
-          .then(resp => {
-            // if (resp.data.length === 0) console.log('None found!')
-            resp.data.forEach(elem => {
-              // console.log(elem)
-              // console.log('Adding ' + elem.referenceId + 'to flag list')
-              commit('appendFlag', elem)
-            })
-            resolve(null)
-          })
-          .catch(err => {
-            console.error(err)
-            reject(null)
-          })
+      http.get('flags', {
+        params: {
+          filter: { where: { courseId: cid }}
+        }
       })
+      .then(resp => {
+        // if (resp.data.length === 0) console.log('None found!')
+        resp.data.forEach(elem => {
+          // console.log(elem)
+          // console.log('Adding ' + elem.referenceId + 'to flag list')
+          commit('appendFlag', elem)
+        })
+        dispatch('checkCourseFlags')
+      })
+      .catch(err => console.error(err))
     },
 
     /**
