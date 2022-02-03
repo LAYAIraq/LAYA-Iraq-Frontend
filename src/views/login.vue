@@ -164,7 +164,7 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: unknown
+     * Last Updated: 12.01.2022
      */
     submit() {
       if (this.errForm || this.busy) {
@@ -189,9 +189,9 @@ export default {
         $store.dispatch('fetchRole')
 
         /* store auth for reloads */
-        const { id, userId, created, ttl } = data
+        const { id, userId, created } = data
         let expire = new Date(created)
-        expire.setSeconds(expire.getSeconds() + ttl)
+        expire.setSeconds(expire.getSeconds() + 604800) //user stays logged-in for 7 days (604800seconds)
         console.log('Auth expires on', expire)
         $ls.set('auth', { id: id, userId: userId }, expire.getTime())
 
