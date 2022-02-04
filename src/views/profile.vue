@@ -489,6 +489,15 @@ export default {
     }
   },
 
+  watch: {
+    profile: {
+      deep: true,
+      handler() {
+        this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
+      }
+    }
+  },
+
   methods: {
 
     /**
@@ -554,6 +563,7 @@ export default {
 
       /* update state */
       ctx.$store.commit('setPrefs', ctx.prefs)
+      ctx.$store.dispatch('saveProfile')
     },
 
     /**
