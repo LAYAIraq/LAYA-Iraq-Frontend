@@ -36,7 +36,7 @@ export default {
      * @param state contains myCourses variable
      */
     addMyCourse(state: { myCourses: number }) {
-      state.myCourses++;
+      state.myCourses++
     },
 
     /**
@@ -49,7 +49,7 @@ export default {
      * @param state contains myCourses
      */
     clearMyCourse(state: { myCourses: number }) {
-      state.myCourses = 0;
+      state.myCourses = 0
     },
 
     /**
@@ -57,13 +57,16 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: unknown
+     * Last Updated: January 27, 2022
      *
      * @param state contains busy boolean
      * @param bool boolean value to set
      */
-    setBusy(state: { busy: boolean }, bool: boolean) {
-      state.busy = bool;
+    setBusy(
+      state: { busy: boolean },
+      bool: boolean
+    ) {
+      state.busy = bool
     }
   }
-};
+}

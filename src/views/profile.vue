@@ -32,7 +32,7 @@ Dependencies:
             class="d-block rounded-circle mx-auto avatar"
           >
 
-          <h1 class="text-center text-light">{{ profile.name }}</h1>
+          <h1 class="text-center text-light">{{ profile.username }}</h1>
         </div>
       </div>
       <!-- row -->
@@ -56,7 +56,7 @@ Dependencies:
                 id="username"
                 type="text"
                 class="form-control"
-                v-model="profile.name"
+                v-model="profile.username"
                 readonly
                 tabindex="-1"
               >

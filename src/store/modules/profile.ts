@@ -11,24 +11,24 @@ import { ids as supportedLangs } from '../../misc/langs.js'
 
 export default {
   state: {
-    name: '',
+    avatar: '',
     email: '',
+    lang: 'en',
+    passwordSet: '', // these exist to make Password Input Component work
+    passwordRepeat: '',
     prefs: {
-      media: {
-        text: true,
-        simple: false,
-        video: true,
-        audio: false
-      },
       font: {
         chosen: 'standard',
         size: 18
+      },
+      media: {
+        audio: false,
+        simple: false,
+        text: true,
+        video: true
       }
     },
-    lang: 'de',
-    avatar: '',
-    passwordSet: '', // these exist to make Password Input Component work
-    passwordRepeat: ''
+    username: ''
   },
   getters: {
 
@@ -41,7 +41,11 @@ export default {
      * @param state preferences as object
      * @returns {object} fontOptions
      */
-    fontOptions (state: { prefs: { font: object } }) {
+    fontOptions(state: {
+      prefs: {
+        font: object
+      }
+    }) {
       return state.prefs.font
     },
 
@@ -53,7 +57,11 @@ export default {
      * Last Updated: October 26, 2021
      *
      */
-    mediaPrefs (state: { prefs: { media: object } }) {
+    mediaPrefs(state: {
+      prefs: {
+        media: object
+      }
+    }) {
       return state.prefs.media
     },
 
@@ -106,13 +114,16 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: unknown
+     * Last Updated: January 27, 2022
      *
      * @param state contains lang
      * @param lang language to set
      */
-    setLang (state: { lang: string }, lang: string) {
-      state.lang = (supportedLangs.includes(lang)) ? lang : supportedLangs[0];
+    setLang(
+      state: { lang: string },
+      lang: string
+    ) {
+      state.lang = (supportedLangs.includes(lang)) ? lang : supportedLangs[0]
     },
 
     /**
@@ -120,60 +131,24 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: May 24, 2021
+     * Last Updated: January 27, 2022
      *
      * @param state: contains user preferences
      * @param type: one of 'audio', 'simple', 'text' and 'video'
      * @param value: boolean
      *
      */
-    setMedia (state: { prefs: { media: object } },
-        { type, value }) {
+    setMedia(
+      state: {
+        prefs: {
+          media: object
+        }
+      },
+      { type, value }: {
+        type: string,
+        value: boolean
+      }) {
       state.prefs.media[type] = value
-    },
-
-    /**
-     * Function toggleMedia: toggle input media boolean
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     *
-     * @param state: contains user preferences
-     * @param type: one of 'audio', 'simple', 'text' and 'video'
-     *
-     */
-    toggleMedia (state: { prefs: { media: object } },
-        type: string) {
-      state.prefs.media[type] = !state.prefs.media[type];
-    },
-
-    /**
-     * function setPwd: set passwordSet to input string
-     *  exists to avoid passing props to deep nested component
-     *
-     *  Author: cmc
-     *
-     *  Last Updated: January 17, 2022
-     * @param state contains passwordSet string
-     * @param input new string to set
-     */
-    setPwd (state: { passwordSet: string}, input: string) {
-      state.passwordSet = input
-    },
-
-    /**
-     * function setPwdRepeat: set passwordRepeat to input string
-     *  exists to avoid passing props to deep nested component
-     *
-     *  Author: cmc
-     *
-     *  Last Updated: January 17, 2022
-     * @param state contains passwordRepeat string
-     * @param input new string to set
-     */
-    setPwdRepeat (state: { passwordRepeat: string}, input: string) {
-      state.passwordRepeat = input
     },
 
     /**
@@ -181,14 +156,19 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: unknown
+     * Last Updated: January 27, 2022
      *
      * @param state contains preferences
-     * @param prefs: object containing all possible options
+     * @param prefs: object containing some options
      */
-    setPrefs (state: { prefs: object },
-        prefs: object) {
-      state.prefs = { ...prefs }
+    setPrefs(
+      state: { prefs: object },
+      prefs: object
+    ) {
+      state.prefs = {
+        ...state.prefs,
+        ...prefs
+      }
     },
 
     /**
@@ -196,14 +176,14 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: March 20, 2021
+     * Last Updated: January 27, 2022
      *
      * @param state contains all profile information
      * @param settings contains the same key-value pairs to set
      */
     setProfile (
       state: {
-        name: string,
+        username: string,
         email: string,
         prefs: object,
         lang: string,
@@ -216,39 +196,32 @@ export default {
         lang: string,
         avatar: string
       }) {
-
-      state.name = settings.username
-      state.email = settings.email
-      state.avatar = settings.avatar
-      state.lang = settings.lang
-      state.prefs = settings.prefs
+      for (const setting in settings) {
+        state[setting] = settings[setting]
+      }
     },
 
     /**
-     * function setUserLang: persist locale to backend
+     * Function toggleMedia: toggle input media boolean
      *
-     * Author: cmc
+     * Author: core
      *
-     * Last Updated: unknown
+     * Last Updated: January 27, 2022
      *
-     * @param state contains lang
-     * @param data contains user language and id
+     * @param state: contains user preferences
+     * @param type: one of 'audio', 'simple', 'text' and 'video'
+     *
      */
-     setUserLang (state: { lang: string },
-      data: { lang: string, uid: number }) {
-      //save language choice in User's profile
-      if (supportedLangs.includes(data.lang)) {
-        state.lang = data.lang
-        http.post(`/accounts/${data.uid}/change-language`, data)
-          // .then( () => console.log(`Changed language to ${state.lang}`))
-          .catch((err) => console.error(err))
-      }
-      else {
-        // console.log('Setting language failed')
-        state.lang = supportedLangs[0]
-      }
-    },
-
+    toggleMedia(
+      state: {
+        prefs: {
+          media: object
+        }
+      },
+      type: string
+    ) {
+      state.prefs.media[type] = !state.prefs.media[type];
+    }
 
   },
   actions: {
@@ -262,7 +235,15 @@ export default {
      *
      * @param param0 state variables
      */
-    fetchProfile ({ commit, rootState }) {
+    fetchProfile(
+      { commit, rootState }: {
+        commit: Function,
+        rootState: {
+          auth: {
+            userId: number
+          }
+        }
+      }) {
       http.get(`accounts/${rootState.auth.userId}`)
         .then(({ data }) => {
           commit('setProfile', data)
@@ -279,22 +260,53 @@ export default {
      *
      * @param param0 state variables
      */
-    saveProfile({ state, rootState }) {
-      http.patch(`accounts/${rootState.auth.userId}`, {
-          ...state,
-          prefs: {
-            media: {
-              ...state.prefs.media
-            },
-            font: {
-              ...state.prefs.font
-            }
+    saveProfile(
+      { state, rootState }: {
+        state: object,
+        rootState: {
+          auth: {
+            userId: string
           }
-        })
+        }
+      }) {
+      http.patch(
+        `accounts/${rootState.auth.userId}`,
+        { ...state })
         .catch(err => {
           console.error(err)
         })
-    }
+    },
 
+    /**
+     * function setUserLang: persist locale to backend
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 27, 2022
+     *
+     * @param param0 contains state variables
+     * @param langData contains user language and id
+     */
+    setUserLang(
+      { commit, state }: {
+        commit: Function,
+        state: {
+          lang: string
+        }
+      },
+      langData: {
+        lang: string,
+        uid: number
+      }) {
+      //save language choice in User's profile
+      http.post(
+        `/accounts/${langData.uid}/change-language`,
+        langData
+      )
+        .then(() => {
+          commit('setLang', langData.lang)
+        })
+        .catch((err) => console.error(err))
+    }
   }
 }
