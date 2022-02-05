@@ -470,6 +470,9 @@
         <p v-if="duplicateProperty">
           {{ duplicateErrMsg }}
         </p>
+        <p v-if="noRoleChosen">
+          {{ i18n['adminPanel.modal.chooseRole'] }}
+        </p>
       </b-modal>
     </div>
   </div>
@@ -585,6 +588,18 @@ export default {
     noEmailFormat() {
       return !(this.createUserEmail.includes('@') &&
         this.createUserEmail.includes('.'))
+    },
+
+    /**
+     * noRoleChosen: true if role for new user is null or 'null'
+     *
+     * Author: cmc
+     *
+     * Last Updated: February 5, 2022
+     * @returns {boolean} true if no role chosen
+     **/
+    noRoleChosen() {
+      return (!this.createUserRole || this.createUserRole === 'null')
     },
 
     /**
@@ -722,7 +737,7 @@ export default {
       this.$store.dispatch('createUser', {
         username: this.createUserName,
         email: this.createUserEmail.toLowerCase(),
-        role: this.createUserRole
+        role: this.createUserRole || 'student' // create student when no role chosen
       })
         .then(() => this.$bvModal.hide('create-user'))
         .catch(err => {

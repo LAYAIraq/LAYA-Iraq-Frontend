@@ -12,6 +12,7 @@
 	"adminPanel.filterListByName": "Nach Namen filtern",
 	"adminPanel.filterListByRole": "Nach Rolle filtern",
 	"adminPanel.itemsPerPage": "Einträge pro Seite",
+	"adminPanel.modal.chooseRole": "Wählen Sie eine Rolle aus!",
 	"adminPanel.modal.createUser": "Neuen Nutzer hinzufügen. Diese Aktion ist nur dafür gedacht, Testnutzer zu erstellen. Nutzen Sie keine E-Mail-Adressen, die nicht zu Ihnen gehören.",
 	"adminPanel.modal.deleteUser": "Alle Informationen über diesen Nutzer entfernen. Dieser Vorgang ist endgültig. Sind Sie sicher, dass Sie diesen Nutzer löschen möchten?",
 	"adminPanel.modal.duplicateError": "Dieser Wert ist bereits vorhanden: ",

@@ -12,6 +12,7 @@
 	"adminPanel.filterListByName": "Filter by name",
 	"adminPanel.filterListByRole": "Filter by role",
 	"adminPanel.itemsPerPage": "Items per page",
+	"adminPanel.modal.chooseRole": "Choose a role!",
 	"adminPanel.modal.createUser": "Create a new user. This is only intended for creating test users. Do not use e-mail addresses that don't belong to you.",
 	"adminPanel.modal.deleteUser": "This will remove all information regarding this user. The process is irreversible. Are you sure you want to remove this user?",
 	"adminPanel.modal.duplicateError": "This property already exists: ",
