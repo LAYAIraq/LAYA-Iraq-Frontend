@@ -144,7 +144,7 @@ Dependencies:
             >
               {{ i18n['profile.pwdStrength'] }}
             </label>
-            <div class="col-sm-9">
+            <div class="col">
               <password
                 id="pwdMeter"
                 v-model="newPwd"
@@ -159,7 +159,7 @@ Dependencies:
             </div>
           </div>
 
-
+          <!-- password suggestions -->
           <div
             v-if="showSuggestions"
             class="form-group row"
@@ -193,6 +193,7 @@ Dependencies:
               </strong>
             </div>
           </div>
+
           <hr>
 
           <!-- avatar upload TODO: FIX Cropper Problems
@@ -307,7 +308,7 @@ Dependencies:
           <div class="form-group">
             <button
               type="submit"
-              @click="submit"
+              @click.prevent="submit"
               :disabled="busy"
               class="btn btn-block btn-lg btn-outline-dark"
               style="border-width: 2px"
@@ -576,7 +577,7 @@ export default {
      * @param warning
      */
     showFeedback({ suggestions, warning }) {
-      this.pwdSuggestions({ suggestions, warning })
+      this.pwdStrength({ suggestions, warning })
     }
   },
 }

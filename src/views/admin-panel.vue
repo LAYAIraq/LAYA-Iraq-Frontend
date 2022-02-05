@@ -467,6 +467,12 @@
         <p v-if="noEmailFormat">
           {{ i18n['emailErr'] }}
         </p>
+        <p v-if="duplicateProperty">
+          {{ duplicateErrMsg }}
+        </p>
+        <p v-if="noRoleChosen">
+          {{ i18n['adminPanel.modal.chooseRole'] }}
+        </p>
       </b-modal>
     </div>
   </div>
@@ -492,6 +498,7 @@ export default {
       changeEmail: '',
       changeRole: null,
       changingUserId: null,
+      duplicateProperty: null,
       emailFilter: '',
       emptyCreateInput: false,
       filter: null,
@@ -534,6 +541,18 @@ export default {
     },
 
     /**
+     * function duplicateErrMsg: returns error message for duplicate property in locale
+     *
+     * Author: cmc
+     *
+     * Last Updated: February 5, 2022
+     * @returns {string} Error message when name or email is duplicate
+     */
+    duplicateErrMsg() {
+      return this.i18n['adminPanel.modal.duplicateError'] + this.duplicateProperty
+    },
+
+    /**
      * function filteredList: filters list according to regexes array
      *
      * Author: cmc
@@ -569,6 +588,18 @@ export default {
     noEmailFormat() {
       return !(this.createUserEmail.includes('@') &&
         this.createUserEmail.includes('.'))
+    },
+
+    /**
+     * noRoleChosen: true if role for new user is null or 'null'
+     *
+     * Author: cmc
+     *
+     * Last Updated: February 5, 2022
+     * @returns {boolean} true if no role chosen
+     **/
+    noRoleChosen() {
+      return (!this.createUserRole || this.createUserRole === 'null')
     },
 
     /**
@@ -705,9 +736,13 @@ export default {
     createUser() {
       this.$store.dispatch('createUser', {
         username: this.createUserName,
-        email: this.createUserEmail,
-        role: this.createUserRole
+        email: this.createUserEmail.toLowerCase(),
+        role: this.createUserRole || 'student' // create student when no role chosen
       })
+        .then(() => this.$bvModal.hide('create-user'))
+        .catch(err => {
+          this.duplicateProperty = err
+        })
     },
 
     /**
@@ -763,7 +798,6 @@ export default {
         this.emptyCreateInput = false
         if(!this.noEmailFormat) {
           this.createUser()
-          this.$nextTick(() => this.$bvModal.hide('create-user'))
         }
       } else {
         this.emptyCreateInput = true

@@ -143,8 +143,8 @@ export default {
     },
 
     /**
-     * function createUser: create new user, then update
-     *  store
+     * function createUser: check for duplicate name or email, if none,
+     * create new user, then update store
      *
      * Author: cmc
      *
@@ -156,19 +156,38 @@ export default {
      * @param role new user's role
      */
     createUser({state, commit}, {username, email, role}) {
-      http.post(`accounts/create`, {
-        username: username,
-        email: email,
-        role: role
-      })
-        .then(resp => {
-          console.log(resp)
-          commit('addUser', {
-            ...resp.data,
-            role: role
-          })
+      return new Promise((resolve, reject) =>
+        http.get(`accounts/name/${username}`)
+          .then(({data}) => {
+            if (!data) { // user name doesn't exist
+              http.get(`accounts/email/${email}`)
+                .then(({data}) => {
+                  if (!data) { // email doesn't exist
+                    http.post(`accounts/create`, {
+                      username: username,
+                      email: email,
+                      role: role
+                    })
+                      .then(resp => { // everything worked
+                        // console.log(resp)
+                        commit('addUser', {
+                          ...resp.data,
+                          role: role
+                        })
+                        resolve(resp)
+                      })
+                      .catch(err => reject(err)) // error creating new user
+                  } else { // duplicate email address
+                    reject(email)
+                  }
+                })
+                .catch(err => reject(err)) // error checking for email
+            } else { // duplicate user name
+              reject(username)
+            }
         })
-        .catch(err => console.error(err))
+          .catch(err => reject(err)) // error checking for name
+      )
     },
 
 
@@ -283,21 +302,18 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: November 19, 2021
+     * Last Updated: January 13, 2022
      * @param commit commit function
      * @param state state variables
      * @param {number} id user Id
      */
     resetPassword({ commit, state }, id) {
-      for (const user of state.users) {
-        if (user.id === id) {
-          console.log('changing ', id, 's password')
-          // http.patch(`accounts/${id}`, user) // TODO: create backend method for resetting password
-          //   .then(() => console.log('user role changed!'))
-          //   .catch(err => console.error(err))
-          break
-        }
+      if (state.users.some(x => x.id === id)) {
+        console.log('changing ', id, 's password')
+        http.post(`accounts/pwd-reset/${id}`)
+          .catch(err => console.error(err))
       }
+      // else statement omitted b/c only called for existing ids
     },
   }
 }

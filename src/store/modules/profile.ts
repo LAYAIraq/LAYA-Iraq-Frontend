@@ -6,8 +6,8 @@
  * Dependencies: axios
  */
 
-import http from 'axios';
-import { ids as supportedLangs } from '../../misc/langs.js';
+import http from 'axios'
+import { ids as supportedLangs } from '../../misc/langs.js'
 
 export default {
   state: {
@@ -18,7 +18,7 @@ export default {
         text: true,
         simple: false,
         video: true,
-        audio: false,
+        audio: false
       },
       font: {
         chosen: 'standard',
@@ -27,6 +27,8 @@ export default {
     },
     lang: 'de',
     avatar: '',
+    passwordSet: '', // these exist to make Password Input Component work
+    passwordRepeat: ''
   },
   getters: {
 
@@ -39,7 +41,7 @@ export default {
      * @param state preferences as object
      * @returns {object} fontOptions
      */
-    fontOptions(state: { prefs: { font: object } }) {
+    fontOptions (state: { prefs: { font: object } }) {
       return state.prefs.font
     },
 
@@ -51,37 +53,65 @@ export default {
      * Last Updated: October 26, 2021
      *
      */
-    mediaPrefs(state: { prefs: { media: object } }) {
+    mediaPrefs (state: { prefs: { media: object } }) {
       return state.prefs.media
     },
 
     /**
      * Function profileLang: get stored language
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param state contains lang
      * @returns current user locale
      */
-    profileLang(state: { lang: string }) {
+    profileLang (state: { lang: string }) {
       return state.lang
+    },
+
+    /**
+     * Function passwordRepeat: return passwordRepeat
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 17, 2022
+     *
+     * @param0 contains passwordRepeat string
+     * @returns password to set
+     */
+    passwordRepeat (state: { passwordRepeat: string }) {
+      return state.passwordRepeat
+    },
+
+    /**
+     * Function passwordSet: return passwordSet
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 17, 2021
+     *
+     * @param0 contains passwordSet string
+     * @returns password to set
+     */
+    passwordSet (state: { passwordSet: string }) {
+      return state.passwordSet
     }
   },
   mutations: {
 
     /**
      * function setLang: set user locale to given language if supported
-     * 
+     *
      * Author: core
-     * 
-     * Last Updated: unknown 
-     * 
+     *
+     * Last Updated: unknown
+     *
      * @param state contains lang
-     * @param lang language to set 
+     * @param lang language to set
      */
-    setLang(state: { lang: string }, lang: string) {
+    setLang (state: { lang: string }, lang: string) {
       state.lang = (supportedLangs.includes(lang)) ? lang : supportedLangs[0];
     },
 
@@ -97,53 +127,81 @@ export default {
      * @param value: boolean
      *
      */
-    setMedia(state: { prefs: { media: object } },
+    setMedia (state: { prefs: { media: object } },
         { type, value }) {
       state.prefs.media[type] = value
     },
 
     /**
      * Function toggleMedia: toggle input media boolean
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param state: contains user preferences
      * @param type: one of 'audio', 'simple', 'text' and 'video'
-     * 
+     *
      */
-    toggleMedia(state: { prefs: { media: object } }, 
+    toggleMedia (state: { prefs: { media: object } },
         type: string) {
       state.prefs.media[type] = !state.prefs.media[type];
     },
 
     /**
-     * Function setPrefs: set all media preferences at once
-     * 
-     * Author: core
-     * 
-     * Last Updated: unknown
-     * 
-     * @param state contains preferences
-     * @param media: object containing all possible options 
+     * function setPwd: set passwordSet to input string
+     *  exists to avoid passing props to deep nested component
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: January 17, 2022
+     * @param state contains passwordSet string
+     * @param input new string to set
      */
-    setPrefs(state: { prefs: object },
+    setPwd (state: { passwordSet: string}, input: string) {
+      state.passwordSet = input
+    },
+
+    /**
+     * function setPwdRepeat: set passwordRepeat to input string
+     *  exists to avoid passing props to deep nested component
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: January 17, 2022
+     * @param state contains passwordRepeat string
+     * @param input new string to set
+     */
+    setPwdRepeat (state: { passwordRepeat: string}, input: string) {
+      state.passwordRepeat = input
+    },
+
+    /**
+     * Function setPrefs: set all media preferences at once
+     *
+     * Author: core
+     *
+     * Last Updated: unknown
+     *
+     * @param state contains preferences
+     * @param prefs: object containing all possible options
+     */
+    setPrefs (state: { prefs: object },
         prefs: object) {
       state.prefs = { ...prefs }
     },
 
     /**
      * Function setProfile: set state with given input values
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: March 20, 2021
-     * 
+     *
      * @param state contains all profile information
-     * @param settings contains the same key-value pairs to set 
+     * @param settings contains the same key-value pairs to set
      */
-    setProfile(
+    setProfile (
       state: {
         name: string,
         email: string,
@@ -168,16 +226,16 @@ export default {
 
     /**
      * function setUserLang: persist locale to backend
-     * 
+     *
      * Author: cmc
-     * 
-     * Last Updated: unknown 
-     * 
+     *
+     * Last Updated: unknown
+     *
      * @param state contains lang
      * @param data contains user language and id
      */
-     setUserLang(state: { lang: string }, 
-      data: { lang: string, uid: number }) { 
+     setUserLang (state: { lang: string },
+      data: { lang: string, uid: number }) {
       //save language choice in User's profile
       if (supportedLangs.includes(data.lang)) {
         state.lang = data.lang
@@ -191,20 +249,20 @@ export default {
       }
     },
 
-    
+
   },
   actions: {
 
     /**
      * Function fetchProfile: get user settings and set them in store
-     * 
+     *
      * Author: core
-     * 
-     * Last Updated: unknown 
-     * 
+     *
+     * Last Updated: unknown
+     *
      * @param param0 state variables
      */
-    fetchProfile({ commit, state, rootState }) {
+    fetchProfile ({ commit, rootState }) {
       http.get(`accounts/${rootState.auth.userId}`)
         .then(({ data }) => {
           commit('setProfile', data)
@@ -214,14 +272,14 @@ export default {
 
     /**
      * Function saveProfile: save profile settings in database
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 24, 2021
-     * 
+     *
      * @param param0 state variables
      */
-    saveProfile({commit, state, rootState}) {
+    saveProfile({ state, rootState }) {
       http.patch(`accounts/${rootState.auth.userId}`, {
           ...state,
           prefs: {

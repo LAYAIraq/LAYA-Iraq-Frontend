@@ -114,9 +114,25 @@ export default new Router({
       component: views.verify
     },
     {
+      path: '/reset-password',
+      name: 'ResetPassword',
+      component: views.pwdReset
+    },
+    {
       path: '/:catchAll(.*)',
       component: views.notFound,
       name: 'not-found'
     }
   ]
 })
+
+export const publicRoutes =
+ [
+  '/',
+  '#/login',
+  '#/register',
+  '#/imprint',
+  '#/privacy',
+  '#/reset-password',
+  '#/verify'
+ ]

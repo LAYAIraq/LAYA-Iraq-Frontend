@@ -27,6 +27,7 @@ import { mapGetters } from 'vuex'
 import 'open-dyslexic/open-dyslexic-regular.css'
 import '@/styles/fonts.css'
 import '@/styles/color-correction.css'
+import { publicRoutes } from '@/router'
 
 export default {
   name: 'app',
@@ -92,16 +93,16 @@ export default {
       /* pass access if auth true */
       if (this.$ls.get('auth', false)) return
 
-      const publicURLs = [
-        '#/',
-        '#/login',
-        '#/register',
-        '#/imprint',
-        '#/privacy'
-      ]
+      // const publicURLs = [
+      //   '/',
+      //   '/login',
+      //   '/register',
+      //   '/imprint',
+      //   '/privacy'
+      // ]
 
       /* target url is public */
-      if (publicURLs.includes(location.hash)) {
+      if (publicRoutes.includes(location.hash)) {
         return
       } else if (this.$route.path !== '/login') {
         this.$router.push('/login')
