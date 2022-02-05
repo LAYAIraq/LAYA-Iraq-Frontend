@@ -14,6 +14,7 @@
 	"adminPanel.itemsPerPage": "Items per page",
 	"adminPanel.modal.createUser": "Create a new user. This is only intended for creating test users. Do not use e-mail addresses that don't belong to you.",
 	"adminPanel.modal.deleteUser": "This will remove all information regarding this user. The process is irreversible. Are you sure you want to remove this user?",
+	"adminPanel.modal.duplicateError": "This property already exists: ",
 	"adminPanel.modal.editEmail": "Change user's e-mail address. There will be a verification e-mail sent to the new address.",
 	"adminPanel.modal.newEmail": "New E-Mail address",
 	"adminPanel.modal.promoteUser": "Change user's role. This will affect their ability to create and edit courses.",

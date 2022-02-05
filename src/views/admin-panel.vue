@@ -467,6 +467,9 @@
         <p v-if="noEmailFormat">
           {{ i18n['emailErr'] }}
         </p>
+        <p v-if="duplicateProperty">
+          {{ duplicateErrMsg }}
+        </p>
       </b-modal>
     </div>
   </div>
@@ -492,6 +495,7 @@ export default {
       changeEmail: '',
       changeRole: null,
       changingUserId: null,
+      duplicateProperty: null,
       emailFilter: '',
       emptyCreateInput: false,
       filter: null,
@@ -531,6 +535,18 @@ export default {
     assignableRoles() {
       // eslint-disable-next-line
       return (({ ADMIN, ...o}) => o) (roles)
+    },
+
+    /**
+     * function duplicateErrMsg: returns error message for duplicate property in locale
+     *
+     * Author: cmc
+     *
+     * Last Updated: February 5, 2022
+     * @returns {string} Error message when name or email is duplicate
+     */
+    duplicateErrMsg() {
+      return this.i18n['adminPanel.modal.duplicateError'] + this.duplicateProperty
     },
 
     /**
@@ -705,9 +721,13 @@ export default {
     createUser() {
       this.$store.dispatch('createUser', {
         username: this.createUserName,
-        email: this.createUserEmail,
+        email: this.createUserEmail.toLowerCase(),
         role: this.createUserRole
       })
+        .then(() => this.$bvModal.hide('create-user'))
+        .catch(err => {
+          this.duplicateProperty = err
+        })
     },
 
     /**
@@ -763,7 +783,6 @@ export default {
         this.emptyCreateInput = false
         if(!this.noEmailFormat) {
           this.createUser()
-          this.$nextTick(() => this.$bvModal.hide('create-user'))
         }
       } else {
         this.emptyCreateInput = true
