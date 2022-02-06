@@ -23,7 +23,7 @@ export default {
      * Last Updated: August 17, 2021
      * @param state state variables
      */
-    courseFlags(state: { courseFlags: Array<object> }) {
+    courseFlags (state: { courseFlags: Array<object> }) {
       return state.courseFlags
     },
 
@@ -64,7 +64,7 @@ export default {
      * @param state state variable
      * @param flag flag to add
      */
-    appendFlag(
+    appendFlag (
       state: { courseFlags: Array<object> },
       flag: {
        courseId: String,
@@ -97,7 +97,7 @@ export default {
      * @param state state variables
      * @param answerData id for flag and answer object
      */
-    appendFlagAnswer(
+    appendFlagAnswer (
       state: {
         courseFlags: Array<{
           answers: Array<object>,
@@ -123,7 +123,7 @@ export default {
      * Last Updated: August 17, 2021
      * @param state state variables
      */
-    clearFlagList(state: { courseFlags: Array<Object> } ) {
+    clearFlagList (state: { courseFlags: Array<Object> } ) {
       state.courseFlags = []
     },
 
@@ -135,7 +135,7 @@ export default {
      * Last Updated: August 17, 2021
      * @param state state variables
      */
-    clearFlagsToAddList(state: { flagsToAdd: Array<Object> }) {
+    clearFlagsToAddList (state: { flagsToAdd: Array<Object> }) {
       state.flagsToAdd = []
     },
 
@@ -148,7 +148,7 @@ export default {
      * @param state state variables
      * @param flag Object to be added
      */
-    setFlag(
+    setFlag (
       state: { flagsToAdd: Array<object> },
       flag: object
     ) {
@@ -167,7 +167,7 @@ export default {
      * @param text the new answer text
      * @param bool if answer is question
      */
-    updateAnswer(
+    updateAnswer (
       state,
       { answer, text, bool }: {
         answer: {
@@ -205,7 +205,7 @@ export default {
      * @param flag the flag to answer
      * @param question string that represents the new question
      */
-    updateFlagQuestion(
+    updateFlagQuestion (
       state,
       {flag, question}: {
         flag: {
@@ -233,7 +233,7 @@ export default {
      * @param val -1 if downvote, 1 if upvote
      * @param uid userId of voter
      */
-    voteOnFlagAnswer(
+    voteOnFlagAnswer (
       state,
       { answer, val, uid }: {
         answer: {
@@ -291,24 +291,11 @@ export default {
      * @param rootState rootState to get course
      * @param state state variables
      */
-    checkCourseFlags(
-      {commit, rootState, state}: {
-        commit: Function,
-        rootState: {
-          edit: {
-            course: {
-              content: Array<{
-                input: object
-              }>
-            }
-          }
-        },
-        state: {
-          courseFlags: Array<{
-            referenceId: string
-          }>
-        }
-      } ) {
+    checkCourseFlags ({
+      commit,
+      rootState,
+      state
+    }) {
       // console.log('We are checking Course Flags!')
       const content = rootState.edit.course.content
       const flags = state.courseFlags
@@ -324,7 +311,7 @@ export default {
           for (const flag of flags) {
             if (flag.referenceId === elemId) {
               // console.log(`${elemId} has a flag, trying to mutate it!`)
-              commit('flagFlaggableElement', elem)
+              commit ('flagFlaggableElement', elem)
             } else {
               // console.log(elem + ' can be flagged but no flag exists')
             }
@@ -345,7 +332,7 @@ export default {
                 if (iter) checkIfFlagged(iter)
               }
             } else if (elem){
-              checkIfFlagged(elem)
+              checkIfFlagged (elem)
             }
           }
         }
@@ -361,14 +348,14 @@ export default {
      * @param param0 store functions
      * @param cid courseId for course
      */
-    getCourseFlags(
+    getCourseFlags (
       { commit, dispatch }: {
         commit: Function,
         dispatch: Function
       },
       cid: string
     ) {
-      commit('clearFlagList')
+      commit ('clearFlagList')
       // console.log('getting elements for courseId: ', cid)
       http.get('flags', {
         params: {
@@ -380,9 +367,9 @@ export default {
         resp.data.forEach(elem => {
           // console.log(elem)
           // console.log('Adding ' + elem.referenceId + 'to flag list')
-          commit('appendFlag', elem)
+          commit ('appendFlag', elem)
         })
-        dispatch('checkCourseFlags')
+        dispatch ('checkCourseFlags')
       })
       .catch(err => console.error(err))
     },
@@ -396,23 +383,20 @@ export default {
      * @param state state variables
      * @param commit commit function
      */
-    saveFlags(
-      {state, commit}: {
-        commit: Function,
-        state: {
-          flagsToAdd: Array<object>
-        }
-      } ) {
+    saveFlags ({
+      state,
+      commit
+    }) {
       state.flagsToAdd.forEach(flag => {
         // console.log(flag)
         http.post('flags', flag)
           .then(resp => {
-            commit('appendFlag', resp.data)
+            commit ('appendFlag', resp.data)
           })
           .catch(err => console.error(err))
 
       })
-      commit('clearFlagsToAddList')
+      commit ('clearFlagsToAddList')
     },
 
     /**
@@ -424,14 +408,10 @@ export default {
      * @param commit commit function
      * @param state state variables
      */
-    updateFlags(
-      { commit, state }: {
-        commit: Function,
-        state: {
-          courseFlags: Array<object>
-        }
-      }
-    ) {
+    updateFlags ({
+     state,
+     commit
+    }) {
       const reqs = []
       state.courseFlags.forEach(flag => {
         // const id = flag.referenceId
@@ -447,7 +427,7 @@ export default {
       http.all(reqs)
         // .then( () => console.log('Flags updated'))
         .catch((err) => console.error(err))
-      commit('clearFlagList')
+      commit ('clearFlagList')
     }
   }
 }

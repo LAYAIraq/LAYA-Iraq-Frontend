@@ -23,7 +23,7 @@ export default {
      * @param state contains feedback array
      * @returns feedback array
      */
-    getEnrollmentFeedback(
+    getEnrollmentFeedback (
       state: {
         enrollment: {
           feedback: Array<object>
@@ -56,7 +56,7 @@ export default {
      * @param state contains course object
      * @returns content Array
      */
-    content(state: {
+    content (state: {
       course: {
         content: Array<object>
       }
@@ -74,7 +74,7 @@ export default {
      * @param state contains course object
      * @returns course object
      */
-    course(state: { course: object } ) {
+    course (state: { course: object } ) {
       return state.course
     },
 
@@ -88,7 +88,7 @@ export default {
      * @param state course object
      * @returns userId of course creator
      */
-    courseCreator(state: {
+    courseCreator (state: {
       course: {
         authorId: number
       }
@@ -106,7 +106,7 @@ export default {
      * @param state contains course object
      * @returns array of course files
      */
-    courseFiles(state: {
+    courseFiles (state: {
       course: {
         files: Array<object>
       }
@@ -120,7 +120,7 @@ export default {
      * Last Updated: January 27, 2022
      * @param state
      */
-    courseId(state: {
+    courseId (state: {
       course: {
         courseId: string
       }
@@ -138,7 +138,7 @@ export default {
      * @param state contains courseList
      * @returns array of courses
      */
-    courseList(state: { courseList: Array<Object> }) {
+    courseList (state: { courseList: Array<Object> }) {
       return state.courseList
     },
 
@@ -151,7 +151,7 @@ export default {
      *  Last Updated: October 29, 2021
      * @param state contains course
      */
-    courseSimple(state: {
+    courseSimple (state: {
       course: {
         properties: {
           simpleLanguage: boolean
@@ -171,7 +171,7 @@ export default {
      * @param state contains course object
      * @returns course storage id
      */
-    courseStorage(state: {
+    courseStorage (state: {
       course: {
         storageId: string
       }
@@ -189,7 +189,7 @@ export default {
      * @param state contains boolean courseUpdated
      * @returns true
      */
-    courseUpdated(state: { courseUpdated: boolean }) {
+    courseUpdated (state: { courseUpdated: boolean }) {
       return state.courseUpdated
     }
   }
@@ -275,7 +275,7 @@ export default {
      * @param state contains courseList array
      * @param courseListItem course object to be added to list
      */
-    appendToCourseList(
+    appendToCourseList (
       state: { courseList: Array<object> },
       courseListItem: object
     ) {
@@ -291,7 +291,7 @@ export default {
      * @param state contains course.properties object
      * @param properties new properties
      */
-    changeCourseProperties(
+    changeCourseProperties (
       state: {
         course: {
           properties: object
@@ -315,7 +315,7 @@ export default {
      * @param state contains course object
      * @param step index of content to remove
      */
-    delContent(
+    delContent (
       state: {
         course: {
           content: Array<object>
@@ -336,7 +336,7 @@ export default {
      * @param state contains course file list
      * @param file file object to remove
      */
-    delFile(
+    delFile (
       state: {
         course: {
           files: Array<object>
@@ -364,7 +364,7 @@ export default {
      * @param state state variables
      * @param elem the flaggable element to be mutated
      */
-    flagFlaggableElement(
+    flagFlaggableElement (
       state: {
         course: {
           content: Array<object>
@@ -421,7 +421,7 @@ export default {
      * @param state contains course
      * @param newName string for new name
      */
-    renameCourse(
+    renameCourse (
       state: {
         course: {
           name: string
@@ -442,7 +442,7 @@ export default {
      * @param state contains enrollment, userEnrolled
      * @param enrollmentData enrollment object
      */
-    setEnrollment(
+    setEnrollment (
       state: {
         enrollment: object,
         userEnrolled: boolean
@@ -462,7 +462,7 @@ export default {
      * @param state contains course
      * @param courseData course object
      */
-    setCourse(
+    setCourse (
       state: {
         course: object
       },
@@ -481,7 +481,7 @@ export default {
      * @param state contains courseList array
      * @param courseList array of course objects
      */
-    setCourseList(
+    setCourseList (
       state: {
         courseList: Array<object>
       },
@@ -498,7 +498,7 @@ export default {
      * Last Updated: January 11, 2021
      * @param state contains boolean courseUpdated
      */
-    setCourseUpdated(state: { courseUpdated: boolean }) {
+    setCourseUpdated (state: { courseUpdated: boolean }) {
       state.courseUpdated = true
     },
 
@@ -510,7 +510,7 @@ export default {
      * Last Updated: January 11, 2021
      * @param state contains boolean courseUpdated
      */
-    unsetCourseUpdated(state: { courseUpdated: boolean }) {
+    unsetCourseUpdated (state: { courseUpdated: boolean }) {
       state.courseUpdated = false
     },
 
@@ -524,7 +524,7 @@ export default {
      * @param state contains course object
      * @param courseFiles array of files
      */
-    updateCourseFiles(
+    updateCourseFiles (
       state: {
         course: {
           files: Array<object>
@@ -550,7 +550,7 @@ export default {
      * @param state contains course, content
      * @param courseData new content array
      */
-    updateCourseNav(
+    updateCourseNav (
       state: {
         course: {
           content: Array<object>
@@ -570,7 +570,7 @@ export default {
      * @param state contains course, content
      * @param stepData contains step index, new content object
      */
-    updateStep(
+    updateStep (
       state: {
         course: {
           content: Array<object>
@@ -601,22 +601,10 @@ export default {
      * @param param0
      * @param newName
      */
-    copyCourse(
-      { commit, state, rootState }: {
-        commit: Function,
-        state: {
-          course: {
-            files: Array<object>
-          }
-        },
-        rootState: {
-          note: {
-            busy: boolean
-          }
-        }
-      },
+    copyCourse (
+      { commit, state, rootState },
       newName: string
-      ) {
+    ) {
       console.log('Original Course Files:', state.course.files)
       // console.log(rootState)
       // create new course object
@@ -715,7 +703,7 @@ export default {
         http.post(`courses`, copiedCourse)
           .then( (resp) => {
             // console.log('This response we got: ', resp)
-            resolve(resp.data)
+            resolve (resp.data)
             // FIXME: Copy File List to Course
             // let fileList = []
             // newFiles.forEach(elem => {
@@ -755,16 +743,7 @@ export default {
      *
      * @param state contains course object
      */
-    deleteCourse(state: {
-      course: {
-        courseId: string,
-        storageId: string,
-        files: Array<{
-          name: string,
-          originalFilename: string
-        }>
-      }
-    } ) {
+    deleteCourse (state) {
       const cid = state.course.courseId
       const sid = state.course.storageId
       const files = state.course.files
@@ -779,7 +758,7 @@ export default {
                 // .then( () => console.log(`removed ${file.originalFilename}`))
                 .catch( (err) => {
                   // console.error(err)
-                  reject(err)
+                  reject (err)
                 })
             )
           }
@@ -790,7 +769,7 @@ export default {
           )
           .catch(err => {
             // console.error(err)
-            reject(err)
+            reject (err)
           })
           .finally( () => {
             // delete course storage
@@ -798,7 +777,7 @@ export default {
               .then( () => console.log('Container removed!'))
               .catch( (err) => {
                 // console.error(err)
-                reject(err)
+                reject (err)
               })
           })
 
@@ -806,11 +785,11 @@ export default {
         http.delete(`courses/${cid}`)
           .then( () => {
             // console.log("REMOVED COURSE", cid)
-            resolve('all good')
+            resolve ('all good')
           })
           .catch(err => {
             // console.error('Failed to delete course:', err)
-            reject(err)
+            reject (err)
           })
       })
     },
@@ -826,25 +805,12 @@ export default {
      * @returns Promise to load course object, null if already being loaded
      */
     fetchCourse (
-      { commit, dispatch, state, rootState }: {
-        commit: Function,
-        dispatch: Function,
-        state: {
-          course: {
-            courseId: string
-          }
-        },
-        rootState: {
-          note: {
-            busy: boolean
-          }
-        }
-      },
+      { commit, dispatch, state, rootState },
       name: string
     ) {
       if (rootState.note.busy) return null
       return new Promise( (resolve, reject) => {
-        commit('setBusy', true)
+        commit ('setBusy', true)
 
         //get course ID from name
         http.get(`courses/getCourseId?courseName=${name}`)
@@ -853,19 +819,19 @@ export default {
             http.get(`courses/${data.courseId}`)
               .then(({ data }) => {
                 // console.log(data)
-                commit('setCourse', data)
-                commit('setCourseUpdated')
-                dispatch('getCourseFlags', state.course.courseId)
-                resolve('Course loaded')
+                commit ('setCourse', data)
+                commit ('setCourseUpdated')
+                dispatch ('getCourseFlags', state.course.courseId)
+                resolve ('Course loaded')
               })
               .catch( err => {
                 console.error(err)
-                reject(err)
+                reject (err)
               })
           })
           .catch( err => {
             console.error(err)
-            reject(err)
+            reject (err)
           })
           .finally( () => commit('setBusy', false))
       })
@@ -880,18 +846,13 @@ export default {
      *
      * @param param0 state variables
      */
-    fetchCourseList(
-      { commit, state }: {
-        commit: Function,
-        state: {
-          courseList: Array<object>
-        }
-      }
+    fetchCourseList (
+      { commit, state }
     ) {
-      commit('setBusy', true)
+      commit ('setBusy', true)
       http.get('courses?filter[include]=author')
         .then( ({data}) => {
-          for(const courseObject of data) {
+          for (const courseObject of data) {
             const listData = {
               category: courseObject.category,
               name: courseObject.name,
@@ -953,7 +914,7 @@ export default {
             if (!state.courseList.some( // add to course list if not present
               (e: { courseId: String }) => e.courseId === listData.courseId)
             ) {
-              commit('appendToCourseList', listData)
+              commit ('appendToCourseList', listData)
             }
           }
         })
@@ -971,19 +932,13 @@ export default {
      * @param param0 state variables
      * @param courseId identifier for enrollment
      */
-    fetchEnrollment(
-      { commit, rootState }: {
-        commit: Function,
-        rootState: {
-          auth: {
-            userId: string
-          }
-        }
-      },
-      courseId: String) {
+    fetchEnrollment (
+      { commit, rootState },
+      courseId: String
+    ) {
       const uid = rootState.auth.userId
       const cid = courseId
-      commit('setBusy', true)
+      commit ('setBusy', true)
       http.get('enrollments/findOne', {
         params: {
           filter: {
@@ -996,7 +951,7 @@ export default {
       })
         .then(({data}) => {
           // console.log('Enrollment exists!')
-          commit('setEnrollment', data)
+          commit ('setEnrollment', data)
         })
         .catch(err => {
           // console.log('No enrollment found!')
@@ -1015,18 +970,9 @@ export default {
      * @param param0 state variables
      * @returns Promise to save changes
      */
-    storeCourse(
-      { commit, state } : {
-        commit: Function,
-        state: {
-          course: {
-            courseId: string,
-            content: Array<object>,
-            properties: object
-          }
-        }
-      }) {
-
+    storeCourse (
+      { commit, state }
+    ) {
       return new Promise( (resolve, reject) => {
         http.patch(`courses/${state.course.courseId}`, {
           content: state.course.content,
@@ -1035,14 +981,13 @@ export default {
         })
           .catch(err => {
             // console.error('Failed storing course content:', err)
-            reject(err)
+            reject (err)
           })
           .finally(()  => {
-            commit('unsetCourseUpdated')
-            resolve('Course updated successfully')
+            commit ('unsetCourseUpdated')
+            resolve ('Course updated successfully')
           })
       })
-
     },
 
     /**
@@ -1055,16 +1000,7 @@ export default {
      *
      * @param param0 state variables
      */
-    storeCourseFiles(
-      { state }: {
-        state: {
-          course: {
-            courseId: string
-            files: Array<object>
-          }
-        }
-      }
-    ) {
+    storeCourseFiles ({ state }) {
       const newFileData = {
         files: state.course.files,
         lastChanged: Date.now()
@@ -1077,11 +1013,11 @@ export default {
         )
           .then( (resp) => {
             // console.log(resp)
-            resolve(resp)
+            resolve (resp)
           })
           .catch( err => {
             // console.error(err)
-            reject(err)
+            reject (err)
           })
       })
 
@@ -1096,14 +1032,7 @@ export default {
      *
      * @param param0 state variables
      */
-    updateEnrollment(
-      { state }: {
-        state: {
-          enrollment: {
-            id: string
-          }
-        }
-      } ) {
+    updateEnrollment ({ state }) {
       const enrol = state.enrollment
 
       // TODO: why is this not returning a Promise?
@@ -1129,7 +1058,7 @@ export default {
      * @param param0 state variables
      * @returns Promise to update renamed course
      */
-    updateRenamedCourse(
+    updateRenamedCourse (
       { state }: {
         state: {
           course: {
@@ -1151,10 +1080,10 @@ export default {
           newNameData
         )
           .then( () => {
-            resolve('Updated Course name!')
+            resolve ('Updated Course name!')
           })
           .catch( (err) => {
-            reject(err)
+            reject (err)
           })
       })
     }

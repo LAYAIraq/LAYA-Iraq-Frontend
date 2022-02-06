@@ -19,15 +19,15 @@ export default {
     unreadMsgNo: 0
   },
   getters: {
-    messages(state: { messages: Array<object>}) {
+    messages (state: { messages: Array<object>}) {
       return state.messages
     },
 
-    unreadMessages(state: { unreadMessages: boolean}) {
+    unreadMessages (state: { unreadMessages: boolean}) {
       return state.unreadMessages
     },
 
-    unreadMsgNo(state: { unreadMsgNo: number }) {
+    unreadMsgNo (state: { unreadMsgNo: number }) {
       return state.unreadMsgNo
     }
   },
@@ -38,7 +38,7 @@ export default {
      * Last Updated: May 28, 2021
      * @param state state variables
      */
-    allRead(state: {
+    allRead (state: {
       messages: Array<object>,
       unreadMessages: boolean,
       unreadMsgNo: number
@@ -61,7 +61,7 @@ export default {
      * @param state state property
      * @param msg the message object to append
      */
-    appendMsg(
+    appendMsg (
       state: {
         messages: Array<object>,
         unreadMessages: boolean,
@@ -79,9 +79,9 @@ export default {
           present = true
         }
       })
-      if(!present) {
+      if (!present) {
         state.messages.push(msg)
-        if(!msg.read) {
+        if (!msg.read) {
           state.unreadMessages = true
           state.unreadMsgNo++
         }
@@ -96,7 +96,7 @@ export default {
      * @param state state variable
      * @param msgId id of message to be marked as read
      */
-    readNotification(
+    readNotification (
       state: {
         messages: Array<object>,
         unreadMessages: boolean,
@@ -105,7 +105,7 @@ export default {
       msgId: string
     ) {
       state.messages.forEach((elem: { noteId: string, read: boolean }) => {
-        if(elem.noteId === msgId) {
+        if (elem.noteId === msgId) {
           if (!elem.read) {
             elem.read = true
             state.unreadMsgNo--
@@ -126,7 +126,7 @@ export default {
      * Last Updated: January 27, 2022
      * @param state state variables
      */
-    sortMessages(state: {
+    sortMessages (state: {
       messages: [
         { time: number }
       ]
@@ -144,7 +144,7 @@ export default {
      * @param state state variables
      * @param newNo new # of loaded messages
      */
-    updateLoaded(
+    updateLoaded (
       state: { messagesLoaded: number },
       newNo: number
     ) {
@@ -162,7 +162,7 @@ export default {
      * Last Updated: January 27, 2022
      * @param param0 state property
      */
-     getAdditionalMessages(
+     getAdditionalMessages (
        { commit, state, rootState }: {
          commit: Function,
          state: {
@@ -176,7 +176,7 @@ export default {
        }) {
       if (state.messagesLoaded < 10) {
         return new Promise((resolve, reject) => {
-          reject('No more messages')
+          reject ('No more messages')
         })
       }
       return new Promise((resolve, reject) => {
@@ -195,12 +195,12 @@ export default {
         .then(resp => {
           let no = 0
           resp.data.forEach((elem: object) => {
-            commit('appendMsg', elem)
+            commit ('appendMsg', elem)
             no++
           })
-          commit('updateLoaded', state.messagesLoaded + no)
-          commit('sortMessages')
-          resolve(resp)
+          commit ('updateLoaded', state.messagesLoaded + no)
+          commit ('sortMessages')
+          resolve (resp)
         })
         .catch(err => reject(err))
       })
@@ -214,7 +214,7 @@ export default {
      * Last Updated: January 27, 2022
      * @param param0 state property
      */
-     getAllMessages(
+     getAllMessages (
        { commit, rootState }: {
          commit: Function,
          rootState: {
@@ -235,10 +235,10 @@ export default {
       })
       .then(resp => {
         resp.data.forEach((elem: object) => {
-          commit('appendMsg', elem)
+          commit ('appendMsg', elem)
         })
-        commit('updateLoaded', resp.data.length)
-        commit('sortMessages')
+        commit ('updateLoaded', resp.data.length)
+        commit ('sortMessages')
       })
       .catch(err => console.error(err))
     },
@@ -251,7 +251,7 @@ export default {
      * Last Updated: January 27, 2022
      * @param param0 state property
      */
-    getInitialMessages(
+    getInitialMessages (
       { commit, state, rootState }: {
         commit: Function,
         state: {
@@ -279,10 +279,10 @@ export default {
           let no = 0
 
           resp.data.forEach((elem: object) => {
-            commit('appendMsg', elem)
+            commit ('appendMsg', elem)
             no++
           })
-          commit('updateLoaded', no)
+          commit ('updateLoaded', no)
         })
         .catch(err => console.error(err))
       }
@@ -297,7 +297,7 @@ export default {
      * Last Updated: January 27, 2022
      * @param param0 state variables
      */
-    getNewMessages(
+    getNewMessages (
       {commit, state, rootState}: {
         commit: Function,
         state: {
@@ -310,7 +310,7 @@ export default {
         }
       }) {
       if (!state.messages) {
-        commit('getInitialMessages')
+        commit ('getInitialMessages')
       }
       else {
         http.get('notifications', {
@@ -326,13 +326,13 @@ export default {
       .then( resp => {
         let no = 0
         resp.data.forEach((elem: object) => {
-          commit('appendMsg', elem)
+          commit ('appendMsg', elem)
           no++
         })
-        commit('updateLoaded', no)
+        commit ('updateLoaded', no)
       })
       .catch(err => console.error(err))
-      commit('sortMessages')
+      commit ('sortMessages')
       }
     },
 
@@ -344,7 +344,7 @@ export default {
      * Last Updated: January 27, 2022
      * @param state state variables
      */
-    updateReadProp({ state }: {
+    updateReadProp ({ state }: {
       state: {
         messages: [{
           noteId: string,
