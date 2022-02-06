@@ -14,7 +14,7 @@ export default {
     users: []
   },
   getters: {
-    users(state: {users: Array<object>}) {
+    users (state: {users: Array<object>}) {
       return state.users
     }
   },
@@ -28,7 +28,7 @@ export default {
      * @param state state variables
      * @param user user variables
      */
-    addUser(
+    addUser (
       state: { users: Array<object> },
       user: object
     ) {
@@ -45,7 +45,7 @@ export default {
      * @param user reference to user in state
      * @param role new email
      */
-    changeUserEmail(
+    changeUserEmail (
       state,
       { user, email }: {
         user: {
@@ -66,7 +66,7 @@ export default {
      * @param user reference to user in state
      * @param role new role
      */
-    changeUserRole(
+    changeUserRole (
       state,
       { user, role }: {
         user: {
@@ -86,7 +86,7 @@ export default {
      * @param state state variables
      * @param id user id to delete
      */
-    removeUser(
+    removeUser (
       state: {
         users: Array<{
           id: number
@@ -109,7 +109,7 @@ export default {
      * @param state state variables
      * @param list list of users
      */
-    setUsersList(
+    setUsersList (
       state: {
         users: Array<object>
       },
@@ -130,7 +130,7 @@ export default {
      * @param {number} id user Id
      * @param {string} email new email address
      */
-    changeEmail(
+    changeEmail (
       { commit, state }: {
         commit: Function,
         state: {
@@ -145,7 +145,7 @@ export default {
       }) {
       const user = state.users.find(el => el.id === id)
       if (user) {
-        commit('changeUserEmail', {user, email})
+        commit ('changeUserEmail', {user, email})
         http.patch(
           `accounts/${id}`,
           {email: email}
@@ -166,7 +166,7 @@ export default {
      * @param {number} id user Id
      * @param {string} role new role
      */
-    changeRole(
+    changeRole (
       { commit, state }: {
         commit: Function,
         state: {
@@ -181,7 +181,7 @@ export default {
       }) {
       const user = state.users.find(el => el.id === id)
       if (user) {
-        commit('changeUserRole', { user, role })
+        commit ('changeUserRole', { user, role })
         http.patch(
           `accounts/${id}`,
           { role: role }
@@ -204,7 +204,7 @@ export default {
      * @param email new user's email
      * @param role new user's role
      */
-    createUser(
+    createUser (
       { commit }: {
         commit: Function,
       },
@@ -220,7 +220,7 @@ export default {
       })
         .then(resp => {
           // console.log(resp)
-          commit('addUser', {
+          commit ('addUser', {
             ...resp.data,
             role: role
           })
@@ -240,7 +240,7 @@ export default {
      * @param commit commit function
      * @param id userId to delete
      */
-    deleteUser(
+    deleteUser (
       {state, commit}: {
         state: {
           users: Array<{
@@ -257,7 +257,7 @@ export default {
           .then(() => {
             // console.log(resp)
             // console.log('deleted user: ', id)
-            commit('removeUser', id)
+            commit ('removeUser', id)
           })
           .catch(err => console.error(err))
       }
@@ -272,7 +272,7 @@ export default {
      * @param commit commit function
      * @param state state variables
      */
-    fetchUserList(
+    fetchUserList (
       {commit}: {commit: Function}
     ){
       http.get('/accounts')
@@ -285,7 +285,7 @@ export default {
               .then(resp => {
                 // console.log(resp.data.role)
                 user.role = resp.data.role
-                commit('addUser', user)
+                commit ('addUser', user)
               })
               .catch(err => console.error(err))
             // console.log('new user ', user)

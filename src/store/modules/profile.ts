@@ -41,7 +41,7 @@ export default {
      * @param state preferences as object
      * @returns {object} fontOptions
      */
-    fontOptions(state: {
+    fontOptions (state: {
       prefs: {
         font: object
       }
@@ -57,7 +57,7 @@ export default {
      * Last Updated: October 26, 2021
      *
      */
-    mediaPrefs(state: {
+    mediaPrefs (state: {
       prefs: {
         media: object
       }
@@ -119,7 +119,7 @@ export default {
      * @param state contains lang
      * @param lang language to set
      */
-    setLang(
+    setLang (
       state: { lang: string },
       lang: string
     ) {
@@ -138,7 +138,7 @@ export default {
      * @param value: boolean
      *
      */
-    setMedia(
+    setMedia (
       state: {
         prefs: {
           media: object
@@ -161,7 +161,7 @@ export default {
      * @param state contains preferences
      * @param prefs: object containing some options
      */
-    setPrefs(
+    setPrefs (
       state: { prefs: object },
       prefs: object
     ) {
@@ -212,7 +212,7 @@ export default {
      * @param type: one of 'audio', 'simple', 'text' and 'video'
      *
      */
-    toggleMedia(
+    toggleMedia (
       state: {
         prefs: {
           media: object
@@ -235,18 +235,10 @@ export default {
      *
      * @param param0 state variables
      */
-    fetchProfile(
-      { commit, rootState }: {
-        commit: Function,
-        rootState: {
-          auth: {
-            userId: number
-          }
-        }
-      }) {
+    fetchProfile ({ commit, rootState }) {
       http.get(`accounts/${rootState.auth.userId}`)
         .then(({ data }) => {
-          commit('setProfile', data)
+          commit ('setProfile', data)
         })
         .catch((err) => console.error(err));
     },
@@ -260,15 +252,7 @@ export default {
      *
      * @param param0 state variables
      */
-    saveProfile(
-      { state, rootState }: {
-        state: object,
-        rootState: {
-          auth: {
-            userId: string
-          }
-        }
-      }) {
+    saveProfile ({ state, rootState }) {
       http.patch(
         `accounts/${rootState.auth.userId}`,
         { ...state })
@@ -287,24 +271,20 @@ export default {
      * @param param0 contains state variables
      * @param langData contains user language and id
      */
-    setUserLang(
-      { commit, state }: {
-        commit: Function,
-        state: {
-          lang: string
-        }
-      },
+    setUserLang (
+      { commit, state },
       langData: {
         lang: string,
         uid: number
-      }) {
+      }
+    ) {
       //save language choice in User's profile
       http.post(
         `/accounts/${langData.uid}/change-language`,
         langData
       )
         .then(() => {
-          commit('setLang', langData.lang)
+          commit ('setLang', langData.lang)
         })
         .catch((err) => console.error(err))
     }
