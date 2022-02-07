@@ -138,13 +138,12 @@ import { mapGetters, mapState } from 'vuex'
 import http from 'axios'
 import { icons } from '@/misc/langs.js'
 import { locale } from '@/mixins'
-import lyHeaderNotifications from '@/components/header-notifications.vue'
 
 export default {
   name: 'ly-header',
 
   components: {
-    lyHeaderNotifications,
+    lyHeaderNotifications: () => import('@/components/header-notifications')
   },
 
   mixins: [

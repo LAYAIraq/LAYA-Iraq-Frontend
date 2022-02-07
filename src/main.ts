@@ -12,17 +12,17 @@ import router from './router.js'
 import store from './store'
 import './registerServiceWorker'
 
-/* set backend address */
+/* set backend address */ // TODO: move to store when separation of concerns is tackled
 import backendUrl from './backend-url'
 import httpClient from 'axios'
 httpClient.defaults.baseURL = backendUrl
 
 /* bootstrap */
-import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
+import { BootstrapVue } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(BootstrapVue);
-Vue.use(BootstrapVueIcons)
+// Vue.use(BootstrapVueIcons)
 
 /* Laya Interface */
 import Laya from './laya';

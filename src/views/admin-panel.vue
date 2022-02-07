@@ -102,24 +102,24 @@
         </div>
         <div class="col pt-4">
           <b-button
-            :class="langIsAr? 'ml-3': 'mr-3'"
+            :class="langIsAr? 'ml-2': 'mr-2'"
             @click="setFilter(true)"
             :title="i18n['adminPanel.filterList']"
             v-b-tooltip.bottom
           >
-            <b-icon icon="filter" scale="1.5"></b-icon>
+            <i class="fas fa-filter"></i>
             <span class="sr-only">
               {{ i18n['adminPanel.filterList'] }}
             </span>
           </b-button>
           <b-button
-            :class="langIsAr? 'ml-3': 'mr-3'"
+            :class="langIsAr? 'ml-2': 'mr-2'"
             variant="warning"
             @click="setFilter(false)"
             :title="i18n['adminPanel.resetFilters']"
             v-b-tooltip.bottom
           >
-            <b-icon icon="x-circle" scale="1.5"></b-icon>
+            <i class="far fa-times-circle"></i>
             <span class="sr-only">
               {{ i18n['adminPanel.resetFilters'] }}
             </span>
@@ -178,15 +178,12 @@
             <b-button
               class="user-mgmt-btn"
               :disabled="user.id === userId"
-              :class="langIsAr? 'ml-3': 'mr-3'"
+              :class="langIsAr? 'ml-2': 'mr-2'"
               :title="i18n['adminPanel.promoteUser']"
               @click="openModal(user.id, 'promote-user')"
               v-b-tooltip.top
             >
-              <b-icon
-                icon="box-arrow-up"
-                scale="1.5"
-              ></b-icon>
+              <i class="fas fa-arrow-circle-up"></i>
               <span class="sr-only">
               {{ i18n['adminPanel.promoteUser']   }}
             </span>
@@ -195,16 +192,13 @@
             <b-button
               class="user-mgmt-btn"
               :disabled="user.id === userId"
-              :class="langIsAr? 'ml-3': 'mr-3'"
+              :class="langIsAr? 'ml-2': 'mr-2'"
               :title="i18n['adminPanel.editEmail']"
               variant="info"
               v-b-tooltip.top
               @click="openModal(user.id, 'edit-email')"
             >
-              <b-icon
-                icon="pen-fill"
-                scale="1.5"
-              ></b-icon>
+              <i class="fas fa-pen"></i>
               <span class="sr-only">
              {{ i18n['adminPanel.editEmail'] }}
             </span>
@@ -213,16 +207,13 @@
             <b-button
               class="user-mgmt-btn"
               :disabled="user.id === userId"
-              :class="langIsAr? 'ml-3': 'mr-3'"
+              :class="langIsAr? 'ml-2': 'mr-2'"
               :title="i18n['adminPanel.resetPassword']"
               variant="warning"
               v-b-tooltip.top
               @click="openModal(user.id, 'reset-password')"
             >
-              <b-icon
-                icon="screwdriver"
-                scale="1.5"
-              ></b-icon>
+              <i class="fas fa-screwdriver"></i>
               <span class="sr-only">
               {{ i18n['adminPanel.resetPassword'] }}
             </span>
@@ -231,16 +222,13 @@
             <b-button
               class="user-mgmt-btn"
               :disabled="user.id === userId"
-              :class="langIsAr? 'ml-3': 'mr-3'"
+              :class="langIsAr? 'ml-2': 'mr-2'"
               :title="i18n['adminPanel.deleteUser']"
               variant="danger"
               v-b-tooltip.top
               @click="openModal(user.id, 'delete-user')"
             >
-              <b-icon
-                icon="x-circle-fill"
-                scale="1.5"
-              ></b-icon>
+              <i class="fas fa-times-circle"></i>
               <span class="sr-only">
               {{ i18n['adminPanel.deleteUser'] }}
             </span>
@@ -294,7 +282,7 @@
         class="m-auto"
         @click="openModal(-1, 'create-user')"
       >
-        <b-icon icon="plus-circle"></b-icon>
+        <i class="fas fa-plus-circle"></i>
         {{ i18n['adminPanel.createUser'] }}
       </b-button>
     </div>
@@ -883,5 +871,8 @@ ul.pages {
 
 .user-mgmt-btn[disabled] {
   cursor: not-allowed;
+}
+i {
+  font-size: 1.5rem;
 }
 </style>

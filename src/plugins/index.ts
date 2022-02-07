@@ -21,5 +21,5 @@ export { default as LayaHtml } from './laya-lb-html'
 // export { default as LayaCourseTable } from './misc/laya-course-table'
 
 // Elements for Course Display and Editing
-export { LayaAudioInline } from './misc'
-export { LayaFlagIcon } from './misc'
+export { default as LayaAudioInline } from './misc/laya-audio-inline'
+export { default as LayaFlagIcon } from './misc/laya-flag-icon'

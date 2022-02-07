@@ -80,7 +80,7 @@ import {
 
 export default {
   name: 'course-edit',
-  components: {
+  components: { // not lazily loaded b/c visible first
     courseCopy,
     courseDelete,
     courseDeleteBlock,

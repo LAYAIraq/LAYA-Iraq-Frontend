@@ -17,7 +17,7 @@ Dependencies:
           <div v-if="preview" :is="comps.view" :previewData="stepData"></div>
 
           <!-- editing view -->
-          <div v-show="!preview">
+          <div v-else>
             <component v-if="!editContent" :is="comps.new" ref="new"></component>
             <component v-else :is="comps.edit" ref="edit"></component>
 
@@ -55,7 +55,7 @@ Dependencies:
 <script>
 import { locale } from '@/mixins'
 import { mapGetters } from 'vuex'
-import LayaUploadFileList from '@/plugins/misc/laya-upload-file-list/file-list.vue'
+import LayaUploadFileList from '@/plugins/misc/laya-upload-file-list/file-list'
 
 
 export default {

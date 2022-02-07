@@ -9,11 +9,28 @@
  *  @/views
  */
 
-import Vue from 'vue';
-import Router from 'vue-router';
-/* views */
-import * as views from './views';
-Vue.use(Router);
+import Vue from 'vue'
+import Router from 'vue-router'
+
+/* dynamic imports for lazy loading */
+const AdminPanel = () => import('./views/admin-panel')
+const CourseDetail = () => import('./views/course-detail')
+const CourseEditWrapper = () => import('./views/course-edit-wrapper')
+const CourseNavEdit = () => import('./views/edit-course-nav')
+const Courses = () => import('./views/courses')
+const Flag = () => import('./views/flag')
+const Imprint = () => import('./views/imprint')
+const Login = () => import('./views/login')
+const NotFound = () => import('./views/not-found')
+const Notifications = () => import('./views/notifications')
+const PasswordReset = () => import('./views/pwd-reset')
+const Privacy = () => import('./views/privacy')
+const Profile = () => import('./views/profile')
+const Register = () => import('./views/register')
+const Root = () => import('./views/root')
+const Verify = () => import('./views/verify')
+
+Vue.use(Router)
 export default new Router({
   mode: 'hash',
   base: '/',
@@ -27,43 +44,43 @@ export default new Router({
       path: '/',
       //redirect: '/login', experimental starting page
       name: 'root-view',
-      component: views.root
+      component: Root
     },
     {
       path: '/admin',
       name: 'admin-panel',
-      component: views.adminPanel
+      component: AdminPanel
     },
     {
       path: '/register',
       name: 'register-view',
-      component: views.register
+      component: Register
     },
     {
       path: '/login',
       name: 'login-view',
-      component: views.login
+      component: Login
     },
     {
       path: '/notifications',
       name: 'notification-view',
-      component: views.notifications,
+      component: Notifications,
       props: true
     },
     {
       path: '/profile',
       name: 'profile-view',
-      component: views.profile
+      component: Profile
     },
     {
       path: '/courses',
       name: 'courses-view',
-      component: views.courses
+      component: Courses
     },
     {
       path: '/courses/:name/:step',
       name: 'course-detail-view',
-      component: views.courseDetailView,
+      component: CourseDetail,
       props: true,
 
       children: [
@@ -71,26 +88,26 @@ export default new Router({
         {
           path: 'edit',
           name: 'edit-course-wrapper',
-          component: views.editCourseWrapper,
+          component: CourseEditWrapper,
           props: true
         },
         {
           path: 'new/:type',
           name: 'new-course-content-view',
-          component: views.editCourseWrapper,
+          component: CourseEditWrapper,
           props: true
         },
         {
           path: 'editNav',
           name: 'edit-course-nav-view',
-          component: views.editCourseNav
+          component: CourseNavEdit
         }
       ]
     },
     {
       path: '/courses/:name/:step/flag/:id',
       name: 'flag-view',
-      component: views.flag,
+      component: Flag,
       props: true
     },
     // {
@@ -101,26 +118,26 @@ export default new Router({
     {
       path: '/imprint',
       name: 'imprint-view',
-      component: views.imprint
+      component: Imprint
     },
     {
       path: '/privacy',
       name: 'privacy-view',
-      component: views.privacy
+      component: Privacy
     },
     {
       path: '/verify',
       name: 'verify-view',
-      component: views.verify
+      component: Verify
     },
     {
       path: '/reset-password',
       name: 'ResetPassword',
-      component: views.pwdReset
+      component: PasswordReset
     },
     {
       path: '/:catchAll(.*)',
-      component: views.notFound,
+      component: NotFound,
       name: 'not-found'
     }
   ]
