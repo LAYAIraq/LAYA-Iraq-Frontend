@@ -91,22 +91,11 @@ export default {
      */
     relocateUnauthorized () {
       /* pass access if auth true */
-      if (this.$ls.get('auth', false)) return
-
-
-
-      /* target url is public */
-      if (publicRoutes.includes(location.hash)) {
-        return
-      } else if (this.$route.path !== '/login') {
+      const auth = this.$ls.get('auth', false)
+      /* target url is not public */
+      if (!auth && publicRoutes.includes(location.hash) && this.$route.path !== '/login') {
         this.$router.push('/login')
       }
-
-      /* temporary allow public course access */
-      // if (/courses/.test(location.hash)) return
-
-      /* auth first */
-
     },
 
     /**
@@ -118,7 +107,7 @@ export default {
      * Last Updated: unknown
      */
     restoreAuth () {
-      let auth = this.$ls.get('auth', false)
+      const auth = this.$ls.get('auth', false)
       if (!auth) return
       console.log('Auth restored')
       this.$store.commit('login', auth)

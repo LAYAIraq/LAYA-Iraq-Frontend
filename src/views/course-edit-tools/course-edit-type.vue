@@ -24,10 +24,8 @@ Dependencies:
       </b-button>
     </div>
 
-    <div
-      class="col text-dark"
-      v-html="i18n['type.changeTypeTip']"
-    >
+    <div class="col text-dark">
+      {{ i18n['type.changeTypeTip'] }}
     </div>
 
     <b-modal

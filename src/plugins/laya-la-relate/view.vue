@@ -127,18 +127,19 @@ Dependencies:
           @click="check"
         >
           {{ i18n['check'] }}
-          <div>
-            <div v-if="showSolutionsBool">
-              {{ i18n["layaLaScmc.showCorrect"] }}
-              <div
-                v-for="(pair, index) in pairs"
-                :key="index"
-              >
-                {{ pair.label }}: {{ pair.relation }},
-              </div>
+        </button>
+
+        <div>
+          <div v-if="showSolutionsBool">
+            {{ i18n["layaLaScmc.showCorrect"] }}
+            <div
+              v-for="(pair, index) in pairs"
+              :key="index"
+            >
+              {{ pair.label }}: {{ pair.relation }},
             </div>
           </div>
-        </button>
+        </div>
 
         <button
           type="button"
@@ -189,12 +190,7 @@ export default {
       showSolutionsBool: false
     }
   },
-  created () {
-    this.defaultOption = this.i18n['layaLaRelate.defaultOption']
-    if (!this.previewData) { // no preview
-      this.fetchData()
-    }
-  },
+
   computed: {
     ...mapGetters(['content']),
 
@@ -209,6 +205,7 @@ export default {
       return this.pairs.map(p => p.relation)
     }
   },
+
   watch: {
     content: {
       deep: true,
@@ -217,6 +214,14 @@ export default {
       }
     }
   },
+
+  created () {
+    this.defaultOption = this.i18n['layaLaRelate.defaultOption']
+    if (!this.previewData) { // no preview
+      this.fetchData()
+    }
+  },
+
   methods: {
 
     /**
