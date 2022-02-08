@@ -14,7 +14,7 @@ export default {
     users: []
   },
   getters: {
-    users(state: {users: Array<object>}) {
+    users (state: {users: Array<object>}) {
       return state.users
     }
   },
@@ -28,7 +28,10 @@ export default {
      * @param state state variables
      * @param user user variables
      */
-    addUser(state: { users: Array<object>}, user: object) {
+    addUser (
+      state: { users: Array<object> },
+      user: object
+    ) {
       state.users.push(user)
     },
 
@@ -37,12 +40,19 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: November 19, 2021
+     * Last Updated: January 27, 2022
      * @param state state variables
      * @param user reference to user in state
      * @param role new email
      */
-    changeUserEmail(state, { user, email }) {
+    changeUserEmail (
+      state,
+      { user, email }: {
+        user: {
+          email: string
+        },
+        email: string
+      }) {
       user.email = email
     },
 
@@ -56,7 +66,14 @@ export default {
      * @param user reference to user in state
      * @param role new role
      */
-    changeUserRole(state, { user, role }) {
+    changeUserRole (
+      state,
+      { user, role }: {
+        user: {
+          role: string
+        },
+        role: string
+      }) {
       user.role = role
     },
 
@@ -69,12 +86,17 @@ export default {
      * @param state state variables
      * @param id user id to delete
      */
-    removeUser(state: {users: Array<{ id: number}>}, id: number) {
-      for (let i = 0; i < state.users.length; i++) {
-        if (state.users[i].id === id) {
-          state.users.splice(i, 1)
-          break
-        }
+    removeUser (
+      state: {
+        users: Array<{
+          id: number
+        }>
+      },
+      id: number
+    ) {
+      const idx = state.users.findIndex(el  => el.id === id)
+      if (idx !== -1) { // element with id exists
+        state.users.splice(idx, 1)
       }
     },
 
@@ -87,7 +109,12 @@ export default {
      * @param state state variables
      * @param list list of users
      */
-    setUsersList(state: { users: Array<object> }, list) {
+    setUsersList (
+      state: {
+        users: Array<object>
+      },
+      list: Array<object>
+    ) {
       state.users = list
     }
   },
@@ -97,22 +124,34 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: November 19, 2021
+     * Last Updated: February 5, 2022
      * @param commit commit function
      * @param state state variables
      * @param {number} id user Id
      * @param {string} email new email address
      */
-    changeEmail({ commit, state }, { id, email }) {
-      for (const user of state.users) {
-        if (user.id === id) {
-          // console.log(email)
-          commit('changeUserEmail', { user, email })
-          http.patch(`accounts/${id}`, { email: email })
-            .then(() => console.log('user role changed!'))
-            .catch(err => console.error(err))
-          break
+    changeEmail (
+      { commit, state }: {
+        commit: Function,
+        state: {
+          users: Array<{
+            id: number
+          }>
         }
+      },
+      { id, email }: {
+        id: number,
+        email: string
+      }) {
+      const user = state.users.find(el => el.id === id)
+      if (user) {
+        commit ('changeUserEmail', {user, email})
+        http.patch(
+          `accounts/${id}`,
+          {email: email}
+        )
+          // .then(() => console.log('user email changed!'))
+          .catch(err => console.error(err))
       }
     },
 
@@ -121,49 +160,67 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: November 19, 2021
+     * Last Updated: January 27, 2022
      * @param commit commit function
      * @param state state variables
      * @param {number} id user Id
      * @param {string} role new role
      */
-    changeRole({ commit, state }, { id, role }) {
-      for (const user of state.users) {
-        if (user.id === id) {
-          // console.log(role)
-          commit('changeUserRole', { user, role })
-          http.post('accounts/change-role', {
-            userId: id,role: role
-          })
-          .then(() => console.log('user role changed!'))
-          .catch(err => console.error(err))
-          break
+    changeRole (
+      { commit, state }: {
+        commit: Function,
+        state: {
+          users: Array<{
+            id: number
+          }>
         }
+      },
+      { id, role }: {
+        id: number,
+        role: string
+      }) {
+      const user = state.users.find(el => el.id === id)
+      if (user) {
+        commit ('changeUserRole', { user, role })
+        http.patch(
+          `accounts/${id}`,
+          { role: role }
+        )
+          // .then(() => console.log('user role changed!'))
+          .catch(err => console.error(err))
       }
     },
 
     /**
-     * function createUser: create new user, then update
-     *  store
+     * function createUser: check for duplicate name or email, if none,
+     * create new user, then update store
      *
      * Author: cmc
      *
-     * Last Updated: November 23, 2021
+     * Last Updated: January 27, 2022
      * @param state store variables
      * @param commit commit function
      * @param username new user's name
      * @param email new user's email
      * @param role new user's role
      */
-    createUser({state, commit}, {username, email, role}) {
+    createUser (
+      { commit }: {
+        commit: Function,
+      },
+      { username, email, role }: {
+        username: string,
+        email: string,
+        role: string
+      }) {
       http.post(`accounts/create`, {
         username: username,
         email: email,
         role: role
       })
         .then(resp => {
-          console.log(resp)
-          commit('addUser', {
+          // console.log(resp)
+          commit ('addUser', {
             ...resp.data,
             role: role
           })
@@ -183,18 +240,26 @@ export default {
      * @param commit commit function
      * @param id userId to delete
      */
-    deleteUser({state, commit}, id) {
-      for (const user of state.users) {
-        if (user.id === id) {
-          http.delete(`accounts/${id}`)
-            .then(resp => {
-              console.log(resp)
-              console.log('deleted user: ', id)
-              commit('removeUser', id)
-            })
-            .catch(err => console.error(err))
-          break
-        }
+    deleteUser (
+      {state, commit}: {
+        state: {
+          users: Array<{
+            id: number
+          }>
+        },
+        commit: Function
+      },
+      id: number
+    ) {
+      const user = state.users.find(el => el.id === id)
+      if (user) {
+        http.delete(`accounts/${id}`)
+          .then(() => {
+            // console.log(resp)
+            // console.log('deleted user: ', id)
+            commit ('removeUser', id)
+          })
+          .catch(err => console.error(err))
       }
     },
 
@@ -207,7 +272,9 @@ export default {
      * @param commit commit function
      * @param state state variables
      */
-    fetchUserList({commit, state}){
+    fetchUserList (
+      {commit}: {commit: Function}
+    ){
       http.get('/accounts')
         .then(resp => {
           // commit('setUsersList', resp.data)
@@ -218,8 +285,9 @@ export default {
               .then(resp => {
                 // console.log(resp.data.role)
                 user.role = resp.data.role
-                commit('addUser', user)
+                commit ('addUser', user)
               })
+              .catch(err => console.error(err))
             // console.log('new user ', user)
 
           }
@@ -283,21 +351,28 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: November 19, 2021
+     * Last Updated: January 13, 2022
      * @param commit commit function
      * @param state state variables
      * @param {number} id user Id
      */
-    resetPassword({ commit, state }, id) {
-      for (const user of state.users) {
-        if (user.id === id) {
-          console.log('changing ', id, 's password')
-          // http.patch(`accounts/${id}`, user) // TODO: create backend method for resetting password
-          //   .then(() => console.log('user role changed!'))
-          //   .catch(err => console.error(err))
-          break
+    resetPassword (
+      { commit, state }: {
+        commit: Function,
+        state: {
+          users: Array<{
+            id: string
+          }>
         }
+      },
+      id: string
+    ) {
+      if (state.users.some(x => x.id === id)) {
+        // console.log('changing ', id, 's password')
+        http.post(`accounts/pwd-reset/${id}`)
+          .catch(err => console.error(err))
       }
+      // else statement omitted b/c only called for existing ids
     },
   }
 }

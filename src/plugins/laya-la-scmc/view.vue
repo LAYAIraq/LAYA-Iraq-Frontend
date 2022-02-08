@@ -51,35 +51,41 @@ vuex,
     <!-- render options -->
     <div class="p-3 bg-light">
       <div v-for="(option,i) in options"
-        class="flaggable form-check mb-3"
+        class="flaggable form-check m-2 mb-3"
         :key="'mchoice-option-'+i"
         :id="option.id"
       >
-        <input
-          v-if="multiple"
-          :id="'mchoice-in-'+i"
-          class="form-check-input"
-          type="checkbox"
-          v-model="answers"
-          :disabled="freeze"
-          v-bind:value="i"
-        >
-        <input v-else
-          :id="'mchoice-in-'+i"
-          class="form-check-input"
-          type="radio"
-          v-model="answers[0]"
-          :disabled="freeze"
-          v-bind:value="i"
-        >
+        <div>
+          <input
+            v-if="multiple"
+            :id="'mchoice-in-'+i"
+            class="position-absolute mt-2"
+            :class="langIsAr? 'mr-3': 'ml-3'"
+            type="checkbox"
+            v-model="answers"
+            :disabled="freeze"
+            v-bind:value="i"
+          >
+          <input
+            v-else
+            :id="'mchoice-in-'+i"
+            class="position-absolute mt-2"
+            :class="langIsAr? 'mr-3': 'ml-3'"
+            type="radio"
+            v-model="answers[0]"
+            :disabled="freeze"
+            v-bind:value="i"
+          >
 
-        <label
-          :for="'mchoice-in-'+i"
-          class="form-check-label"
-          :class="langIsAr? 'mr-4' : ''">
-          {{ courseSimple? option.simple: option.text }}
-        </label>
-        <i class="ml-2" :class="eval[i]"></i>
+          <label
+            :for="'mchoice-in-'+i"
+            class="form-check-label"
+            :class="langIsAr? 'mr-4' : ''">
+            {{ courseSimple? option.simple: option.text }}
+          </label>
+          <i class="ml-2" :class="eval[i]"></i>
+        </div>
+
         <!--
         <i class="ml-2" :class="{'far fa-check-circle text-success': true}"></i>
         <i class="ml-2" :class="{'far fa-times-circle text-danger': true}"></i>
@@ -395,6 +401,12 @@ export default {
 
 label {
   user-select: none;
+}
+
+.form-check-label {
+  width: 90%;
+  padding-left: 3rem;
+  padding-right: 3rem;
 }
 
 legend {

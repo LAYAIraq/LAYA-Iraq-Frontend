@@ -7,9 +7,6 @@
  */
 
 import _Vue from 'vue'
-
-import _create from './create.vue'
-import _edit from './edit.vue'
 import _view from './view.vue'
 
 export default {
@@ -20,10 +17,10 @@ export default {
       'layaLaFeedback',
       'fas fa-comment-dots',
       {
-        new: _create,
+        new: () => import('./create.vue'),
         //@ts-ignore
-        view: _view,
-        edit: _edit
+        view: _view, // not lazily loaded b/c always visible
+        edit: () => import('./edit.vue')
       }
     )
   }

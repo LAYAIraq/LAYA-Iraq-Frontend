@@ -102,24 +102,24 @@
         </div>
         <div class="col pt-4">
           <b-button
-            :class="langIsAr? 'ml-3': 'mr-3'"
+            :class="langIsAr? 'ml-2': 'mr-2'"
             @click="setFilter(true)"
             :title="i18n['adminPanel.filterList']"
             v-b-tooltip.bottom
           >
-            <b-icon icon="filter" scale="1.5"></b-icon>
+            <i class="fas fa-filter"></i>
             <span class="sr-only">
               {{ i18n['adminPanel.filterList'] }}
             </span>
           </b-button>
           <b-button
-            :class="langIsAr? 'ml-3': 'mr-3'"
+            :class="langIsAr? 'ml-2': 'mr-2'"
             variant="warning"
             @click="setFilter(false)"
             :title="i18n['adminPanel.resetFilters']"
             v-b-tooltip.bottom
           >
-            <b-icon icon="x-circle" scale="1.5"></b-icon>
+            <i class="far fa-times-circle"></i>
             <span class="sr-only">
               {{ i18n['adminPanel.resetFilters'] }}
             </span>
@@ -178,15 +178,12 @@
             <b-button
               class="user-mgmt-btn"
               :disabled="user.id === userId"
-              :class="langIsAr? 'ml-3': 'mr-3'"
+              :class="langIsAr? 'ml-2': 'mr-2'"
               :title="i18n['adminPanel.promoteUser']"
               @click="openModal(user.id, 'promote-user')"
               v-b-tooltip.top
             >
-              <b-icon
-                icon="box-arrow-up"
-                scale="1.5"
-              ></b-icon>
+              <i class="fas fa-arrow-circle-up"></i>
               <span class="sr-only">
               {{ i18n['adminPanel.promoteUser']   }}
             </span>
@@ -195,16 +192,13 @@
             <b-button
               class="user-mgmt-btn"
               :disabled="user.id === userId"
-              :class="langIsAr? 'ml-3': 'mr-3'"
+              :class="langIsAr? 'ml-2': 'mr-2'"
               :title="i18n['adminPanel.editEmail']"
               variant="info"
               v-b-tooltip.top
               @click="openModal(user.id, 'edit-email')"
             >
-              <b-icon
-                icon="pen-fill"
-                scale="1.5"
-              ></b-icon>
+              <i class="fas fa-pen"></i>
               <span class="sr-only">
              {{ i18n['adminPanel.editEmail'] }}
             </span>
@@ -213,16 +207,13 @@
             <b-button
               class="user-mgmt-btn"
               :disabled="user.id === userId"
-              :class="langIsAr? 'ml-3': 'mr-3'"
+              :class="langIsAr? 'ml-2': 'mr-2'"
               :title="i18n['adminPanel.resetPassword']"
               variant="warning"
               v-b-tooltip.top
               @click="openModal(user.id, 'reset-password')"
             >
-              <b-icon
-                icon="screwdriver"
-                scale="1.5"
-              ></b-icon>
+              <i class="fas fa-screwdriver"></i>
               <span class="sr-only">
               {{ i18n['adminPanel.resetPassword'] }}
             </span>
@@ -231,16 +222,13 @@
             <b-button
               class="user-mgmt-btn"
               :disabled="user.id === userId"
-              :class="langIsAr? 'ml-3': 'mr-3'"
+              :class="langIsAr? 'ml-2': 'mr-2'"
               :title="i18n['adminPanel.deleteUser']"
               variant="danger"
               v-b-tooltip.top
               @click="openModal(user.id, 'delete-user')"
             >
-              <b-icon
-                icon="x-circle-fill"
-                scale="1.5"
-              ></b-icon>
+              <i class="fas fa-times-circle"></i>
               <span class="sr-only">
               {{ i18n['adminPanel.deleteUser'] }}
             </span>
@@ -294,7 +282,7 @@
         class="m-auto"
         @click="openModal(-1, 'create-user')"
       >
-        <b-icon icon="plus-circle"></b-icon>
+        <i class="fas fa-plus-circle"></i>
         {{ i18n['adminPanel.createUser'] }}
       </b-button>
     </div>
@@ -467,6 +455,12 @@
         <p v-if="noEmailFormat">
           {{ i18n['emailErr'] }}
         </p>
+        <p v-if="duplicateProperty">
+          {{ duplicateErrMsg }}
+        </p>
+        <p v-if="noRoleChosen">
+          {{ i18n['adminPanel.modal.chooseRole'] }}
+        </p>
       </b-modal>
     </div>
   </div>
@@ -492,6 +486,7 @@ export default {
       changeEmail: '',
       changeRole: null,
       changingUserId: null,
+      duplicateProperty: null,
       emailFilter: '',
       emptyCreateInput: false,
       filter: null,
@@ -534,6 +529,18 @@ export default {
     },
 
     /**
+     * function duplicateErrMsg: returns error message for duplicate property in locale
+     *
+     * Author: cmc
+     *
+     * Last Updated: February 5, 2022
+     * @returns {string} Error message when name or email is duplicate
+     */
+    duplicateErrMsg() {
+      return this.i18n['adminPanel.modal.duplicateError'] + this.duplicateProperty
+    },
+
+    /**
      * function filteredList: filters list according to regexes array
      *
      * Author: cmc
@@ -569,6 +576,18 @@ export default {
     noEmailFormat() {
       return !(this.createUserEmail.includes('@') &&
         this.createUserEmail.includes('.'))
+    },
+
+    /**
+     * noRoleChosen: true if role for new user is null or 'null'
+     *
+     * Author: cmc
+     *
+     * Last Updated: February 5, 2022
+     * @returns {boolean} true if no role chosen
+     **/
+    noRoleChosen() {
+      return (!this.createUserRole || this.createUserRole === 'null')
     },
 
     /**
@@ -705,9 +724,13 @@ export default {
     createUser() {
       this.$store.dispatch('createUser', {
         username: this.createUserName,
-        email: this.createUserEmail,
-        role: this.createUserRole
+        email: this.createUserEmail.toLowerCase(),
+        role: this.createUserRole || 'student' // create student when no role chosen
       })
+        .then(() => this.$bvModal.hide('create-user'))
+        .catch(err => {
+          this.duplicateProperty = err
+        })
     },
 
     /**
@@ -763,7 +786,6 @@ export default {
         this.emptyCreateInput = false
         if(!this.noEmailFormat) {
           this.createUser()
-          this.$nextTick(() => this.$bvModal.hide('create-user'))
         }
       } else {
         this.emptyCreateInput = true
@@ -849,5 +871,8 @@ ul.pages {
 
 .user-mgmt-btn[disabled] {
   cursor: not-allowed;
+}
+i {
+  font-size: 1.5rem;
 }
 </style>

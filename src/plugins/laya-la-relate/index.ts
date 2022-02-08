@@ -7,23 +7,20 @@
  */
 
 import _Vue from 'vue'
-
-import _create from './create.vue'
-import _edit from './edit.vue'
 import _view from './view.vue'
 
 export default {
   install(Vue: typeof _Vue, options?: any): void {
     Vue.$laya.registerLA(
-      'laya-quiz-relate', 
-      'AssessmentRelate', 
+      'laya-quiz-relate',
+      'AssessmentRelate',
       'layaLaRelate',
       'fas fa-paperclip',
       {
-        new: _create,
+        new: () => import('./create.vue'),
         //@ts-ignore
-        view: _view,
-        edit: _edit
+        view: _view, // not lazily loaded b/c always visible
+        edit: () => import('./edit.vue')
       }
     )
   }

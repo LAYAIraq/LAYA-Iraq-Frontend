@@ -34,7 +34,7 @@ Dependencies:
                 type="text"
                 :disabled="submitOk"
                 @blur="isNameTaken"
-                class="w-100"
+                class="form-control"
                 aria-describedby="name-err">
             </div>
           </div>
@@ -58,9 +58,16 @@ Dependencies:
               <i class="fas fa-at"></i>
             </div>
             <div class="col">
-              <input v-model="email" :placeholder="i18n['emailPH']" :aria-label="i18n['emailPH']" type="text"
-              :disabled="submitOk" @blur="isEmailTaken" class="w-100"
-              aria-describedby="email-err">
+              <input
+                v-model="email"
+                :placeholder="i18n['emailPH']"
+                :aria-label="i18n['emailPH']"
+                type="text"
+                :disabled="submitOk"
+                @blur="isEmailTaken"
+                class="form-control"
+                aria-describedby="email-err"
+              >
             </div>
           </div>
 
@@ -77,49 +84,16 @@ Dependencies:
             </div>
           </div>
 
-          <!-- password -->
-          <div class="form-group row" :class="{error: errPwds}">
-            <div class="col-1 col-form-label">
 
-                <i class="fas fa-key"></i>
-
-            </div>
-            <div class="col">
-              <input
-                v-model="pwd1"
-                :placeholder="i18n['pwdPH']"
-                :aria-label="i18n['pwdPH']"
-                type="password"
-                :disabled="submitOk"
-                class="w-100"
-                aria-describedby="pwd-err"
-              >
-            </div>
-          </div>
-          <div class="form-group row" :class="{error: errPwds}">
-            <div class="col-1 col-form-label">
-                <i class="fas fa-redo-alt"></i>
-            </div>
-            <div class="col">
-              <input v-model="pwd2" :placeholder="i18n['pwd2PH']" :aria-label="i18n['pwd2PH']" type="password"
-              :disabled="submitOk" class="w-100" aria-describedby="pwd-err">
-            </div>
-          </div>
-          <div
-            id="pwd-err"
-            class="text-center"
-            :class="{'d-none': !errPwds}"
-            :aria-hidden="!errPwds"
-            v-show="errPwds">
-            {{ i18n['register.pwdErr'] }}
-          </div>
-          <div class="form-group row">
-            <div class="col-sm-9">
-              <label for="pwdMeter" class="col-sm-3 col-form-label">{{ i18n['profile.pwdStrength'] }}</label>
-              <password id="pwdMeter" v-model="pwd2" :strength-meter-only="true" @feedback="showFeedback"></password>
-              <strong id="testPwdMeter" class="form-text text-center"> {{ warnings }} </strong>
-            </div>
-          </div>
+          <!--- pwd input component test TODO: find out why props get undefined -->
+          <LayaPasswordInput
+            class="pwd-input"
+            :input-pwd="pwd1"
+            :input-pwd-repeat="pwd2"
+            :label-icons-only="true"
+            :label-width="1"
+            @compliantLength="setPwdCompliance"
+          ></LayaPasswordInput>
 
           <!-- profile pic -->
 
@@ -134,19 +108,18 @@ Dependencies:
             </ly-input-img>
           </div> -->
 
-
           <!-- submit -->
           <!-- <div style="height: 4rem"></div> -->
           <h2 :class="{'d-none': busy || submitOk}">
             <button v-if="!errForm"
               @click.prevent="submit"
-              type="submit"
               class="btn btn-lg btn-block btn-outline-dark"
               style="border: 2px solid black">
               {{ i18n['register.submit'] }}
               <i class="fas fa-user-plus"></i>
             </button>
           </h2>
+
           <!-- still form errors -->
           <h3 id="form-err" class="text-center" :class="{'d-none': !errForm}">
             {{ i18n['register.formErr'] }}
@@ -177,20 +150,20 @@ Dependencies:
 
 <script>
 import http from 'axios'
-import { locale, pwdStrength } from '@/mixins'
-import Password from 'vue-password-strength-meter'
+import { locale } from '@/mixins'
+import LayaPasswordInput from '@/components/password-input.vue'
+import { mapGetters } from 'vuex'
 
 export default {
-  name: 'register-view',
+  name: 'RegisterView',
 
   components: {
-    Password,
+    LayaPasswordInput, // not lazily loaded b/c always visible
     // LayaUploadAvatar
   },
 
   mixins: [
-    locale,
-    pwdStrength
+    locale
   ],
 
   data () {
@@ -203,16 +176,18 @@ export default {
       pwd2: '',
       profileImg: null,
 
-      /* temp */
+      /* helpers for input checking */
       errmsg: '',
       busy: false,
       submitOk: false,
       nameTaken: false,
-      emailTaken: false
+      emailTaken: false,
+      sufficientPwdLength: false
     }
   },
 
   computed: {
+    ...mapGetters(['passwordSet']),
 
     /**
      * errName: form validation for name
@@ -241,19 +216,6 @@ export default {
     },
 
     /**
-     * errPwds: form validation for password input
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     */
-    errPwds() {
-      if(this.pwd1 === '') return false
-      return (/^$/.test(this.pwd1) || /^$/.test(this.pwd2)) ||
-        (this.pwd1 !== this.pwd2)
-    },
-
-    /**
      * noInput: return true if no input is set
      *
      * Author: cmc
@@ -272,10 +234,10 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: unknown
+     * Last Updated: January 17, 2021
      */
     errForm() {
-      return this.errName || this.errEmail || this.errPwds || this.noInput
+      return this.errName || this.errEmail || this.noInput || !this.sufficientPwdLength
     }
   },
 
@@ -336,6 +298,18 @@ export default {
     },
 
     /**
+     * function setPwdCompliance: set sufficientPwdLength to bool
+     *
+     * Author cmc
+     *
+     * Last Updated: January 17, 2021
+     * @param bool if password matches required length
+     */
+    setPwdCompliance(bool) {
+      this.sufficientPwdLength = bool
+    },
+
+    /**
      * Function submit: collect requests for changes, then shoot them
      *
      * Author: core
@@ -348,50 +322,56 @@ export default {
         return
       }
 
-      console.log('Submitting...')
+      // console.log('Submitting...')
       this.busy = true
       let ctx = this
 
-      const avatarFileName = ctx.profileImg
-        ? `${ctx.name}.${ctx.profileImg.name.split('.').slice(-1).pop()}` : ''
+      // const avatarFileName = ctx.profileImg
+      //   ? `${ctx.name}.${ctx.profileImg.name.split('.').slice(-1).pop()}` : ''
 
-      let requests = [
+      // let requests = [
         http.post(`accounts/student`, {
           email: ctx.email,
           username: ctx.name,
-          password: ctx.pwd1,
-          avatar: avatarFileName,
+          password: ctx.passwordSet,
+          // avatar: avatarFileName,
           lang: ctx.$store.state.profile.lang
         })
-      ]
+          .then(() => {
+            ctx.submitOk = true
+          })
+          .catch((err) => {
+            console.error(err)
+            ctx.errmsg = this.i18n['register.fail']
+          })
+          .finally(() => {
+            ctx.busy = false
+          })
+      // ]
 
       //
       // upload profile pic if set
-      if (ctx.profileImg) {
-        const data = new FormData()
-        data.append('file', ctx.profileImg)
-        requests.push(
-          http.post(`storage/img/upload?name=${avatarFileName}`, data)
-          .then(res => console.log(res))
-          .catch(err => console.error(err))
-        )
-      }
+      // if (ctx.profileImg) {
+      //   const data = new FormData()
+      //   data.append('file', ctx.profileImg)
+      //   requests.push(
+      //     http.post(`storage/img/upload?name=${avatarFileName}`, data)
+      //     .then(res => console.log(res))
+      //     .catch(err => console.error(err))
+      //   )
+      // }
 
-      http.all(requests)
-        .then(http.spread( () => {
-          ctx.submitOk = true
-        }))
-        .catch( (err) => {
-          console.log(err)
-          ctx.errmsg = this.i18n['register.fail']
-        })
-        .finally( () => {
-          ctx.busy = false
-        })
-    },
-    showFeedback ({suggestions, warning}) {
-      this.pwdStrength({suggestions, warning})
-
+      // http.all(requests)
+      //   .then(http.spread( () => {
+      //     ctx.submitOk = true
+      //   }))
+      //   .catch( (err) => {
+      //     console.log(err)
+      //     ctx.errmsg = this.i18n['register.fail']
+      //   })
+      //   .finally( () => {
+      //     ctx.busy = false
+      //   })
     }
   }
 }
@@ -408,7 +388,7 @@ form {
   margin: auto;
 }
 
-form > * {
+form > *, form > .pwd-input > * {
   width: 90%;
 }
 

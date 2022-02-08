@@ -28,7 +28,7 @@ export default {
      * @param state holds role string
      * @returns {boolean} true if user is admin
      */
-    isAdmin(state: { role: string }) {
+    isAdmin (state: { role: string }) {
       return state.role === roles.ADMIN
     },
 
@@ -42,7 +42,7 @@ export default {
      * @param state contains role string
      * @returns true if role is author or admin
      */
-    isAuthor(state: { role: string }) {
+    isAuthor (state: { role: string }) {
       return state.role === roles.AUTHOR || state.role == roles.ADMIN
     },
 
@@ -52,7 +52,7 @@ export default {
      * Last Updated: June 20, 2021
      * @param state: state variables
      */
-    userId(state: { userId: number }) {
+    userId (state: { userId: number }) {
       return state.userId
     }
   },
@@ -68,7 +68,7 @@ export default {
      * @param state contains role string
      * @param role new role
      */
-    setRole(state: { role: any }, role: any) {
+    setRole (state: { role: any }, role: any) {
       state.role = role
     },
 
@@ -82,7 +82,7 @@ export default {
      * @param state contains online and userId
      * @param data response from post request to backend, contains token and userId
      */
-    login(state: { online: boolean, userId: any }, { id, userId }: any) {
+    login (state: { online: boolean, userId: any }, { id, userId }: any) {
       state.online = true
       state.userId = userId
       //place token ID in axios for all future http requests
@@ -98,7 +98,7 @@ export default {
      *
      * @param state contains boolean online, userId, role string
      */
-    logout(state: { online: boolean, userId: number, role: string }) {
+    logout (state: { online: boolean, userId: number, role: string }) {
       state.online = false
       state.userId = -1
       state.role = roles.STUDENT
@@ -117,7 +117,7 @@ export default {
      *
      * @param data vuex state and commit handles
      */
-    fetchRole({ commit, state }) {
+    fetchRole ({ commit, state }) {
       http
         .get(`accounts/${state.userId}/role`)
         .then(({ data }) => commit('setRole', data.role))

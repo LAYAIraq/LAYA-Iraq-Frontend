@@ -27,6 +27,7 @@ import { mapGetters } from 'vuex'
 import 'open-dyslexic/open-dyslexic-regular.css'
 import '@/styles/fonts.css'
 import '@/styles/color-correction.css'
+import { publicRoutes } from '@/router'
 
 export default {
   name: 'app',

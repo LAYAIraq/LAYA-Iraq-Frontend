@@ -8,7 +8,7 @@
 
     <div class="form-group flag-question">
       <form
-        @submit="setFlagQuestion()"
+        @submit.prevent="setFlagQuestion()"
       >
         <div class="form-group row">
           <span

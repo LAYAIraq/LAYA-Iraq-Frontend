@@ -32,7 +32,7 @@ Dependencies:
             class="d-block rounded-circle mx-auto avatar"
           >
 
-          <h1 class="text-center text-light">{{ profile.name }}</h1>
+          <h1 class="text-center text-light">{{ profile.username }}</h1>
         </div>
       </div>
       <!-- row -->
@@ -56,7 +56,7 @@ Dependencies:
                 id="username"
                 type="text"
                 class="form-control"
-                v-model="profile.name"
+                v-model="profile.username"
                 readonly
                 tabindex="-1"
               >
@@ -144,7 +144,7 @@ Dependencies:
             >
               {{ i18n['profile.pwdStrength'] }}
             </label>
-            <div class="col-sm-9">
+            <div class="col">
               <password
                 id="pwdMeter"
                 v-model="newPwd"
@@ -159,7 +159,7 @@ Dependencies:
             </div>
           </div>
 
-
+          <!-- password suggestions -->
           <div
             v-if="showSuggestions"
             class="form-group row"
@@ -193,6 +193,7 @@ Dependencies:
               </strong>
             </div>
           </div>
+
           <hr>
 
           <!-- avatar upload TODO: FIX Cropper Problems
@@ -307,7 +308,7 @@ Dependencies:
           <div class="form-group">
             <button
               type="submit"
-              @click="submit"
+              @click.prevent="submit"
               :disabled="busy"
               class="btn btn-block btn-lg btn-outline-dark"
               style="border-width: 2px"
@@ -347,7 +348,7 @@ export default {
   name: 'profile-view',
 
   components: {
-    Password,
+    Password, // not lazily loaded b/c always visible
     // LayaUploadAvatar
   },
 
@@ -489,6 +490,15 @@ export default {
     }
   },
 
+  watch: {
+    profile: {
+      deep: true,
+      handler() {
+        this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
+      }
+    }
+  },
+
   methods: {
 
     /**
@@ -572,7 +582,7 @@ export default {
      * @param warning
      */
     showFeedback({ suggestions, warning }) {
-      this.pwdSuggestions({ suggestions, warning })
+      this.pwdStrength({ suggestions, warning })
     }
   },
 }

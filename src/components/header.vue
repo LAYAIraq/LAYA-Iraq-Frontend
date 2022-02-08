@@ -138,13 +138,12 @@ import { mapGetters, mapState } from 'vuex'
 import http from 'axios'
 import { icons } from '@/misc/langs.js'
 import { locale } from '@/mixins'
-import lyHeaderNotifications from '@/components/header-notifications.vue'
 
 export default {
   name: 'ly-header',
 
   components: {
-    lyHeaderNotifications,
+    lyHeaderNotifications: () => import('@/components/header-notifications')
   },
 
   mixins: [
@@ -236,15 +235,13 @@ export default {
     */
     setLang (newlang) {
       this.$store.commit('setLang', newlang)
-      this.$nextTick(() => {
-        if(this.$store.state.auth.online) {
-          const data = {
-            lang: this.$store.state.profile.lang,
-            uid: this.$store.state.auth.userId
-          }
-          this.$store.commit('setUserLang', data)
+      if(this.$store.state.auth.online) {
+        const data = {
+          lang: this.$store.state.profile.lang,
+          uid: this.$store.state.auth.userId
         }
-      })
+        this.$store.dispatch('setUserLang', data)
+      }
     },
 
     /**

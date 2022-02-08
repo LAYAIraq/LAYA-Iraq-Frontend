@@ -8,25 +8,25 @@
 
 import Vue from 'vue'
 import App from './App.vue'
-import router from './router.js'
+import router from './router'
 import store from './store'
 import './registerServiceWorker'
 
-/* set backend address */
+/* set backend address */ // TODO: move to store when separation of concerns is tackled
 import backendUrl from './backend-url'
 import httpClient from 'axios'
 httpClient.defaults.baseURL = backendUrl
 
 /* bootstrap */
-import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
+import { BootstrapVue } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(BootstrapVue);
-Vue.use(BootstrapVueIcons)
+// Vue.use(BootstrapVueIcons)
 
 /* Laya Interface */
-import Laya from './laya';
-Vue.use(Laya);
+import Laya from './laya'
+Vue.use(Laya)
 
 /** LAYA core plugins */
 import * as plugins from '@/plugins'
@@ -37,14 +37,11 @@ import '@fortawesome/fontawesome-free/css/all.css'
 
 /* storage */
 import Storage from 'vue-ls'
-Vue.use(Storage, { name: 'ls', namespace: 'vuejs__', storage: 'local' });
-
-Vue.config.productionTip = false;
-
+Vue.use(Storage, { name: 'ls', namespace: 'vuejs__', storage: 'local' })
+Vue.config.productionTip = process.env.NODE_ENV === 'development'
 
 new Vue({
   store,
-  //@ts-ignore
   router,
   render: (h) => h(App),
-}).$mount('#app');
+}).$mount('#app')

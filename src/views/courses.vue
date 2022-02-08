@@ -81,8 +81,6 @@ Dependencies:
 import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 // import http from 'axios'
-
-import lyCourseEdit from '@/components/authoring/course-create'
 import lyCourseList from '@/components/ly-course-list'
 
 import utils from '../misc/utils.js'
@@ -91,8 +89,8 @@ export default {
   name: 'courses-view',
 
   components: {
-    lyCourseEdit,
-    lyCourseList
+    lyCourseEdit: () => import('@/components/authoring/course-create'),
+    lyCourseList // not lazily loaded b/c always visible
   },
 
   mixins: [
