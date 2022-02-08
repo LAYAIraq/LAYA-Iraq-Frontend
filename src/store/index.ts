@@ -3,7 +3,7 @@
  * Use: make store available to be used in app
  * Creator: core
  * Date: unknown
- * Dependencies: 
+ * Dependencies:
  *  vue,
  *  vuex
  */
