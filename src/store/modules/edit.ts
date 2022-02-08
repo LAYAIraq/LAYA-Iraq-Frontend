@@ -282,6 +282,27 @@ export default {
       state.courseList.push(courseListItem)
     },
 
+      /**
+       * Function to replace properties attribute for course in course list
+       *
+       * Author: pj
+       *
+       * Last Updated: February 02, 2022
+       *
+       * @param state course list array
+       * @param data new properties to be set
+       */
+    setPropertyToCourseInCourseList(
+      state: { courseList: Array<object>},
+      data: { course: object, prefs: object }){
+      for (let i = 0; i < state.courseList.length; i++){
+        if(data.course["courseId"] == state.courseList[i]["courseId"]){
+          state.courseList[i]["properties"] = data.prefs
+        }
+      }
+    },
+
+
     /**
      * function changeCourseProperties: update course properties
      *

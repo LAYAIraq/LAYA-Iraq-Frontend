@@ -119,7 +119,7 @@ export default {
     locale
   ],
   computed: {
-    ...mapGetters(['course'])
+    ...mapGetters(['course', 'courseList'])
   },
   data() {
     return {
@@ -145,6 +145,8 @@ export default {
     this.enrollment = prefs.enrollment
     this.simpleLanguage = prefs.simpleLanguage
     this.checkForSimpleLanguage()
+    this.changeSettings()
+    //console.log(JSON.stringify(this.course))
   },
 
 
@@ -154,13 +156,15 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: October 31, 2021
+     * Last Updated: Feburary 08, 2022
      */
     changeSettings() {
+      this.simple = true
+      const {course } = this
       //eslint-disable-next-line
       const prefs = (({$laya, ...o}) => o) (this.$data) // strip $laya from data property
-      // console.log(prefs)
       this.$store.commit('changeCourseProperties', prefs)
+      this.$store.commit('setPropertyToCourseInCourseList', {course, prefs})
       this.$emit('settingsChanged')
     },
 
@@ -202,6 +206,9 @@ export default {
                 }
               } else if (elem){
                 if (!hasSimple(elem)) {
+                  if (Object.prototype.hasOwnProperty.call(elem, 'ops')) { // object is squill input
+                    return null
+                  }
                   // console.log(elem)
                   // console.log(' doesnt have simple')
                   this.simple = false
