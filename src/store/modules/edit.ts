@@ -536,6 +536,30 @@ export default {
     },
 
     /**
+     * Function setCourseUpdated: set courseUpdated to true
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 11, 2021
+     * @param state contains boolean courseUpdated
+     */
+    setCourseUpdated(state: { courseUpdated: boolean }) {
+      state.courseUpdated = true
+    },
+
+    /**
+     * Function unsetCourseUpdated: set courseUpdated to false
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 11, 2021
+     * @param state contains boolean courseUpdated
+     */
+    unsetCourseUpdated(state: { courseUpdated: boolean }) {
+      state.courseUpdated = false
+    },
+
+    /**
      * Function updateCourseFiles: updates list of course files
      *
      * Author: cmc

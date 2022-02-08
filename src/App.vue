@@ -93,16 +93,16 @@ export default {
       /* pass access if auth true */
       if (this.$ls.get('auth', false)) return
 
-      // const publicURLs = [
-      //   '/',
-      //   '/login',
-      //   '/register',
-      //   '/imprint',
-      //   '/privacy'
-      // ]
+      const publicURLs = [
+        '#/',
+        '#/login',
+        '#/register',
+        '#/imprint',
+        '#/privacy'
+      ]
 
       /* target url is public */
-      if (publicRoutes.includes(location.hash)) {
+      if (publicURLs.includes(location.hash)) {
         return
       } else if (this.$route.path !== '/login') {
         this.$router.push('/login')

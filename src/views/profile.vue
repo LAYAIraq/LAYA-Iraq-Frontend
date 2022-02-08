@@ -524,45 +524,50 @@ export default {
       const ctx = this
       ctx.formMsg = ''
 
-      const requests = []
+      // const requests = []
 
       /* change password request */
       if (ctx.oldPwd !== '' && ctx.newPwd !== '') {
-        requests.push(
+        // requests.push(
           http
           .post('accounts/change-password', {
             oldPassword: ctx.oldPwd,
             newPassword: ctx.newPwd
           })
+          .then(() => {
+            this.busy = false
+            ctx.$bvToast.show('submit-ok')
+          })
           .catch(err => {
             console.error(err)
             ctx.pwdMsg = ctx.i18n['profile.pwdFail']
+            ctx.$bvToast.show('submit-failed')
           })
-        )
+        // )
       }
       // console.log(requests)
       /* fire requests */
-      http
-      .all(requests)
-      .then(
-        http.spread(() => {
-          ctx.formMsg = ctx.i18n['profile.submitOk']
-        })
-      )
-      .catch(function(err) {
-        console.log(err)
-        ctx.$bvToast.show('submit-failed')
-      })
-      .then(() => {
-        ctx.busy = false
-        setTimeout(() => {
-          ctx.formMsg = ''
-        }, 2000)
-        ctx.$forceUpdate()
-        ctx.$bvToast.show('submit-ok')
-      })
+      // http
+      // .all(requests)
+      // .then(
+      //   http.spread(() => {
+      //     ctx.formMsg = ctx.i18n['profile.submitOk']
+      //   })
+      // )
+      // .catch(function(err) {
+      //   console.log(err)
+      //   ctx.$bvToast.show('submit-failed')
+      // })
+      // .then(() => {
+      //   ctx.busy = false
+      //   setTimeout(() => {
+      //     ctx.formMsg = ''
+      //   }, 2000)
+      //   ctx.$forceUpdate()
+      //   ctx.$bvToast.show('submit-ok')
+      // })
 
-      /* update state */
+      /* update state and save profile preferences */
       ctx.$store.commit('setPrefs', ctx.prefs)
       ctx.$store.dispatch('saveProfile')
     },
