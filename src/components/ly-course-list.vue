@@ -61,7 +61,7 @@ Dependencies:
         <div class="col-2">
           <ul class="course-props">
             <li
-              v-for="set in Object.entries(course.properties)"
+              v-for="set in Object.entries(course.properties).filter(k => k[0] !== 'simple')"
               :key="`setting-${set[0]}`"
               v-show="set[1]"
             >
@@ -69,11 +69,11 @@ Dependencies:
                 :title="i18n[`courseList.properties.${set[0]}`]"
                 v-b-tooltip.top
               >
-                <b-icon
-                  :icon="getIcon(set[0])"
+                <i
+                  class="icons-list"
+                  :class="getIcon(set[0])"
                   :aria-describedby="`label-desc-${set[0]}`"
-                  scale="1.5"
-                ></b-icon>
+                ></i>
                 <span
                   class="sr-only"
                   :id="`label-desc-${set[0]}`"
@@ -116,10 +116,7 @@ Dependencies:
             :title="i18n['courseList.notComplicit']"
             v-b-tooltip.top
           >
-            <b-icon
-            icon="exclamation-diamond-fill"
-            scale="2"
-            ></b-icon>
+            <i class="fas fa-exclamation-circle"></i>
           </div>
 
         </div>
@@ -355,11 +352,11 @@ export default {
         // case 'enrollment':
         //   return 'key' // commented out b/c enrollment is disabled
         case 'simpleLanguage':
-          return 'check2-circle'
+          return 'fas fa-check-circle'
         case 'text':
-          return 'textarea-t'
+          return 'fas fa-envelope-open-text'
         case 'video':
-          return 'play-btn'
+          return 'far fa-play-circle'
         default:
           return ''
       }
@@ -481,8 +478,14 @@ export default {
 
 .indicate-icon {
   position: absolute;
-  top: 3px;
-  left: 1px;
+  top: -1px;
+  left: 5px;
   color: crimson;
+  font-size: 2rem;
 }
+
+i.icons-list {
+  font-size: 1.75rem;
+}
+
 </style>

@@ -7,23 +7,20 @@
  */
 
 import _Vue from 'vue'
-
-import _create from './create.vue'
-import _edit from './edit.vue'
 import _view from './view.vue'
 
 export default {
   install(Vue: typeof _Vue, options?: any): void {
     Vue.$laya.registerLB(
-      'laya-plyr', 
-      'BlockPlyr', 
+      'laya-plyr',
+      'BlockPlyr',
       'layaPlyr',
-      'fab fa-youtube', 
+      'fab fa-youtube',
       {
-        new: _create,
+        new: () => import('./create.vue'),
         //@ts-ignore
         view: _view,
-        edit: _edit
+        edit: () => import('./edit.vue')
       }
     )
   }

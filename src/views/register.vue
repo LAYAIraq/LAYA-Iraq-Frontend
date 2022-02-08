@@ -158,7 +158,7 @@ export default {
   name: 'RegisterView',
 
   components: {
-    LayaPasswordInput,
+    LayaPasswordInput, // not lazily loaded b/c always visible
     // LayaUploadAvatar
   },
 

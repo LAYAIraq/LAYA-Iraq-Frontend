@@ -8,22 +8,22 @@
  *  vuex
  */
 
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from 'vue'
+import Vuex from 'vuex'
 
 /* modules */
-import auth from './modules/auth';
-import edit from './modules/edit';
-import flags from './modules/flags';
-import message from './modules/message';
-import note from './modules/note';
-import profile from './modules/profile';
-import users from './modules/users';
+import auth from './modules/auth'
+import edit from './modules/edit'
+import flags from './modules/flags'
+import message from './modules/message'
+import note from './modules/note'
+import profile from './modules/profile'
+import users from './modules/users'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
-const debug = process.env.NODE_ENV !== 'production';
-console.log(debug ? 'vuex in debug mode' : '');
+const debug = process.env.NODE_ENV !== 'production'
+if(debug) console.log('vuex in debug mode' )
 
 export default new Vuex.Store({
   modules: {
@@ -36,4 +36,4 @@ export default new Vuex.Store({
     users
   },
   strict: debug,
-});
+})

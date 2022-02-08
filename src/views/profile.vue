@@ -348,7 +348,7 @@ export default {
   name: 'profile-view',
 
   components: {
-    Password,
+    Password, // not lazily loaded b/c always visible
     // LayaUploadAvatar
   },
 

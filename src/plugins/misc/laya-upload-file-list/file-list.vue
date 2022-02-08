@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="file-list"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
@@ -12,15 +12,15 @@
             {{ i18n['layaUploadFileList.filesInCourse'] }}
           </h2>
         </label>
-        <i 
-          id ="questionmark" 
-          class="fas fa-question-circle align-right" 
-          @click="toggleTip" 
-          :title="i18n['showTip']" 
+        <i
+          id ="questionmark"
+          class="fas fa-question-circle align-right"
+          @click="toggleTip"
+          :title="i18n['showTip']"
           v-b-tooltip.left
         >
         </i>
-        <b-jumbotron 
+        <b-jumbotron
           v-if="tooltipOn"
           :header="i18n['layaUploadFileList.addUpload']"
           :lead="i18n['tipHeadline']">
@@ -35,7 +35,7 @@
         <div class="col-2">
           <span @click="sortByProp('type')"
             :title="sortTooltip('type')"
-            v-b-tooltip.top 
+            v-b-tooltip.top
             class="sort-list"
           >
             <i :class="sortIcon('type')"></i>
@@ -43,10 +43,10 @@
           </span>
         </div>
         <div class="col-5">
-          <span 
+          <span
             @click="sortByProp('originalFilename')"
             :title="sortTooltip('originalFilename')"
-            v-b-tooltip.top 
+            v-b-tooltip.top
             class="sort-list"
           >
             <i :class="sortIcon('originalFilename')"></i>
@@ -56,7 +56,7 @@
         <div class="col-2">
           <span @click="sortByProp('size')"
             :title="sortTooltip('size')"
-            v-b-tooltip.top 
+            v-b-tooltip.top
             class="sort-list"
           >
             <i :class="sortIcon('size')"></i>
@@ -69,14 +69,14 @@
         <div class="col">
           {{ i18n['layaUploadFileList.deleteFile'] }}
         </div>
-        
+
       </div>
       <hr>
 
-      
+
 
       <!-- List of files -->
-      <ul 
+      <ul
         class="explorer"
         v-if="sortedFiles.length>0"
         >
@@ -88,7 +88,7 @@
           <div class="row">
 
             <div class="col-2">
-              <i 
+              <i
               :class="fileIcon(file.type)"
               :title="i18n['layaUploadFileList.fileType']"
               v-b-tooltip.left></i>
@@ -102,9 +102,9 @@
             <div class="col-2 size">
               {{ fileSize(file.size) }}
             </div>
-            
+
             <div class="col-1">
-              <i 
+              <i
                 class="fas fa-copy copy"
                 :title="i18n['layaUploadFileList.copyUrl']"
                 v-b-tooltip.right
@@ -120,9 +120,9 @@
                 v-b-tooltip.top
                 @click="deleteFile(file)"
               >
-                <i 
+                <i
                   class="fas fa-trash"
-                  
+
                 ></i>
               </button>
             </div>
@@ -132,11 +132,11 @@
       <div v-else class="row">
         {{ i18n['layaUploadFileList.noFiles'] }}
       </div>
-    
+
     </div>
     <hr>
     <div class="show-uploader" v-if="!addUpload">
-      <button 
+      <button
         type="button"
         class="btn btn-primary btn-large"
         @click="addUpload = true">
@@ -148,8 +148,8 @@
       <div class="drag-upload">
 
         <ul v-if="files.length">
-          <li 
-            v-for="(file, i) in files" 
+          <li
+            v-for="(file, i) in files"
             :key="file.id"
           >
             <div class="row">
@@ -160,15 +160,15 @@
               <div class="col-auto" v-else-if="file.active"> {{ i18n['layaUploadFileList.active'] }} </div>
               <div class="col-auto" v-else></div>
               <div class="col-0 align-self-center" v-if="!file.success">
-                <button 
+                <button
                   type="button"
                   class="btn btn-danger btn-sm"
                   :title="i18n['layaUploadFileList.removeUpload']"
                   v-b-tooltip.right
                   @click="_removeFile(i)"
                 >
-                  <i 
-                    class="fas fa-times" 
+                  <i
+                    class="fas fa-times"
                     >
                   </i>
                 </button>
@@ -180,10 +180,7 @@
         <ul v-else>
           <div class="text-center p-5">
             <h4 v-html="i18n['layaUploadFileList.dropOr']"></h4>
-            <label 
-              for="file"
-              class="btn btn-lg btn-primary"
-            >
+            <label class="btn btn-lg btn-primary">
               <i class="fas fa-plus"></i>
               {{ i18n['layaUploadFileList.selectFiles'] }}
             </label>
@@ -208,25 +205,25 @@
               <i class="fas fa-plus"></i>
               {{ i18n['layaUploadFileList.selectFiles'] }}
             </file-upload>
-            <button 
-              type="button" 
-              class="btn btn-success" 
-              v-if="!$refs.upload || !$refs.upload.active" 
+            <button
+              type="button"
+              class="btn btn-success"
+              v-if="!$refs.upload || !$refs.upload.active"
               @click.prevent="$refs.upload.active = true"
             >
               <i class="fas fa-arrow-up" aria-hidden="true"></i>
               {{ i18n['startUpload'] }}
             </button>
-            <button 
-              type="button" 
-              class="btn btn-danger"  
-              v-else 
+            <button
+              type="button"
+              class="btn btn-danger"
+              v-else
               @click.prevent="$refs.upload.active = false"
             >
               <i class="fas fa-stop" aria-hidden="true"></i>
               {{ i18n['stopUpload'] }}
             </button>
-            <button 
+            <button
               type="button"
               class="btn btn-warning"
               @click="addUpload = false"
@@ -240,7 +237,7 @@
       </div>
     </div>
 
-    <b-modal 
+    <b-modal
       id="file-delete-confirm"
       :title="i18n['layaUploadFileList.deleteFile']"
       centered
@@ -257,7 +254,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import FileUpload from 'vue-upload-component'
 import { listSort, locale, mimeTypes, tooltipIcon }  from '@/mixins'
 import api from '@/backend-url'
 import fileSize from '@/misc/utils.js'
@@ -266,7 +262,7 @@ export default {
   name: 'laya-upload-file-list',
 
   components: {
-    FileUpload
+    FileUpload: () => import('vue-upload-component')
   },
 
   mixins: [
@@ -288,9 +284,9 @@ export default {
 
     /**
      * step: return step of current content block
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 29, 2021
      */
     step() {
@@ -299,9 +295,9 @@ export default {
 
     /**
      * upload: make refs available
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 29, 2021
      */
     upload() {
@@ -310,10 +306,10 @@ export default {
 
     /**
      * uploadUrl: return course storage URL for upload
-     * 
+     *
      * Author: cmc
-     * 
-     * Last Updated: March 29, 2021 
+     *
+     * Last Updated: March 29, 2021
      */
     uploadUrl() {
       return `${api}/storage/${this.courseStorage}/upload`
@@ -336,9 +332,9 @@ export default {
      * watcher files: watch for changes in files data prop,
      *  change uploaded property if an action happened in
      *  upload
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 29, 2021
      */
     files() {
@@ -348,9 +344,9 @@ export default {
 
     /**
      * watcher uploaded: fire updateFileList() if uploaded is true
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 29, 2021
      */
     uploaded(val) {
@@ -367,7 +363,7 @@ export default {
      *  fire updateCourseFiles() when there are any
      *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 29, 2021
      */
     uploadedFiles() {
@@ -387,9 +383,9 @@ export default {
     /**
      * function upLoadFile: proceed a duplicate check,
      *  then upload the file to uploadUrl()
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 29, 2021
      */
     async uploadFile(file, component) {
@@ -406,11 +402,11 @@ export default {
 
     /**
      * function checkForSizeExcess: check if a file is too large
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: April 6, 2021
-     * 
+     *
      * @param file the file to be checked
      * @returns true if file is too large!
      */
@@ -424,13 +420,13 @@ export default {
     },
 
     /**
-     * function checkForDuplicate: check if file with same name 
-     *  and size already exists in a course 
-     * 
+     * function checkForDuplicate: check if file with same name
+     *  and size already exists in a course
+     *
      * Author: cmc
-     * 
+     *
      * Last updated: March 29, 2021
-     * 
+     *
      * @param {object} file file to be uploaded
      * @returns true if a file with same name and size exists
      */
@@ -441,32 +437,32 @@ export default {
         return true
       }
 
-      const attrs = { 
-        name: file.name, 
-        size: file.size, 
-        type: file.type 
+      const attrs = {
+        name: file.name,
+        size: file.size,
+        type: file.type
       }
-      // check if file with the same parameters already 
+      // check if file with the same parameters already
       // exists in the course
       for (let entry of this.courseFiles ) {
-        if (entry.originalFilename === attrs.name && 
+        if (entry.originalFilename === attrs.name &&
           entry.size == attrs.size &&
           entry.type === attrs.type ) {
             // console.log('This file already exists in this course!')
             file.error = this.i18n['layaUploadFileList.duplicateFile']
             return true
-          } 
+          }
       }
       return false
     },
 
     /**
      * function _removeFiles: remove file from list at index idx
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 29, 2021
-     * 
+     *
      * @param {number} idx index of file object
      */
     _removeFile(idx) {
@@ -475,12 +471,12 @@ export default {
 
     /**
      * function updateCourseFiles: store new files in vuex store
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 29, 2021
-     * 
-     * @param {array} fileList list of files 
+     *
+     * @param {array} fileList list of files
      */
     updateCourseFiles() {
       this.$store.commit('updateCourseFiles', this.uploadedFiles)
@@ -489,15 +485,15 @@ export default {
     /**
      * function updateFileList: update list of files
      *  that have been added in this component
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 29, 2021
      */
     updateFileList() {
       for (let file of this.files) {
         if (file.success) {
-          const fileEntry = { ...file.response.result.files.file[0]} 
+          const fileEntry = { ...file.response.result.files.file[0]}
           this.uploadedFiles.push(fileEntry)
         }
       }
@@ -505,11 +501,11 @@ export default {
 
     /**
      * function copyUrl: copy URL for that file
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: April 6, 2021
-     * 
+     *
      * @param url file URL
      */
     copyUrl(url) {
@@ -536,9 +532,9 @@ export default {
 
     /**
      * function getUrl: get store download URL for file
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: April 6, 2021
      *
      * @param name file name
@@ -550,11 +546,11 @@ export default {
 
     /**
      * Function deleteFile: mark file as to delete, show prompt
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: April 9, 2021
-     * 
+     *
      * @param file the file to delete
      */
     deleteFile(file) {
@@ -564,10 +560,10 @@ export default {
 
     /**
      * Function confirmedFileDelete: propagate file to delete to vuex,
-     *  nullify the global variable 
-     * 
+     *  nullify the global variable
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: April 9, 2021
      */
     confirmedFileDelete() {
@@ -582,7 +578,7 @@ export default {
 
 <style scoped>
 #questionmark {
-  float: inline-end;
+  float: end;
   cursor: pointer;
 }
 

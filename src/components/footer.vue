@@ -62,13 +62,12 @@ Dependencies: @/mixins/locale.vue
 
 <script>
 import { locale } from '@/mixins'
-import lyScrollToTop from '@/components/scroll-to-top.vue'
 
 export default {
   name: 'ly-footer',
 
   components: {
-    lyScrollToTop
+    lyScrollToTop: () => import('@/components/scroll-to-top')
   },
 
   mixins: [

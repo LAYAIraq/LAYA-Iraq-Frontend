@@ -18,15 +18,13 @@
 </template>
 
 <script>
-import FlagQuestion from '@/views/flag-views/flag-question.vue'
-import FlagAnswer from '@/views/flag-views/flag-answer.vue'
 import { locale, storeHandler } from '@/mixins'
 import { mapGetters } from 'vuex'
 export default {
   name: 'flag-view',
   components: {
-    FlagQuestion,
-    FlagAnswer
+    FlagQuestion: () => import('@/views/flag-views/flag-question'),
+    FlagAnswer: () => import('@/views/flag-views/flag-answer')
   },
   mixins: [
     locale,

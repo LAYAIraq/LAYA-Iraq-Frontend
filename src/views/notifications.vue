@@ -163,7 +163,7 @@
 import http from 'axios'
 import { mapGetters, mapState } from 'vuex'
 import { storeHandler, locale, time } from '@/mixins'
-import randomNotifications from '@/misc/fillnotifications.js'
+// import randomNotifications from '@/misc/fillnotifications.js'
 
 export default {
   name: 'laya-notifications',
@@ -232,8 +232,7 @@ export default {
   },
 
   methods: {
-    ...randomNotifications,
-
+    // ...randomNotifications,
     /**
      * Function cacheValues: get all referencing data for
      *  notifications, set loading to false if done

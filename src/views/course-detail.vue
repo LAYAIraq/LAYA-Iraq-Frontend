@@ -63,21 +63,16 @@ Dependencies:
 </template>
 
 <script>
-import {
-  mapGetters
-} from 'vuex'
-
+import { mapGetters } from 'vuex'
 import utils from '@/misc/utils.js'
-import lyScrollToTop from '@/components/scroll-to-top.vue'
-import courseEdit from '@/views/course-edit.vue'
 import { locale, storeHandler } from '@/mixins'
 
 export default {
   name: 'course-detail-view',
 
   components: {
-    lyScrollToTop,
-    courseEdit
+    lyScrollToTop: () => import('@/components/scroll-to-top'),
+    courseEdit: () => import('@/views/course-edit')
   },
 
   mixins: [

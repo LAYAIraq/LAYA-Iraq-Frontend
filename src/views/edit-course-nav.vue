@@ -1,9 +1,9 @@
 <!--
-Filename edit-course-nav.vue 
+Filename edit-course-nav.vue
 Use: Edit paths through a course
 Creator: core
 Date: unknown
-Dependencies: 
+Dependencies:
   vis-network,
   vuex,
   @/mixins/locale.vue
@@ -55,16 +55,16 @@ Dependencies:
 
       </div>
 
-      <div 
-        class="row" 
-        v-for="(step,i) in courseContent" 
+      <div
+        class="row"
+        v-for="(step,i) in courseContent"
         :key="'step-'+i"
       >
 
         <div class="col-2">
           <b>{{ i+1 }}</b>
         </div>
-        
+
         <div class="col">
           {{ typeName(step.name) }}
         </div>
@@ -74,7 +74,7 @@ Dependencies:
         </div>
 
         <div class="col-3">
-          <input 
+          <input
             class="form-control"
             :class="{'is-invalid': !step.nextStep}"
             type="text"
@@ -84,7 +84,7 @@ Dependencies:
 
         <div class="col-2">
           <!-- swap up -->
-          <button 
+          <button
             v-if="i > 0"
             type="button"
             class="btn btn-primary btn-sm"
@@ -92,7 +92,7 @@ Dependencies:
             <i class="fas fa-level-up-alt"></i>
           </button>
           <!-- swap down -->
-          <button 
+          <button
             v-if="i < courseContent.length-1"
             type="button"
             class="btn btn-primary btn-sm float-right"
@@ -107,7 +107,7 @@ Dependencies:
 
         <!-- graph preview -->
         <div class="col">
-          <button 
+          <button
             type="button"
             class="btn btn-secondary"
             :disabled="formInvalid"
@@ -119,17 +119,17 @@ Dependencies:
 
         <!-- store -->
         <div class="col text-right">
-          <button 
+          <button
             type="button"
             class="btn btn-primary"
             :disabled="formInvalid"
             @click="save">
             <span v-if="formInvalid">
-              <i class="fas fa-exclamation-triangle"></i> 
+              <i class="fas fa-exclamation-triangle"></i>
               {{ i18n['courseNavEdit.table.missingInfo'] }}
             </span>
             <span v-else>
-              <i class="fas fa-check"></i> 
+              <i class="fas fa-check"></i>
               {{ i18n['save'] }}
             </span>
           </button>
@@ -168,7 +168,7 @@ export default {
   mixins: [
     locale
   ],
-  
+
   props: {
     onnavupdate: Function
   },
@@ -185,9 +185,9 @@ export default {
 
     /**
      * formInvalid: checks if all contents have nextStep set
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: January 20, 2021
      */
     formInvalid() {
@@ -216,11 +216,11 @@ export default {
 
     /**
      * Function swapUp: swap element with the one above
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: January 20, 2021
-     * 
+     *
      * @param {number} i index of element to swap up
      */
     swapUp(i) {
@@ -231,11 +231,11 @@ export default {
 
     /**
      * Function swapDown: swap element with the one below
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: January 20, 2021
-     * 
+     *
      * @param {number} i index of element to swap down
      */
     swapDown(i) {
@@ -246,14 +246,14 @@ export default {
 
     /**
      * Function typeName: returns name of content block in locale
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: May 6, 2021
-     * 
+     *
      * @param {string} compName name of content block
      */
-    typeName(compName) {     
+    typeName(compName) {
       let comps = { ...this.$laya.la, ...this.$laya.lb }
       for(let comp in comps) {
         if (comps[comp].id === compName) {

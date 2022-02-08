@@ -202,6 +202,41 @@ export default {
     },
 
     /**
+     * function setPwd: set passwordSet to input string
+     *  exists to avoid passing props to deep nested component
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: January 17, 2022
+     * @param state contains passwordSet string
+     * @param input new string to set
+     */
+    setPwd (
+      state: { passwordSet: string },
+      input: string
+    ) {
+      state.passwordSet = input
+    },
+
+    /**
+     * function setPwdRepeat: set passwordRepeat to input string
+     *  exists to avoid passing props to deep nested component
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: January 17, 2022
+     * @param state contains passwordRepeat string
+     * @param input new string to set
+     */
+    setPwdRepeat (
+      state: { passwordRepeat: string},
+      input: string
+    ) {
+      state.passwordRepeat = input
+    },
+
+
+    /**
      * Function toggleMedia: toggle input media boolean
      *
      * Author: core

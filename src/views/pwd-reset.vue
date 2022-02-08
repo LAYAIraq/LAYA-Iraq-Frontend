@@ -54,7 +54,7 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'passwordReset',
   components: {
-    PasswordInput
+    PasswordInput // not lazily loaded b/c always visible
   },
   mixins: [
     locale
