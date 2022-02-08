@@ -23,8 +23,8 @@
     <!-- filter options -->
     <div class="container">
       <div
-        class="row mb-5 pt-3 pb-4 bg-dark text-light"
         id="filter-criteria"
+        class="row mb-5 pt-3 pb-4 bg-dark text-light"
       >
         <div class="col-2">
           <strong>
@@ -68,7 +68,6 @@
               @blur="setFilter(null)"
             >
           </div>
-
         </div>
         <div class="col">
           {{ i18n['adminPanel.role'] }}
@@ -80,8 +79,8 @@
           </span>
           <div class="input-group">
             <b-select
-              v-model="roleFilter"
               id="role-filter-select"
+              v-model="roleFilter"
               aria-describedby="role-filter-label"
               @blur="setFilter(null)"
             >
@@ -102,10 +101,10 @@
         </div>
         <div class="col pt-4">
           <b-button
-            :class="langIsAr? 'ml-2': 'mr-2'"
-            @click="setFilter(true)"
-            :title="i18n['adminPanel.filterList']"
             v-b-tooltip.bottom
+            :class="langIsAr? 'ml-2': 'mr-2'"
+            :title="i18n['adminPanel.filterList']"
+            @click="setFilter(true)"
           >
             <i class="fas fa-filter"></i>
             <span class="sr-only">
@@ -113,11 +112,11 @@
             </span>
           </b-button>
           <b-button
+            v-b-tooltip.bottom
             :class="langIsAr? 'ml-2': 'mr-2'"
             variant="warning"
-            @click="setFilter(false)"
             :title="i18n['adminPanel.resetFilters']"
-            v-b-tooltip.bottom
+            @click="setFilter(false)"
           >
             <i class="far fa-times-circle"></i>
             <span class="sr-only">
@@ -131,8 +130,8 @@
     <div class="container">
       <!-- head -->
       <div
-        class="row font-weight-bold mb-3"
         id="user-list"
+        class="row font-weight-bold mb-3"
       >
         <div class="col-3">
           {{ i18n['adminPanel.user'] }}
@@ -153,9 +152,9 @@
       <!-- body -->
       <div v-if="pagedList.length !== 0">
         <div
-          class="row mb-2"
           v-for="user in pagedList[pageSelected]"
           :key="user.id"
+          class="row mb-2"
         >
           <div class="col-3">
             {{ user.username }}
@@ -171,75 +170,75 @@
           </div>
           <!-- user management -->
           <div
-            class="col-3"
             id="user-management-buttons"
+            class="col-3"
           >
             <!-- promote user -->
             <b-button
+              v-b-tooltip.top
               class="user-mgmt-btn"
               :disabled="user.id === userId"
               :class="langIsAr? 'ml-2': 'mr-2'"
               :title="i18n['adminPanel.promoteUser']"
               @click="openModal(user.id, 'promote-user')"
-              v-b-tooltip.top
             >
               <i class="fas fa-arrow-circle-up"></i>
               <span class="sr-only">
-              {{ i18n['adminPanel.promoteUser']   }}
-            </span>
+                {{ i18n['adminPanel.promoteUser'] }}
+              </span>
             </b-button>
             <!-- edit email -->
             <b-button
+              v-b-tooltip.top
               class="user-mgmt-btn"
               :disabled="user.id === userId"
               :class="langIsAr? 'ml-2': 'mr-2'"
               :title="i18n['adminPanel.editEmail']"
               variant="info"
-              v-b-tooltip.top
               @click="openModal(user.id, 'edit-email')"
             >
               <i class="fas fa-pen"></i>
               <span class="sr-only">
-             {{ i18n['adminPanel.editEmail'] }}
-            </span>
+                {{ i18n['adminPanel.editEmail'] }}
+              </span>
             </b-button>
             <!-- reset password -->
             <b-button
+              v-b-tooltip.top
               class="user-mgmt-btn"
               :disabled="user.id === userId"
               :class="langIsAr? 'ml-2': 'mr-2'"
               :title="i18n['adminPanel.resetPassword']"
               variant="warning"
-              v-b-tooltip.top
               @click="openModal(user.id, 'reset-password')"
             >
               <i class="fas fa-screwdriver"></i>
               <span class="sr-only">
-              {{ i18n['adminPanel.resetPassword'] }}
-            </span>
+                {{ i18n['adminPanel.resetPassword'] }}
+              </span>
             </b-button>
             <!-- delete user -->
             <b-button
+              v-b-tooltip.top
               class="user-mgmt-btn"
               :disabled="user.id === userId"
               :class="langIsAr? 'ml-2': 'mr-2'"
               :title="i18n['adminPanel.deleteUser']"
               variant="danger"
-              v-b-tooltip.top
               @click="openModal(user.id, 'delete-user')"
             >
               <i class="fas fa-times-circle"></i>
               <span class="sr-only">
-              {{ i18n['adminPanel.deleteUser'] }}
-            </span>
+                {{ i18n['adminPanel.deleteUser'] }}
+              </span>
             </b-button>
           </div>
         </div>
       </div>
       <!-- placeholder if no filter matches -->
       <div
-        class="text-center"
         v-else
+        class="text-center"
       >
         {{ i18n['adminPanel.noMatch'] }}
       </div>
@@ -296,8 +295,8 @@
         ok-variant="warning"
         :ok-title="i18n['adminPanel.promoteUser']"
         :cancel-title="i18n['cancel']"
-        @ok="changeUserRole"
         centered
+        @ok="changeUserRole"
       >
         <p>
           {{ i18n['adminPanel.modal.promoteUser'] }}
@@ -314,7 +313,6 @@
             {{ capitalizeFirstLetter(role) }}
           </b-select-option>
         </b-select>
-
       </b-modal>
       <!-- edit email modal -->
       <b-modal
@@ -324,8 +322,8 @@
         ok-variant="warning"
         :ok-title="i18n['adminPanel.editEmail']"
         :cancel-title="i18n['cancel']"
-        @ok="editUserEmail"
         centered
+        @ok="editUserEmail"
       >
         <p>
           {{ i18n['adminPanel.modal.editEmail'] }}
@@ -338,8 +336,8 @@
         </label>
         <input
           id="email-change-input"
-          type="text"
           v-model="changeEmail"
+          type="text"
           :placeholder="i18n['adminPanel.modal.newEmail']"
         >
       </b-modal>
@@ -351,8 +349,8 @@
         ok-variant="warning"
         :ok-title="i18n['adminPanel.resetPassword']"
         :cancel-title="i18n['cancel']"
-        @ok="resetUserPassword"
         centered
+        @ok="resetUserPassword"
       >
         <p>
           {{ i18n['adminPanel.modal.resetPassword'] }}
@@ -366,8 +364,8 @@
         ok-variant="danger"
         :ok-title="i18n['adminPanel.deleteUser']"
         :cancel-title="i18n['cancel']"
-        @ok="deleteUser"
         centered
+        @ok="deleteUser"
       >
         <p>
           {{ i18n['adminPanel.modal.deleteUser'] }}
@@ -381,8 +379,8 @@
         ok-variant="warning"
         :ok-title="i18n['adminPanel.createUser']"
         :cancel-title="i18n['cancel']"
-        @ok="handleCreateUser"
         centered
+        @ok="handleCreateUser"
       >
         <p>
           {{ i18n['adminPanel.modal.createUser'] }}
@@ -396,16 +394,15 @@
             {{ i18n['namePH'] }}
           </label>
           <input
-            :class="{
-            'mr-2': langIsAr,
-            'ml-2': !langIsAr,
-            'highlight-border': emptyCreateInput
-          }"
             id="create-user-name"
-            :placeholder="i18n['namePH']"
             v-model="createUserName"
+            :class="{
+              'mr-2': langIsAr,
+              'ml-2': !langIsAr,
+              'highlight-border': emptyCreateInput
+            }"
+            :placeholder="i18n['namePH']"
           >
-
         </p>
         <p>
           <label
@@ -416,14 +413,14 @@
           </label>
 
           <input
-            :class="{
-            'mr-2': langIsAr,
-            'ml-2': !langIsAr,
-            'highlight-border': emptyCreateInput || noEmailFormat
-          }"
             id="create-user-email"
-            :placeholder="i18n['adminPanel.email']"
             v-model="createUserEmail"
+            :class="{
+              'mr-2': langIsAr,
+              'ml-2': !langIsAr,
+              'highlight-border': emptyCreateInput || noEmailFormat
+            }"
+            :placeholder="i18n['adminPanel.email']"
           >
         </p>
         <p>
@@ -467,18 +464,18 @@
 </template>
 
 <script>
-import { mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 import roles from '@/misc/roles'
 
 export default {
-  name: 'admin-dashboard',
+  name: 'AdminDashboard',
 
   mixins: [
     locale
   ],
 
-  data() {
+  data () {
     return {
       createUserEmail: '',
       createUserName: '',
@@ -494,12 +491,12 @@ export default {
       pageSelected: 0,
       pageSize: 25,
       pageOptions: [
-        { value: 10, text: '10'},
-        { value: 25, text: '25'},
-        { value: 50, text: '50'},
-        { value: 100, text: '100'},
-        { value: 250, text: '250'},
-        { value: 500, text: '500'}
+        { value: 10, text: '10' },
+        { value: 25, text: '25' },
+        { value: 50, text: '50' },
+        { value: 100, text: '100' },
+        { value: 250, text: '250' },
+        { value: 500, text: '500' }
       ],
       regexArr: [],
       roleFilter: null,
@@ -523,7 +520,7 @@ export default {
      * Last Updated: December 3, 2021
      * @returns {object} roles without admin
      */
-    assignableRoles() {
+    assignableRoles () {
       // eslint-disable-next-line
       return (({ ADMIN, ...o}) => o) (roles)
     },
@@ -536,7 +533,7 @@ export default {
      * Last Updated: February 5, 2022
      * @returns {string} Error message when name or email is duplicate
      */
-    duplicateErrMsg() {
+    duplicateErrMsg () {
       return this.i18n['adminPanel.modal.duplicateError'] + this.duplicateProperty
     },
 
@@ -547,13 +544,13 @@ export default {
      *
      * Last Updated: November 27, 2021
      */
-    filteredList() {
+    filteredList () {
       // check each filter set if element matches
       if (this.regexes.length !== 0) {
         return this.users.filter(user => {
           let match = true
           this.regexes.forEach(pair => {
-            if(!pair[1].test(user[pair[0]])) {
+            if (!pair[1].test(user[pair[0]])) {
               match = false
             }
           })
@@ -573,7 +570,7 @@ export default {
      *  Last Updated: November 23, 2021
      * @returns true if no stop or @ in createUserEmail
      */
-    noEmailFormat() {
+    noEmailFormat () {
       return !(this.createUserEmail.includes('@') &&
         this.createUserEmail.includes('.'))
     },
@@ -586,7 +583,7 @@ export default {
      * Last Updated: February 5, 2022
      * @returns {boolean} true if no role chosen
      **/
-    noRoleChosen() {
+    noRoleChosen () {
       return (!this.createUserRole || this.createUserRole === 'null')
     },
 
@@ -598,10 +595,10 @@ export default {
      * Last Updated: December 3, 2021
      **/
     pagedList: {
-      get() {
+      get () {
         return this.listPages
       },
-      set(val) {
+      set (val) {
         this.listPages = []
         // page list in slices of pageSize
         for (let i = 0; i < this.filteredList.length / val; i++) {
@@ -619,10 +616,10 @@ export default {
      * Last Updated: November 27, 2021
      */
     regexes: {
-      get() {
+      get () {
         return this.regexArr
       },
-      set() {
+      set () {
         const regexes = []
         if (!this.filter) {
           this.regexArr = regexes
@@ -641,29 +638,29 @@ export default {
       }
     },
 
-    roles() {
+    roles () {
       return roles
     }
   },
 
   watch: {
     // reset regexes when filter changes
-    filter(val) {
+    filter (val) {
       if (val !== null) { // explicily because false is used to reset filter
         this.regexes = val
       }
     },
     // repage list if filters change
-    filteredList() {
+    filteredList () {
       this.pagedList = this.pageSize
     },
     // repage list if page size changes
-    pageSize(val) {
+    pageSize (val) {
       this.pagedList = val
     }
   },
 
-  created() {
+  created () {
     this.relocateNonAdmin()
     this.getUserList()
     this.pagedList = 25
@@ -696,7 +693,7 @@ export default {
      * Last Updated: November 18, 2021
      * @param {string} str string to be capitalized
      */
-    capitalizeFirstLetter(str) {
+    capitalizeFirstLetter (str) {
       return str.charAt(0).toUpperCase() + str.slice(1)
     },
 
@@ -707,7 +704,7 @@ export default {
      *
      * Last Updated: November 19, 2021
      */
-    changeUserRole() {
+    changeUserRole () {
       this.$store.dispatch('changeRole', {
         id: this.changingUserId,
         role: this.changeRole
@@ -721,7 +718,7 @@ export default {
      *
      * Last Updated: November 23, 2021
      */
-    createUser() {
+    createUser () {
       this.$store.dispatch('createUser', {
         username: this.createUserName,
         email: this.createUserEmail.toLowerCase(),
@@ -740,7 +737,7 @@ export default {
      *
      * Last Updated: November 19, 2021
      */
-    deleteUser() {
+    deleteUser () {
       this.$store.dispatch('deleteUser', this.changingUserId)
     },
 
@@ -751,7 +748,7 @@ export default {
      *
      * Last Updated: November 19, 2021
      */
-    editUserEmail() {
+    editUserEmail () {
       this.$store.dispatch('changeEmail', {
         id: this.changingUserId,
         email: this.changeEmail
@@ -765,7 +762,7 @@ export default {
      *
      * Last Updated: November 18, 2021
      */
-    getUserList() {
+    getUserList () {
       if (this.users.length === 0) {
         this.$store.dispatch('fetchUserList')
       }
@@ -780,11 +777,11 @@ export default {
      * Last Updated: November 23, 2021
      * @param e modal event
      */
-    handleCreateUser(e) {
+    handleCreateUser (e) {
       e.preventDefault()
       if (this.createUserName !== '' && this.createUserEmail !== '') {
         this.emptyCreateInput = false
-        if(!this.noEmailFormat) {
+        if (!this.noEmailFormat) {
           this.createUser()
         }
       } else {
@@ -801,7 +798,7 @@ export default {
      * @param {number} id userId that is getting a new role
      * @param {string} type id of modal to open
      */
-    openModal(id, type) {
+    openModal (id, type) {
       this.changingUserId = id
       this.$bvModal.show(type)
     },
@@ -813,8 +810,8 @@ export default {
      *
      * Last Updated: November 11, 2021
      */
-    relocateNonAdmin() {
-      if(!this.isAdmin) this.$router.push('/')
+    relocateNonAdmin () {
+      if (!this.isAdmin) this.$router.push('/')
     },
 
     /**
@@ -824,7 +821,7 @@ export default {
      *
      * Last Updated: November 19, 2021
      */
-    resetUserPassword() {
+    resetUserPassword () {
       this.$store.dispatch('resetPassword', this.changingUserId)
     },
 
@@ -836,7 +833,7 @@ export default {
      * Last Updated: November 18, 2021
      * @param {any} property what will set as filter
      */
-    setFilter(property) {
+    setFilter (property) {
       this.filter = property
     }
   }

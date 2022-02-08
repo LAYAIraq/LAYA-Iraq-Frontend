@@ -7,23 +7,20 @@
  */
 
 import _Vue from 'vue'
-
-import _create from './view.vue'
-import _edit from './view.vue'
 import _view from './view.vue'
 
 export default {
-  install(Vue: typeof _Vue, options?: any): void {
+  install (Vue: typeof _Vue): void {
     Vue.$laya.registerLB(
-      'laya-stepper', 
-      'BlockStepper', 
-      'layaStepper', 
+      'laya-stepper',
+      'BlockStepper',
+      'layaStepper',
       '',
       {
-        new: _create,
-        //@ts-ignore
+        new: _view,
+        // @ts-ignore
         view: _view,
-        edit: _view,
-    })
+        edit: _view
+      })
   }
 }

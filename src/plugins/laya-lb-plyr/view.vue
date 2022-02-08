@@ -11,32 +11,31 @@ Dependencies:
 
 <template>
   <div class="ly-plyr-view">
-
     <div
       v-if="title.show"
-      class="flaggable row"
       :id="title.id"
+      class="flaggable row"
     >
       <h2>{{ courseSimple? title.simple : title.text }}</h2>
-      <laya-flag-icon v-if="!previewData"
-          :refData="title"
-          @flagged="title.flagged = true"
+      <laya-flag-icon
+        v-if="!previewData"
+        :ref-data="title"
+        @flagged="title.flagged = true"
       ></laya-flag-icon>
     </div>
 
-
     <div>
-        <div
-          :id="playerId"
-          :data-plyr-provider="platform"
-          :data-plyr-embed-id="src"
-          class="plyr__video-embed"
-        ></div>
-<!--      <laya-flag-icon v-if="!previewData"-->
-<!--          :refData="videoFlag"-->
-<!--          :interactive="true"-->
-<!--          @flagged="videoFlag.flagged = true"-->
-<!--      ></laya-flag-icon>-->
+      <div
+        :id="playerId"
+        :data-plyr-provider="platform"
+        :data-plyr-embed-id="src"
+        class="plyr__video-embed"
+      ></div>
+      <!--      <laya-flag-icon v-if="!previewData"-->
+      <!--          :refData="videoFlag"-->
+      <!--          :interactive="true"-->
+      <!--          @flagged="videoFlag.flagged = true"-->
+      <!--      ></laya-flag-icon>-->
     </div>
 
     <div class="row">
@@ -44,16 +43,18 @@ Dependencies:
         type="button"
         class="btn btn-primary btn-lg mt-3 d-block"
         :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-        @click="onFinish[0]() || {}">
+        @click="onFinish[0]() || {}"
+      >
         <span>
           {{ i18n['nextContent'] }}
-          <i :class="langIsAr?
-            'fas fa-arrow-left' :
-            'fas fa-arrow-right'"></i>
+          <i
+            :class="langIsAr?
+              'fas fa-arrow-left' :
+              'fas fa-arrow-right'"
+          ></i>
         </span>
       </button>
     </div>
-
   </div>
 </template>
 
@@ -61,20 +62,21 @@ Dependencies:
 import Plyr from 'plyr'
 import { mapGetters } from 'vuex'
 import 'plyr/dist/plyr.css'
-import { locale, watchContent } from '@/mixins'
+import { locale, viewPluginProps, watchContent } from '@/mixins'
 import '@/styles/flaggables.css'
 
 export default {
-  name: 'laya-plyr',
+  name: 'LayaPlyr',
 
   mixins: [
     locale,
+    viewPluginProps,
     watchContent
   ],
 
-  data() {
+  data () {
     if (this.previewData) { // for 'preview' feature
-      return {...this.previewData}
+      return { ...this.previewData }
     }
     return {
       plyr: null,
@@ -83,16 +85,7 @@ export default {
       videoFlag: {}
     }
   },
-  created() {
-    if(!this.previewData) this.fetchData()
-  },
-  mounted() {
-    this.initPlyr()
-  },
 
-  props: {
-    onFinish: Array
-  },
   computed: {
     ...mapGetters([
       'content',
@@ -106,7 +99,7 @@ export default {
      *
      * Last Updated: unknown
      */
-    playerId() {
+    playerId () {
       return `ly-plyr-${Date.now()}`
     },
 
@@ -117,13 +110,22 @@ export default {
      *
      * Last Updated: January 17, 2021
      */
-    platform() {
+    platform () {
       if (this.src.includes('youtube')) return 'youtube'
       else if (this.src.includes('vimeo')) return 'vimeo'
       else return ''
     }
 
   },
+
+  created () {
+    if (!this.previewData) this.fetchData()
+  },
+
+  mounted () {
+    this.initPlyr()
+  },
+
   methods: {
 
     /**
@@ -135,7 +137,7 @@ export default {
      *
      * @param {string} str string to check
      */
-    notEmpty(str) {
+    notEmpty (str) {
       return (!!str && str.length > 0) ? str : false
     },
 
@@ -146,8 +148,8 @@ export default {
      *
      * Last Updated: March 20, 2021
      */
-    fetchData() {
-      let idx = this.$route.params.step - 1
+    fetchData () {
+      const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.src = preData.src
       this.showTitle = preData.showTitle
@@ -162,7 +164,7 @@ export default {
      *
      * Updated: March 20, 2021
      */
-    initPlyr() {
+    initPlyr () {
       this.plyr = new Plyr(`#${this.playerId}`)
       // console.log('plyr: ', this.plyr)
       /* this.plyr.source = {

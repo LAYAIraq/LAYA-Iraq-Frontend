@@ -13,13 +13,14 @@ Dependencies:
   <div class="laya-wysiwyg-view">
     <div
       v-if="title.show"
-      class="flaggable row"
       :id="title.id"
+      class="flaggable row"
     >
       <h2>{{ courseSimple? title.simple : title.text }}</h2>
-      <laya-flag-icon v-if="!previewData"
-          :refData="title"
-          @flagged="title.flagged = true"
+      <laya-flag-icon
+        v-if="!previewData"
+        :ref-data="title"
+        @flagged="title.flagged = true"
       ></laya-flag-icon>
     </div>
     <div :id="editorId"></div>
@@ -28,7 +29,8 @@ Dependencies:
         type="button"
         class="btn btn-primary mt-3 d-block"
         :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-        @click="onFinish[0]() || {}">
+        @click="onFinish[0]() || {}"
+      >
         {{ i18n['nextContent'] }}
         <i
           :class="langIsAr?
@@ -38,40 +40,34 @@ Dependencies:
       </button>
     </div>
   </div>
-
-
-
 </template>
 
 <script>
 import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
-import { locale, watchContent } from '@/mixins'
+import { locale, viewPluginProps, watchContent } from '@/mixins'
 import { mapGetters } from 'vuex'
 import '@/styles/flaggables.css'
 
 export default {
-  name: 'laya-wysiwyg',
+  name: 'LayaWysiwyg',
 
   mixins: [
     locale,
+    viewPluginProps,
     watchContent
   ],
 
-  data() {
-    if(this.previewData) //for preview
-      return {...this.previewData}
+  data () {
+    if (this.previewData) { // preview
+      return { ...this.previewData }
+    }
     return {
       contents: null,
       title: {}
     }
   },
-  created() {
-    if (!this.previewData) this.fetchData()
-  },
-  mounted() {
-    this.fetchContent()
-  },
+
   computed: {
     ...mapGetters(['content', 'courseSimple']),
 
@@ -82,10 +78,19 @@ export default {
      *
      * Last Updated: unknown
      */
-    editorId() {
+    editorId () {
       return `laya-wysiwyg-readonly-${Date.now()}`
     }
   },
+
+  created () {
+    if (!this.previewData) this.fetchData()
+  },
+
+  mounted () {
+    this.fetchContent()
+  },
+
   methods: {
 
     /**
@@ -95,8 +100,8 @@ export default {
      *
      * Last Updated: March 20, 2021
      */
-    fetchData() {
-      let idx = this.$route.params.step -1
+    fetchData () {
+      const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.contents = preData.contents
       this.title = preData.title
@@ -108,17 +113,13 @@ export default {
      *
      * Last Updated: March 20, 2021
      */
-    fetchContent() {
+    fetchContent () {
       const quill = new Quill(`#${this.editorId}`, {
         theme: 'snow',
         readOnly: true
       })
       quill.setContents(this.contents)
     }
-  },
-  props: {
-    onFinish: Array,
-    previewData: Object
   }
 }
 </script>

@@ -14,9 +14,7 @@ Dependencies:
     class="laya-course-list"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
-
     <div class="container-fluid">
-
       <div class="row">
         <div
           class="col"
@@ -31,7 +29,10 @@ Dependencies:
         </div>
       </div>
 
-      <div class="row header" v-if="filtered.length > 0">
+      <div
+        v-if="filtered.length > 0"
+        class="row header"
+      >
         <div class="col">
           <h2>{{ i18n['namePH'] }}</h2>
         </div>
@@ -39,7 +40,9 @@ Dependencies:
           <h4>{{ i18n['cat'] }}</h4>
         </div>
         <div class="col-2">
-          <h2 class="sr-only">{{ i18n['courseList.properties'] }}</h2>
+          <h2 class="sr-only">
+            {{ i18n['courseList.properties'] }}
+          </h2>
         </div>
         <div class="col-3">
         </div>
@@ -62,12 +65,12 @@ Dependencies:
           <ul class="course-props">
             <li
               v-for="set in Object.entries(course.properties).filter(k => k[0] !== 'simple')"
-              :key="`setting-${set[0]}`"
               v-show="set[1]"
+              :key="`setting-${set[0]}`"
             >
               <span
-                :title="i18n[`courseList.properties.${set[0]}`]"
                 v-b-tooltip.top
+                :title="i18n[`courseList.properties.${set[0]}`]"
               >
                 <i
                   class="icons-list"
@@ -75,8 +78,8 @@ Dependencies:
                   :aria-describedby="`label-desc-${set[0]}`"
                 ></i>
                 <span
-                  class="sr-only"
                   :id="`label-desc-${set[0]}`"
+                  class="sr-only"
                 >
                   {{ i18n[`courseList.properties.${set[0]}`] }}
                 </span>
@@ -93,57 +96,55 @@ Dependencies:
             {{ i18n['courseList.start'] }}
             <i class="fas fa-arrow-right"></i>
           </a>
-<!--          <router-link-->
-<!--            :to="'/courses/'+course.name+'/1'"-->
-<!--            class="btn indicated-btn"-->
-<!--            v-if="isEnrolled(course)"-->
-<!--            @click="selectedCourse = course.name"-->
-<!--          >-->
-<!--            {{ i18n['courseList.start'] }}-->
-<!--            <i class="fas fa-arrow-right"></i>-->
-<!--          </router-link>-->
-<!--          <a-->
-<!--            class="btn indicated-btn"-->
-<!--            v-else-->
-<!--            @click="subscribe(course)"-->
-<!--          >-->
-<!--            {{ i18n['courseList.subscribe'] }}-->
-<!--            <i class="fas fa-file-signature"></i>-->
-<!--          </a>-->
+          <!--          <router-link-->
+          <!--            :to="'/courses/'+course.name+'/1'"-->
+          <!--            class="btn indicated-btn"-->
+          <!--            v-if="isEnrolled(course)"-->
+          <!--            @click="selectedCourse = course.name"-->
+          <!--          >-->
+          <!--            {{ i18n['courseList.start'] }}-->
+          <!--            <i class="fas fa-arrow-right"></i>-->
+          <!--          </router-link>-->
+          <!--          <a-->
+          <!--            class="btn indicated-btn"-->
+          <!--            v-else-->
+          <!--            @click="subscribe(course)"-->
+          <!--          >-->
+          <!--            {{ i18n['courseList.subscribe'] }}-->
+          <!--            <i class="fas fa-file-signature"></i>-->
+          <!--          </a>-->
           <div
             v-if="complicitReady && !complicitCourses.has(course.courseId)"
+            v-b-tooltip.top
             class="indicate-icon"
             :title="i18n['courseList.notComplicit']"
-            v-b-tooltip.top
           >
             <i class="fas fa-exclamation-circle"></i>
           </div>
-
         </div>
       </div>
-
     </div>
     <b-modal
       id="noncomplicit-confirm"
       :title="i18n['courseList.notComplicit.title']"
       header-bg-variant="warning"
+      centered
       @ok="buttonAction()"
       @cancel="$router.push('/profile')"
-      centered
     >
       <p>
         {{ i18n['courseList.notComplicit'] }}.
         {{ i18n['courseList.notComplicit.text'] }}:
       </p>
-        <ul>
-          <li
-            v-for="thing in nonComplicitList"
-            v-bind:key="thing"
-          >
-            <strong>{{ i18n[`profile.defmedia.${thing}`] }}</strong>:
-            {{ i18n[`courseList.notComplicit.${thing}Hint`]}}
-          </li>
-         </ul>
+      <ul>
+        <li
+          v-for="thing in nonComplicitList"
+          :key="thing"
+        >
+          <strong>{{ i18n[`profile.defmedia.${thing}`] }}</strong>:
+          {{ i18n[`courseList.notComplicit.${thing}Hint`] }}
+        </li>
+      </ul>
 
       <template #modal-footer="{ ok, cancel, hide }">
         <b-button
@@ -172,14 +173,23 @@ import { mapGetters } from 'vuex'
 import { locale, storeHandler } from '@/mixins'
 
 export default {
-  name: 'laya-course-list',
+  name: 'LayaCourseList',
 
   mixins: [
     locale,
     storeHandler
   ],
 
-  data() {
+  props: {
+    filter: {
+      type: String,
+      default () {
+        return ''
+      }
+    }
+  },
+
+  data () {
     return {
       buttonAction: null,
       complicitCourses: null,
@@ -190,10 +200,6 @@ export default {
       nonComplicitList: [],
       selectedCourse: ''
     }
-  },
-
-  props: {
-    filter: String,
   },
 
   computed: {
@@ -212,18 +218,18 @@ export default {
      * Last Updated: November 9, 2021
      * @returns {boolean} true if complicitCourses set has at least one member
      */
-    complicitReady() {
+    complicitReady () {
       return this.complicitCourses !== null
     },
 
-     /**
+    /**
      * filtered: filter course list depending on user input
      *
      * Author: core
      *
      * Last updated: March 24, 2021
      */
-    filtered() {
+    filtered () {
       if (!this.filter) return this.courseList
       const filterByCourseName = new RegExp(this.filter, 'i')
       return this.filteredList.filter(course => filterByCourseName.test(course.name))
@@ -232,12 +238,12 @@ export default {
 
   watch: {
     // watch course list in order to have non-complicit indicator at first load
-    courseList(){
+    courseList () {
       this.getComplicitCourses()
     }
   },
 
-  created() {
+  created () {
     // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
     // this.getSubs()
     this.filteredList = [...this.courseList]
@@ -246,18 +252,17 @@ export default {
 
   methods: {
     // TEST
-    debounce(fn, delay) {
+    debounce (fn, delay) {
       let timeoutID = null
       return () => {
         clearTimeout(timeoutID)
         const args = arguments
         const ctx = this
-        timeoutID = setTimeout( () => {
+        timeoutID = setTimeout(() => {
           fn.apply(ctx, args)
         }, delay)
       }
     },
-
 
     /**
      * function markAsNonComplicit: add array in nonComplicitSettings if not
@@ -265,14 +270,12 @@ export default {
      * @param courseId id of course that is non-complicit
      * @param property property to be added
      */
-    markAsNonComplicit(courseId, property) {
-
-      if(!this.nonComplicitSettings[courseId]) {
+    markAsNonComplicit (courseId, property) {
+      if (!this.nonComplicitSettings[courseId]) {
         this.nonComplicitSettings[courseId] = []
       }
       this.nonComplicitSettings[courseId].push(property)
       // this.complicitCourses.delete(courseId)
-
     },
 
     /**
@@ -284,27 +287,27 @@ export default {
      *
      *  Last Updated: October 29, 2021
      */
-    getComplicitCourses() {
+    getComplicitCourses () {
       this.complicitCourses = new Set()
       // check all courses for complicity with user preferences
       for (const course of this.courseList) {
-          // eslint-disable-next-line
+        // eslint-disable-next-line
           const props = (({enrollment, ...o}) => o) (course.properties) // filter enrollment, can be removed when it is reinstated
-          let complicit = true
-          for (const prop of Object.keys(this.mediaPrefs)) { //check each user pref
-            // check prop settings in course's props array
-            if (Object.prototype.hasOwnProperty.call(props, prop)) { // setting is found in props
-              if (props[prop] !== this.mediaPrefs[prop]) { // if not the same as user's pref, mark non complicit
-                complicit = false
-                this.markAsNonComplicit(course.courseId, prop)
-              }
+        let complicit = true
+        for (const prop of Object.keys(this.mediaPrefs)) { // check each user pref
+          // check prop settings in course's props array
+          if (Object.prototype.hasOwnProperty.call(props, prop)) { // setting is found in props
+            if (props[prop] !== this.mediaPrefs[prop]) { // if not the same as user's pref, mark non complicit
+              complicit = false
+              this.markAsNonComplicit(course.courseId, prop)
             }
-            // else statement omitted b/c prop not present in course, no valid assessment can be made
           }
-          if (complicit) {
-            this.complicitCourses.add(course.courseId)
-          }
+          // else statement omitted b/c prop not present in course, no valid assessment can be made
         }
+        if (complicit) {
+          this.complicitCourses.add(course.courseId)
+        }
+      }
     },
 
     /**
@@ -316,15 +319,15 @@ export default {
      *  Last Updated: October 29, 2021
      *  @param {object} course corresponding course to button
      */
-    decideButtonAction(course) {
+    decideButtonAction (course) {
       // boolean if course is complicit w/ user settings
       const complicit = this.complicitCourses.has(course.courseId)
       this.buttonAction = // this.isEnrolled(course) ? // commented out case of enrollment
-        () =>  {
+        () => {
           if (course.name !== this.course.name) {
             this.fetchCourse(course.name)
           }
-          this.$router.push('/courses/'+course.name+'/1')
+          this.$router.push('/courses/' + course.name + '/1')
         } // :
         // () => { this.subscribe(course) }
       if (this.complicitReady && !complicit) {
@@ -347,7 +350,7 @@ export default {
      * @param {string} setting prop that need icon
      * @returns {string} icon name
      */
-    getIcon(setting) {
+    getIcon (setting) {
       switch (setting) {
         // case 'enrollment':
         //   return 'key' // commented out b/c enrollment is disabled
@@ -360,7 +363,7 @@ export default {
         default:
           return ''
       }
-    },
+    }
 
     // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
     // /**

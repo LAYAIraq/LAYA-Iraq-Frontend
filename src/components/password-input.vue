@@ -8,23 +8,23 @@
         class="col-form-label"
       >
         <span v-if="labelIconsOnly">
-           <i
-             class="fas fa-key"
-             :title="newInput? i18n['profile.newPwd']: i18n['pwdPH']"
-             v-b-tooltip.auto
-           ></i>
+          <i
+            v-b-tooltip.auto
+            class="fas fa-key"
+            :title="newInput? i18n['profile.newPwd']: i18n['pwdPH']"
+          ></i>
         </span>
         <span v-else>
-           {{ newInput? i18n['profile.newPwd']: i18n['pwdPH'] }}
+          {{ newInput? i18n['profile.newPwd']: i18n['pwdPH'] }}
         </span>
 
       </span>
       <div class="col">
         <password
+          v-model="pwdSet"
           class="pwd-row"
           :class="langIsAr? 'reverse': ''"
-          v-model="pwdSet"
-          :defaultClass="'form-control'"
+          :default-class="'form-control'"
           :label-hide="i18n['password.hide']"
           :label-show="i18n['password.show']"
           :secure-length="Number(secureLength)"
@@ -53,11 +53,11 @@
         class="col-form-label"
       >
         <span v-if="labelIconsOnly">
-           <i
-             class="fas fa-redo-alt"
-             :title="i18n['pwd2PH']"
-             v-b-tooltip.auto
-           ></i>
+          <i
+            v-b-tooltip.auto
+            class="fas fa-redo-alt"
+            :title="i18n['pwd2PH']"
+          ></i>
         </span>
         <span v-else>
           {{ i18n['pwd2PH'] }}
@@ -66,9 +66,9 @@
       <div class="col">
         <input
           id="repeatPwd"
+          v-model="pwdRepeat"
           type="password"
           class="form-control pwd-row"
-          v-model="pwdRepeat"
           :placeholder="i18n['pwd2PH']"
           aria-describedby="repeat-label"
         >
@@ -85,23 +85,24 @@
         class="col-form-label d-inline-block"
       >
         <span v-if="labelIconsOnly">
-           <i
-             class="fas fa-lightbulb"
-             :title="i18n['profile.pwdSuggestion']"
-             v-b-tooltip.auto
-           ></i>
+          <i
+            v-b-tooltip.auto
+            class="fas fa-lightbulb"
+            :title="i18n['profile.pwdSuggestion']"
+          ></i>
         </span>
         <span v-else>
           {{ i18n['profile.pwdSuggestion'] }}
         </span>
       </div>
       <div
-        class="col pwd-row"
         id="suggestions"
+        class="col pwd-row"
       >
         <strong
           id="pwd-suggestions"
-          class="form-text text-center">
+          class="form-text text-center"
+        >
           {{ warnings }}
         </strong>
       </div>
@@ -109,27 +110,27 @@
 
     <!-- error messages -->
     <div
-      class="form-group"
       v-if="!pwdSecureLength || !pwdMatch"
+      class="form-group"
     >
       <div
         :class="`col-${labelWidth}`"
         class="col-form-label d-inline-block"
       >
         <span v-if="labelIconsOnly">
-           <i
-             class="fas fa-exclamation-triangle"
-             :title="i18n['password.error']"
-             v-b-tooltip.auto
-           ></i>
+          <i
+            v-b-tooltip.auto
+            class="fas fa-exclamation-triangle"
+            :title="i18n['password.error']"
+          ></i>
         </span>
         <span v-else>
           {{ i18n['password.error'] }}
         </span>
       </div>
       <div
-        class="col pwd-row"
         id="errors"
+        class="col pwd-row"
       >
         <strong
           id="pwd-diff-msg"
@@ -165,50 +166,50 @@ export default {
     /* input password */
     inputPwd: {
       type: String,
-      default() {
+      default () {
         return ''
       }
     },
     /* repeat input password */
     inputPwdRepeat: {
       type: String,
-      default() {
+      default () {
         return ''
       }
     },
     /* boolean for label output */
     labelIconsOnly: {
       type: Boolean,
-      default() { return false }
+      default () { return false }
     },
     /* width of labeling, uses bootstrap col widths */
     labelWidth: {
       type: Number,
-      default() { return 3 }
+      default () { return 3 }
     },
     /* boolean if it's a new password */
     newInput: {
       type: Boolean,
-      default() { return false }
+      default () { return false }
     },
     /* secure pwd length, shows indicator if input is below */
     secureLength: {
       type: Number,
-      default() { return 8 }
+      default () { return 8 }
     },
     /* boolean for showing verbal output */
     showWordedStrength: {
       type: Boolean,
-      default() { return true }
+      default () { return true }
     },
     /* boolean for showing suggestions to improve password */
     showPasswordSuggestions: {
       type: Boolean,
-      default() { return true }
+      default () { return true }
     }
 
   },
-  data() {
+  data () {
     return {
       passwordStrength: null,
       possibleWarnings: ['Straights of keys are easy to guess', 'Short keyboard patterns are easy to guess', 'Repeats like "aaa" are easy to guess',
@@ -236,7 +237,7 @@ export default {
      * Last Updated: January 18, 2021
      * @returns {number} 12 - labelWidth
      */
-    inputWidth() {
+    inputWidth () {
       return 12 - this.labelWidth
     },
 
@@ -248,7 +249,7 @@ export default {
      * Last Updated: March 24, 2021
      */
     pwdDiffMsg () {
-      return !this.pwdMatch? this.i18n['profile.pwdDiffer'] : ''
+      return !this.pwdMatch ? this.i18n['profile.pwdDiffer'] : ''
     },
 
     /**
@@ -288,7 +289,7 @@ export default {
      * Last Updated: January 18, 2022
      * @returns {boolean} true if password if sufficiently long
      */
-    pwdSecureLength() {
+    pwdSecureLength () {
       return this.pwdSet.length >= this.secureLength
     },
 
@@ -300,7 +301,7 @@ export default {
      * Last Updated: January 18, 2022
      * @returns {string} message that pwd is not long enough
      */
-    pwdSecureLengthNotReachedMsg() {
+    pwdSecureLengthNotReachedMsg () {
       return !this.pwdSecureLength
         ? this.i18n['password.secureLengthNotReached']
         : ''
@@ -332,9 +333,9 @@ export default {
      * @returns {boolean} true if any of the suggestions aren't empty,
      *  but not all
      */
-    showSuggestions() {
+    showSuggestions () {
       return (
-          this.warnings !== '' ||
+        this.warnings !== '' ||
           this.pwdDiffMsg !== '' ||
           this.pwdMsg !== '') &&
         (this.warnings !== this.pwdDiffMsg)
@@ -348,15 +349,15 @@ export default {
      * Last Updated: September 22, 2021
      * @returns {string} password strength in locale
      */
-    wordedPwdStrength() {
-      return this.passwordStrength != null?
-        this.i18n[`pwdStrength${this.passwordStrength}`]:
-        ''
+    wordedPwdStrength () {
+      return this.passwordStrength != null
+        ? this.i18n[`pwdStrength${this.passwordStrength}`]
+        : ''
     }
   },
 
   watch: {
-    pwdMatch(val) {
+    pwdMatch (val) {
       if (val) {
         this.$emit('compliantLength', this.pwdSecureLength)
       }
@@ -374,7 +375,7 @@ export default {
      * @param warning
      */
     pwdStrength ({ suggestions, warning }) {
-      if (this.repeatPwd !== '') { // start checking when user repeated password
+      if (this.pwdRepeat !== '') { // start checking when user repeated password
         let k, j// check for different language
         for (j = 0; j < this.possibleWarnings.length; j++) {
           if (warning === this.possibleWarnings[j]) {
@@ -411,9 +412,9 @@ export default {
      *
      * Last Updated: September 22, 2021
      */
-    setPwdStrength(num) {
+    setPwdStrength (num) {
       this.passwordStrength = num
-    },
+    }
 
   }
 }

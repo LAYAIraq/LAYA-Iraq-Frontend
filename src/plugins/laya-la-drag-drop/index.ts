@@ -11,7 +11,7 @@ import _Vue from 'vue'
 import _view from './view.vue'
 
 export default {
-  install(Vue: typeof _Vue, options?: any): void {
+  install (Vue: typeof _Vue): void {
     Vue.$laya.registerLA(
       'laya-quiz-drag-drop',
       'AssessmentDragDrop',
@@ -19,7 +19,7 @@ export default {
       'fas fa-ellipsis-h',
       {
         new: () => import('./create.vue'),
-        //@ts-ignore
+        // @ts-ignore
         view: _view, // not lazily loaded b/c always needed
         edit: () => import('./edit.vue')
       }

@@ -20,11 +20,11 @@ Dependencies:
 
       <i
         id="questionmark"
+        v-b-tooltip.left
         class="fas fa-question-circle"
         :class="langIsAr? 'mr-auto' : 'ml-auto'"
-        @click="toggleTip"
         :title="i18n['showTip']"
-        v-b-tooltip.left
+        @click="toggleTip"
       ></i>
     </div>
     <hr>
@@ -32,10 +32,12 @@ Dependencies:
     <b-jumbotron
       v-if="tooltipOn"
       :header="i18n['layaLbDialog.name']"
-      :lead="i18n['tipHeadline']">
+      :lead="i18n['tipHeadline']"
+    >
       <hr class="my-4">
-      <span v-html="i18n['layaLbDialog.tooltip']"></span>
-
+      <span>
+        {{ i18n['layaLbDialog.tooltip'] }}
+      </span>
     </b-jumbotron>
 
     <form>
@@ -51,8 +53,8 @@ Dependencies:
           <div class="col-8">
             <input
               id="dialog-title"
-              type="text"
               v-model="title.text"
+              type="text"
               class="form-control"
               :placeholder="i18n['titlePlaceholder']"
               :aria-label="i18n['titlePlaceholder']"
@@ -66,17 +68,16 @@ Dependencies:
               {{ i18n['showTitle'] }}
               <input
                 id="show-title-tick"
-                type="checkbox"
                 v-model="title.show"
+                type="checkbox"
               >
             </label>
           </div>
-
         </div>
         <!-- simple title -->
         <div
-          class="row"
           v-if="courseSimple"
+          class="row"
         >
           <label
             for="dialog-title-simple"
@@ -89,14 +90,13 @@ Dependencies:
           <div class="col-8">
             <input
               id="dialog-title-simple"
-              type="text"
               v-model="title.simple"
+              type="text"
               class="form-control"
               :placeholder="i18n['simpleAlt']"
             >
           </div>
         </div>
-
       </div>
       <div class="form-group">
         <!-- task -->
@@ -118,8 +118,8 @@ Dependencies:
         </div>
         <!-- task simple -->
         <div
-          class="row"
           v-if="courseSimple"
+          class="row"
         >
           <label
             for="dialog-question-simple"
@@ -151,9 +151,9 @@ Dependencies:
         <div class="col-10">
           <input
             id="dialog-bg"
+            v-model="bg"
             type="text"
             class="form-control"
-            v-model="bg"
             :placeholder="i18n['layaLbDialog.bgPlaceholder']"
           >
         </div>
@@ -161,9 +161,9 @@ Dependencies:
 
       <p><b>{{ i18n['layaLbDialog.answers'] }}</b></p>
       <div
-        class="form-group"
         v-for="(answer, i) in answers"
         :key="'answer-'+i"
+        class="form-group"
       >
         <div class="row">
           <!-- text -->
@@ -176,9 +176,9 @@ Dependencies:
           <div class="col-5">
             <textarea
               :id="'answer-text-'+i"
+              v-model="answer.text"
               class="form-control"
               style="height: 6rem; font-size: 80%"
-              v-model="answer.text"
             ></textarea>
           </div>
           <!-- delete -->
@@ -186,21 +186,21 @@ Dependencies:
             <button
               type="button"
               class="btn btn-danger btn-sm"
-              @click="_delItem(i)"
               :aria-label="i18n['deleteField']"
+              @click="_delItem(i)"
             >
               <i class="fas fa-times"></i>
             </button>
           </div>
         </div>
         <div
-          class="row"
           v-if="courseSimple"
+          class="row"
         >
           <!-- item simple -->
           <label
             class="col-form-label col-2"
-            :for="'answer-text-simple'+i"
+            :for="`answer-text-simple-${i}`"
           >
             <span class="sr-only">
               {{ i18n['text'] }}
@@ -208,10 +208,10 @@ Dependencies:
           </label>
           <div class="col-5">
             <textarea
-              :id="'answer-text-simple-'+i"
+              :id="`answer-text-simple-${i}`"
+              v-model="answer.simple"
               class="form-control"
               style="height: 6rem; font-size: 80%"
-              v-model="answer.simple"
               :placeholder="i18n['simpleAlt']"
             ></textarea>
           </div>
@@ -230,7 +230,6 @@ Dependencies:
         </button>
       </div>
     </form>
-
   </div>
 </template>
 
@@ -240,12 +239,21 @@ import { mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 
 export default {
-  name: 'laya-lb-dialog-edit',
+  name: 'LayaLbDialogEdit',
 
   mixins: [
     locale,
     tooltipIcon
   ],
+
+  data () {
+    return {
+      bg: '',
+      question: {},
+      answers: [],
+      title: {}
+    }
+  },
 
   computed: {
     ...mapGetters(['content']),
@@ -257,21 +265,12 @@ export default {
      *
      * Last Updated: January 16, 2021
      */
-    step() {
+    step () {
       return this.$route.params.step
     }
   },
 
-  data() {
-    return {
-      bg: '',
-      question: {},
-      answers: [],
-      title: {}
-    }
-  },
-
-  created() {
+  created () {
     this.fetchData()
   },
 
@@ -285,7 +284,7 @@ export default {
      *
      * @param {*} idx index of item
      */
-    _delItem(idx) {
+    _delItem (idx) {
       this.answers.splice(idx, 1)
     },
 
@@ -294,7 +293,7 @@ export default {
      * Author: core
      * Last Updated: June 6, 2021
      */
-    _addItem(str) {
+    _addItem (str) {
       const newItem = {
         text: str,
         flagged: false,
@@ -310,10 +309,10 @@ export default {
      *
      * Last Updated: March 19, 2021
      */
-    fetchData() {
-      let idx = this.$route.params.step -1 //comply with array indexing in store
-      //create deep copy of store object to manipulate in vue instance
-      let preData = JSON.parse(JSON.stringify(this.content[idx].input))
+    fetchData () {
+      const idx = this.$route.params.step - 1 // comply with array indexing in store
+      // create deep copy of store object to manipulate in vue instance
+      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.bg = preData.bg
       this.question = preData.question
       this.answers = preData.answers
@@ -338,7 +337,7 @@ export default {
   left: 0;
 
   /* height: 50%; */
-  width: stretch;
+  width: fit-content;
 
   /* background-color: #ffffffd9; */
   margin: 1rem;

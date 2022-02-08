@@ -7,8 +7,16 @@ Dependencies: none
 -->
 
 <template>
-  <div v-show="show" class="ly-scroll-to-top">
-    <button :aria-label="i18n['scrollUp']" type="button" class="btn btn-secondary btn-lg" @click="scrollTop">
+  <div
+    v-show="show"
+    class="ly-scroll-to-top"
+  >
+    <button
+      :aria-label="i18n['scrollUp']"
+      type="button"
+      class="btn btn-secondary btn-lg"
+      @click="scrollTop"
+    >
       <i class="fas fa-chevron-up"></i>
     </button>
   </div>
@@ -18,7 +26,7 @@ Dependencies: none
 import { locale } from '@/mixins'
 
 export default {
-  name: 'ly-scroll-to-top',
+  name: 'LyScrollToTop',
 
   mixins: [
     locale
@@ -29,6 +37,12 @@ export default {
       show: false
     }
   },
+  created () {
+    window.addEventListener('scroll', this.scrollTreshold)
+  },
+  destroyed () {
+    window.removeEventListener('scroll', this.scrollTreshold)
+  },
   methods: {
 
     /**
@@ -38,7 +52,7 @@ export default {
      *
      * Last Updated: March 12, 2021
      */
-    scrollTreshold() {
+    scrollTreshold () {
       this.show = window.scrollY > 200
     },
 
@@ -49,15 +63,9 @@ export default {
      *
      * Last Updated: March 12, 2021
      */
-    scrollTop() {
-      window.scroll({top: 0, behavior: 'smooth'})
+    scrollTop () {
+      window.scroll({ top: 0, behavior: 'smooth' })
     }
-  },
-  created() {
-    window.addEventListener('scroll', this.scrollTreshold)
-  },
-  destroyed() {
-    window.removeEventListener('scroll', this.scrollTreshold)
   }
 }
 </script>

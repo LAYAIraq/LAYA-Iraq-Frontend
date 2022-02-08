@@ -5,12 +5,12 @@
   >
     <div class="flag-interface">
       <div
+        v-b-tooltip.bottom
         class="flag-icon"
         :class="refData.flagged ? 'flagged' : 'unflagged'"
         :title="refData.flagged
           ? i18n['flag.seeDiscussion']
           : i18n['flag.title']"
-        v-b-tooltip.bottom
         tabindex="0"
       >
         <router-link
@@ -20,7 +20,6 @@
           <i class="fas fa-flag"></i>
         </router-link>
       </div>
-
     </div>
   </div>
 </template>
@@ -34,13 +33,19 @@ export default {
   name: 'LayaFlagIcon',
 
   mixins: [
-    locale,
+    locale
     // time
   ],
 
   props: {
-    refData: Object,
-    interactive: Boolean
+    refData: {
+      type: Object,
+      default () { return null }
+    },
+    interactive: {
+      type: Boolean,
+      default () { return false }
+    }
   }
 }
 </script>

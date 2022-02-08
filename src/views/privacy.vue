@@ -11,11 +11,9 @@ Dependencies: @/mixins/locale.vue
     class="privacy-view"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
-
     <div class="container">
       <div class="row">
         <div class="col">
-
           <div style="height: 2rem"></div>
 
           <h1>Privacy Policy of Universität Vechta</h1>
@@ -75,13 +73,13 @@ Dependencies: @/mixins/locale.vue
 
           <h2>Contact Us</h2>
 
-          <p>If you have any questions or suggestions about our Privacy Policy, do not hesitate to
+          <p>
+            If you have any questions or suggestions about our Privacy Policy, do not hesitate to
             <a href="mailto:laya-support@informatik.hu-berlin.de">
               contact us
             </a>
             .
           </p>
-
         </div>
       </div>
     </div>
@@ -92,7 +90,7 @@ Dependencies: @/mixins/locale.vue
 import { locale } from '@/mixins'
 
 export default {
-  name: 'privacy-view',
+  name: 'PrivacyView',
 
   mixins: [
     locale

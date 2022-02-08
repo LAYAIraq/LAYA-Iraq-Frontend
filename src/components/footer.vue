@@ -11,13 +11,16 @@ Dependencies: @/mixins/locale.vue
     id="ly-footer"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
-    <div class="container" style="border-top: 0.2rem solid black; padding-top: 1rem;">
+    <div
+      class="container"
+      style="border-top: 0.2rem solid black; padding-top: 1rem;"
+    >
       <div class="row">
         <div class="col-9 col-lg-9">
           <!-- socials row -->
-         <div class="row no-gutters">
+          <div class="row no-gutters">
             <!-- social media links -->
-         </div>
+          </div>
 
           <div class="row">
             <div class="col">
@@ -59,12 +62,11 @@ Dependencies: @/mixins/locale.vue
   </footer>
 </template>
 
-
 <script>
 import { locale } from '@/mixins'
 
 export default {
-  name: 'ly-footer',
+  name: 'LyFooter',
 
   components: {
     lyScrollToTop: () => import('@/components/scroll-to-top')
@@ -88,7 +90,7 @@ footer {
 }
 
 .social-link:first-child {
-  margin-left: 0px;
+  margin-left: 0;
 }
 .social-link {
   margin: 5px;

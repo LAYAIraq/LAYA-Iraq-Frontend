@@ -28,7 +28,7 @@ export default {
         enrollment: {
           feedback: Array<object>
         }
-      } ) {
+      }) {
       return state.enrollment.feedback
     },
 
@@ -60,7 +60,7 @@ export default {
       course: {
         content: Array<object>
       }
-    } ) {
+    }) {
       return state.course.content
     },
 
@@ -74,7 +74,7 @@ export default {
      * @param state contains course object
      * @returns course object
      */
-    course (state: { course: object } ) {
+    course (state: { course: object }) {
       return state.course
     },
 
@@ -110,7 +110,7 @@ export default {
       course: {
         files: Array<object>
       }
-    } ) {
+    }) {
       return state.course.files
     },
 
@@ -192,8 +192,7 @@ export default {
     courseUpdated (state: { courseUpdated: boolean }) {
       return state.courseUpdated
     }
-  }
-  ,
+  },
 
   mutations: {
 
@@ -220,22 +219,21 @@ export default {
         freetext: String,
         id: number,
         numberOfFeedbacksEntries: number,
-        //options: object
+        // options: object
         options: {
           questions: String,
           answers: String
         }
       }
     ) {
-      if (feedbackData.numberOfFeedbacksEntries+1 > state.enrollment.feedback.length){
-        for (let i = state.enrollment.feedback.length; i < feedbackData.numberOfFeedbacksEntries+1; i++){
+      if (feedbackData.numberOfFeedbacksEntries + 1 > state.enrollment.feedback.length) {
+        for (let i = state.enrollment.feedback.length; i < feedbackData.numberOfFeedbacksEntries + 1; i++) {
           state.enrollment.feedback.push(null)
         }
       }
       if (state.enrollment.feedback.length !== 0) {
         state.enrollment.feedback[feedbackData.numberOfFeedbacksEntries] = feedbackData
-      }
-      else {
+      } else {
         state.enrollment.feedback.push(feedbackData)
       }
     },
@@ -260,7 +258,7 @@ export default {
         name: string,
         nextStep: any,
         input: object
-      } ) {
+      }) {
       state.course.content.push(contentToAdd)
     },
 
@@ -282,7 +280,7 @@ export default {
       state.courseList.push(courseListItem)
     },
 
-      /**
+    /**
        * Function to replace properties attribute for course in course list
        *
        * Author: pj
@@ -292,16 +290,15 @@ export default {
        * @param state course list array
        * @param data new properties to be set
        */
-    setPropertyToCourseInCourseList(
+    setPropertyToCourseInCourseList (
       state: { courseList: Array<object>},
-      data: { course: object, prefs: object }){
-      for (let i = 0; i < state.courseList.length; i++){
-        if(data.course["courseId"] == state.courseList[i]["courseId"]){
-          state.courseList[i]["properties"] = data.prefs
+      data: { course: object, prefs: object }) {
+      for (let i = 0; i < state.courseList.length; i++) {
+        if (data.course['courseId'] === state.courseList[i]['courseId']) {
+          state.courseList[i]['properties'] = data.prefs
         }
       }
     },
-
 
     /**
      * function changeCourseProperties: update course properties
@@ -366,12 +363,12 @@ export default {
       file: {
         name: string,
         container: string
-      } ) {
+      }) {
       const idx = state.course.files.indexOf(file)
       // console.log(`${file.name} hat Stelle ${idx}`)
       state.course.files.splice(idx, 1)
       http.delete(`storage/${file.container}/files/${file.name}`)
-        .catch( (err) => {
+        .catch((err) => {
           console.error(err)
         })
     },
@@ -394,7 +391,7 @@ export default {
       elem: {
         id: string,
         flagged: boolean
-      } ) {
+      }) {
       // const checkAndFlag = (o: any) => {
       //   console.log(`we flag ${o}`)
       //   if (object.prototype.hasOwnProperty.call(o, 'flagged')) {
@@ -536,30 +533,6 @@ export default {
     },
 
     /**
-     * Function setCourseUpdated: set courseUpdated to true
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 11, 2021
-     * @param state contains boolean courseUpdated
-     */
-    setCourseUpdated(state: { courseUpdated: boolean }) {
-      state.courseUpdated = true
-    },
-
-    /**
-     * Function unsetCourseUpdated: set courseUpdated to false
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 11, 2021
-     * @param state contains boolean courseUpdated
-     */
-    unsetCourseUpdated(state: { courseUpdated: boolean }) {
-      state.courseUpdated = false
-    },
-
-    /**
      * Function updateCourseFiles: updates list of course files
      *
      * Author: cmc
@@ -624,7 +597,7 @@ export default {
       stepData: {
         step: number,
         updatedStep: object
-      } ) {
+      }) {
       // console.log(data.step)
       // console.log(data.updatedStep)
       state.course.content[stepData.step] = {
@@ -741,14 +714,13 @@ export default {
       //   }
       //   // console.log('NEW COPIED COURSE:', copiedCourse)
 
-      return new Promise( (resolve,reject) => {
-
+      return new Promise((resolve, reject) => {
         // console.log('again: this course should be posted ', copiedCourse)
         // FIXME: filelist is not pushed in database
-        http.post(`courses`, copiedCourse)
-          .then( (resp) => {
+        http.post('courses', copiedCourse)
+          .then((resp) => {
             // console.log('This response we got: ', resp)
-            resolve (resp.data)
+            resolve(resp.data)
             // FIXME: Copy File List to Course
             // let fileList = []
             // newFiles.forEach(elem => {
@@ -767,7 +739,7 @@ export default {
             //     reject(err)
             //   })
           })
-          .catch( (err) => { reject(err)})
+          .catch((err) => { reject(err) })
       })
       // })
       // .catch(err => {
@@ -793,48 +765,48 @@ export default {
       const sid = state.course.storageId
       const files = state.course.files
 
-      return new Promise ((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         // collect delete requests for all course files
         const requests = []
         if (files) {
-          for ( const file of files) {
+          for (const file of files) {
             requests.push(
               http.delete(`storage/${sid}/files/${file.name}`)
                 // .then( () => console.log(`removed ${file.originalFilename}`))
-                .catch( (err) => {
+                .catch((err) => {
                   // console.error(err)
-                  reject (err)
+                  reject(err)
                 })
             )
           }
         }
         http.all(requests)
           .then(
-            http.spread( () => console.log('FILES REMOVED'))
+            http.spread(() => console.log('FILES REMOVED'))
           )
           .catch(err => {
             // console.error(err)
-            reject (err)
+            reject(err)
           })
-          .finally( () => {
+          .finally(() => {
             // delete course storage
             http.delete(`storage/${sid}`)
-              .then( () => console.log('Container removed!'))
-              .catch( (err) => {
+              .then(() => console.log('Container removed!'))
+              .catch((err) => {
                 // console.error(err)
-                reject (err)
+                reject(err)
               })
           })
 
         // delete course itself
         http.delete(`courses/${cid}`)
-          .then( () => {
+          .then(() => {
             // console.log("REMOVED COURSE", cid)
-            resolve ('all good')
+            resolve('all good')
           })
           .catch(err => {
             // console.error('Failed to delete course:', err)
-            reject (err)
+            reject(err)
           })
       })
     },
@@ -854,31 +826,31 @@ export default {
       name: string
     ) {
       if (rootState.note.busy) return null
-      return new Promise( (resolve, reject) => {
-        commit ('setBusy', true)
+      return new Promise((resolve, reject) => {
+        commit('setBusy', true)
 
-        //get course ID from name
+        // get course ID from name
         http.get(`courses/getCourseId?courseName=${name}`)
-          .then( ({ data }) => {
+          .then(({ data }) => {
             /* fetch course */
             http.get(`courses/${data.courseId}`)
               .then(({ data }) => {
                 // console.log(data)
-                commit ('setCourse', data)
-                commit ('setCourseUpdated')
-                dispatch ('getCourseFlags', state.course.courseId)
-                resolve ('Course loaded')
+                commit('setCourse', data)
+                commit('setCourseUpdated')
+                dispatch('getCourseFlags', state.course.courseId)
+                resolve('Course loaded')
               })
-              .catch( err => {
+              .catch(err => {
                 console.error(err)
-                reject (err)
+                reject(err)
               })
           })
-          .catch( err => {
+          .catch(err => {
             console.error(err)
-            reject (err)
+            reject(err)
           })
-          .finally( () => commit('setBusy', false))
+          .finally(() => commit('setBusy', false))
       })
     },
 
@@ -894,9 +866,9 @@ export default {
     fetchCourseList (
       { commit, state }
     ) {
-      commit ('setBusy', true)
+      commit('setBusy', true)
       http.get('courses?filter[include]=author')
-        .then( ({data}) => {
+        .then(({ data }) => {
           for (const courseObject of data) {
             const listData = {
               category: courseObject.category,
@@ -911,12 +883,13 @@ export default {
                 // @/views/course-edit-tools/course-preferences.vue
                 // might be refactored to reduce redundancy
                 const hasSimple = (elem) => {
-                  return Object.prototype.hasOwnProperty.call(elem, 'simple')?
-                    elem.simple !== '' : false
+                  return Object.prototype.hasOwnProperty.call(elem, 'simple')
+                    ? elem.simple !== ''
+                    : false
                 }
                 const iterInput = Object.values(block)
                 for (const elem of iterInput) {
-                  if (typeof(elem) === 'object') {
+                  if (typeof (elem) === 'object') {
                     if (Array.isArray(elem)) {
                       for (const iter of elem) {
                         if (iter) {
@@ -928,7 +901,7 @@ export default {
                           }
                         }
                       }
-                    } else if (elem){
+                    } else if (elem) {
                       if (!hasSimple(elem)) {
                         // console.log(elem)
                         // console.log(' doesnt have simple')
@@ -938,7 +911,6 @@ export default {
                     }
                   }
                 }
-
               }
               switch (block.name) { // check content for text and video
                 // TODO: what about audio? obsolete b/c screenreaders?
@@ -959,12 +931,12 @@ export default {
             if (!state.courseList.some( // add to course list if not present
               (e: { courseId: String }) => e.courseId === listData.courseId)
             ) {
-              commit ('appendToCourseList', listData)
+              commit('appendToCourseList', listData)
             }
           }
         })
         .catch(err => console.error(err))
-        .finally( () => { commit('setBusy', false) })
+        .finally(() => { commit('setBusy', false) })
     },
 
     /**
@@ -983,7 +955,7 @@ export default {
     ) {
       const uid = rootState.auth.userId
       const cid = courseId
-      commit ('setBusy', true)
+      commit('setBusy', true)
       http.get('enrollments/findOne', {
         params: {
           filter: {
@@ -994,15 +966,15 @@ export default {
           }
         }
       })
-        .then(({data}) => {
+        .then(({ data }) => {
           // console.log('Enrollment exists!')
-          commit ('setEnrollment', data)
+          commit('setEnrollment', data)
         })
         .catch(err => {
           // console.log('No enrollment found!')
           console.error(err)
         })
-        .finally( () => { commit('setBusy', false) })
+        .finally(() => { commit('setBusy', false) })
     },
 
     /**
@@ -1018,7 +990,7 @@ export default {
     storeCourse (
       { commit, state }
     ) {
-      return new Promise( (resolve, reject) => {
+      return new Promise((resolve, reject) => {
         http.patch(`courses/${state.course.courseId}`, {
           content: state.course.content,
           lastChanged: Date.now(),
@@ -1026,11 +998,11 @@ export default {
         })
           .catch(err => {
             // console.error('Failed storing course content:', err)
-            reject (err)
+            reject(err)
           })
-          .finally(()  => {
-            commit ('unsetCourseUpdated')
-            resolve ('Course updated successfully')
+          .finally(() => {
+            commit('unsetCourseUpdated')
+            resolve('Course updated successfully')
           })
       })
     },
@@ -1051,21 +1023,20 @@ export default {
         lastChanged: Date.now()
       }
       // console.log(newFileData)
-      return new Promise( (resolve, reject) => {
+      return new Promise((resolve, reject) => {
         http.patch(
           `courses/${state.course.courseId}`,
           newFileData
         )
-          .then( (resp) => {
+          .then((resp) => {
             // console.log(resp)
-            resolve (resp)
+            resolve(resp)
           })
-          .catch( err => {
+          .catch(err => {
             // console.error(err)
-            reject (err)
+            reject(err)
           })
       })
-
     },
 
     /**
@@ -1113,22 +1084,21 @@ export default {
         }
       }
     ) {
-
       const newNameData = {
         lastChanged: Date.now(),
         name: state.course.name
       }
 
-      return new Promise( (resolve, reject) => {
+      return new Promise((resolve, reject) => {
         http.patch(
       `courses/${state.course.courseId}`,
-          newNameData
+      newNameData
         )
-          .then( () => {
-            resolve ('Updated Course name!')
+          .then(() => {
+            resolve('Updated Course name!')
           })
-          .catch( (err) => {
-            reject (err)
+          .catch((err) => {
+            reject(err)
           })
       })
     }

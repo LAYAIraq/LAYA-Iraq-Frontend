@@ -22,18 +22,18 @@ export default {
   // }
 
   watch: {
-    courseUpdated(val) {
+    courseUpdated (val) {
       if (val) { // set to true
         this.fetchData()
         this.$store.commit('unsetCourseUpdated')
       }
     },
-    storeBusy(val) {
-      if(!val) {
+    storeBusy (val) {
+      if (!val) {
         console.log('store finished loading!!')
       }
     }
-  },
+  }
   // created() {
   //   this.$store.commit('unsetCourseUpdated')
   // }

@@ -10,5 +10,5 @@ export default {
   ADMIN: 'admin',
   EDITOR: 'editor',
   AUTHOR: 'author',
-  STUDENT: 'student',
+  STUDENT: 'student'
 }

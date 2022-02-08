@@ -11,18 +11,17 @@ Dependencies:
 
 <template>
   <div class="laya-ableplayer-edit">
-
     <label>
       <h4>
         {{ i18n['layaAbleplayer.name'] }}
       </h4>
     </label>
     <i
-      id ="questionmark"
-      class="fas fa-question-circle"
-      @click="toggleTip()"
-      :title="i18n['showTip']"
+      id="questionmark"
       v-b-tooltip.left
+      class="fas fa-question-circle"
+      :title="i18n['showTip']"
+      @click="toggleTip()"
     ></i>
     <b-jumbotron
       v-if="tooltipOn"
@@ -30,7 +29,9 @@ Dependencies:
       :lead="i18n['tipHeadline']"
     >
       <hr class="my-4">
-      <span v-html="i18n['layaAbleplayer.tooltip']"></span>
+      <span>
+        {{ i18n['layaAbleplayer.tooltip'] }}
+      </span>
     </b-jumbotron>
     <hr>
 
@@ -43,16 +44,18 @@ Dependencies:
             {{ i18n['title'] }}
           </label>
 
-
           <input
             id="ableplayer-title"
-            type="text"
             v-model="title.text"
+            type="text"
             class="form-control"
             :placeholder="i18n['titlePlaceholder']"
           >
         </div>
-        <div class="form-group col" id="show-title-button">
+        <div
+          id="show-title-button"
+          class="form-group col"
+        >
           <div style="height: calc(1.5em + .75rem + 2px);"></div>
           <label
             for="show-title-tick"
@@ -61,42 +64,45 @@ Dependencies:
             {{ i18n['showTitle'] }}
             <input
               id="show-title-tick"
-              type="checkbox"
               v-model="title.show"
+              type="checkbox"
             >
           </label>
-
-
         </div>
       </div>
       <div class="form-group">
         <label for="able-src-id">{{ i18n['layaAbleplayer.vidURL'] }}</label>
-        <input id="able-src-id"
-          type="text"
+        <input
+          id="able-src-id"
           v-model="src"
+          type="text"
           class="form-control"
-          :placeholder="i18n['layaAbleplayer.vidPlaceholder']">
+          :placeholder="i18n['layaAbleplayer.vidPlaceholder']"
+        >
       </div>
 
       <div class="form-group">
         <label for="able-sign-id">{{ i18n['layaAbleplayer.signVidURL'] }} </label>
-        <input id="able-sign-id"
-          type="text"
+        <input
+          id="able-sign-id"
           v-model="sign"
+          type="text"
           class="form-control"
-          :placeholder="i18n['layaAbleplayer.signVidPlaceholder']">
+          :placeholder="i18n['layaAbleplayer.signVidPlaceholder']"
+        >
       </div>
 
       <div class="form-group">
         <label for="able-sub-id">{{ i18n['layaAbleplayer.subtitle'] }}</label>
-        <input id="able-sub-id"
-          type="text"
+        <input
+          id="able-sub-id"
           v-model="sub"
+          type="text"
           class="form-control"
-          :placeholder="i18n['layaAbleplayer.subtitlePlaceholder']">
+          :placeholder="i18n['layaAbleplayer.subtitlePlaceholder']"
+        >
       </div>
     </form>
-
   </div>
 </template>
 
@@ -105,18 +111,14 @@ import { mapGetters } from 'vuex'
 import { locale, tooltipIcon } from '@/mixins'
 
 export default {
-  name: 'laya-ableplayer-edit',
+  name: 'LayaAbleplayerEdit',
 
   mixins: [
     locale,
     tooltipIcon
   ],
 
-  computed: {
-    ...mapGetters(['content'])
-  },
-
-  data() {
+  data () {
     return {
       src: '',
       sign: '',
@@ -125,7 +127,11 @@ export default {
     }
   },
 
-  created() {
+  computed: {
+    ...mapGetters(['content'])
+  },
+
+  created () {
     this.fetchData()
   },
 
@@ -138,8 +144,8 @@ export default {
      *
      * Last Updated: March 19, 2021
      */
-    fetchData() {
-      let idx = this.$route.params.step - 1
+    fetchData () {
+      const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx]['input']))
       this.src = preData.src
       this.sign = preData.sign

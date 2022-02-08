@@ -10,18 +10,24 @@ Dependencies:
 
 <template>
   <div class="register-view ly-nav-margin">
-
     <div class="container">
       <div class="row">
-
         <form class="d-flex flex-column align-items-center">
-
           <div style="height: 2rem"></div>
-          <img src="../assets/anmelden.svg" alt="Login" class="w-50">
-          <h1 class="text-center">{{ i18n['register.title'] }}</h1>
+          <img
+            src="../assets/anmelden.svg"
+            alt="Login"
+            class="w-50"
+          >
+          <h1 class="text-center">
+            {{ i18n['register.title'] }}
+          </h1>
 
           <!-- name -->
-          <div class="form-group row" :class="{error: errName}">
+          <div
+            class="form-group row"
+            :class="{error: errName}"
+          >
             <div class="col-1 col-form-label">
               <i class="fas fa-signature"></i>
             </div>
@@ -33,18 +39,22 @@ Dependencies:
                 :aria-label="i18n['namePH']"
                 type="text"
                 :disabled="submitOk"
-                @blur="isNameTaken"
                 class="form-control"
-                aria-describedby="name-err">
+                aria-describedby="name-err"
+                @blur="isNameTaken"
+              >
             </div>
           </div>
 
-          <div class="form-group row" :class="{'d-none': !errName}">
+          <div
+            class="form-group row"
+            :class="{'d-none': !errName}"
+          >
             <div class="col text-center">
               <span
+                v-show="errName"
                 id="name-err"
                 class="text-center"
-                v-show="errName"
                 :aria-hidden="!nameTaken"
               >
                 {{ nameTaken ? i18n['nameTaken'] : i18n['nameErr'] }}
@@ -53,7 +63,10 @@ Dependencies:
           </div>
 
           <!-- email -->
-          <div class="form-group row" :class="{error: errEmail}">
+          <div
+            class="form-group row"
+            :class="{error: errEmail}"
+          >
             <div class="col-1 col-form-label">
               <i class="fas fa-at"></i>
             </div>
@@ -64,26 +77,28 @@ Dependencies:
                 :aria-label="i18n['emailPH']"
                 type="text"
                 :disabled="submitOk"
-                @blur="isEmailTaken"
                 class="form-control"
                 aria-describedby="email-err"
+                @blur="isEmailTaken"
               >
             </div>
           </div>
 
           <!-- email hint-->
-          <div class="form-group row text-center" :class="{'d-none': !errEmail}">
+          <div
+            class="form-group row text-center"
+            :class="{'d-none': !errEmail}"
+          >
             <div class="col text-center">
-                <span
-                  id="email-err"
-                  v-show="errEmail"
-                  :aria-hidden="!emailTaken"
-                >
-                  {{ emailTaken ? i18n['emailTaken'] : i18n['emailErr'] }}
-                </span>
+              <span
+                v-show="errEmail"
+                id="email-err"
+                :aria-hidden="!emailTaken"
+              >
+                {{ emailTaken ? i18n['emailTaken'] : i18n['emailErr'] }}
+              </span>
             </div>
           </div>
-
 
           <!--- pwd input component test TODO: find out why props get undefined -->
           <LayaPasswordInput
@@ -111,40 +126,55 @@ Dependencies:
           <!-- submit -->
           <!-- <div style="height: 4rem"></div> -->
           <h2 :class="{'d-none': busy || submitOk}">
-            <button v-if="!errForm"
-              @click.prevent="submit"
+            <button
+              v-if="!errForm"
               class="btn btn-lg btn-block btn-outline-dark"
-              style="border: 2px solid black">
+              style="border: 2px solid black"
+              @click.prevent="submit"
+            >
               {{ i18n['register.submit'] }}
               <i class="fas fa-user-plus"></i>
             </button>
           </h2>
 
           <!-- still form errors -->
-          <h3 id="form-err" class="text-center" :class="{'d-none': !errForm}">
+          <h3
+            id="form-err"
+            class="text-center"
+            :class="{'d-none': !errForm}"
+          >
             {{ i18n['register.formErr'] }}
           </h3>
           <!-- busy note -->
-          <h3 class="text-center" :class="{'d-none': !busy}">
+          <h3
+            class="text-center"
+            :class="{'d-none': !busy}"
+          >
             {{ i18n['busy'] }} <i class="fas fa-spinner fa-spin"></i>
           </h3>
           <!-- submit ok: goto login -->
-          <h3 class="text-center" :class="{'d-none': !submitOk}">
+          <h3
+            class="text-center"
+            :class="{'d-none': !submitOk}"
+          >
             <router-link to="/login">
               <div>
                 <u>{{ i18n['register.success'] }}</u>
-              <img src="../assets/fertig.svg" alt="Erfolg" style="width: 3rem">
+                <img
+                  src="../assets/fertig.svg"
+                  alt="Erfolg"
+                  style="width: 3rem"
+                >
               </div>
             </router-link>
           </h3>
           <!-- submit not ok -->
-          <h3 class="text-center">{{ errmsg }}</h3>
-
+          <h3 class="text-center">
+            {{ errmsg }}
+          </h3>
         </form>
-
       </div>
     </div>
-
   </div>
 </template>
 
@@ -158,7 +188,7 @@ export default {
   name: 'RegisterView',
 
   components: {
-    LayaPasswordInput, // not lazily loaded b/c always visible
+    LayaPasswordInput // not lazily loaded b/c always visible
     // LayaUploadAvatar
   },
 
@@ -196,8 +226,8 @@ export default {
      *
      * Last Updated: unknown
      */
-    errName() {
-      if(this.name === '') return false
+    errName () {
+      if (this.name === '') return false
       return /\W/.test(this.name) || /^$/.test(this.name) ||
         this.nameTaken
     },
@@ -209,8 +239,8 @@ export default {
      *
      * Last Updated: unknown
      */
-    errEmail() {
-      if(this.email === '') return false
+    errEmail () {
+      if (this.email === '') return false
       return !(/^[^@\s]+[@][^@\s]+$/.test(this.email)) ||
         this.emailTaken
     },
@@ -222,7 +252,7 @@ export default {
      *
      * Last Updated: May 15, 2021
      */
-    noInput() {
+    noInput () {
       return (this.name === '' &&
         this.email === '' &&
         this.pwd1 === '' &&
@@ -236,7 +266,7 @@ export default {
      *
      * Last Updated: January 17, 2021
      */
-    errForm() {
+    errForm () {
       return this.errName || this.errEmail || this.noInput || !this.sufficientPwdLength
     }
   },
@@ -255,7 +285,7 @@ export default {
      *
      * Last Updated: unknown
      */
-    focusImgInput() {
+    focusImgInput () {
       document.querySelector('#image-input').focus()
     },
 
@@ -266,14 +296,14 @@ export default {
      *
      * Last Updated: unknown
      */
-    isNameTaken() {
-      let ctx = this
+    isNameTaken () {
+      const ctx = this
       if (ctx.name.length === 0) {
         ctx.nameTaken = false
         return
       }
       http.get(`accounts/name/${ctx.name}`)
-        .then( ({data}) => {
+        .then(({ data }) => {
           ctx.nameTaken = data
         })
     },
@@ -285,14 +315,14 @@ export default {
      *
      * Last Updated: unknown
      */
-    isEmailTaken() {
-      let ctx = this
+    isEmailTaken () {
+      const ctx = this
       if (ctx.email.length === 0) {
         ctx.emailTaken = false
         return
       }
       http.get(`accounts/email/${ctx.email}`)
-        .then(({data}) => {
+        .then(({ data }) => {
           ctx.emailTaken = data
         })
     },
@@ -305,7 +335,7 @@ export default {
      * Last Updated: January 17, 2021
      * @param bool if password matches required length
      */
-    setPwdCompliance(bool) {
+    setPwdCompliance (bool) {
       this.sufficientPwdLength = bool
     },
 
@@ -316,7 +346,7 @@ export default {
      *
      * Last Updated: unknown
      */
-    submit() {
+    submit () {
       if (this.errForm || this.nameTaken || this.emailTaken) {
         console.log('Not Submitting')
         return
@@ -324,29 +354,29 @@ export default {
 
       // console.log('Submitting...')
       this.busy = true
-      let ctx = this
+      const ctx = this
 
       // const avatarFileName = ctx.profileImg
       //   ? `${ctx.name}.${ctx.profileImg.name.split('.').slice(-1).pop()}` : ''
 
       // let requests = [
-        http.post(`accounts/student`, {
-          email: ctx.email,
-          username: ctx.name,
-          password: ctx.passwordSet,
-          // avatar: avatarFileName,
-          lang: ctx.$store.state.profile.lang
+      http.post('accounts/student', {
+        email: ctx.email,
+        username: ctx.name,
+        password: ctx.passwordSet,
+        // avatar: avatarFileName,
+        lang: ctx.$store.state.profile.lang
+      })
+        .then(() => {
+          ctx.submitOk = true
         })
-          .then(() => {
-            ctx.submitOk = true
-          })
-          .catch((err) => {
-            console.error(err)
-            ctx.errmsg = this.i18n['register.fail']
-          })
-          .finally(() => {
-            ctx.busy = false
-          })
+        .catch((err) => {
+          console.error(err)
+          ctx.errmsg = this.i18n['register.fail']
+        })
+        .finally(() => {
+          ctx.busy = false
+        })
       // ]
 
       //

@@ -8,27 +8,29 @@ Dependencies: @/mixins/locale.vue
 
 <template>
   <div class="laya-feedback">
-
-    <b-toast id="feedback-new"
+    <b-toast
+      id="feedback-new"
       :title="i18n['layaLaFeedback.name']"
       static
       variant="success"
       auto-hide-delay="1500"
-      class="feedback-toast">
+      class="feedback-toast"
+    >
       {{ i18n['successfulSave'] }}
     </b-toast>
 
-    <b-toast id="feedback-updated"
+    <b-toast
+      id="feedback-updated"
       :title="i18n['layaLaFeedback.title']"
       static
       variant="success"
       auto-hide-delay="1500"
-      class="feedback-toast">
+      class="feedback-toast"
+    >
       {{ i18n['layaLaFeedback.bToast.feedbackUpdated'] }}
     </b-toast>
 
     <div class="feedback-container-main">
-
       <div class="row mb-3">
         <div class="col">
           <h2>
@@ -49,29 +51,32 @@ Dependencies: @/mixins/locale.vue
           >
             <h3 class="text-center item-label">
               {{ item.text }}
-
             </h3>
             <div class="d-flex justify-content-between">
-              <b v-for="cat in categoriesLocal" :key="cat" aria-hidden="true">{{cat}}</b>
+              <b
+                v-for="cat in categoriesLocal"
+                :key="cat"
+                aria-hidden="true"
+              >{{ cat }}</b>
             </div>
 
-            <input type="range"
-                   class="custom-range"
-                   min="0"
-                   :max="categoriesLocal.length-1"
-                   v-model.number="choice[i]"
-                   :aria-valuenow="choice[i]"
-                   :aria-valuetext="categoriesLocal[choice[i]]"
-                   :aria-label="i18n['layaLaFeedback.label.slider']"
+            <input
+              v-model.number="choice[i]"
+              type="range"
+              class="custom-range"
+              min="0"
+              :max="categoriesLocal.length-1"
+              :aria-valuenow="choice[i]"
+              :aria-valuetext="categoriesLocal[choice[i]]"
+              :aria-label="i18n['layaLaFeedback.label.slider']"
             >
             <laya-flag-icon
-              :refData="item"
+              :ref-data="item"
               :flagged="item.flagged"
               :interactive="true"
             >
             </laya-flag-icon>
           </div>
-
         </div>
       </div>
 
@@ -79,9 +84,9 @@ Dependencies: @/mixins/locale.vue
         <div class="col">
           <h4>{{ i18n['layaLaFeedback.addFreetext'] }}</h4>
           <textarea
+            v-model="freetext"
             class="w-100 mt-1"
             rows="5"
-            v-model="freetext"
             :aria-label="i18n['layaLaFeedback.label.freetext']"
           ></textarea>
         </div>
@@ -99,18 +104,18 @@ Dependencies: @/mixins/locale.vue
         </div>
       </div>
 
-
       <div class="row">
-
-        <button type="button"
+        <button
+          type="button"
           class="btn btn-primary mt-3 ml-auto"
           :class="langIsAr? 'float-right': 'float-left'"
-          @click="done">
+          @click="done"
+        >
           {{ i18n['nextContent'] }}
           <i
             :class="langIsAr?
-            'fas fa-arrow-left':
-            'fas fa-arrow-right'"
+              'fas fa-arrow-left':
+              'fas fa-arrow-right'"
           ></i>
         </button>
       </div>
@@ -123,21 +128,35 @@ import { locale, watchContent } from '@/mixins'
 import { mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 
-//import layaWsyisyg from '../misc/laya-html'
+// import layaWsyisyg from '../misc/laya-html'
 export default {
-  name: 'laya-feedback',
+  name: 'LayaFeedback',
 
   mixins: [
     locale,
     watchContent
   ],
+  props: {
+    init: {
+      type: Object,
+      default () { return null }
+    },
+    onFinish: {
+      type: Array,
+      default () { return [] }
+    },
+    onSave: {
+      type: Function,
+      default () { return () => {} }
+    }
+  },
 
   data () {
     return {
       choice: [], // users choice as index
       freetext: '',
       answered: false,
-      //step: this.init.fno,
+      // step: this.init.fno,
       step: this.$route.params.step - 1,
       id: uuidv4(),
       items: [],
@@ -145,12 +164,6 @@ export default {
       categoriesLocal: '',
       numberOfFeedbacksEntries: 0
     }
-
-  },
-  props: {
-    init: Object,
-    onFinish: Array,
-    onSave: Function
   },
 
   computed: {
@@ -158,20 +171,20 @@ export default {
     ...mapGetters(['getEnrollmentFeedback'])
   },
 
-  created() {
+  created () {
     this.fetchData()
     this.mapSolutions()
     this.getPrevFeedback()
   },
-  beforeDestroy() {
-    //add saving feedback data
+  beforeDestroy () {
+    // add saving feedback data
 
   },
   methods: {
-    mapSolutions() {
+    mapSolutions () {
       this.categoriesLocal = this.categories
-      const mid = Math.floor((this.categories.length)/2)
-      let s = this.items.map(() => mid)
+      const mid = Math.floor((this.categories.length) / 2)
+      const s = this.items.map(() => mid)
       this.solution = [...s]
     },
 
@@ -182,7 +195,7 @@ export default {
      *
      * Last Updated: unknown
      */
-    getPrevFeedback(){
+    getPrevFeedback () {
       if (typeof this.getEnrollmentFeedback !== 'undefined') {
         this.prevFeedback = JSON.parse(JSON.stringify(this.getEnrollmentFeedback))
         if ((this.prevFeedback[this.numberOfFeedbacksEntries] !== null) && this.prevFeedback.length !== 0) {
@@ -198,7 +211,7 @@ export default {
       }
     },
 
-  /*  getPreviousFeedback() {
+    /*  getPreviousFeedback() {
       for (var i of this.init) {
         if(i.step === this.step) {
           this.answered = true
@@ -219,8 +232,8 @@ export default {
      *
      * LastUpdated: unknown
      */
-    done() {
-      this.onFinish[0]();
+    done () {
+      this.onFinish[0]()
     },
 
     /**
@@ -230,22 +243,22 @@ export default {
      *
      * Last Updated: September 10, 2021
      */
-    bundleFeedback() {
+    bundleFeedback () {
       return {
-          step: this.step,
-          created: Date.now(),
-          choice: this.choice,
-          freetext: this.freetext,
-          id: this.id,
-          numberOfFeedbacksEntries: this.numberOfFeedbacksEntries,
-          options: {
-            questions: this.items,
-            answers: this.categories
-          }
+        step: this.step,
+        created: Date.now(),
+        choice: this.choice,
+        freetext: this.freetext,
+        id: this.id,
+        numberOfFeedbacksEntries: this.numberOfFeedbacksEntries,
+        options: {
+          questions: this.items,
+          answers: this.categories
         }
+      }
     },
 
-    /*save() {
+    /* save() {
       let step = this.step -1 // to comply to array indexing in store
       const newInput = this.stepData
       const updatedStep = {
@@ -262,7 +275,7 @@ export default {
         this.$store.commit('updateStep', { step, updatedStep })
       }
       this.$emit('saved')
-    },*/
+    }, */
 
     /**
      * function storeFeedback: emit feedback to parent component, show toast
@@ -271,14 +284,14 @@ export default {
      *
      * Last Updated: September 10, 2021
      */
-    storeFeedback() {
+    storeFeedback () {
       const newFeedback = this.bundleFeedback()
       this.$store.commit('appendFeedback', newFeedback)
       this.$forceUpdate()
       this.$store.dispatch('updateEnrollment')
-      !this.answered?
-        this.$bvToast.show('feedback-new') :
-        this.$bvToast.show('feedback-updated')
+      !this.answered
+        ? this.$bvToast.show('feedback-new')
+        : this.$bvToast.show('feedback-updated')
     },
 
     /**
@@ -288,9 +301,9 @@ export default {
      *
      * Last Updated: September 10, 2021
      */
-    fetchData() {
-      for (let i = 0; i < this.step; i++){
-        if (this.content[i].name === 'laya-course-feedback'){
+    fetchData () {
+      for (let i = 0; i < this.step; i++) {
+        if (this.content[i].name === 'laya-course-feedback') {
           this.numberOfFeedbacksEntries++
         }
       }
@@ -301,9 +314,9 @@ export default {
       this.items = preData.items
       this.categories = preData.categories
     },
-    fetchEnrollment() {
+    fetchEnrollment () {
       this.$store.dispatch('fetchEnrollment', this.course.courseId)
-    },
+    }
   }
 }
 </script>

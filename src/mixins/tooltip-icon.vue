@@ -7,32 +7,32 @@
 -->
 
 <script>
-  import { mapGetters } from 'vuex'
-  export default {
+import { mapGetters } from 'vuex'
+export default {
 
-    data() {
-      return {
-        tooltipOn: false
-      }
-    },
+  data () {
+    return {
+      tooltipOn: false
+    }
+  },
 
-    computed: {
-      ...mapGetters(['courseSimple'])
-    },
+  computed: {
+    ...mapGetters(['courseSimple'])
+  },
 
-    methods: {
-      /**
+  methods: {
+    /**
       * Function toggleTip: toggle tooltipOn boolean
-      * 
+      *
       * Author: cmc
-      * 
+      *
       * Last updated: unknown
       */
-      toggleTip() {
+    toggleTip () {
       this.tooltipOn = !this.tooltipOn
-      }
     }
   }
+}
 </script>
 
 <style scoped>

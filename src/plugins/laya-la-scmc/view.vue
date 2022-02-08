@@ -13,77 +13,84 @@ vuex,
     class="laya-la-scmc"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
-
     <!-- render task -->
-    <div class="flaggable row" :id="title.id">
+    <div
+      :id="title.id"
+      class="flaggable row"
+    >
       <div class="col">
         <h2 class="pb-3">
           {{ courseSimple? title.simple : title.text }}
           <laya-audio-inline
             v-if="taskAudioExists"
             :src="courseSimple?
-            taskAudio.regular:
-            taskAudio.simple"
+              taskAudio.regular:
+              taskAudio.simple"
           >
           </laya-audio-inline>
         </h2>
       </div>
       <laya-flag-icon
         v-if="!previewData"
-        :refData="title"
+        :ref-data="title"
         @flagged="title.flagged = true"
       ></laya-flag-icon>
     </div>
     <div
-      class="flaggable row"
       :id="task.id"
+      class="flaggable row"
     >
       <div class="col">
         {{ courseSimple? task.simple: task.text }}
       </div>
       <laya-flag-icon
         v-if="!previewData"
-        :refData="task"
+        :ref-data="task"
         @flagged="task.flagged = true"
       ></laya-flag-icon>
     </div>
 
     <!-- render options -->
     <div class="p-3 bg-light">
-      <div v-for="(option,i) in options"
-        class="flaggable form-check m-2 mb-3"
-        :key="'mchoice-option-'+i"
+      <div
+        v-for="(option,i) in options"
         :id="option.id"
+        :key="'mchoice-option-'+i"
+        class="flaggable form-check m-2 mb-3"
       >
         <div>
           <input
             v-if="multiple"
             :id="'mchoice-in-'+i"
+            v-model="answers"
             class="position-absolute mt-2"
             :class="langIsAr? 'mr-3': 'ml-3'"
             type="checkbox"
-            v-model="answers"
             :disabled="freeze"
-            v-bind:value="i"
+            :value="i"
           >
           <input
             v-else
             :id="'mchoice-in-'+i"
+            v-model="answers[0]"
             class="position-absolute mt-2"
             :class="langIsAr? 'mr-3': 'ml-3'"
             type="radio"
-            v-model="answers[0]"
             :disabled="freeze"
-            v-bind:value="i"
+            :value="i"
           >
 
           <label
             :for="'mchoice-in-'+i"
             class="form-check-label"
-            :class="langIsAr? 'mr-4' : ''">
+            :class="langIsAr? 'mr-4' : ''"
+          >
             {{ courseSimple? option.simple: option.text }}
           </label>
-          <i class="ml-2" :class="eval[i]"></i>
+          <i
+            class="ml-2"
+            :class="eval[i]"
+          ></i>
         </div>
 
         <!--
@@ -92,7 +99,7 @@ vuex,
         -->
         <laya-flag-icon
           v-if="!previewData"
-          :refData="option"
+          :ref-data="option"
           :interactive="true"
           @flagged="option.flagged = true"
         ></laya-flag-icon>
@@ -107,25 +114,31 @@ vuex,
     </div>
     -->
     <div>
-      <button type="button"
+      <button
+        type="button"
         class="btn btn-link mt-3"
+        :disabled="freeze"
         @click="diffSolution"
-        :disabled="freeze">
+      >
         {{ i18n['check'] }}
       </button>
       <div aria-live="polite">
-      <div v-if="showSolutionsBool">
-        {{ i18n["layaLaScmc.showCorrect"] }}
-        <div v-for="(showSolution, index) in showSolutions"
-             :key="index">
-          {{ showSolution }}
+        <div v-if="showSolutionsBool">
+          {{ i18n["layaLaScmc.showCorrect"] }}
+          <div
+            v-for="(showSolution, index) in showSolutions"
+            :key="index"
+          >
+            {{ showSolution }}
+          </div>
         </div>
       </div>
-      </div>
-      <button type="button"
+      <button
+        type="button"
         class="btn btn-primary mt-3"
         :class="langIsAr? 'float-left': 'float-right'"
-        @click="onFinish[0]() || {}">
+        @click="onFinish[0]() || {}"
+      >
         <span>
           {{ i18n['nextContent'] }}
           <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
@@ -139,62 +152,25 @@ vuex,
         {{ feedback }}
       </span>
     </div>
-
   </fieldset>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale, watchContent } from '@/mixins'
+import { locale, viewPluginProps, watchContent } from '@/mixins'
 import '@/styles/flaggables.css'
 
 export default {
-  name: 'laya-multiple-choice',
+  name: 'LayaMultipleChoice',
 
   mixins: [
     locale,
+    viewPluginProps,
     watchContent
   ],
 
-  props: {
-    onFinish: Array,
-    previewData: Object
-  },
-
-  computed: {
-    ...mapGetters(['content', 'courseSimple']),
-
-    /**
-     * feedbackId: creates an identifier string
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     */
-    feedbackId() {
-      return `mchoice-feedback-${this._uid}`
-      //FIXME vm _uid is not supposed to be used as data
-      //source: https://github.com/vuejs/vue/issues/5886#issuecomment-308625735
-    },
-
-    /**
-     * function taskAudioExists: returns true if taskAudio object doesn't
-     *  contain empty strings
-     *
-     *  Author: cmc
-     *
-     *  Last Updated: October 31, 2021
-     * @returns {boolean} true if strings are set
-     */
-    taskAudioExists() {
-      return this.courseSimple?
-        this.taskAudio.regular !== '':
-        this.taskAudio.regular !== '' && this.taskAudio.simple !== ''
-    }
-  },
-
-   data () {
-    if (this.previewData)
+  data () {
+    if (this.previewData) {
       return {
         ...this.previewData,
         tries: 0,
@@ -204,6 +180,7 @@ export default {
         freeze: false,
         eval: []
       }
+    }
     return {
       tries: 0,
       answers: [],
@@ -223,6 +200,38 @@ export default {
     }
   },
 
+  computed: {
+    ...mapGetters(['content', 'courseSimple']),
+
+    /**
+     * feedbackId: creates an identifier string
+     *
+     * Author: core
+     *
+     * Last Updated: unknown
+     */
+    feedbackId () {
+      return `mchoice-feedback-${this._uid}`
+      // FIXME vm _uid is not supposed to be used as data
+      // source: https://github.com/vuejs/vue/issues/5886#issuecomment-308625735
+    },
+
+    /**
+     * function taskAudioExists: returns true if taskAudio object doesn't
+     *  contain empty strings
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: October 31, 2021
+     * @returns {boolean} true if strings are set
+     */
+    taskAudioExists () {
+      return this.courseSimple
+        ? this.taskAudio.regular !== ''
+        : this.taskAudio.regular !== '' && this.taskAudio.simple !== ''
+    }
+  },
+
   created () {
     if (!this.previewData) { // previewing newly created content
       this.fetchData()
@@ -238,9 +247,9 @@ export default {
      *
      * Last Updated: October 22, 2021
      */
-    populateShowSolutions(){
-      for(let i = 0; i < this.options.length; i++){
-        if (this.solutions[i] === null || this.solutions[i] === false){
+    populateShowSolutions () {
+      for (let i = 0; i < this.options.length; i++) {
+        if (this.solutions[i] === null || this.solutions[i] === false) {
           this.showSolutions.push(this.options[i].text)
         }
       }
@@ -255,8 +264,8 @@ export default {
      *
      * @param {*} i index of answer
      */
-    correct(i) {
-      //FIXME currently not used
+    correct (i) {
+      // FIXME currently not used
       return this.answers.includes(i) && this.checked[i]
     },
 
@@ -269,8 +278,8 @@ export default {
      *
      * @param {*} i index of answer
      */
-    incorrect(i) {
-      //FIXME currently not used
+    incorrect (i) {
+      // FIXME currently not used
       return this.answers.includes(i) && (this.checked[i] === false)
     },
 
@@ -281,9 +290,9 @@ export default {
      *
      * Last Updated: March 19, 2021
      */
-    markAnswers() {
+    markAnswers () {
       const zis = this
-      this.answers.forEach( (answer) => {
+      this.answers.forEach((answer) => {
         zis.checked[answer] = zis.solutions.includes(answer)
       })
     },
@@ -296,22 +305,22 @@ export default {
      *
      * Last Updated: March 19, 2021
      */
-    diffSolution() {
-      for(let i=0; i<this.options.length; ++i) {
+    diffSolution () {
+      for (let i = 0; i < this.options.length; ++i) {
         // is solution ?
-        if(this.solutions.includes(i)) {
+        if (this.solutions.includes(i)) {
           // is also answer ?
-          if(this.answers.includes(i)) {
-            this.eval[i] = {'far fa-check-circle text-success': true}
+          if (this.answers.includes(i)) {
+            this.eval[i] = { 'far fa-check-circle text-success': true }
           } else {
-            this.eval[i] = {'far fa-times-circle text-danger': true}
+            this.eval[i] = { 'far fa-times-circle text-danger': true }
           }
         } else {
           // but is answer ?
-          if(this.answers.includes(i)) {
-            this.eval[i] = {'far fa-times-circle text-danger': true}
+          if (this.answers.includes(i)) {
+            this.eval[i] = { 'far fa-times-circle text-danger': true }
           } else {
-            this.eval[i] = {'far fa-check-circle text-success': true}
+            this.eval[i] = { 'far fa-check-circle text-success': true }
           }
         }
       }
@@ -327,13 +336,12 @@ export default {
      *
      * Updated: March 21, 2021
      */
-    check() {
-
-      //FIXME is never called, missing i18n, missing connection to diffSolution
+    check () {
+      // FIXME is never called, missing i18n, missing connection to diffSolution
 
       // NOTE: eval is currently not wanted so skip it
       this.onFinish[0]()
-      /*if(true) return*/ //commented out for compilation reasons
+      /* if(true) return */ // commented out for compilation reasons
 
       if (this.freeze) return
 
@@ -362,7 +370,7 @@ export default {
 
       /*
        * no tries left - show solutions */
-      this.answers = [ ...this.solutions ]
+      this.answers = [...this.solutions]
       this.markAnswers()
       this.feedback = 'Die Lösung wurde ergänzt!'
       document.getElementById(this.feedbackId).focus()
@@ -376,8 +384,8 @@ export default {
      *
      * Last Updated: March 19, 2021
      */
-    fetchData() {
-      let idx = this.$route.params.step - 1
+    fetchData () {
+      const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.multiple = preData.multiple
       this.title = preData.title

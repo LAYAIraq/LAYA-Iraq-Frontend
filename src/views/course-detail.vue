@@ -12,17 +12,17 @@ Dependencies:
 -->
 
 <template>
-  <div v-if="!storeBusy" class="course-detail-view">
-
+  <div
+    v-if="!storeBusy"
+    class="course-detail-view"
+  >
     <!-- course header -->
     <div class="container-fluid bg-dark">
       <div class="row">
         <div class="col">
-
           <h1 class="text-center text-light py-5">
             <b>{{ name }}</b>
           </h1>
-
         </div>
       </div>
     </div>
@@ -31,24 +31,24 @@ Dependencies:
     <div class="container content">
       <div class="row">
         <div class="col">
-
           <div id="main-content-anchor"></div>
 
           <!-- v-if="viewPermit()" removed, readd when enrollment is reactivated -->
           <component
+            :is="contentToDisplay.name"
             v-if="contentToDisplay"
             :key="name+'-'+step"
-            :is="contentToDisplay.name"
-            :onFinish="nextStep(contentToDisplay.nextStep)">
+            :on-finish="nextStep(contentToDisplay.nextStep)"
+          >
           </component>
 
           <div v-else>
-<!--            <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">-->
-              {{ i18n['courseDetail.content'] }}
-<!--            </h2>-->
-<!--            <h2 v-else class="mt-5 text-center text-muted">-->
-<!--              {{ i18n['courseDetail.noPermit'] }}-->
-<!--            </h2>-->
+            <!--            <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">-->
+            {{ i18n['courseDetail.content'] }}
+            <!--            </h2>-->
+            <!--            <h2 v-else class="mt-5 text-center text-muted">-->
+            <!--              {{ i18n['courseDetail.noPermit'] }}-->
+            <!--            </h2>-->
           </div>
         </div>
       </div>
@@ -56,19 +56,19 @@ Dependencies:
 
     <courseEdit
       v-if="isAuthor && content"
-      :name="name" :step="step"
+      :name="name"
+      :step="step"
     ></courseEdit>
-
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import utils from '@/misc/utils.js'
-import { locale, storeHandler } from '@/mixins'
+import { locale, routeProps, storeHandler } from '@/mixins'
 
 export default {
-  name: 'course-detail-view',
+  name: 'CourseDetailView',
 
   components: {
     lyScrollToTop: () => import('@/components/scroll-to-top'),
@@ -77,21 +77,23 @@ export default {
 
   mixins: [
     locale,
+    routeProps,
     storeHandler
   ],
 
-  props: {
-    name: String,
-    step: String
+  beforeRouteUpdate (to, from, next) {
+    document.getElementById('main-content-anchor').scrollIntoView()
+    next()
+    // new commit
   },
 
-  data() {
+  data () {
     return {
       // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
       // enrollment: {},
       rename: '',
       copy: '',
-      changetype: null,
+      changetype: null
       // courseStats: {}
     }
   },
@@ -105,7 +107,6 @@ export default {
       'storeBusy'
     ]),
 
-
     /**
      *  onFinishDummy: returns empty function on every [] invocation
      *
@@ -113,10 +114,10 @@ export default {
      *
      * Last Updated: unknown
      * */
-    onFinishDummy() {
+    onFinishDummy () {
       return new Proxy({}, {
-        get() {
-          return ()=>{}
+        get () {
+          return () => {}
         }
       })
     },
@@ -140,9 +141,9 @@ export default {
      *
      * Last Updated: March 24, 2021
      */
-    contentToDisplay() {
-      return this.content? this.content[this.step-1] : false
-    },
+    contentToDisplay () {
+      return this.content ? this.content[this.step - 1] : false
+    }
 
     // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
     // /**
@@ -172,7 +173,7 @@ export default {
      */
     content: {
       deep: true,
-      handler() {
+      handler () {
         // console.log('updating...')
         this.$nextTick(() => this.$forceUpdate)
       }
@@ -191,20 +192,14 @@ export default {
     }
   },
 
-  beforeRouteUpdate(to,from,next) {
-    document.getElementById('main-content-anchor').scrollIntoView()
-    next()
-    //new commit
-  },
-
-  created() {
+  created () {
     this.getCourse()
     // this.fetchEnrollment()
     // this.fetchFlags()
     // this.fetchCourseStats()
   },
 
-  beforeDestroy() {
+  beforeDestroy () {
     // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
     // if(this.enrollment.length > 0) this.updateEnrollment()
     // this.saveFlags()
@@ -220,17 +215,16 @@ export default {
      *
      * Last Updated: October 21, 2021
      */
-    getCourse() {
-      const ctx = this;
+    getCourse () {
+      const ctx = this
 
-      window.scrollTo(0,0)
+      window.scrollTo(0, 0)
       document.title = `Laya - ${ctx.name}`
       if (
         !this.course || // course is undefined in store
         this.course.name !== this.$route.params.name || // course in store doesn't match the route params
         Object.keys(this.course).length === 0 // course in store has no properties
-      )
-      {
+      ) {
         // console.log('Fetching Course...')
         this.fetchCourse()
       }
@@ -245,14 +239,14 @@ export default {
      *
      * @param {string} steps next steps
      */
-    nextStep(steps) { // string e.g. '1,2'
-      if(!steps) return []
+    nextStep (steps) { // string e.g. '1,2'
+      if (!steps) return []
 
-      const {name, $router} = this
+      const { name, $router } = this
       return steps.split(',').map(step => {
-        return () =>{
+        return () => {
           // if(this.enrollment.length >0) this.enrollment.progress = Number(step)
-          $router.push({name: 'course-detail-view', params: {name, step}})
+          $router.push({ name: 'course-detail-view', params: { name, step } })
         }
       })
     }

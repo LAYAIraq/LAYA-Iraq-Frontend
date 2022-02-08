@@ -9,11 +9,9 @@ Dependencies:
 -->
 
 <template>
-
   <div
     :class="langIsAr? 'text-right' : 'text-left'"
   >
-
     <form>
       <div class="form-group row">
         <h3 class="d-inline-block mr-auto">
@@ -21,20 +19,22 @@ Dependencies:
         </h3>
         <i
           id="questionmark"
-          class="fas fa-question-circle"
-          @click="toggleTip"
-          :title="i18n['showTip']"
           v-b-tooltip.left
+          class="fas fa-question-circle"
+          :title="i18n['showTip']"
+          @click="toggleTip"
         ></i>
       </div>
 
       <b-jumbotron
         v-if="tooltipOn"
         :header="i18n['layaPlyr.name']"
-        :lead="i18n['tipHeadline']">
+        :lead="i18n['tipHeadline']"
+      >
         <hr class="my-4">
-        <p v-html="i18n['layaPlyr.tooltip']"></p>
-
+        <p>
+          {{ i18n['layaPlyr.tooltip'] }}
+        </p>
       </b-jumbotron>
 
       <hr>
@@ -51,13 +51,16 @@ Dependencies:
           <div class="form-group col-8">
             <input
               id="laya-plyr-title"
-              type="text"
               v-model="title.text"
+              type="text"
               class="form-control"
               :placeholder="i18n['titlePlaceholder']"
             >
           </div>
-          <div class="form-group col" id="show-title-button">
+          <div
+            id="show-title-button"
+            class="form-group col"
+          >
             <label
               for="show-title-tick"
               class="col col-form-label"
@@ -65,30 +68,30 @@ Dependencies:
               {{ i18n['showTitle'] }}
               <input
                 id="show-title-tick"
-                type="checkbox"
                 v-model="title.show"
+                type="checkbox"
               >
             </label>
           </div>
         </div>
         <div
-          class="row"
           v-if="courseSimple"
+          class="row"
         >
           <!-- simple title -->
           <label
             for="laya-plyr-title-simple"
             class="col-2 col-form-label"
           >
-              <span class="sr-only">
-                {{ i18n['simpleAlt'] }}
-              </span>
+            <span class="sr-only">
+              {{ i18n['simpleAlt'] }}
+            </span>
           </label>
           <div class="form-group col-8">
             <input
               id="laya-plyr-title-simple"
-              type="text"
               v-model="title.simple"
+              type="text"
               class="form-control"
               :placeholder="i18n['simpleAlt']"
             >
@@ -107,8 +110,8 @@ Dependencies:
         <div class="col">
           <input
             id="vid-id"
-            type="text"
             v-model="src"
+            type="text"
             class="form-control"
             :placeholder="i18n['layaPlyr.placeholder']"
             @blur="checkURL"
@@ -127,11 +130,11 @@ Dependencies:
         <div class="col-2 form-check form-check-inline align-text-top">
           <input
             id="platform-vimeo"
+            v-model="youtube"
             class="form-check-input"
             type="radio"
             name="platform"
             :value="false"
-            v-model="youtube"
             disabled
           >
           <label
@@ -144,11 +147,11 @@ Dependencies:
         <div class="col-2 form-check form-check-inline align-text-top">
           <input
             id="platform-yt"
+            v-model="youtube"
             class="form-check-input"
             type="radio"
             name="platform"
             :value="true"
-            v-model="youtube"
             disabled
           >
           <label
@@ -165,7 +168,6 @@ Dependencies:
       </div>
     </form>
   </div>
-
 </template>
 
 <script>
@@ -173,14 +175,14 @@ import { locale, tooltipIcon } from '@/mixins'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'laya-plyr-edit',
+  name: 'LayaPlyrEdit',
 
   mixins: [
     locale,
     tooltipIcon
   ],
 
-  data() {
+  data () {
     return {
       src: '',
       youtube: false,
@@ -200,7 +202,7 @@ export default {
      * Last Updated: January 17, 2021
      */
     urlMsg () {
-      return this.correctURL? '' : this.i18n['layaPlyr.wrongURL']
+      return this.correctURL ? '' : this.i18n['layaPlyr.wrongURL']
     },
 
     /**
@@ -210,12 +212,12 @@ export default {
      *
      * Last Updated: January 17, 2021
      */
-    correctURL() {
-      return (this.src.includes('youtube') || this.src.includes('vimeo') )
+    correctURL () {
+      return (this.src.includes('youtube') || this.src.includes('vimeo'))
     }
   },
 
-  created() {
+  created () {
     this.fetchData()
   },
 
@@ -228,7 +230,7 @@ export default {
      *
      * Last Updated: January 17, 2021
      */
-    checkURL() {
+    checkURL () {
       this.youtube = !!(this.correctURL && this.src.includes('youtube'))
     },
 
@@ -239,16 +241,16 @@ export default {
      *
      * Last Updated: March 20, 2021
      */
-    fetchData() {
-      let idx = this.$route.params.step -1 //comply with array indexing in store
-      //create deep copy of store object to manipulate in vue instance
-      let preData = JSON.parse(JSON.stringify(this.content[idx].input))
+    fetchData () {
+      const idx = this.$route.params.step - 1 // comply with array indexing in store
+      // create deep copy of store object to manipulate in vue instance
+      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.src = preData.src
       this.youtube = preData.youtube
       this.title = preData.title
       this.showTitle = preData.showTitle
     }
-  },
+  }
 }
 </script>
 

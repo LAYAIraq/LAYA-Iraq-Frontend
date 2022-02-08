@@ -3,13 +3,13 @@ Filename: edit.vue
 Use: Edit a Relate content block
 Creator: core
 Date: unknown
-Dependencies: 
+Dependencies:
   @/mixins/locale.vue,
   vuex
 -->
 
 <template>
-  <div 
+  <div
     class="laya-la-relate-edit"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
@@ -18,51 +18,56 @@ Dependencies:
         {{ i18n['layaLaRelate.name'] }}
       </h4>
     </label>
-    <i 
-      id ="questionmark" 
-      class="fas fa-question-circle" 
-      @click="toggleTip" 
-      :title="i18n['showTip']" 
+    <i
+      id="questionmark"
       v-b-tooltip.left
+      class="fas fa-question-circle"
+      :title="i18n['showTip']"
+      @click="toggleTip"
     ></i>
-    <b-jumbotron 
+    <b-jumbotron
       v-if="tooltipOn"
-      :header="i18n['layaLaRelate.name']" 
+      :header="i18n['layaLaRelate.name']"
       :lead="i18n['tipHeadline']"
     >
       <hr class="my-4">
-      <span v-html="i18n['layaLaRelate.tooltip']"></span>
-
+      <span>
+        {{ i18n['layaLaRelate.tooltip'] }}
+      </span>
     </b-jumbotron>
     <hr>
 
     <form>
-
       <!-- title -->
       <div class="form-group row">
-        <label 
-          for="relate-title" 
+        <label
+          for="relate-title"
           class="col-2 col-form-label"
         >
           {{ i18n['title'] }}
         </label>
         <div class="col-10">
-          <input id="relate-title"
-            type="text"
+          <input
+            id="relate-title"
             v-model="title.text"
+            type="text"
             class="form-control"
-            :placeholder="i18n['titlePlaceholder']">
+            :placeholder="i18n['titlePlaceholder']"
+          >
         </div>
       </div>
 
-
       <!-- task -->
       <div class="form-group row">
-        <label for="relate-task" class="col-2 col-form-label">
+        <label
+          for="relate-task"
+          class="col-2 col-form-label"
+        >
           {{ i18n['task'] }}
         </label>
         <div class="col-10">
-          <textarea id="relate-task"
+          <textarea
+            id="relate-task"
             v-model="task.text"
             class="w-100"
             :placeholder="i18n['taskPlaceholder']"
@@ -73,41 +78,48 @@ Dependencies:
 
       <!-- task audio -->
       <div class="form-group row">
-        <label for="relate-task-audio" class="col-2 col-form-label">
+        <label
+          for="relate-task-audio"
+          class="col-2 col-form-label"
+        >
           {{ i18n['taskAudio'] }}
         </label>
         <div class="col-10">
-          <input id="relate-task-audio"
-            type="text"
+          <input
+            id="relate-task-audio"
             v-model="taskAudio"
+            type="text"
             class="form-control"
-            :placeholder="i18n['taskAudioPlaceholder']">
+            :placeholder="i18n['taskAudioPlaceholder']"
+          >
         </div>
       </div>
 
       <p><b>{{ i18n['layaLaRelate.edit.solutions'] }}</b></p>
-      <div 
-        class="form-group row" 
-        v-for="(rel, i) in relations" 
+      <div
+        v-for="(rel, i) in relations"
         :key="'rel-'+i"
+        class="form-group row"
       >
         <!-- text -->
-        <label 
-          class="col-form-label col-2" 
+        <label
+          class="col-form-label col-2"
           :for="'rel-text-'+i"
         >
           {{ i18n['text'] }}
         </label>
         <div class="col-7">
-          <input :id="'rel-text-'+i"
+          <input
+            :id="'rel-text-'+i"
+            v-model="relations[i]"
             class="form-control"
             type="text"
-            v-model="relations[i]">
+          >
         </div>
 
         <!-- delete -->
         <div class="col-auto align-self-center">
-          <button 
+          <button
             type="button"
             class="btn btn-danger btn-sm"
             @click="_delRelation(i)"
@@ -118,10 +130,11 @@ Dependencies:
       </div>
       <div class="form-group row">
         <div class="col-10 offset-2">
-          <button 
+          <button
             type="button"
             class="btn btn-primary btn-sm"
-            @click="_addRelation">
+            @click="_addRelation"
+          >
             <i class="fas fa-plus"></i>
             {{ i18n['layaLaRelate.edit.solutionAdd'] }}
           </button>
@@ -129,65 +142,68 @@ Dependencies:
       </div>
 
       <p><b>{{ i18n['items'] }}</b></p>
-      <div 
-        class="form-group row" 
-        v-for="(pair, i) in pairs" 
+      <div
+        v-for="(pair, i) in pairs"
         :key="'pair-'+i"
+        class="form-group row"
       >
-
-        <div 
-          v-if="langIsAr" 
+        <div
+          v-if="langIsAr"
           class="col-2"
         ></div>
 
         <!-- image -->
-        <div 
+        <div
           class="col"
           :class="langIsAr? '' : 'offset-2'"
         >
-          <input 
+          <input
             :id="'pair-text-'+i"
+            v-model="pairs[i].img"
             class="form-control"
             type="text"
-            v-model="pairs[i].img"
-            :placeholder="i18n['layaLaRelate.edit.imgPlaceholder']">
+            :placeholder="i18n['layaLaRelate.edit.imgPlaceholder']"
+          >
         </div>
 
         <!-- alt text -->
-        <div 
+        <div
           class="col"
         >
-          <input 
+          <input
             :id="'pair-label-'+i"
+            v-model="pairs[i].label"
             class="form-control"
             type="text"
-            v-model="pairs[i].label"
-            :placeholder="i18n['layaLaRelate.edit.labelPlaceholder']">
+            :placeholder="i18n['layaLaRelate.edit.labelPlaceholder']"
+          >
         </div>
 
         <!-- audio -->
         <div class="col">
-          <input :id="'pair-text-'+i"
+          <input
+            :id="'pair-text-'+i"
+            v-model="pairs[i].audio"
             class="form-control"
             type="text"
-            v-model="pairs[i].audio"
-            :placeholder="i18n['layaLaRelate.edit.audioPlaceholder']">
+            :placeholder="i18n['layaLaRelate.edit.audioPlaceholder']"
+          >
         </div>
 
         <!-- relation -->
         <div class="col-auto">
-          <select 
-            class="custom-select" 
+          <select
             v-model="pairs[i].relation"
+            class="custom-select"
           >
-            <option 
-              disabled 
+            <option
+              disabled
               :value="-1"
             >
               {{ i18n['layaLaRelate.edit.solution'] }}
             </option>
-            <option 
-              v-for="(rel,j) in relations" 
+            <option
+              v-for="(rel,j) in relations"
               :key="rel+'-'+i+'-'+j"
             >
               {{ rel }}
@@ -197,7 +213,7 @@ Dependencies:
 
         <!-- delete -->
         <div class="col-auto align-self-center">
-          <button 
+          <button
             type="button"
             class="btn btn-danger btn-sm"
             @click="_delPair(i)"
@@ -208,7 +224,7 @@ Dependencies:
       </div>
       <div class="form-group row">
         <div class="col-10 offset-2">
-          <button 
+          <button
             type="button"
             class="btn btn-primary btn-sm"
             @click="_addPair"
@@ -218,9 +234,7 @@ Dependencies:
           </button>
         </div>
       </div>
-
     </form>
-
   </div>
 </template>
 
@@ -230,18 +244,14 @@ import { v4 as uuidv4 } from 'uuid'
 import { locale, tooltipIcon } from '@/mixins'
 
 export default {
-  name: 'laya-la-relate-edit',
+  name: 'LayaLaRelateEdit',
 
   mixins: [
     locale,
     tooltipIcon
   ],
 
- computed: {
-    ...mapGetters(['content']),
-  },
-
-  data() {
+  data () {
     return {
       title: {},
       task: {},
@@ -251,7 +261,11 @@ export default {
     }
   },
 
-  created() {
+  computed: {
+    ...mapGetters(['content'])
+  },
+
+  created () {
     this.fetchData()
   },
 
@@ -259,61 +273,61 @@ export default {
 
     /**
      * Function _delItem: remove item at position idx
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param {*} idx index at which to remove
      */
-    _delPair(idx) {
+    _delPair (idx) {
       this.pairs.splice(idx, 1)
     },
 
     /**
      * Function _addPair: add an empty pair
+     *
      * Author: core
+     *
      * Last Updated: June 28, 2021
-     * 
-     * @param {*} idx index at which to remove
      */
-    _addPair() {
-      this.pairs.push({img: '', audio: '', relation: -1, label: '', flagged: false, id: uuidv4()})
+    _addPair () {
+      this.pairs.push({ img: '', audio: '', relation: -1, label: '', flagged: false, id: uuidv4() })
     },
 
     /**
-     * Function _delRelation: remove a relation 
-     * 
+     * Function _delRelation: remove a relation
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unkown
-     * 
+     *
      * @param {*} idx index of relation to remove
      */
-    _delRelation(idx) {
+    _delRelation (idx) {
       this.relations.splice(idx, 1)
     },
 
     /**
      * Function _addRelation: add an empty relation
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
-    _addRelation() {
+    _addRelation () {
       this.relations.push('')
     },
 
     /**
      * Function fetchData: fetch data from vuex and make data property
-     * 
-     * Author: cmc 
-     * 
+     *
+     * Author: cmc
+     *
      * Last Updated: March 19, 2021
      */
-    fetchData() {
-      let idx = this.$route.params.step - 1
+    fetchData () {
+      const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.title = preData.title
       this.task = preData.task
@@ -332,7 +346,7 @@ export default {
 }
 
 #questionmark {
-  float: inline-end;
+  float: end;
   cursor: pointer;
 }
 </style>

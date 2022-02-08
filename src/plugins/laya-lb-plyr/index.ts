@@ -10,7 +10,7 @@ import _Vue from 'vue'
 import _view from './view.vue'
 
 export default {
-  install(Vue: typeof _Vue, options?: any): void {
+  install (Vue: typeof _Vue): void {
     Vue.$laya.registerLB(
       'laya-plyr',
       'BlockPlyr',
@@ -18,7 +18,7 @@ export default {
       'fab fa-youtube',
       {
         new: () => import('./create.vue'),
-        //@ts-ignore
+        // @ts-ignore
         view: _view,
         edit: () => import('./edit.vue')
       }

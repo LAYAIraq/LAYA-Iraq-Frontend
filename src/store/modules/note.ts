@@ -9,7 +9,7 @@
 export default {
   state: {
     busy: false,
-    myCourses: 0,
+    myCourses: 0
   },
   getters: {
     /**

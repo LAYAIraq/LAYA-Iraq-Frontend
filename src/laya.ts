@@ -6,8 +6,7 @@
  * Dependencies: vue
  */
 
-import _Vue from 'vue';
-import { VueConstructor } from 'vue';
+import _Vue, { VueConstructor } from 'vue'
 
 // copied from laya.d.ts
 // 2. Specify a file with the types you want to augment
@@ -27,7 +26,6 @@ declare module 'vue/types/vue' {
   }
 }
 
-
 /** this class takes care of laya specific frontend (Vue) concerns
  *   i.e. it implements the $laya behaviour
  */
@@ -38,89 +36,89 @@ export class Laya {
   private _la: object;
   private _li: object; /* lookup for learn interactions to block/assessment */
 
-  public get lb() {
-    return this._lb;
+  public get lb () {
+    return this._lb
   }
 
-  public get la() {
-    return this._la;
+  public get la () {
+    return this._la
   }
 
-  public get li() {
-    return this._li;
+  public get li () {
+    return this._li
   }
 
-  constructor(v: typeof _Vue) {
-    this._vue = v;
-    this._lb = {};
-    this._la = {};
-    this._li = {};
+  constructor (v: typeof _Vue) {
+    this._vue = v
+    this._lb = {}
+    this._la = {}
+    this._li = {}
   }
 
-  public lookupType(type: string): object {
-    return this._li[type];
+  public lookupType (type: string): object {
+    return this._li[type]
   }
 
-  public registerLB<VC1, VC2, VC3 extends VueConstructor>(
+  public registerLB<VC1, VC2, VC3 extends VueConstructor> (
     id: string,
     type: string,
     name: string,
     icon: string,
-    components: { new?: VC1; edit?: VC2; view: VC3 },
+    components: { new?: VC1; edit?: VC2; view: VC3 }
   ): void {
-    this._lb[id] = { id, type, name, components, icon };
-    this._li[type] = { type: 'block', id };
+    this._lb[id] = { id, type, name, components, icon }
+    this._li[type] = { type: 'block', id }
 
     if ('new' in components) {
-      this._vue.component(id, components.new);
+      this._vue.component(id, components.new)
     }
 
     if ('edit' in components) {
-      this._vue.component(id, components.edit);
+      this._vue.component(id, components.edit)
     }
 
-    this._vue.component(id, components.view);
+    this._vue.component(id, components.view)
   }
 
-  public registerLA<VC1, VC2, VC3 extends VueConstructor>(
+  public registerLA<VC1, VC2, VC3 extends VueConstructor> (
     id: string,
     type: string,
     name: string,
     icon: string,
-    components: { new?: VC1; edit?: VC2; view: VC3 },
+    components: { new?: VC1; edit?: VC2; view: VC3 }
   ): void {
-    this._la[id] = { id, type, name, components, icon };
-    this._li[type] = { type: 'assessment', id };
+    this._la[id] = { id, type, name, components, icon }
+    this._li[type] = { type: 'assessment', id }
 
     if ('new' in components) {
-      this._vue.component(id, components.new);
+      this._vue.component(id, components.new)
     }
 
     if ('edit' in components) {
-      this._vue.component(id, components.edit);
+      this._vue.component(id, components.edit)
     }
 
-    this._vue.component(id, components.view);
+    this._vue.component(id, components.view)
   }
 }
 
 export default {
-  install(Vue: typeof _Vue, options?: any): void {
-    const $laya = new Laya(Vue);
-    //@ts-ignore
-    Vue.$laya = $laya; // important to make $laya available to other plugins.
-    Vue.prototype.$laya = $laya;
+  install (Vue: typeof _Vue, options?: any): void {
+    const $laya = new Laya(Vue)
+    // @ts-ignore
+    Vue.$laya = $laya // important to make $laya available to other plugins.
+    Vue.prototype.$laya = $laya
 
     Vue.mixin({
-      data(): object {
+      data (): object {
         return {
           $laya: {
             lb: $laya.lb,
             la: $laya.la,
             li: $laya.li
           }
-        };
-      },
-    });
+        }
+      }
+    })
   }
-};
+}

@@ -235,7 +235,6 @@ export default {
       state.passwordRepeat = input
     },
 
-
     /**
      * Function toggleMedia: toggle input media boolean
      *
@@ -255,7 +254,7 @@ export default {
       },
       type: string
     ) {
-      state.prefs.media[type] = !state.prefs.media[type];
+      state.prefs.media[type] = !state.prefs.media[type]
     }
 
   },
@@ -273,9 +272,9 @@ export default {
     fetchProfile ({ commit, rootState }) {
       http.get(`accounts/${rootState.auth.userId}`)
         .then(({ data }) => {
-          commit ('setProfile', data)
+          commit('setProfile', data)
         })
-        .catch((err) => console.error(err));
+        .catch((err) => console.error(err))
     },
 
     /**
@@ -313,13 +312,13 @@ export default {
         uid: number
       }
     ) {
-      //save language choice in User's profile
+      // save language choice in User's profile
       http.post(
         `/accounts/${langData.uid}/change-language`,
         langData
       )
         .then(() => {
-          commit ('setLang', langData.lang)
+          commit('setLang', langData.lang)
         })
         .catch((err) => console.error(err))
     }

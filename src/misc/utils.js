@@ -10,9 +10,9 @@ export default {
 
   /**
    * Function categorize: push list from arr to target, if exists
-   * 
+   *
    * Author: core
-   * 
+   *
    * Last Updated: March 12, 2021
    * @param {*} arr source array
    * @param {*} target target array
@@ -21,7 +21,7 @@ export default {
   categorize (arr, target, key) {
     if (!arr) return
     arr.forEach(data => {
-      const {category} = data
+      const { category } = data
       if (!target[category]) {
         target[category] = {}
         target[category][key] = []
@@ -32,26 +32,24 @@ export default {
       target[category][key].push(data)
     })
   },
-  
+
   /**
    * Function fileSize: verbalize file size
-   * 
+   *
    * Author: cmc
-   * 
+   *
    * Last Updated: April 1, 2021
    * @param {number} size size of a file
    * @returns a string making the size human-readable
    */
-  fileSize(size) {
-    if(size>1024*1024){
-      let mbsize = Math.round(size/1024/1024 *10) /10
+  fileSize (size) {
+    if (size > 1024 * 1024) {
+      const mbsize = Math.round(size / 1024 / 1024 * 10) / 10
       return `${mbsize} MBytes`
-    }
-    else if (size>1024){
-      let kbsize = Math.round(size/1024 *10) /10
+    } else if (size > 1024) {
+      const kbsize = Math.round(size / 1024 * 10) / 10
       return `${kbsize} kBytes`
-    }
-    else {
+    } else {
       return `${size} Bytes`
     }
   }

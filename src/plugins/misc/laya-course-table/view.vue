@@ -8,28 +8,38 @@ Dependencies: @/i18n/plugins/misc/laya-course-table
 
 <template>
   <div class="laya-course-table">
-
-    <h3 v-show="filtered.length === 0" class="text-center text-muted">
+    <h3
+      v-show="filtered.length === 0"
+      class="text-center text-muted"
+    >
       {{ i18n['noCourses'] }}
     </h3>
 
-    <div v-for="(courses, category) in categories" :key="category"
-         class="category">
-      <div class="d-flex justify-content-between align-item-center header"
-           v-b-toggle="category"
-           tabindex="0"
-           @keyup.enter="toggle(category)">
-        <h4><u>{{category}}</u></h4>
-        <span>{{courses.length}} {{courses.length == 1 ? 'Kurs':'Kurse'}}</span>
+    <div
+      v-for="(courseList, category) in categories"
+      :key="category"
+      class="category"
+    >
+      <div
+        v-b-toggle="category"
+        class="d-flex justify-content-between align-item-center header"
+        tabindex="0"
+        @keyup.enter="toggle(category)"
+      >
+        <h4><u>{{ category }}</u></h4>
+        <span>{{ courseList.length }} {{ courseList.length === 1 ? 'Kurs':'Kurse' }}</span>
       </div>
 
       <!-- courses -->
-      <b-collapse :id="category" v-model="collapsed[category]">
-
-        <div v-for="(course,i) in courses"
-             class="d-flex px-2 py-3"
-             :key="category+'-'+course.name+'-'+i">
-
+      <b-collapse
+        :id="category"
+        v-model="collapsed[category]"
+      >
+        <div
+          v-for="(course,i) in courses"
+          :key="category+'-'+course.name+'-'+i"
+          class="d-flex px-2 py-3"
+        >
           <!-- left meta infos -->
           <div class="w-25 pr-5 pl-1">
             <!--
@@ -47,7 +57,8 @@ Dependencies: @/i18n/plugins/misc/laya-course-table
           <!-- course link -->
           <router-link
             :to="{name: 'course-detail-view', params: {name: course.name, step: '1'}}"
-            class="w-50 pl-xs-1 pl-md-0 course-link">
+            class="w-50 pl-xs-1 pl-md-0 course-link"
+          >
             <h5><u><b>{{ course.name }}</b></u></h5>
           </router-link>
 
@@ -64,21 +75,27 @@ Dependencies: @/i18n/plugins/misc/laya-course-table
 import { locale } from '@/mixins'
 
 export default {
-  name: 'laya-course-table',
+  name: 'LayaCourseTable',
 
   mixins: [
     locale
   ],
+  props: {
+    courses: {
+      type: Array,
+      default () { return [] }
+    },
+    filter: {
+      type: String,
+      default () { return '' }
+    }
+  },
 
-  data() {
+  data () {
     return {
       cats: {},
       collapsed: {}
-    };
-  },
-  props: {
-    courses: Array,
-    filter: String,
+    }
   },
   computed: {
 
@@ -89,8 +106,8 @@ export default {
      *
      * Last Updated: unknown
      */
-    filtered() {
-      if (!this.filter) return this.courses;
+    filtered () {
+      if (!this.filter) return this.courses
 
       const filterByCourseName = new RegExp(this.filter, 'i')
       return this.courses.filter(course => filterByCourseName.test(course.name))
@@ -103,16 +120,13 @@ export default {
      *
      * Last Updated: unknown
      */
-    categories() {
-
-      let cats = {}
-      if (!this.filtered || this.filtered.length == 0)
-        return cats
+    categories () {
+      const cats = {}
+      if (!this.filtered || this.filtered.length === 0) { return cats }
 
       this.filtered.forEach(course => {
-        const {category} = course
-        if (!cats[category])
-          cats[category] = []
+        const { category } = course
+        if (!cats[category]) { cats[category] = [] }
         cats[category].push(course)
       })
       return cats
@@ -127,7 +141,7 @@ export default {
      *
      * Last Updated: unknown
      */
-    collapse(category) {
+    collapse (category) {
       this.collapsed[category] = !this.collapsed[category]
     }
   }
@@ -155,7 +169,7 @@ export default {
 }
 
 .header {
-  padding: 1rem 0rem;
+  padding: 1rem 0;
   cursor: pointer;
   border-top: 2px solid black;
   border-bottom: 2px dashed black;

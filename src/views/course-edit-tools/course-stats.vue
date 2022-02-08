@@ -1,21 +1,19 @@
 <!--
-Filename: course-stats.vue 
+Filename: course-stats.vue
 Use: Provide User Stats
 Author: cmc
 Date: October 27, 2020
-Dependencies: 
+Dependencies:
   axios,
   @/mixins/locale.vue
 -->
 
 <template>
-
   <div class="row mt-5">
-
     <div class="col">
-      <b-button 
-        block 
-        variant="success" 
+      <b-button
+        block
+        variant="success"
         @click="$bvModal.show('author-courseStats')"
       >
         <i class="fas fa-info-circle"></i> {{ i18n['stats.seeStats'] }}
@@ -26,32 +24,32 @@ Dependencies:
       {{ i18n['stats.statsTip'] }}
     </div>
 
-    <b-modal ok-only id="author-courseStats"
+    <b-modal
+      id="author-courseStats"
+      ok-only
       :title="i18n['stats.modal.title']"
       centered
     >
-      <p>  
+      <p>
         {{ i18n['stats.modal.users'] }}: {{ courseStats.count }}
       </p>
-      <p>  
-        {{ i18n['stats.modal.time'] }}: {{ courseStats.averageTime }} 
+      <p>
+        {{ i18n['stats.modal.time'] }}: {{ courseStats.averageTime }}
       </p>
-      <p>  
+      <p>
         {{ i18n['stats.modal.flags'] }}: 0
       </p>
-      <p>  
-        {{ i18n['stats.modal.stoppedAt'] }}: {{courseStats.lostUsersAt}}
+      <p>
+        {{ i18n['stats.modal.stoppedAt'] }}: {{ courseStats.lostUsersAt }}
       </p>
-      <p>  
-        {{ i18n['stats.modal.totalLosses'] }}: {{ courseStats.usersLost}} 
+      <p>
+        {{ i18n['stats.modal.totalLosses'] }}: {{ courseStats.usersLost }}
       </p>
-      <p>  
-        {{ i18n['stats.modal.feedback'] }}: {{ courseStats.feedbackAverage }} 
+      <p>
+        {{ i18n['stats.modal.feedback'] }}: {{ courseStats.feedbackAverage }}
       </p>
     </b-modal>
-
   </div>
-
 </template>
 
 <script>
@@ -59,75 +57,75 @@ import http from 'axios'
 import { locale } from '@/mixins'
 
 export default {
-  name: 'course-stats',
+  name: 'CourseStats',
 
-  mixins: [ 
+  mixins: [
     locale
   ],
 
-  data() {
-    return{
+  data () {
+    return {
       courseStats: {}
     }
   },
 
-  methods: { 
+  methods: {
 
     /**
      * Function fetchCourseStats: get stats for all users
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: October 27,2020
      */
-    async fetchCourseStats() { //FIXME: not productive yet
+    async fetchCourseStats () { // FIXME: not productive yet
       const ctx = this
       let listEnr = []
 
-      //get data from enrollments
+      // get data from enrollments
       await http.get('enrollments/getAllByCourseId', {
         params: {
           createDate: this.name
         }
       })
-      .then(({data}) => {
-        console.log(data.subs)
-        listEnr = data.subs
-      })
-      .catch(err => {
-        console.error(err)
-      })
+        .then(({ data }) => {
+          console.log(data.subs)
+          listEnr = data.subs
+        })
+        .catch(err => {
+          console.error(err)
+        })
 
       let stats = (Object)
-      stats = {...stats, count: listEnr.length} //all enrolled users 
+      stats = { ...stats, count: listEnr.length } // all enrolled users
 
-      //get avg time to completion
+      // get avg time to completion
       let timeSpent = 0
       let finished = 0
       let notFinished = 0
-      let lostAt = []
-      let avgFeedback = []
+      const lostAt = []
+      const avgFeedback = []
 
       for (const enrol of listEnr) {
         console.log(enrol)
         if (enrol.finished) {
-          let userTime = Date.parse(enrol.lastActivity) - Date.parse(enrol.created)
+          const userTime = Date.parse(enrol.lastActivity) - Date.parse(enrol.created)
           console.log(`User time: ${userTime} `)
           timeSpent += userTime
-          finished ++
-        }
-
-        else { //count as lost if user didn't take action for more than a week
+          finished++
+        } else { // count as lost if user didn't take action for more than a week
           console.log(`User ${enrol.studentId} didn't finish!`)
           notFinished++
-          let lastAct = Date.parse(enrol.lastActivity)
-          lastAct >= 604800000? lostAt.push(enrol.progress) : null
+          const lastAct = Date.parse(enrol.lastActivity)
+          if (lastAct >= 604800000) {
+            lostAt.push(enrol.progress)
+          }
         }
 
         if (enrol.feedback) { // get average of feedback if applicable
-          for(let token of enrol.feedback) {
-            let highScore = token.options.answers.length
-            let avgScore = Number((token.choice.reduce((a,b) => (a+b)) / token.choice.length).toFixed(1))
+          for (const token of enrol.feedback) {
+            const highScore = token.options.answers.length
+            const avgScore = Number((token.choice.reduce((a, b) => (a + b)) / token.choice.length).toFixed(1))
             console.log(`Score: ${avgScore} of ${highScore} `)
             avgFeedback.push(avgScore)
           }
@@ -135,64 +133,64 @@ export default {
       }
 
       console.log(`time spent: ${timeSpent} by ${finished} users who finished`)
-      let avgTime = (finished != 0)? this.verbalizeTime(timeSpent/finished): this.verbalizeTime(0)
-      
+      const avgTime = (finished !== 0) ? this.verbalizeTime(timeSpent / finished) : this.verbalizeTime(0)
+
       console.log(`${notFinished} users didn't finish`)
-      let lossCnt = Array(ctx.course.content.length).fill(0)
+      const lossCnt = Array(ctx.course.content.length).fill(0)
       console.log(lostAt)
-      for (let p of lostAt) { //count where not finished users stopped
+      for (const p of lostAt) { // count where not finished users stopped
         lossCnt[p]++
       }
-      let bigLoss = lossCnt.indexOf(Math.max(...lossCnt)) + 1 // Index of Content that lost most users
+      const bigLoss = lossCnt.indexOf(Math.max(...lossCnt)) + 1 // Index of Content that lost most users
       console.log(`We lost most users at Content #${bigLoss}`)
 
-      let lostUsers = notFinished - lostAt.length //only count users that didn't do anythin for over a week
+      const lostUsers = notFinished - lostAt.length // only count users that didn't do anythin for over a week
       console.log(`We lost ${lostUsers} in total`)
 
-      let fbAvg = avgFeedback ?
-        (avgFeedback.reduce((a,b) => (a+b)) / avgFeedback.length).toFixed(1) :
-        null //calculate average of averages 
-      
+      const fbAvg = avgFeedback
+        ? (avgFeedback.reduce((a, b) => (a + b)) / avgFeedback.length).toFixed(1)
+        : null // calculate average of averages
+
       stats = {
-        ...stats, 
-        averageTime: avgTime, 
-        lostUsersAt: bigLoss, 
-        usersLost: lostUsers, 
+        ...stats,
+        averageTime: avgTime,
+        lostUsersAt: bigLoss,
+        usersLost: lostUsers,
         feedbackAverage: fbAvg
       }
-      
-      //TODO: get data for flags
+
+      // TODO: get data for flags
       console.log(stats)
       this.courseStats = stats
     },
 
     /**
      * Function storeFeedback: store feedback
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: October 27, 2020
      */
-    storeFeedback() {
+    storeFeedback () {
       const self = this
-      http.patch(`enrollments/${self.enrollment.id}`, {feedback: self.enrollment.feedback})
-      .catch(err => console.error('Failed storing course feedback:', err))
-      .finally(function() {
-        //this.$bvToast.show('author-toast')
-      })
+      http.patch(`enrollments/${self.enrollment.id}`, { feedback: self.enrollment.feedback })
+        .catch(err => console.error('Failed storing course feedback:', err))
+        .finally(function () {
+        // this.$bvToast.show('author-toast')
+        })
     },
 
     /**
      * Function saveFeedback: save feedback
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: October 27, 2020
      */
-    saveFeedback(feedback) {
-      var cfb = this.enrollment.feedback
-      for (var i in cfb) {
-        if(cfb[i].step == this.step) {
+    saveFeedback (feedback) {
+      const cfb = this.enrollment.feedback
+      for (const i in cfb) {
+        if (cfb[i].step === this.step) {
           this.updateFeedback(feedback, i)
           return
         }
@@ -203,17 +201,17 @@ export default {
 
     /**
      * Function updateFeedback: update Feedback at given index
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: October 27, 2020
      */
-    updateFeedback(updatedFeedback, index) {
+    updateFeedback (updatedFeedback, index) {
       this.enrollment.feedback[index] = {
-        ...this.enrollment.feedback[index], 
+        ...this.enrollment.feedback[index],
         ...updatedFeedback
       }
-      console.log('Feedback for step '+ updatedFeedback.step + ' updated!')
+      console.log('Feedback for step ' + updatedFeedback.step + ' updated!')
       this.storeFeedback()
     }
   }

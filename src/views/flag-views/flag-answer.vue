@@ -1,11 +1,11 @@
 <template>
   <div
-      class="pick-up-flag"
+    class="pick-up-flag"
   >
     <div class="flag-title">
       <div class="title-text">
         <h1>
-        {{ i18n['flag.provideClarification'] }}
+          {{ i18n['flag.provideClarification'] }}
         </h1>
       </div>
     </div>
@@ -25,7 +25,8 @@
       >
         <label
           for="question-editor"
-          class="sr-only">
+          class="sr-only"
+        >
           {{ i18n['flag.editQuestion'] }}
         </label>
         <textarea
@@ -43,69 +44,87 @@
         </b-button>
       </div>
       <div class="question-meta row">
-        <div class="col-5" v-if="!anonQuestion || isCourseCreator">{{ i18n['by'] }}
+        <div
+          v-if="!anonQuestion || isCourseCreator"
+          class="col-5"
+        >
+          {{ i18n['by'] }}
           #{{ showUserName(flagAuthor) }},
           {{ timeSince(currentFlag.created) }}
         </div>
-        <div class="col-5" v-else>{{ timeSince(currentFlag.created) }}</div>
-        <div class="col-5" v-if="currentFlag.question.edited">
+        <div
+          v-else
+          class="col-5"
+        >
+          {{ timeSince(currentFlag.created) }}
+        </div>
+        <div
+          v-if="currentFlag.question.edited"
+          class="col-5"
+        >
           {{ i18n['edited'] }} {{ timeSince(currentFlag.question.editTime) }}
         </div>
-        <div class="col" v-if="userId === currentFlag.authorId">
+        <div
+          v-if="userId === currentFlag.authorId"
+          class="col"
+        >
           <i
             id="edit-question"
+            v-b-tooltip.bottom
             class="fas fa-edit eventful"
             :class="langIsAr? 'float-left': 'float-right'"
-            @click="editQuestion = true; $event.target.blur()"
-            @keydown.enter="editQuestion = true; $event.target.blur()"
             tabindex="0"
             :title="i18n['flag.editQuestion']"
-            v-b-tooltip.bottom
             :aria-label="i18n['flag.editQuestion']"
+            @click="editQuestion = true; $event.target.blur()"
+            @keydown.enter="editQuestion = true; $event.target.blur()"
           >
           </i>
         </div>
       </div>
     </div>
     <div
-      class="flag-discussion"
       v-if="currentFlag.answers.length !== 0"
+      class="flag-discussion"
     >
       <div
         class="heading"
       >
-        {{ i18n['flag.discussion']}}
+        {{ i18n['flag.discussion'] }}
       </div>
       <div
-          class="discussion-post bg-light"
-          v-for="(answer,i) in sortedAnswers"
-          :class="{
-            'creator': answer.authorId === courseCreator,
-            'question': answer.isQuestion
-          }"
-          :key="'answer-'+i"
+        v-for="(answer,i) in sortedAnswers"
+        :key="'answer-'+i"
+        class="discussion-post bg-light"
+        :class="{
+          'creator': answer.authorId === courseCreator,
+          'question': answer.isQuestion
+        }"
       >
         <div
           v-if="editAnswer !== answer.id"
           class="row p-3 m-2"
         >
-          <div class="col pre">{{ answer.text }}</div>
+          <div class="col pre">
+            {{ answer.text }}
+          </div>
           <div
-            class="col-0 answer-edit"
             v-if="answer.authorId === userId"
+            class="col-0 answer-edit"
           >
             <label
               for="edit-answer"
-              class="sr-only">
+              class="sr-only"
+            >
               {{ i18n['flag.editAnswer'] }}
             </label>
             <i
               id="edit-answer"
+              v-b-tooltip.bottom
               class="fas fa-edit eventful"
+              :title="i18n['flag.editAnswer']"
               @click="e => prepareAnswerEdit(e, answer)"
               @keydown.enter="e => prepareAnswerEdit(e, answer)"
-              :title="i18n['flag.editAnswer']"
-              v-b-tooltip.bottom
             ></i>
           </div>
         </div>
@@ -116,7 +135,8 @@
           <div>
             <label
               for="answer-editor"
-              class="sr-only">
+              class="sr-only"
+            >
               {{ i18n['flag.editQuestion'] }}
             </label>
             <textarea
@@ -152,20 +172,19 @@
               </label>
               <input
                 id="answerQuestion2"
-                type="checkbox"
                 v-model="editedAnswerIsQuestion"
+                type="checkbox"
                 :class="langIsAr? 'mr-3': 'ml-3'"
               >
             </div>
           </div>
-
         </div>
         <div
           class="answer-meta row text-center"
         >
           <div
-            class="col answer-author"
             v-if="!anonQuestion || isCourseCreator"
+            class="col answer-author"
           >
             <label
               for="author-icon"
@@ -175,21 +194,21 @@
             </label>
             <i
               id="author-icon"
+              v-b-tooltip.bottom
               class="fas fa-user ml-2 mr-2"
               :title="i18n['flag.answerAuthor']"
-              v-b-tooltip.bottom
             ></i>
             <small>{{ i18n['by'] }} #{{ showUserName(answer.authorId) }}</small>
           </div>
           <div class="answer-edited col-1">
             <span v-if="answer.edited">
               <i
+                v-b-tooltip.bottom
                 class="fas fa-pen"
                 :title="i18n['flag.editedAnswer']"
-                v-b-tooltip.bottom
               ></i>
               <small class="sr-only">
-                {{ i18n['flag.editedAnswer']}}
+                {{ i18n['flag.editedAnswer'] }}
               </small>
             </span>
           </div>
@@ -202,9 +221,9 @@
             </label>
             <i
               id="answer-time"
+              v-b-tooltip.bottom
               class="fas fa-clock ml-2 mr-2"
               :title="i18n['flag.answerTime']"
-              v-b-tooltip.bottom
             ></i>
             <small>
               {{ timeAndDate(answer.timestamp) }}
@@ -222,13 +241,13 @@
             </label>
             <i
               id="vote-up"
+              v-b-tooltip.bottomright
               class="fas fa-arrow-up"
               :class="voted(answer) === 1? 'active' : ''"
-              @click="vote(answer, 1); $event.target.blur()"
-              @keydown.enter="vote(answer, 1); $event.target.blur()"
               tabindex="0"
               :title="i18n['flag.voteUp']"
-              v-b-tooltip.bottomright
+              @click="vote(answer, 1); $event.target.blur()"
+              @keydown.enter="vote(answer, 1); $event.target.blur()"
             ></i>
             <label
               for="vote-down"
@@ -238,41 +257,38 @@
             </label>
             <i
               id="vote-down"
+              v-b-tooltip.bottomright
               class="fas fa-arrow-down"
               :class="voted(answer) === -1? 'active' : ''"
-              @click="vote(answer, -1); $event.target.blur()"
-              @keydown.enter="vote(answer, -1); $event.target.blur()"
               tabindex="0"
               :title="i18n['flag.voteDown']"
-              v-b-tooltip.bottomright
+              @click="vote(answer, -1); $event.target.blur()"
+              @keydown.enter="vote(answer, -1); $event.target.blur()"
             ></i>
-            {{ answer.score>0 ? '+' : ''}} {{ answer.score }}
+            {{ answer.score>0 ? '+' : '' }} {{ answer.score }}
           </div>
-
-
         </div>
         <div
           v-if="answer.authorId === courseCreator"
+          v-b-tooltip.bottom
           class="answer-icon"
           tabindex="0"
           :title="i18n['flag.creatorAnswer']"
-          v-b-tooltip.bottom
         >
           <i class="fas fa-user-graduate">
           </i>
         </div>
         <div
           v-if="answer.isQuestion"
+          v-b-tooltip.bottom
           class="answer-icon"
           tabindex="0"
           :title="i18n['flag.answerIsQuestion']"
-          v-b-tooltip.bottom
         >
           <i class="fas fa-question">
           </i>
         </div>
       </div>
-
     </div>
     <div class="add-answer">
       <h2 class="heading">
@@ -289,24 +305,24 @@
             </label>
 
             <textarea
-                id="my-answer"
-                rows="5"
-                v-model="newAnswer"
-                class="form-control"
-                :placeholder="i18n['flag.typeAnswer']"
-                :disabled="answerSent || noNewAnswer"
-                @focus="subFocus = true"
-                @blur="subFocus = false"
+              id="my-answer"
+              v-model="newAnswer"
+              rows="5"
+              class="form-control"
+              :placeholder="i18n['flag.typeAnswer']"
+              :disabled="answerSent || noNewAnswer"
+              @focus="subFocus = true"
+              @blur="subFocus = false"
             ></textarea>
           </div>
           <div class="form-group row">
             <div class="col">
               <b-button
-                  type="submit"
-                  :class="langIsAr? 'ml-auto': 'mr-auto'"
-                  :disabled="answerSent || noNewAnswer"
+                type="submit"
+                :class="langIsAr? 'ml-auto': 'mr-auto'"
+                :disabled="answerSent || noNewAnswer"
               >
-                {{ this.i18n['flag.sendAnswer'] }}
+                {{ i18n['flag.sendAnswer'] }}
               </b-button>
             </div>
             <div class="col">
@@ -316,20 +332,19 @@
               >
                 <strong>{{ i18n['flag.answerQuestion'] }}</strong>
                 <i
+                  v-b-tooltip.bottom
                   class="fas fa-question-circle"
                   :class="langIsAr? 'mr-2': 'ml-2'"
                   :title="i18n['flag.answerQuestionHint']"
-                  v-b-tooltip.bottom
                 ></i>
               </label>
               <input
                 id="answerQuestion"
-                type="checkbox"
                 v-model="answerIsQuestion"
+                type="checkbox"
                 :class="langIsAr? 'mr-3': 'ml-3'"
               >
             </div>
-
           </div>
         </div>
         <div class="answer-hint">
@@ -340,7 +355,6 @@
           </span>
         </div>
       </form>
-
     </div>
   </div>
 </template>
@@ -351,75 +365,14 @@ import { v4 as uuidv4 } from 'uuid'
 import { locale, time } from '@/mixins'
 
 export default {
-  name: 'flag-answer',
+  name: 'FlagAnswer',
+
   mixins: [
-      locale,
-      time
+    locale,
+    time
   ],
-  computed: {
-    ...mapGetters(['content', 'courseCreator', 'courseFlags', 'userId']),
 
-    /**
-     * function anonQuestion: returns if question was asked anonymously
-     *
-     * Author: cmc
-     *
-     * Last Updated: October 21, 2021
-     * @returns {boolean}
-     */
-    anonQuestion() {
-      return this.currentFlag? this.currentFlag.anonymous: false
-    },
-
-    /**
-     * function currentFlag: returns current flag if any is set
-     *
-     * Author: cmc
-     *
-     * Last Updated: September 20, 2021
-     * @returns {null|object} current flag
-     */
-    currentFlag() {
-      return this.$store.getters.singleFlag(this.$route.params.id)
-    },
-
-    /**
-     * function flagAuthor: return ID of flag author
-     *
-     * Author: cmc
-     *
-     * Last Updated: September 20, 2021
-     * @returns {boolean|number|string|*}
-     */
-    flagAuthor() {
-      return this.currentFlag?
-        this.currentFlag.authorId :
-        'unknown'
-    },
-
-    /**
-     * function isCourseCreator: returns if user is course creator
-     *
-     * Author: cmc
-     *
-     * Last Updated: October 21, 2021
-     * @returns {boolean}
-     */
-    isCourseCreator() {
-      return this.courseCreator === this.userId
-    }
-  },
-
-  watch: {
-    currentFlag: {
-      deep: true,
-      handler() {
-        this.question = this.currentFlag.question.text
-      }
-    }
-  },
-
-  data() {
+  data () {
     return {
       answerIsQuestion: false,
       answerSent: false,
@@ -434,10 +387,74 @@ export default {
       noNewAnswer: false,
       sortedAnswers: [],
       subFocus: false,
-      question: '',
+      question: ''
     }
   },
-  created() {
+
+  computed: {
+    ...mapGetters(['content', 'courseCreator', 'courseFlags', 'userId']),
+
+    /**
+     * function anonQuestion: returns if question was asked anonymously
+     *
+     * Author: cmc
+     *
+     * Last Updated: October 21, 2021
+     * @returns {boolean}
+     */
+    anonQuestion () {
+      return this.currentFlag ? this.currentFlag.anonymous : false
+    },
+
+    /**
+     * function currentFlag: returns current flag if any is set
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 20, 2021
+     * @returns {null|object} current flag
+     */
+    currentFlag () {
+      return this.$store.getters.singleFlag(this.$route.params.id)
+    },
+
+    /**
+     * function flagAuthor: return ID of flag author
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 20, 2021
+     * @returns {boolean|number|string|*}
+     */
+    flagAuthor () {
+      return this.currentFlag
+        ? this.currentFlag.authorId
+        : 'unknown'
+    },
+
+    /**
+     * function isCourseCreator: returns if user is course creator
+     *
+     * Author: cmc
+     *
+     * Last Updated: October 21, 2021
+     * @returns {boolean}
+     */
+    isCourseCreator () {
+      return this.courseCreator === this.userId
+    }
+  },
+
+  watch: {
+    currentFlag: {
+      deep: true,
+      handler () {
+        this.question = this.currentFlag.question.text
+      }
+    }
+  },
+
+  created () {
     this.question = this.currentFlag.question.text
     this.checkForNewestAnswer()
     this.updateSortedAnswers()
@@ -452,7 +469,7 @@ export default {
      *
      * Last Updated: September 20, 2021
      */
-    addAnswer() {
+    addAnswer () {
       const myAnswer = {
         text: this.newAnswer,
         authorId: this.userId,
@@ -479,9 +496,10 @@ export default {
      * Last Updated: September 20, 2021
      * @returns {*|string}
      */
-    answerHint() {
-      return this.answerSent ? this.i18n['flag.ty'] :
-          this.noNewAnswer? this.i18n['flag.noNewAnswer'] : ''
+    answerHint () {
+      return this.answerSent
+        ? this.i18n['flag.ty']
+        : this.noNewAnswer ? this.i18n['flag.noNewAnswer'] : ''
     },
 
     /**
@@ -492,8 +510,8 @@ export default {
      *
      * Last Updated: September 20, 2021
      */
-    checkForNewestAnswer() {
-      let ourAns = [...this.currentFlag.answers]
+    checkForNewestAnswer () {
+      const ourAns = [...this.currentFlag.answers]
       if (ourAns.length !== 0) {
         ourAns.sort((a, b) => {
           return b.timestamp - a.timestamp
@@ -511,7 +529,7 @@ export default {
      *
      * Last Updated: October 21, 2021
      */
-    prepareAnswerEdit(e, answer) {
+    prepareAnswerEdit (e, answer) {
       this.editAnswer = answer.id
       this.answerToEdit = answer.text
       e.target.blur()
@@ -525,7 +543,7 @@ export default {
      * Last Updated: September 20, 2021
      * @param answer store item
      */
-    saveAnswer(answer) {
+    saveAnswer (answer) {
       this.$store.commit('updateAnswer', {
         answer: answer,
         text: this.answerToEdit,
@@ -541,9 +559,9 @@ export default {
      *
      * Last Updated: September 20, 2021
      */
-    saveQuestion(){
+    saveQuestion () {
       this.$store.commit('updateFlagQuestion',
-        {flag: this.currentFlag, question: this.question})
+        { flag: this.currentFlag, question: this.question })
       this.editQuestion = false
     },
 
@@ -553,7 +571,7 @@ export default {
      * @param id
      * @returns {*}
      */
-    showUserName(id) {
+    showUserName (id) {
       return id
     },
 
@@ -566,7 +584,7 @@ export default {
      * @param {number} timestamp answer timestamp
      * @returns {string} hh:mm, dd-mm-yyyy
      */
-    timeAndDate(timestamp) {
+    timeAndDate (timestamp) {
       const time = new Date(timestamp)
       return `${this.locDate(time)}, ${this.locTime(time)}`
     },
@@ -578,7 +596,7 @@ export default {
      *
      * Last Updated: September 20, 2021
      */
-    updateFilteredFlag() {
+    updateFilteredFlag () {
       this.filteredFlag = this.$store.getters.singleFlag(this.$route.params.id)
       this.question = this.filteredFlag.question.text
     },
@@ -590,7 +608,7 @@ export default {
      *
      * Last Updated: September 20, 2021
      */
-    updateSortedAnswers() {
+    updateSortedAnswers () {
       this.sortedAnswers = [...this.currentFlag.answers].sort((a, b) => b.score - a.score)
     },
 
@@ -603,7 +621,7 @@ export default {
      * @param answer
      * @param val
      */
-    vote(answer, val) {
+    vote (answer, val) {
       // console.trace(answer)
       if (answer.authorId === this.userId) { // no voting on own answer
         this.$bvToast.toast(this.i18n['flag.noSelfVote'], {
@@ -612,8 +630,8 @@ export default {
           variant: 'danger'
         })
       } else {
-        const uid = this.userId+''
-        this.$store.commit('voteOnFlagAnswer', {answer, val, uid})
+        const uid = this.userId + ''
+        this.$store.commit('voteOnFlagAnswer', { answer, val, uid })
       }
     },
 
@@ -626,8 +644,8 @@ export default {
      * @param answer
      * @returns {number}
      */
-    voted(answer) {
-      return answer.votes? answer.votes[this.userId]: 0
+    voted (answer) {
+      return answer.votes ? answer.votes[this.userId] : 0
     }
   }
 }

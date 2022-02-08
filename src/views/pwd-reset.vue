@@ -2,12 +2,12 @@
   <div class="container text-center pt-5">
     <!-- password change input -->
     <div
-      id="change-password-input"
       v-if="!resetSuccess"
+      id="change-password-input"
     >
       <div class="row mb-3">
         <h2 class="mx-auto">
-          {{ i18n['password.submit' ]}}
+          {{ i18n['password.submit' ] }}
         </h2>
       </div>
       <!-- password -->
@@ -18,8 +18,8 @@
           :label-icons-only="false"
           :label-width="3"
           :new-input="true"
-          @compliantLength="setCompliance"
           class="mx-auto"
+          @compliantLength="setCompliance"
         ></PasswordInput>
       </div>
       <div>
@@ -41,7 +41,6 @@
     <div v-else>
       {{ i18n['password.redirectMsg'] }}
     </div>
-
   </div>
 </template>
 
@@ -52,7 +51,7 @@ import PasswordInput from '@/components/password-input'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'passwordReset',
+  name: 'PasswordReset',
   components: {
     PasswordInput // not lazily loaded b/c always visible
   },
@@ -82,7 +81,7 @@ export default {
      * Last Updated: January 18, 2022
      * @param val boolean
      */
-    resetSuccess(val) {
+    resetSuccess (val) {
       if (val) { // val is boolean
         // this.$router.push('/login')
       }
@@ -126,18 +125,18 @@ export default {
         verificationToken: this.$route.query.token,
         password: this.passwordSet
       })
-      .then(() => {
-        this.showToast('success')
-        this.resetSuccess = true
-        this.$store.commit('setPwd', '')
-      })
-      .catch((err) => {
-        console.error(err)
-        this.showToast('error')
-      })
-      .finally(() => {
-        this.busy = false
-      })
+        .then(() => {
+          this.showToast('success')
+          this.resetSuccess = true
+          this.$store.commit('setPwd', '')
+        })
+        .catch((err) => {
+          console.error(err)
+          this.showToast('error')
+        })
+        .finally(() => {
+          this.busy = false
+        })
     },
 
     /**
@@ -165,7 +164,7 @@ export default {
       this.$root.$bvToast.toast(this.i18n[`password.${type}Msg`], {
         title: this.i18n[`password.${type}`],
         toaster: 'b-toaster-bottom-center',
-        variant: type === 'success'? type : 'danger'
+        variant: type === 'success' ? type : 'danger'
       })
     }
   }

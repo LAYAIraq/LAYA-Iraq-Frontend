@@ -9,10 +9,10 @@ Dependencies:
 -->
 
 <template>
-
   <div class="row mt-3">
     <div class="col">
-      <b-button size="sm"
+      <b-button
+        size="sm"
         variant="warning"
         :class="langIsAr? 'float-left' : 'float-right'"
         @click="$bvModal.show('author-renameCourse-confirm')"
@@ -25,30 +25,35 @@ Dependencies:
       {{ i18n['rename.renameCourseTip'] }}
     </div>
 
-    <b-modal id="author-renameCourse-confirm"
+    <b-modal
+      id="author-renameCourse-confirm"
       :title="i18n['renameCourse']"
       header-bg-variant="warning"
       ok-variant="warning"
       :ok-title="i18n['rename.modal.ok']"
       :cancel-title="i18n['cancel']"
-      @ok="renameCourse"
       centered
-             :aria-label="i18n['popupwarning']"
+      :aria-label="i18n['popupwarning']"
+      @ok="renameCourse"
     >
       <p>
         {{ i18n['copy.modal.text'] }}
         <input
-        type="text"
-        v-model="rename"
-        class="form-control"
-        :placeholder="i18n['placeholder']"
-        :aria-label="i18n['placeholder']"
+          v-model="rename"
+          type="text"
+          class="form-control"
+          :placeholder="i18n['placeholder']"
+          :aria-label="i18n['placeholder']"
         >
       </p>
     </b-modal>
-    <div id="openPopup" style="display:none" >{{ i18n['popupwarning'] }}</div>
+    <div
+      id="openPopup"
+      style="display:none"
+    >
+      {{ i18n['popupwarning'] }}
+    </div>
   </div>
-
 </template>
 
 <script>
@@ -56,21 +61,21 @@ import { locale } from '@/mixins'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'courseRename',
+  name: 'CourseRename',
 
   mixins: [
     locale
   ],
 
-  computed: {
-    ...mapGetters(['course']),
-  },
-
-  data() {
+  data () {
     return {
       rename: '',
       oldName: ''
     }
+  },
+
+  computed: {
+    ...mapGetters(['course'])
   },
 
   methods: {
@@ -84,19 +89,18 @@ export default {
      * Last Updated: March 24, 2021
      */
 
-    duplicateCheck(click) {
+    duplicateCheck (click) {
       click.preventDefault()
-      if(!this.rename) {
-        this.$nextTick( () => {
+      if (!this.rename) {
+        this.$nextTick(() => {
           this.$bvModal.hide('author-rename-course-confirm')
         })
         return
       }
-      if(!this.courseList) this.$store.dispatch('fetchCourseList')
-      if(this.courseList.some( e => e.name == this.rename)) {
+      if (!this.courseList) this.$store.dispatch('fetchCourseList')
+      if (this.courseList.some(e => e.name === this.rename)) {
         this.dupeName = true
-      }
-      else {
+      } else {
         this.dupeName = false
         this.renameCourse()
       }
@@ -109,25 +113,23 @@ export default {
      *
      * Last Updated: March 24, 2021
      */
-    renameCourse() {
-      if(!this.rename) return
-      let newName = this.rename
-      let step = this.$route.params.step
+    renameCourse () {
+      if (!this.rename) return
+      const newName = this.rename
+      const step = this.$route.params.step
       this.$store.commit('renameCourse', newName)
-      let renamed = this.$store.dispatch('updateRenamedCourse')
+      const renamed = this.$store.dispatch('updateRenamedCourse')
 
-      renamed.then( () => {
+      renamed.then(() => {
         this.$router.replace(`/courses/${newName}/${step}`)
         console.log('Renaming successful!')
         this.$emit('renamed')
       })
-      .catch(err => {
-        console.err(err)
-        console.log('Renaming failed!')
-      })
-
+        .catch(err => {
+          console.error(err)
+          console.log('Renaming failed!')
+        })
     }
   }
 }
 </script>
-

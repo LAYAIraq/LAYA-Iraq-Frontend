@@ -12,19 +12,27 @@ Dependencies:
   <div class="login-view ly-nav-margin">
     <div class="container">
       <div
-        class="text-center"
         v-if="$route.params.verified"
+        class="text-center"
       >
-        {{ i18n['login.verified']}}
+        {{ i18n['login.verified'] }}
       </div>
       <div class="row">
         <form class="d-flex flex-column align-items-center">
           <div style="height: 2rem"></div>
-          <img src="../assets/anmelden.svg" alt="Login" class="d-block m-auto w-50">
-          <h1 class="text-center">{{ i18n['login.title'] }}</h1>
+          <img
+            src="../assets/anmelden.svg"
+            alt="Login"
+            class="d-block m-auto w-50"
+          >
+          <h1 class="text-center">
+            {{ i18n['login.title'] }}
+          </h1>
 
-          <div class="ly-input" :class="{error: errEmail}">
-
+          <div
+            class="ly-input"
+            :class="{error: errEmail}"
+          >
             <input
               id="email-input"
               v-model.trim="email"
@@ -34,10 +42,12 @@ Dependencies:
               autocomplete="on"
               :aria-label="i18n['emailPH']"
             >
-
           </div>
 
-          <div class="ly-input" :class="{error: errPwd}">
+          <div
+            class="ly-input"
+            :class="{error: errPwd}"
+          >
             <input
               v-model.trim="pwd"
               :placeholder="i18n['pwdPH']"
@@ -51,30 +61,33 @@ Dependencies:
           <button
             id="login-button"
             type="submit"
-            @click.prevent="submit"
             class="btn btn-lg btn-outline-dark"
             aria-describedby="login-error"
+            @click.prevent="submit"
           >
             {{ i18n['login.title'] }}
             <i class="fas fa-sign-in-alt"></i>
           </button>
 
           <!-- busy note -->
-          <h5 v-if="busy" class="text-center">
+          <h5
+            v-if="busy"
+            class="text-center"
+          >
             {{ i18n['busy'] }}
             <i class="fas fa-spinner fa-spin"></i>
           </h5>
           <div aria-live="polite">
-          <div
-            id="login-error"
-            v-if="submitFailed"
-            :aria-hidden="!submitFailed? 'false' : 'true'"
-            class="font-weight-bold text-center mt-3"
-          >
-            <i class="fas fa-exclamation-triangle"></i>
-            {{ errMsg }}
+            <div
+              v-if="submitFailed"
+              id="login-error"
+              :aria-hidden="!submitFailed? 'false' : 'true'"
+              class="font-weight-bold text-center mt-3"
+            >
+              <i class="fas fa-exclamation-triangle"></i>
+              {{ errMsg }}
+            </div>
           </div>
-      </div>
 
           <hr>
           <div class="text-center">
@@ -96,13 +109,13 @@ import http from 'axios'
 import { locale } from '@/mixins'
 
 export default {
-  name: 'login-view',
+  name: 'LoginView',
 
   mixins: [
     locale
   ],
 
-  data() {
+  data () {
     return {
       /* form */
       email: '',
@@ -112,7 +125,7 @@ export default {
       busy: false,
       errMsg: '',
       submitFailed: false
-    };
+    }
   },
 
   computed: {
@@ -124,7 +137,7 @@ export default {
      *
      * Last Updated: unknown
      */
-    errEmail() {
+    errEmail () {
       return this.email.length === 0
     },
 
@@ -135,7 +148,7 @@ export default {
      *
      * Last Updated: unknown
      */
-    errPwd() {
+    errPwd () {
       return this.pwd.length === 0
     },
 
@@ -146,7 +159,7 @@ export default {
      *
      * Last Updated: unknown
      */
-    errForm() {
+    errForm () {
       return this.errEmail || this.errPwd
     }
   },
@@ -166,7 +179,7 @@ export default {
      *
      * Last Updated: 12.01.2022
      */
-    submit() {
+    submit () {
       if (this.errForm || this.busy) {
         console.log('Not Submitting')
         return
@@ -180,32 +193,32 @@ export default {
         email: $data.email,
         password: $data.pwd
       })
-      .then(({ data }) => {
+        .then(({ data }) => {
         /* set login state */
-        $store.commit('login', data)
+          $store.commit('login', data)
 
-        /* load profile */
-        $store.dispatch('fetchProfile')
-        $store.dispatch('fetchRole')
+          /* load profile */
+          $store.dispatch('fetchProfile')
+          $store.dispatch('fetchRole')
 
-        /* store auth for reloads */
-        const { id, userId, created } = data
-        let expire = new Date(created)
-        expire.setSeconds(expire.getSeconds() + 604800) //user stays logged-in for 7 days (604800seconds)
-        console.log('Auth expires on', expire)
-        $ls.set('auth', { id: id, userId: userId }, expire.getTime())
+          /* store auth for reloads */
+          const { id, userId, created } = data
+          const expire = new Date(created)
+          expire.setSeconds(expire.getSeconds() + 604800) // user stays logged-in for 7 days (604800seconds)
+          console.log('Auth expires on', expire)
+          $ls.set('auth', { id: id, userId: userId }, expire.getTime())
 
-        /* move to view */
-        $router.push('/courses')
-      })
-      .catch(err => {
-        console.log(err)
-        $data.submitFailed = true
-        $data.errMsg = i18n['login.errMsg']
-      })
-      .finally(() => {
-        $data.busy = false
-      })
+          /* move to view */
+          $router.push('/courses')
+        })
+        .catch(err => {
+          console.log(err)
+          $data.submitFailed = true
+          $data.errMsg = i18n['login.errMsg']
+        })
+        .finally(() => {
+          $data.busy = false
+        })
     }
   }
 }

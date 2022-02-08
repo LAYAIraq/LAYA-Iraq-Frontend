@@ -15,7 +15,7 @@ export default {
   state: {
     userId: 0,
     online: false,
-    role: roles.STUDENT,
+    role: roles.STUDENT
   },
   getters: {
 
@@ -43,7 +43,7 @@ export default {
      * @returns true if role is author or admin
      */
     isAuthor (state: { role: string }) {
-      return state.role === roles.AUTHOR || state.role == roles.ADMIN
+      return state.role === roles.AUTHOR || state.role === roles.ADMIN
     },
 
     /**
@@ -85,7 +85,7 @@ export default {
     login (state: { online: boolean, userId: any }, { id, userId }: any) {
       state.online = true
       state.userId = userId
-      //place token ID in axios for all future http requests
+      // place token ID in axios for all future http requests
       http.defaults.headers.common.Authorization = id
     },
 
@@ -102,9 +102,9 @@ export default {
       state.online = false
       state.userId = -1
       state.role = roles.STUDENT
-      //remove auth token from axios
+      // remove auth token from axios
       delete http.defaults.headers.common.Authorization
-    },
+    }
   },
   actions: {
 

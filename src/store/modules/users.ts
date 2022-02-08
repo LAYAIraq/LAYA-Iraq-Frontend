@@ -94,7 +94,7 @@ export default {
       },
       id: number
     ) {
-      const idx = state.users.findIndex(el  => el.id === id)
+      const idx = state.users.findIndex(el => el.id === id)
       if (idx !== -1) { // element with id exists
         state.users.splice(idx, 1)
       }
@@ -145,10 +145,10 @@ export default {
       }) {
       const user = state.users.find(el => el.id === id)
       if (user) {
-        commit ('changeUserEmail', {user, email})
+        commit('changeUserEmail', { user, email })
         http.patch(
           `accounts/${id}`,
-          {email: email}
+          { email: email }
         )
           // .then(() => console.log('user email changed!'))
           .catch(err => console.error(err))
@@ -181,7 +181,7 @@ export default {
       }) {
       const user = state.users.find(el => el.id === id)
       if (user) {
-        commit ('changeUserRole', { user, role })
+        commit('changeUserRole', { user, role })
         http.patch(
           `accounts/${id}`,
           { role: role }
@@ -213,21 +213,20 @@ export default {
         email: string,
         role: string
       }) {
-      http.post(`accounts/create`, {
+      http.post('accounts/create', {
         username: username,
         email: email,
         role: role
       })
         .then(resp => {
           // console.log(resp)
-          commit ('addUser', {
+          commit('addUser', {
             ...resp.data,
             role: role
           })
         })
         .catch(err => console.error(err))
     },
-
 
     /**
      * function deleteUser: delete user from database, then update
@@ -241,7 +240,7 @@ export default {
      * @param id userId to delete
      */
     deleteUser (
-      {state, commit}: {
+      { state, commit }: {
         state: {
           users: Array<{
             id: number
@@ -257,7 +256,7 @@ export default {
           .then(() => {
             // console.log(resp)
             // console.log('deleted user: ', id)
-            commit ('removeUser', id)
+            commit('removeUser', id)
           })
           .catch(err => console.error(err))
       }
@@ -273,23 +272,22 @@ export default {
      * @param state state variables
      */
     fetchUserList (
-      {commit}: {commit: Function}
-    ){
+      { commit }: {commit: Function}
+    ) {
       http.get('/accounts')
         .then(resp => {
           // commit('setUsersList', resp.data)
           for (const entry of resp.data) {
             // console.log(entry)
-            const user = {...entry}
+            const user = { ...entry }
             http.get(`accounts/${entry.id}/role`)
               .then(resp => {
                 // console.log(resp.data.role)
                 user.role = resp.data.role
-                commit ('addUser', user)
+                commit('addUser', user)
               })
               .catch(err => console.error(err))
             // console.log('new user ', user)
-
           }
         })
         .catch(err => console.error(err))
@@ -373,6 +371,6 @@ export default {
           .catch(err => console.error(err))
       }
       // else statement omitted b/c only called for existing ids
-    },
+    }
   }
 }

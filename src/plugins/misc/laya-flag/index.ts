@@ -10,7 +10,7 @@ import _Vue from 'vue'
 import _view from './flag.vue'
 
 export default {
-  install(Vue: typeof _Vue, options?: any): void {
+  install (Vue: typeof _Vue): void {
     Vue.component(_view.name, _view)
   }
 }

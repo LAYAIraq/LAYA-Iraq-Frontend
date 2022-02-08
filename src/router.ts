@@ -42,7 +42,7 @@ export default new Router({
     }, */
     {
       path: '/',
-      //redirect: '/login', experimental starting page
+      // redirect: '/login', experimental starting page
       name: 'root-view',
       component: Root
     },
@@ -143,8 +143,7 @@ export default new Router({
   ]
 })
 
-export const publicRoutes =
- [
+export const publicRoutes = [
   '/',
   '#/login',
   '#/register',
@@ -152,4 +151,4 @@ export const publicRoutes =
   '#/privacy',
   '#/reset-password',
   '#/verify'
- ]
+]

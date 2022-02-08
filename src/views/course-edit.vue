@@ -12,23 +12,35 @@ Dependencies:
   <!-- author view -->
   <div class="ly-bg-author py-4">
     <course-edit-header
-    :name="name" :step="step">
+      :name="name"
+      :step="step"
+    >
     </course-edit-header>
 
     <!-- mounts course-edit-wrapper & edit-course-nav -->
     <router-view @saved="$bvToast.show('author-toast')"></router-view>
 
     <div
+      v-if="$route.name === 'course-detail-view'"
       class="container"
       :class="langIsAr ? 'text-right' : ''"
-      v-if="$route.name === 'course-detail-view'"
     >
+      <course-edit-content
+        :name="name"
+        :step="step"
+      ></course-edit-content>
 
-      <course-edit-content :name="name" :step="step"></course-edit-content>
+      <course-edit-type
+        :name="name"
+        :step="step"
+        @changedType="storeCourse"
+      ></course-edit-type>
 
-      <course-edit-type :name="name" :step="step" @changedType="storeCourse"></course-edit-type>
-
-      <course-new-block :name="name" :step="step"> </course-new-block>
+      <course-new-block
+        :name="name"
+        :step="step"
+      >
+      </course-new-block>
 
       <course-edit-nav></course-edit-nav>
 
@@ -36,14 +48,16 @@ Dependencies:
 
       <course-copy @success="$bvToast.show('author-toast')"></course-copy>
 
-      <course-delete-block :name="name" :step="step"></course-delete-block>
+      <course-delete-block
+        :name="name"
+        :step="step"
+      ></course-delete-block>
 
       <course-delete :name="name"></course-delete>
 
       <!--<course-stats></course-stats>-->
 
       <course-preferences @settingsChanged="storeCourse"></course-preferences>
-
     </div>
 
     <b-toast
@@ -56,12 +70,11 @@ Dependencies:
     >
       {{ i18n['successfulSave'] }}
     </b-toast>
-
   </div>
 </template>
 
 <script>
-import { locale } from '@/mixins'
+import { locale, routeProps } from '@/mixins'
 import { mapGetters } from 'vuex'
 import {
   courseCopy,
@@ -73,13 +86,12 @@ import {
   courseEditType,
   courseNewBlock,
   coursePreferences,
-  courseRename,
+  courseRename
   // courseStats
-  } from './course-edit-tools/'
-
+} from './course-edit-tools/'
 
 export default {
-  name: 'course-edit',
+  name: 'CourseEdit',
   components: { // not lazily loaded b/c visible first
     courseCopy,
     courseDelete,
@@ -90,19 +102,17 @@ export default {
     courseEditType,
     courseNewBlock,
     coursePreferences,
-    courseRename,
+    courseRename
     // courseStats
   },
   mixins: [
-    locale
+    locale,
+    routeProps
   ],
-  props: {
-    name: String,
-    step: String
-  },
+
   computed: {
     // ...mapState(['edit']),
-    ...mapGetters(['content', 'course']),
+    ...mapGetters(['content', 'course'])
   },
   methods: {
 
@@ -113,12 +123,12 @@ export default {
      *
      * Last Updated: January 11, 2021
      *  */
-    storeCourse() {
-      let ctx = this
+    storeCourse () {
+      const ctx = this
       this.$store.dispatch('storeCourse')
-      .then(() => ctx.$bvToast.show('author-toast'))
-      .catch( (err) => console.error(err))
-  }
+        .then(() => ctx.$bvToast.show('author-toast'))
+        .catch((err) => console.error(err))
+    }
 
   }
 }

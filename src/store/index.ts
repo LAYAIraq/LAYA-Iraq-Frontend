@@ -23,7 +23,7 @@ import users from './modules/users'
 Vue.use(Vuex)
 
 const debug = process.env.NODE_ENV !== 'production'
-if(debug) console.log('vuex in debug mode' )
+if (debug) console.log('vuex in debug mode')
 
 export default new Vuex.Store({
   modules: {
@@ -35,5 +35,5 @@ export default new Vuex.Store({
     profile,
     users
   },
-  strict: debug,
+  strict: debug
 })

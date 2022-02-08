@@ -10,7 +10,7 @@ import _Vue from 'vue'
 import _view from './view.vue'
 
 export default {
-  install(Vue: typeof _Vue, options?: any): void {
+  install (Vue: typeof _Vue): void {
     Vue.$laya.registerLB(
       'laya-wysiwyg',
       'BlockWysiwyg',
@@ -18,9 +18,10 @@ export default {
       'fas fa-keyboard',
       {
         new: () => import('./create.vue'),
-        //@ts-ignore
+        // @ts-ignore
         view: _view, // not lazily loaded b/c always visible
         edit: () => import('./edit.vue')
-    })
+      }
+    )
   }
 }

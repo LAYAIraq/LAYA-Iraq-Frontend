@@ -40,11 +40,10 @@ export default {
       state: {
         courseFlags: [
           flag: {
-          referenceId: string
-        }
+            referenceId: string
+          }
         ]
-      }) => (id: string) =>
-    {
+      }) => (id: string) => {
       for (const flag of state.courseFlags) {
         if (flag.referenceId === id) {
           return flag
@@ -73,16 +72,16 @@ export default {
       }
     ) {
       if (!state.courseFlags.some( // duplicate check if invoked several times
-          (existingFlag: {
+        (existingFlag: {
             courseId: String,
             referenceId: String,
             question: String
           }) => {
-            // check if flag exists by mapping course, reference and question
-            return (existingFlag.courseId === flag.courseId &&
+          // check if flag exists by mapping course, reference and question
+          return (existingFlag.courseId === flag.courseId &&
                 existingFlag.referenceId === flag.referenceId &&
                 existingFlag.question === flag.question)
-          })
+        })
       ) { // fresh flag: push in array
         state.courseFlags.push(flag)
       }
@@ -107,7 +106,7 @@ export default {
       answerData: {
         id: string,
         answer: object
-      } ) {
+      }) {
       // find element courseFlags
       const arr = state.courseFlags.filter(flag => flag.referenceId === answerData.id)
       // if (arr.length > 1) console.error('More than one flag with same ID!')
@@ -123,7 +122,7 @@ export default {
      * Last Updated: August 17, 2021
      * @param state state variables
      */
-    clearFlagList (state: { courseFlags: Array<Object> } ) {
+    clearFlagList (state: { courseFlags: Array<Object> }) {
       state.courseFlags = []
     },
 
@@ -207,7 +206,7 @@ export default {
      */
     updateFlagQuestion (
       state,
-      {flag, question}: {
+      { flag, question }: {
         flag: {
           question: {
             text: string,
@@ -242,11 +241,11 @@ export default {
         },
         val: number,
         uid: string
-      } ) {
-      if (Object.prototype.hasOwnProperty.call(answer,'votes')) {
+      }) {
+      if (Object.prototype.hasOwnProperty.call(answer, 'votes')) {
         // answer has exisiting votes
         const vote = answer.votes[uid] ? answer.votes[uid] : 0 // turn null vote into 0
-        switch (vote+val) { // possibilities for voting
+        switch (vote + val) { // possibilities for voting
           case -2: // remove downvote
             answer.votes[uid] = 0
             answer.score++
@@ -306,12 +305,12 @@ export default {
         // console.log(elem)
         if (!elem) {
           console.error(`not an element: ${elem}`)
-        } else if (Object.prototype.hasOwnProperty.call(elem,'flagged')) {
+        } else if (Object.prototype.hasOwnProperty.call(elem, 'flagged')) {
           const elemId = elem.id
           for (const flag of flags) {
             if (flag.referenceId === elemId) {
               // console.log(`${elemId} has a flag, trying to mutate it!`)
-              commit ('flagFlaggableElement', elem)
+              commit('flagFlaggableElement', elem)
             } else {
               // console.log(elem + ' can be flagged but no flag exists')
             }
@@ -326,13 +325,13 @@ export default {
         const iterInput = Object.values(step.input)
         // console.log(`iterInput: ${iterInput}`)
         for (const elem of iterInput) {
-          if (typeof(elem) === 'object') {
+          if (typeof (elem) === 'object') {
             if (Array.isArray(elem)) {
               for (const iter of elem) {
                 if (iter) checkIfFlagged(iter)
               }
-            } else if (elem){
-              checkIfFlagged (elem)
+            } else if (elem) {
+              checkIfFlagged(elem)
             }
           }
         }
@@ -355,23 +354,23 @@ export default {
       },
       cid: string
     ) {
-      commit ('clearFlagList')
+      commit('clearFlagList')
       // console.log('getting elements for courseId: ', cid)
       http.get('flags', {
         params: {
-          filter: { where: { courseId: cid }}
+          filter: { where: { courseId: cid } }
         }
       })
-      .then(resp => {
+        .then(resp => {
         // if (resp.data.length === 0) console.log('None found!')
-        resp.data.forEach(elem => {
+          resp.data.forEach(elem => {
           // console.log(elem)
           // console.log('Adding ' + elem.referenceId + 'to flag list')
-          commit ('appendFlag', elem)
+            commit('appendFlag', elem)
+          })
+          dispatch('checkCourseFlags')
         })
-        dispatch ('checkCourseFlags')
-      })
-      .catch(err => console.error(err))
+        .catch(err => console.error(err))
     },
 
     /**
@@ -391,12 +390,11 @@ export default {
         // console.log(flag)
         http.post('flags', flag)
           .then(resp => {
-            commit ('appendFlag', resp.data)
+            commit('appendFlag', resp.data)
           })
           .catch(err => console.error(err))
-
       })
-      commit ('clearFlagsToAddList')
+      commit('clearFlagsToAddList')
     },
 
     /**
@@ -409,8 +407,8 @@ export default {
      * @param state state variables
      */
     updateFlags ({
-     state,
-     commit
+      state,
+      commit
     }) {
       const reqs = []
       state.courseFlags.forEach(flag => {
@@ -427,7 +425,7 @@ export default {
       http.all(reqs)
         // .then( () => console.log('Flags updated'))
         .catch((err) => console.error(err))
-      commit ('clearFlagList')
+      commit('clearFlagList')
     }
   }
 }

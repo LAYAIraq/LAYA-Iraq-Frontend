@@ -10,106 +10,113 @@ Dependencies:
 
 <template>
   <div class="container">
-
-      <div class="flaggable row mb-3" :id="title.id">
-        <div class="col">
-          <h2>
-            {{ courseSimple? title.simple : title.text }}
-            <laya-audio-inline
-              v-if="taskAudioExists"
-              :src="courseSimple?
-                taskAudio.simple :
-                taskAudio.text"
-            ></laya-audio-inline>
-          </h2>
-        </div>
-        <laya-flag-icon
-          v-if="!previewData"
-          :refData="title"
-          @flagged="title.flagged = true"
-        ></laya-flag-icon>
+    <div
+      :id="title.id"
+      class="flaggable row mb-3"
+    >
+      <div class="col">
+        <h2>
+          {{ courseSimple? title.simple : title.text }}
+          <laya-audio-inline
+            v-if="taskAudioExists"
+            :src="courseSimple?
+              taskAudio.simple :
+              taskAudio.text"
+          ></laya-audio-inline>
+        </h2>
       </div>
+      <laya-flag-icon
+        v-if="!previewData"
+        :ref-data="title"
+        @flagged="title.flagged = true"
+      ></laya-flag-icon>
+    </div>
 
-      <div
-        class="flaggable row"
-        :id="task.id"
-      >
-        <div class="col">
-          <p>{{ courseSimple? task.simple : task.text }}</p>
-        </div>
-        <laya-flag-icon v-if="!previewData"
-            :refData="task"
-
-            @flagged="task.flagged = true"
-
-        ></laya-flag-icon>
+    <div
+      :id="task.id"
+      class="flaggable row"
+    >
+      <div class="col">
+        <p>{{ courseSimple? task.simple : task.text }}</p>
       </div>
-      <hr>
+      <laya-flag-icon
+        v-if="!previewData"
+        :ref-data="task"
 
-      <div class="row">
-        <div class="col">
-          <div
-            v-for="(item,i) in items"
-            :key="item.id"
-            :id="item.id"
-            class="flaggable item mb-5"
-          >
-            <h3 class="text-center item-label">
-              {{ courseSimple? item.simple : item.label }}
-              <i v-if="checked"
-                class="fas"
-                :class="{
-                  'fa-check text-success': eval[i],
-                  'fa-times text-danger': !eval[i]
-                }">
-              </i>
-            </h3>
+        @flagged="task.flagged = true"
+      ></laya-flag-icon>
+    </div>
+    <hr>
 
-            <div class="d-flex justify-content-between">
-              <b v-for="cat in categories" :key="cat.text">
-                {{ courseSimple? cat.simple : cat.text }}
-              </b>
-            </div>
-            <input
-              type="range"
-              class="custom-range"
-              min="0"
-              :max="categories.length-1"
-              :disabled="checked"
-              v-model.number="solution[i]"
-              :aria-valuenow="solution[i]"
-              :aria-valuetext="categories[solution[i]]"
-              :aria-label="i18n['layaLaDragDrop.label.slider']"
+    <div class="row">
+      <div class="col">
+        <div
+          v-for="(item,i) in items"
+          :id="item.id"
+          :key="item.id"
+          class="flaggable item mb-5"
+        >
+          <h3 class="text-center item-label">
+            {{ courseSimple? item.simple : item.label }}
+            <i
+              v-if="checked"
+              class="fas"
+              :class="{
+                'fa-check text-success': eval[i],
+                'fa-times text-danger': !eval[i]
+              }"
             >
-            <laya-flag-icon
-                v-if="!previewData"
-                :refData="item"
-                :interactive="true"
-                @flagged="item.flagged = true"
-            ></laya-flag-icon>
+            </i>
+          </h3>
+
+          <div class="d-flex justify-content-between">
+            <b
+              v-for="cat in categories"
+              :key="cat.text"
+            >
+              {{ courseSimple? cat.simple : cat.text }}
+            </b>
           </div>
+          <input
+            v-model.number="solution[i]"
+            type="range"
+            class="custom-range"
+            min="0"
+            :max="categories.length-1"
+            :disabled="checked"
+            :aria-valuenow="solution[i]"
+            :aria-valuetext="categories[solution[i]]"
+            :aria-label="i18n['layaLaDragDrop.label.slider']"
+          >
+          <laya-flag-icon
+            v-if="!previewData"
+            :ref-data="item"
+            :interactive="true"
+            @flagged="item.flagged = true"
+          ></laya-flag-icon>
         </div>
       </div>
-      <div class="row">
-        <button
-          type="button"
-          class="btn btn-link mt-3"
-          :class="langIsAr? 'float-right': 'float-left'"
-          :disabled="checked"
-          @click="check"
-        >
-          {{ i18n['check'] }}
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary mt-3"
-          :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-          @click="done"
-        >
-          {{ i18n['nextContent'] }}
-          <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
-        </button>
-      </div>
+    </div>
+    <div class="row">
+      <button
+        type="button"
+        class="btn btn-link mt-3"
+        :class="langIsAr? 'float-right': 'float-left'"
+        :disabled="checked"
+        @click="check"
+      >
+        {{ i18n['check'] }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary mt-3"
+        :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
+        @click="done"
+      >
+        {{ i18n['nextContent'] }}
+        <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
+      </button>
+    </div>
     <div v-if="showSolutionsBool">
       {{ i18n["layaLaScmc.showCorrect"] }}
       <div
@@ -124,25 +131,38 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale, watchContent } from '@/mixins'
+import { locale, viewPluginProps, watchContent } from '@/mixins'
 import '@/styles/flaggables.css'
 
 export default {
-  name: 'laya-quiz-drag-drop',
+  name: 'LayaQuizDragDrop',
 
   mixins: [
     locale,
+    viewPluginProps,
     watchContent
   ],
 
-  created () {
-    this.mapSolutions()
-    if (!this.previewData) this.fetchData()
-  },
-
-  props: {
-    onFinish: Array,
-    previewData: Object
+  data () {
+    if (this.previewData) { // show preview
+      return {
+        ...this.previewData,
+        checked: false,
+        solution: [], // users solution as index
+        eval: []
+      }
+    }
+    return {
+      checked: false,
+      solution: [], // users solution as index
+      eval: [], // list of booleans
+      title: {},
+      task: {},
+      taskAudio: '',
+      items: [],
+      categories: [],
+      showSolutionsBool: false
+    }
   },
 
   computed: {
@@ -157,32 +177,16 @@ export default {
      *  Last Updated: October 31, 2021
      * @returns {boolean} true if strings are set
      */
-    taskAudioExists() {
-      return this.courseSimple?
-        this.taskAudio.regular !== '':
-        this.taskAudio.regular !== '' && this.taskAudio.simple !== ''
+    taskAudioExists () {
+      return this.courseSimple
+        ? this.taskAudio.regular !== ''
+        : this.taskAudio.regular !== '' && this.taskAudio.simple !== ''
     }
   },
 
-  data () {
-    if (this.previewData) //for showing preview
-      return {
-        ...this.previewData,
-        checked: false,
-        solution: [], // users solution as index
-        eval: []
-      }
-    return {
-      checked: false,
-      solution: [], // users solution as index
-      eval: [], // list of booleans
-      title: {},
-      task: {},
-      taskAudio: '',
-      items: [],
-      categories: [],
-      showSolutionsBool: false
-    }
+  created () {
+    this.mapSolutions()
+    if (!this.previewData) this.fetchData()
   },
 
   methods: {
@@ -193,7 +197,7 @@ export default {
      *
      * Last Updated: unknown
      */
-    done() {
+    done () {
       this.onFinish[0]()
     },
 
@@ -204,16 +208,16 @@ export default {
      *
      * Last Updated: unknown
      */
-    check() {
+    check () {
       if (this.eval.length === 0) {
-        for(let i=0; i<this.solution.length; i++) {
-          let solution = this.solution[i]
+        for (let i = 0; i < this.solution.length; i++) {
+          const solution = this.solution[i]
           this.eval[i] = (solution === this.items[i].category)
         }
       }
       this.checked = !this.checked
       this.showSolutionsBool = true
-      //this.$forceUpdate()
+      // this.$forceUpdate()
     },
 
     /**
@@ -223,9 +227,9 @@ export default {
      *
      * Last Updated: unknown
      */
-    mapSolutions() {
-      const mid = Math.floor((this.categories.length)/2)
-      let s = this.items.map(() => mid)
+    mapSolutions () {
+      const mid = Math.floor((this.categories.length) / 2)
+      const s = this.items.map(() => mid)
       this.solution = [...s]
     },
 
@@ -236,8 +240,8 @@ export default {
      *
      * Last Updated: March 12, 2021
      */
-    fetchData() {
-      let idx = this.$route.params.step - 1
+    fetchData () {
+      const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.title = preData.title
       this.task = preData.task

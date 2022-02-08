@@ -8,22 +8,22 @@
 
 export default {
   methods: {
-    /** 
+    /**
      * Function markAllAsRead: set allRead commit in store
      * Author: cmc
      * Last Updated: May 28, 2021
     */
-    markAllAsRead() {
+    markAllAsRead () {
       this.$store.commit('allRead')
     },
 
     /**
-     * Function getNewNotifications: get messages newer than 
+     * Function getNewNotifications: get messages newer than
      *  newest in store
      * Author: cmc
      * Last Updated: June 26, 2021
      */
-    getNewNotifications() {
+    getNewNotifications () {
       this.$store.dispatch('getNewMessages')
     }
   }

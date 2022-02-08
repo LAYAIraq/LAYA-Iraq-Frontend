@@ -1,5 +1,5 @@
 <!--
-Filename: edit.vue 
+Filename: edit.vue
 Use: Edit WYSIWYG content block
 Creator: core
 Date: unknown
@@ -26,8 +26,8 @@ Dependencies:
           <div class="col-8">
             <input
               id="laya-wysiwyg-title"
-              type="text"
               v-model="title.text"
+              type="text"
               class="form-control"
               :placeholder="i18n['titlePlaceholder']"
             >
@@ -41,15 +41,15 @@ Dependencies:
               {{ i18n['showTitle'] }}
               <input
                 id="show-title-tick"
-                type="checkbox"
                 v-model="title.show"
+                type="checkbox"
               >
             </label>
           </div>
         </div>
         <div
-          class="row"
           v-if="courseSimple"
+          class="row"
         >
           <!-- simple title -->
           <label
@@ -63,8 +63,8 @@ Dependencies:
           <div class="col-8">
             <input
               id="laya-wysiwyg-title-simple"
-              type="text"
               v-model="title.simple"
+              type="text"
               class="form-control"
               :placeholder="i18n['simpleAlt']"
             >
@@ -80,7 +80,6 @@ Dependencies:
       <div :id="editorId"></div>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -90,53 +89,53 @@ import Quill from 'quill'
 import { locale } from '@/mixins'
 
 export default {
-  name: 'laya-wysiwyg-edit',
+  name: 'LayaWysiwygEdit',
 
   mixins: [
     locale
   ],
 
-  computed: {
-    ...mapGetters(['content', 'courseSimple']),
-
-    /**
-     * editorId: return ID for html element
-     * 
-     * Author: core
-     * 
-     * Last Updated: unknown
-     */
-    editorId() {
-      return `laya-wysiwyg-${Date.now()}`
-    }
-  },
-
-  data() {
+  data () {
     return {
       contents: null,
       title: { }
     }
   },
 
-  created() {
+  computed: {
+    ...mapGetters(['content', 'courseSimple']),
+
+    /**
+     * editorId: return ID for html element
+     *
+     * Author: core
+     *
+     * Last Updated: unknown
+     */
+    editorId () {
+      return `laya-wysiwyg-${Date.now()}`
+    }
+  },
+
+  created () {
     this.fetchData()
   },
-  
-  mounted() {
+
+  mounted () {
     this.initQuill()
   },
-  
+
   methods: {
 
     /**
      * Function fetchData: fetch data from vuex and make data property
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 20, 2021
      */
-    fetchData() {
-      let idx = this.$route.params.step -1
+    fetchData () {
+      const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.contents = preData.contents
       this.title = preData.title
@@ -144,12 +143,12 @@ export default {
 
     /**
      * Function initQuill: initialize wysiwyg editor
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: March 20, 2021
      */
-    initQuill() {
+    initQuill () {
       const self = this
       const quill = new Quill(`#${self.editorId}`, {
         theme: 'snow',
@@ -158,18 +157,17 @@ export default {
           toolbar: [
             ['bold', 'italic', 'underline'],
             ['blockquote', 'link', 'image'],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-            [{ 'size': ['small', false, 'large', 'huge'] }],
-            [{ 'color': [] }, { 'background': [] }],
-            [{ 'align': [] }],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ size: ['small', false, 'large', 'huge'] }],
+            [{ color: [] }, { background: [] }],
+            [{ align: [] }],
             ['clean']
           ]
         }
       })
       quill.on('text-change', (delta, oldDelta, source) => {
-        if (source === 'user')
-          self.contents = quill.getContents()
-          self.$forceUpdate()
+        if (source === 'user') { self.contents = quill.getContents() }
+        self.$forceUpdate()
       })
       quill.setContents(self.contents)
     }
@@ -195,7 +193,7 @@ export default {
   margin-right: 2px;
 }
 .laya-wysiwyg-edit .ql-formats button:last-child {
-  margin-right: 0px;
+  margin-right: 0;
 }
 .ql-container.ql-snow {
  min-height: 200px;

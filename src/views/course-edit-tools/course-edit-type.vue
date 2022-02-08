@@ -1,5 +1,5 @@
 <!--
-Filename: course-edit-type.vue 
+Filename: course-edit-type.vue
 Use: edit type of current content block
 Author: cmc
 Date: October 27, 2020
@@ -9,18 +9,25 @@ Dependencies:
 -->
 
 <template>
-
   <!-- change content type -->
-  <div class="row mb-2" v-if="contentToDisplay">
+  <div
+    v-if="contentToDisplay"
+    class="row mb-2"
+  >
     <div class="col">
-      <b-button variant="warning" block
+      <b-button
+        variant="warning"
+        block
         @click="$bvModal.show('author-changeContentType-confirm')"
-        >
+      >
         <i class="fas fa-edit"></i> {{ i18n['type.changeType'] }}
       </b-button>
     </div>
 
-    <div class="col text-dark" v-html="i18n['type.changeTypeTip']">
+    <div
+      class="col text-dark"
+      v-html="i18n['type.changeTypeTip']"
+    >
     </div>
 
     <b-modal
@@ -30,14 +37,15 @@ Dependencies:
       ok-variant="warning"
       :ok-title="i18n['type.modal.ok']"
       :cancel-title="i18n['cancel']"
-      @ok="changeContentType"
       centered
+      @ok="changeContentType"
     >
       <p>
         {{ i18n['type.modal.text'] }}
         <b-form-select
           v-model="changetype"
-          :options="plugins">
+          :options="plugins"
+        >
         </b-form-select>
       </p>
     </b-modal>
@@ -46,71 +54,67 @@ Dependencies:
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-import { locale } from '@/mixins'
+import { locale, routeProps } from '@/mixins'
 
 export default {
-  name: 'course-edit-type',
+  name: 'CourseEditType',
 
   mixins: [
-    locale 
+    locale,
+    routeProps
   ],
 
-  props: {
-    name: String,
-    step: String
-  },
-
-  data() {
+  data () {
     return {
-      changetype: null,
+      changetype: null
     }
   },
-  
+
   computed: {
     ...mapGetters(['profileLang', 'content']),
     ...mapState(['edit']),
 
     /**
      * contentToDisplay: return current content block
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: October 27, 2020
      */
-    contentToDisplay() {
-      return this.content[this.step-1]
+    contentToDisplay () {
+      return this.content[this.step - 1]
     },
 
     /**
-     * plugins: make localized names of laya plugins available 
+     * plugins: make localized names of laya plugins available
      *  as computed property
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: October 27, 2020
      */
-    plugins() {
+    plugins () {
       const la = this.$laya.la
       const lb = this.$laya.lb
-      let lalb = [ 
-        { 
-          value: null, 
-          text: this.i18n['type.changeTypeText'], 
+      const lalb = [
+        {
+          value: null,
+          text: this.i18n['type.changeTypeText'],
           disabled: true
         }
       ]
-      
+
       // add lb elements by name and id
-      for(const id in lb) {
+      for (const id in lb) {
         lalb.push({
-          value: id, 
+          value: id,
           text: this.i18n[lb[id].name + '.name']
         })
       }
       // add la elements by name and id
-      for(const id in la) {
+      for (const id in la) {
         lalb.push({
-          value: id, 
+          value: id,
           text: this.i18n[la[id].name + '.name']
         })
       }
@@ -123,24 +127,24 @@ export default {
     /**
      * Function changeContentType: change content type, remove all
      *  input for old type
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: October 27, 2020
      */
-    changeContentType() {
-      if(!this.changetype) return
-      
-      let step = this.step-1
+    changeContentType () {
+      if (!this.changetype) return
+
+      const step = this.step - 1
       const updatedStep = {
         name: this.changetype,
         input: null,
         nextStep: null
       }
       // console.log(`Change type of step ${step} to ${updatedStep.name}`)
-      this.$store.commit('updateStep', { 
-        step, 
-        updatedStep 
+      this.$store.commit('updateStep', {
+        step,
+        updatedStep
       })
       this.$emit('changedType')
     }

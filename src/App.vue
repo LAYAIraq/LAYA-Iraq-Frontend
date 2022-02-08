@@ -30,11 +30,15 @@ import '@/styles/color-correction.css'
 import { publicRoutes } from '@/router'
 
 export default {
-  name: 'app',
+  name: 'App',
 
   components: {
     lyHeader,
     lyFooter
+  },
+
+  beforeRouteUpdate () {
+    this.relocateUnauthorized()
   },
 
   computed: {
@@ -45,25 +49,21 @@ export default {
   },
 
   watch: {
-    $route(){
+    $route () {
       this.relocateUnauthorized()
     }
   },
 
-  created() {
+  created () {
     this.restoreAuth()
-    this.relocateUnauthorized()
-  },
-
-  beforeRouteUpdate() {
     this.relocateUnauthorized()
   },
 
   methods: {
 
-    getClasses() {
-      return this.getReadingDir() + ` laya-font-${this.fontOptions.chosen}`
-        + ` font-size-${this.fontOptions.size}`
+    getClasses () {
+      return this.getReadingDir() + ` laya-font-${this.fontOptions.chosen}` +
+        ` font-size-${this.fontOptions.size}`
     },
     /**
      * Function getReadingDir: set dir prop depending on locale
@@ -74,7 +74,7 @@ export default {
      * Last Updated: June 3, 2021
      * @returns {string} class name for reading direction
      */
-    getReadingDir() {
+    getReadingDir () {
       if (this.profileLang === 'ar' || this.profileLang === 'ku') {
         return 'right-to-left'
       }
@@ -89,20 +89,14 @@ export default {
      *
      * Last Updated: unknown
      */
-    relocateUnauthorized() {
+    relocateUnauthorized () {
       /* pass access if auth true */
       if (this.$ls.get('auth', false)) return
 
-      const publicURLs = [
-        '#/',
-        '#/login',
-        '#/register',
-        '#/imprint',
-        '#/privacy'
-      ]
+
 
       /* target url is public */
-      if (publicURLs.includes(location.hash)) {
+      if (publicRoutes.includes(location.hash)) {
         return
       } else if (this.$route.path !== '/login') {
         this.$router.push('/login')
@@ -123,7 +117,7 @@ export default {
      *
      * Last Updated: unknown
      */
-    restoreAuth() {
+    restoreAuth () {
       let auth = this.$ls.get('auth', false)
       if (!auth) return
       console.log('Auth restored')

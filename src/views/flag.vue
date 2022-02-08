@@ -21,25 +21,29 @@
 import { locale, storeHandler } from '@/mixins'
 import { mapGetters } from 'vuex'
 export default {
-  name: 'flag-view',
+  name: 'FlagView',
+
   components: {
     FlagQuestion: () => import('@/views/flag-views/flag-question'),
     FlagAnswer: () => import('@/views/flag-views/flag-answer')
   },
+
   mixins: [
     locale,
     storeHandler
   ],
-  computed: {
-    ...mapGetters(['course', 'courseId', 'courseFlags']),
-  },
-  data() {
+
+  data () {
     return {
-      flag: null,
+      flag: null
     }
   },
-  watch: {
 
+  computed: {
+    ...mapGetters(['course', 'courseId', 'courseFlags'])
+  },
+
+  watch: {
     /**
      * watcher courseFlags: deep watcher to update currentFlag
      *
@@ -49,15 +53,15 @@ export default {
      */
     courseFlags: {
       deep: true,
-      handler() {
+      handler () {
         // this.$store.dispatch('updateFlags')
         this.flag = this.$store.getters.singleFlag(this.$attrs.id)
       }
     }
   },
 
-  created() {
-    if(!this.courseId) this.fetchCourse()
+  created () {
+    if (!this.courseId) this.fetchCourse()
     this.flag = this.$store.getters.singleFlag(this.$attrs.id)
   }
 }

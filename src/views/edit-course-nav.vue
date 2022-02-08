@@ -11,20 +11,20 @@ Dependencies:
 
 <template>
   <div class="edit-course-nav-view">
-
     <!-- guide -->
     <div class="container guide">
       <div class="row title">
         <div class="col">
-
           <h4>{{ i18n['courseNavEdit.title'] }}</h4>
-          <p v-html="i18n['courseNavEdit.text.p1']">
+          <p>
+            {{ i18n['courseNavEdit.text.p1'] }}
           </p>
-          <p v-html="i18n['courseNavEdit.text.p2']">
+          <p>
+            {{ i18n['courseNavEdit.text.p2'] }}
           </p>
-          <p v-html="i18n['courseNavEdit.text.p3']">
+          <p>
+            {{ i18n['courseNavEdit.text.p3'] }}
           </p>
-
         </div>
       </div>
     </div>
@@ -32,7 +32,6 @@ Dependencies:
     <!-- table -->
     <div class="container table">
       <div class="row">
-
         <div class="col-2">
           <b>{{ i18n['courseNavEdit.table.contentNo'] }}</b>
         </div>
@@ -52,15 +51,13 @@ Dependencies:
         <div class="col-2">
           <b>{{ i18n['courseNavEdit.table.swap'] }}</b>
         </div>
-
       </div>
 
       <div
-        class="row"
         v-for="(step,i) in courseContent"
         :key="'step-'+i"
+        class="row"
       >
-
         <div class="col-2">
           <b>{{ i+1 }}</b>
         </div>
@@ -75,11 +72,12 @@ Dependencies:
 
         <div class="col-3">
           <input
+            v-model="step.nextStep"
             class="form-control"
             :class="{'is-invalid': !step.nextStep}"
             type="text"
-            v-model="step.nextStep"
-            :placeholder="i18n['courseNavEdit.table.placeholder']">
+            :placeholder="i18n['courseNavEdit.table.placeholder']"
+          >
         </div>
 
         <div class="col-2">
@@ -88,7 +86,8 @@ Dependencies:
             v-if="i > 0"
             type="button"
             class="btn btn-primary btn-sm"
-            @click="swapUp(i)">
+            @click="swapUp(i)"
+          >
             <i class="fas fa-level-up-alt"></i>
           </button>
           <!-- swap down -->
@@ -96,22 +95,22 @@ Dependencies:
             v-if="i < courseContent.length-1"
             type="button"
             class="btn btn-primary btn-sm float-right"
-            @click="swapDown(i)">
+            @click="swapDown(i)"
+          >
             <i class="fas fa-level-down-alt"></i>
           </button>
         </div>
-
       </div>
 
       <div class="row">
-
         <!-- graph preview -->
         <div class="col">
           <button
             type="button"
             class="btn btn-secondary"
             :disabled="formInvalid"
-            @click="renderNavGraph">
+            @click="renderNavGraph"
+          >
             <i class="fas fa-project-diagram"></i>
             {{ i18n['courseNavEdit.table.renewGraph'] }}
           </button>
@@ -123,7 +122,8 @@ Dependencies:
             type="button"
             class="btn btn-primary"
             :disabled="formInvalid"
-            @click="save">
+            @click="save"
+          >
             <span v-if="formInvalid">
               <i class="fas fa-exclamation-triangle"></i>
               {{ i18n['courseNavEdit.table.missingInfo'] }}
@@ -134,9 +134,7 @@ Dependencies:
             </span>
           </button>
         </div>
-
       </div>
-
     </div>
 
     <!-- graph -->
@@ -147,12 +145,13 @@ Dependencies:
           <span class="text-muted">
             {{ i18n['courseNavEdit.graphTip'] }}
           </span>
-          <div :id="navGraphId" class="nav-graph"></div>
+          <div
+            :id="navGraphId"
+            class="nav-graph"
+          ></div>
         </div>
       </div>
     </div>
-
-
   </div>
 </template>
 
@@ -163,17 +162,22 @@ import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 
 export default {
-  name: 'edit-course-nav-view',
+  name: 'EditCourseNavView',
 
   mixins: [
     locale
   ],
 
-  props: {
-    onnavupdate: Function
-  },
+  // props: {
+  //   onnavupdate: {
+  //     type: Function,
+  //     default () {
+  //       return () => []
+  //     }
+  //   }
+  // },
 
-  data() {
+  data () {
     return {
       graph: null,
       courseContent: []
@@ -190,26 +194,25 @@ export default {
      *
      * Last Updated: January 20, 2021
      */
-    formInvalid() {
+    formInvalid () {
       return this.courseContent.reduce((res, val) => !val.nextStep || res, false)
     },
 
     /**
      * navGraphId: returns 'nav-graph' as identifier for html element
      */
-    navGraphId() {
+    navGraphId () {
       return 'nav-graph'
     }
   },
 
-  created() {
-    //create deep copy of store object to manipulate in vue instance
+  created () {
+    // create deep copy of store object to manipulate in vue instance
     this.courseContent = JSON.parse(JSON.stringify(this.content))
   },
 
-  mounted() {
-    if(!this.formInvalid)
-      this.renderNavGraph()
+  mounted () {
+    if (!this.formInvalid) { this.renderNavGraph() }
   },
 
   methods: {
@@ -223,9 +226,9 @@ export default {
      *
      * @param {number} i index of element to swap up
      */
-    swapUp(i) {
-      [this.courseContent[i-1], this.courseContent[i]] =
-        [this.courseContent[i], this.courseContent[i-1]]
+    swapUp (i) {
+      [this.courseContent[i - 1], this.courseContent[i]] =
+        [this.courseContent[i], this.courseContent[i - 1]]
       this.$forceUpdate()
     },
 
@@ -238,9 +241,9 @@ export default {
      *
      * @param {number} i index of element to swap down
      */
-    swapDown(i) {
-      [this.courseContent[i], this.courseContent[i+1]] =
-        [this.courseContent[i+1], this.courseContent[i]]
+    swapDown (i) {
+      [this.courseContent[i], this.courseContent[i + 1]] =
+        [this.courseContent[i + 1], this.courseContent[i]]
       this.$forceUpdate()
     },
 
@@ -253,9 +256,9 @@ export default {
      *
      * @param {string} compName name of content block
      */
-    typeName(compName) {
-      let comps = { ...this.$laya.la, ...this.$laya.lb }
-      for(let comp in comps) {
+    typeName (compName) {
+      const comps = { ...this.$laya.la, ...this.$laya.lb }
+      for (const comp in comps) {
         if (comps[comp].id === compName) {
           return this.i18n[comps[comp].name + '.name']
         }
@@ -263,8 +266,8 @@ export default {
       return 'FAIL'
     },
 
-    renderTitle(step) {
-      return step.input.title? step.input.title.text : 'No title set'
+    renderTitle (step) {
+      return step.input.title ? step.input.title.text : 'No title set'
     },
 
     /**
@@ -272,20 +275,20 @@ export default {
      * Author: core
      * Last Updated: August 3, 2021
      */
-    renderNavGraph() {
+    renderNavGraph () {
       const self = this
 
-      let _nodes = self.courseContent.map(
-        (c,i) => ({id: i+1, label: `${i+1}. ${self.typeName(c.name)}`})
+      const _nodes = self.courseContent.map(
+        (c, i) => ({ id: i + 1, label: `${i + 1}. ${self.typeName(c.name)}` })
       )
 
-      let _edges = []
-      for(let i=0; i<self.courseContent.length; ++i) {
-        let c = self.courseContent[i]
-        if(!c.nextStep) continue
-        let steps = c.nextStep.split(',').map(s => parseInt(s))
-        for(let s=0; s<steps.length; ++s) {
-          _edges.push({from: i+1, to: steps[s]})
+      const _edges = []
+      for (let i = 0; i < self.courseContent.length; ++i) {
+        const c = self.courseContent[i]
+        if (!c.nextStep) continue
+        const steps = c.nextStep.split(',').map(s => parseInt(s))
+        for (let s = 0; s < steps.length; ++s) {
+          _edges.push({ from: i + 1, to: steps[s] })
         }
       }
 
@@ -308,8 +311,8 @@ export default {
         },
         interaction: {
           dragNodes: true,
-          selectable: true,
-        },
+          selectable: true
+        }
         /*
         layout: {
           hierarchical: {
@@ -327,7 +330,7 @@ export default {
      * Author: core
      * Last Updated: January 20, 2021
      */
-    save() {
+    save () {
       this.$store.commit('updateCourseNav', this.courseContent)
       this.$store.dispatch('storeCourse')
       this.$emit('saved')

@@ -8,24 +8,33 @@ Dependencies: @/mixins/locale.vue
 
 <template>
   <div class="laya-dialog">
-<!--    <div-->
-<!--      class="row"-->
-<!--      :id="title.id"-->
-<!--      v-if="title.show"-->
-<!--    >-->
-<!--      {{ title.text }}-->
-<!--    </div>-->
-    <img v-if="bg" class="bg" :src="bg" alt="">
-    <div v-else class="bg-fallback"></div>
+    <!--    <div-->
+    <!--      class="row"-->
+    <!--      :id="title.id"-->
+    <!--      v-if="title.show"-->
+    <!--    >-->
+    <!--      {{ title.text }}-->
+    <!--    </div>-->
+    <img
+      v-if="bg"
+      class="bg"
+      :src="bg"
+      alt=""
+    >
+    <div
+      v-else
+      class="bg-fallback"
+    ></div>
     <div class="dialog-text">
       <div
         v-if="question"
-        class="flaggable question"
         :id="question.id"
+        class="flaggable question"
       >
         {{ courseSimple? question.simple: question.text }}
-        <laya-flag-icon v-if="!previewData"
-          :refData="question"
+        <laya-flag-icon
+          v-if="!previewData"
+          :ref-data="question"
           @flagged="question.flagged = true"
         ></laya-flag-icon>
       </div>
@@ -38,12 +47,13 @@ Dependencies: @/mixins/locale.vue
           <button
             type="button"
             class="btn btn-info btn-lg"
-            @click="onFinish[i]()">
+            @click="onFinish[i]()"
+          >
             {{ courseSimple? answer.simple : answer.text }}
           </button>
           <laya-flag-icon
             v-if="!previewData"
-            :refData="answer"
+            :ref-data="answer"
             :interactive="true"
             @flagged="answer.flagged = true"
           ></laya-flag-icon>
@@ -51,22 +61,35 @@ Dependencies: @/mixins/locale.vue
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
 
-import { locale, watchContent } from '@/mixins'
+import { locale, viewPluginProps, watchContent } from '@/mixins'
 import { mapGetters } from 'vuex'
 import '@/styles/flaggables.css'
 
 export default {
-  name: 'laya-dialog',
+  name: 'LayaDialog',
 
   mixins: [
     locale,
+    viewPluginProps,
     watchContent
   ],
+
+  data () {
+    if (this.previewData) { // for 'preview' feature
+      return { ...this.previewData }
+    }
+    return {
+      question: '',
+      answers: [],
+      bg: '',
+      title: '',
+      unwatch: null
+    }
+  },
 
   computed: {
     ...mapGetters([
@@ -80,31 +103,13 @@ export default {
      * Author: cmc
      * Last Updated: January 16, 2021
      */
-    idx() {
-      //comply with array indexing in store
-      return this.$route.params.step -1
+    idx () {
+      // comply with array indexing in store
+      return this.$route.params.step - 1
     }
   },
 
-  props: {
-    onFinish: Array,
-    previewData: Object
-  },
-
-  data() {
-    if (this.previewData) { // for 'preview' feature
-      return {...this.previewData}
-    }
-    return {
-      question: '',
-      answers: [],
-      bg: '',
-      title: '',
-      unwatch: null
-    }
-  },
-
-  created() {
+  created () {
     if (!this.previewData) this.fetchData()
   },
 
@@ -117,10 +122,10 @@ export default {
      *
      * Last Updated: July 7, 2021
      */
-    checkFlags() {
-      const flaggables = [ this.title, this.question ]
+    checkFlags () {
+      const flaggables = [this.title, this.question]
       // console.log(flaggables)
-      for (let elem of flaggables) {
+      for (const elem of flaggables) {
         for (const flag of this.courseFlags) {
           // console.log('checking ' + elem.id)
           if (flag.referenceId === elem.id) {
@@ -139,10 +144,10 @@ export default {
      *
      * Last Updated: January 16, 2021
      */
-    fetchData() {
+    fetchData () {
       // dereference store data
-      let preData = JSON.parse(JSON.stringify(this.content[this.idx].input))
-      //replace data stubs with stored data
+      const preData = JSON.parse(JSON.stringify(this.content[this.idx].input))
+      // replace data stubs with stored data
       this.question = preData.question
       this.answers = preData.answers
       this.bg = preData.bg

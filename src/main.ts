@@ -1,3 +1,4 @@
+/* eslint-disable import/first */
 /**
  * Filename: main.ts
  * Use: packs all components of LAYA together
@@ -21,7 +22,7 @@ httpClient.defaults.baseURL = backendUrl
 import { BootstrapVue } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-Vue.use(BootstrapVue);
+Vue.use(BootstrapVue)
 // Vue.use(BootstrapVueIcons)
 
 /* Laya Interface */
@@ -43,5 +44,5 @@ Vue.config.productionTip = process.env.NODE_ENV === 'development'
 new Vue({
   store,
   router,
-  render: (h) => h(App),
+  render: (h) => h(App)
 }).$mount('#app')

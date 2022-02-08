@@ -8,7 +8,7 @@
  *  @/misc/roles
  */
 
-import http from 'axios';
+import http from 'axios'
 // import roles from '../../misc/roles';
 
 export default {
@@ -70,7 +70,7 @@ export default {
       msg: {
         noteId: string,
         read: boolean
-      } ) {
+      }) {
       // console.log('new message: ', msg)
       let present = false
       // check if message exists already
@@ -162,8 +162,8 @@ export default {
      * Last Updated: January 27, 2022
      * @param param0 state property
      */
-     getAdditionalMessages (
-       { commit, state, rootState }: {
+    getAdditionalMessages (
+      { commit, state, rootState }: {
          commit: Function,
          state: {
            messagesLoaded: number
@@ -176,7 +176,7 @@ export default {
        }) {
       if (state.messagesLoaded < 10) {
         return new Promise((resolve, reject) => {
-          reject ('No more messages')
+          reject(new Error('No more messages'))
         })
       }
       return new Promise((resolve, reject) => {
@@ -192,17 +192,17 @@ export default {
             }
           }
         })
-        .then(resp => {
-          let no = 0
-          resp.data.forEach((elem: object) => {
-            commit ('appendMsg', elem)
-            no++
+          .then(resp => {
+            let no = 0
+            resp.data.forEach((elem: object) => {
+              commit('appendMsg', elem)
+              no++
+            })
+            commit('updateLoaded', state.messagesLoaded + no)
+            commit('sortMessages')
+            resolve(resp)
           })
-          commit ('updateLoaded', state.messagesLoaded + no)
-          commit ('sortMessages')
-          resolve (resp)
-        })
-        .catch(err => reject(err))
+          .catch(err => reject(err))
       })
     },
 
@@ -214,8 +214,8 @@ export default {
      * Last Updated: January 27, 2022
      * @param param0 state property
      */
-     getAllMessages (
-       { commit, rootState }: {
+    getAllMessages (
+      { commit, rootState }: {
          commit: Function,
          rootState: {
            auth: {
@@ -233,14 +233,14 @@ export default {
           }
         }
       })
-      .then(resp => {
-        resp.data.forEach((elem: object) => {
-          commit ('appendMsg', elem)
+        .then(resp => {
+          resp.data.forEach((elem: object) => {
+            commit('appendMsg', elem)
+          })
+          commit('updateLoaded', resp.data.length)
+          commit('sortMessages')
         })
-        commit ('updateLoaded', resp.data.length)
-        commit ('sortMessages')
-      })
-      .catch(err => console.error(err))
+        .catch(err => console.error(err))
     },
 
     /**
@@ -263,7 +263,7 @@ export default {
           }
         }
       }) {
-      if (state.messages.length == 0) {
+      if (state.messages.length === 0) {
         http.get('notifications', {
           params: {
             filter: {
@@ -275,16 +275,16 @@ export default {
             }
           }
         })
-        .then(resp => {
-          let no = 0
+          .then(resp => {
+            let no = 0
 
-          resp.data.forEach((elem: object) => {
-            commit ('appendMsg', elem)
-            no++
+            resp.data.forEach((elem: object) => {
+              commit('appendMsg', elem)
+              no++
+            })
+            commit('updateLoaded', no)
           })
-          commit ('updateLoaded', no)
-        })
-        .catch(err => console.error(err))
+          .catch(err => console.error(err))
       }
     },
 
@@ -298,7 +298,7 @@ export default {
      * @param param0 state variables
      */
     getNewMessages (
-      {commit, state, rootState}: {
+      { commit, state, rootState }: {
         commit: Function,
         state: {
           messages: Array<any>
@@ -310,29 +310,28 @@ export default {
         }
       }) {
       if (!state.messages) {
-        commit ('getInitialMessages')
-      }
-      else {
+        commit('getInitialMessages')
+      } else {
         http.get('notifications', {
-        params: {
-          filter: {
-            where: {
-              userId: rootState.auth.userId,
-              time: { gt: state.messages[0].time }
+          params: {
+            filter: {
+              where: {
+                userId: rootState.auth.userId,
+                time: { gt: state.messages[0].time }
+              }
             }
           }
-        }
-      })
-      .then( resp => {
-        let no = 0
-        resp.data.forEach((elem: object) => {
-          commit ('appendMsg', elem)
-          no++
         })
-        commit ('updateLoaded', no)
-      })
-      .catch(err => console.error(err))
-      commit ('sortMessages')
+          .then(resp => {
+            let no = 0
+            resp.data.forEach((elem: object) => {
+              commit('appendMsg', elem)
+              no++
+            })
+            commit('updateLoaded', no)
+          })
+          .catch(err => console.error(err))
+        commit('sortMessages')
       }
     },
 
