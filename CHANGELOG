@@ -1,36 +1,4 @@
 # Changes
 
-## v1.7.1
-- Added verification view, 404 page
-- Set Backend URL with environment variables for production
-
-## v1.7.0
-- Added Admin Panel
-
-## v1.6.0
-- Added Kurdish Localization
-
-## v1.5.2
-- Started Screenreader compatibility
-
-## v1.5.1
-- Added properties setting in course edit toolbox
-- Added Icons to display courses' content
-- Introduced warning if course doesn't comply with user's preferences
-
-## v1.5.0
-Added Option to change text font and size
-
-## v1.4.1
-- Moved Flag to own view
-- Small Improvements to Flag Features
-
-## v1.4.0
-- Added Flag Feature
-- Added Password Strength Suggestions
-- Added Notifications for Flags
-
-## v1.2.2
-
-- Added Arabic Localization
-- Some fixes for display in rtl (right-to-left) locale
+## v1.0.0-release
+- Released first production version of LAYA Iraq.
