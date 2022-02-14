@@ -104,7 +104,7 @@ Dependencies: @/mixins/locale.vue
         <span
           class="col-2 col-form-labelsr-only"
         >
-            {{ i18n['simpleAlt'] }}
+          {{ i18n['simpleAlt'] }}
         </span>
         <div class="col-10">
           <textarea
@@ -197,8 +197,8 @@ Dependencies: @/mixins/locale.vue
           class="row"
         >
           <label
-            class="col-form-label col-2"
             :for="'cat-simple-'+i"
+            class="col-form-label col-2"
           >
             <span class="sr-only">
               {{ i18n['simpleAlt'] }}
@@ -295,8 +295,8 @@ Dependencies: @/mixins/locale.vue
         >
           <!-- simple item -->
           <label
-            class="col-form-label col-2"
             :for="'item-simple-'+i"
+            class="col-form-label col-2"
           >
             <span class="sr-only">
               {{ i18n['simpleAlt'] }}
@@ -447,7 +447,7 @@ export default {
      * Last Updated: unknown
      *
      */
-    _addCategory() {
+    _addCategory () {
       this.categories.push({})
     }
   }

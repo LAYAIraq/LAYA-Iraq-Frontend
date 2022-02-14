@@ -106,7 +106,7 @@ Dependencies:
         <span
           class="col-2 col-form-labelsr-only"
         >
-            {{ i18n['simpleAlt'] }}
+          {{ i18n['simpleAlt'] }}
         </span>
         <div class="col-10">
           <textarea
@@ -196,8 +196,8 @@ Dependencies:
 
         <!-- simple alt -->
         <div
-          class="row"
           v-if="courseSimple"
+          class="row"
         >
           <label
             class="col-form-label col-2"
@@ -294,8 +294,8 @@ Dependencies:
         </div>
 
         <div
-          class="row"
           v-if="courseSimple"
+          class="row"
         >
           <!-- simple item -->
           <label
@@ -318,9 +318,10 @@ Dependencies:
       </div>
       <div class="form-group row">
         <div class="col-10 offset-2">
-          <button type="button"
-                  class="btn btn-primary btn-sm"
-                  @click="_addItem(i18n['layaLaScmc.edit.sampleOption'])"
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            @click="_addItem(i18n['layaLaScmc.edit.sampleOption'])"
           >
             <i class="fas fa-plus"></i>
             {{ i18n['itemAdd'] }}
