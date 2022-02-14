@@ -81,13 +81,11 @@ Dependencies: @/mixins/locale.vue
 
       <!-- task -->
       <div class="form-group row">
-        <!--suppress XmlInvalidId -->
-        <label
-          for="drag-drop-task"
+        <span
           class="col-2 col-form-label"
         >
           {{ i18n['task'] }}
-        </label>
+        </span>
         <div class="col-10">
           <textarea
             id="drag-drop-task"
@@ -103,15 +101,11 @@ Dependencies: @/mixins/locale.vue
         v-if="courseSimple"
         class="form-group row"
       >
-        <!--suppress XmlInvalidId -->
-        <label
-          for="drag-drop-task-simple"
-          class="col-2 col-form-label"
+        <span
+          class="col-2 col-form-labelsr-only"
         >
-          <span class="sr-only">
             {{ i18n['simpleAlt'] }}
-          </span>
-        </label>
+        </span>
         <div class="col-10">
           <textarea
             id="drag-drop-task-simple"
@@ -453,8 +447,8 @@ export default {
      * Last Updated: unknown
      *
      */
-    _addCategory () {
-      this.categories.push('')
+    _addCategory() {
+      this.categories.push({})
     }
   }
 }

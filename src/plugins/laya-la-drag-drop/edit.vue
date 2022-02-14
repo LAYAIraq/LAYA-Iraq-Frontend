@@ -10,13 +10,13 @@ Dependencies:
 
 <template>
   <div
-    class="laya-la-drag-drop-edit"
+    class="laya-la-drag-drop-new"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div class="d-flex">
-      <h3 class="d-inline-block mr-auto">
+      <h4 class="d-inline-block mr-auto">
         {{ i18n['layaLaDragDrop.name'] }}
-      </h3>
+      </h4>
       <i
         id="questionmark"
         v-b-tooltip.left
@@ -83,12 +83,11 @@ Dependencies:
 
       <!-- task -->
       <div class="form-group row">
-        <label
-          for="drag-drop-task"
+        <span
           class="col-2 col-form-label"
         >
           {{ i18n['task'] }}
-        </label>
+        </span>
         <div class="col-10">
           <textarea
             id="drag-drop-task"
@@ -104,14 +103,11 @@ Dependencies:
         v-if="courseSimple"
         class="form-group row"
       >
-        <label
-          for="drag-drop-task-simple"
-          class="col-2 col-form-label"
+        <span
+          class="col-2 col-form-labelsr-only"
         >
-          <span class="sr-only">
             {{ i18n['simpleAlt'] }}
-          </span>
-        </label>
+        </span>
         <div class="col-10">
           <textarea
             id="drag-drop-task-simple"
@@ -199,7 +195,10 @@ Dependencies:
         </div>
 
         <!-- simple alt -->
-        <div class="row">
+        <div
+          class="row"
+          v-if="courseSimple"
+        >
           <label
             class="col-form-label col-2"
             :for="'cat-simple-'+i"
@@ -294,7 +293,10 @@ Dependencies:
           </div>
         </div>
 
-        <div class="row">
+        <div
+          class="row"
+          v-if="courseSimple"
+        >
           <!-- simple item -->
           <label
             class="col-form-label col-2"
@@ -316,10 +318,9 @@ Dependencies:
       </div>
       <div class="form-group row">
         <div class="col-10 offset-2">
-          <button
-            type="button"
-            class="btn btn-primary btn-sm"
-            @click="_addItem(i18n['layaLaScmc.edit.sampleOption'])"
+          <button type="button"
+                  class="btn btn-primary btn-sm"
+                  @click="_addItem(i18n['layaLaScmc.edit.sampleOption'])"
           >
             <i class="fas fa-plus"></i>
             {{ i18n['itemAdd'] }}
