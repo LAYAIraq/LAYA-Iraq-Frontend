@@ -1,5 +1,5 @@
 <!--
-Filename: create.vue 
+Filename: create.vue
 Use: Create new Plyr content block
 Creator: cmc
 Date: January 17, 2021
@@ -7,55 +7,58 @@ Dependencies: @/mixins/locale.vue
 -->
 
 <template>
-
   <div
     :class="langIsAr? 'text-right' : 'text-left'"
   >
-
     <form>
       <div class="form-group row">
-       <h4 class="d-inline-block mr-auto">
-         {{ i18n['layaPlyr.name'] }}
-       </h4>
-        <i 
-          id="questionmark" 
-          class="fas fa-question-circle" 
-          @click="toggleTip" 
-          :title="i18n['showTip']" 
+        <h4 class="d-inline-block mr-auto">
+          {{ i18n['layaPlyr.name'] }}
+        </h4>
+        <i
+          id="questionmark"
           v-b-tooltip.left
+          class="fas fa-question-circle"
+          :title="i18n['showTip']"
+          @click="toggleTip"
         ></i>
       </div>
 
-        <b-jumbotron 
-            v-if="tooltipOn"
-            :header="i18n['layaPlyr.name']" 
-            :lead="i18n['tipHeadline']">
-          <hr class="my-4">
-          <p v-html="i18n['layaPlyr.tooltip']"></p>
-
-        </b-jumbotron>
+      <b-jumbotron
+        v-if="tooltipOn"
+        :header="i18n['layaPlyr.name']"
+        :lead="i18n['tipHeadline']"
+      >
+        <hr class="my-4">
+        <p>
+          {{ i18n['layaPlyr.tooltip'] }}
+        </p>
+      </b-jumbotron>
 
       <hr>
 
       <div class="form-group">
         <div class="row">
           <!-- title -->
-            <label
-              for="laya-plyr-title"
-              class="col col-form-label"
-            >
-              {{ i18n['title'] }}
-            </label>
+          <label
+            for="laya-plyr-title"
+            class="col col-form-label"
+          >
+            {{ i18n['title'] }}
+          </label>
           <div class="form-group col-8">
             <input
               id="laya-plyr-title"
-              type="text"
               v-model="title.text"
+              type="text"
               class="form-control"
               :placeholder="i18n['titlePlaceholder']"
             >
           </div>
-          <div class="form-group col" id="show-title-button">
+          <div
+            id="show-title-button"
+            class="form-group col"
+          >
             <label
               for="show-title-tick"
               class="col col-form-label"
@@ -63,31 +66,30 @@ Dependencies: @/mixins/locale.vue
               {{ i18n['showTitle'] }}
               <input
                 id="show-title-tick"
-                type="checkbox"
                 v-model="title.show"
+                type="checkbox"
               >
             </label>
           </div>
-
-          </div>
+        </div>
         <div
-          class="row"
           v-if="courseSimple"
+          class="row"
         >
           <!-- simple title -->
           <label
             for="laya-plyr-title-simple"
             class="col-2 col-form-label"
           >
-              <span class="sr-only">
-                {{ i18n['simpleAlt'] }}
-              </span>
+            <span class="sr-only">
+              {{ i18n['simpleAlt'] }}
+            </span>
           </label>
           <div class="form-group col-8">
             <input
               id="laya-plyr-title-simple"
-              type="text"
               v-model="title.simple"
+              type="text"
               class="form-control"
               :placeholder="i18n['simpleAlt']"
             >
@@ -106,14 +108,14 @@ Dependencies: @/mixins/locale.vue
         <div class="col">
           <input
             id="vid-id"
-            type="text"
             v-model="src"
+            type="text"
             class="form-control"
             :placeholder="i18n['layaPlyr.placeholder']"
             @blur="checkURL"
           >
         </div>
-       </div>
+      </div>
 
       <!-- video props -->
       <div class="form-group row">
@@ -127,11 +129,11 @@ Dependencies: @/mixins/locale.vue
         <div class="col-2 form-check form-check-inline align-text-top">
           <input
             id="platform-vimeo"
+            v-model="youtube"
             class="form-check-input"
             type="radio"
             name="platform"
             :value="false"
-            v-model="youtube"
             disabled
           >
           <label
@@ -144,11 +146,11 @@ Dependencies: @/mixins/locale.vue
         <div class="col-2 form-check form-check-inline align-text-top">
           <input
             id="platform-yt"
+            v-model="youtube"
             class="form-check-input"
             type="radio"
             name="platform"
             :value="true"
-            v-model="youtube"
             disabled
           >
           <label
@@ -162,14 +164,9 @@ Dependencies: @/mixins/locale.vue
         <div class="col form-check form-check-inline align-text-top">
           <span class="text-danger form-control-plaintext text-right"> {{ urlMsg }}</span>
         </div>
-
-
       </div>
-
     </form>
-      
   </div>
-
 </template>
 
 <script>
@@ -177,39 +174,14 @@ import { locale, tooltipIcon } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 
 export default {
-  name: 'laya-plyr-new',
+  name: 'LayaPlyrNew',
 
   mixins: [
     locale,
     tooltipIcon
   ],
 
-  computed: {
-
-    /**
-     * urlMsg: return warning if URL is not supported
-     * 
-     * Author: cmc
-     * 
-     * Last Updated: January 17, 2021
-     */
-    urlMsg () {
-      return this.correctURL? '' : this.i18n['layaPlyr.wrongURL']
-    },
-
-    /**
-     * correctURL: checks if video is on yt or vimeo
-     * 
-     * Author: cmc
-     * 
-     * Last Updated: January 17, 2021
-     */
-    correctURL() {
-      return (this.src.includes('youtube') || this.src.includes('vimeo') )
-    }
-  },
-
-  data() {
+  data () {
     return {
       src: '',
       youtube: false,
@@ -225,26 +197,51 @@ export default {
       }
     }
   },
-  
+
+  computed: {
+
+    /**
+     * urlMsg: return warning if URL is not supported
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 17, 2021
+     */
+    urlMsg () {
+      return this.correctURL ? '' : this.i18n['layaPlyr.wrongURL']
+    },
+
+    /**
+     * correctURL: checks if video is on yt or vimeo
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 17, 2021
+     */
+    correctURL () {
+      return (this.src.includes('youtube') || this.src.includes('vimeo'))
+    }
+  },
+
+  created () {
+    this.title.id = uuidv4()
+    this.videoFlag.id = uuidv4()
+  },
+
   methods: {
 
     /**
      * function checkURL: check if video is from youtube or vimeo
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: January 17, 2021
      */
-    checkURL() {
-      (this.correctURL && this.src.includes('youtube')) ?
-          this.youtube = true :
-          this.youtube = false
+    checkURL () {
+      (this.correctURL && this.src.includes('youtube'))
+        ? this.youtube = true
+        : this.youtube = false
     }
-  },
-
-  created() {
-    this.title.id = uuidv4()
-    this.videoFlag.id = uuidv4()
   }
 }
 </script>

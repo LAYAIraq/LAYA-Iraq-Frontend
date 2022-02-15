@@ -1,14 +1,14 @@
 <template>
   <div
     class="ly-notifications"
-    :class="langIsAr? 'text-right': 'text-left'">
-
+    :class="langIsAr? 'text-right': 'text-left'"
+  >
     <div class="container mt-5 mb-5">
       <div class="row">
         <div class="col">
-        <h1 class="text-center">
-          {{ i18n['notifications'] }}
-        </h1>
+          <h1 class="text-center">
+            {{ i18n['notifications'] }}
+          </h1>
         </div>
         <div class="col-3">
           <button
@@ -22,11 +22,11 @@
           </button>
         </div>
       </div>
-        <!-- <a @click="randomNotifications">MAKE RANDOM NOTIFICATIONS</a> -->
+      <!-- <a @click="randomNotifications">MAKE RANDOM NOTIFICATIONS</a> -->
     </div>
     <div
-      class="container"
       id="message-list"
+      class="container"
     >
       <div class="row font-weight-bold mb-2">
         <div class="col">
@@ -38,16 +38,16 @@
           {{ i18n['timestamp'] }}
         </div>
         <div class="col-sm-3 text-nowrap">
-            <button
-              type="button"
-              class="btn btn-info ml-1"
-              :class="langIsAr? 'float-left' : 'float-right'"
-              :disabled="!unreadMessages"
-              @click="markAllAsRead"
-            >
-              <i class="fas fa-eye"></i>
-              {{ i18n['markAllAsRead'] }}
-            </button>
+          <button
+            type="button"
+            class="btn btn-info ml-1"
+            :class="langIsAr? 'float-left' : 'float-right'"
+            :disabled="!unreadMessages"
+            @click="markAllAsRead"
+          >
+            <i class="fas fa-eye"></i>
+            {{ i18n['markAllAsRead'] }}
+          </button>
         </div>
       </div>
       <ul
@@ -55,10 +55,10 @@
         class="list-group"
       >
         <li
-          class="list-group-item"
           v-for="(note ,i) in messages"
-          :key="i"
           :id="note.noteId"
+          :key="i"
+          class="list-group-item"
           :class="{
             'highlighted': $route.query.id === note.noteId,
             'noHighlight': showhighLight
@@ -67,35 +67,37 @@
             showhighLight = !showhighLight:
             false"
         >
-          <div class="message-toggle" >
+          <div class="message-toggle">
             <div class="row">
-              <div class="col"
+              <div
+                class="col"
                 :class="{
                   'font-italic': note.read,
                   'font-weight-bold': !note.read
                 }"
               >
-                <i :class="{
-                  'fas fa-envelope-open': note.read,
-                  'fas fa-envelope': !note.read
-                }"></i>
+                <i
+                  :class="{
+                    'fas fa-envelope-open': note.read,
+                    'fas fa-envelope': !note.read
+                  }"
+                ></i>
                 {{ i18n[`notifications.${note.type}.title`] }}
               </div>
               <div class="col-sm-3">
                 <span
+                  v-b-tooltip.top
                   class="time-note"
                   :title="noteTime(note.time)"
-                  v-b-tooltip.top
                 >
                   {{ timeSince(note.time) }}
                 </span>
-
               </div>
               <div class="col-sm-2">
                 <b-button
+                  v-b-toggle="`collapse-${i}`"
                   variant="dark"
                   :class="langIsAr? 'float-left' : 'float-right'"
-                  v-b-toggle="`collapse-${i}`"
                 >
                   <small>
                     {{ i18n['message.read'] }}
@@ -103,12 +105,13 @@
                     <i class="when-closed fas fa-chevron-left"></i>
                   </small>
                 </b-button>
-
-
               </div>
             </div>
             <div class="row">
-              <b-collapse :id="`collapse-${i}`" class="w-100">
+              <b-collapse
+                :id="`collapse-${i}`"
+                class="w-100"
+              >
                 <button
                   :id="`collapse-${i}-btn`"
                   class="d-none"
@@ -119,8 +122,8 @@
                     {{ replaceStr(note) }}
                   </span>
                   <span
-                    class="note-cta"
                     v-if="!loading"
+                    class="note-cta"
                   >
                     <router-link
                       :to="linkToCourse(note)"
@@ -131,7 +134,6 @@
                   <span v-else><i class="fas fa-spinner fa-spin"></i></span>
                 </b-card>
               </b-collapse>
-
             </div>
           </div>
         </li>
@@ -146,16 +148,14 @@
         <b-button
           variant="warning"
           class="m-auto"
-          @click="loadMoreNotifications"
           :disabled="!moreMessages"
+          @click="loadMoreNotifications"
         >
           <i :class="loading? 'fas fa-spinner fa-spin' : 'fas fa-plus'"></i>
           {{ i18n['notifications.loadMore'] }}
         </b-button>
       </div>
     </div>
-
-
   </div>
 </template>
 
@@ -163,10 +163,10 @@
 import http from 'axios'
 import { mapGetters, mapState } from 'vuex'
 import { storeHandler, locale, time } from '@/mixins'
-import randomNotifications from '@/misc/fillnotifications.js'
+// import randomNotifications from '@/misc/fillnotifications.js'
 
 export default {
-  name: 'laya-notifications',
+  name: 'LayaNotifications',
 
   mixins: [
     storeHandler,
@@ -174,7 +174,7 @@ export default {
     time
   ],
 
-  data() {
+  data () {
     return {
       loading: false,
       msgList: [],
@@ -191,12 +191,12 @@ export default {
      * Author: cmc
      * Last Updated: June 10, 2021
      */
-    moreMessages() {
+    moreMessages () {
       return (this.messages.length !== 0 && !this.messages.length % 10 === 0)
     }
   },
 
-  created() {
+  created () {
     this.$store.dispatch('getInitialMessages')
     if (Object.prototype.hasOwnProperty.call(this.$route.query, 'id')) {
       this.highlightId = this.$route.query.id
@@ -210,7 +210,7 @@ export default {
     // })
   },
 
-  mounted() {
+  mounted () {
     // watch collapse items to trigger markAsRead()
     this.$root.$on('bv::collapse::state', (collapseId, isJustShown) => {
       if (isJustShown) {
@@ -224,16 +224,15 @@ export default {
     //     this.loading = false
     //   }, 5000)
     // this.highlightMessage()
-    if(!this.valueCache) console.log('error loading valueCache')
+    if (!this.valueCache) console.log('error loading valueCache')
   },
 
-  beforeDestroy() {
+  beforeDestroy () {
     this.$store.dispatch('updateReadProp')
   },
 
   methods: {
-    ...randomNotifications,
-
+    // ...randomNotifications,
     /**
      * Function cacheValues: get all referencing data for
      *  notifications, set loading to false if done
@@ -242,21 +241,21 @@ export default {
      *
      * Last Updated: June 26, 2021
      */
-    cacheValues() {
+    cacheValues () {
       this.loading = true
-      let queries = []
+      const queries = []
       this.messages.forEach(elem => {
         queries.push(
-        this.getReference(elem.data.courseId)
-          .then(r => {
+          this.getReference(elem.data.courseId)
+            .then(r => {
             // console.log(r)
-            if(!this.valueCache[elem.data.courseId]) {
-              this.valueCache[elem.data.courseId] = r
-            }
-          })
+              if (!this.valueCache[elem.data.courseId]) {
+                this.valueCache[elem.data.courseId] = r
+              }
+            })
         )
       })
-      http.all(queries).finally(() => this.loading = false)
+      http.all(queries).finally(() => { this.loading = false })
     },
 
     /**
@@ -267,13 +266,13 @@ export default {
      * Last Updated: September 2, 2021
      * @param {object} note notification for which it's used
      */
-    linkToCourse(note) {
+    linkToCourse (note) {
       // console.log("Rytna show href for: ", note)
       // return '/#'
       // // const courseName = await this.getReference(note.data.courseId)
       // // return(`/courses/${courseName}/1`)
       // TODO: for flag related notification, create link to flag
-      switch(note.type) {
+      switch (note.type) {
         // case 'authorNewFlag' || 'studentFlagNewAnswer': {
         //   if (this.valueCache[note.data.courseId]) {
         //     // console.log(note.data.courseId)
@@ -287,9 +286,9 @@ export default {
         default: {
           if (this.valueCache[note.data.courseId]) {
             // console.log(note.data.courseId)
-            let val = this.valueCache[note.data.courseId]
+            const val = this.valueCache[note.data.courseId]
             // console.log(`href is ${val}`)
-            return(`/courses/${val}/1`)
+            return (`/courses/${val}/1`)
           } else {
             return '/#'
           }
@@ -303,18 +302,18 @@ export default {
      *
      * Last Updated: September 20, 2021
      */
-    async getReference(id) {
+    async getReference (id) {
       // console.log('we wanna get ref for: ', note)
       // switch(note.type) {
       //   case 'authorNewSub': {
       return new Promise((resolve, reject) => {
         http.get(`courses/getCourseName?courseId=${id}`)
-            .then(resp => {
-              resolve(resp.data.courseName)
-            })
-            .catch(err => {
-              reject(err)
-            })
+          .then(resp => {
+            resolve(resp.data.courseName)
+          })
+          .catch(err => {
+            reject(err)
+          })
       })
     // if(this.valueCache['authorNewSub'][note.data.courseId]) {
     //  return
@@ -347,7 +346,7 @@ export default {
      *
      * Last Updated: May 30, 2021
      */
-    highlightMessage() {
+    highlightMessage () {
       if (Object.prototype.hasOwnProperty.call(this.$route.query, 'id')) {
         const [el] = this.$refs.highlight
         el.scrollIntoView()
@@ -361,13 +360,13 @@ export default {
      *
      * Last Updated: September 21, 2021
      */
-    loadMoreNotifications() {
+    loadMoreNotifications () {
       this.loading = true
       this.$store.dispatch('getAdditionalMessages')
         .catch(err => {
           console.error(err)
         })
-        .finally(() => this.loading = false)
+        .finally(() => { this.loading = false })
     },
 
     /**
@@ -378,7 +377,7 @@ export default {
      * Last Updated: May 27, 2021
      * @param {string} msg message to mark as read
      */
-    markAsRead(msg) {
+    markAsRead (msg) {
       this.$store.commit('readNotification', msg.noteId)
     },
 
@@ -388,7 +387,7 @@ export default {
      * Last Updated: May 30, 2021
      * @param time timestamp
      */
-    noteTime(time) {
+    noteTime (time) {
       return `${this.locDate(time)}, ${this.locTime(time)}`
     },
 
@@ -401,8 +400,8 @@ export default {
      * Last Updated: September 2, 2021
      * @param {object} note notification object
      */
-    replaceStr(note) {
-      //TODO: be generic in order to use if for all notification types
+    replaceStr (note) {
+      // TODO: be generic in order to use if for all notification types
       // console.log(note)
       switch (note.type) { // replace placeholders for different notifications, only CID as of now
         default: {

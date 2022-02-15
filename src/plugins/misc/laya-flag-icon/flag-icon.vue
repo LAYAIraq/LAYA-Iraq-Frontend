@@ -1,26 +1,25 @@
 <template>
   <div
     class="laya-flag-icon"
-    :class="{
-      'flagged': refData.flagged,
-      'unflagged': !refData.flagged,
-      'interactive': interactive
-    }"
+    :class="interactive ? 'interactive' : ''"
   >
     <div class="flag-interface">
-      <router-link
-        :to="{ name: 'flag-view', params: { id: refData.id } }"
-        class="flag-link"
+      <div
+        v-b-tooltip.bottom
+        class="flag-icon"
+        :class="refData.flagged ? 'flagged' : 'unflagged'"
+        :title="refData.flagged
+          ? i18n['flag.seeDiscussion']
+          : i18n['flag.title']"
+        tabindex="0"
       >
-        <div
-          class="flag-icon expanded"
-          :title="refData.flagged? i18n['flag.seeDiscussion'] : i18n['flag.title']"
-          v-b-tooltip.bottom
-          tabindex="0"
+        <router-link
+          :to="{ name: 'flag-view', params: { id: refData.id } }"
+          class="flag-link"
         >
           <i class="fas fa-flag"></i>
-        </div>
-      </router-link>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -34,13 +33,19 @@ export default {
   name: 'LayaFlagIcon',
 
   mixins: [
-    locale,
+    locale
     // time
   ],
 
   props: {
-    refData: Object,
-    interactive: Boolean
+    refData: {
+      type: Object,
+      default () { return null }
+    },
+    interactive: {
+      type: Boolean,
+      default () { return false }
+    }
   }
 }
 </script>
@@ -58,23 +63,36 @@ export default {
     z-index: 0;
     /*max-height: 100px;*/
   }
-  .laya-flag-icon.interactive {
+
+  .interactive {
     z-index: -1;
   }
 
-  .laya-flag-icon.unflagged:hover {
+  .laya-flag-icon:hover {
     background-color: rgba(108, 117, 125, 0.25);
     border-radius: 5px;
     width: 100%;
     height: 100%;
   }
+
+  .laya-flag-icon:hover .flag-icon {
+    margin-left: calc(100% - 25px);
+    display: block !important;
+  }
+
   .flag-interface {
     width: 100%;
     height: 100%;
+    position: relative;
+  }
+
+  .flag-link {
+    text-decoration: none;
   }
 
   .flag-icon {
     cursor: pointer;
+    position: relative;
     height: 60px;
     width: 60px;
     border-radius: 30px;
@@ -87,19 +105,7 @@ export default {
     outline-offset: 5px;
   }
 
-  .unflagged:hover>.flag-interface>*>.flag-icon {
-    margin-left: calc(100% - 25px);
-    /*margin-top: auto;*/
-    border: 1px solid tomato;
-    background-color: tomato;
-    display: block !important;
-    vertical-align: middle; /* doesn't do anything */
-  }
-
-  .unflagged>.flag-interface>.flag-link>.flag-icon {
-   display: none;
- }
-  .flagged>.flag-interface>*>.flag-icon {
+  .flagged {
     height: 60px;
     width: 60px;
     border-radius: 30px;
@@ -109,13 +115,20 @@ export default {
     display: block;
   }
 
-  .flagged>.flag-interface>*>.flag-icon:hover,
-  .flagged>.flag-interface>*> .flag-icon:focus {
+  .flagged:hover,
+  .flagged:focus {
     /*border: 1px solid fuchsia;*/
     background: #b900b9 ;
   }
 
-  .flag-icon>i {
+  .unflagged {
+    display: none;
+    border: 1px solid tomato;
+    background-color: tomato;
+  }
+
+  i {
+    display: block;
     color: whitesmoke;
     font-size: 2rem;
     padding: 12px;

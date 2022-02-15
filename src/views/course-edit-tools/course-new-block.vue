@@ -1,18 +1,16 @@
 <!--
-Filename: course-new-block.vue 
+Filename: course-new-block.vue
 Use: Create a new content block
 Author: cmc
 Date: October 27, 2020
-Dependencies: 
+Dependencies:
   vuex,
   @/mixins/locale.vue
 -->
 
 <template>
   <div class="row mb-2">
-
     <div class="col">
-
       <b-dropdown
         v-if="!langIsAr"
         id="new-content-dd"
@@ -22,7 +20,7 @@ Dependencies:
         dropright
       >
         <template slot="button-content">
-          <i class="fas fa-plus"></i> 
+          <i class="fas fa-plus"></i>
           {{ i18n['newBlock.newContent'] }}
         </template>
 
@@ -30,21 +28,21 @@ Dependencies:
           {{ i18n['newBlock.newContentBlock'] }}
         </b-dropdown-header>
 
-        <b-dropdown-item 
+        <b-dropdown-item
           v-for="block in $laya.lb"
           :key="block.id"
           :to="'/courses/'+name+'/'+nextId+'/new/'+block.id"
         >
           <div class="dropitem">
-            <i 
-              :class="block.icon"
-              id="icon"
-            ></i>
-            {{ getName(block) }} 
             <i
-              id="questionmark" 
-              class="far fa-question-circle" 
-              v-b-tooltip.right 
+              id="icon-drop"
+              :class="block.icon"
+            ></i>
+            {{ getName(block) }}
+            <i
+              id="questionmark-block"
+              v-b-tooltip.right
+              class="far fa-question-circle"
               :title="getCaption(block)"
             ></i>
           </div>
@@ -56,7 +54,7 @@ Dependencies:
           {{ i18n['newBlock.newContentAssmnt'] }}
         </b-dropdown-header>
 
-        <b-dropdown-item 
+        <b-dropdown-item
           v-for="ass in applicableAssessments"
           :key="ass.id"
           :to="'/courses/'+name+'/'+nextId+'/new/'+ass.id"
@@ -64,15 +62,14 @@ Dependencies:
           <div class="dropitem">
             <i :class="ass.icon"></i>
             {{ getName(ass) }}
-        
-            <i 
-              class="far fa-question-circle" 
-              v-b-tooltip.right 
+
+            <i
+              v-b-tooltip.right
+              class="far fa-question-circle"
               :title="getCaption(ass)"
             >
             </i>
           </div>
-              
         </b-dropdown-item>
       </b-dropdown>
 
@@ -86,7 +83,7 @@ Dependencies:
         dropleft
       >
         <template slot="button-content">
-          <i class="fas fa-plus"></i> 
+          <i class="fas fa-plus"></i>
           {{ i18n['newBlock.newContent'] }}
         </template>
 
@@ -94,21 +91,21 @@ Dependencies:
           {{ i18n['newBlock.newContentBlock'] }}
         </b-dropdown-header>
 
-        <b-dropdown-item 
+        <b-dropdown-item
           v-for="block in $laya.lb"
           :key="block.id"
           :to="'/courses/'+name+'/'+nextId+'/new/'+block.id"
         >
           <div class="dropitem text-right">
-            <i 
-              :class="block.icon"
-              id="icon"
-            ></i>
-            {{ getName(block) }} 
             <i
-              id="questionmark" 
-              class="far fa-question-circle" 
-              v-b-tooltip.right 
+              id="icon"
+              :class="block.icon"
+            ></i>
+            {{ getName(block) }}
+            <i
+              id="questionmark"
+              v-b-tooltip.right
+              class="far fa-question-circle"
               :title="getCaption(block)"
             ></i>
           </div>
@@ -120,7 +117,7 @@ Dependencies:
           {{ i18n['newBlock.newContentAssmnt'] }}
         </b-dropdown-header>
 
-        <b-dropdown-item 
+        <b-dropdown-item
           v-for="ass in $laya.la"
           :key="ass.id"
           :to="'/courses/'+name+'/'+nextId+'/new/'+ass.id"
@@ -128,15 +125,14 @@ Dependencies:
           <div class="dropitem text-right">
             <i :class="ass.icon"></i>
             {{ getName(ass) }}
-        
-            <i 
-              class="far fa-question-circle" 
-              v-b-tooltip.right 
+
+            <i
+              v-b-tooltip.right
+              class="far fa-question-circle"
               :title="getCaption(ass)"
             >
             </i>
           </div>
-              
         </b-dropdown-item>
       </b-dropdown>
     </div>
@@ -150,13 +146,14 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale } from '@/mixins'
+import { locale, routeProps } from '@/mixins'
 
 export default {
-  name: 'course-new-block',
+  name: 'CourseNewBlock',
 
   mixins: [
-    locale 
+    locale,
+    routeProps
   ],
 
   computed: {
@@ -170,8 +167,8 @@ export default {
      *
      *  Last Updated: September 21, 2021
      */
-    applicableAssessments() {
-      if(this.course.properties.enrollment){
+    applicableAssessments () {
+      if (this.course.properties.enrollment) {
         return this.$laya.la
       } else {
         // eslint-disable-next-line
@@ -182,46 +179,41 @@ export default {
 
     /**
      * nextId: return step # for next content
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: October 27, 2020
      */
-    nextId() {
-      return this.content.length+1
+    nextId () {
+      return this.content.length + 1
     }
-  },
-
-   props: {  
-    name: String,
-    step: String
   },
 
   methods: {
 
     /**
      * function getCaption: get caption property of $laya block
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: May 6, 2021
-     * 
+     *
      * @param {obj} layaBlock $laya block object
      */
-    getCaption(layaBlock) {
+    getCaption (layaBlock) {
       return this.i18n[layaBlock.name + '.caption']
     },
 
     /**
      * function getName: get name property of $laya block
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: May 6, 2021
-     * 
+     *
      * @param {obj} layaBlock $laya block object
      */
-    getName(layaBlock) {
+    getName (layaBlock) {
       return this.i18n[layaBlock.name + '.name']
     }
   }
@@ -242,5 +234,5 @@ export default {
 .far {
   float: end;
 }
-    
+
 </style>

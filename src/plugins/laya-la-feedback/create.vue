@@ -11,7 +11,6 @@ Dependencies: @/mixins/locale.vue
     class="laya-la-feedback-edit"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
-
     <label>
       <h4>
         {{ i18n['layaLaFeedback.name'] }}
@@ -19,23 +18,24 @@ Dependencies: @/mixins/locale.vue
     </label>
     <i
       id="questionmark"
-      class="fas fa-question-circle"
-      @click="toggleTip"
-      :title="i18n['showTip']"
       v-b-tooltip.left
+      class="fas fa-question-circle"
+      :title="i18n['showTip']"
+      @click="toggleTip"
     ></i>
     <b-jumbotron
       v-if="tooltipOn"
       :header="i18n['layaLaFeedback.name']"
-      :lead="i18n['tipHeadline']">
-        <hr class="my-4">
-        <span v-html="i18n['layaLaFeedback.tooltip']"></span>
-
+      :lead="i18n['tipHeadline']"
+    >
+      <hr class="my-4">
+      <span>
+        {{ i18n['layaLaFeedback.tooltip'] }}
+      </span>
     </b-jumbotron>
     <hr>
 
     <form>
-
       <!-- title -->
       <div class="form-group row">
         <label
@@ -45,23 +45,29 @@ Dependencies: @/mixins/locale.vue
           {{ i18n['title'] }}
         </label>
         <div class="col-10">
-          <input id="feedback-title"
-                 type="text"
-                 v-model="title"
-                 class="form-control">
+          <input
+            id="feedback-title"
+            v-model="title"
+            type="text"
+            class="form-control"
+          >
         </div>
       </div>
 
-
       <!-- task -->
       <div class="form-group row">
-        <label for="feedback-task" class="col-2 col-form-label">
+        <label
+          for="feedback-task"
+          class="col-2 col-form-label"
+        >
           {{ i18n['layaLaFeedback.edit.desc'] }}
         </label>
         <div class="col-10">
-          <textarea id="feedback-task"
+          <textarea
+            id="feedback-task"
             v-model="task"
-            class="w-100">
+            class="w-100"
+          >
           </textarea>
         </div>
       </div>
@@ -88,77 +94,92 @@ Dependencies: @/mixins/locale.vue
         </b>
       </p>
       <div
-        class="form-group row"
         v-for="(cat, i) in categories"
         :key="'cat-'+i"
+        class="form-group row"
       >
-
         <!-- text -->
         <label
           class="col-form-label col-2"
-          :for="'cat-text-'+i">
+          :for="'cat-text-'+i"
+        >
           {{ i18n['text'] }}
         </label>
         <div class="col-7">
           <input
             :id="'cat-text-'+i"
+            v-model="categories[i]"
             class="form-control"
             type="text"
-            v-model="categories[i]">
+          >
         </div>
 
         <!-- delete -->
         <div class="col-auto align-self-center">
-          <button type="button"
-                  class="btn btn-danger btn-sm"
-                  @click="_delCategory(i)">
+          <button
+            type="button"
+            class="btn btn-danger btn-sm"
+            @click="_delCategory(i)"
+          >
             <i class="fas fa-times"></i>
           </button>
         </div>
       </div>
       <div class="form-group row">
         <div class="col-10 offset-2">
-          <button type="button"
-                  class="btn btn-primary btn-sm"
-                  @click="_addCategory">
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            @click="_addCategory"
+          >
             <i class="fas fa-plus"></i>{{ i18n['layaLaFeedback.edit.addAnswer'] }}
           </button>
         </div>
       </div>
 
       <p><b>{{ i18n['layaLaFeedback.edit.questions'] }}</b></p>
-      <div class="form-group row" v-for="(item, i) in items" :key="'item-'+i">
-
+      <div
+        v-for="(item, i) in items"
+        :key="'item-'+i"
+        class="form-group row"
+      >
         <!-- text -->
-        <label class="col-form-label col-2" :for="'item-text-'+i">{{ i18n['text'] }}</label>
+        <label
+          class="col-form-label col-2"
+          :for="item"
+        >{{ i18n['text'] }}</label>
         <div class="col-5">
-          <input :id="item"
+          <input
+            :id="item"
+            v-model="items[i]"
             class="form-control"
             type="text"
-            v-model="items[i]">
+          >
         </div>
 
         <!-- delete -->
         <div class="col-auto align-self-center">
-          <button type="button"
-                  class="btn btn-danger btn-sm"
-                  @click="_delItem(i)">
+          <button
+            type="button"
+            class="btn btn-danger btn-sm"
+            @click="_delItem(i)"
+          >
             <i class="fas fa-times"></i>
           </button>
         </div>
       </div>
       <div class="form-group row">
         <div class="col-10 offset-2">
-          <button type="button"
-                  class="btn btn-primary btn-sm"
-                  @click="_addItem">
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            @click="_addItem"
+          >
             <i class="fas fa-plus"></i>{{ i18n['layaLaFeedback.edit.addQuestion'] }}
           </button>
         </div>
       </div>
-
     </form>
-
   </div>
 </template>
 
@@ -167,33 +188,36 @@ import { mapGetters } from 'vuex'
 import { locale, tooltipIcon } from '@/mixins'
 
 export default {
-  name: 'laya-la-feedback-new',
+  name: 'LayaLaFeedbackNew',
 
   mixins: [
     locale,
     tooltipIcon
   ],
 
-  created () {
-    this.fetchData()
-  },
-
   data () {
-    if(Object.entries(this.$attrs).length > 0)
-      return {...this.$attrs,
-        tooltipOn: false}
+    if (Object.entries(this.$attrs).length > 0) {
+      return {
+        ...this.$attrs,
+        tooltipOn: false
+      }
+    }
     return {
       title: '',
       task: '',
       taskAudio: '',
       items: [],
-      categories: [],
+      categories: []
 
     }
   },
 
   computed: {
-    ...mapGetters(['content']),
+    ...mapGetters(['content'])
+  },
+
+  created () {
+    this.fetchData()
   },
 
   methods: {
@@ -206,7 +230,7 @@ export default {
      *
      * @param {*} idx index at which to remove
      */
-    _delItem(idx) {
+    _delItem (idx) {
       this.items.splice(idx, 1)
     },
 
@@ -218,7 +242,7 @@ export default {
      * Last Updated: unknown
      *
      */
-    _addItem() {
+    _addItem () {
       this.items.push('')
     },
 
@@ -231,7 +255,7 @@ export default {
      *
      * @param {*} idx index at which to remove the category
      */
-    _delCategory(idx) {
+    _delCategory (idx) {
       this.categories.splice(idx, 1)
     },
 
@@ -243,7 +267,7 @@ export default {
      * Last Updated: unknown
      *
      */
-    _addCategory() {
+    _addCategory () {
       this.categories.push('')
     },
 
@@ -254,8 +278,8 @@ export default {
      *
      * Last Updated: August 15, 2021
      */
-      fetchData() {
-      if (this.title === '') { //prefetch Data at creation
+    fetchData () {
+      if (this.title === '') { // prefetch Data at creation
         this.title = this.i18n['layaLaFeedback.name']
         this.task = this.i18n['layaLaFeedback.prefetch.task']
         this.items = this.i18n['layaLaFeedback.prefetch.items'].split(',')
@@ -263,15 +287,14 @@ export default {
       }
     }
 
-
-   /* fetchData() {
+    /* fetchData() {
       let idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.title = preData.title
       this.task = preData.task
       this.items = preData.items
       this.categories = preData.categories
-    }*/
+    } */
   }
 }
 </script>
@@ -287,7 +310,7 @@ legend {
 }
 
 #questionmark {
-  float: inline-end;
+  float: end;
   cursor: pointer;
 }
 </style>

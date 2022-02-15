@@ -18,11 +18,11 @@ Dependencies:
         {{ i18n['layaLaDragDrop.name'] }}
       </h4>
       <i
-        id ="questionmark"
-        class="fas fa-question-circle"
-        @click="toggleTip"
-        :title="i18n['showTip']"
+        id="questionmark"
         v-b-tooltip.left
+        class="fas fa-question-circle"
+        :title="i18n['showTip']"
+        @click="toggleTip"
       ></i>
     </div>
 
@@ -32,12 +32,13 @@ Dependencies:
       :lead="i18n['tipHeadline']"
     >
       <hr class="my-4">
-      <span v-html="i18n['layaLaDragDrop.tooltip']"></span>
+      <span>
+        {{ i18n['layaLaDragDrop.tooltip'] }}
+      </span>
     </b-jumbotron>
     <hr>
 
     <form>
-
       <!-- title -->
       <div class="form-group row">
         <label
@@ -49,8 +50,8 @@ Dependencies:
         <div class="col-10">
           <input
             id="drag-drop-title"
-            type="text"
             v-model="title.text"
+            type="text"
             class="form-control"
             :placeholder="i18n['titlePlaceholder']"
           >
@@ -58,8 +59,8 @@ Dependencies:
       </div>
       <!-- simple language alt -->
       <div
-        class="form-group row"
         v-if="courseSimple"
+        class="form-group row"
       >
         <label
           for="drag-drop-title-simple"
@@ -72,14 +73,13 @@ Dependencies:
         <div class="col-10">
           <input
             id="drag-drop-title-simple"
-            type="text"
             v-model="title.simple"
+            type="text"
             class="form-control"
             :placeholder="i18n['simpleAlt']"
           >
         </div>
       </div>
-
 
       <!-- task -->
       <div class="form-group row">
@@ -100,13 +100,13 @@ Dependencies:
 
       <!-- task simple -->
       <div
-        class="form-group row"
         v-if="courseSimple"
+        class="form-group row"
       >
         <span
           class="col-2 col-form-labelsr-only"
         >
-            {{ i18n['simpleAlt'] }}
+          {{ i18n['simpleAlt'] }}
         </span>
         <div class="col-10">
           <textarea
@@ -127,18 +127,20 @@ Dependencies:
           {{ i18n['taskAudio'] }}
         </label>
         <div class="col-10">
-          <input id="drag-drop-task-audio"
-                 type="text"
-                 v-model="taskAudio.regular"
-                 class="form-control"
-                 :placeholder="i18n['taskAudioPlaceholder']">
+          <input
+            id="drag-drop-task-audio"
+            v-model="taskAudio.regular"
+            type="text"
+            class="form-control"
+            :placeholder="i18n['taskAudioPlaceholder']"
+          >
         </div>
       </div>
 
       <!-- task audio simple -->
       <div
-        class="form-group row"
         v-if="courseSimple"
+        class="form-group row"
       >
         <label
           for="drag-drop-task-audio-simple"
@@ -151,25 +153,32 @@ Dependencies:
         <div class="col-10">
           <input
             id="drag-drop-task-audio-simple"
-            type="text"
             v-model="taskAudio.simple"
+            type="text"
             class="form-control"
-            :placeholder="i18n['simpleAlt']">
+            :placeholder="i18n['simpleAlt']"
+          >
         </div>
       </div>
 
       <p><b>{{ i18n['layaLaDragDrop.cats'] }}</b></p>
-      <div class="form-group" v-for="(cat, i) in categories" :key="'cat-'+i">
-
+      <div
+        v-for="(cat, i) in categories"
+        :key="'cat-'+i"
+        class="form-group"
+      >
         <!-- text -->
         <div class="row">
-          <label class="col-form-label col-2" :for="'cat-text-'+i">{{ i18n['text'] }}</label>
+          <label
+            class="col-form-label col-2"
+            :for="'cat-text-'+i"
+          >{{ i18n['text'] }}</label>
           <div class="col-7">
             <input
               :id="'cat-text-'+i"
+              v-model="cat.text"
               class="form-control"
               type="text"
-              v-model="cat.text"
             >
           </div>
           <!-- delete -->
@@ -177,6 +186,7 @@ Dependencies:
             <button
               type="button"
               class="btn btn-danger btn-sm"
+              :aria-label="i18n['deleteField']"
               @click="_delCategory(i)"
             >
               <i class="fas fa-times"></i>
@@ -186,27 +196,26 @@ Dependencies:
 
         <!-- simple alt -->
         <div
-          class="row"
           v-if="courseSimple"
+          class="row"
         >
           <label
             class="col-form-label col-2"
             :for="'cat-simple-'+i"
           >
             <span class="sr-only">
-            {{ i18n['simpleAlt'] }}
-          </span>
+              {{ i18n['simpleAlt'] }}
+            </span>
           </label>
           <div class="col-7">
             <input
               :id="'cat-simple-'+i"
+              v-model="cat.simple"
               class="form-control"
               type="text"
-              v-model="cat.simple"
             >
           </div>
         </div>
-
       </div>
 
       <!-- add category -->
@@ -215,7 +224,8 @@ Dependencies:
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            @click="_addCategory">
+            @click="_addCategory"
+          >
             <i class="fas fa-plus"></i>
             {{ i18n['layaLaDragDrop.catAdd'] }}
           </button>
@@ -227,38 +237,43 @@ Dependencies:
         <b>{{ i18n['items'] }}</b>
       </p>
       <div
-        class="form-group"
-        v-for="(it, i) in items"
+        v-for="(item, i) in items"
         :key="'item-'+i"
+        class="form-group"
       >
         <div class="row">
           <!-- text -->
           <label
             class="col-form-label col-2"
-            :for="'item-text-'+i"
+            :for="`item-text-${item.id}`"
           >
             {{ i18n['text'] }}
           </label>
           <div class="col-5">
             <input
-              :id="'item-text-'+i"
+              :id="`item-text-${item.id}`"
+              v-model="item.label"
               class="form-control"
               type="text"
-              v-model="items[i].label"
             >
           </div>
 
           <!-- category -->
           <div class="col-3">
             <select
-              class="custom-select"
               v-model="items[i].category"
+              class="custom-select"
             >
-              <option disabled :value="-1">{{ i18n['cat'] }}</option>
+              <option
+                disabled
+                :value="-1"
+              >
+                {{ i18n['cat'] }}
+              </option>
               <option
                 v-for="(cat,j) in categories"
-                :value="j"
                 :key="cat.text"
+                :value="j"
               >
                 {{ cat.text }}
               </option>
@@ -270,6 +285,7 @@ Dependencies:
             <button
               type="button"
               class="btn btn-danger btn-sm"
+              :aria-label="i18n['deleteField']"
               @click="_delItem(i)"
             >
               <i class="fas fa-times"></i>
@@ -278,8 +294,8 @@ Dependencies:
         </div>
 
         <div
-          class="row"
           v-if="courseSimple"
+          class="row"
         >
           <!-- simple item -->
           <label
@@ -287,33 +303,32 @@ Dependencies:
             :for="'item-simple-'+i"
           >
             <span class="sr-only">
-            {{ i18n['simpleAlt'] }}
-          </span>
+              {{ i18n['simpleAlt'] }}
+            </span>
           </label>
           <div class="col-5">
             <input
               :id="'item-simple-'+i"
+              v-model="item.simple"
               class="form-control"
               type="text"
-              v-model="it.simple"
             >
           </div>
         </div>
       </div>
       <div class="form-group row">
         <div class="col-10 offset-2">
-          <button type="button"
-                  class="btn btn-primary btn-sm"
-                  @click="_addItem(i18n['layaLaScmc.edit.sampleOption'])"
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            @click="_addItem(i18n['layaLaScmc.edit.sampleOption'])"
           >
             <i class="fas fa-plus"></i>
             {{ i18n['itemAdd'] }}
           </button>
         </div>
       </div>
-
     </form>
-
   </div>
 </template>
 
@@ -323,13 +338,12 @@ import { locale, tooltipIcon } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 
 export default {
-  name: 'laya-la-drag-drop-edit',
+  name: 'LayaLaDragDropEdit',
 
   mixins: [
     locale,
     tooltipIcon
   ],
-
 
   data () {
     return {
@@ -342,7 +356,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['content', 'courseSimple']),
+    ...mapGetters(['content', 'courseSimple'])
   },
 
   created () {
@@ -359,7 +373,7 @@ export default {
      *
      * @param {*} idx index at which to remove
      */
-    _delItem(idx) {
+    _delItem (idx) {
       this.items.splice(idx, 1)
     },
 
@@ -369,8 +383,8 @@ export default {
      * Last Updated: June 6, 2021
      * @param {string} str string to be added
      */
-    _addItem(str) {
-      this.items.push({label: str, category: -1, flagged: false, id: uuidv4()})
+    _addItem (str) {
+      this.items.push({ label: str, category: -1, flagged: false, id: uuidv4() })
     },
 
     /**
@@ -382,7 +396,7 @@ export default {
      *
      * @param {*} idx index at which to remove the category
      */
-    _delCategory(idx) {
+    _delCategory (idx) {
       this.categories.splice(idx, 1)
     },
 
@@ -394,7 +408,7 @@ export default {
      * Last Updated: unknown
      *
      */
-    _addCategory() {
+    _addCategory () {
       this.categories.push({})
     },
 
@@ -405,8 +419,8 @@ export default {
      *
      * Last Updated: March 12, 2021
      */
-    fetchData() {
-      let idx = this.$route.params.step - 1
+    fetchData () {
+      const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.title = preData.title
       this.task = preData.task

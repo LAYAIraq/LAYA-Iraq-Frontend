@@ -9,7 +9,7 @@
 export default {
   state: {
     busy: false,
-    myCourses: 0,
+    myCourses: 0
   },
   getters: {
     /**
@@ -21,7 +21,7 @@ export default {
      * @param state contains busy bool
      * @returns {boolean} true if store is busy
      */
-    storeBusy(state: { busy: boolean }) {
+    storeBusy (state: { busy: boolean }) {
       return state.busy
     }
   },
@@ -35,8 +35,8 @@ export default {
      *
      * @param state contains myCourses variable
      */
-    addMyCourse(state: { myCourses: number }) {
-      state.myCourses++;
+    addMyCourse (state: { myCourses: number }) {
+      state.myCourses++
     },
 
     /**
@@ -48,8 +48,8 @@ export default {
      *
      * @param state contains myCourses
      */
-    clearMyCourse(state: { myCourses: number }) {
-      state.myCourses = 0;
+    clearMyCourse (state: { myCourses: number }) {
+      state.myCourses = 0
     },
 
     /**
@@ -57,13 +57,16 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: unknown
+     * Last Updated: January 27, 2022
      *
      * @param state contains busy boolean
      * @param bool boolean value to set
      */
-    setBusy(state: { busy: boolean }, bool: boolean) {
-      state.busy = bool;
+    setBusy (
+      state: { busy: boolean },
+      bool: boolean
+    ) {
+      state.busy = bool
     }
   }
-};
+}

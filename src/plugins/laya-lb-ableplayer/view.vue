@@ -11,18 +11,17 @@ Dependencies:
 
 <template>
   <div class="ly-ableplayer">
-
     <div
-      class="flaggable row"
-      :id="title.id"
       v-if="title.show"
+      :id="title.id"
+      class="flaggable row"
     >
       <h4> {{ title.text }}</h4>
-      <laya-flag-icon v-if="!previewData"
-        :refData="title"
+      <laya-flag-icon
+        v-if="!previewData"
+        :ref-data="title"
 
         @flagged="title.flagged = true"
-
       ></laya-flag-icon>
     </div>
 
@@ -30,7 +29,9 @@ Dependencies:
       :id="playerId"
       preload="auto"
       data-debug
-      :data-lang="profileLang" data-force-lang>
+      :data-lang="profileLang"
+      data-force-lang
+    >
 
       <source
         type="video/mp4"
@@ -41,38 +42,52 @@ Dependencies:
       <track
         kind="captions"
         :src="notEmpty(sub)"
-        default/>
+        default
+      />
     </video>
 
-    <button type="button"
+    <button
+      type="button"
       class="btn btn-primary mt-3 d-block ml-auto"
-      @click="onFinish[0]() || {}">
+      @click="onFinish[0]() || {}"
+    >
       {{ i18n['nextContent'] }}
       <i class="fas fa-arrow-right"></i>
     </button>
-
   </div>
 </template>
 
 <script>
 // import 'ableplayer' FIXME: still broken
 import { mapGetters } from 'vuex'
-import 'ableplayer/build/ableplayer.min.css' //neccessary, otherwise ableplayer is butchered
-import { locale, watchContent } from '@/mixins'
+import 'ableplayer/build/ableplayer.min.css' // neccessary, otherwise ableplayer is butchered
+import { locale, viewPluginProps, watchContent } from '@/mixins'
 import '@/styles/flaggables.css'
 
 export default {
 
-  name: 'laya-ableplayer',
+  name: 'LayaAbleplayer',
 
   mixins: [
     locale,
+    viewPluginProps,
     watchContent
   ],
 
-  props: {
-    onFinish: Array,
-    previewData: Object
+  data () {
+    if (this.previewData) {
+      return {
+        ...this.previewData,
+        ableplayer: null
+      }
+    }
+    return {
+      title: '',
+      src: '',
+      sign: '',
+      sub: '',
+      ableplayer: null
+    }
   },
 
   computed: {
@@ -85,31 +100,15 @@ export default {
      *
      * Last Updated: unknown
      */
-    playerId() {
+    playerId () {
       return `laya-ableplayer-${Date.now()}`
     }
   },
-
-  data() {
-    if (this.previewData)
-      return {
-        ...this.previewData,
-        ableplayer: null
-      }
-    return {
-      title: '',
-      src: '',
-      sign: '',
-      sub: '',
-      ableplayer: null
-    }
-  },
-
-  created() {
+  created () {
     if (!this.previewData) this.fetchData()
   },
 
-  mounted() {
+  mounted () {
     this.ableplayer = new window.AblePlayer(`#${this.playerId}`)
   },
 
@@ -124,7 +123,7 @@ export default {
      *
      * @param {string} str string to be checked
      */
-    notEmpty(str) {
+    notEmpty (str) {
       return (!!str && str.length > 0) ? str : false
     },
 
@@ -135,8 +134,8 @@ export default {
      *
      * Last Updated: March 19, 2021
      */
-    fetchData() {
-      let idx = this.$route.params.step - 1
+    fetchData () {
+      const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.src = preData.src
       this.sign = preData.sign

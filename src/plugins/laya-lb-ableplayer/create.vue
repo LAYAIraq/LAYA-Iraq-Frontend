@@ -1,64 +1,66 @@
-<!-- 
+<!--
 Filename: create.vue
 Use: Create a new Ableplayer content block
 Creator: cmc
 Date: January 19, 2021
-Dependencies: 
+Dependencies:
   @/mixins/locale.vue,
   @/mixins/tooltipIcon.vue
 -->
 
 <template>
-  <div 
+  <div
     class="laya-ableplayer-new"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
-
     <label>
       <h4>
         {{ i18n['layaAbleplayer.name'] }}
       </h4>
     </label>
-    <i 
-      id ="questionmark"
-      class="fas fa-question-circle" 
-      :class="langIsAr? 'mr-auto' : 'ml-auto'"
-      @click="toggleTip" 
-      :title="i18n['showTip']" 
+    <i
+      id="questionmark"
       v-b-tooltip.left
+      class="fas fa-question-circle"
+      :class="langIsAr? 'mr-auto' : 'ml-auto'"
+      :title="i18n['showTip']"
+      @click="toggleTip"
     ></i>
-    <b-jumbotron 
+    <b-jumbotron
       v-if="tooltipOn"
-      :header="i18n['layaAbleplayer.name']" 
+      :header="i18n['layaAbleplayer.name']"
       :lead="i18n['tipHeadline']"
     >
       <hr class="my-4">
-      <span v-html="i18n['layaAbleplayer.tooltip']"></span>
+      <span>
+        {{ i18n['layaAbleplayer.tooltip'] }}
+      </span>
     </b-jumbotron>
 
     <hr>
 
     <form>
-
       <!-- title -->
       <div class="form-group row">
         <div class="form-group col-10">
-          <label 
-            for="ableplayer-title" 
+          <label
+            for="ableplayer-title"
           >
             {{ i18n['title'] }}
           </label>
-          
-          
-          <input 
+
+          <input
             id="ableplayer-title"
-            type="text"
             v-model="title.text"
+            type="text"
             class="form-control"
             :placeholder="i18n['titlePlaceholder']"
           >
         </div>
-        <div class="form-group col" id="show-title-button">
+        <div
+          id="show-title-button"
+          class="form-group col"
+        >
           <div style="height: calc(1.5em + .75rem + 2px);"></div>
           <label
             for="show-title-tick"
@@ -67,42 +69,45 @@ Dependencies:
             {{ i18n['showTitle'] }}
             <input
               id="show-title-tick"
-              type="checkbox"
               v-model="title.show"
+              type="checkbox"
             >
           </label>
-            
-          
         </div>
       </div>
       <div class="form-group">
         <label for="able-src-id">{{ i18n['layaAbleplayer.vidURL'] }}</label>
-        <input id="able-src-id"
-          type="text"
+        <input
+          id="able-src-id"
           v-model="src"
+          type="text"
           class="form-control"
-          :placeholder="i18n['layaAbleplayer.vidPlaceholder']">
+          :placeholder="i18n['layaAbleplayer.vidPlaceholder']"
+        >
       </div>
 
       <div class="form-group">
         <label for="able-sign-id">{{ i18n['layaAbleplayer.signVidURL'] }} </label>
-        <input id="able-sign-id"
-          type="text"
+        <input
+          id="able-sign-id"
           v-model="sign"
+          type="text"
           class="form-control"
-          :placeholder="i18n['layaAbleplayer.signVidPlaceholder']">
+          :placeholder="i18n['layaAbleplayer.signVidPlaceholder']"
+        >
       </div>
 
       <div class="form-group">
         <label for="able-sub-id">{{ i18n['layaAbleplayer.subtitle'] }}</label>
-        <input id="able-sub-id"
-          type="text"
+        <input
+          id="able-sub-id"
           v-model="sub"
+          type="text"
           class="form-control"
-          :placeholder="i18n['layaAbleplayer.subtitlePlaceholder']">
+          :placeholder="i18n['layaAbleplayer.subtitlePlaceholder']"
+        >
       </div>
     </form>
-
   </div>
 </template>
 
@@ -111,14 +116,14 @@ import { locale, tooltipIcon } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 
 export default {
-  name: 'laya-ableplayer-create',
+  name: 'LayaAbleplayerCreate',
 
   mixins: [
     locale,
     tooltipIcon
-  ],  
-  
-  data() {
+  ],
+
+  data () {
     return {
       title: {
         show: false,
@@ -132,7 +137,7 @@ export default {
     }
   },
 
-  created() {
+  created () {
     this.title.id = uuidv4()
   }
 }
@@ -142,6 +147,5 @@ export default {
 #show-title-button {
   vertical-align: bottom;
 }
-
 
 </style>

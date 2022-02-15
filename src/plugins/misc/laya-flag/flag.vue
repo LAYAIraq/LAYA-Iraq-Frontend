@@ -11,13 +11,13 @@
     <div class="flag-interface">
       <div
         v-if="!isOpen"
+        v-b-tooltip.bottom
         class="flag-icon"
         :class="clicked? 'collapsed' : 'expanded'"
+        :title="refData.flagged? i18n['flag.seeDiscussion'] : i18n['flag.title']"
+        tabindex="0"
         @click="toggleClicked"
         @keypress="toggleClicked"
-        :title="refData.flagged? i18n['flag.seeDiscussion'] : i18n['flag.title']"
-        v-b-tooltip.bottom
-        tabindex="0"
       >
         <i class="fas fa-flag"></i>
       </div>
@@ -27,52 +27,52 @@
         :class="clicked? 'expanded' : 'collapsed'"
       >
         <div
-          class="set-flag"
           v-if="!refData.flagged"
+          class="set-flag"
         >
           <div class="flag-title">
             <div class="title-text">
               {{ i18n['flag.title'] }}
             </div>
             <div
-                class="close-btn"
-                tabindex="0"
-                @click="toggleClicked"
-                @keypress="toggleClicked"
-                @keydown.esc="toggleClicked"
+              class="close-btn"
+              tabindex="0"
+              @click="toggleClicked"
+              @keypress="toggleClicked"
+              @keydown.esc="toggleClicked"
             >
               <i class="fas fa-times"></i>
             </div>
           </div>
           <div class="form-group flag-question">
             <form
-                @submit="setFlagQuestion()"
+              @submit="setFlagQuestion()"
             >
               <label
-                  for="set-flag-question"
-                  class=""
+                for="set-flag-question"
+                class=""
               >
                 {{ i18n['flag.typeHere'] }}
               </label>
               <textarea
-                class="form-control"
                 id="set-flag-question"
-                rows="5"
                 v-model="question"
+                class="form-control"
+                rows="5"
                 :placeholder="i18n['flag.questionPlaceholder']"
               ></textarea>
 
-<!--              Added if non-anonymous questions are possible-->
-<!--              <label-->
-<!--                for="anonymous-question"-->
-<!--                >-->
-<!--                {{ i18n['flag.anonymous'] }}-->
-<!--              </label>-->
-<!--              <input-->
-<!--                id ="anonymous-question"-->
-<!--                type="checkbox"-->
-<!--                v-model="anonymous"-->
-<!--              >-->
+              <!--              Added if non-anonymous questions are possible-->
+              <!--              <label-->
+              <!--                for="anonymous-question"-->
+              <!--                >-->
+              <!--                {{ i18n['flag.anonymous'] }}-->
+              <!--              </label>-->
+              <!--              <input-->
+              <!--                id ="anonymous-question"-->
+              <!--                type="checkbox"-->
+              <!--                v-model="anonymous"-->
+              <!--              >-->
 
               <b-button
                 for="set-flag-question"
@@ -84,8 +84,8 @@
           </div>
         </div>
         <div
-          class="pick-up-flag"
           v-else-if="currentFlag"
+          class="pick-up-flag"
         >
           <div class="flag-title">
             <div class="title-text">
@@ -115,18 +115,18 @@
           </div>
           <div class="flag-discussion">
             <div class="heading">
-              {{ i18n['layaLbDialog.answers']}}
+              {{ i18n['layaLbDialog.answers'] }}
             </div>
             <div
-              class="discussion-post"
               v-for="(answer,i) in currentFlag.answers"
+              :key="'answer-'+i"
+              v-b-tooltip.bottom
+              class="discussion-post"
               :class="answer.authorId === courseCreator ? 'creator' : ''"
               :title="answer.authorId === courseCreator ?
                 i18n['flag.creatorAnswer']
                 : ''
               "
-              v-b-tooltip.bottom
-              :key="'answer-'+i"
             >
               <div class="text-center">
                 {{ answer.text }}
@@ -136,7 +136,7 @@
               >
                 <small>
                   {{ timeAndDate(answer.timestamp) }}
-               </small>
+                </small>
               </div>
             </div>
             <div class="add-answer">
@@ -146,40 +146,38 @@
               <form @submit.prevent="addAnswer">
                 <div>
                   <input
-                      id="my-answer"
-                      type="text"
-                      class="ml-auto"
-                      v-model="newAnswer"
-                      :disabled="answerSent || !refData.flagged"
-                      @focus="subFocus = true"
-                      @blur="subFocus = false"
+                    id="my-answer"
+                    v-model="newAnswer"
+                    type="text"
+                    class="ml-auto"
+                    :disabled="answerSent || !refData.flagged"
+                    @focus="subFocus = true"
+                    @blur="subFocus = false"
                   >
                   <b-button
                     type="submit"
                     class="mr-auto"
                     :disabled="answerSent"
-                    >
-                    {{ this.i18n['flag.enterToSubmit'] }}
+                  >
+                    {{ i18n['flag.enterToSubmit'] }}
                   </b-button>
-
                 </div>
                 <div class="answer-hint">
                   <label
+                    v-if="subFocus"
                     for="my-answer"
                     class="m-auto"
-                    v-if="subFocus"
                   >
                     {{ i18n['flag.enterToSubmit'] }}
                   </label>
                   <label
-                    class="m-auto"
                     v-else-if="answerSent"
+                    class="m-auto"
                   >
                     {{ i18n['flag.ty'] }}
                   </label>
                 </div>
               </form>
-
             </div>
           </div>
         </div>
@@ -197,14 +195,36 @@ export default {
   name: 'LayaFlag',
 
   mixins: [
-      locale,
-      time
+    locale,
+    time
   ],
 
   props: {
-    refData: Object,
-    interactive: Boolean,
-    isOpen: null
+    refData: {
+      type: Object,
+      default () { return null }
+    },
+    interactive: {
+      type: Boolean,
+      default () { return false }
+    },
+    isOpen: {
+      type: Boolean,
+      default () { return null }
+    }
+  },
+
+  data () {
+    return {
+      answerSent: false,
+      // anonymous: false,
+      clicked: false,
+      filteredFlag: null,
+      newFlag: null,
+      newAnswer: '',
+      subFocus: false,
+      question: ''
+    }
   },
 
   computed: {
@@ -224,10 +244,10 @@ export default {
      * Last Updated: September 20, 2021
      * @returns {null|object} current flag
      */
-    currentFlag() {
-      return this.filteredFlag?
-        this.filteredFlag:
-        this.newFlag
+    currentFlag () {
+      return this.filteredFlag
+        ? this.filteredFlag
+        : this.newFlag
     },
 
     /**
@@ -238,23 +258,10 @@ export default {
      * Last Updated: September 20, 2021
      * @returns {boolean|number|string|*}
      */
-    flagAuthor() {
-      return this.currentFlag?
-        this.currentFlag.authorId :
-        'unknown'
-    }
-  },
-
-  data() {
-    return{
-      answerSent: false,
-      // anonymous: false,
-      clicked: false,
-      filteredFlag: null,
-      newFlag: null,
-      newAnswer: '',
-      subFocus: false,
-      question: ''
+    flagAuthor () {
+      return this.currentFlag
+        ? this.currentFlag.authorId
+        : 'unknown'
     }
   },
 
@@ -269,7 +276,7 @@ export default {
      * Last Updated: September 20, 2021
      * @param {boolean} val clicked boolean
      */
-    clicked(val) { // avoid multiple open instances
+    clicked (val) { // avoid multiple open instances
       if (val) {
         this.$emit('flagOpen', this.refData.id)
       } else {
@@ -286,16 +293,16 @@ export default {
      */
     courseFlags: {
       deep: true,
-      handler() {
+      handler () {
         this.updateFilteredFlag()
       }
     }
   },
 
-  created() {
+  created () {
     this.updateFilteredFlag()
     this.filteredFlag = this.courseFlags
-        .filter(flag => flag.referenceId === this.refData.id)[0] // set flag if exists
+      .filter(flag => flag.referenceId === this.refData.id)[0] // set flag if exists
     if (this.currentFlag) { // check if user already answered
       for (const answer of this.currentFlag.answers) {
         if (answer.authorId === this.userId) {
@@ -306,7 +313,7 @@ export default {
     }
   },
 
-  onUpdate() {
+  onUpdate () {
     // this.updateFilteredFlag()
   },
 
@@ -319,7 +326,7 @@ export default {
      *
      * Last Updated: September 20, 2021
      */
-    addAnswer() {
+    addAnswer () {
       const myAnswer = {
         text: this.newAnswer,
         authorId: this.userId,
@@ -341,11 +348,13 @@ export default {
      *
      * Last Updated: September 20, 2021
      */
-    updateFilteredFlag() {
+    updateFilteredFlag () {
       const myFlagId = new RegExp(this.refData.id, 'i')
-      let arr = this.courseFlags
-          .filter(flag => myFlagId.test(flag.referenceId))
-      arr.length === 1 ? this.filteredFlag = arr[0] : null
+      const arr = this.courseFlags
+        .filter(flag => myFlagId.test(flag.referenceId))
+      if (arr.length === 1) {
+        this.filteredFlag = arr[0]
+      }
     },
 
     /**
@@ -355,7 +364,7 @@ export default {
      *
      * Last Updated: September 21, 2021
      */
-    setFlagQuestion() {
+    setFlagQuestion () {
       if (this.question === '') {
         this.$bvToast.toast(this.i18n['flag.noQuestion'], {
           title: this.i18n['flag.noQuestionTitle'],
@@ -368,9 +377,9 @@ export default {
           referenceId: this.refData.id,
           courseId: this.courseId,
           authorId: this.userId,
-          enrollmentId: (this.$store.state.enrollment) ?
-              this.$store.state.enrollment.id :
-              null
+          enrollmentId: (this.$store.state.enrollment)
+            ? this.$store.state.enrollment.id
+            : null
         }
         this.$store.commit('setFlag', flag)
         this.$store.dispatch('saveFlags')
@@ -390,7 +399,7 @@ export default {
      * Last Updated: September 20, 2021
      * @returns {string|*} question
      */
-    showFlagQuestion() {
+    showFlagQuestion () {
       if (this.currentFlag) {
         return this.currentFlag.question
       } else {
@@ -407,7 +416,7 @@ export default {
      * @param {number} timestamp answer timestamp
      * @returns {string} hh:mm, dd-mm-yyyy
      */
-    timeAndDate(timestamp) {
+    timeAndDate (timestamp) {
       const time = new Date(timestamp)
       return `${this.locDate(time)}, ${this.locTime(time)}`
     },
@@ -419,7 +428,7 @@ export default {
      *
      * Last Updated: September 20, 2021
      */
-    toggleClicked() {
+    toggleClicked () {
       this.clicked = !this.clicked
     }
   }

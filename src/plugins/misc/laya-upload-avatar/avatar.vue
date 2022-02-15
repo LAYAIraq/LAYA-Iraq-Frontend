@@ -1,67 +1,99 @@
 <template>
   <div>
-    <div v-if="type=='avatar'">
-      <div v-show="$refs.upload && $refs.upload.dropActive" class="drop-active">
+    <div v-if="type === 'avatar'">
+      <div
+        v-show="$refs.upload && $refs.upload.dropActive"
+        class="drop-active"
+      >
         {{ i18n['layaUploadAvatar.dragFileHere'] }}
       </div>
-      <div class="avatar-upload" v-show="!edit">
+      <div
+        v-show="!edit"
+        class="avatar-upload"
+      >
         <div class="text-center p-2">
-          <label for="file">
-            <img :src="files.length ? files[0].url : oldAvatar" 
-              class="d-block rounded-circle avatar-preview">
+          <label>
+            <img
+              :src="files.length ? files[0].url : oldAvatar"
+              class="d-block rounded-circle avatar-preview"
+              alt="User Avatar"
+            >
             <br>{{ i18n['layaUploadAvatar.dragAnywhere'] }}
           </label>
         </div>
         <div class="text-center p-2">
-          <file-upload ref="upload"
+          <file-upload
+            ref="upload"
+            v-model="files"
             extensions="gif,jpg,jpeg,png,webp"
             accept="image/png,image/gif,image/jpeg,image/webp"
-            name="file" class="btn btn-primary"
+            name="file"
+            class="btn btn-primary"
             :post-action="postAvatar"
             :drop="!edit"
             @input-filter="inputFilter"
             @input-file="inputFile"
-            v-model="files"
-            >
+          >
             {{ i18n['layaUploadAvatar.uploadFile'] }}
           </file-upload>
         </div>
       </div>
 
-      <div class="avatar-edit" v-show="files.length !=0 && edit">
-        <div class="avatar-edit-image" v-if="files.length">
-          <img ref="editImage" :src="files[0].url">
+      <div
+        v-show="files.length !== 0 && edit"
+        class="avatar-edit"
+      >
+        <div
+          v-if="files.length"
+          class="avatar-edit-image"
+        >
+          <img
+            ref="editImage"
+            :src="files[0].url"
+            alt="Edit Image"
+          >
         </div>
         <div class="text-center p-4">
-          <button type="button" class="btn btn-secondary" 
-            @click.prevent="$refs.upload.clear">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            @click.prevent="$refs.upload.clear"
+          >
             {{ i18n['cancel'] }}
           </button>
-          <button type="submit" class="btn btn-primary"
-            @click.prevent="editSave">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            @click.prevent="editSave"
+          >
             {{ i18n['save'] }}
           </button>
         </div>
       </div>
-
     </div>
 
     <div v-else>
-      <file-upload 
+      <file-upload
         ref="upload"
         v-model="files"
         post-action=""
         @input-file="inputFile"
-        @input-filter="inputFilter">
-        {{ i18n['layaUploadAvatar.uploadFile'] }} 
+        @input-filter="inputFilter"
+      >
+        {{ i18n['layaUploadAvatar.uploadFile'] }}
       </file-upload>
-      <button v-show="!$refs.upload || !$refs.upload.active" 
-        @click.prevent="$refs.upload.active = true" type="button">
+      <button
+        v-show="!$refs.upload || !$refs.upload.active"
+        type="button"
+        @click.prevent="$refs.upload.active = true"
+      >
         {{ i18n['startUpload'] }}
       </button>
-      <button v-show="$refs.upload && $refs.upload.active" 
-        @click.prevent="$refs.upload.active = false" 
-        type="button">
+      <button
+        v-show="$refs.upload && $refs.upload.active"
+        type="button"
+        @click.prevent="$refs.upload.active = false"
+      >
         {{ i18n['stopUpload'] }}
       </button>
     </div>
@@ -72,11 +104,11 @@
 import FileUpload from 'vue-upload-component'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.min.css'
-import api from '../../../backend-url.ts';
+import api from '../../../backend-url.ts'
 import { locale } from '@/mixins'
 
 export default {
-  name: 'laya-upload-avatar',
+  name: 'LayaUploadAvatar',
 
   components: {
     FileUpload
@@ -87,11 +119,17 @@ export default {
   ],
 
   props: {
-    type: String,
-    oldAvatar: String
+    type: {
+      type: String,
+      default () { return '' }
+    },
+    oldAvatar: {
+      type: String,
+      default () { return '' }
+    }
   },
 
-  data() {
+  data () {
     return {
       files: [],
       edit: false,
@@ -100,27 +138,25 @@ export default {
   },
 
   computed: {
-    postAvatar(){
+    postAvatar () {
       return `${api}/storage/img/upload`
     }
   },
 
   watch: {
-    edit(value) {
-      if(value) {
-        this.$nextTick( () => {
-          if(!this.$refs.editImage) return ''
+    edit (value) {
+      if (value) {
+        this.$nextTick(() => {
+          if (!this.$refs.editImage) return ''
 
-          let cropper = new Cropper(this.$refs.editImage, {
-            aspectRatio: 1 / 1,
+          this.cropper = new Cropper(this.$refs.editImage, {
+            aspectRatio: 1,
             viewMode: 1
           })
-          this.cropper = cropper
           // console.log(cropper)
         })
-      }
-      else {
-        if(this.cropper) {
+      } else {
+        if (this.cropper) {
           this.cropper.destroy()
           this.cropper = false
         }
@@ -130,18 +166,18 @@ export default {
 
   methods: {
 
-    editSave() {
+    editSave () {
       // console.log(`editSave function entered`)
       this.edit = false
 
-      let oldFile = this.files[0]
-      let binStr = atob(this.cropper.getCroppedCanvas().toDataURL(oldFile.type).split(',')[1])
-      let arr = new Uint8Array(binStr.length)
-      for (let i = 0; i<binStr.length; i++) {
+      const oldFile = this.files[0]
+      const binStr = atob(this.cropper.getCroppedCanvas().toDataURL(oldFile.type).split(',')[1])
+      const arr = new Uint8Array(binStr.length)
+      for (let i = 0; i < binStr.length; i++) {
         arr[i] = binStr.charCodeAt(i)
-      } 
+      }
 
-      let file = new File(arr, oldFile.name, {type: oldFile.type})
+      const file = new File(arr, oldFile.name, { type: oldFile.type })
       this.$refs.upload.update(oldFile.id, {
         file,
         type: file.type,
@@ -151,22 +187,22 @@ export default {
       return false
     },
 
-    alert(msg) {
+    alert (msg) {
       alert(msg)
     },
 
-    inputFile(newFile, oldFile) {
+    inputFile (newFile, oldFile) {
       if (newFile && !oldFile) {
-        this.$nextTick( () => {
+        this.$nextTick(() => {
           this.edit = true
         })
       }
-      if(!newFile && oldFile) {
+      if (!newFile && oldFile) {
         this.edit = false
       }
     },
-  
-    inputFilter(newFile, oldFile, prevent) {
+
+    inputFilter (newFile, oldFile, prevent) {
       if (newFile && !oldFile) {
         // Filter non-image file
         if (!/\.(jpeg|jpe|jpg|gif|png|webp)$/i.test(newFile.name)) {
@@ -175,9 +211,9 @@ export default {
         }
       }
 
-      if (newFile && (!oldFile || newFile.file != oldFile.file)) {
+      if (newFile && (!oldFile || newFile.file !== oldFile.file)) {
         newFile.url = ''
-        let URL = window.URL || window.webkitURL
+        const URL = window.URL || window.webkitURL
         // console.log(URL)
         if (URL && URL.createObjectURL) {
           newFile.url = URL.createObjectURL(newFile.file)
@@ -185,7 +221,7 @@ export default {
       }
     }
   }
-    
+
 }
 </script>
 

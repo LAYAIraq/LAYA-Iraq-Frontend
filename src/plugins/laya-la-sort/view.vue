@@ -12,7 +12,7 @@ Dependencies: @/mixins/locale.vue
       <div class="row mb-3">
         <div>
           <h4>{{ i18n['task'] }}</h4>
-          <p>{{task}}</p>
+          <p>{{ task }}</p>
         </div>
       </div>
       <div class="row py-2 ly-bg-grey">
@@ -23,8 +23,9 @@ Dependencies: @/mixins/locale.vue
               v-for="(us,i) in unsorted"
               :key="i"
               class="btn btn-outline-dark mb-2"
-              @click="moveToSorted(i)">
-              {{us.label}}
+              @click="moveToSorted(i)"
+            >
+              {{ us.label }}
             </button>
           </div>
         </div>
@@ -35,27 +36,34 @@ Dependencies: @/mixins/locale.vue
               v-for="(s,i) in solution"
               :key="i"
               class="btn btn-outline-dark mb-2"
-              @click="moveToUnsorted(i)">
-              {{s.label}}
+              @click="moveToUnsorted(i)"
+            >
+              {{ s.label }}
             </button>
           </div>
         </div>
         <div class="col-2">
-          <h4 style="color: transparent">{{ i18n['layaLaSort.e'] }}</h4>
+          <h4 style="color: transparent">
+            {{ i18n['layaLaSort.e'] }}
+          </h4>
           <div class="d-flex flex-column">
-            <i v-for="(r,i) in result"
-               :key="i"
-               class="fas fa-2x text-center result-icon"
-               :class="{'fa-check text-success': r, 'fa-times text-danger': !r}">
+            <i
+              v-for="(r,i) in result"
+              :key="i"
+              class="fas fa-2x text-center result-icon"
+              :class="{'fa-check text-success': r, 'fa-times text-danger': !r}"
+            >
             </i>
           </div>
         </div>
       </div>
       <div class="row mt-3 justify-content-end">
-        <button type="button"
-                class="btn btn-primary btn-lg"
-                :disabled="unsorted.length !== 0"
-                @click="check">
+        <button
+          type="button"
+          class="btn btn-primary btn-lg"
+          :disabled="unsorted.length !== 0"
+          @click="check"
+        >
           {{ i18n['layaLaSort.done'] }}
         </button>
       </div>
@@ -67,24 +75,30 @@ Dependencies: @/mixins/locale.vue
 import { locale, watchContent } from '@/mixins'
 
 export default {
-  name: 'laya-quiz-sort',
+  name: 'LayaQuizSort',
 
   mixins: [
     locale,
     watchContent
   ],
 
+  props: {
+    task: {
+      type: String,
+      default () { return '' }
+    },
+    sorted: {
+      type: Array,
+      default () { return [] }
+    }
+  },
+
   data () {
     return {
       unsorted: [], // the shuffled options from this.sorted
       solution: [], // the solution of the user
-      result: [], // list of booleans
+      result: [] // list of booleans
     }
-  },
-
-  props: {
-    task: String,
-    sorted: Array,
   },
 
   created () {
@@ -102,8 +116,8 @@ export default {
      *
      * @param {*} i index of item
      */
-    moveToSorted(i) {
-      this.solution.push(this.unsorted.splice(i,1)[0])
+    moveToSorted (i) {
+      this.solution.push(this.unsorted.splice(i, 1)[0])
     },
 
     /**
@@ -115,8 +129,8 @@ export default {
      *
      * @param {*} i index of item
      */
-    moveToUnsorted(i) {
-      this.unsorted.push(this.solution.splice(i,1)[0])
+    moveToUnsorted (i) {
+      this.unsorted.push(this.solution.splice(i, 1)[0])
     },
 
     /**
@@ -126,8 +140,8 @@ export default {
      *
      * Last Updated: March 19, 2021
      */
-    check() {
-      for(let i=0; i<this.sorted.length; i++) {
+    check () {
+      for (let i = 0; i < this.sorted.length; i++) {
         this.result[i] = (this.sorted[i].order === this.solution[i].order)
       }
       this.$forceUpdate()
@@ -142,9 +156,9 @@ export default {
      *
      * @param {Array} arr array to be shuffled
      */
-    shuffle(arr) {
-      for (let i = arr.length-1; i>0; i--) {
-        let j = Math.floor(Math.random() * (i+1))
+    shuffle (arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
         const tmp = arr[j]
         arr[j] = arr[i]
         arr[i] = tmp

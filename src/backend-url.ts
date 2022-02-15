@@ -16,19 +16,18 @@ const base = 'http://localhost:3001/api'
 let url
 if (NODE_ENV === 'development') {
   // set port if defined in env, default if not
-  url = VUE_APP_BACKEND_PORT?
-    `http://localhost:${VUE_APP_BACKEND_PORT}/api`:
-    base
+  url = VUE_APP_BACKEND_PORT
+    ? `http://localhost:${VUE_APP_BACKEND_PORT}/api`
+    : base
 } else if (NODE_ENV === 'production') {
   // set host if set in environment
-  const host = VUE_APP_BACKEND_HOST?
-    (VUE_APP_BACKEND_PORT? // append port if set
-      `${VUE_APP_BACKEND_HOST}:${VUE_APP_BACKEND_PORT}`:
-      VUE_APP_BACKEND_HOST):
-    ''
+  const host = VUE_APP_BACKEND_HOST
+    ? (VUE_APP_BACKEND_PORT // append port if set
+        ? `${VUE_APP_BACKEND_HOST}:${VUE_APP_BACKEND_PORT}`
+        : VUE_APP_BACKEND_HOST)
+    : ''
   // set root dir if defined, default to '/api' if not
-  const root = VUE_APP_BACKEND_ROOT?
-    VUE_APP_BACKEND_ROOT : '/api'
+  const root = VUE_APP_BACKEND_ROOT || '/api'
   url = host + root
 } else {
   console.log('unexpected enviroment, defaulting API address')

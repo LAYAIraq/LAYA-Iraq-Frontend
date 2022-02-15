@@ -1,80 +1,88 @@
-<!-- 
+<!--
 Filename: course-create.vue
 Use: This file implements the form to add a new course
 Creator: core
 Date: unknown
-Dependencies: 
-  axios, 
-  vuex, 
+Dependencies:
+  axios,
+  vuex,
   @/i18n/course-update
 -->
 
 <template>
   <div class="laya-course-new-view">
-    <h3 :class="langIsAr? 'text-right' : 'text-left'"> 
+    <h3 :class="langIsAr? 'text-right' : 'text-left'">
       {{ i18n['courseCreate.createCourse'] }}
     </h3>
     <hr>
     <form class="mt-3">
       <div class="form-group row">
-        <label for="new-course-name" class="col-3 col-form-label">
+        <label
+          for="new-course-name"
+          class="col-3 col-form-label"
+        >
           {{ i18n['courseCreate.courseName'] }}
         </label>
         <div class="col">
-          <input id="new-course-name"
-                 type="text"
-                 class="form-control"
-                 v-model="newCourse.name"
-                 :placeholder="i18n['courseCreate.courseName']">
+          <input
+            id="new-course-name"
+            v-model="newCourse.name"
+            type="text"
+            class="form-control"
+            :placeholder="i18n['courseCreate.courseName']"
+          >
         </div>
-      </div>     
+      </div>
       <div class="form-group row">
-        <label for="new-course-category" class="col-3 col-form-label">
+        <label
+          for="new-course-category"
+          class="col-3 col-form-label"
+        >
           {{ i18n['cat'] }}
         </label>
         <div class="col">
-          <input id="new-course-category"
-                 type="text"
-                 class="form-control"
-                 v-model="newCourse.category"
-                 :placeholder="i18n['cat']">
+          <input
+            id="new-course-category"
+            v-model="newCourse.category"
+            type="text"
+            class="form-control"
+            :placeholder="i18n['cat']"
+          >
         </div>
       </div>
-<!--      COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)-->
-<!--      <div class="form-group row">-->
-<!--        <label for="new-course-enrollment" class="col-3 col-form-label">-->
-<!--          {{ i18n['courseCreate.enrollment'] }}-->
-<!--        </label>-->
-<!--        <div class="col">-->
-<!--          <input -->
-<!--            id="new-course-enrollment"-->
-<!--            type="checkbox"-->
-<!--            class="form-control"-->
-<!--            ref="enrollmentRequired"-->
-<!--          >-->
-<!--        </div>-->
-<!--      </div>-->
+      <!--      COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)-->
+      <!--      <div class="form-group row">-->
+      <!--        <label for="new-course-enrollment" class="col-3 col-form-label">-->
+      <!--          {{ i18n['courseCreate.enrollment'] }}-->
+      <!--        </label>-->
+      <!--        <div class="col">-->
+      <!--          <input -->
+      <!--            id="new-course-enrollment"-->
+      <!--            type="checkbox"-->
+      <!--            class="form-control"-->
+      <!--            ref="enrollmentRequired"-->
+      <!--          >-->
+      <!--        </div>-->
+      <!--      </div>-->
       <div class="form-group row">
         <div class="col">
           <span class="text-danger form-control-plaintext text-right">
-            {{msg}}
+            {{ msg }}
           </span>
         </div>
         <div class="col-4">
-          <button 
+          <button
             type="submit"
             class="btn btn-block btn-primary"
             :disabled="!formValid"
             @click="duplicateCheck"
           >
-            <i class="fas fa-check"></i> 
+            <i class="fas fa-check"></i>
             {{ i18n['save'] }}
           </button>
         </div>
       </div>
     </form>
-
-
   </div>
 </template>
 
@@ -85,13 +93,13 @@ import { locale } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 
 export default {
-  name: 'course-create',
+  name: 'CourseCreate',
 
   mixins: [
     locale
-  ], 
+  ],
 
-  data() {
+  data () {
     return {
       msg: '',
       newCourse: {
@@ -107,23 +115,23 @@ export default {
 
     /**
      * formValid: to test if both name and category are set
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
-    formValid() {
+    formValid () {
       return !!this.newCourse.name && !!this.newCourse.category
     },
 
     /**
      * needsEnrollment: Check if new course will need an enrollment
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last updated: unknown
      */
-    needsEnrollment() {
+    needsEnrollment () {
       return this.$refs.enrollmentRequired.checked
     }
 
@@ -131,16 +139,15 @@ export default {
 
   methods: {
 
-
     /**
      * Function duplicateCheck: check for duplicate keys before storing the course
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 24, 2021
      */
-    duplicateCheck() {
-      for(let entry of this.courseList) {
+    duplicateCheck () {
+      for (const entry of this.courseList) {
         if (this.newCourse.name === entry.name) {
           this.msg = this.i18n['courseCreate.courseExists']
           return
@@ -148,60 +155,59 @@ export default {
       }
       this.storeNewCourse()
     },
-    
+
     /**
-     * Function storeNewCourse: check for duplicate name, persist new database entry, 
+     * Function storeNewCourse: check for duplicate name, persist new database entry,
      *  create a new storage
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * last updated: March 24, 2021
-     *  */    
-    storeNewCourse() {
+     *  */
+    storeNewCourse () {
       this.trimNames()
       const self = this
       const { newCourse, auth } = this
 
       // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
       // let enrBool = self.needsEnrollment
-      let newId = uuidv4()
+      const newId = uuidv4()
       console.log(`New Id: ${newId}`)
 
       /* create storage */
       http.post('storage', {
-        name: newId,
+        name: newId
       }).then(() => console.log(`New Storage: ${newId}`))
-        .catch((err) => console.error(err));
+        .catch((err) => console.error(err))
 
       /* create course */
       http.post('courses', {
         ...newCourse,
         authorId: auth.userId,
-        storageId: newId,
+        storageId: newId
         // properties: { enrollment: enrBool }
-        }).then( () => {
-          // console.log(resp)
-          self.$router.push(`/courses/${newCourse.name}/1`)
+      }).then(() => {
+        // console.log(resp)
+        self.$router.push(`/courses/${newCourse.name}/1`)
 
-          /* create enrollment for creator */
-          // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
-          // if (enrBool) {
-          //     http.get(`courses/getCourseId?courseName=${newCourse.name}`).
-          //       then( resp => {
-          //         const newEnrollment = {
-          //           courseId: resp.data.courseId,
-          //           studentId: self.auth.userId
-          //         }
-          //         http.patch('enrollments', {
-          //           ...newEnrollment
-          //         }).catch((err) => {console.log(err)})
-          //       })
-          // }
-        }).catch((err) => {
-          console.log(err)
-          self.msg = self.i18n['savingFailed']
+        /* create enrollment for creator */
+        // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
+        // if (enrBool) {
+        //     http.get(`courses/getCourseId?courseName=${newCourse.name}`).
+        //       then( resp => {
+        //         const newEnrollment = {
+        //           courseId: resp.data.courseId,
+        //           studentId: self.auth.userId
+        //         }
+        //         http.patch('enrollments', {
+        //           ...newEnrollment
+        //         }).catch((err) => {console.log(err)})
+        //       })
+        // }
+      }).catch((err) => {
+        console.log(err)
+        self.msg = self.i18n['savingFailed']
       })
-
     },
 
     /**
@@ -212,7 +218,7 @@ export default {
      *
      *  Last Updated: October 31, 2021
      */
-    trimNames() {
+    trimNames () {
       this.newCourse.name = this.newCourse.name.trim()
       this.newCourse.category = this.newCourse.category.trim()
     }

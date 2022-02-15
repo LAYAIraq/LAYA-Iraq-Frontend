@@ -7,23 +7,20 @@
  */
 
 import _Vue from 'vue'
-
-import _create from './create.vue'
 import _view from './view.vue'
-import _edit from './edit.vue'
 
 export default {
-  install(Vue: typeof _Vue, options?: any): void {
+  install (Vue: typeof _Vue): void {
     Vue.$laya.registerLA(
-      'laya-scmc', 
+      'laya-scmc',
       'AssessmentScmc',
       'layaLaScmc',
       'fas fa-user-graduate',
       {
-        new: _create,
-        //@ts-ignore
-        view: _view,
-        edit: _edit,
+        new: () => import('./create.vue'),
+        // @ts-ignore
+        view: _view, // not lazily loaded b/c always visible
+        edit: () => import('./edit.vue')
       }
     )
   }

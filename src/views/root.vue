@@ -1,5 +1,5 @@
 <!--
-Filename: root.vue 
+Filename: root.vue
 Use: Show Landing Page
 Creator: core
 Date: unknown
@@ -7,11 +7,10 @@ Dependencies: @/mixins/locale.vue
 -->
 
 <template>
-  <div 
+  <div
     class="root-view"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
-
     <div class="container">
       <div class="row">
         <div class="col">
@@ -23,7 +22,9 @@ Dependencies: @/mixins/locale.vue
           <p> {{ i18n['root.promoText4'] }} </p>
           <p> {{ i18n['root.promoText5'] }} </p>
 
-          <b-link to="/register">{{ i18n['root.register'] }}</b-link>
+          <b-link to="/register">
+            {{ i18n['root.register'] }}
+          </b-link>
         </div>
       </div>
     </div>
@@ -34,12 +35,12 @@ Dependencies: @/mixins/locale.vue
 import { locale } from '@/mixins'
 
 export default {
-  name: 'root-view',
+  name: 'RootView',
 
   mixins: [
     locale
   ]
-  
+
 }
 </script>
 

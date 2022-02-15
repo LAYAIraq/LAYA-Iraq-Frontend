@@ -1,4 +1,4 @@
-<!-- 
+<!--
 Filename: simple-icon.vue
 Use: Shows a simple icon
 Author: core
@@ -16,7 +16,7 @@ Dependencies: none
 
 <script>
 export default {
-  name: 'ly-simple-icon'
+  name: 'LySimpleIcon'
 }
 </script>
 

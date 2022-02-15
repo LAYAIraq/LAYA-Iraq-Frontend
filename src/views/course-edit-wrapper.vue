@@ -14,21 +14,34 @@ Dependencies:
       <div class="row">
         <div class="col">
           <!-- preview -->
-          <div v-if="preview" :is="comps.view" :previewData="stepData"></div>
+          <div
+            :is="comps.view"
+            v-if="preview"
+            :preview-data="stepData"
+          ></div>
 
           <!-- editing view -->
-          <div v-show="!preview">
-            <component v-if="!editContent" :is="comps.new" ref="new"></component>
-            <component v-else :is="comps.edit" ref="edit"></component>
-
+          <div v-else>
+            <component
+              :is="comps.new"
+              v-if="!editContent"
+              ref="new"
+            ></component>
+            <component
+              :is="comps.edit"
+              v-else
+              ref="edit"
+            ></component>
           </div>
           <hr>
 
           <div class="d-flex justify-content-between">
-            <button type="button"
-                    class="btn btn-secondary"
-                    :class="{ active: preview }"
-                    @click="preview = !preview">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              :class="{ active: preview }"
+              @click="preview = !preview"
+            >
               <span v-if="preview">
                 <i class="fas fa-edit"></i>
                 {{ i18n['courseWrapper.edit'] }}
@@ -38,14 +51,17 @@ Dependencies:
                 {{ i18n['courseWrapper.preview'] }}
               </span>
             </button>
-            <button type="button" class="btn btn-primary" @click="save">
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="save"
+            >
               <i class="fas fa-save"></i> {{ i18n['save'] }}
             </button>
           </div>
 
           <hr>
           <laya-upload-file-list v-if="!preview"></laya-upload-file-list>
-
         </div>
       </div>
     </div>
@@ -53,31 +69,34 @@ Dependencies:
 </template>
 
 <script>
-import { locale } from '@/mixins'
+import { locale, routeProps } from '@/mixins'
 import { mapGetters } from 'vuex'
-import LayaUploadFileList from '@/plugins/misc/laya-upload-file-list/file-list.vue'
-
+import LayaUploadFileList from '@/plugins/misc/laya-upload-file-list/file-list'
 
 export default {
-  name: 'course-edit-wrapper',
+  name: 'CourseEditWrapper',
 
   components: {
     LayaUploadFileList
   },
 
   mixins: [
-    locale
+    locale,
+    routeProps
   ],
 
   props: {
-    name: String,
-    step: String,
-    type: String
+    type: {
+      type: String,
+      default () {
+        return ''
+      }
+    }
   },
 
-  data() {
+  data () {
     return {
-      preview: false,
+      preview: false
     }
   },
 
@@ -91,8 +110,8 @@ export default {
      *
      * Last Updated: January 20, 2021
      */
-    cid() {
-      return this.type || this.content[this.step-1].name //why not always use $route.params.type?
+    cid () {
+      return this.type || this.content[this.step - 1].name // why not always use $route.params.type?
     },
 
     /**
@@ -102,7 +121,7 @@ export default {
      *
      * Last Updated: January 20, 2021
      */
-    comps() {
+    comps () {
       const la = this.$laya.la[this.cid]
       return la ? la.components : this.$laya.lb[this.cid].components
     },
@@ -114,7 +133,7 @@ export default {
      *
      * Last Updated: January 20, 2021
      */
-    editContent() {
+    editContent () {
       return this.step <= this.content.length
     },
 
@@ -125,11 +144,11 @@ export default {
      *
      * Last Updated: January 20, 2021
      */
-    stepData() {
-      let input = {}
-      const data = this.editContent? this.$refs.edit.$data: this.$refs.new.$data
-      for (let prop in data) {
-        if(!/^[$_]/.test(prop)) {
+    stepData () {
+      const input = {}
+      const data = this.editContent ? this.$refs.edit.$data : this.$refs.new.$data
+      for (const prop in data) {
+        if (!/^[$_]/.test(prop)) {
           input[prop] = data[prop]
         }
       }
@@ -138,17 +157,18 @@ export default {
     }
   },
 
-  beforeDestroy() {
+  beforeDestroy () {
     // persist changes in database
-    if(this.editContent) {
+    if (this.editContent) {
       this.save()
       this.$store.dispatch('storeCourse')
     }
   },
 
-  mounted() {
-    if(!this.cid && !this.content) // data not passed -> go back
+  mounted () {
+    if (!this.cid && !this.content) { // data not passed -> go back
       this.$router.back()
+    }
   },
 
   methods: {
@@ -160,8 +180,8 @@ export default {
      *
      * Last Updated: January 11, 2022
      */
-    save() {
-      let step = this.step -1 // to comply to array indexing in store
+    save () {
+      const step = this.step - 1 // to comply to array indexing in store
       // deep copy to get rid of store references
       const newInput = JSON.parse(JSON.stringify(this.stepData))
       const updatedStep = {
@@ -170,10 +190,9 @@ export default {
       }
 
       // choose way depending on new or existing content
-      if(!this.editContent){
+      if (!this.editContent) {
         this.$store.commit('appendContent', { ...updatedStep, nextStep: null })
-      }
-      else{
+      } else {
         this.$store.commit('updateStep', { step, updatedStep })
       }
       // set courseUpdated to trigger watchers

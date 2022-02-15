@@ -7,7 +7,7 @@
  */
 
 export default {
-  data() {
+  data () {
     return {
       flagOpen: false
     }
@@ -19,7 +19,7 @@ export default {
      * Last Updated: August 23, 2021
      * @param val boolean
      */
-    toggleFlagOpen(val) {
+    toggleFlagOpen (val) {
       this.flagOpen = val
     }
   }

@@ -10,7 +10,7 @@ export default {
   computed: {
     ...mapGetters(['courseFlags'])
   },
-  data() {
+  data () {
     return {
       flaggables: []
     }
@@ -27,8 +27,8 @@ export default {
      * Author: cmc
      * Last Updated: July 7, 2021
      */
-    checkFlags() {
-      for (let elem of this.flaggables) {
+    checkFlags () {
+      for (const elem of this.flaggables) {
         for (const flag of this.courseFlags) {
           if (flag.referenceId === elem.id) {
             elem.flagged = true
@@ -38,14 +38,14 @@ export default {
       }
     },
 
-    populateFlaggables() {
+    populateFlaggables () {
       this.$data.forEach(elem => {
-        if(Object.prototype.hasOwnProperty
+        if (Object.prototype.hasOwnProperty
           .call(elem, 'flagged')) {
           this.flaggables.push(elem)
         } else if (Array.isArray(elem)) {
           elem.forEach(child => {
-            if(Object.prototype.hasOwnProperty
+            if (Object.prototype.hasOwnProperty
               .call(child, 'flagged')) {
               this.flaggables.push(child)
             }

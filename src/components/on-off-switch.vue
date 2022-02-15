@@ -1,32 +1,35 @@
 <template>
   <div class="onoffswitch">
-      <input 
-        type="checkbox" 
-        name="onoffswitch" 
-        class="onoffswitch-checkbox" 
-        id="laya-on-off-switch" 
-        tabindex="0" 
-        v-model="check"
-        @click.prevent="toggleCheck">
-      <label class="onoffswitch-label" for="laya-on-off-switch">
-        <span class="onoffswitch-inner"></span>
-        <span class="onoffswitch-switch"></span>
-      </label>
+    <input
+      id="laya-on-off-switch"
+      v-model="check"
+      type="checkbox"
+      name="onoffswitch"
+      class="onoffswitch-checkbox"
+      tabindex="0"
+      @click.prevent="toggleCheck"
+    >
+    <label
+      class="onoffswitch-label"
+      for="laya-on-off-switch"
+    >
+      <span class="onoffswitch-inner"></span>
+      <span class="onoffswitch-switch"></span>
+    </label>
   </div>
-
 </template>
 
 <script>
 export default {
-  name: 'lyOnOff',
-  data() {
+  name: 'LyOnOff',
+  data () {
     return {
       check: false
     }
   },
 
   methods: {
-    toggleCheck() {
+    toggleCheck () {
       this.check = !this.check
       this.$emit('checked', this.check)
     }
@@ -38,8 +41,8 @@ export default {
   .onoffswitch {
     position: relative; width: 90px;
     user-select: none;
-    -webkit-user-select:none; 
-    -moz-user-select:none; 
+    -webkit-user-select:none;
+    -moz-user-select:none;
     -ms-user-select: none;
   }
   .onoffswitch-checkbox {
@@ -77,12 +80,12 @@ export default {
     position: absolute; top: 0; bottom: 0;
     right: 56px;
     border: 2px solid #999999; border-radius: 20px;
-    transition: all 0.3s ease-in 0s; 
+    transition: all 0.3s ease-in 0s;
   }
   .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
     margin-left: 0;
   }
   .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
-    right: 0px;   
+    right: 0;
   }
 </style>

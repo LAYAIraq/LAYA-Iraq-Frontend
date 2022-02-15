@@ -1,5 +1,5 @@
 /**
- * Filename: passwordStrength.ts
+ * Filename: password-strength.ts
  * Use: Provide feedback regarding password strength
  * Author: pj
  * Date: June 28, 2021
@@ -8,7 +8,7 @@
 
 export default {
 
-  data() {
+  data () {
     return {
       possibleWarnings: ['Straight rows of keys are easy to guess', 'Short keyboard patterns are easy to guess', 'Repeats like "aaa" are easy to guess',
         'Repeats like "abcabcabc" are only slightly harder to guess than "abc"', 'Sequences like abc or 6543 are easy to guess',

@@ -8,23 +8,20 @@
  */
 
 import _Vue from 'vue'
-
-import _create from './create.vue'
-import _edit from './edit.vue'
 import _view from './view.vue'
 
 export default {
-  install(Vue: typeof _Vue, options?: any): void {
+  install (Vue: typeof _Vue): void {
     Vue.$laya.registerLA(
-      'laya-quiz-drag-drop', 
-      'AssessmentDragDrop', 
+      'laya-quiz-drag-drop',
+      'AssessmentDragDrop',
       'layaLaDragDrop',
       'fas fa-ellipsis-h',
       {
-        new: _create,
-        //@ts-ignore
-        view: _view,
-        edit: _edit
+        new: () => import('./create.vue'),
+        // @ts-ignore
+        view: _view, // not lazily loaded b/c always needed
+        edit: () => import('./edit.vue')
       }
     )
   }

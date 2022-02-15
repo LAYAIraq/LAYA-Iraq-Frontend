@@ -7,8 +7,8 @@
     <template slot="button-content">
       <!-- <i class="fas fa-bell"></i>
       {{ i18n['notifications'] }} -->
-        {{ i18n['notifications'] }}
-        <i class="fas fa-bell fa-lg"></i>
+      {{ i18n['notifications'] }}
+      <i class="fas fa-bell fa-lg"></i>
 
       <span
         v-if="unreadMessages"
@@ -23,7 +23,6 @@
       :key="i"
       class="text-nowrap"
     >
-
       <router-link
         :to="'/notifications?id=' + note.noteId"
         :highlight="note.noteId"
@@ -34,7 +33,6 @@
           {{ timeSince(note.time) }}
         </span>
       </router-link>
-
     </b-dropdown-item>
 
     <b-dropdown-item v-if="!messagesPresent">
@@ -59,7 +57,7 @@
       </b-button>
     </b-dropdown-item>
 
-    <b-dropdown-item >
+    <b-dropdown-item>
       <b-button
         class="w-100"
         @click="getNewNotifications"
@@ -82,7 +80,7 @@ import { mapGetters, mapState } from 'vuex'
 // import lyOnOff from '@/components/on-off-switch.vue'
 
 export default {
-  name: 'lyHeaderNotifications',
+  name: 'LyHeaderNotifications',
 
   // components: {
   //   lyOnOff
@@ -94,46 +92,46 @@ export default {
     time
   ],
 
+  data () {
+    return {
+      doNotDisturb: false,
+      notifyShortList: []
+      // stream: null,
+      // streamListener: null
+    }
+  },
+
   computed: {
     ...mapGetters([
-        'messages',
-        'unreadMessages',
-        'unreadMsgNo',
-        'userId'
-      ]),
+      'messages',
+      'unreadMessages',
+      'unreadMsgNo',
+      'userId'
+    ]),
     ...mapState(['message']),
     /**
      * messagesPresent: returns true if there are notifications
      * Author: cmc
      * Last Updated: June 10, 2021
      */
-    messagesPresent() {
+    messagesPresent () {
       return this.messages.length !== 0
     }
   },
 
-  data() {
-    return {
-      doNotDisturb: false,
-      notifyShortList: [],
-      // stream: null,
-      // streamListener: null
-    }
-  },
-
   watch: {
-    messages() {
+    messages () {
       this.$nextTick(() => this.setShortlist())
     }
   },
 
-  created() {
+  created () {
     this.$store.dispatch('getAllMessages')
     this.setShortlist()
     // this.initiateEventStream()
   },
 
-  beforeDestroy() {
+  beforeDestroy () {
     this.$store.dispatch('updateReadProp')
     // this.stream.close()
   },
@@ -145,7 +143,7 @@ export default {
      * Author: cmc
      * Last Updated: June 20, 2021
      */
-    initiateEventStream() {
+    initiateEventStream () {
       const customStreamUrl =
         `${api}/notifications/change-stream?_format=event-stream`
       // http.post(customStreamUrl)
@@ -157,11 +155,13 @@ export default {
       this.stream.addEventListener('data', (msg) => {
         // helper function to make read property a boolean
         const booleanizeString = (str) => {
-          return str === 'true' ? true:
-            str === 'false'? false:
-            str
+          return str === 'true'
+            ? true
+            : str === 'false'
+              ? false
+              : str
         }
-        let notification = JSON.parse(msg.data)
+        const notification = JSON.parse(msg.data)
         console.log('before:', notification.data)
         notification.data.read = booleanizeString(notification.data.read)
         console.log('after: ', notification.data)
@@ -178,9 +178,9 @@ export default {
      * Author: cmc
      * Last Updated: May 27, 2021
      */
-    setShortlist() {
+    setShortlist () {
       const createShortList = () => {
-        let tempList = [...this.messages]
+        const tempList = [...this.messages]
         tempList.sort((a, b) => a.time - b.time)
         if (tempList.length > 5) {
           tempList.length = 5
@@ -189,8 +189,7 @@ export default {
       }
       if (this.messages) {
         createShortList()
-      }
-      else {
+      } else {
         this.$nextTick(() => {
           createShortList()
         })
@@ -198,7 +197,6 @@ export default {
     }
   }
 }
-
 
 </script>
 
@@ -227,7 +225,5 @@ export default {
 .timestamp {
   color: rgba(0, 0, 0, 0.5);
 }
-
-
 
 </style>

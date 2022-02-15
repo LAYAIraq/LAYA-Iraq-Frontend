@@ -15,11 +15,14 @@ Dependencies:
 <template>
   <div class="courses-view">
     <div class="container">
-
       <div style="height: 2rem"></div>
 
       <div class="row">
-        <img class="mx-auto" src="../assets/kurse.svg" :alt="i18n['courses.brain']">
+        <img
+          class="mx-auto"
+          src="../assets/kurse.svg"
+          :alt="i18n['courses.brain']"
+        >
       </div>
 
       <div style="height: 2rem"></div>
@@ -37,11 +40,13 @@ Dependencies:
       <div class="row">
         <div class="col">
           <div class="ly-search-bar">
-            <input id="search-bar"
-                   type="text"
-                   v-model="search"
-                   :placeholder="i18n['searchPH']"
-                   :aria-label="i18n['searchPH.label']">
+            <input
+              id="search-bar"
+              v-model="search"
+              type="text"
+              :placeholder="i18n['searchPH']"
+              :aria-label="i18n['searchPH.label']"
+            >
             <i class="icon fas fa-search"></i>
           </div>
         </div>
@@ -54,17 +59,18 @@ Dependencies:
       <div class="container">
         <div class="row">
           <div class="col">
-
             <ly-course-list :filter="search">
             </ly-course-list>
-
           </div> <!-- col -->
         </div> <!-- row -->
       </div> <!-- container -->
     </div>
 
     <!-- author view -->
-    <div class="ly-bg-author py-3 mt-5" v-if="isAuthor">
+    <div
+      v-if="isAuthor"
+      class="ly-bg-author py-3 mt-5"
+    >
       <div class="container">
         <div class="row">
           <div class="col">
@@ -73,7 +79,6 @@ Dependencies:
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -81,39 +86,38 @@ Dependencies:
 import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 // import http from 'axios'
-
-import lyCourseEdit from '@/components/authoring/course-create'
 import lyCourseList from '@/components/ly-course-list'
 
 import utils from '../misc/utils.js'
 
 export default {
-  name: 'courses-view',
+  name: 'CoursesView',
 
   components: {
-    lyCourseEdit,
-    lyCourseList
+    lyCourseEdit: () => import('@/components/authoring/course-create'),
+    lyCourseList // not lazily loaded b/c always visible
   },
 
   mixins: [
     locale
   ],
 
+  data () {
+    return {
+      courses: [],
+      search: ''
+    }
+  },
+
   computed: {
     ...mapGetters([
       'courseList',
       'isAuthor'
-    ]),
+    ])
   },
 
-  created() {
+  created () {
     this.fetchCourses()
-  },
-  data() {
-    return {
-      courses: [],
-      search: '',
-    }
   },
 
   methods: {
@@ -126,7 +130,7 @@ export default {
      *
      * Last Updated: January 20, 2021
      */
-    fetchCourses() {
+    fetchCourses () {
       this.$store.dispatch('fetchCourseList')
     }
 

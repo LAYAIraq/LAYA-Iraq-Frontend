@@ -1,5 +1,5 @@
 /**
-  Filename: locale.ts 
+  Filename: locale.ts
   Use: Expose i18n local to components
   Creator: cmc
   Date: May 3, 2021
@@ -21,7 +21,7 @@ export default {
      *
      * Last Updated: May 3, 2021
      */
-    i18n() {
+    i18n () {
       return i18n[this.profileLang]
     },
 
@@ -33,7 +33,7 @@ export default {
      * Last Updated: November 16, 2021
      * @returns true if 'ar' or 'ku' is set as profileLang
      */
-    langIsAr() {
+    langIsAr () {
       return this.profileLang === 'ar' || this.profileLang === 'ku'
     }
   }

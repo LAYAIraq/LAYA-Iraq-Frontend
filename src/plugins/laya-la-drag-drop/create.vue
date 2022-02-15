@@ -16,11 +16,11 @@ Dependencies: @/mixins/locale.vue
         {{ i18n['layaLaDragDrop.name'] }}
       </h4>
       <i
-        id ="questionmark"
-        class="fas fa-question-circle"
-        @click="toggleTip"
-        :title="i18n['showTip']"
+        id="questionmark"
         v-b-tooltip.left
+        class="fas fa-question-circle"
+        :title="i18n['showTip']"
+        @click="toggleTip"
       ></i>
     </div>
 
@@ -30,12 +30,13 @@ Dependencies: @/mixins/locale.vue
       :lead="i18n['tipHeadline']"
     >
       <hr class="my-4">
-      <span v-html="i18n['layaLaDragDrop.tooltip']"></span>
+      <span>
+        {{ i18n['layaLaDragDrop.tooltip'] }}
+      </span>
     </b-jumbotron>
     <hr>
 
     <form>
-
       <!-- title -->
       <div class="form-group row">
         <label
@@ -47,8 +48,8 @@ Dependencies: @/mixins/locale.vue
         <div class="col-10">
           <input
             id="drag-drop-title"
-            type="text"
             v-model="title.text"
+            type="text"
             class="form-control"
             :placeholder="i18n['titlePlaceholder']"
           >
@@ -56,8 +57,8 @@ Dependencies: @/mixins/locale.vue
       </div>
       <!-- simple language alt -->
       <div
-        class="form-group row"
         v-if="courseSimple"
+        class="form-group row"
       >
         <label
           for="drag-drop-title-simple"
@@ -70,14 +71,13 @@ Dependencies: @/mixins/locale.vue
         <div class="col-10">
           <input
             id="drag-drop-title-simple"
-            type="text"
             v-model="title.simple"
+            type="text"
             class="form-control"
             :placeholder="i18n['simpleAlt']"
           >
         </div>
       </div>
-
 
       <!-- task -->
       <div class="form-group row">
@@ -98,13 +98,13 @@ Dependencies: @/mixins/locale.vue
 
       <!-- task simple -->
       <div
-        class="form-group row"
         v-if="courseSimple"
+        class="form-group row"
       >
         <span
           class="col-2 col-form-labelsr-only"
         >
-            {{ i18n['simpleAlt'] }}
+          {{ i18n['simpleAlt'] }}
         </span>
         <div class="col-10">
           <textarea
@@ -125,18 +125,20 @@ Dependencies: @/mixins/locale.vue
           {{ i18n['taskAudio'] }}
         </label>
         <div class="col-10">
-          <input id="drag-drop-task-audio"
-            type="text"
+          <input
+            id="drag-drop-task-audio"
             v-model="taskAudio.regular"
+            type="text"
             class="form-control"
-            :placeholder="i18n['taskAudioPlaceholder']">
+            :placeholder="i18n['taskAudioPlaceholder']"
+          >
         </div>
       </div>
 
       <!-- task audio simple -->
       <div
-        class="form-group row"
         v-if="courseSimple"
+        class="form-group row"
       >
         <label
           for="drag-drop-task-audio-simple"
@@ -149,25 +151,32 @@ Dependencies: @/mixins/locale.vue
         <div class="col-10">
           <input
             id="drag-drop-task-audio-simple"
-            type="text"
             v-model="taskAudio.simple"
+            type="text"
             class="form-control"
-            :placeholder="i18n['simpleAlt']">
+            :placeholder="i18n['simpleAlt']"
+          >
         </div>
       </div>
 
       <p><b>{{ i18n['layaLaDragDrop.cats'] }}</b></p>
-      <div class="form-group" v-for="(cat, i) in categories" :key="'cat-'+i">
-
+      <div
+        v-for="(cat, i) in categories"
+        :key="'cat-'+i"
+        class="form-group"
+      >
         <!-- text -->
         <div class="row">
-          <label class="col-form-label col-2" :for="'cat-text-'+i">{{ i18n['text'] }}</label>
+          <label
+            class="col-form-label col-2"
+            :for="'cat-text-'+i"
+          >{{ i18n['text'] }}</label>
           <div class="col-7">
             <input
               :id="'cat-text-'+i"
+              v-model="cat.text"
               class="form-control"
               type="text"
-              v-model="cat.text"
             >
           </div>
           <!-- delete -->
@@ -184,27 +193,26 @@ Dependencies: @/mixins/locale.vue
 
         <!-- simple alt -->
         <div
-          class="row"
           v-if="courseSimple"
+          class="row"
         >
           <label
-            class="col-form-label col-2"
             :for="'cat-simple-'+i"
+            class="col-form-label col-2"
           >
             <span class="sr-only">
-            {{ i18n['simpleAlt'] }}
-          </span>
+              {{ i18n['simpleAlt'] }}
+            </span>
           </label>
           <div class="col-7">
             <input
               :id="'cat-simple-'+i"
+              v-model="cat.simple"
               class="form-control"
               type="text"
-              v-model="cat.simple"
             >
           </div>
         </div>
-
       </div>
 
       <!-- add category -->
@@ -213,7 +221,8 @@ Dependencies: @/mixins/locale.vue
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            @click="_addCategory">
+            @click="_addCategory"
+          >
             <i class="fas fa-plus"></i>
             {{ i18n['layaLaDragDrop.catAdd'] }}
           </button>
@@ -225,9 +234,9 @@ Dependencies: @/mixins/locale.vue
         <b>{{ i18n['items'] }}</b>
       </p>
       <div
-        class="form-group"
         v-for="(it, i) in items"
         :key="'item-'+i"
+        class="form-group"
       >
         <div class="row">
           <!-- text -->
@@ -240,23 +249,28 @@ Dependencies: @/mixins/locale.vue
           <div class="col-5">
             <input
               :id="'item-text-'+i"
+              v-model="items[i].label"
               class="form-control"
               type="text"
-              v-model="items[i].label"
             >
           </div>
 
           <!-- category -->
           <div class="col-3">
             <select
-              class="custom-select"
               v-model="items[i].category"
+              class="custom-select"
             >
-              <option disabled :value="-1">{{ i18n['cat'] }}</option>
+              <option
+                disabled
+                :value="-1"
+              >
+                {{ i18n['cat'] }}
+              </option>
               <option
                 v-for="(cat,j) in categories"
-                :value="j"
                 :key="cat.text"
+                :value="j"
               >
                 {{ cat.text }}
               </option>
@@ -276,31 +290,32 @@ Dependencies: @/mixins/locale.vue
         </div>
 
         <div
-          class="row"
           v-if="courseSimple"
+          class="row"
         >
           <!-- simple item -->
           <label
-            class="col-form-label col-2"
             :for="'item-simple-'+i"
+            class="col-form-label col-2"
           >
             <span class="sr-only">
-            {{ i18n['simpleAlt'] }}
-          </span>
+              {{ i18n['simpleAlt'] }}
+            </span>
           </label>
           <div class="col-5">
             <input
               :id="'item-simple-'+i"
+              v-model="it.simple"
               class="form-control"
               type="text"
-              v-model="it.simple"
             >
           </div>
         </div>
       </div>
       <div class="form-group row">
         <div class="col-10 offset-2">
-          <button type="button"
+          <button
+            type="button"
             class="btn btn-primary btn-sm"
             @click="_addItem(i18n['layaLaScmc.edit.sampleOption'])"
           >
@@ -309,9 +324,7 @@ Dependencies: @/mixins/locale.vue
           </button>
         </div>
       </div>
-
     </form>
-
   </div>
 </template>
 
@@ -321,7 +334,7 @@ import { mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 
 export default {
-  name: 'laya-la-drag-drop-new',
+  name: 'LayaLaDragDropNew',
 
   mixins: [
     locale,
@@ -355,11 +368,11 @@ export default {
      *
      * Last Updated: March 12, 2021
      */
-    fillFormSamples() {
+    fillFormSamples () {
       // fill item and category props with localized tokens
       if (this.categories.length === 0) {
-        let temp = this.i18n['layaLaDragDrop.answer'] + " 1"
-        let tmpItem = {
+        const temp = this.i18n['layaLaDragDrop.answer'] + ' 1'
+        const tmpItem = {
           label: temp,
           simple: 'simple lang alternative',
           category: -1,
@@ -368,8 +381,8 @@ export default {
         }
         this.items.push(tmpItem)
 
-        for (let i = 1; i<3; i++) {
-          let tmp = this.i18n['cat'] + " " + i
+        for (let i = 1; i < 3; i++) {
+          const tmp = this.i18n['cat'] + ' ' + i
           this.categories.push({
             text: tmp,
             simple: 'simple language alternative'
@@ -378,7 +391,7 @@ export default {
       }
     },
 
-    populateVars() {
+    populateVars () {
       this.title = {
         text: '',
         flagged: false,
@@ -400,7 +413,7 @@ export default {
      *
      * @param {*} idx index at which to remove
      */
-    _delItem(idx) {
+    _delItem (idx) {
       this.items.splice(idx, 1)
     },
 
@@ -410,8 +423,8 @@ export default {
      * Last Updated: June 6, 2021
      * @param {string} str string to be added
      */
-    _addItem(str) {
-      this.items.push({label: str, category: -1, flagged: false, id: uuidv4()})
+    _addItem (str) {
+      this.items.push({ label: str, category: -1, flagged: false, id: uuidv4() })
     },
 
     /**
@@ -423,7 +436,7 @@ export default {
      *
      * @param {*} idx index at which to remove the category
      */
-    _delCategory(idx) {
+    _delCategory (idx) {
       this.categories.splice(idx, 1)
     },
     /**
@@ -434,7 +447,7 @@ export default {
      * Last Updated: unknown
      *
      */
-    _addCategory() {
+    _addCategory () {
       this.categories.push({})
     }
   }

@@ -18,11 +18,11 @@ Dependencies:
         {{ i18n['layaLaScmc.name'] }}
       </h3>
       <i
-        id ="questionmark"
-        class="fas fa-question-circle"
-        @click="toggleTip"
-        :title="i18n['showTip']"
+        id="questionmark"
         v-b-tooltip.left
+        class="fas fa-question-circle"
+        :title="i18n['showTip']"
+        @click="toggleTip"
       ></i>
     </div>
 
@@ -32,12 +32,12 @@ Dependencies:
       :lead="i18n['tipHeadline']"
     >
       <hr class="my-4">
-      <span v-html="i18n['layaLaScmc.tooltip']"></span>
-
+      <span>
+        {{ i18n['layaLaScmc.tooltip'] }}
+      </span>
     </b-jumbotron>
     <hr>
     <form>
-
       <!-- type -->
       <div class="form-group row">
         <label class="col-2 col-form-label">
@@ -47,10 +47,10 @@ Dependencies:
           <div class="form-check form-check-inline align-text-top">
             <input
               id="scmc-sc"
+              v-model="multiple"
               class="form-check-input"
               type="radio"
               :value="false"
-              v-model="multiple"
             >
             <label
               for="scmc-sc"
@@ -62,11 +62,11 @@ Dependencies:
           <div class="form-check form-check-inline align-text-top">
             <input
               id="scmc-mc"
+              v-model="multiple"
               class="form-check-input"
               type="radio"
               name="multiple"
               :value="true"
-              v-model="multiple"
             >
             <label
               for="scmc-mc"
@@ -90,8 +90,8 @@ Dependencies:
           <div class="col-10">
             <input
               id="scmc-title"
-              type="text"
               v-model="title.text"
+              type="text"
               class="form-control"
               :placeholder="i18n['titlePlaceholder']"
             >
@@ -99,8 +99,8 @@ Dependencies:
         </div>
         <!-- simple title-->
         <div
-          class="row"
           v-if="courseSimple"
+          class="row"
         >
           <label
             for="scmc-title-simple"
@@ -113,8 +113,8 @@ Dependencies:
           <div class="col-10">
             <input
               id="scmc-title-simple"
-              type="text"
               v-model="title.simple"
+              type="text"
               class="form-control"
               :placeholder="i18n['simpleAlt']"
             >
@@ -136,14 +136,15 @@ Dependencies:
               id="scmc-task"
               v-model="task.text"
               class="w-100"
-              :placeholder="i18n['taskPlaceholder']">
+              :placeholder="i18n['taskPlaceholder']"
+            >
             </textarea>
           </div>
         </div>
         <!-- task simple -->
         <div
-          class="row"
           v-if="courseSimple"
+          class="row"
         >
           <label
             for="scmc-task-simple"
@@ -158,7 +159,8 @@ Dependencies:
               id="scmc-task-simple"
               v-model="task.simple"
               class="w-100"
-              :placeholder="i18n['simpleAlt']">
+              :placeholder="i18n['simpleAlt']"
+            >
             </textarea>
           </div>
         </div>
@@ -176,8 +178,8 @@ Dependencies:
           <div class="col-10">
             <input
               id="scmc-task-audio"
-              type="text"
               v-model="taskAudio.regular"
+              type="text"
               class="form-control"
               :placeholder="i18n['taskAudioPlaceholder']"
             >
@@ -185,8 +187,8 @@ Dependencies:
         </div>
         <!-- task audio simple -->
         <div
-          class="row"
           v-if="courseSimple"
+          class="row"
         >
           <label
             for="scmc-task-audio-simple"
@@ -199,8 +201,8 @@ Dependencies:
           <div class="col-10">
             <input
               id="scmc-task-audio-simple"
-              type="text"
               v-model="taskAudio.simple"
+              type="text"
               class="form-control"
               :placeholder="i18n['simpleAlt']"
             >
@@ -210,9 +212,9 @@ Dependencies:
 
       <p><b>{{ i18n['items'] }}</b></p>
       <div
-        class="form-group"
         v-for="(option, i) in options"
         :key="'item-'+i"
+        class="form-group"
       >
         <div class="row">
           <!-- caption -->
@@ -225,20 +227,25 @@ Dependencies:
           <div class="col-7">
             <input
               :id="'option-text-'+i"
+              v-model="option.text"
               class="form-control"
               type="text"
-              v-model="option.text">
+            >
           </div>
 
           <!-- correct -->
           <div class="form-check form-check-inline">
             <input
               :id="'option-corr-'+i"
+              v-model="solutions[i]"
               class="form-check-input"
               type="checkbox"
               :true-value="i"
-              v-model="solutions[i]">
-            <label class="form-check-label" :for="'option-corr-'+i">
+            >
+            <label
+              class="form-check-label"
+              :for="'option-corr-'+i"
+            >
               {{ i18n['layaLaScmc.edit.correct'] }}
             </label>
           </div>
@@ -248,19 +255,19 @@ Dependencies:
             <button
               type="button"
               class="btn btn-danger btn-sm"
-              @click="_delItem(i)"
               :aria-label="i18n['deleteField']"
+              @click="_delItem(i)"
             >
               <i class="fas fa-times"></i>
             </button>
           </div>
         </div>
         <div
-          class="row"
           v-if="courseSimple"
+          class="row"
         >
           <label
-            :for="`item-${i}-simple`"
+            :for="'option-text-'+i"
             class="col-form-label col-2"
           >
             <span class="sr-only">
@@ -270,24 +277,22 @@ Dependencies:
           <div class="col-7">
             <input
               :id="'option-text-'+i"
+              v-model="options[i].simple"
               class="form-control"
               type="text"
-              v-model="options[i].simple"
             >
           </div>
-
         </div>
       </div>
 
       <button
         type="button"
         class="btn btn-primary btn-sm"
-        @click="_addItem">
+        @click="_addItem"
+      >
         <i class="fas fa-plus"></i>{{ i18n['itemAdd'] }}
       </button>
-
     </form>
-
   </div>
 </template>
 
@@ -297,7 +302,7 @@ import { locale, tooltipIcon } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 
 export default {
-  name: 'laya-la-scmc-edit',
+  name: 'LayaLaScmcEdit',
 
   mixins: [
     locale,
@@ -333,7 +338,7 @@ export default {
      *
      * Last Updated: unknown
      */
-    _delItem(idx) {
+    _delItem (idx) {
       this.options.splice(idx, 1)
     },
 
@@ -342,7 +347,7 @@ export default {
      * Author: core
      * Last Updated: June 28, 2021
      */
-    _addItem() {
+    _addItem () {
       this.options.push({
         text: this.i18n['layaLaScmc.edit.sampleOption'],
         flagged: false,
@@ -357,8 +362,8 @@ export default {
      *
      * Last Updated: March 19, 2021
      */
-    fetchData() {
-      let idx = this.$route.params.step - 1
+    fetchData () {
+      const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx]['input']))
       this.multiple = preData.multiple
       this.title = preData.title

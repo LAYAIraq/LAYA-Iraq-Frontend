@@ -32,7 +32,9 @@ Dependencies:
             class="d-block rounded-circle mx-auto avatar"
           >
 
-          <h1 class="text-center text-light">{{ profile.name }}</h1>
+          <h1 class="text-center text-light">
+            {{ profile.username }}
+          </h1>
         </div>
       </div>
       <!-- row -->
@@ -41,7 +43,10 @@ Dependencies:
 
     <div class="container">
       <div class="row">
-        <form class="w-100" style="margin-top: 1rem">
+        <form
+          class="w-100"
+          style="margin-top: 1rem"
+        >
           <h1 :class="langIsAr? 'text-right' : 'text-left'">
             {{ i18n['profile.title'] }}
           </h1>
@@ -49,14 +54,16 @@ Dependencies:
 
           <!-- Name -->
           <div class="form-group row">
-            <label for="username"
-                   class="col-sm-3 col-form-label">{{ i18n['namePH'] }}</label>
+            <label
+              for="username"
+              class="col-sm-3 col-form-label"
+            >{{ i18n['namePH'] }}</label>
             <div class="col-sm-9">
               <input
                 id="username"
+                v-model="profile.username"
                 type="text"
                 class="form-control"
-                v-model="profile.name"
                 readonly
                 tabindex="-1"
               >
@@ -65,14 +72,16 @@ Dependencies:
 
           <!-- Email -->
           <div class="form-group row">
-            <label for="email"
-                   class="col-sm-3 col-form-label">{{ i18n['emailPH'] }}</label>
+            <label
+              for="email"
+              class="col-sm-3 col-form-label"
+            >{{ i18n['emailPH'] }}</label>
             <div class="col-sm-9">
               <input
                 id="email"
+                v-model="profile.email"
                 type="text"
                 class="form-control"
-                v-model="profile.email"
                 readonly
                 tabindex="-1"
               >
@@ -82,13 +91,16 @@ Dependencies:
           <hr>
           <!-- Old Password -->
           <div class="form-group row">
-            <label for="oldPwd" class="col-sm-3 col-form-label">{{ i18n['profile.oldPwd'] }}</label>
+            <label
+              for="oldPwd"
+              class="col-sm-3 col-form-label"
+            >{{ i18n['profile.oldPwd'] }}</label>
             <div class="col-sm-9">
               <input
                 id="oldPwd"
+                v-model="oldPwd"
                 type="password"
                 class="form-control"
-                v-model="oldPwd"
                 :placeholder="i18n['profile.oldPwd']"
                 autocomplete="on"
               >
@@ -107,9 +119,9 @@ Dependencies:
             <div class="col-sm-9">
               <input
                 id="newPwd"
+                v-model="newPwd"
                 type="password"
                 class="form-control"
-                v-model="newPwd"
                 :placeholder="i18n['profile.newPwd']"
                 aria-describedby="new-pwd-label"
               >
@@ -128,9 +140,9 @@ Dependencies:
             <div class="col-sm-9">
               <input
                 id="repeatPwd"
+                v-model="repeatPwd"
                 type="password"
                 class="form-control"
-                v-model="repeatPwd"
                 :placeholder="i18n['pwd2PH']"
                 aria-describedby="repeat-label"
               >
@@ -144,7 +156,7 @@ Dependencies:
             >
               {{ i18n['profile.pwdStrength'] }}
             </label>
-            <div class="col-sm-9">
+            <div class="col">
               <password
                 id="pwdMeter"
                 v-model="newPwd"
@@ -159,7 +171,7 @@ Dependencies:
             </div>
           </div>
 
-
+          <!-- password suggestions -->
           <div
             v-if="showSuggestions"
             class="form-group row"
@@ -170,12 +182,13 @@ Dependencies:
               {{ i18n['profile.pwdSuggestion'] }}
             </div>
             <div
-              class="col-sm-9"
               id="pwd-suggestions"
+              class="col-sm-9"
             >
               <strong
                 id="testPwdMeter"
-                class="form-text text-center">
+                class="form-text text-center"
+              >
                 {{ warnings }}
               </strong>
 
@@ -193,6 +206,7 @@ Dependencies:
               </strong>
             </div>
           </div>
+
           <hr>
 
           <!-- avatar upload TODO: FIX Cropper Problems
@@ -210,10 +224,8 @@ Dependencies:
 
           </div>
 
-
           <hr>
           -->
-
 
           <!-- Default Media Forms -->
           <div class="form-group row">
@@ -222,7 +234,10 @@ Dependencies:
               <!-- Text -->
               <div class="checkbox-inline">
                 <label>
-                  <input type="checkbox" v-model="prefs.media.text">
+                  <input
+                    v-model="prefs.media.text"
+                    type="checkbox"
+                  >
                   {{ i18n['profile.defmedia.text'] }}
                 </label>
               </div>
@@ -230,7 +245,10 @@ Dependencies:
               <!-- Simple -->
               <div class="checkbox-inline">
                 <label>
-                  <input type="checkbox" v-model="prefs.media.simple">
+                  <input
+                    v-model="prefs.media.simple"
+                    type="checkbox"
+                  >
                   {{ i18n['profile.defmedia.simple'] }}
                 </label>
               </div>
@@ -238,7 +256,10 @@ Dependencies:
               <!-- Video -->
               <div class="checkbox-inline">
                 <label>
-                  <input type="checkbox" v-model="prefs.media.video">
+                  <input
+                    v-model="prefs.media.video"
+                    type="checkbox"
+                  >
                   {{ i18n['profile.defmedia.video'] }}
                 </label>
               </div>
@@ -246,7 +267,10 @@ Dependencies:
               <!-- Audio -->
               <div class="checkbox-inline">
                 <label>
-                  <input type="checkbox" v-model="prefs.media.audio">
+                  <input
+                    v-model="prefs.media.audio"
+                    type="checkbox"
+                  >
                   {{ i18n['profile.defmedia.audio'] }}
                 </label>
               </div>
@@ -260,7 +284,8 @@ Dependencies:
               {{ i18n['profile.fontOptions'] }}
             </label>
             <div
-              class="col-sm-9 d-inline-flex justify-content-between align-items-center">
+              class="col-sm-9 d-inline-flex justify-content-between align-items-center"
+            >
               <div class="input-inline">
                 <label>
                   {{ i18n['profile.font'] }}
@@ -272,7 +297,7 @@ Dependencies:
                       :key="i"
                       :value="opt.value"
                       :class="`laya-font-${opt.value}`"
-                      >
+                    >
                       <span :class="opt.value? `laya-font-${opt.value}`:''">
                         {{ opt.text }}
                       </span>
@@ -285,8 +310,8 @@ Dependencies:
                 <label>
                   {{ i18n['profile.fontSize'] }}
                   <b-form-input
-                    type="range"
                     v-model="chosenSize"
+                    type="range"
                     min="0"
                     :max="fontSizeOptions.length-1"
                   ></b-form-input>
@@ -307,10 +332,10 @@ Dependencies:
           <div class="form-group">
             <button
               type="submit"
-              @click="submit"
               :disabled="busy"
               class="btn btn-block btn-lg btn-outline-dark"
               style="border-width: 2px"
+              @click.prevent="submit"
             >
               <i class="fas fa-check"></i>
               {{ i18n['save'] }}
@@ -320,13 +345,25 @@ Dependencies:
         </form>
       </div>
     </div>
-    <b-toast variant="danger" id="submit-failed" :title="i18n['savingFailed']"
-             class="author-toast" auto-hide-delay="1500" static>
-      {{ i18n['profile.submitFail']}}
+    <b-toast
+      id="submit-failed"
+      variant="danger"
+      :title="i18n['savingFailed']"
+      class="author-toast"
+      auto-hide-delay="1500"
+      static
+    >
+      {{ i18n['profile.submitFail'] }}
     </b-toast>
-    <b-toast variant="success" id="submit-ok" :title="i18n['layaUploadFileList.success']"
-             class="author-toast" auto-hide-delay="1500" static>
-      {{ i18n['profile.submitOk']}}
+    <b-toast
+      id="submit-ok"
+      variant="success"
+      :title="i18n['layaUploadFileList.success']"
+      class="author-toast"
+      auto-hide-delay="1500"
+      static
+    >
+      {{ i18n['profile.submitOk'] }}
     </b-toast>
   </div>
 </template>
@@ -338,16 +375,16 @@ import api from '../backend-url.ts'
 import Password from 'vue-password-strength-meter'
 import { mapState } from 'vuex'
 import fontOptions from '@/misc/font-options'
-import fontSizeOptions from '@/misc/font-options'
+import fontSizeOptions from '@/misc/font-size-options'
 import 'open-dyslexic/open-dyslexic-regular.css'
 import '@/styles/fonts.css'
-//import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
+// import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
 
 export default {
-  name: 'profile-view',
+  name: 'ProfileView',
 
   components: {
-    Password,
+    Password // not lazily loaded b/c always visible
     // LayaUploadAvatar
   },
 
@@ -356,7 +393,7 @@ export default {
     pwdStrength
   ],
 
-  data() {
+  data () {
     return {
       avatar: null,
       oldPwd: '',
@@ -367,8 +404,8 @@ export default {
       busy: false,
       passwordStrength: null,
       prefs: {},
-      ...fontOptions,
-      ...fontSizeOptions
+      fontOptions: fontOptions,
+      fontSizeOptions: fontSizeOptions
     }
   },
 
@@ -382,9 +419,10 @@ export default {
      *
      * Last Updated: unknown
      */
-    avatarURL() {
-      return (!this.avatar || this.avatar === '') ?
-        null : `${api}/storage/img/download/${this.avatar}`
+    avatarURL () {
+      return (!this.avatar || this.avatar === '')
+        ? null
+        : `${api}/storage/img/download/${this.avatar}`
     },
 
     /**
@@ -397,10 +435,10 @@ export default {
      * @returns {number} index in fontSizeOptions array
      */
     chosenSize: {
-      get() {
+      get () {
         return this.fontSizeOptions.indexOf(this.prefs.font.size)
       },
-      set(newVal) {
+      set (newVal) {
         this.prefs.font.size = this.fontSizeOptions[newVal]
       }
     },
@@ -412,9 +450,9 @@ export default {
      *
      * Last Updated: September 22, 2021
      */
-    introFontOptions() {
+    introFontOptions () {
       return [
-        {value: null, text: this.i18n['profile.fontChoose']},
+        { value: null, text: this.i18n['profile.fontChoose'] },
         ...this.fontOptions
       ]
     },
@@ -426,7 +464,7 @@ export default {
      *
      * Last Updated: March 24, 2021
      */
-    passwordsDiffer() {
+    passwordsDiffer () {
       return this.newPwd !== this.repeatPwd
     },
 
@@ -437,8 +475,8 @@ export default {
      *
      * Last Updated: March 24, 2021
      */
-    pwdDiffMsg() {
-      return this.passwordsDiffer? this.i18n['profile.pwdDiffer'] : ''
+    pwdDiffMsg () {
+      return this.passwordsDiffer ? this.i18n['profile.pwdDiffer'] : ''
     },
 
     /**
@@ -449,7 +487,7 @@ export default {
      * Last Updated: September 22, 2021
      * @returns {boolean} true if any of the suggestions aren't empty
      */
-    showSuggestions() {
+    showSuggestions () {
       return this.warnings !== '' || this.pwdDiffMsg !== '' || this.pwdMsg !== ''
     },
 
@@ -461,15 +499,24 @@ export default {
      * Last Updated: September 22, 2021
      * @returns {string} password strength in locale
      */
-    wordedPwdStrength() {
-      return this.passwordStrength != null?
-        this.i18n[`pwdStrength${this.passwordStrength}`]:
-        ''
+    wordedPwdStrength () {
+      return this.passwordStrength != null
+        ? this.i18n[`pwdStrength${this.passwordStrength}`]
+        : ''
     }
   },
 
-  beforeDestroy() {
-    //save changes in profile
+  watch: {
+    profile: {
+      deep: true,
+      handler () {
+        this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
+      }
+    }
+  },
+
+  beforeDestroy () {
+    // save changes in profile
     this.$store.commit('setPrefs', this.prefs)
     this.$store.dispatch('saveProfile')
   },
@@ -498,7 +545,7 @@ export default {
      *
      * Last Updated: September 22, 2021
      */
-    setPwdStrength(num) {
+    setPwdStrength (num) {
       this.passwordStrength = num
     },
 
@@ -509,51 +556,57 @@ export default {
      *
      * Last Updated: unknown
      */
-    submit() {
+    submit () {
       this.busy = true
       const ctx = this
       ctx.formMsg = ''
 
-      const requests = []
+      // const requests = []
 
       /* change password request */
       if (ctx.oldPwd !== '' && ctx.newPwd !== '') {
-        requests.push(
-          http
+        // requests.push(
+        http
           .post('accounts/change-password', {
             oldPassword: ctx.oldPwd,
             newPassword: ctx.newPwd
           })
+          .then(() => {
+            this.busy = false
+            ctx.$bvToast.show('submit-ok')
+          })
           .catch(err => {
             console.error(err)
             ctx.pwdMsg = ctx.i18n['profile.pwdFail']
+            ctx.$bvToast.show('submit-failed')
           })
-        )
+        // )
       }
       // console.log(requests)
       /* fire requests */
-      http
-      .all(requests)
-      .then(
-        http.spread(() => {
-          ctx.formMsg = ctx.i18n['profile.submitOk']
-        })
-      )
-      .catch(function(err) {
-        console.log(err)
-        ctx.$bvToast.show('submit-failed')
-      })
-      .then(() => {
-        ctx.busy = false
-        setTimeout(() => {
-          ctx.formMsg = ''
-        }, 2000)
-        ctx.$forceUpdate()
-        ctx.$bvToast.show('submit-ok')
-      })
+      // http
+      // .all(requests)
+      // .then(
+      //   http.spread(() => {
+      //     ctx.formMsg = ctx.i18n['profile.submitOk']
+      //   })
+      // )
+      // .catch(function(err) {
+      //   console.log(err)
+      //   ctx.$bvToast.show('submit-failed')
+      // })
+      // .then(() => {
+      //   ctx.busy = false
+      //   setTimeout(() => {
+      //     ctx.formMsg = ''
+      //   }, 2000)
+      //   ctx.$forceUpdate()
+      //   ctx.$bvToast.show('submit-ok')
+      // })
 
-      /* update state */
+      /* update state and save profile preferences */
       ctx.$store.commit('setPrefs', ctx.prefs)
+      ctx.$store.dispatch('saveProfile')
     },
 
     /**
@@ -565,10 +618,10 @@ export default {
      * @param suggestions
      * @param warning
      */
-    showFeedback({ suggestions, warning }) {
-      this.pwdSuggestions({ suggestions, warning })
+    showFeedback ({ suggestions, warning }) {
+      this.pwdStrength({ suggestions, warning })
     }
-  },
+  }
 }
 </script>
 

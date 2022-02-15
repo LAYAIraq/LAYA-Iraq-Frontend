@@ -15,12 +15,12 @@ export default {
 
     /**
      * types(): filter i18n file for mimeType keys
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: May 5, 2021
      */
-    types() {
+    types () {
       const types = {}
 
       // filter i18n file for key containing 'mimeTypes'
@@ -40,12 +40,12 @@ export default {
 
     /**
      * function fileIcon: returns a fas class for expected MIME types
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: April 28, 2021
      */
-    fileIcon(type){
+    fileIcon (type) {
       // List of official MIME Types: http://www.iana.org/assignments/media-types/media-types.xhtml
       const iconClasses = {
         // Media
@@ -88,15 +88,14 @@ export default {
 
     /**
      * Function fileTypeString: return textual description of file type
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: April 28, 2021
-     * 
+     *
      * @param {string} type mime type of http request
      */
-    fileTypeString(type){
-      
+    fileTypeString (type) {
       const fileClasses = {
         // Media
         image: 'image',
@@ -129,7 +128,7 @@ export default {
         if (Object.prototype.hasOwnProperty.call(fileClasses, key)) {
           if (type.search(key) === 0) {
             // Found it
-            return this.types['mimeTypes.'+key]
+            return this.types['mimeTypes.' + key]
           }
         }
       }

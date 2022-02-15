@@ -1,9 +1,9 @@
 <!--
-Filename: mycourses.vue 
-Use: show courses for certain user 
+Filename: mycourses.vue
+Use: show courses for certain user
 Creator: core
 Date: unknown
-Dependencies: 
+Dependencies:
   vuex,
   axios,
   @/mixins/locale.vue
@@ -27,7 +27,9 @@ Dependencies:
         alt="Avatar"
         class="d-block rounded-circle mx-auto avatar"
       >
-      <h1 class="text-center text-light">{{ profile.name }}</h1>
+      <h1 class="text-center text-light">
+        {{ profile.username }}
+      </h1>
     </div>
 
     <!-- filter and search -->
@@ -35,19 +37,25 @@ Dependencies:
       <div class="row">
         <div class="col">
           <div class="d-flex justify-content-between">
-            <h2 id="tab-focus" tabindex="0">
+            <h2
+              id="tab-focus"
+              tabindex="0"
+            >
               <b>{{ i18n['mycourses.title'] }}</b>
             </h2>
           </div>
           <div class="sep"></div>
-          <div id="filters" class="d-flex justify-content-start flex-wrap">
-            <a 
-              href
+          <div
+            id="filters"
+            class="d-flex justify-content-start flex-wrap"
+          >
+            <a
               v-for="cat in cats"
-              v-bind:key="cat"
-              @click.prevent="cat.on = !cat.on"
+              :key="cat"
+              href
               class="filter"
               :class="{active: cat.on}"
+              @click.prevent="cat.on = !cat.on"
             > <!-- was missing v-bind:key directive -->
               <u>{{ cat.label }}</u>
             </a>
@@ -57,8 +65,8 @@ Dependencies:
           <div class="ly-search-bar">
             <input
               id="search-bar"
-              type="text"
               v-model="searchStr"
+              type="text"
               :placeholder="i18n['searchPH']"
               autofocus
             >
@@ -78,26 +86,43 @@ Dependencies:
               <div slot="header">
                 <div class="d-flex">
                   <div style="flex-basis: 25%;"></div>
-                  <a href @click.prevent="sortByName" class="w-50 pt-3 pb-3">
+                  <a
+                    href
+                    class="w-50 pt-3 pb-3"
+                    @click.prevent="sortByName"
+                  >
                     <i :class="nameSortIcon"></i>
                     <span class="d-none d-sm-inline">{{ i18n['mycourses.sortByName'] }}</span>
                   </a>
-                  <a href @click.prevent="sortByDate" class="w-25 text-right pt-3 pb-3">
+                  <a
+                    href
+                    class="w-25 text-right pt-3 pb-3"
+                    @click.prevent="sortByDate"
+                  >
                     <i :class="dateSortIcon"></i>
                     <span class="d-none d-sm-inline">{{ i18n['mycourses.sortByDate'] }}</span>
                   </a>
                 </div>
               </div>
 
-              <div slot="item" slot-scope="data">
+              <div
+                slot="item"
+                slot-scope="data"
+              >
                 <div class="d-flex">
                   <!-- left meta infos -->
                   <div class="w-25 pr-5">
                     <h3 class="d-flex justify-content-start h-25">
-                      <span v-if="data.item.locked" class="mr-2">
+                      <span
+                        v-if="data.item.locked"
+                        class="mr-2"
+                      >
                         <i class="fas fa-lock"></i>
                       </span>
-                      <span v-if="data.item.endDate" class="mr-2">
+                      <span
+                        v-if="data.item.endDate"
+                        class="mr-2"
+                      >
                         <i class="fas fa-stopwatch"></i>
                       </span>
                     </h3>
@@ -148,7 +173,7 @@ import utils from '../misc/utils.js'
 import be from '@/backend-url'
 
 export default {
-  name: 'mycourses-view',
+  name: 'MycoursesView',
 
   components: {
     lyAccordion
@@ -158,7 +183,11 @@ export default {
     locale
   ],
 
-  data() {
+  beforeRouteEnter (to, from, next) {
+    next()
+  },
+
+  data () {
     return {
       cats: [],
       courses: [],
@@ -174,23 +203,23 @@ export default {
 
     /**
      * avatarURL: return url of profile avatar
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: March 21, 2021
      */
-    avatarURL() {
+    avatarURL () {
       return `${be()}/storage/img/download/${this.profile.avatar}`
     },
 
     /**
      * nameSortIcon: return icon css class depending on how names are sorted
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
-    nameSortIcon() {
+    nameSortIcon () {
       return {
         'fas fa-sort-up': this.sortBy === 'nameASC',
         'fas fa-sort-down': this.sortBy === 'nameDESC',
@@ -200,12 +229,12 @@ export default {
 
     /**
      * dateSortIcon: return icon css class depending on how dates are sorted
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
-    dateSortIcon() {
+    dateSortIcon () {
       return {
         'fas fa-sort-up': this.sortBy === 'dateASC',
         'fas fa-sort-down': this.sortBy === 'dateDESC',
@@ -214,15 +243,11 @@ export default {
     }
   },
 
-  beforeRouteEnter(to, from, next) {
-    next()
-  },
-
-  mounted() {
+  mounted () {
     document.querySelector('#tab-focus').focus()
   },
 
-  created() {
+  created () {
     this.fetchCourses()
   },
 
@@ -231,15 +256,15 @@ export default {
 
     /**
      * Function search: filter courses with given input
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param {array} courses course array
      * @returns {array} filtered course list
      */
-    search(courses) {
+    search (courses) {
       const { searchStr } = this
       if (searchStr === '') return courses
       return courses.filter(course => {
@@ -250,33 +275,33 @@ export default {
 
     /**
      * Function filter: filter courses by category
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param {array} courses course array
      * @returns {array} filtered course list
      */
-    filter(courses) {
+    filter (courses) {
       if (courses.length === 0) return courses
-      let activeCats = this.cats.filter(c => c.on).map(c => c.label)
+      const activeCats = this.cats.filter(c => c.on).map(c => c.label)
       if (activeCats.length === 0) return courses
       return courses.filter(c => activeCats.includes(c.category))
     },
 
     /**
-     * Function sort: sort courses 
-     * 
+     * Function sort: sort courses
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
-     * 
+     *
      * @param {array} _courses course array
      * @returns {array} sorted course array
      */
-    sort(_courses) {
-      let courses = [..._courses]
+    sort (_courses) {
+      const courses = [..._courses]
       const by = this.sortBy
       if (by === 'nameASC') {
         return courses.sort((c1, c2) => c1.name < c2.name)
@@ -295,12 +320,12 @@ export default {
 
     /**
      * Function sortByName: sort courses by name
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
-    sortByName() {
+    sortByName () {
       if (this.sortBy === 'nameASC') {
         this.sortBy = 'nameDESC'
         return
@@ -314,12 +339,12 @@ export default {
 
     /**
      * Function sortByDate: sort courses by date
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
-    sortByDate() {
+    sortByDate () {
       if (this.sortBy === 'dateASC') {
         this.sortBy = 'dateDESC'
         return
@@ -330,16 +355,16 @@ export default {
       }
       this.sortBy = 'dateDESC'
     },
-    
+
     /**
      * Function fetchCourses: fetch courses from database,
      *  create categories
-     * 
+     *
      * Author: core
-     * 
+     *
      * Last Updated: unknown
      */
-    fetchCourses() {
+    fetchCourses () {
       const ctx = this
       this.$store.commit('setBusy', true)
       this.$store.commit('clearMyCourse')
@@ -347,7 +372,7 @@ export default {
       * fetch courses */
       http
         .get(`accounts/${ctx.auth.userId}/mycourses?filter[include]=author`)
-        .then(function({ data }) {
+        .then(function ({ data }) {
           ctx.courses = data
           /*
           * create filters from categories */

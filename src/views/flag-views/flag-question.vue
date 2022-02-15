@@ -8,7 +8,7 @@
 
     <div class="form-group flag-question">
       <form
-        @submit="setFlagQuestion()"
+        @submit.prevent="setFlagQuestion()"
       >
         <div class="form-group row">
           <span
@@ -17,35 +17,34 @@
           >
           </span>
           <textarea
+            id="set-flag-question"
+            v-model="question"
             aria-labelledby="question-hint"
             class="form-control"
-            id="set-flag-question"
             rows="5"
-            v-model="question"
             :placeholder="i18n['flag.questionPlaceholder']"
-
           ></textarea>
         </div>
         <div class="form-group row">
-
-            {{ i18n['flag.anonymous'] }}
-            <i
-              id="questionmark"
-              class="fas fa-question-circle"
-              :class="langIsAr? 'mr-3': 'ml-3'"
-              @click="toggleTip"
-              :title="i18n['showTip']"
-            ></i>
-            <div aria-live="polite">
-              <b-jumbotron
-                v-if="tooltipOn">
-                <div>{{ i18n['flag.anonHint'] }}</div>
-              </b-jumbotron>
-            </div>
+          {{ i18n['flag.anonymous'] }}
+          <i
+            id="questionmark"
+            class="fas fa-question-circle"
+            :class="langIsAr? 'mr-3': 'ml-3'"
+            :title="i18n['showTip']"
+            @click="toggleTip"
+          ></i>
+          <div aria-live="polite">
+            <b-jumbotron
+              v-if="tooltipOn"
+            >
+              <div>{{ i18n['flag.anonHint'] }}</div>
+            </b-jumbotron>
+          </div>
           <input
-            id ="anonymous-question"
-            type="checkbox"
+            id="anonymous-question"
             v-model="anonymous"
+            type="checkbox"
             :class="langIsAr? 'mr-3': 'ml-3'"
             :aria-label="i18n['flag.anonymous']"
           >
@@ -69,29 +68,22 @@ import { locale, tooltipIcon } from '@/mixins'
 import { mapGetters } from 'vuex'
 import './flag-styles.css'
 export default {
-  name: 'flag-question',
+  name: 'FlagQuestion',
 
   mixins: [
-      locale,
+    locale,
     tooltipIcon
   ],
 
-  computed: {
-    ...mapGetters([
-      'courseFlags',
-      'courseCreator',
-      'courseId',
-      'userId'
-    ]),
-
-  },
-
   props: {
-    id: String
+    id: {
+      type: String,
+      default () { return '' }
+    }
   },
 
-  data() {
-    return{
+  data () {
+    return {
       answerSent: false,
       anonymous: false,
       newAnswer: '',
@@ -99,6 +91,16 @@ export default {
       question: '',
       unflagged: false
     }
+  },
+
+  computed: {
+    ...mapGetters([
+      'courseFlags',
+      'courseCreator',
+      'courseId',
+      'userId'
+    ])
+
   },
 
   methods: {
@@ -110,7 +112,7 @@ export default {
      *
      * Last Updated: September 21, 2021
      */
-    setFlagQuestion() {
+    setFlagQuestion () {
       if (this.question === '') {
         this.$bvToast.toast(this.i18n['flag.noQuestion'], {
           title: this.i18n['flag.noQuestionTitle'],
@@ -127,9 +129,9 @@ export default {
           referenceId: this.$route.params.id,
           courseId: this.courseId,
           authorId: this.userId,
-          enrollmentId: (this.$store.state.enrollment) ?
-              this.$store.state.enrollment.id :
-              null
+          enrollmentId: (this.$store.state.enrollment)
+            ? this.$store.state.enrollment.id
+            : null
         }
         this.$store.commit('setFlag', flag)
         this.$store.dispatch('saveFlags')

@@ -1,21 +1,25 @@
-<!-- 
-Filename: course-delete-block.vue 
+<!--
+Filename: course-delete-block.vue
 Use: Provides tool to delete content block
 Creator: cmc
 Date: October 27, 2020
-Dependencies: 
+Dependencies:
   vuex,
   @/mixins/locale.vue
 -->
 
 <template>
-  <div class="row mt-5" v-if="contentToDisplay">
-
+  <div
+    v-if="contentToDisplay"
+    class="row mt-5"
+  >
     <div class="col">
-      <b-button size="sm"
-          variant="danger"
-          :class="langIsAr? 'float-left' : 'float-right'"
-          @click="$bvModal.show('author-delContent-confirm')">
+      <b-button
+        size="sm"
+        variant="danger"
+        :class="langIsAr? 'float-left' : 'float-right'"
+        @click="$bvModal.show('author-delContent-confirm')"
+      >
         <i class="fas fa-exclamation-circle"></i> {{ i18n['deleteContent'] }}
       </b-button>
     </div>
@@ -24,66 +28,65 @@ Dependencies:
       {{ i18n['deleteBlock.deleteContentTip'] }}
     </div>
 
-    <b-modal id="author-delContent-confirm"
-        :title="i18n['deleteContent']"
-        header-bg-variant="danger"
-        ok-variant="danger"
-        :ok-title="i18n['delete']"
-        :cancel-title="i18n['cancel']"
-        @ok="delContent"
-        centered>
+    <b-modal
+      id="author-delContent-confirm"
+      :title="i18n['deleteContent']"
+      header-bg-variant="danger"
+      ok-variant="danger"
+      :ok-title="i18n['delete']"
+      :cancel-title="i18n['cancel']"
+      centered
+      @ok="delContent"
+    >
       <p>
         {{ i18n['deleteBlock.modal.text'] }}
       </p>
     </b-modal>
-
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { locale } from '@/mixins'
+import { locale, routeProps } from '@/mixins'
 
 export default {
-  name: 'course-delete-block',
+  name: 'CourseDeleteBlock',
+
   mixins: [
-    locale
+    locale,
+    routeProps
   ],
+
   computed: {
     ...mapGetters(['content']),
     ...mapState(['edit'])
-  },
-
-  props: {
-    name: String,
-    step: String
   },
 
   methods: {
 
     /**
      * Function contentToDisplay: return current content block
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: March 24, 2021
      */
-    contentToDisplay() {
-      return this.content[this.step-1]
+    contentToDisplay () {
+      return this.content[this.step - 1]
     },
 
     /**
      * Function delContent: remove current content block in store
-     * 
+     *
      * Author: cmc
-     * 
+     *
      * Last Updated: October 27, 2020
      */
-    delContent() {
-      this.$store.commit('delContent', this.step-1) 
+    delContent () {
+      this.$store.commit('delContent', this.step - 1)
       this.$store.dispatch('storeCourse')
     }
-    
+
   }
 }
 </script>

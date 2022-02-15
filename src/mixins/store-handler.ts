@@ -17,17 +17,17 @@ export default {
      *
      * Last Updated: October 21, 2021
      */
-    fetchCourse(name) {
+    fetchCourse (name) {
       const courseName = name || this.$route.params.name // use argument if given, otherwise use router params
       this.$store.dispatch('fetchCourse', courseName)
-      .then(() => {
+        .then(() => {
         // this.fetchEnrollment() // commented out b/c no enrollment
-        this.$store.commit('unsetCourseUpdated')
-      })
-      .catch(err => {
-        this.$router.push('/courses')
-        console.error(err)
-      })
+          this.$store.commit('unsetCourseUpdated')
+        })
+        .catch(err => {
+          this.$router.push('/courses')
+          console.error(err)
+        })
     },
     /**
      * Function fetchEnrollment: load enrollment status of user
@@ -36,8 +36,8 @@ export default {
      *
      * Last Updated: October 27, 2020
      */
-    fetchEnrollment() {
-      if(this.course.needsEnrollment) {
+    fetchEnrollment () {
+      if (this.course.needsEnrollment) {
         this.$store.dispatch('fetchEnrollment', this.course.courseId)
       }
     },
@@ -49,10 +49,9 @@ export default {
      *
      * Last Updated: July 7, 2021
      */
-    fetchFlags() {
+    fetchFlags () {
       this.$store.dispatch('getCourseFlags', this.course.courseId)
     },
-
 
     /**
      * Function getNewNotifications: get messages newer than
@@ -62,7 +61,7 @@ export default {
      *
      * Last Updated: June 26, 2021
      */
-    getNewNotifications() {
+    getNewNotifications () {
       this.$store.dispatch('getNewMessages')
     },
 
@@ -73,7 +72,7 @@ export default {
      *
      * Last Updated: May 28, 2021
      */
-    markAllAsRead() {
+    markAllAsRead () {
       this.$store.commit('allRead')
     },
 
@@ -84,7 +83,7 @@ export default {
      *
      * Last Updated: July 7, 2021
      */
-    updateFlags() {
+    updateFlags () {
       this.$store.dispatch('updateFlags')
     },
 
@@ -95,8 +94,8 @@ export default {
      *
      * Last Updated: October 27, 2020
      */
-    updateEnrollment() {
+    updateEnrollment () {
       this.$store.dispatch('updateEnrollment')
-    },
+    }
   }
 }
