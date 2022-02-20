@@ -1,3 +1,4 @@
+<!--suppress XmlInvalidId --> <!-- id reference for label used for file drag & drop -->
 <template>
   <div
     class="file-list"
@@ -5,16 +6,15 @@
   >
     <!-- title, tooltip-->
     <div class="file-explorer">
-      <div>
-        <label>
-          <h2>
-            {{ i18n['layaUploadFileList.filesInCourse'] }}
-          </h2>
-        </label>
+      <div class="d-flex">
+        <h2>
+          {{ i18n['layaUploadFileList.filesInCourse'] }}
+        </h2>
         <i
           id="questionmark"
           v-b-tooltip.left
           class="fas fa-question-circle align-right"
+          :class="langIsAr? 'mr-auto': 'ml-auto'"
           :title="i18n['showTip']"
           @click="toggleTip"
         >
@@ -135,6 +135,8 @@
       </div>
     </div>
     <hr>
+
+    <!-- list upload drag & drop -->
     <div
       v-if="!addUpload"
       class="show-uploader"
@@ -214,7 +216,10 @@
               <h4>
                 {{ i18n['layaUploadFileList.dropOr'] }}
               </h4>
-              <label class="btn btn-lg btn-primary">
+              <label
+                class="btn btn-lg btn-primary"
+                for="file"
+              >
                 <i class="fas fa-plus"></i>
                 {{ i18n['layaUploadFileList.selectFiles'] }}
               </label>
@@ -665,8 +670,6 @@ span.sort-list {
   top: 50%;
   left: 0;
   right: 0;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
   transform: translateY(-50%);
   font-size: 40px;
   color: #fff;
