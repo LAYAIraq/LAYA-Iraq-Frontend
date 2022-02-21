@@ -145,10 +145,10 @@ export default new Router({
 
 export const publicRoutes = [
   '/',
-  '#/login',
-  '#/register',
-  '#/imprint',
-  '#/privacy',
-  '#/reset-password',
-  '#/verify'
+  '/login',
+  '/register',
+  '/imprint',
+  '/privacy',
+  '/reset-password',
+  '/verify'
 ]
