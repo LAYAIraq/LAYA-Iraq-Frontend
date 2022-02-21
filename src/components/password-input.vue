@@ -1,7 +1,7 @@
 <template>
-  <div class="laya-pwd-input pwd-row">
+  <div class="laya-pwd-input">
     <!-- Password -->
-    <div class="form-group">
+    <div class="form-group row">
       <span
         id="pwd-label"
         :class="`col-${labelWidth}`"
@@ -22,7 +22,7 @@
       <div class="col">
         <password
           v-model="pwdSet"
-          class="pwd-row"
+          class="pwd-input"
           :class="langIsAr? 'reverse': ''"
           :default-class="'form-control'"
           :label-hide="i18n['password.hide']"
@@ -32,7 +32,7 @@
           :toggle="!langIsAr"
           :badge="!langIsAr"
           aria-describedby="pwd-label"
-          @feedback="pwdStrength"
+          @feedback="pwdHints"
           @score="setPwdStrength"
         ></password>
         <strong
@@ -45,7 +45,7 @@
     </div>
 
     <!-- repeat password -->
-    <div class="form-group">
+    <div class="form-group row">
       <label
         id="repeat-label"
         for="repeatPwd"
@@ -68,7 +68,7 @@
           id="repeatPwd"
           v-model="pwdRepeat"
           type="password"
-          class="form-control pwd-row"
+          class="form-control"
           :placeholder="i18n['pwd2PH']"
           aria-describedby="repeat-label"
         >
@@ -78,7 +78,7 @@
     <!-- password suggestions -->
     <div
       v-if="showPasswordSuggestions && warnings.length !== 0"
-      class="form-group"
+      class="form-group row"
     >
       <div
         :class="`col-${labelWidth}`"
@@ -97,7 +97,7 @@
       </div>
       <div
         id="suggestions"
-        class="col pwd-row"
+        class="col"
       >
         <strong
           id="pwd-suggestions"
@@ -111,7 +111,7 @@
     <!-- error messages -->
     <div
       v-if="!pwdSecureLength || !pwdMatch"
-      class="form-group"
+      class="form-group row"
     >
       <div
         :class="`col-${labelWidth}`"
@@ -130,7 +130,7 @@
       </div>
       <div
         id="errors"
-        class="col pwd-row"
+        class="col"
       >
         <strong
           id="pwd-diff-msg"
@@ -212,22 +212,45 @@ export default {
   data () {
     return {
       passwordStrength: null,
-      possibleWarnings: ['Straights of keys are easy to guess', 'Short keyboard patterns are easy to guess', 'Repeats like "aaa" are easy to guess',
-        'Repeats like "abcabcabc" are only slightly harder to guess than "abc"', 'Sequences like abc or 6543 are easy to guess',
-        'Recent years are easy to guess', 'Dates are often easy to guess', 'This is a top-10 common password', 'This is a top-100 common password',
-        'This is a very common password', 'This is similar to a commonly used password', 'A word by itself is easy to guess',
-        'Names and surnames by themselves are easy to guess', 'Common names and surnames are easy to guess'], // length = 14
-      possibleSuggestions: ['Use a few words, avoid common phrases', 'No need for symbols, digits, or uppercase letters',
-        'Add another word or two. Uncommon words are better.', 'Use a longer keyboard pattern with more turns', 'Avoid repeated words and characters',
-        'Avoid sequences', 'Avoid recent years', 'Avoid years that are associated with you', 'Avoid dates and years that are associated with you',
-        "Capitalization doesn't help very much", 'All-uppercase is almost as easy to guess as all-lowercase', "Reversed words aren't much harder to guess",
-        "Predictable substitutions like '@' instead of 'a' don't help very much"], // length = 13
+      possibleWarnings: [
+        'Straights of keys are easy to guess',
+        'Short keyboard patterns are easy to guess',
+        'Repeats like "aaa" are easy to guess',
+        'Repeats like "abcabcabc" are only slightly harder to guess than "abc"',
+        'Sequences like abc or 6543 are easy to guess',
+        'Recent years are easy to guess',
+        'Dates are often easy to guess',
+        'This is a top-10 common password',
+        'This is a top-100 common password',
+        'This is a very common password',
+        'This is similar to a commonly used password',
+        'A word by itself is easy to guess',
+        'Names and surnames by themselves are easy to guess',
+        'Common names and surnames are easy to guess'
+      ], // length = 14
+      possibleSuggestions: [
+        'Use a few words, avoid common phrases',
+        'No need for symbols, digits, or uppercase letters',
+        'Add another word or two. Uncommon words are better.',
+        'Use a longer keyboard pattern with more turns',
+        'Avoid repeated words and characters',
+        'Avoid sequences', 'Avoid recent years',
+        'Avoid years that are associated with you',
+        'Avoid dates and years that are associated with you',
+        'Capitalization doesn\'t help very much',
+        'All-uppercase is almost as easy to guess as all-lowercase',
+        'Reversed words aren\'t much harder to guess',
+        'Predictable substitutions like \'@\' instead of \'a\' don\'t help very much'
+      ], // length = 13
       warnings: ''
     }
   },
 
   computed: {
-    ...mapGetters(['passwordRepeat', 'passwordSet']),
+    ...mapGetters([
+      'passwordRepeat',
+      'passwordSet'
+    ]),
 
     /**
      * inputWidth: returns number for matching label in bootstrap
@@ -357,16 +380,14 @@ export default {
   },
 
   watch: {
-    pwdMatch (val) {
-      if (val) {
-        this.$emit('compliantLength', this.pwdSecureLength)
-      }
+    pwdMatch () {
+      this.$emit('compliantLength', this.pwdSecureLength)
     }
   },
 
   methods: {
     /**
-     * function pwdStrength: word zxvn warnings, suggestions in user locale
+     * function pwdHints: word zxvn warnings, suggestions in user locale
      *
      * Author: pj
      *
@@ -374,7 +395,7 @@ export default {
      * @param suggestions
      * @param warning
      */
-    pwdStrength ({ suggestions, warning }) {
+    pwdHints ({ suggestions, warning }) {
       if (this.pwdRepeat !== '') { // start checking when user repeated password
         let k, j// check for different language
         for (j = 0; j < this.possibleWarnings.length; j++) {
@@ -427,11 +448,11 @@ export default {
   flex-wrap: wrap;
 }
 
-.reverse > * > * {
-  right: 85% !important;
+.pwd-input {
+  max-width: 1200px !important;
 }
 
-.laya-pwd-input {
-  width: 450px;
+.reverse > * > * {
+  right: 85% !important;
 }
 </style>

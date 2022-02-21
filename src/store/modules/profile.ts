@@ -261,6 +261,35 @@ export default {
   actions: {
 
     /**
+     * function changePassword: fire change-password request
+     *
+     * Author: cmc
+     *
+     * Last Updated: February 21, 2021
+     * @param state contains passwordSet
+     * @param {string }oldPwd old password for user
+     */
+    changePassword ({ state }, oldPwd: string) {
+      if (state.passwordSet !== state.passwordRepeat) {
+        return Promise.reject(new Error('passwords don\'t match!'))
+      } else {
+        return new Promise((resolve, reject) => {
+          http
+            .post('accounts/change-password', {
+              oldPassword: oldPwd,
+              newPassword: state.passwordSet
+            })
+            .then(() => {
+              resolve(null)
+            })
+            .catch(err => {
+              reject(err)
+            })
+        })
+      }
+    },
+
+    /**
      * Function fetchProfile: get user settings and set them in store
      *
      * Author: core
