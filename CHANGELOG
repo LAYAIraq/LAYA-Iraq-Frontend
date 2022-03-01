@@ -1,5 +1,8 @@
 # Changes
 
+## v1.0.2
+- enforced use of non-reserved characters in new course name and category
+
 ## v1.0.1
 - fixed issue where users were redirected to login page from public routes
 - fixed issue where users were redirected when URL had query string
