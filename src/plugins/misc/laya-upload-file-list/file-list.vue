@@ -456,7 +456,8 @@ export default {
      * @returns true if file is too large!
      */
     checkforSizeExcess (file) {
-      if (file.size > 500000) {
+      const maxFileSize = process.env.VUE_APP_MAX_FILE_SIZE || 500000000
+      if (file.size > maxFileSize) {
         // console.log('File too large!')
         file.error = this.i18n['layaUploadFileList.fileTooLarge']
         return true
