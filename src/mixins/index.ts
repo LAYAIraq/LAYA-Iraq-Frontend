@@ -1,7 +1,7 @@
 export { default as listSort } from './list-sort'
 export { default as locale } from './locale'
 export { default as mimeTypes } from './mime-types'
-export { default as pwdStrength } from './password-strength'
+export { default as pwdProps } from './pwd-props'
 export { default as routeProps } from './route-props'
 export { default as storeHandler } from './store-handler'
 export { default as time } from './time'

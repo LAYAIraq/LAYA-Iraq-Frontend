@@ -13,20 +13,18 @@
       <!-- password -->
       <div class="row">
         <PasswordInput
-          :input-pwd="pwd"
-          :input-pwd-repeat="pwdRepeat"
           :label-icons-only="false"
           :label-width="3"
           :new-input="true"
-          class="mx-auto"
-          @compliantLength="setCompliance"
+          class="mx-auto small-input"
+          @compliantLength="newPwdOk"
         ></PasswordInput>
       </div>
       <div>
         <b-button
           type="submit"
           variant="info"
-          :disabled="!pwdCompliant"
+          :disabled="!passwordOk"
           @click.prevent="resetPassword"
         >
           <i
@@ -45,10 +43,8 @@
 </template>
 
 <script>
-import http from 'axios'
-import { locale } from '@/mixins'
+import { locale, pwdProps } from '@/mixins'
 import PasswordInput from '@/components/password-input'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'PasswordReset',
@@ -56,20 +52,14 @@ export default {
     PasswordInput // not lazily loaded b/c always visible
   },
   mixins: [
-    locale
+    locale,
+    pwdProps
   ],
   data () {
     return {
       busy: false,
-      resetSuccess: false,
-      pwd: '',
-      pwdCompliant: false,
-      pwdRepeat: ''
+      resetSuccess: false
     }
-  },
-
-  computed: {
-    ...mapGetters(['passwordSet'])
   },
 
   watch: {
@@ -83,7 +73,7 @@ export default {
      */
     resetSuccess (val) {
       if (val) { // val is boolean
-        // this.$router.push('/login')
+        this.$router.push('/login')
       }
     }
   },
@@ -120,7 +110,7 @@ export default {
      */
     resetPassword () {
       this.busy = true
-      http.post('/accounts/set-pwd/', {
+      this.$store.dispatch('resetOwnPassword', {
         userId: this.$route.query.uid,
         verificationToken: this.$route.query.token,
         password: this.passwordSet
@@ -171,5 +161,7 @@ export default {
 }
 </script>
 <style scoped>
-
+.small-input {
+  width: 450px;
+}
 </style>

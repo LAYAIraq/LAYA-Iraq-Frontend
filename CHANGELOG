@@ -1,4 +1,9 @@
 # Changes
 
+## v1.0.1
+- fixed issue where users were redirected to login page from public routes
+- fixed issue where users were redirected when URL had query string
+- several updates on code organization
+
 ## v1.0.0-release
 - Released first production version of LAYA Iraq.

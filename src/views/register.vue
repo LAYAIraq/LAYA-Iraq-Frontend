@@ -103,11 +103,9 @@ Dependencies:
           <!--- pwd input component test TODO: find out why props get undefined -->
           <LayaPasswordInput
             class="pwd-input"
-            :input-pwd="pwd1"
-            :input-pwd-repeat="pwd2"
             :label-icons-only="true"
             :label-width="1"
-            @compliantLength="setPwdCompliance"
+            @compliantLength="newPwdOk"
           ></LayaPasswordInput>
 
           <!-- profile pic -->
@@ -180,9 +178,8 @@ Dependencies:
 
 <script>
 import http from 'axios'
-import { locale } from '@/mixins'
+import { locale, pwdProps } from '@/mixins'
 import LayaPasswordInput from '@/components/password-input.vue'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'RegisterView',
@@ -193,7 +190,8 @@ export default {
   },
 
   mixins: [
-    locale
+    locale,
+    pwdProps
   ],
 
   data () {
@@ -202,8 +200,6 @@ export default {
       /* form model */
       name: '',
       email: '',
-      pwd1: '',
-      pwd2: '',
       profileImg: null,
 
       /* helpers for input checking */
@@ -211,13 +207,11 @@ export default {
       busy: false,
       submitOk: false,
       nameTaken: false,
-      emailTaken: false,
-      sufficientPwdLength: false
+      emailTaken: false
     }
   },
 
   computed: {
-    ...mapGetters(['passwordSet']),
 
     /**
      * errName: form validation for name
@@ -255,8 +249,8 @@ export default {
     noInput () {
       return (this.name === '' &&
         this.email === '' &&
-        this.pwd1 === '' &&
-        this.pwd2 === '')
+        this.passwordRepeat === '' &&
+        this.passwordSet === '')
     },
 
     /**
@@ -267,7 +261,7 @@ export default {
      * Last Updated: January 17, 2021
      */
     errForm () {
-      return this.errName || this.errEmail || this.noInput || !this.sufficientPwdLength
+      return this.errName || this.errEmail || this.noInput || !this.passwordOk
     }
   },
 
@@ -277,17 +271,6 @@ export default {
   },
 
   methods: {
-
-    /**
-     * function focusImgInput: focus #image-input html element
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     */
-    focusImgInput () {
-      document.querySelector('#image-input').focus()
-    },
 
     /**
      * Function isNameTaken: return if chosen name is already taken
@@ -325,18 +308,6 @@ export default {
         .then(({ data }) => {
           ctx.emailTaken = data
         })
-    },
-
-    /**
-     * function setPwdCompliance: set sufficientPwdLength to bool
-     *
-     * Author cmc
-     *
-     * Last Updated: January 17, 2021
-     * @param bool if password matches required length
-     */
-    setPwdCompliance (bool) {
-      this.sufficientPwdLength = bool
     },
 
     /**
@@ -416,6 +387,10 @@ export default {
 form {
   width: 30rem;
   margin: auto;
+}
+
+.pwd-input {
+  padding: 0 15px;
 }
 
 form > *, form > .pwd-input > * {
