@@ -32,6 +32,7 @@ build:
   script: docker build .
 
 build_dist:
+  needs: build
   image: node:lts
   stage: build
   before_script:
@@ -45,6 +46,7 @@ build_dist:
       - dist
 
 build_img:
+  needs: build
   stage: deploy
   image: docker:19.03.12
   services:
@@ -57,3 +59,18 @@ build_img:
     - docker push $IMAGE_TAG
   only:
     - tags
+
+build_img_latest:
+  needs: build
+  stage: deploy
+  image: docker:19.03.12
+  services:
+    - docker:19.03.12-dind
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:latest
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
+  only:
+    - master
