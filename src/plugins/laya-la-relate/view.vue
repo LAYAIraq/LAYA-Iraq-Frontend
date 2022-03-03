@@ -140,6 +140,12 @@ Dependencies:
           </div>
         </div>
 
+        <div>
+          <div v-if="allAnswersChosen">
+            {{ i18n['layaLaRelate.missingAnswerWarning'] }}
+          </div>
+        </div>
+
         <button
           type="button"
           class="btn btn-primary"
@@ -186,7 +192,8 @@ export default {
       solution: [],
       eval: [],
       freeze: false,
-      showSolutionsBool: false
+      showSolutionsBool: false,
+      allAnswersChosen: false
     }
   },
 
@@ -262,25 +269,30 @@ export default {
      * Last Updated: March 19, 2021
      */
     check () {
-      for (let i = 0; i < this.pairs.length; ++i) {
-        if (this.pairs[i].relation === this.solution[i]) {
-          this.eval[i] = { 'fa fa-check fa-2x text-success': true }
-        } else {
-          this.solution[i] = this.pairs[i].relation
-          this.eval[i] = { 'fa fa-times fa-2x text-danger': true }
+      if ((this.solution.length === this.pairs.length) && !this.solution.includes(undefined)) {
+        this.allAnswersChosen = false
+        for (let i = 0; i < this.pairs.length; ++i) {
+          if (this.pairs[i].relation === this.solution[i]) {
+            this.eval[i] = { 'fa fa-check fa-2x text-success': true }
+          } else {
+            this.solution[i] = this.pairs[i].relation
+            this.eval[i] = { 'fa fa-times fa-2x text-danger': true }
+          }
         }
+        this.freeze = true
+        this.showSolutionsBool = true
+        this.$forceUpdate()
+      } else {
+        this.allAnswersChosen = true
       }
-      this.freeze = true
-      this.showSolutionsBool = true
-      this.$forceUpdate()
     },
 
     /**
-     * Function fetchData: fethc data from vuex and create data property
+     * Function fetchData: fetch data from vuex and create data property
      *
      * Author: cmc
      *
-     * Last Updated: March 19, 2021
+     * Last Updated: March 03, 2022
      */
     fetchData () {
       const idx = this.$route.params.step - 1
