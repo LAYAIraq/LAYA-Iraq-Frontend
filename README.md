@@ -18,6 +18,8 @@ If you want to set an individual URL, you need to add a `.env` file in the root 
 - `VUE_APP_BACKEND_HOST`: the host where the back end is running. Omit to default to same location as the front end
 - `VUE_APP_BACKEND_PORT`: the port on which the backend is listening. Omit to default port (80 for HTTP, 443 for HTTPS)
 - `VUE_APP_BACKEND_ROOT`: the location at which the back end accepts HTTP requests. Needs to include the slash at the beginning (e.g. `/requests`). Omit to default to `/api`
+- `VUE_APP_MAX_FILE_SIZE`: the maximum amount of bytes for file upload. Defaults to 
+  500000000
 
 ### Server
 In order to deploy to a server, you need to have node installed (version 16). Clone the repository and run `npm install`. Set the environment file if your back end is running anywhere else than `/api`.

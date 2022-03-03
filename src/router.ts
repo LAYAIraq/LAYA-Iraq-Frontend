@@ -1,5 +1,5 @@
 /**
- * Filename: router.js
+ * Filename: router.ts
  * Use: register all possible routes
  * Creator: core
  * Date: unknown
