@@ -36,7 +36,8 @@ Dependencies: @/mixins/locale.vue
     <hr>
 
     <form>
-      <!-- title -->
+      <div class="form-group">
+      <!-- title regular -->
       <div class="form-group row">
         <label
           for="relate-title"
@@ -54,8 +55,33 @@ Dependencies: @/mixins/locale.vue
           >
         </div>
       </div>
+      <!-- title simple -->
+      <div
+        v-if="courseSimple"
+        class="row"
+      >
+        <label
+          for="relate-title-simple"
+          class="col-2 col-form-label"
+        >
+            <span class="sr-only">
+              {{ i18n['simpleAlt'] }}
+            </span>
+        </label>
+        <div class="col-8">
+          <input
+            id="relate-title-simple"
+            v-model="title.simple"
+            type="text"
+            class="form-control"
+            :placeholder="i18n['simpleAlt']"
+          >
+        </div>
+      </div>
+      </div>
 
-      <!-- task -->
+      <div class="form-group">
+      <!-- task regular -->
       <div class="form-group row">
         <label
           for="relate-task"
@@ -72,6 +98,29 @@ Dependencies: @/mixins/locale.vue
           >
           </textarea>
         </div>
+      </div>
+      <!-- task simple -->
+      <div
+        v-if="courseSimple"
+        class="row"
+      >
+        <label
+          for="relate-task-simple"
+          class="col-2 col-form-label"
+        >
+            <span class="sr-only">
+              {{ i18n['task'] }}
+            </span>
+        </label>
+        <div class="col-10">
+          <textarea
+            id="relate-task-simple"
+            v-model="task.simple"
+            class="w-100"
+            :placeholder="i18n['simpleAlt']"
+          ></textarea>
+          </div>
+      </div>
       </div>
 
       <!-- task audio -->
@@ -94,12 +143,14 @@ Dependencies: @/mixins/locale.vue
       </div>
 
       <p><b>{{ i18n['layaLaRelate.edit.solutions'] }}</b></p>
+
       <div
         v-for="(rel, i) in relations"
         :key="'rel-'+i"
         class="form-group row"
       >
-        <!-- text -->
+
+        <!-- text regular -->
         <label
           class="col-form-label col-2"
           :for="'rel-text-'+i"
@@ -107,6 +158,7 @@ Dependencies: @/mixins/locale.vue
           {{ i18n['text'] }}
         </label>
         <div class="col-7">
+          <div class="col">
           <input
             :id="'rel-text-'+i"
             v-model="relations[i]"
@@ -114,6 +166,23 @@ Dependencies: @/mixins/locale.vue
             type="text"
           >
         </div>
+        <!-- text simple -->
+        <div
+          v-if="courseSimple"
+        >
+          <div class="col">
+            <input
+              :id="'rel-text-simple-'+i"
+              v-model="relations[i].simple"
+              class="form-control"
+              type="text"
+              :placeholder="i18n['simpleAlt']"
+            >
+          </div>
+        </div>
+      </div>
+
+
 
         <!-- delete -->
         <div class="col-auto align-self-center">
@@ -125,7 +194,10 @@ Dependencies: @/mixins/locale.vue
             <i class="fas fa-times"></i>
           </button>
         </div>
+
+
       </div>
+
       <div class="form-group row">
         <div class="col-10 offset-2">
           <button
@@ -165,9 +237,7 @@ Dependencies: @/mixins/locale.vue
         </div>
 
         <!-- alt text -->
-        <div
-          class="col"
-        >
+        <div class="col">
           <input
             :id="'pair-label-'+i"
             v-model="pairs[i].label"
@@ -175,7 +245,22 @@ Dependencies: @/mixins/locale.vue
             type="text"
             :placeholder="i18n['layaLaRelate.edit.labelPlaceholder']"
           >
+
+          <!-- alt text simple -->
+          <div
+            v-if="courseSimple"
+          >
+            <input
+              :id="'pair-label-simple+'+i"
+              v-model="pairs[i].label.simple"
+              class="form-control"
+              type="text"
+              :placeholder="i18n['simpleAlt']"
+            >
+            </div>
         </div>
+
+
 
         <!-- audio -->
         <div class="col">
@@ -250,7 +335,12 @@ export default {
 
   data () {
     return {
-      title: {},
+      title: {
+        text: '',
+        flagged: false,
+        show: false,
+        id: ''
+      },
       task: {},
       taskAudio: '',
       pairs: [],

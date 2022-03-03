@@ -20,7 +20,7 @@ Dependencies:
       >
         <div class="col">
           <h4>
-            {{ title.text }}
+            {{ courseSimple? title.simple: title.text }}
             <laya-audio-inline
               v-if="taskAudio"
               :src="taskAudio"
@@ -40,7 +40,7 @@ Dependencies:
         class="flaggable row"
       >
         <div class="col">
-          <p>{{ task.text }}</p>
+          <p>{{ courseSimple? task.simple: task.text }}</p>
         </div>
         <laya-flag-icon
           v-if="!previewData"
@@ -198,7 +198,8 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['content']),
+    ...mapGetters(['content',
+        'courseSimple']),
 
     /**
      * options: map pairs to their relation
@@ -209,9 +210,18 @@ export default {
      */
     options () {
       let shuffled = []
-      for (let i = 0; i < this.relations.length; i++) {
-        if (!shuffled.includes(this.relations[i])) {
-          shuffled.push(this.relations[i])
+      if (this.courseSimple){
+        for (let i = 0; i < this.relations.length; i++) {
+          if (!shuffled.includes(this.relations[i].simple)) {
+            shuffled.push(this.relations[i].simple)
+          }
+        }
+      }
+      else{
+        for (let i = 0; i < this.relations.length; i++) {
+          if (!shuffled.includes(this.relations[i])) {
+            shuffled.push(this.relations[i])
+          }
         }
       }
       shuffled = shuffled.map(value => ({ value, sort: Math.random() }))
