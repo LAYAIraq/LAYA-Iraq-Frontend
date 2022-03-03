@@ -90,7 +90,6 @@ Dependencies:
                   <option
                     v-for="opt in options"
                     :key="opt"
-                    :disabled="solution.includes(opt)"
                   >
                     {{ opt }}
                   </option>
@@ -202,10 +201,16 @@ export default {
      * Last Updated: 03.03.2022
      */
     options () {
-      return this.pairs.map(p => p.relation)
-        .map(value => ({ value, sort: Math.random() }))
+      let shuffled = []
+      for (let i = 0; i < this.relations.length; i++) {
+        if (!shuffled.includes(this.relations[i])) {
+          shuffled.push(this.relations[i])
+        }
+      }
+      shuffled = shuffled.map(value => ({ value, sort: Math.random() }))
         .sort((a, b) => a.sort - b.sort)
         .map(({ value }) => value)
+      return shuffled
     }
   },
 
@@ -280,6 +285,7 @@ export default {
     fetchData () {
       const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
+      this.relations = preData.relations
       this.title = preData.title
       this.task = preData.task
       this.taskAudio = preData.taskAudio
