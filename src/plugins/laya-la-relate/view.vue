@@ -197,12 +197,15 @@ export default {
     /**
      * options: map pairs to their relation
      *
-     * Author: core
+     * Author: pj
      *
-     * Last Updated: unknown
+     * Last Updated: 03.03.2022
      */
     options () {
       return this.pairs.map(p => p.relation)
+        .map(value => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value)
     }
   },
 
