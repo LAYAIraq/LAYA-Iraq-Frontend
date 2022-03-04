@@ -48,13 +48,11 @@ Dependencies: @/mixins/locale.vue
 
         <!-- partner logo -->
         <div class="col-3 col-lg-3">
-          <a href="#">
-            <img
-              src="../assets/logo-iraq-m.png"
-              alt="Laya - Learn as you are"
-              class="w-100"
-            >
-          </a>
+          <img
+            src="../assets/logo-iraq-m.png"
+            alt="Laya - Learn as you are"
+            class="w-100"
+          >
         </div>
       </div>
       <ly-scroll-to-top tabindex="0"></ly-scroll-to-top>
