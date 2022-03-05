@@ -8,7 +8,6 @@ module.exports = {
   moduleNameMapper: {
     '/^@\/(.*)$/': '<rootDir>/src/$1'
   },
-  preset: '@vue/cli-plugin-unit-jest',
   resolver: null,
   rootDir: '../..',
   transform: {
