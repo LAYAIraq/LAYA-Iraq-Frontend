@@ -12,6 +12,7 @@ Dependencies:
   <div class="row mt-3">
     <div class="col">
       <b-button
+        id="delete-button"
         size="sm"
         variant="danger"
         :class="langIsAr? 'float-left' : 'float-right'"

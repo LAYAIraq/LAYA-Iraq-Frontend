@@ -85,7 +85,9 @@ Necessary packages:
 - `@vue/test-utils`
 - `babel-core`: use version `@bridge`
 - `babel-jest`: use version `@26`
+- `lodash.clonedeep`: for store module tests
 - `jsdom-global`
+- `regenerator-runtime`
 - `ts-jest`: use version `@26`
 - `vue-jest`
 

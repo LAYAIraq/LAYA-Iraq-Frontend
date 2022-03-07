@@ -772,7 +772,7 @@ export default {
      *
      * @param state contains course object
      */
-    deleteCourse (state) {
+    deleteCourse ({ state }) {
       const cid = state.course.courseId
       const sid = state.course.storageId
       const files = state.course.files

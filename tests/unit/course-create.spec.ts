@@ -1,6 +1,5 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
-// @ts-ignore
 import CourseCreate from '@/components/authoring/course-create.vue'
 
 const localVue = createLocalVue()
