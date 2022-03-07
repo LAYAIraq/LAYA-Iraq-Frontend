@@ -27,22 +27,12 @@ lint:
   stage: test
   script: npm run lint
 
-build:
-  stage: build
-  script: docker build .
-
-build_dist:
+lint_tests:
   image: node:lts
-  stage: build
   before_script:
     - npm install --progress=false
-  script: npm run build
-  only:
-    - master
-  artifacts:
-    expire_in: 1 week
-    paths:
-      - dist
+  stage: test
+  script: npm run lint:tests
 
 build_img:
   stage: deploy
