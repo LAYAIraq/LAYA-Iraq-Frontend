@@ -35,6 +35,20 @@ describe('Course create', () => {
     expect(vm.formValid).toBeFalsy()
   })
 
+  it('sets the correct data properties', () => {
+    const wrapper = shallowMount(
+      CourseCreate, {
+        store,
+        localVue
+      })
+    const vm = wrapper.vm as any
+    const nameInput = wrapper.find('#new-course-name')
+    nameInput.setValue('Course Name')
+    const catInput = wrapper.find('#new-course-category')
+    catInput.setValue('Course Category')
+    expect(vm.newCourse).toStrictEqual({name: 'Course Name', category: 'Course Category'})
+  })
+
   it('trims names properly', () => {
     const wrapper = shallowMount(
       CourseCreate, {
@@ -72,4 +86,5 @@ describe('Course create', () => {
     vm.checkNames()
     expect(vm.newCourseNeedsEncoding).toBeFalsy()
   })
+
 })
