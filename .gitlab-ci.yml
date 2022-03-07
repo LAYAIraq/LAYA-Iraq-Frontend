@@ -27,13 +27,6 @@ lint:
   stage: test
   script: npm run lint
 
-test_unit:
-  image: node:lts
-  before_script:
-    - npm install --progress=false
-  stage: test
-  script: npm run test:unit
-
 build:
   stage: build
   script: docker build .
