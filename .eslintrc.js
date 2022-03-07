@@ -1,8 +1,10 @@
 module.exports = {
   root: false,
+
   env: {
     node: true
   },
+
   extends: [
     'plugin:vue/essential',
     'plugin:vue/recommended',
@@ -11,6 +13,7 @@ module.exports = {
     'eslint:recommended',
     '@vue/typescript'
   ],
+
   rules: {
     'dot-notation': 'off',
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
@@ -18,8 +21,21 @@ module.exports = {
     'no-return-assign': 'warn',
     'vue/html-self-closing': 'off'
   },
+
   parserOptions: {
     parser: '@typescript-eslint/parser',
     ecmaVersion: 'latest'
-  }
+  },
+
+  overrides: [
+    {
+      files: [
+        '**/__tests__/*.{j,t}s?(x)',
+        '**/tests/unit/**/*.spec.{j,t}s?(x)'
+      ],
+      env: {
+        jest: true
+      }
+    }
+  ]
 }
