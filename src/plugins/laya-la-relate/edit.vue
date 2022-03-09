@@ -63,7 +63,7 @@ Dependencies:
           class="row"
         >
           <label
-            for="dialog-title-simple"
+            for="relate-title-simple"
             class="col-2 col-form-label"
           >
             <span class="sr-only">
@@ -72,7 +72,7 @@ Dependencies:
           </label>
           <div class="col-8">
             <input
-              id="dialog-title-simple"
+              id="relate-title-simple"
               v-model="title.simple"
               type="text"
               class="form-control"
@@ -196,6 +196,8 @@ Dependencies:
             <i class="fas fa-times"></i>
           </button>
         </div>
+
+
       </div>
 
       <div class="form-group row">
@@ -251,8 +253,8 @@ Dependencies:
             v-if="courseSimple"
           >
             <input
-              :id="'pair-label-simple+'+i"
-              v-model="pairs[i].label.simple"
+              :id="'pair-label-simple-'+i"
+              v-model="pairs[i].labelSimple"
               class="form-control"
               type="text"
               :placeholder="i18n['simpleAlt']"

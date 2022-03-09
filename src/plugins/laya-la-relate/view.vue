@@ -75,7 +75,7 @@ Dependencies:
                   :src="pair.audio"
                 >
                 </laya-audio-inline>
-                {{ pair.label }}
+                {{ courseSimple? pair.labelSimple: pair.label }}
               </label>
               <div class="col-sm-6">
                 <select
@@ -135,7 +135,7 @@ Dependencies:
               v-for="(pair, index) in pairs"
               :key="index"
             >
-              {{ pair.label }}: {{ pair.relation }},
+              {{ courseSimple? pair.labelSimple: pair.label }}: {{ pair.relation }},
             </div>
           </div>
         </div>

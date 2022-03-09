@@ -251,8 +251,8 @@ Dependencies: @/mixins/locale.vue
             v-if="courseSimple"
           >
             <input
-              :id="'pair-label-simple+'+i"
-              v-model="pairs[i].label.simple"
+              :id="'pair-labelSimple-'+i"
+              v-model="pairs[i].labelSimple"
               class="form-control"
               type="text"
               :placeholder="i18n['simpleAlt']"
@@ -362,6 +362,7 @@ export default {
         img: '',
         audio: '',
         label: '',
+        labelSimple: '',
         relation: -1,
         id: uuidv4(),
         flagged: false
@@ -398,7 +399,7 @@ export default {
      * Last Updated: June 28, 2021
      */
     _addPair () {
-      this.pairs.push({ img: '', audio: '', relation: -1, label: '', flagged: false, id: uuidv4() })
+      this.pairs.push({ img: '', audio: '', relation: -1, label: '', labelSimple: '', flagged: false, id: uuidv4() })
     },
 
     /**
