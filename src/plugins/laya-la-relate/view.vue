@@ -50,7 +50,6 @@ Dependencies:
       </div>
 
       <hr>
-
       <div class="row">
         <div class="col">
           <form>
@@ -199,7 +198,7 @@ export default {
 
   computed: {
     ...mapGetters(['content',
-        'courseSimple']),
+      'courseSimple']),
 
     /**
      * options: map pairs to their relation
@@ -210,14 +209,13 @@ export default {
      */
     options () {
       let shuffled = []
-      if (this.courseSimple){
+      if (this.courseSimple) {
         for (let i = 0; i < this.relations.length; i++) {
           if (!shuffled.includes(this.relationsSimple[i])) {
             shuffled.push(this.relationsSimple[i])
           }
         }
-      }
-      else{
+      } else {
         for (let i = 0; i < this.relations.length; i++) {
           if (!shuffled.includes(this.relations[i])) {
             shuffled.push(this.relations[i])

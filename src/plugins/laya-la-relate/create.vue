@@ -37,90 +37,90 @@ Dependencies: @/mixins/locale.vue
 
     <form>
       <div class="form-group">
-      <!-- title regular -->
-      <div class="form-group row">
-        <label
-          for="relate-title"
-          class="col-2 col-form-label"
-        >
-          {{ i18n['title'] }}
-        </label>
-        <div class="col-10">
-          <input
-            id="relate-title"
-            v-model="title.text"
-            type="text"
-            class="form-control"
-            :placeholder="i18n['titlePlaceholder']"
+        <!-- title regular -->
+        <div class="form-group row">
+          <label
+            for="relate-title"
+            class="col-2 col-form-label"
           >
+            {{ i18n['title'] }}
+          </label>
+          <div class="col-10">
+            <input
+              id="relate-title"
+              v-model="title.text"
+              type="text"
+              class="form-control"
+              :placeholder="i18n['titlePlaceholder']"
+            >
+          </div>
         </div>
-      </div>
-      <!-- title simple -->
-      <div
-        v-if="courseSimple"
-        class="row"
-      >
-        <label
-          for="relate-title-simple"
-          class="col-2 col-form-label"
+        <!-- title simple -->
+        <div
+          v-if="courseSimple"
+          class="row"
         >
+          <label
+            for="relate-title-simple"
+            class="col-2 col-form-label"
+          >
             <span class="sr-only">
               {{ i18n['simpleAlt'] }}
             </span>
-        </label>
-        <div class="col-8">
-          <input
-            id="relate-title-simple"
-            v-model="title.simple"
-            type="text"
-            class="form-control"
-            :placeholder="i18n['simpleAlt']"
-          >
+          </label>
+          <div class="col-8">
+            <input
+              id="relate-title-simple"
+              v-model="title.simple"
+              type="text"
+              class="form-control"
+              :placeholder="i18n['simpleAlt']"
+            >
+          </div>
         </div>
-      </div>
       </div>
 
       <div class="form-group">
-      <!-- task regular -->
-      <div class="form-group row">
-        <label
-          for="relate-task"
-          class="col-2 col-form-label"
-        >
-          {{ i18n['task'] }}
-        </label>
-        <div class="col-10">
-          <textarea
-            id="relate-task"
-            v-model="task.text"
-            class="w-100"
-            :placeholder="i18n['taskPlaceholder']"
+        <!-- task regular -->
+        <div class="form-group row">
+          <label
+            for="relate-task"
+            class="col-2 col-form-label"
           >
+            {{ i18n['task'] }}
+          </label>
+          <div class="col-10">
+            <textarea
+              id="relate-task"
+              v-model="task.text"
+              class="w-100"
+              :placeholder="i18n['taskPlaceholder']"
+            >
           </textarea>
+          </div>
         </div>
-      </div>
-      <!-- task simple -->
-      <div
-        v-if="courseSimple"
-        class="row"
-      >
-        <label
-          for="relate-task-simple"
-          class="col-2 col-form-label"
+        <!-- task simple -->
+        <div
+          v-if="courseSimple"
+          class="row"
         >
+          <label
+            for="relate-task-simple"
+            class="col-2 col-form-label"
+          >
             <span class="sr-only">
               {{ i18n['task'] }}
             </span>
-        </label>
-        <div class="col-10">
-          <textarea
-            id="relate-task-simple"
-            v-model="task.simple"
-            class="w-100"
-            :placeholder="i18n['simpleAlt']"
-          ></textarea>
+          </label>
+          <div class="col-10">
+            <textarea
+              id="relate-task-simple"
+              v-model="task.simple"
+              class="w-100"
+              :placeholder="i18n['simpleAlt']"
+            ></textarea>
           </div>
-      </div>
+        </div>
       </div>
 
       <!-- task audio -->
@@ -149,7 +149,6 @@ Dependencies: @/mixins/locale.vue
         :key="'rel-'+i"
         class="form-group row"
       >
-
         <!-- text regular -->
         <label
           class="col-form-label col-2"
@@ -159,28 +158,28 @@ Dependencies: @/mixins/locale.vue
         </label>
         <div class="col-7">
           <div class="col">
-          <input
-            :id="'rel-text-'+i"
-            v-model="relations[i]"
-            class="form-control"
-            type="text"
-          >
-        </div>
-        <!-- text simple -->
-        <div
-          v-if="courseSimple"
-        >
-          <div class="col">
             <input
-              :id="'rel-text-simple-'+i"
-              v-model="relationsSimple[i]"
+              :id="'rel-text-'+i"
+              v-model="relations[i]"
               class="form-control"
               type="text"
-              :placeholder="i18n['simpleAlt']"
             >
           </div>
+          <!-- text simple -->
+          <div
+            v-if="courseSimple"
+          >
+            <div class="col">
+              <input
+                :id="'rel-text-simple-'+i"
+                v-model="relationsSimple[i]"
+                class="form-control"
+                type="text"
+                :placeholder="i18n['simpleAlt']"
+              >
+            </div>
+          </div>
         </div>
-      </div>
 
         <!-- delete -->
         <div class="col-auto align-self-center">
@@ -192,8 +191,6 @@ Dependencies: @/mixins/locale.vue
             <i class="fas fa-times"></i>
           </button>
         </div>
-
-
       </div>
 
       <div class="form-group row">
@@ -255,7 +252,7 @@ Dependencies: @/mixins/locale.vue
               type="text"
               :placeholder="i18n['simpleAlt']"
             >
-            </div>
+          </div>
         </div>
 
         <!-- audio -->

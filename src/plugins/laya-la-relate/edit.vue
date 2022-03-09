@@ -92,12 +92,12 @@ Dependencies:
             {{ i18n['task'] }}
           </label>
           <div class="col-10">
-          <textarea
-            id="relate-task"
-            v-model="task.text"
-            class="w-100"
-            :placeholder="i18n['taskPlaceholder']"
-          >
+            <textarea
+              id="relate-task"
+              v-model="task.text"
+              class="w-100"
+              :placeholder="i18n['taskPlaceholder']"
+            >
           </textarea>
           </div>
         </div>
@@ -115,12 +115,12 @@ Dependencies:
             </span>
           </label>
           <div class="col-10">
-          <textarea
-            id="relate-task-simple"
-            v-model="task.simple"
-            class="w-100"
-            :placeholder="i18n['simpleAlt']"
-          ></textarea>
+            <textarea
+              id="relate-task-simple"
+              v-model="task.simple"
+              class="w-100"
+              :placeholder="i18n['simpleAlt']"
+            ></textarea>
           </div>
         </div>
       </div>
@@ -151,7 +151,6 @@ Dependencies:
         :key="'rel-'+i"
         class="form-group row"
       >
-
         <!-- text regular -->
         <label
           class="col-form-label col-2"
@@ -184,8 +183,6 @@ Dependencies:
           </div>
         </div>
 
-
-
         <!-- delete -->
         <div class="col-auto align-self-center">
           <button
@@ -196,8 +193,6 @@ Dependencies:
             <i class="fas fa-times"></i>
           </button>
         </div>
-
-
       </div>
 
       <div class="form-group row">
@@ -261,8 +256,6 @@ Dependencies:
             >
           </div>
         </div>
-
-
 
         <!-- audio -->
         <div class="col">
