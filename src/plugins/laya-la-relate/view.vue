@@ -212,8 +212,8 @@ export default {
       let shuffled = []
       if (this.courseSimple){
         for (let i = 0; i < this.relations.length; i++) {
-          if (!shuffled.includes(this.relations[i].simple)) {
-            shuffled.push(this.relations[i].simple)
+          if (!shuffled.includes(this.relationsSimple[i])) {
+            shuffled.push(this.relationsSimple[i])
           }
         }
       }
@@ -308,6 +308,7 @@ export default {
       const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.relations = preData.relations
+      this.relationsSimple = preData.relationsSimple
       this.title = preData.title
       this.task = preData.task
       this.taskAudio = preData.taskAudio

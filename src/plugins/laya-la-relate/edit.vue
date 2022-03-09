@@ -175,7 +175,7 @@ Dependencies:
             <div class="col">
               <input
                 :id="'rel-text-simple-'+i"
-                v-model="relations[i].simple"
+                v-model="relationsSimple[i]"
                 class="form-control"
                 type="text"
                 :placeholder="i18n['simpleAlt']"
@@ -342,7 +342,8 @@ export default {
       task: {},
       taskAudio: '',
       pairs: [],
-      relations: []
+      relations: [],
+      relationsSimple: []
     }
   },
 
@@ -391,6 +392,7 @@ export default {
      */
     _delRelation (idx) {
       this.relations.splice(idx, 1)
+      this.relationsSimple.splice(idx, 1)
     },
 
     /**
@@ -402,6 +404,7 @@ export default {
      */
     _addRelation () {
       this.relations.push('')
+      this.relationsSimple.push('')
     },
 
     /**
@@ -419,6 +422,7 @@ export default {
       this.taskAudio = preData.taskAudio
       this.pairs = preData.pairs
       this.relations = preData.relations
+      this.relationsSimple = preData.relationsSimple
     }
   }
 }

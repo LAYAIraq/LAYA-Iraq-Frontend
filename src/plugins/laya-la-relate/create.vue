@@ -173,7 +173,7 @@ Dependencies: @/mixins/locale.vue
           <div class="col">
             <input
               :id="'rel-text-simple-'+i"
-              v-model="relations[i].simple"
+              v-model="relationsSimple[i]"
               class="form-control"
               type="text"
               :placeholder="i18n['simpleAlt']"
@@ -181,8 +181,6 @@ Dependencies: @/mixins/locale.vue
           </div>
         </div>
       </div>
-
-
 
         <!-- delete -->
         <div class="col-auto align-self-center">
@@ -259,8 +257,6 @@ Dependencies: @/mixins/locale.vue
             >
             </div>
         </div>
-
-
 
         <!-- audio -->
         <div class="col">
@@ -344,7 +340,8 @@ export default {
       task: {},
       taskAudio: '',
       pairs: [],
-      relations: []
+      relations: [],
+      relationsSimple: []
     }
   },
 
@@ -357,6 +354,7 @@ export default {
       for (let i = 1; i < 3; i++) {
         const tmp = this.i18n['layaLaRelate.edit.solution'] + ' ' + i
         this.relations.push(tmp)
+        this.relationsSimple.push(tmp)
       }
       this.pairs.push({
         img: '',
@@ -413,6 +411,7 @@ export default {
      */
     _delRelation (idx) {
       this.relations.splice(idx, 1)
+      this.relationsSimple.splice(idx, 1)
     },
 
     /**
@@ -424,6 +423,7 @@ export default {
      */
     _addRelation () {
       this.relations.push('')
+      this.relationsSimple.push('')
     }
   }
 }
