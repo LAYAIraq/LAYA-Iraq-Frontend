@@ -80,7 +80,7 @@ Dependencies:
           class="row"
         >
           <label
-            for="relate-title-simple"
+            for="dialog-title-simple"
             class="col-2 col-form-label"
           >
             <span class="sr-only">
@@ -89,7 +89,7 @@ Dependencies:
           </label>
           <div class="col-8">
             <input
-              id="relate-title-simple"
+              id="dialog-title-simple"
               v-model="title.simple"
               type="text"
               class="form-control"

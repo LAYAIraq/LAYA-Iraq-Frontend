@@ -246,7 +246,7 @@ Dependencies: @/mixins/locale.vue
             v-if="courseSimple"
           >
             <input
-              :id="'pair-labelSimple-'+i"
+              :id="'pair-label-simple-'+i"
               v-model="pairs[i].labelSimple"
               class="form-control"
               type="text"

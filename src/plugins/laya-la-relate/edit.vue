@@ -10,7 +10,7 @@ Dependencies:
 
 <template>
   <div
-    class="laya-la-relate-create"
+    class="laya-la-relate-edit"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <label>
