@@ -1,10 +1,15 @@
 # Contributing to LAYA
 
-We are open to contributors! Please feel free to tackle an issue in the issues list. We are especially grateful for contributors who can add missing translations to our localization files.
+We are open to contributors! Please feel free to tackle an issue in
+the issues list. We are especially grateful for contributors who can
+add missing translations to our localization files.
 
 ## Coding Style
 
-In order to be consistent in our code, we need to implement certain standards. We are complying to Vue's Coding Standards in the standard js flavor. Linting your code will give you an idea of which rules to apply.
+In order to be consistent in our code, we need to implement certain
+standards. We are complying to Vue's Coding Standards in the standard
+js flavor. Linting your code will give you an idea of which rules to
+apply.
 
 We furthermore use some custom styling as explained below.
 
@@ -55,7 +60,10 @@ someFunction = (name, space) => { ... }
 
 ### Type type annotations
 
-In our TypeScript files (such as store modules), we use extensive type annotation. As a general rule, the type should be declared as meticulously as possible. Unless we are actually accepting different argument types, the type annotation should never be `any`.
+In our TypeScript files (such as store modules), we use extensive type
+annotation. As a general rule, the type should be declared as
+meticulously as possible. Unless we are actually accepting different
+argument types, the type annotation should never be `any`.
 
 Good:
 
@@ -69,7 +77,10 @@ Bad:
 someFunction (argument)
 ```
 
-When we are handling complex data types, the declaration needs to be nested. For deeper nesting, we use line breaks to increase readability. For multiple arguments, every arguments needs to start at a new line.
+When we are handling complex data types, the declaration needs to be
+nested. For deeper nesting, we use line breaks to increase
+readability. For multiple arguments, every arguments needs to start
+at a new line.
 
 Good:
 
