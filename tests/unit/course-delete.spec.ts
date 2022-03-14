@@ -7,7 +7,6 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 
 describe('Course delete', () => {
-
   it('prompts a modal when clicking button', async () => {
     const getters = {
       profileLang: () => 'en'
@@ -100,7 +99,7 @@ describe('Course delete', () => {
         // FIXME: overwriting methods is deprecated,
         //  figure out how to test without it
         methods: {
-          delCourse() {
+          delCourse () {
             return new Promise((resolve, reject) => {
               this.$store.dispatch('deleteCourse')
                 .then(() => {
