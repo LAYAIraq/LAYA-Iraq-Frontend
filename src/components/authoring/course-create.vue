@@ -75,7 +75,7 @@ Dependencies:
             type="submit"
             class="btn btn-block btn-primary"
             :disabled="!formValid"
-            @click="duplicateCheck"
+            @click.prevent="duplicateCheck"
           >
             <i class="fas fa-check"></i>
             {{ i18n['save'] }}
