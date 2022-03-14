@@ -12,6 +12,7 @@ Dependencies:
   <div class="row mt-3">
     <div class="col">
       <b-button
+        id="delete-button"
         size="sm"
         variant="danger"
         :class="langIsAr? 'float-left' : 'float-right'"
@@ -71,7 +72,7 @@ export default {
     delCourse () {
       this.$store.dispatch('deleteCourse')
         .then(() => {
-          this.$store.dispatch('fetchCourseList')
+          this.$store.commit('removeFromCourseList', this.course.courseId)
           this.$router.push('/courses')
         })
         .catch(err => console.error('ERROR:', err))
