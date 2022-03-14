@@ -1,5 +1,5 @@
 /**
- * Filename: router.js
+ * Filename: router.ts
  * Use: register all possible routes
  * Creator: core
  * Date: unknown
@@ -145,10 +145,10 @@ export default new Router({
 
 export const publicRoutes = [
   '/',
-  '#/login',
-  '#/register',
-  '#/imprint',
-  '#/privacy',
-  '#/reset-password',
-  '#/verify'
+  '/login',
+  '/register',
+  '/imprint',
+  '/privacy',
+  '/reset-password',
+  '/verify'
 ]

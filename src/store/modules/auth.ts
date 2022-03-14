@@ -122,6 +122,28 @@ export default {
         .get(`accounts/${state.userId}/role`)
         .then(({ data }) => commit('setRole', data.role))
         .catch((err) => console.error(err))
+    },
+
+    /**
+     * function resetOwnPassword: fire request to change password
+     *
+     * Author: cmc
+     *
+     * Last Updated: February 21, 2022
+     * @param state not used, but neccessary in signature
+     * @param data contains userId, verificationToken, password
+     */
+    resetOwnPassword ({ state }, data: {
+      userId: string,
+      verificationToken: string,
+      password: string
+    }) {
+      return new Promise((resolve, reject) => {
+        http.post('/accounts/set-pwd/', data
+        )
+          .then(() => resolve(null))
+          .catch(err => reject(err))
+      })
     }
   }
 }

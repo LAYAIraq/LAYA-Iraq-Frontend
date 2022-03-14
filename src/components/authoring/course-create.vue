@@ -75,7 +75,7 @@ Dependencies:
             type="submit"
             class="btn btn-block btn-primary"
             :disabled="!formValid"
-            @click="duplicateCheck"
+            @click.prevent="duplicateCheck"
           >
             <i class="fas fa-check"></i>
             {{ i18n['save'] }}
@@ -101,12 +101,13 @@ export default {
 
   data () {
     return {
+      duplicateNameCategory: false,
       msg: '',
       newCourse: {
-        name: '',
-        category: ''
+        category: '',
+        name: ''
       },
-      duplicateNameCategory: false
+      newCourseNeedsEncoding: false
     }
   },
   computed: {
@@ -140,6 +141,25 @@ export default {
   methods: {
 
     /**
+     * Function checkNames: check if name or category contain sensitive
+     *  characters
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: March 1, 2022
+     **/
+    checkNames () {
+      const { newCourse } = this
+      // regex for reserved URL encoding characters
+      // eslint-disable-next-line
+      const reserved = /[:/?#\[\]@!$%&'()*+,;=]+/
+      this.newCourseNeedsEncoding = reserved.test(newCourse.name)
+      if (!this.newCourseNeedsEncoding) {
+        this.newCourseNeedsEncoding = reserved.test(newCourse.category)
+      }
+    },
+
+    /**
      * Function duplicateCheck: check for duplicate keys before storing the course
      *
      * Author: cmc
@@ -165,49 +185,51 @@ export default {
      * last updated: March 24, 2021
      *  */
     storeNewCourse () {
-      this.trimNames()
-      const self = this
-      const { newCourse, auth } = this
-
-      // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
-      // let enrBool = self.needsEnrollment
-      const newId = uuidv4()
-      console.log(`New Id: ${newId}`)
-
-      /* create storage */
-      http.post('storage', {
-        name: newId
-      }).then(() => console.log(`New Storage: ${newId}`))
-        .catch((err) => console.error(err))
-
-      /* create course */
-      http.post('courses', {
-        ...newCourse,
-        authorId: auth.userId,
-        storageId: newId
-        // properties: { enrollment: enrBool }
-      }).then(() => {
-        // console.log(resp)
-        self.$router.push(`/courses/${newCourse.name}/1`)
-
-        /* create enrollment for creator */
+      this.checkNames()
+      const { auth, newCourse } = this
+      if (this.newCourseNeedsEncoding) {
+        this.msg = this.i18n['courseList.needsEncoding']
+      } else {
         // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
-        // if (enrBool) {
-        //     http.get(`courses/getCourseId?courseName=${newCourse.name}`).
-        //       then( resp => {
-        //         const newEnrollment = {
-        //           courseId: resp.data.courseId,
-        //           studentId: self.auth.userId
-        //         }
-        //         http.patch('enrollments', {
-        //           ...newEnrollment
-        //         }).catch((err) => {console.log(err)})
-        //       })
-        // }
-      }).catch((err) => {
-        console.log(err)
-        self.msg = self.i18n['savingFailed']
-      })
+        // let enrBool = self.needsEnrollment
+        const newId = uuidv4()
+        console.log(`New Id: ${newId}`)
+
+        /* create storage */
+        http.post('storage', {
+          name: newId
+        }).then(() => console.log(`New Storage: ${newId}`))
+          .catch((err) => console.error(err))
+
+        /* create course */
+        http.post('courses', {
+          ...newCourse,
+          authorId: auth.userId,
+          storageId: newId
+          // properties: { enrollment: enrBool }
+        }).then(() => {
+          // console.log(resp)
+          this.$router.push(`/courses/${newCourse.name}/1`)
+
+          /* create enrollment for creator */
+          // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
+          // if (enrBool) {
+          //     http.get(`courses/getCourseId?courseName=${newCourse.name}`).
+          //       then( resp => {
+          //         const newEnrollment = {
+          //           courseId: resp.data.courseId,
+          //           studentId: self.auth.userId
+          //         }
+          //         http.patch('enrollments', {
+          //           ...newEnrollment
+          //         }).catch((err) => {console.log(err)})
+          //       })
+          // }
+        }).catch((err) => {
+          console.log(err)
+          this.msg = this.i18n['savingFailed']
+        })
+      }
     },
 
     /**

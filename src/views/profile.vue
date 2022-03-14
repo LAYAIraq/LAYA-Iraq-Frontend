@@ -12,6 +12,7 @@ Dependencies:
   @/plugins/misc/laya-upload-avatar/avatar.vue
 -->
 
+<!--suppress JSAnnotator -->
 <template>
   <div>
     <div class="container-fluid">
@@ -107,106 +108,12 @@ Dependencies:
             </div>
           </div>
 
-          <!-- New Password -->
-          <div class="form-group row">
-            <label
-              id="new-pwd-label"
-              for="newPwd"
-              class="col-sm-3 col-form-label"
-            >
-              {{ i18n['profile.newPwd'] }}
-            </label>
-            <div class="col-sm-9">
-              <input
-                id="newPwd"
-                v-model="newPwd"
-                type="password"
-                class="form-control"
-                :placeholder="i18n['profile.newPwd']"
-                aria-describedby="new-pwd-label"
-              >
-            </div>
-          </div>
-
-          <!-- repeat password -->
-          <div class="form-group row">
-            <label
-              id="repeat-label"
-              for="repeatPwd"
-              class="col-sm-3 col-form-label"
-            >
-              {{ i18n['pwd2PH'] }}
-            </label>
-            <div class="col-sm-9">
-              <input
-                id="repeatPwd"
-                v-model="repeatPwd"
-                type="password"
-                class="form-control"
-                :placeholder="i18n['pwd2PH']"
-                aria-describedby="repeat-label"
-              >
-            </div>
-          </div>
-          <div class="form-group row">
-            <!--suppress XmlInvalidId -->
-            <label
-              for="pwdMeter"
-              class="col-sm-3 col-form-label"
-            >
-              {{ i18n['profile.pwdStrength'] }}
-            </label>
-            <div class="col">
-              <password
-                id="pwdMeter"
-                v-model="newPwd"
-                :strength-meter-only="true"
-                :secure-length="8"
-                @feedback="showFeedback"
-                @score="setPwdStrength"
-              ></password>
-              <strong class="form-text text-center">
-                {{ wordedPwdStrength }}
-              </strong>
-            </div>
-          </div>
-
-          <!-- password suggestions -->
-          <div
-            v-if="showSuggestions"
-            class="form-group row"
-          >
-            <div
-              class="col-sm-3"
-            >
-              {{ i18n['profile.pwdSuggestion'] }}
-            </div>
-            <div
-              id="pwd-suggestions"
-              class="col-sm-9"
-            >
-              <strong
-                id="testPwdMeter"
-                class="form-text text-center"
-              >
-                {{ warnings }}
-              </strong>
-
-              <strong
-                id="pwdDiffMsg"
-                class="form-text text-center"
-              >
-                {{ pwdDiffMsg }}
-              </strong>
-              <strong
-                id="pwdStoreMsg"
-                class="form-text text-center"
-              >
-                {{ pwdMsg }}
-              </strong>
-            </div>
-          </div>
-
+          <PasswordInput
+            class="pwd-input"
+            :label-icons-only="false"
+            :label-width="3"
+            @compliantLength="newPwdOk"
+          ></PasswordInput>
           <hr>
 
           <!-- avatar upload TODO: FIX Cropper Problems
@@ -332,7 +239,7 @@ Dependencies:
           <div class="form-group">
             <button
               type="submit"
-              :disabled="busy"
+              :disabled="busy || !passwordInputOk"
               class="btn btn-block btn-lg btn-outline-dark"
               style="border-width: 2px"
               @click.prevent="submit"
@@ -369,42 +276,35 @@ Dependencies:
 </template>
 
 <script>
-import http from 'axios'
-import { locale, pwdStrength } from '@/mixins'
-import api from '../backend-url.ts'
-import Password from 'vue-password-strength-meter'
+import { locale, pwdProps } from '@/mixins'
+import api from '@/backend-url'
+import PasswordInput from '@/components/password-input.vue'
 import { mapState } from 'vuex'
 import fontOptions from '@/misc/font-options'
 import fontSizeOptions from '@/misc/font-size-options'
-import 'open-dyslexic/open-dyslexic-regular.css'
-import '@/styles/fonts.css'
+// import '@/styles/fonts.css'
 // import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
 
 export default {
   name: 'ProfileView',
 
   components: {
-    Password // not lazily loaded b/c always visible
-    // LayaUploadAvatar
+    PasswordInput // not lazily loaded b/c always visible
   },
 
   mixins: [
     locale,
-    pwdStrength
+    pwdProps
   ],
 
   data () {
     return {
       avatar: null,
       oldPwd: '',
-      newPwd: '',
-      repeatPwd: '',
       pwdMsg: '',
       formMsg: '',
       busy: false,
-      passwordStrength: null,
       prefs: {},
-      fontOptions: fontOptions,
       fontSizeOptions: fontSizeOptions
     }
   },
@@ -453,56 +353,35 @@ export default {
     introFontOptions () {
       return [
         { value: null, text: this.i18n['profile.fontChoose'] },
-        ...this.fontOptions
+        ...fontOptions
       ]
     },
 
     /**
-     * passwordsDiffer: returns true if passwords differ
+     * function newPasswordInput: returns something when password input is set
      *
      * Author: cmc
      *
-     * Last Updated: March 24, 2021
+     * Last Updated: February 21, 2022
+     * @returns {string}
      */
-    passwordsDiffer () {
-      return this.newPwd !== this.repeatPwd
+    newPasswordInput () {
+      return this.passwordRepeat ||
+        this.passwordSet
     },
 
     /**
-     * pwdDiffMsg: returns a message if passwords differ
+     * passwordsInputOk: returns true if no new password set or
+     *  new password is secure
      *
      * Author: cmc
      *
-     * Last Updated: March 24, 2021
+     * Last Updated: February 21, 2022
      */
-    pwdDiffMsg () {
-      return this.passwordsDiffer ? this.i18n['profile.pwdDiffer'] : ''
-    },
-
-    /**
-     * showSuggestions: boolean to show suggestions row
-     *
-     * Author: cmc
-     *
-     * Last Updated: September 22, 2021
-     * @returns {boolean} true if any of the suggestions aren't empty
-     */
-    showSuggestions () {
-      return this.warnings !== '' || this.pwdDiffMsg !== '' || this.pwdMsg !== ''
-    },
-
-    /**
-     * wordedPwdStrength(): word pwd strength for linguistic support
-     *
-     * Author: cmc
-     *
-     * Last Updated: September 22, 2021
-     * @returns {string} password strength in locale
-     */
-    wordedPwdStrength () {
-      return this.passwordStrength != null
-        ? this.i18n[`pwdStrength${this.passwordStrength}`]
-        : ''
+    passwordInputOk () {
+      return this.newPasswordInput
+        ? this.passwordOk
+        : true
     }
   },
 
@@ -539,17 +418,6 @@ export default {
   methods: {
 
     /**
-     * function setPwdStrength: set passwordStrength data property
-     *
-     * Author: cmc
-     *
-     * Last Updated: September 22, 2021
-     */
-    setPwdStrength (num) {
-      this.passwordStrength = num
-    },
-
-    /**
      * Function submit: get password change request and fire it
      *
      * Author: core
@@ -557,69 +425,28 @@ export default {
      * Last Updated: unknown
      */
     submit () {
-      this.busy = true
-      const ctx = this
-      ctx.formMsg = ''
-
-      // const requests = []
+      this.formMsg = ''
 
       /* change password request */
-      if (ctx.oldPwd !== '' && ctx.newPwd !== '') {
-        // requests.push(
-        http
-          .post('accounts/change-password', {
-            oldPassword: ctx.oldPwd,
-            newPassword: ctx.newPwd
-          })
+      if (this.newPasswordInput) {
+        this.busy = true
+        this.$store.dispatch('changePassword', this.oldPwd)
           .then(() => {
-            this.busy = false
-            ctx.$bvToast.show('submit-ok')
+            this.$bvToast.show('submit-ok')
           })
           .catch(err => {
             console.error(err)
-            ctx.pwdMsg = ctx.i18n['profile.pwdFail']
-            ctx.$bvToast.show('submit-failed')
+            this.pwdMsg = this.i18n['profile.pwdFail']
+            this.$bvToast.show('submit-failed')
           })
-        // )
+          .finally(() => {
+            this.busy = false
+          })
       }
-      // console.log(requests)
-      /* fire requests */
-      // http
-      // .all(requests)
-      // .then(
-      //   http.spread(() => {
-      //     ctx.formMsg = ctx.i18n['profile.submitOk']
-      //   })
-      // )
-      // .catch(function(err) {
-      //   console.log(err)
-      //   ctx.$bvToast.show('submit-failed')
-      // })
-      // .then(() => {
-      //   ctx.busy = false
-      //   setTimeout(() => {
-      //     ctx.formMsg = ''
-      //   }, 2000)
-      //   ctx.$forceUpdate()
-      //   ctx.$bvToast.show('submit-ok')
-      // })
 
       /* update state and save profile preferences */
-      ctx.$store.commit('setPrefs', ctx.prefs)
-      ctx.$store.dispatch('saveProfile')
-    },
-
-    /**
-     * function showFeedback: load feedback for pwd strength
-     *
-     * Author: pj
-     *
-     * Last Updated: July 26, 2021
-     * @param suggestions
-     * @param warning
-     */
-    showFeedback ({ suggestions, warning }) {
-      this.pwdStrength({ suggestions, warning })
+      this.$store.commit('setPrefs', this.prefs)
+      this.$store.dispatch('saveProfile')
     }
   }
 }

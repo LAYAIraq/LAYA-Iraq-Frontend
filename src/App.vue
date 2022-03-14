@@ -93,7 +93,10 @@ export default {
       /* pass access if auth true */
       const auth = this.$ls.get('auth', false)
       /* target url is not public */
-      if (!auth && publicRoutes.includes(location.hash) && this.$route.path !== '/login') {
+      const loc = this.$route.query.length === 0 // separate query for if statement
+        ? this.$route.path
+        : this.$route.path.split('?')[0]
+      if (!auth && !publicRoutes.includes(loc) && this.$route.path !== '/login') {
         this.$router.push('/login')
       }
     },
