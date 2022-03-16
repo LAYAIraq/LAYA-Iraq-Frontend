@@ -65,7 +65,7 @@ describe('Course delete', () => {
     // expect(vm.$router.push).toHaveBeenCalled()
   })
 
-  it('redirects user and reloads course list', async () => {
+  it('redirects user and removes from course list', async () => {
     const getters = {
       profileLang: () => 'en',
       course: () => {
