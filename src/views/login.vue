@@ -19,7 +19,7 @@ Dependencies:
       </div>
       <div class="row">
         <form class="d-flex flex-column align-items-center">
-          <div style="height: 2rem"></div>
+          <div class="h-2rem"></div>
           <img
             src="../assets/anmelden.svg"
             alt="Login"
@@ -49,6 +49,7 @@ Dependencies:
             :class="{error: errPwd}"
           >
             <input
+              id="pwd-input"
               v-model.trim="pwd"
               :placeholder="i18n['pwdPH']"
               type="password"
@@ -57,7 +58,7 @@ Dependencies:
             >
           </div>
 
-          <div style="height: 2rem"></div>
+          <div class="h-2rem"></div>
           <button
             id="login-button"
             type="submit"
@@ -245,5 +246,9 @@ a {
 
 #login-button {
   border: 2px solid black;
+}
+
+.h-2rem {
+  height: 2rem;
 }
 </style>
