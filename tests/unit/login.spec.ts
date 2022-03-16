@@ -1,10 +1,8 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Login from '@/views/login.vue'
 import Vuex from 'vuex'
-import Storage from 'vue-ls'
 const localVue = createLocalVue()
 localVue.use(Vuex)
-// localVue.use(Storage, { name: 'ls', namespace: 'vuejs__', storage: 'local' })
 
 describe('login component', () => {
   let getters
@@ -16,16 +14,13 @@ describe('login component', () => {
   let pwdInput
   let sendButton
   let logSpy
-  let http
   beforeEach(() => {
-
+    console.log = jest.fn()
     getters = {
       profileLang: () => 'en'
     }
     actions = {
-      sendCredentials: () => {
-        return Promise.resolve('true')
-      },
+      sendCredentials: jest.fn(),
       fetchProfile: jest.fn(),
       fetchRole: jest.fn()
     }
@@ -40,9 +35,6 @@ describe('login component', () => {
     const router = {
       replace: jest.fn()
     }
-    http = {
-      post: jest.fn()
-    }
     wrapper = shallowMount(
       Login, {
         store,
@@ -52,14 +44,17 @@ describe('login component', () => {
         mocks: {
           $router: router,
           $ls: {
-            get: () => jest.fn()
+            get: jest.fn(),
+            set: jest.fn()
           },
           $route: {
             params: {
               verified: false
             }
           },
-          http: http
+          i18n: {
+            'login.errMsg': 'login error'
+          }
         },
         localVue
       }
@@ -97,17 +92,39 @@ describe('login component', () => {
     expect(logSpy).toHaveBeenCalledWith('Not Submitting')
   })
 
-  it('sends http request when both things are filled out', () => {
-    const user = {
-      email: 'name@domain',
-      userId: 420
-    }
-
-    http.post.mockResolvedValueOnce(user)
+  it('sends http request when both things are filled out', async () => {
     emailInput.setValue('name@domain')
     pwdInput.setValue('secret')
     sendButton.trigger('click')
-    expect(http.post).toHaveBeenCalled()
+    expect(logSpy).toHaveBeenCalledWith('Submitting...')
   })
 
+  it('calls store', () => {
+    const myResp = { id: 1, userId: 'KEKW', created: Date.now() }
+    actions.sendCredentials.mockResolvedValue(myResp)
+    emailInput.setValue('name@domain')
+    pwdInput.setValue('secret')
+    sendButton.trigger('click')
+    expect(actions.sendCredentials).toHaveBeenCalledWith(
+      expect.objectContaining({
+        getters: {
+          profileLang: 'en'
+        }
+      }),
+      expect.objectContaining({
+        email: 'name@domain',
+        password: 'secret'
+      })
+    )
+  })
+
+  it('shows link when submit failed', () => {
+    vm.submitFailed = true
+    // actions.sendCredentials.mockRejectedValue(new Error('error!'))
+    // emailInput.setValue('name@domain')
+    // pwdInput.setValue('secret')
+    // sendButton.trigger('click')
+    const newLink = wrapper.find('#forgotten-password')
+    expect(newLink).toBeDefined()
+  })
 })
