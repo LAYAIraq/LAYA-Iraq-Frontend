@@ -144,6 +144,74 @@ export default {
           .then(() => resolve(null))
           .catch(err => reject(err))
       })
+    },
+
+    /**
+     * function resetUserPassword: fire reset password request when
+     *  email for user exists
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 16, 2022
+     * @param state store variable
+     * @param {string} email user emails
+     */
+    resetUserPassword (
+      { state },
+      email: string
+    ) {
+      return new Promise((resolve, reject) => {
+        http.get(`accounts/email/${email}`)
+          .then(({ data }) => {
+            http.post(`accounts/pwd-reset/${data}`)
+              .then(() => resolve(null))
+              .catch(err => reject(err))
+          })
+          .catch(err => reject(err))
+      })
+    },
+
+    /**
+     * function sendCredentials: fire login request
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 16, 2022
+     * @param {state, commit, dispatch} any store variables
+     * @param {object} data email, password
+     */
+    sendCredentials (
+      { state, commit, dispatch },
+      data: {
+        email: string,
+        password: string
+      }
+    ) {
+      return new Promise((resolve, reject) => {
+        http.post('accounts/login', {
+          email: data.email,
+          password: data.password
+        })
+          .then(({ data }) => {
+            /* set login state */
+            commit('login', data)
+
+            /* load profile */
+            dispatch('fetchProfile')
+            dispatch('fetchRole')
+
+            /* return data for local storage */
+
+            resolve({
+              id: data.id,
+              userId: data.userId,
+              created: data.created
+            })
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
     }
   }
 }
