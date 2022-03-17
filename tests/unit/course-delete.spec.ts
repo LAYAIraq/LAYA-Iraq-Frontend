@@ -96,29 +96,23 @@ describe('Course delete', () => {
             push: jest.fn()
           }
         },
-        // FIXME: overwriting methods is deprecated,
-        //  figure out how to test without it
-        methods: {
-          delCourse () {
-            return new Promise((resolve, reject) => {
-              this.$store.dispatch('deleteCourse')
-                .then(() => {
-                  this.$store.commit('removeFromCourseList', 'test')
-                  this.$router.push('/courses')
-                  resolve(true)
-                })
-                .catch((err) => reject(err))
-            })
-          }
-        },
-
         localVue
       }
     )
     const vm = wrapper.vm as any
-    await vm.delCourse()
+    const delCourse = () => { // copy of vm.delCourse with returned Promise
+      return new Promise((resolve, reject) => {
+        vm.$store.dispatch('deleteCourse')
+          .then(() => {
+            vm.$store.commit('removeFromCourseList', 'test')
+            vm.$router.push('/courses')
+            resolve(true)
+          })
+          .catch((err) => reject(err))
+      })
+    }
+    await delCourse()
     expect(mutations.removeFromCourseList).toHaveBeenCalled()
     expect(vm.$router.push).toHaveBeenCalledWith('/courses')
-    // expect(vm.$router.push).toHaveBeenCalled()
   })
 })
