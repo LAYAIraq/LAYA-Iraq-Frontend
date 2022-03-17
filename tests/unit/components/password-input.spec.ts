@@ -1,6 +1,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
 import PasswordInput from '@/components/password-input.vue'
+import 'regenerator-runtime/runtime'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -37,7 +38,7 @@ describe('password input component', () => {
     expect(errors.text()).toBeDefined()
   })
 
-  it('sets passwordRepeat to input', () => {
+  it('sets passwordRepeat to input', async () => {
     getters = {
       ...getters,
       passwordSet: () => 'secret',
@@ -56,7 +57,7 @@ describe('password input component', () => {
       localVue
     })
     const pwdRepeat = wrapper.find('#repeatPwd')
-    pwdRepeat.setValue('secret')
+    await pwdRepeat.setValue('secret')
     expect(mutations.setPwdRepeat).toHaveBeenCalledWith({}, 'secret')
   })
 

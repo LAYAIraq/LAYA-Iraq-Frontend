@@ -33,7 +33,7 @@ Dependencies:
             </div>
             <div class="col">
               <input
-                id="register-focus"
+                id="name-input"
                 v-model="name"
                 :placeholder="i18n['namePH']"
                 :aria-label="i18n['namePH']"
@@ -65,13 +65,14 @@ Dependencies:
           <!-- email -->
           <div
             class="form-group row"
-            :class="{error: errEmail}"
+            :class="{'error': errEmail}"
           >
             <div class="col-1 col-form-label">
               <i class="fas fa-at"></i>
             </div>
             <div class="col">
               <input
+                id="email-input"
                 v-model="email"
                 :placeholder="i18n['emailPH']"
                 :aria-label="i18n['emailPH']"
@@ -101,12 +102,12 @@ Dependencies:
           </div>
 
           <!--- pwd input component test TODO: find out why props get undefined -->
-          <LayaPasswordInput
+          <laya-password-input
             class="pwd-input"
             :label-icons-only="true"
             :label-width="1"
             @compliantLength="newPwdOk"
-          ></LayaPasswordInput>
+          ></laya-password-input>
 
           <!-- profile pic -->
 
