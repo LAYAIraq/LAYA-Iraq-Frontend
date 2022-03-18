@@ -110,7 +110,7 @@ export default {
      */
     resetPassword () {
       this.busy = true
-      this.$store.dispatch('resetOwnPassword', {
+      this.$store.dispatch('resetPassword', {
         userId: this.$route.query.uid,
         verificationToken: this.$route.query.token,
         password: this.passwordSet

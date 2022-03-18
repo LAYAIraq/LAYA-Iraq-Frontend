@@ -354,7 +354,7 @@ export default {
      * @param state state variables
      * @param {number} id user Id
      */
-    resetPassword (
+    resetUserPassword (
       { commit, state }: {
         commit: Function,
         state: {
