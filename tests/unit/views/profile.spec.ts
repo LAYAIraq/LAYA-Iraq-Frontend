@@ -29,7 +29,7 @@ describe('profile view', () => {
           text: true,
           video: true
         },
-        font:{
+        font: {
           chosen: 'standard',
           size: 18
         }
@@ -67,7 +67,7 @@ describe('profile view', () => {
     })
 
     wrapper = shallowMount(ProfileView, {
-      data() {
+      data () {
         return {
           passwordOk: true
         }
@@ -98,13 +98,13 @@ describe('profile view', () => {
     await button.trigger('click')
     expect(mutations.setPrefs).toHaveBeenCalledWith(
       expect.objectContaining({ id: 1 }), expect.objectContaining({
-      media: {
-        text: true,
-        video: true,
-        audio: true,
-        simple: true
-      }
-    }))
+        media: {
+          text: true,
+          video: true,
+          audio: true,
+          simple: true
+        }
+      }))
     const inputFields = wrapper.findAll('input').filter(elem => elem.attributes('type') === 'checkbox')
     inputFields.setChecked(false)
     await button.trigger('click')
