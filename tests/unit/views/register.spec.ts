@@ -6,7 +6,7 @@ import 'regenerator-runtime/runtime'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
-describe('name input', () => {
+describe('register component', () => {
   const getters = {
     profileLang: () => 'en',
     passwordRepeat: () => 'secret',
