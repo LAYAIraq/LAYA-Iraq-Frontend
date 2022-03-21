@@ -26,11 +26,31 @@ Dependencies:
 
     <div>
       <div
+        v-if="platform !== 'self-hosted'"
         :id="playerId"
         :data-plyr-provider="platform"
         :data-plyr-embed-id="src"
         class="plyr__video-embed"
-      ></div>
+      >
+      </div>
+      <video
+        v-else
+        :id="playerId"
+      >
+        <source
+          v-for="source in sources"
+          :src="source.src"
+          :type="source.type"
+        />
+        <track
+          v-for="track in tracks"
+          :default="track.default"
+          :src="track.src"
+          :label="track.label"
+          :srclang="track.srclang"
+          :kind="track.kind"
+        />
+      </video>
       <!--      <laya-flag-icon v-if="!previewData"-->
       <!--          :refData="videoFlag"-->
       <!--          :interactive="true"-->
@@ -81,7 +101,13 @@ export default {
     return {
       plyr: null,
       src: '',
-      title: '',
+      title: {
+        show: false,
+        id: '',
+        simple: '',
+        text: '',
+        flagged: false
+      },
       videoFlag: {}
     }
   },
@@ -113,7 +139,39 @@ export default {
     platform () {
       if (this.src.includes('youtube')) return 'youtube'
       else if (this.src.includes('vimeo')) return 'vimeo'
-      else return ''
+      else return 'self-hosted'
+    },
+
+    tracks () {
+      return [
+        {
+          kind: 'captions',
+          label: 'English',
+          srclang: 'en',
+          src:
+            'http://localhost:3001/api/storage/73ef9e89-69c4-4848-929c-56591f23bc12/download/a1f453e4-7328-4c99-a0e1-fcd18de6dff2.vtt',
+          default: true,
+        },
+        {
+          kind: 'captions',
+          label: 'French',
+          srclang: 'fr',
+          src: 'http://localhost:3001/api/storage/73ef9e89-69c4-4848-929c-56591f23bc12/download/bde12ecf-f5ef-47c6-9814-65f11f335644.vtt',
+        },
+      ]
+    },
+    sources () {
+      return [
+        {
+          src:
+            'https://filesamples.com/samples/video/mp4/sample_640x360.mp4',
+          type: 'video/mp4'
+        },
+        {
+          src: 'https://dl8.webmfiles.org/big-buck-bunny_trailer.webm',
+          type: 'video/webm'
+        }
+      ]
     }
 
   },
@@ -179,6 +237,7 @@ export default {
       this.plyr.on('ended', e => {
         console.log('finished playing')
       }) */
+      // this.plyr.source = options
     }
   }
 }
