@@ -26,6 +26,7 @@ Dependencies: @/mixins/locale.vue
 
       <b-jumbotron
         v-if="tooltipOn"
+        id="helptext"
         :header="i18n['layaPlyr.name']"
         :lead="i18n['tipHeadline']"
       >
@@ -129,11 +130,10 @@ Dependencies: @/mixins/locale.vue
         <div class="col-2 form-check form-check-inline align-text-top">
           <input
             id="platform-vimeo"
-            v-model="youtube"
+            :checked="!youtube"
             class="form-check-input"
             type="radio"
             name="platform"
-            :value="false"
             disabled
           >
           <label
@@ -146,11 +146,10 @@ Dependencies: @/mixins/locale.vue
         <div class="col-2 form-check form-check-inline align-text-top">
           <input
             id="platform-yt"
-            v-model="youtube"
+            :checked="youtube"
             class="form-check-input"
             type="radio"
             name="platform"
-            :value="true"
             disabled
           >
           <label

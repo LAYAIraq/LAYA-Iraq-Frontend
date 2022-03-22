@@ -39,11 +39,13 @@ Dependencies:
       >
         <source
           v-for="source in sources"
+          :key="source.src"
           :src="source.src"
           :type="source.type"
         />
         <track
           v-for="track in tracks"
+          :key="track.label"
           :default="track.default"
           :src="track.src"
           :label="track.label"
@@ -150,14 +152,14 @@ export default {
           srclang: 'en',
           src:
             'http://localhost:3001/api/storage/73ef9e89-69c4-4848-929c-56591f23bc12/download/a1f453e4-7328-4c99-a0e1-fcd18de6dff2.vtt',
-          default: true,
+          default: true
         },
         {
           kind: 'captions',
           label: 'French',
           srclang: 'fr',
-          src: 'http://localhost:3001/api/storage/73ef9e89-69c4-4848-929c-56591f23bc12/download/bde12ecf-f5ef-47c6-9814-65f11f335644.vtt',
-        },
+          src: 'http://localhost:3001/api/storage/73ef9e89-69c4-4848-929c-56591f23bc12/download/bde12ecf-f5ef-47c6-9814-65f11f335644.vtt'
+        }
       ]
     },
     sources () {
@@ -185,19 +187,6 @@ export default {
   },
 
   methods: {
-
-    /**
-     * Function notEmpty: checks if String is not empty
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     *
-     * @param {string} str string to check
-     */
-    notEmpty (str) {
-      return (!!str && str.length > 0) ? str : false
-    },
 
     /**
      * Function fetchData: fetch data from vuex and make data property
