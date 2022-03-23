@@ -79,3 +79,57 @@ describe('Plyr create component', () => {
 
   })
 })
+
+describe.only('Plyr edit component', () => {
+  let wrapper
+  let getters
+  beforeEach(() => {
+    getters = {
+      content: () => [
+        {
+          input: {
+            youtube: true,
+            src: 'youtu.be/1hcSloy35hj',
+            title: 'some vid',
+            showTitle: true
+          }
+        }
+      ],
+      courseSimple: () => false,
+      profileLang: () => 'en'
+    }
+    const store = new Vuex.Store({
+      getters
+    })
+    wrapper = shallowMount(PlyrEdit, {
+      directives: {
+        'b-tooltip': () => {
+        }
+      },
+      mocks: {
+        $route: {
+          params: {
+            step: 1
+          }
+        }
+      },
+      stubs: ['b-jumbotron'],
+      store,
+      localVue
+    })
+  })
+
+  it('has loaded title and video from store', async () => {
+    // expect(wrapper.vm.$data).toBe({
+    //   youtube: true,
+    //   src: 'youtu.be/1hcSloy35hj',
+    //   title: 'some vid',
+    //   showTitle: true,
+    //   tooltipOn: false
+    // })
+    const titleInput = wrapper.find('#laya-plyr-title')
+    expect(titleInput.text()).toBe('some vid')
+    const vidInput = wrapper.find('#vid-id')
+    expect(vidInput.text()).toBe('youtu.be/1hcSloy35hj')
+  })
+})
