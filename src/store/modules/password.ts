@@ -10,8 +10,8 @@ import http from 'axios'
 export default {
   state:
     {
-      passwordSet: '', // necessar for password component
-      passwordRepeat: '',
+      passwordSet: '', // necessary for password component
+      passwordRepeat: ''
     },
   getters: {
 
@@ -76,7 +76,7 @@ export default {
       input: string
     ) {
       state.passwordRepeat = input
-    },
+    }
   },
   actions: {
     /**
