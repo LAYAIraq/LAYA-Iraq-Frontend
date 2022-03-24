@@ -1,6 +1,8 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Login from '@/views/login.vue'
 import Vuex from 'vuex'
+import 'regenerator-runtime/runtime'
+
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
@@ -39,6 +41,7 @@ describe('login component', () => {
       Login, {
         store,
         stubs: [
+          'b-toast',
           'router-link'
         ],
         mocks: {
