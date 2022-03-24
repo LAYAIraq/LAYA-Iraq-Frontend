@@ -28,6 +28,7 @@ Dependencies:
 
       <b-jumbotron
         v-if="tooltipOn"
+        id="helptext"
         :header="i18n['layaPlyr.name']"
         :lead="i18n['tipHeadline']"
       >
