@@ -33,8 +33,11 @@ Dependencies:
         :lead="i18n['tipHeadline']"
       >
         <hr class="my-4">
-        <p>
-          {{ i18n['layaPlyr.tooltip'] }}
+        <p
+          v-for="str in i18n['layaPlyr.tooltip'].split(';')"
+          :key="str.length"
+        >
+          {{ str }}
         </p>
       </b-jumbotron>
 

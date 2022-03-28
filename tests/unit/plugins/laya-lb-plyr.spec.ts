@@ -11,7 +11,7 @@ localVue.use(Vuex)
 describe('Plyr create component', () => {
   let wrapper
   let getters
-  beforeEach(() =>{
+  beforeEach(() => {
     getters = {
       courseSimple: () => false,
       profileLang: () => 'en'
@@ -76,7 +76,6 @@ describe('Plyr create component', () => {
     const subtitleInput = wrapper.findAll('input')
       .filter(el => el.attributes('id').includes('subtitle'))
     expect(subtitleInput.length).toBeTruthy()
-
   })
 })
 
@@ -124,7 +123,7 @@ describe('Plyr edit component', () => {
       youtube: true,
       src: 'youtu.be/1hcSloy35hj',
       title: {
-      text: 'some vid',
+        text: 'some vid',
         id: 'video-title'
       },
       showTitle: true,
@@ -184,7 +183,6 @@ describe('Plyr edit component', () => {
     const subtitleInput = wrapper.findAll('input')
       .filter(el => el.attributes('id').includes('subtitle'))
     expect(subtitleInput.length).toBeTruthy()
-
   })
 })
 
