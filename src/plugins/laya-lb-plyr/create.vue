@@ -116,55 +116,131 @@ Dependencies: @/mixins/locale.vue
             type="text"
             class="form-control"
             :placeholder="i18n['layaPlyr.placeholder']"
-            @blur="checkURL"
           >
         </div>
       </div>
 
       <!-- video props -->
       <div class="form-group row">
-        <label
-          for="platform-vimeo"
-          class="col-2 col-form-label"
-        >
+        <span class="col-2 col-form-label">
           {{ i18n['layaPlyr.platform'] }}
-        </label>
-
-        <div class="col-2 form-check form-check-inline align-text-top">
+        </span>
+        <div class="col-5 form-check form-check-inline align-text-top">
+          <input
+            id="platform-self-hosted"
+            :checked="host === 'self-hosted'"
+            class="form-check-input"
+            :class="langIsAr ? 'mr-3' : 'ml-3'"
+            type="radio"
+            name="platform"
+            @click="setHost('self-hosted')"
+          >
+          <label
+            for="platform-self-hosted"
+            class="form-check-label"
+            :class="langIsAr ? 'ml-3' : 'mr-3'"
+          >
+            {{ i18n['layaPlyr.selfHosted'] }}
+          </label>
           <input
             id="platform-vimeo"
-            :checked="!youtube"
+            :checked="host === 'vimeo'"
             class="form-check-input"
             type="radio"
             name="platform"
-            disabled
+            @click="setHost('vimeo')"
           >
           <label
             for="platform-vimeo"
             class="form-check-label"
+            :class="langIsAr ? 'ml-3' : 'mr-3'"
           >
             {{ i18n['layaPlyr.vimeo'] }}
           </label>
-        </div>
-        <div class="col-2 form-check form-check-inline align-text-top">
           <input
             id="platform-yt"
-            :checked="youtube"
+            :checked="host === 'youtube'"
             class="form-check-input"
             type="radio"
             name="platform"
-            disabled
+            @click="setHost('youtube')"
           >
           <label
             for="platform-yt"
             class="form-check-label"
+            :class="langIsAr ? 'ml-3' : 'mr-3'"
           >
             {{ i18n['layaPlyr.youtube'] }}
           </label>
         </div>
 
-        <div class="col form-check form-check-inline align-text-top">
-          <span class="text-danger form-control-plaintext text-right"> {{ urlMsg }}</span>
+        <div
+          v-if="!correctURL"
+          id="url-hint"
+          class="col form-check form-check-inline align-text-top"
+        >
+          <span class="text-danger form-control-plaintext text-right">
+            {{ urlMsg }}
+          </span>
+        </div>
+      </div>
+
+      <!-- caption tracks -->
+      <div
+        v-if="host === 'self-hosted'"
+        id="caption-input"
+        class="form-group"
+      >
+        <h4 class="mb-4 mt-4">
+          {{ i18n['captionTypes.captions'] }}
+        </h4>
+        <div
+          v-for="(track, i) in captions"
+          :key="`track-${i}`"
+          class="row"
+        >
+          <!-- caption type -->
+          <div class="col">
+            <label
+              class="form-check-label"
+              :for="`type-select-${i}`"
+            >
+              {{ i18n['type'] }}
+            </label>
+            <b-select
+              :id="`type-select-${i}`"
+              v-model="track.kind"
+            >
+              <b-select-option value="null">
+                {{ i18n['layaPlyr.captions.chooseType'] }}
+              </b-select-option>
+              <b-select-option
+                v-for="type in captionTypes"
+                :key="type"
+                :value="type"
+              >
+                {{ i18n[`captionTypes.${type}`] }}
+              </b-select-option>
+            </b-select>
+          </div>
+          <div class="col">
+            <label
+              :for="`label-input-${i}`"
+              class="form-check-label"
+            >
+              {{ i18n['layaPlyr.captions.label'] }}
+            </label>
+            <input
+              :id="`label-input-${i}`"
+              v-model="track.label"
+              class="form-control"
+              type="text"
+              :placeholder="i18n['layaPlyr.captions.label']"
+            >
+          </div>
+          <div class="col"></div>
+          <div class="col"></div>
+          <div class="col"></div>
         </div>
       </div>
     </form>
@@ -174,6 +250,7 @@ Dependencies: @/mixins/locale.vue
 <script>
 import { locale, tooltipIcon } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
+import captionTypes from '@/misc/caption-types'
 
 export default {
   name: 'LayaPlyrNew',
@@ -186,7 +263,7 @@ export default {
   data () {
     return {
       src: '',
-      youtube: false,
+      host: '',
       title: {
         text: '',
         flagged: false,
@@ -196,7 +273,14 @@ export default {
       videoFlag: {
         flagged: false,
         id: ''
-      }
+      },
+      captions: [{
+        kind: null,
+        label: '',
+        srclang: '',
+        src: ''
+      }],
+      captionTypes: captionTypes
     }
   },
 
@@ -210,7 +294,9 @@ export default {
      * Last Updated: January 17, 2021
      */
     urlMsg () {
-      return this.correctURL ? '' : this.i18n['layaPlyr.wrongURL']
+      return this.correctURL
+        ? ''
+        : this.i18n['layaPlyr.wrongURL']
     },
 
     /**
@@ -221,7 +307,15 @@ export default {
      * Last Updated: January 17, 2021
      */
     correctURL () {
-      return (this.src.includes('youtube') || this.src.includes('vimeo'))
+      if (this.host === 'self-hosted') {
+        return this.validUrl(this.src)
+      } else if (this.host === 'vimeo') {
+        return this.validVimeoUrl()
+      } else if (this.host === 'youtube') {
+        return this.validYtUrl()
+      } else { // no input set yet
+        return true
+      }
     }
   },
 
@@ -232,17 +326,73 @@ export default {
 
   methods: {
 
+    // /**
+    //  * function checkURL: check if video is from youtube or vimeo
+    //  *
+    //  * Author: cmc
+    //  *
+    //  * Last Updated: January 17, 2021
+    //  */
+    // checkURL () {
+    //   (this.correctURL && this.src.includes('youtube'))
+    //     ? this.youtube = true
+    //     : this.youtube = false
+    // },
+
     /**
-     * function checkURL: check if video is from youtube or vimeo
+     * function setHost: set host variable to val
      *
      * Author: cmc
      *
-     * Last Updated: January 17, 2021
+     * Last Updated: March 31, 2022
+     * @param {string} str one of 'youtube', 'vimeo' or 'self-hosted'
      */
-    checkURL () {
-      (this.correctURL && this.src.includes('youtube'))
-        ? this.youtube = true
-        : this.youtube = false
+    setHost (str) {
+      this.host = str
+    },
+    /**
+     * function validUrl: check if string is a valid URL according to RFC 3886
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 31, 2022
+     * @param {string} str string that needs to be checked
+     */
+    validUrl (str) {
+      let url
+      try {
+        // eslint-disable-next-line prefer-const
+        url = new URL(str)
+      } catch (_) {
+        return false
+      }
+      return url.protocol === 'http:' || url.protocol === 'https:'
+    },
+
+    /**
+     * function validVimeoUrl: check if URL contains vimeo or consists of Numbers
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 31, 2022
+     */
+    validVimeoUrl () {
+      return (this.validUrl(this.src))
+        ? this.src.includes('vimeo')
+        : /^\d+$/.test(this.src)
+    },
+
+    /**
+     * function validYtUrl: check if URL contains vimeo or consists of Numbers
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 31, 2022
+     */
+    validYtUrl () {
+      return (this.validUrl(this.src))
+        ? this.src.includes('youtu')
+        : (/^([0-9a-zA-Z]|-)+$/.test(this.src) && this.src.length === 11) // matcher for yt URLs
     }
   }
 }

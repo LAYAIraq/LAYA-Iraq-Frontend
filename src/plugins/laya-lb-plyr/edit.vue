@@ -14,9 +14,9 @@ Dependencies:
   >
     <form>
       <div class="form-group row">
-        <h3 class="d-inline-block mr-auto">
+        <h4 class="d-inline-block mr-auto">
           {{ i18n['layaPlyr.name'] }}
-        </h3>
+        </h4>
         <i
           id="questionmark"
           v-b-tooltip.left
@@ -118,56 +118,76 @@ Dependencies:
             type="text"
             class="form-control"
             :placeholder="i18n['layaPlyr.placeholder']"
-            @blur="checkURL"
           >
         </div>
       </div>
 
       <!-- video props -->
       <div class="form-group row">
-        <label
-          class="col-2 col-form-label"
-        >
+        <span class="col-2 col-form-label">
           {{ i18n['layaPlyr.platform'] }}
-        </label>
-
-        <div class="col-2 form-check form-check-inline align-text-top">
+        </span>
+        <div class="col-5 form-check form-check-inline align-text-top">
+          <input
+            id="platform-self-hosted"
+            :checked="host === 'self-hosted'"
+            class="form-check-input"
+            :class="langIsAr ? 'mr-3' : 'ml-3'"
+            type="radio"
+            name="platform"
+            @click="setHost('self-hosted')"
+          >
+          <label
+            for="platform-self-hosted"
+            class="form-check-label"
+            :class="langIsAr ? 'ml-3' : 'mr-3'"
+          >
+            {{ i18n['layaPlyr.selfHosted'] }}
+          </label>
+          <!--        </div>-->
+          <!--        <div class="col-2 form-check form-check-inline align-text-top">-->
           <input
             id="platform-vimeo"
-            v-model="youtube"
+            :checked="host === 'vimeo'"
             class="form-check-input"
             type="radio"
             name="platform"
-            :value="false"
-            disabled
+            @click="setHost('vimeo')"
           >
           <label
             for="platform-vimeo"
             class="form-check-label"
+            :class="langIsAr ? 'ml-3' : 'mr-3'"
           >
             {{ i18n['layaPlyr.vimeo'] }}
           </label>
-        </div>
-        <div class="col-2 form-check form-check-inline align-text-top">
+          <!--        </div>-->
+          <!--        <div class="col-2 form-check form-check-inline align-text-top">-->
           <input
             id="platform-yt"
-            v-model="youtube"
+            :checked="host === 'youtube'"
             class="form-check-input"
             type="radio"
             name="platform"
-            :value="true"
-            disabled
+            @click="setHost('youtube')"
           >
           <label
             for="platform-yt"
             class="form-check-label"
+            :class="langIsAr ? 'ml-3' : 'mr-3'"
           >
             {{ i18n['layaPlyr.youtube'] }}
           </label>
         </div>
 
-        <div class="col form-check form-check-inline align-text-top">
-          <span class="text-danger form-control-plaintext text-right"> {{ urlMsg }}</span>
+        <div
+          v-if="!correctURL"
+          id="url-hint"
+          class="col form-check form-check-inline align-text-top"
+        >
+          <span class="text-danger form-control-plaintext text-right">
+            {{ urlMsg }}
+          </span>
         </div>
       </div>
     </form>
@@ -176,7 +196,7 @@ Dependencies:
 
 <script>
 import { locale, tooltipIcon } from '@/mixins'
-import { mapGetters } from 'vuex'
+// import { mapGetters } from 'vuex'
 
 export default {
   name: 'LayaPlyrEdit',
@@ -189,24 +209,32 @@ export default {
   data () {
     return {
       src: '',
-      youtube: false,
-      title: '',
-      showTitle: false
+      host: '',
+      title: {
+        text: '',
+        flagged: false,
+        show: false,
+        id: ''
+      },
+      videoFlag: {
+        flagged: false,
+        id: ''
+      }
     }
   },
 
   computed: {
-    ...mapGetters(['content', 'courseSimple']),
-
     /**
-     * urlMsg: return warning if URL not supported
+     * urlMsg: return warning if URL is not supported
      *
      * Author: cmc
      *
      * Last Updated: January 17, 2021
      */
     urlMsg () {
-      return this.correctURL ? '' : this.i18n['layaPlyr.wrongURL']
+      return this.correctURL
+        ? ''
+        : this.i18n['layaPlyr.wrongURL']
     },
 
     /**
@@ -217,7 +245,15 @@ export default {
      * Last Updated: January 17, 2021
      */
     correctURL () {
-      return (this.src.includes('youtube') || this.src.includes('vimeo'))
+      if (this.host === 'self-hosted') {
+        return this.validUrl()
+      } else if (this.host === 'vimeo') {
+        return this.validVimeoUrl()
+      } else if (this.host === 'youtube') {
+        return this.validYtUrl()
+      } else { // no input set yet
+        return true
+      }
     }
   },
 
@@ -253,6 +289,49 @@ export default {
       this.youtube = preData.youtube
       this.title = preData.title
       this.showTitle = preData.showTitle
+    },
+
+    /**
+     * function setHost: set host variable to val
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 31, 2022
+     * @param {string} str one of 'youtube', 'vimeo' or 'self-hosted'
+     */
+    setHost (str) {
+      this.host = str
+    },
+    /**
+     * function validUrl: check if string is a valid URL according to RFC 3886
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 31, 2022
+     *
+     */
+    validUrl () {
+      let url
+      try {
+        // eslint-disable-next-line prefer-const
+        url = new URL(this.src)
+      } catch (_) {
+        return false
+      }
+      return url.protocol === 'http:' || url.protocol === 'https:'
+    },
+
+    /**
+     * function validVimeoUrl: check if URL contains vimeo or consists of Numbers
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 31, 2022
+     */
+    validVimeoUrl () {
+      return (this.validUrl())
+        ? this.src.includes('vimeo')
+        : /^\d$/.test(this.src)
     }
   }
 }

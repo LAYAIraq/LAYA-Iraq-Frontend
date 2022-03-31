@@ -13,7 +13,7 @@ describe('Plyr create component', () => {
   let getters
   beforeEach(() => {
     getters = {
-      courseSimple: () => false,
+      courseSimple: () => true,
       profileLang: () => 'en'
     }
     const store = new Vuex.Store({
@@ -42,6 +42,12 @@ describe('Plyr create component', () => {
     expect(titleInput.element.value).toBe('my title')
   })
 
+  it('allows to input a simple title', async () => {
+    const titleInput = wrapper.find('#laya-plyr-title-simple')
+    await titleInput.setValue('my title')
+    expect(titleInput.element.value).toBe('my title')
+  })
+
   it('has a checkbox to toggle title display', async () => {
     const titleToggle = wrapper.findAll('input').filter(el => el.attributes('type') === 'checkbox')
     expect(titleToggle.exists()).toBeTruthy()
@@ -52,6 +58,86 @@ describe('Plyr create component', () => {
     expect(videoUrl.exists()).toBeTruthy()
     await videoUrl.setValue('somevalue')
     expect(videoUrl.element.value).toBe('somevalue')
+  })
+
+  it('shows an error with wrong URL input', async () => {
+    const videoUrl = wrapper.find('#vid-id')
+    const typeButton = wrapper.find('#platform-self-hosted')
+    await typeButton.trigger('click')
+    await videoUrl.setValue('somevalue')
+    expect(videoUrl.element.value).toBe('somevalue')
+    const urlHint = wrapper.find('#url-hint')
+    expect(urlHint.exists()).toBeTruthy()
+  })
+
+  it('shows no error with valid URL input', async () => {
+    const videoUrl = wrapper.find('#vid-id')
+    const typeButton = wrapper.find('#platform-self-hosted')
+    await typeButton.trigger('click')
+    await videoUrl.setValue('http://ourmovie')
+    // expect(videoUrl.element.value).toBe('somevalue')
+    const urlHint = wrapper.find('#url-hint')
+    expect(urlHint.exists()).toBeFalsy()
+  })
+
+  it('shows an error with wrong youtube URL input', async () => {
+    const videoUrl = wrapper.find('#vid-id')
+    const typeButton = wrapper.find('#platform-yt')
+    await typeButton.trigger('click')
+    await videoUrl.setValue('somevalue')
+    expect(videoUrl.element.value).toBe('somevalue')
+    const urlHint = wrapper.find('#url-hint')
+    expect(urlHint.exists()).toBeTruthy()
+  })
+
+  it('shows no error with valid youtube URL', async () => {
+    const videoUrl = wrapper.find('#vid-id')
+    const typeButton = wrapper.find('#platform-yt')
+    await typeButton.trigger('click')
+    await videoUrl.setValue('https://www.youtube.com/watch?v=N7qMjY-gSDA')
+    // expect(videoUrl.element.value).toBe('somevalue')
+    const urlHint = wrapper.find('#url-hint')
+    expect(urlHint.exists()).toBeFalsy()
+  })
+
+  it('shows no error with valid youtube ID', async () => {
+    const videoUrl = wrapper.find('#vid-id')
+    const typeButton = wrapper.find('#platform-yt')
+    await typeButton.trigger('click')
+    await videoUrl.setValue('N7qMjY-gSDA')
+    // expect(videoUrl.element.value).toBe('somevalue')
+    const urlHint = wrapper.find('#url-hint')
+    expect(urlHint.exists()).toBeFalsy()
+  })
+
+  it('shows an error with wrong vimeo URL input', async () => {
+    const videoUrl = wrapper.find('#vid-id')
+    const typeButton = wrapper.find('#platform-vimeo')
+    await typeButton.trigger('click')
+    await videoUrl.setValue('somevalue')
+    expect(videoUrl.element.value).toBe('somevalue')
+    const urlHint = wrapper.find('#url-hint')
+    expect(urlHint.exists()).toBeTruthy()
+  })
+
+  it('shows no error with valid vimeo URL', async () => {
+    const videoUrl = wrapper.find('#vid-id')
+    const typeButton = wrapper.find('#platform-vimeo')
+    await typeButton.trigger('click')
+    await videoUrl.setValue('https://vimeo.com/1235467689')
+    // expect(videoUrl.element.value).toBe('somevalue')
+    const urlHint = wrapper.find('#url-hint')
+    expect(urlHint.exists()).toBeFalsy()
+  })
+
+  it('shows no error with valid vimeo ID', async () => {
+    const videoUrl = wrapper.find('#vid-id')
+    const typeButton = wrapper.find('#platform-vimeo')
+    await typeButton.trigger('click')
+    await videoUrl.setValue('1235467689')
+    // expect(videoUrl.element.value).toBe('somevalue')
+    const urlHint = wrapper.find('#url-hint')
+    expect(urlHint.exists()).toBeFalsy()
   })
 
   it('has 3 radio buttons for source type', async () => {
@@ -73,9 +159,12 @@ describe('Plyr create component', () => {
   })
 
   it('allows input for subtitles files', async () => {
-    const subtitleInput = wrapper.findAll('input')
-      .filter(el => el.attributes('id').includes('subtitle'))
-    expect(subtitleInput.length).toBeTruthy()
+    const selfHostCheck = wrapper.find('#platform-self-hosted')
+    await selfHostCheck.trigger('click')
+    const subtitleInput = wrapper.find('#caption-input')
+    expect(subtitleInput.exists()).toBeTruthy()
+    const inputFields = subtitleInput.findAll('input')
+    expect(inputFields.length).toBe(5)
   })
 })
 
@@ -89,12 +178,25 @@ describe('Plyr edit component', () => {
           input: {
             youtube: true,
             src: 'youtu.be/1hcSloy35hj',
-            title: 'some vid',
+            title: {
+              text: 'some vid',
+              simple: 'Video',
+              id: 'video-title'
+            },
+            captions: [
+              {
+                kind: 'captions',
+                label: 'English',
+                srclang: 'en',
+                src: 'someURL',
+                default: true
+              }
+            ],
             showTitle: true
           }
         }
       ],
-      courseSimple: () => false,
+      courseSimple: () => true,
       profileLang: () => 'en'
     }
     const store = new Vuex.Store({
@@ -119,74 +221,27 @@ describe('Plyr edit component', () => {
   })
 
   it('has loaded title and video from store', async () => {
-    expect(wrapper.vm.$data).toStrictEqual({
-      youtube: true,
-      src: 'youtu.be/1hcSloy35hj',
-      title: {
-        text: 'some vid',
-        id: 'video-title'
-      },
-      showTitle: true,
-      tooltipOn: false
-    })
-    // TODO: find out why data is not rendered and the following tests fail
-    // const titleInput = wrapper.find('#laya-plyr-title')
-    // expect(titleInput.text()).toBe('some vid')
-    // const vidInput = wrapper.find('#vid-id')
-    // expect(vidInput.text()).toBe('youtu.be/1hcSloy35hj')
-  })
-  // TODO: Find a way to re-use the test units instead of duplicating them
-  it('shows a helper box when clicking the questionmark', async () => {
-    const questionmark = wrapper.find('#questionmark')
-    await questionmark.trigger('click')
-    const helpText = wrapper.find('#helptext')
-    expect(helpText.exists()).toBeTruthy()
-  })
-
-  it('allows to input a title', async () => {
+    await localVue.nextTick()
     const titleInput = wrapper.find('#laya-plyr-title')
-    await titleInput.setValue('my title')
-    expect(titleInput.element.value).toBe('my title')
+    expect(titleInput.element.value).toBe('some vid')
+    const simpleTitleInput = wrapper.find('#laya-plyr-title-simple')
+    expect(simpleTitleInput.element.value).toBe('Video')
+    const vidInput = wrapper.find('#vid-id')
+    expect(vidInput.element.value).toBe('youtu.be/1hcSloy35hj')
   })
 
-  it('has a checkbox to toggle title display', async () => {
-    const titleToggle = wrapper.findAll('input').filter(el => el.attributes('type') === 'checkbox')
-    expect(titleToggle.exists()).toBeTruthy()
-  })
-
-  it('has an input field for video URL', async () => {
-    const videoUrl = wrapper.find('#vid-id')
-    expect(videoUrl.exists()).toBeTruthy()
-    await videoUrl.setValue('somevalue')
-    expect(videoUrl.element.value).toBe('somevalue')
-  })
-
-  it('has 3 radio buttons for source type', async () => {
-    const radioButtons = wrapper.findAll('input')
-      .filter(el => el.attributes('type') === 'radio')
-    expect(radioButtons.length).toBe(3)
-  })
-
-  it('which cannot be activated independently', async () => {
-    const radioButtons = wrapper.findAll('input')
-      .filter(el => el.attributes('type') === 'radio')
-    const first = radioButtons.at(0)
-    first.setChecked()
-    radioButtons.wrappers.forEach(elem => {
-      if (elem !== first) {
-        expect(elem.element.checked).toBeFalsy()
-      }
-    })
-  })
-
-  it('allows input for subtitles files', async () => {
-    const subtitleInput = wrapper.findAll('input')
-      .filter(el => el.attributes('id').includes('subtitle'))
-    expect(subtitleInput.length).toBeTruthy()
+  it('has loaded captions array from store', async () => {
+    const captionInput = wrapper.find('#caption-input').findAll('input')
+    expect(captionInput.length).toBe(5)
+    expect(captionInput.wrappers[0].element.value).toBe('captions')
+    expect(captionInput.wrappers[1].element.value).toBe('English')
+    expect(captionInput.wrappers[2].element.value).toBe('en')
+    expect(captionInput.wrappers[3].element.value).toBe('someURL')
+    expect(captionInput.wrappers[4].element.checked).toBeTruthy()
   })
 })
 
-describe.only('Plyr view component', () => {
+describe('Plyr view component', () => {
   let wrapper
   let getters
   // jest.mock('plyr', () => {
@@ -207,7 +262,7 @@ describe.only('Plyr view component', () => {
         }
       ],
       courseSimple: () => false,
-      courseUpdated: () => false,
+      // courseUpdated: () => false,
       profileLang: () => 'en',
       storeBusy: () => false
     }
@@ -248,5 +303,52 @@ describe.only('Plyr view component', () => {
     videoTitle = wrapper.find('#video-title')
     expect(videoTitle.exists()).toBeTruthy()
     expect(videoTitle.text()).toBe('some vid')
+  })
+})
+
+describe('Plyr view simple language', () => {
+  it('displays the correct title', () => {
+    const getters = {
+      content: () => [
+        {
+          input: {
+            src: 'youtu.be/1hcSloy35hj',
+            title: {
+              text: 'some vid',
+              simple: 'Video',
+              id: 'video-title',
+              show: true
+            }
+          }
+        }
+      ],
+      courseSimple: () => true,
+      courseUpdated: () => false,
+      profileLang: () => 'en',
+      storeBusy: () => false
+    }
+    const store = new Vuex.Store({
+      getters
+    })
+    const wrapper = shallowMount(PlyrView, {
+      computed: {
+        playerId () {
+          return 'video-div'
+        }
+      },
+      mocks: {
+        $route: {
+          params: {
+            step: 1
+          }
+        }
+      },
+      store,
+      stubs: ['laya-flag-icon'],
+      localVue
+    })
+    const videoTitle = wrapper.find('#video-title')
+    expect(videoTitle.exists()).toBeTruthy()
+    expect(videoTitle.text()).toBe('Video')
   })
 })

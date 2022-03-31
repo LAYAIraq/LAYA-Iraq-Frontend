@@ -150,8 +150,7 @@ export default {
           kind: 'captions',
           label: 'English',
           srclang: 'en',
-          src:
-            'http://localhost:3001/api/storage/73ef9e89-69c4-4848-929c-56591f23bc12/download/a1f453e4-7328-4c99-a0e1-fcd18de6dff2.vtt',
+          src: 'someurl',
           default: true
         },
         {
