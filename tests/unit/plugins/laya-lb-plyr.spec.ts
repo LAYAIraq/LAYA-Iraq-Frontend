@@ -1,5 +1,6 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
+import { BootstrapVue } from 'bootstrap-vue'
 import PlyrCreate from '@/plugins/laya-lb-plyr/create.vue'
 import PlyrEdit from '@/plugins/laya-lb-plyr/edit.vue'
 import PlyrView from '@/plugins/laya-lb-plyr/view.vue'
@@ -7,6 +8,7 @@ import 'regenerator-runtime/runtime'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
+localVue.use(BootstrapVue)
 
 describe('Plyr create component', () => {
   let wrapper
@@ -19,11 +21,11 @@ describe('Plyr create component', () => {
     const store = new Vuex.Store({
       getters
     })
-    wrapper = shallowMount(PlyrCreate, {
+    wrapper = mount(PlyrCreate, {
       directives: {
         'b-tooltip': () => {}
       },
-      stubs: ['b-jumbotron'],
+      // stubs: ['b-jumbotron'],
       store,
       localVue
     })
@@ -62,7 +64,7 @@ describe('Plyr create component', () => {
 
   it('shows an error with wrong URL input', async () => {
     const videoUrl = wrapper.find('#vid-id')
-    const typeButton = wrapper.find('#platform-self-hosted')
+    const typeButton = wrapper.find('#platform-upload')
     await typeButton.trigger('click')
     await videoUrl.setValue('somevalue')
     expect(videoUrl.element.value).toBe('somevalue')
@@ -72,7 +74,7 @@ describe('Plyr create component', () => {
 
   it('shows no error with valid URL input', async () => {
     const videoUrl = wrapper.find('#vid-id')
-    const typeButton = wrapper.find('#platform-self-hosted')
+    const typeButton = wrapper.find('#platform-upload')
     await typeButton.trigger('click')
     await videoUrl.setValue('http://ourmovie')
     // expect(videoUrl.element.value).toBe('somevalue')
@@ -159,12 +161,16 @@ describe('Plyr create component', () => {
   })
 
   it('allows input for subtitles files', async () => {
-    const selfHostCheck = wrapper.find('#platform-self-hosted')
+    const selfHostCheck = wrapper.find('#platform-upload')
     await selfHostCheck.trigger('click')
     const subtitleInput = wrapper.find('#caption-input')
     expect(subtitleInput.exists()).toBeTruthy()
+    const addCaptionButton = subtitleInput.find('button')
+    await addCaptionButton.trigger('click')
     const inputFields = subtitleInput.findAll('input')
-    expect(inputFields.length).toBe(5)
+    expect(inputFields.length).toBe(4)
+    const typeSelector = subtitleInput.find('select')
+    expect(typeSelector.exists())
   })
 })
 
@@ -191,8 +197,7 @@ describe('Plyr edit component', () => {
                 src: 'someURL',
                 default: true
               }
-            ],
-            showTitle: true
+            ]
           }
         }
       ],
@@ -262,7 +267,7 @@ describe('Plyr view component', () => {
         }
       ],
       courseSimple: () => false,
-      // courseUpdated: () => false,
+      courseUpdated: () => false,
       profileLang: () => 'en',
       storeBusy: () => false
     }

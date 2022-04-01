@@ -19,7 +19,7 @@ Dependencies:
         </h4>
         <i
           id="questionmark"
-          v-b-tooltip.left
+          v-b-tooltip.auto
           class="fas fa-question-circle"
           :title="i18n['showTip']"
           @click="toggleTip"
@@ -196,7 +196,7 @@ Dependencies:
 
 <script>
 import { locale, tooltipIcon } from '@/mixins'
-// import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'LayaPlyrEdit',
@@ -224,6 +224,8 @@ export default {
   },
 
   computed: {
+    ...mapGetters(['content']),
+
     /**
      * urlMsg: return warning if URL is not supported
      *
