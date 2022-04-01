@@ -277,32 +277,31 @@ describe('Plyr view component', () => {
   // })
   beforeEach(() => {
     getters = {
-      content: () => [
-        {
-          input: {
-            src: 'youtu.be/1hcSloy35hj',
-            title: {
-              text: 'some vid',
-              id: 'video-title',
-              show: false
-            }
-          }
-        }
-      ],
-      courseSimple: () => false,
       courseUpdated: () => false,
       profileLang: () => 'en',
       storeBusy: () => false
     }
+  })
+
+  it('shows a video container', () => {
+    getters.content = () => [
+      {
+        input: {
+          src: 'youtu.be/1hcSloy35hj',
+          title: {
+            text: 'some vid',
+            id: 'video-title',
+            show: false
+          },
+          host: 'youtube'
+        }
+      }
+    ]
+    getters.courseSimple = () => false
     const store = new Vuex.Store({
       getters
     })
     wrapper = shallowMount(PlyrView, {
-      computed: {
-        playerId () {
-          return 'video-div'
-        }
-      },
       mocks: {
         $route: {
           params: {
@@ -314,15 +313,39 @@ describe('Plyr view component', () => {
       stubs: ['laya-flag-icon'],
       localVue
     })
-  })
-
-  it('shows a video container', () => {
-    expect(wrapper.vm.playerId).toBe('video-div')
-    const videoContainer = wrapper.find('#video-div')
+    // expect(wrapper.vm.playerId).toBe('video-div')
+    const videoContainer = wrapper.find(`#${wrapper.vm.playerId}`)
     expect(videoContainer.exists()).toBeTruthy()
   })
 
   it('shows title when title.show boolean is set', async () => {
+    getters.content = () => [
+      {
+        input: {
+          title: {
+            text: 'some vid',
+            id: 'video-title',
+            show: false
+          }
+        }
+      }
+    ]
+    getters.courseSimple = () => false
+    const store = new Vuex.Store({
+      getters
+    })
+    wrapper = shallowMount(PlyrView, {
+      mocks: {
+        $route: {
+          params: {
+            step: 1
+          }
+        }
+      },
+      store,
+      stubs: ['laya-flag-icon'],
+      localVue
+    })
     let videoTitle = wrapper.find('#video-title')
     expect(videoTitle.exists()).toBeFalsy()
     wrapper.vm.title.show = true
@@ -332,33 +355,27 @@ describe('Plyr view component', () => {
     expect(videoTitle.exists()).toBeTruthy()
     expect(videoTitle.text()).toBe('some vid')
   })
-})
 
-describe('Plyr view simple language', () => {
-  it('displays the correct title', () => {
-    const getters = {
-      content: () => [
-        {
-          input: {
-            src: 'youtu.be/1hcSloy35hj',
-            title: {
-              text: 'some vid',
-              simple: 'Video',
-              id: 'video-title',
-              show: true
-            }
-          }
+  it('displays the simple title correctly', () => {
+    getters.content = () => [
+      {
+        input: {
+          src: 'youtu.be/1hcSloy35hj',
+          title: {
+            text: 'some vid',
+            id: 'video-title',
+            show: true,
+            simple: 'Video'
+          },
+          host: 'youtube'
         }
-      ],
-      courseSimple: () => true,
-      courseUpdated: () => false,
-      profileLang: () => 'en',
-      storeBusy: () => false
-    }
+      }
+    ]
+    getters.courseSimple = () => true
     const store = new Vuex.Store({
       getters
     })
-    const wrapper = shallowMount(PlyrView, {
+    wrapper = shallowMount(PlyrView, {
       computed: {
         playerId () {
           return 'video-div'
