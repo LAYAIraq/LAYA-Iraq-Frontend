@@ -142,6 +142,20 @@ describe('Plyr create component', () => {
     expect(urlHint.exists()).toBeFalsy()
   })
 
+  it('shows hint when URL might not match platform', async () => {
+    const videoUrl = wrapper.find('#vid-id')
+    const typeButton = wrapper.find('#platform-vimeo')
+    await typeButton.trigger('click')
+    await videoUrl.setValue('https://youtu.be/2313hasdb123')
+    // expect(videoUrl.element.value).toBe('somevalue')
+    let urlHint = wrapper.find('#url-hint')
+    expect(urlHint.exists()).toBeTruthy()
+    const uploadButton = wrapper.find('#platform-upload')
+    await uploadButton.trigger('click')
+    urlHint = wrapper.find('#url-hint')
+    expect(urlHint.exists()).toBeTruthy()
+  })
+
   it('has 3 radio buttons for source type', async () => {
     const radioButtons = wrapper.findAll('input')
       .filter(el => el.attributes('type') === 'radio')
@@ -167,10 +181,15 @@ describe('Plyr create component', () => {
     expect(subtitleInput.exists()).toBeTruthy()
     const addCaptionButton = subtitleInput.find('button')
     await addCaptionButton.trigger('click')
-    const inputFields = subtitleInput.findAll('input')
+    let inputFields = subtitleInput.findAll('input')
     expect(inputFields.length).toBe(4)
     const typeSelector = subtitleInput.find('select')
     expect(typeSelector.exists())
+    await inputFields.wrappers[3].trigger('click') // check radio button
+    expect(inputFields.wrappers[3].element.checked).toBeTruthy()
+    await wrapper.find('#delete-button-0').trigger('click')
+    inputFields = subtitleInput.findAll('input')
+    expect(inputFields.length).toBeFalsy()
   })
 })
 
@@ -182,22 +201,23 @@ describe('Plyr edit component', () => {
       content: () => [
         {
           input: {
-            youtube: true,
+            host: 'upload',
             src: 'youtu.be/1hcSloy35hj',
             title: {
               text: 'some vid',
               simple: 'Video',
               id: 'video-title'
             },
-            captions: [
-              {
+            captions: {
+              tracks: [{
                 kind: 'captions',
                 label: 'English',
                 srclang: 'en',
                 src: 'someURL',
                 default: true
-              }
-            ]
+              }],
+              default: 0
+            }
           }
         }
       ],
@@ -207,7 +227,7 @@ describe('Plyr edit component', () => {
     const store = new Vuex.Store({
       getters
     })
-    wrapper = shallowMount(PlyrEdit, {
+    wrapper = mount(PlyrEdit, {
       directives: {
         'b-tooltip': () => {
         }
@@ -236,13 +256,16 @@ describe('Plyr edit component', () => {
   })
 
   it('has loaded captions array from store', async () => {
-    const captionInput = wrapper.find('#caption-input').findAll('input')
-    expect(captionInput.length).toBe(5)
-    expect(captionInput.wrappers[0].element.value).toBe('captions')
-    expect(captionInput.wrappers[1].element.value).toBe('English')
-    expect(captionInput.wrappers[2].element.value).toBe('en')
-    expect(captionInput.wrappers[3].element.value).toBe('someURL')
-    expect(captionInput.wrappers[4].element.checked).toBeTruthy()
+    const captionInput = wrapper.find('#caption-input')
+    const inputList = captionInput.findAll('input')
+    expect(inputList.length).toBe(4)
+    // expect(inputList.wrappers[0].element.value).toBe('captions')
+    expect(inputList.wrappers[0].element.value).toBe('English')
+    expect(inputList.wrappers[1].element.value).toBe('en')
+    expect(inputList.wrappers[2].element.value).toBe('someURL')
+    expect(inputList.wrappers[3].element.checked).toBeTruthy()
+    const typeSelect = captionInput.find('select')
+    expect(typeSelect.element.value).toBe('captions')
   })
 })
 

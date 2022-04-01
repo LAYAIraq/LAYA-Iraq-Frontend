@@ -129,23 +129,21 @@ Dependencies:
         </span>
         <div class="col-5 form-check form-check-inline align-text-top">
           <input
-            id="platform-self-hosted"
-            :checked="host === 'self-hosted'"
+            id="platform-upload"
+            :checked="host === 'upload'"
             class="form-check-input"
             :class="langIsAr ? 'mr-3' : 'ml-3'"
             type="radio"
             name="platform"
-            @click="setHost('self-hosted')"
+            @click="setHost('upload')"
           >
           <label
-            for="platform-self-hosted"
+            for="platform-upload"
             class="form-check-label"
             :class="langIsAr ? 'ml-3' : 'mr-3'"
           >
-            {{ i18n['layaPlyr.selfHosted'] }}
+            {{ i18n['layaPlyr.upload'] }}
           </label>
-          <!--        </div>-->
-          <!--        <div class="col-2 form-check form-check-inline align-text-top">-->
           <input
             id="platform-vimeo"
             :checked="host === 'vimeo'"
@@ -161,8 +159,6 @@ Dependencies:
           >
             {{ i18n['layaPlyr.vimeo'] }}
           </label>
-          <!--        </div>-->
-          <!--        <div class="col-2 form-check form-check-inline align-text-top">-->
           <input
             id="platform-yt"
             :checked="host === 'youtube'"
@@ -180,8 +176,9 @@ Dependencies:
           </label>
         </div>
 
+        <!-- URL warning -->
         <div
-          v-if="!correctURL"
+          v-if="urlMsg"
           id="url-hint"
           class="col form-check form-check-inline align-text-top"
         >
@@ -190,73 +187,182 @@ Dependencies:
           </span>
         </div>
       </div>
+
+      <!-- caption tracks -->
+      <div
+        v-if="host === 'upload'"
+        id="caption-input"
+        class="form-group"
+      >
+        <h4 class="mb-4 mt-4">
+          {{ i18n['captionTypes.captions'] }}
+        </h4>
+        <!-- table header -->
+        <div
+          id="caption-input-header"
+          class="row mb-3"
+        >
+          <div class="col-2">
+            {{ i18n['type'] }}
+          </div>
+          <div class="col">
+            {{ i18n['layaPlyr.captions.label'] }}
+          </div>
+          <div class="col-1">
+            {{ i18n['layaPlyr.captions.lang'] }}
+          </div>
+          <div class="col">
+            {{ i18n['layaPlyr.captions.src'] }}
+          </div>
+          <div class="col-1">
+            {{ i18n['layaPlyr.captions.default'] }}
+          </div>
+          <div class="col-1"></div> <!-- placeholder for alignment -->
+        </div>
+        <!-- input fields -->
+        <div
+          v-for="(track, i) in captions.tracks"
+          :key="`track-${i}`"
+          class="row"
+        >
+          <!-- caption type -->
+          <div class="col-2">
+            <label
+              class="form-check-label sr-only"
+              :for="`type-select-${i}`"
+            >
+              {{ i18n['type'] }}
+            </label>
+            <b-select
+              :id="`type-select-${i}`"
+              v-model="track.kind"
+            >
+              <b-select-option value="null">
+                {{ i18n['layaPlyr.captions.chooseType'] }}
+              </b-select-option>
+              <b-select-option
+                v-for="type in captionTypes"
+                :key="type"
+                :value="type"
+              >
+                {{ i18n[`captionTypes.${type}`] }}
+              </b-select-option>
+            </b-select>
+          </div>
+          <!-- caption label -->
+          <div class="col">
+            <label
+              :for="`label-input-${i}`"
+              class="form-check-label sr-only"
+            >
+              {{ i18n['layaPlyr.captions.label'] }}
+            </label>
+            <input
+              :id="`label-input-${i}`"
+              v-model="track.label"
+              class="form-control"
+              type="text"
+              :placeholder="i18n['layaPlyr.captions.label']"
+            >
+          </div>
+          <!-- caption language -->
+          <div class="col-1">
+            <label
+              :for="`srclang-input-${i}`"
+              class="form-check-label sr-only"
+            >
+              {{ i18n['layaPlyr.captions.lang'] }}
+            </label>
+            <input
+              :id="`srclang-input-${i}`"
+              v-model="track.srclang"
+              class="form-control"
+              type="text"
+              :placeholder="i18n['layaPlyr.captions.lang']"
+            >
+          </div>
+          <!-- caption source -->
+          <div class="col">
+            <label
+              :for="`src-input-${i}`"
+              class="form-check-label sr-only"
+            >
+              {{ i18n['layaPlyr.captions.src'] }}
+            </label>
+            <input
+              :id="`src-input-${i}`"
+              v-model="track.src"
+              class="form-control"
+              type="text"
+              :placeholder="i18n['layaPlyr.captions.src']"
+            >
+          </div>
+          <!-- caption default -->
+          <div class="col-1">
+            <label
+              :for="`default-check-${i}`"
+              class="col-form-label sr-only"
+            >
+              {{ i18n['layaPlyr.captions.default'] }}
+            </label>
+            <input
+              :id="`default-check-${i}`"
+              class="ml-auto mr-auto"
+              type="radio"
+              :checked="captions.default === i"
+              @click="makeDefault(i)"
+            >
+          </div>
+          <!-- delete button -->
+          <div class="col-1">
+            <b-button
+              :id="`delete-button-${i}`"
+              v-b-tooltip.auto
+              class="m-auto"
+              variant="danger"
+              :title="i18n['delete']"
+              @click.prevent="removeCaption(i)"
+            >
+              <i class="fas fa-times-circle"></i>
+              <span class="sr-only">
+                {{ i18n['delete'] }}
+              </span>
+            </b-button>
+          </div>
+        </div>
+        <!-- table footer -->
+        <div
+          id="caption-input-footer"
+          class="row mt-3"
+        >
+          <b-button
+            id="add-caption"
+            variant="success"
+            class="m-auto"
+            @click.prevent="addCaption"
+          >
+            <i class="fas fa-plus-circle"></i>
+            {{ i18n['layaPlyr.captions.add'] }}
+          </b-button>
+        </div>
+      </div>
     </form>
   </div>
 </template>
 
 <script>
-import { locale, tooltipIcon } from '@/mixins'
 import { mapGetters } from 'vuex'
+import editMethods from './common-methods'
 
 export default {
   name: 'LayaPlyrEdit',
 
   mixins: [
-    locale,
-    tooltipIcon
+    editMethods
   ],
 
-  data () {
-    return {
-      src: '',
-      host: '',
-      title: {
-        text: '',
-        flagged: false,
-        show: false,
-        id: ''
-      },
-      videoFlag: {
-        flagged: false,
-        id: ''
-      }
-    }
-  },
-
   computed: {
-    ...mapGetters(['content']),
-
-    /**
-     * urlMsg: return warning if URL is not supported
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 17, 2021
-     */
-    urlMsg () {
-      return this.correctURL
-        ? ''
-        : this.i18n['layaPlyr.wrongURL']
-    },
-
-    /**
-     * correctURL: checks if video is on yt or vimeo
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 17, 2021
-     */
-    correctURL () {
-      if (this.host === 'self-hosted') {
-        return this.validUrl()
-      } else if (this.host === 'vimeo') {
-        return this.validVimeoUrl()
-      } else if (this.host === 'youtube') {
-        return this.validYtUrl()
-      } else { // no input set yet
-        return true
-      }
-    }
+    ...mapGetters(['content'])
   },
 
   created () {
@@ -264,18 +370,6 @@ export default {
   },
 
   methods: {
-
-    /**
-     * function checkURL: checks if URL is on yt, sets boolean if it is
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 17, 2021
-     */
-    checkURL () {
-      this.youtube = !!(this.correctURL && this.src.includes('youtube'))
-    },
-
     /**
      * Function fetchData: fetch data from vuex and make data property
      *
@@ -288,52 +382,10 @@ export default {
       // create deep copy of store object to manipulate in vue instance
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.src = preData.src
-      this.youtube = preData.youtube
+      this.host = preData.host
       this.title = preData.title
       this.showTitle = preData.showTitle
-    },
-
-    /**
-     * function setHost: set host variable to val
-     *
-     * Author: cmc
-     *
-     * Last Updated: March 31, 2022
-     * @param {string} str one of 'youtube', 'vimeo' or 'self-hosted'
-     */
-    setHost (str) {
-      this.host = str
-    },
-    /**
-     * function validUrl: check if string is a valid URL according to RFC 3886
-     *
-     * Author: cmc
-     *
-     * Last Updated: March 31, 2022
-     *
-     */
-    validUrl () {
-      let url
-      try {
-        // eslint-disable-next-line prefer-const
-        url = new URL(this.src)
-      } catch (_) {
-        return false
-      }
-      return url.protocol === 'http:' || url.protocol === 'https:'
-    },
-
-    /**
-     * function validVimeoUrl: check if URL contains vimeo or consists of Numbers
-     *
-     * Author: cmc
-     *
-     * Last Updated: March 31, 2022
-     */
-    validVimeoUrl () {
-      return (this.validUrl())
-        ? this.src.includes('vimeo')
-        : /^\d$/.test(this.src)
+      this.captions = preData.captions
     }
   }
 }
