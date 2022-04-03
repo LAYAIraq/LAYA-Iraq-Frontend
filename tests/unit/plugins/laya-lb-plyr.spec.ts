@@ -396,4 +396,32 @@ describe('Plyr view component', () => {
     expect(videoTitle.exists()).toBeTruthy()
     expect(videoTitle.text()).toBe('Video')
   })
+
+  it('shows previewData correctly', async () => {
+    const store = new Vuex.Store({
+      getters
+    })
+    wrapper = shallowMount(PlyrView, {
+      propsData: {
+        previewData: {
+          src: 'youtu.be/1hcSloy35hj',
+          title: {
+            text: 'some vid',
+            id: 'video-title',
+            show: false
+          },
+          host: 'youtube'
+        }
+      },
+      store,
+      stubs: ['laya-flag-icon'],
+      localVue
+    })
+    // await localVue.nextTick()
+    // const videoTitle = wrapper.find('#video-title')
+    // expect(videoTitle.exists()).toBeTruthy()
+    // expect(videoTitle.text()).toBe('some vid')
+    // const videoContainer = wrapper.find(`#${wrapper.vm.playerId}`)
+    // expect(videoContainer.exists()).toBeTruthy()
+  })
 })

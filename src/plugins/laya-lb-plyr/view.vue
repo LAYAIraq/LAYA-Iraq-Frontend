@@ -110,7 +110,8 @@ export default {
       captions: {
         default: 0,
         tracks: []
-      }
+      },
+      host: ''
     }
   },
 
@@ -198,7 +199,7 @@ export default {
       const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.src = preData.src
-      this.showTitle = preData.showTitle
+      // this.showTitle = preData.showTitle
       this.title = preData.title
       this.videoFlag = preData.videoFlag
       this.host = preData.host
