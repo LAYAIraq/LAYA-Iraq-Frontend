@@ -107,6 +107,7 @@
     "deleteField": "Dieses Feld löschen",
 	"edited": "Geändert",
 	"emailErr": "Diese Email ist ungültig",
+	"emailErr.missingChars": "Fehlende notwendige Zeichen",
 	"emailPH": "Email",
 	"emailTaken": "Diese Email ist bereits vergeben",
 	"flag.anonHint": "Diese Option verbirgt deine Identität vor anderen Teilnehmenden. Kursleitende sehen immer, wer eine Frage gestellt hat!",

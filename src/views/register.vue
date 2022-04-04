@@ -122,17 +122,27 @@ Dependencies:
             class="form-group row text-center"
             :class="{'d-none': !errEmail}"
           >
-            <div class="col text-center">
+            <div
+              v-if="errEmail"
+              id="email-err"
+              :aria-hidden="!emailTaken"
+              class="col text-center"
+            >
               <i class="fas fa-exclamation-triangle"></i>
-              <span
-                v-show="errEmail"
-                id="email-err"
-                :aria-hidden="!emailTaken"
-              >
-                <strong>
-                  {{ emailTaken ? i18n['emailTaken'] : i18n['emailErr'] }}
-                </strong>
-              </span>
+              <strong>
+                {{ emailTaken ? i18n['emailTaken'] : i18n['emailErr'] }} <br>
+                {{ missingEmailCharacters.length > 0? i18n['emailErr.missingChars'] : '' }}:
+              </strong>
+              <ul class="list-unstyled">
+                <li
+                  v-for="char in missingEmailCharacters"
+                  :key="char"
+                  class="d-inline-block"
+                  :class="langIsAr? 'ml-3' : 'mr-3'"
+                >
+                  {{ char }}
+                </li>
+              </ul>
             </div>
           </div>
 
@@ -245,7 +255,8 @@ export default {
       nameTaken: false,
       nameInputStarted: false,
       wrongNameCharacters: [],
-      emailTaken: false
+      emailTaken: false,
+      missingEmailCharacters: []
     }
   },
 
@@ -312,9 +323,8 @@ export default {
      * Author: cmc
      *
      * Last Updated: March 21, 2022
-     * @param {string} val value of name
      */
-    name (val) {
+    name () {
       this.nameInputStarted = true
       this.wrongNameCharacters = []
       if (this.errName) {
@@ -326,6 +336,32 @@ export default {
             this.wrongNameCharacters.push(letter)
           }
         }
+      }
+    },
+
+    /**
+     * watcher email: check if @ and . are present in email
+     *
+     * Author: cmc
+     *
+     * Last Updated: April 4, 2022
+     */
+    email () {
+      this.missingEmailCharacters = []
+      let missingAt = true
+      let missingPeriod = true
+      for (const char of this.email) {
+        if (char === '@') {
+          missingAt = false
+        } else if (char === '.') {
+          missingPeriod = false
+        }
+      }
+      if (missingAt) {
+        this.missingEmailCharacters.push('@')
+      }
+      if (missingPeriod) {
+        this.missingEmailCharacters.push('.')
       }
     }
   },
