@@ -24,10 +24,7 @@ Dependencies:
           </h1>
 
           <!-- name -->
-          <div
-            class="form-group row"
-            :class="{error: errName}"
-          >
+          <div class="form-group row">
             <div class="col-1 col-form-label">
               <i class="fas fa-signature"></i>
             </div>
@@ -40,6 +37,7 @@ Dependencies:
                 type="text"
                 :disabled="submitOk"
                 class="form-control"
+                :class="errName? 'wrong-input' : ''"
                 aria-describedby="name-err"
                 @blur="isNameTaken"
               >
@@ -47,26 +45,60 @@ Dependencies:
           </div>
 
           <div
+            v-if="errName"
             class="form-group row"
-            :class="{'d-none': !errName}"
           >
-            <div class="col text-center">
-              <span
-                v-show="errName"
-                id="name-err"
+            <div class="d-flex m-auto">
+              <i
+                class="fas fa-exclamation-triangle"
+                :class="langIsAr? 'mr-3' : 'ml-3'"
+              ></i>
+              <div
+                v-if="nameTaken"
+                id="name-taken-err"
                 class="text-center"
                 :aria-hidden="!nameTaken"
               >
-                {{ nameTaken ? i18n['nameTaken'] : i18n['nameErr'] }}
-              </span>
+                <strong>
+                  {{ i18n['nameTaken'] }}
+                </strong>
+              </div>
+              <div
+                v-else-if="wrongNameCharacters.length === 0"
+                id="name-empty-err"
+                class="col text-center"
+                :aria-hidden="nameTaken"
+              >
+                <strong>
+                  {{ i18n['nameErrEmpty'] }}
+                </strong>
+              </div>
+              <div
+                v-else
+                id="name-err"
+                class="text-center"
+                :aria-hidden="nameTaken"
+              >
+                <strong>
+                  {{ i18n['nameErr'] }} <br>
+                  {{ i18n['forbiddenChars'] }}:
+                </strong>
+                <ul class="list-unstyled">
+                  <li
+                    v-for="char in wrongNameCharacters"
+                    :key="char"
+                    class="d-inline-block"
+                    :class="langIsAr? 'ml-3' : 'mr-3'"
+                  >
+                    {{ char.replace(' ', i18n['noWhiteSpace']) }}
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
 
           <!-- email -->
-          <div
-            class="form-group row"
-            :class="{error: errEmail}"
-          >
+          <div class="form-group row">
             <div class="col-1 col-form-label">
               <i class="fas fa-at"></i>
             </div>
@@ -78,6 +110,7 @@ Dependencies:
                 type="text"
                 :disabled="submitOk"
                 class="form-control"
+                :class="errEmail? 'wrong-input' : ''"
                 aria-describedby="email-err"
                 @blur="isEmailTaken"
               >
@@ -89,18 +122,31 @@ Dependencies:
             class="form-group row text-center"
             :class="{'d-none': !errEmail}"
           >
-            <div class="col text-center">
-              <span
-                v-show="errEmail"
-                id="email-err"
-                :aria-hidden="!emailTaken"
-              >
-                {{ emailTaken ? i18n['emailTaken'] : i18n['emailErr'] }}
-              </span>
+            <div
+              v-if="errEmail"
+              id="email-err"
+              :aria-hidden="!emailTaken"
+              class="col text-center"
+            >
+              <i class="fas fa-exclamation-triangle"></i>
+              <strong>
+                {{ emailTaken ? i18n['emailTaken'] : i18n['emailErr'] }} <br>
+                {{ missingEmailCharacters.length > 0? i18n['emailErr.missingChars'] : '' }}:
+              </strong>
+              <ul class="list-unstyled">
+                <li
+                  v-for="char in missingEmailCharacters"
+                  :key="char"
+                  class="d-inline-block"
+                  :class="langIsAr? 'ml-3' : 'mr-3'"
+                >
+                  {{ char }}
+                </li>
+              </ul>
             </div>
           </div>
 
-          <!--- pwd input component test TODO: find out why props get undefined -->
+          <!--- pwd input component -->
           <LayaPasswordInput
             class="pwd-input"
             :label-icons-only="true"
@@ -125,7 +171,7 @@ Dependencies:
           <!-- <div style="height: 4rem"></div> -->
           <h2 :class="{'d-none': busy || submitOk}">
             <button
-              v-if="!errForm"
+              :disabled="errForm"
               class="btn btn-lg btn-block btn-outline-dark"
               style="border: 2px solid black"
               @click.prevent="submit"
@@ -207,7 +253,10 @@ export default {
       busy: false,
       submitOk: false,
       nameTaken: false,
-      emailTaken: false
+      nameInputStarted: false,
+      wrongNameCharacters: [],
+      emailTaken: false,
+      missingEmailCharacters: []
     }
   },
 
@@ -218,10 +267,11 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: unknown
+     * Last Updated: March 21, 2022 by cmc
      */
     errName () {
-      if (this.name === '') return false
+      // no error when no input yet
+      if (!this.nameInputStarted) return false
       return /\W/.test(this.name) || /^$/.test(this.name) ||
         this.nameTaken
     },
@@ -235,7 +285,7 @@ export default {
      */
     errEmail () {
       if (this.email === '') return false
-      return !(/^[^@\s]+[@][^@\s]+$/.test(this.email)) ||
+      return !(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) ||
         this.emailTaken
     },
 
@@ -265,6 +315,57 @@ export default {
     }
   },
 
+  watch: {
+    /**
+     * watcher name: check for wrong characters in name, pushing them to
+     *  wrongNameCharacters for display
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 21, 2022
+     */
+    name () {
+      this.nameInputStarted = true
+      this.wrongNameCharacters = []
+      if (this.errName) {
+        for (const letter of this.name) {
+          if (
+            /\W/.test(letter) && // letter is non-word character
+            !this.wrongNameCharacters.find(el => el === letter)
+          ) { // push wrong character to array if not already present
+            this.wrongNameCharacters.push(letter)
+          }
+        }
+      }
+    },
+
+    /**
+     * watcher email: check if @ and . are present in email
+     *
+     * Author: cmc
+     *
+     * Last Updated: April 4, 2022
+     */
+    email () {
+      this.missingEmailCharacters = []
+      let missingAt = true
+      let missingPeriod = true
+      for (const char of this.email) {
+        if (char === '@') {
+          missingAt = false
+        } else if (char === '.') {
+          missingPeriod = false
+        }
+      }
+      if (missingAt) {
+        this.missingEmailCharacters.push('@')
+      }
+      if (missingPeriod) {
+        this.missingEmailCharacters.push('.')
+      }
+    }
+  },
+
   created () {
     // relocate logged users
     if (this.$ls.get('auth', false)) this.$router.replace('/')
@@ -289,10 +390,11 @@ export default {
         .then(({ data }) => {
           ctx.nameTaken = data
         })
+        .catch(() => { ctx.nameTaken = false })
     },
 
     /**
-     * Function isEmailTake: return if given email is already taken
+     * Function isEmailTaken: return if given email is already taken
      *
      * Author: core
      *
@@ -308,6 +410,7 @@ export default {
         .then(({ data }) => {
           ctx.emailTaken = data
         })
+        .catch(() => { ctx.emailTaken = false })
     },
 
     /**
@@ -395,6 +498,10 @@ form {
 
 form > *, form > .pwd-input > * {
   width: 90%;
+}
+
+.wrong-input {
+  border: 2px crimson solid;
 }
 
 a {

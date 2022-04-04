@@ -143,7 +143,6 @@ export default {
       /* form */
       email: '',
       pwd: '',
-
       /* temp */
       busy: false,
       errMsg: '',
