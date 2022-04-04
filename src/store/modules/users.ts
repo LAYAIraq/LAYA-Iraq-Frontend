@@ -255,7 +255,7 @@ export default {
     ) {
       const user = state.users.find(el => el.id === id)
       if (user) {
-        http.delete(`accounts/${id}`)
+        http.delete(`accounts/${id}/full`)
           .then(() => {
             // console.log(resp)
             // console.log('deleted user: ', id)
@@ -357,7 +357,7 @@ export default {
      * @param state state variables
      * @param {number} id user Id
      */
-    resetPassword (
+    resetUserPassword (
       { commit, state }: {
         commit: Function,
         state: {

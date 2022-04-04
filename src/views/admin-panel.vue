@@ -822,7 +822,7 @@ export default {
      * Last Updated: November 19, 2021
      */
     resetUserPassword () {
-      this.$store.dispatch('resetPassword', this.changingUserId)
+      this.$store.dispatch('resetUserPassword', this.changingUserId)
     },
 
     /**
