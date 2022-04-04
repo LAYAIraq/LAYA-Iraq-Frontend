@@ -321,6 +321,7 @@
 	"newBlock.newContentTip": "Damit kannst Du einen neuen Inhalt erstellen. Er erhält die Nummer",
 	"nextContent": "Nächster Inhalt",
 	"noCourses": "Keine Kurse gefunden",
+	"noWhiteSpace": "Keine Leerzeichen erlaubt!",
 	"notifications": "Benachrichtigungen",
 	"notifications.seeAll": "Alle Benachrichtigungen ansehen",
 	"notifications.authorInquiry.cta": "Klicken, um die Frage zu sehen!",

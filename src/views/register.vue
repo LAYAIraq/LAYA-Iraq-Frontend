@@ -90,7 +90,7 @@ Dependencies:
                     class="d-inline-block"
                     :class="langIsAr? 'ml-3' : 'mr-3'"
                   >
-                    {{ char.replace(' ', '␣') }}
+                    {{ char.replace(' ', i18n['noWhiteSpace']) }}
                   </li>
                 </ul>
               </div>

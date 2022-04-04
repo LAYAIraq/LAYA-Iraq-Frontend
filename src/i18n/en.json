@@ -321,6 +321,7 @@
 	"newBlock.newContentTip": "You can create a new content block. It will have number",
 	"nextContent": "Next Content Block",
 	"noCourses": "No Courses Found",
+	"noWhiteSpace": "No whitespace allowed!",
 	"notifications": "Notifications",
 	"notifications.seeAll": "See all notifications",
 	"notifications.authorInquiry.cta": "Click to see the question!",
