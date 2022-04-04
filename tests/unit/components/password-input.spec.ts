@@ -1,80 +1,92 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount } from '@vue/test-utils'
 import Vuex from 'vuex'
 import PasswordInput from '@/components/password-input.vue'
+import Password from 'vue-password-strength-meter'
 import 'regenerator-runtime/runtime'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
 describe('password input component', () => {
+  let state
   let getters
   let mutations
   let wrapper
-  let vm
+  let pwdInput
+  let pwdRepeat
   beforeEach(() => {
-    getters = {
-      profileLang: () => 'en'
+    state = {
+      passwordSet: '',
+      passwordRepeat: ''
     }
-  })
-
-  it('shows error message when passwords not identical', () => {
     getters = {
-      ...getters,
-      passwordSet: () => 'secret',
-      passwordRepeat: () => 'ecret'
-    }
-    const store = new Vuex.Store({
-      getters
-    })
-    wrapper = shallowMount(PasswordInput, {
-      stubs: ['password'],
-      store,
-      localVue
-    })
-    vm = wrapper.vm as any
-    expect(vm.pwdMatch).toBeFalsy()
-    const errors = wrapper.find('#errors')
-    expect(errors).toBeDefined()
-    expect(errors.text()).toBeDefined()
-  })
-
-  it('sets passwordRepeat to input', async () => {
-    getters = {
-      ...getters,
-      passwordSet: () => 'secret',
-      passwordRepeat: () => 'ecret'
+      profileLang: () => 'en',
+      passwordSet: () => state.passwordSet,
+      passwordRepeat: () => state.passwordRepeat
     }
     mutations = {
-      setPwdRepeat: jest.fn()
+      setPwd (state, input) {
+        state.passwordSet = input
+      },
+      setPwdRepeat (state, input) {
+        state.passwordRepeat = input
+      }
     }
     const store = new Vuex.Store({
       getters,
+      state,
       mutations
     })
-    wrapper = shallowMount(PasswordInput, {
-      stubs: ['password'],
+    wrapper = mount(PasswordInput, {
       store,
       localVue
     })
-    const pwdRepeat = wrapper.find('#repeatPwd')
-    await pwdRepeat.setValue('secret')
-    expect(mutations.setPwdRepeat).toHaveBeenCalledWith({}, 'secret')
+    pwdInput = wrapper.find('.pwd-input').find('input')
+    pwdRepeat = wrapper.find('#repeatPwd')
   })
 
-  it('sets state correctly when passwords match and have min length', () => {
-    getters = {
-      ...getters,
-      passwordSet: () => 'secret12',
-      passwordRepeat: () => 'secret12'
-    }
-    const store = new Vuex.Store({ getters })
-    wrapper = shallowMount(PasswordInput, {
-      store,
-      stubs: ['password'],
-      localVue
-    })
-    vm = wrapper.vm as any
-    expect(vm.pwdMatch).toBeTruthy()
-    expect(vm.pwdSecureLength).toBeTruthy()
+  it('shows error message when passwords not identical', async () => {
+    await pwdInput.setValue('secret12')
+    await pwdRepeat.setValue('secret11')
+    expect(wrapper.vm.pwdMatch).toBeFalsy()
+    const diffErr = wrapper.find('#pwd-diff-msg')
+    expect(diffErr).toBeDefined()
+    expect(diffErr.text()).toBeTruthy()
+  })
+
+  it('shows no error when passwords match and have min length', async () => {
+    await pwdInput.setValue('secret12')
+    await pwdRepeat.setValue('secret12')
+    const diffErr = wrapper.find('#pwd-diff-msg')
+    expect(diffErr.element).toBeUndefined()
+  })
+
+  it('shows error when passwords are not long enough', async () => {
+    await pwdInput.setValue('secret')
+    await pwdRepeat.setValue('secret')
+    const errors = wrapper.find('#errors')
+    expect(errors.text()).toBeTruthy()
+  })
+
+  it('warns when passwords are not strong', async () => {
+    const pwd = wrapper.findComponent(Password)
+    // console.log(pwd)
+    expect(pwd.exists).toBeTruthy()
+    const emitSpy = jest.spyOn(pwd.vm, '$emit')
+    const warningSetter = jest.spyOn(wrapper.vm, 'pwdHints')
+    await pwdInput.setValue('password')
+    await pwdRepeat.setValue('password')
+    expect(emitSpy).toHaveBeenLastCalledWith('feedback', expect.objectContaining({
+      suggestions: expect.any(Array),
+      warning: expect.any(String)
+    }))
+    await localVue.nextTick()
+    expect(warningSetter).toHaveBeenCalledWith(expect.objectContaining({
+      suggestions: expect.any(Array),
+      warning: expect.any(String)
+    }))
+    expect(wrapper.vm.warnings.length).toBeTruthy()
+    const errors = wrapper.find('#pwd-suggestions')
+    expect(errors.text()).toBeTruthy()
   })
 })

@@ -347,22 +347,22 @@ export default {
       }
     },
 
-    /**
-     * showSuggestions: boolean to show suggestions
-     *
-     * Author: cmc
-     *
-     * Last Updated: September 22, 2021
-     * @returns {boolean} true if any of the suggestions aren't empty,
-     *  but not all
-     */
-    showSuggestions () {
-      return (
-        this.warnings !== '' ||
-          this.pwdDiffMsg !== '' ||
-          this.pwdMsg !== '') &&
-        (this.warnings !== this.pwdDiffMsg)
-    },
+    // /**
+    //  * showSuggestions: boolean to show suggestions
+    //  *
+    //  * Author: cmc
+    //  *
+    //  * Last Updated: September 22, 2021
+    //  * @returns {boolean} true if any of the suggestions aren't empty,
+    //  *  but not all
+    //  */
+    // showSuggestions () {
+    //   return (
+    //     this.warnings !== '' ||
+    //       this.pwdDiffMsg !== '' ||
+    //       this.pwdMsg !== '') &&
+    //     (this.warnings !== this.pwdDiffMsg)
+    // },
 
     /**
      * wordedPwdStrength(): word pwd strength for linguistic support

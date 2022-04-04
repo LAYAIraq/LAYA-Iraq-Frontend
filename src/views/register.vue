@@ -60,7 +60,7 @@ Dependencies:
                 :aria-hidden="!nameTaken"
               >
                 <strong>
-                {{ nameTaken }}
+                  {{ nameTaken }}
                 </strong>
               </div>
               <div
@@ -80,16 +80,17 @@ Dependencies:
                 :aria-hidden="nameTaken"
               >
                 <strong>
-                  {{ i18n['nameErr']}} <br>
+                  {{ i18n['nameErr'] }} <br>
                   {{ i18n['forbiddenChars'] }}:
                 </strong>
                 <ul class="list-unstyled">
                   <li
+                    v-for="char in wrongNameCharacters"
+                    :key="char"
                     class="d-inline-block"
                     :class="langIsAr? 'ml-3' : 'mr-3'"
-                    v-for="char in wrongNameCharacters"
                   >
-                      {{ char.replace(' ', '␣') }}
+                    {{ char.replace(' ', '␣') }}
                   </li>
                 </ul>
               </div>
