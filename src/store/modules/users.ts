@@ -160,7 +160,7 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: January 27, 2022
+     * Last Updated: March 15, 2022
      * @param commit commit function
      * @param state state variables
      * @param {number} id user Id
@@ -182,11 +182,14 @@ export default {
       const user = state.users.find(el => el.id === id)
       if (user) {
         commit('changeUserRole', { user, role })
-        http.patch(
-          `accounts/${id}`,
-          { role: role }
+        http.post(
+          'accounts/change-role',
+          {
+            role: role,
+            userId: id
+          }
         )
-          // .then(() => console.log('user role changed!'))
+          .then(() => console.log('user role changed!'))
           .catch(err => console.error(err))
       }
     },
@@ -252,7 +255,7 @@ export default {
     ) {
       const user = state.users.find(el => el.id === id)
       if (user) {
-        http.delete(`accounts/${id}`)
+        http.delete(`accounts/${id}/full`)
           .then(() => {
             // console.log(resp)
             // console.log('deleted user: ', id)
@@ -354,7 +357,7 @@ export default {
      * @param state state variables
      * @param {number} id user Id
      */
-    resetPassword (
+    resetUserPassword (
       { commit, state }: {
         commit: Function,
         state: {
