@@ -277,6 +277,7 @@
 	"login.errMsg": "Deine Anmeldung war nicht erfolgreich - prüfe Deine Eingaben!",
 	"login.passwordForgotten": "Passwort vergessen?",
 	"login.passwordReset": "Password zurücksetzen",
+	"login.passwordResetHint": "Wenn du dein Passwort vergessen hast, kannst du es hier zurücksetzen. Du bekommst eine E-Mail, mit der du ein neues Passwort festlegen kannst. Möchtest du das Passwort zurücksetzen?",
 	"login.passwordResetFailed": "Passwort Zurücksetzen fehlgeschlagen!",
 	"login.passwordResetFailedText": "Das Zurücksetzen des Passworts ist fehlgeschlagen! Bitte überprüfe deine eingegebene E-Mail-Adresse!",
 	"login.passwordResetText": "Passwort zurückgesetzt! Bitte prüfe deine E-Mails!",
