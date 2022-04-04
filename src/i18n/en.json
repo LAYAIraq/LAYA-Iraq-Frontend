@@ -277,6 +277,7 @@
 	"login.errMsg": "The login failed - please check your inputs",
 	"login.passwordForgotten": "Password forgotten?",
 	"login.passwordReset": "Password Reset",
+	"login.passwordResetHint": "If you forgot your password, you can reset here. You will get an e-mail with which you can set a new password. Do you want to reset your password?",
 	"login.passwordResetFailed": "Password Reset Failed!",
 	"login.passwordResetFailedText": "Password reset failed! Please check your email input!",
 	"login.passwordResetText": "Password Reset! Please check your emails!",

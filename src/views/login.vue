@@ -91,7 +91,7 @@ Dependencies:
               <a
                 id="forgotten-password"
                 href="#"
-                @click.prevent="resetPassword"
+                @click.prevent="$bvModal.show('reset-password-confirm')"
               >
                 {{ i18n['login.passwordForgotten'] }}
               </a>
@@ -110,27 +110,21 @@ Dependencies:
         </form>
       </div>
     </div>
-    <b-toast
-      id="pwd-req-failed"
-      :title="i18n['login.passwordResetFailed']"
-      static
-      variant="danger"
-      auto-hide-delay="1500"
-      class="author-toast"
-    >
-      {{ i18n['login.passwordResetFailedText'] }}
-    </b-toast>
-
-    <b-toast
-      id="pwd-req-sent"
+    <b-modal
+      id="reset-password-confirm"
       :title="i18n['login.passwordReset']"
-      static
-      variant="success"
-      auto-hide-delay="1500"
-      class="author-toast"
+      header-bg-variant="warning"
+      ok-variant="warning"
+      :ok-title="i18n['login.passwordReset']"
+      :cancel-title="i18n['cancel']"
+      :aria-label="i18n['popupwarning']"
+      centered
+      @ok="resetPassword"
     >
-      {{ i18n['login.passwordResetText'] }}
-    </b-toast>
+      <p>
+        {{ i18n['login.passwordResetHint'] }}
+      </p>
+    </b-modal>
   </div>
 </template>
 
@@ -208,8 +202,30 @@ export default {
      */
     resetPassword () {
       this.$store.dispatch('resetUserPassword', this.email)
-        .then(() => this.$bvToast.show('pwd-req-sent'))
-        .catch(() => this.$bvToast.show('pwd-req-failed'))
+        .then(() => this.showToast('success'))
+        .catch(() => this.showToast('error'))
+    },
+
+    /**
+     * function showToast: show a toast in root instance depending on type,
+     *  is used for bootstrap variant and message
+     *
+     * Author cmc
+     *
+     * Last Updated: April 4, 2022
+     * @param type {'error', 'success'}
+     */
+    showToast (type) {
+      this.$root.$bvToast.toast(
+        type === 'success'
+          ? this.i18n['login.passwordResetText']
+          : this.i18n['login.passwordResetFailedText'], {
+          title: type === 'success'
+            ? this.i18n['login.passwordReset']
+            : this.i18n['login.passwordResetFailed'],
+          toaster: 'b-toaster-bottom-center',
+          variant: type === 'success' ? type : 'danger'
+        })
     },
 
     /**
