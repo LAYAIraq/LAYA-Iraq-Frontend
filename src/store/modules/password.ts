@@ -128,6 +128,31 @@ export default {
           .then(() => resolve(null))
           .catch(err => reject(err))
       })
+    },
+
+    /**
+     * function resetUserPassword: fire reset password request when
+     *  email for user exists
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 16, 2022
+     * @param state store variable
+     * @param {string} email user emails
+     */
+    resetUserPassword (
+      { state },
+      email: string
+    ) {
+      return new Promise((resolve, reject) => {
+        http.get(`accounts/email/${email}`)
+          .then(({ data }) => {
+            http.post(`accounts/pwd-reset/${data}`)
+              .then(() => resolve(null))
+              .catch(err => reject(err))
+          })
+          .catch(err => reject(err))
+      })
     }
   }
 }

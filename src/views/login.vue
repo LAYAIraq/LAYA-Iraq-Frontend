@@ -19,7 +19,7 @@ Dependencies:
       </div>
       <div class="row">
         <form class="d-flex flex-column align-items-center">
-          <div style="height: 2rem"></div>
+          <div class="h-2rem"></div>
           <img
             src="../assets/anmelden.svg"
             alt="Login"
@@ -49,6 +49,7 @@ Dependencies:
             :class="{error: errPwd}"
           >
             <input
+              id="pwd-input"
               v-model.trim="pwd"
               :placeholder="i18n['pwdPH']"
               type="password"
@@ -57,7 +58,7 @@ Dependencies:
             >
           </div>
 
-          <div style="height: 2rem"></div>
+          <div class="h-2rem"></div>
           <button
             id="login-button"
             type="submit"
@@ -86,6 +87,14 @@ Dependencies:
             >
               <i class="fas fa-exclamation-triangle"></i>
               {{ errMsg }}
+              <br>
+              <a
+                id="forgotten-password"
+                href="#"
+                @click.prevent="resetPassword"
+              >
+                {{ i18n['login.passwordForgotten'] }}
+              </a>
             </div>
           </div>
 
@@ -101,11 +110,31 @@ Dependencies:
         </form>
       </div>
     </div>
+    <b-toast
+      id="pwd-req-failed"
+      :title="i18n['login.passwordResetFailed']"
+      static
+      variant="danger"
+      auto-hide-delay="1500"
+      class="author-toast"
+    >
+      {{ i18n['login.passwordResetFailedText'] }}
+    </b-toast>
+
+    <b-toast
+      id="pwd-req-sent"
+      :title="i18n['login.passwordReset']"
+      static
+      variant="success"
+      auto-hide-delay="1500"
+      class="author-toast"
+    >
+      {{ i18n['login.passwordResetText'] }}
+    </b-toast>
   </div>
 </template>
 
 <script>
-import http from 'axios'
 import { locale } from '@/mixins'
 
 export default {
@@ -170,6 +199,18 @@ export default {
   },
 
   methods: {
+    /**
+     * function resetPassword: fire password reset request
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 16, 2022
+     */
+    resetPassword () {
+      this.$store.dispatch('resetUserPassword', this.email)
+        .then(() => this.$bvToast.show('pwd-req-sent'))
+        .catch(() => this.$bvToast.show('pwd-req-failed'))
+    },
 
     /**
      * Function submit: submit login, on success load profile,
@@ -187,27 +228,17 @@ export default {
 
       console.log('Submitting...')
       this.busy = true
-      const { $data, $ls, $router, $store, i18n } = this
+      const { $data, $ls, $router, i18n } = this
 
-      http.post('accounts/login', {
+      this.$store.dispatch('sendCredentials', {
         email: $data.email,
         password: $data.pwd
       })
-        .then(({ data }) => {
-        /* set login state */
-          $store.commit('login', data)
-
-          /* load profile */
-          $store.dispatch('fetchProfile')
-          $store.dispatch('fetchRole')
-
-          /* store auth for reloads */
-          const { id, userId, created } = data
+        .then(({ id, userId, created }) => {
           const expire = new Date(created)
           expire.setSeconds(expire.getSeconds() + 604800) // user stays logged-in for 7 days (604800seconds)
           console.log('Auth expires on', expire)
           $ls.set('auth', { id: id, userId: userId }, expire.getTime())
-
           /* move to view */
           $router.push('/courses')
         })
@@ -245,5 +276,9 @@ a {
 
 #login-button {
   border: 2px solid black;
+}
+
+.h-2rem {
+  height: 2rem;
 }
 </style>

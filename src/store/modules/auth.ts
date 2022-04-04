@@ -122,6 +122,49 @@ export default {
         .get(`accounts/${state.userId}/role`)
         .then(({ data }) => commit('setRole', data.role))
         .catch((err) => console.error(err))
+    },
+
+    /**
+     * function sendCredentials: fire login request
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 16, 2022
+     * @param {state, commit, dispatch} any store variables
+     * @param {object} data email, password
+     */
+    sendCredentials (
+      { state, commit, dispatch },
+      data: {
+        email: string,
+        password: string
+      }
+    ) {
+      return new Promise((resolve, reject) => {
+        http.post('accounts/login', {
+          email: data.email,
+          password: data.password
+        })
+          .then(({ data }) => {
+            /* set login state */
+            commit('login', data)
+
+            /* load profile */
+            dispatch('fetchProfile')
+            dispatch('fetchRole')
+
+            /* return data for local storage */
+
+            resolve({
+              id: data.id,
+              userId: data.userId,
+              created: data.created
+            })
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
     }
   }
 }
