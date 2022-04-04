@@ -60,7 +60,7 @@ Dependencies:
                 :aria-hidden="!nameTaken"
               >
                 <strong>
-                {{ nameTaken }}
+                  {{ i18n['nameTaken'] }}
                 </strong>
               </div>
               <div
@@ -80,16 +80,17 @@ Dependencies:
                 :aria-hidden="nameTaken"
               >
                 <strong>
-                  {{ i18n['nameErr']}} <br>
+                  {{ i18n['nameErr'] }} <br>
                   {{ i18n['forbiddenChars'] }}:
                 </strong>
                 <ul class="list-unstyled">
                   <li
+                    v-for="char in wrongNameCharacters"
+                    :key="char"
                     class="d-inline-block"
                     :class="langIsAr? 'ml-3' : 'mr-3'"
-                    v-for="char in wrongNameCharacters"
                   >
-                      {{ char.replace(' ', '␣') }}
+                    {{ char.replace(' ', '␣') }}
                   </li>
                 </ul>
               </div>
@@ -273,7 +274,7 @@ export default {
      */
     errEmail () {
       if (this.email === '') return false
-      return !(/^[^@\s]+[@][^@\s]+$/.test(this.email)) ||
+      return !(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) ||
         this.emailTaken
     },
 
@@ -353,6 +354,7 @@ export default {
         .then(({ data }) => {
           ctx.nameTaken = data
         })
+        .catch(() => { ctx.nameTaken = false })
     },
 
     /**
@@ -372,6 +374,7 @@ export default {
         .then(({ data }) => {
           ctx.emailTaken = data
         })
+        .catch(() => { ctx.emailTaken = false })
     },
 
     /**
