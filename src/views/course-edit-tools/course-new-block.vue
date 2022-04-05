@@ -78,7 +78,7 @@ Dependencies:
         id="new-content-dd"
         variant="primary"
         class="w-100"
-        :class="text-right"
+        :class="langIsAr? 'text-right' : ''"
         menu-class="drop-wrap"
         dropleft
       >

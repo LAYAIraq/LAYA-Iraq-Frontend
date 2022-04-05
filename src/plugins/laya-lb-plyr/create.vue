@@ -13,13 +13,13 @@ Dependencies: @/mixins/locale.vue
     <form>
       <div class="form-group row">
         <h4 class="d-inline-block mr-auto">
-          {{ i18n['layaPlyr.name'] }}
+          {{ y18n('layaPlyr.name') }}
         </h4>
         <i
           id="questionmark"
           v-b-tooltip.auto
           class="fas fa-question-circle"
-          :title="i18n['showTip']"
+          :title="y18n('showTip')"
           @click="toggleTip"
         ></i>
       </div>
@@ -27,15 +27,16 @@ Dependencies: @/mixins/locale.vue
       <b-jumbotron
         v-if="tooltipOn"
         id="helptext"
-        :header="i18n['layaPlyr.name']"
-        :lead="i18n['tipHeadline']"
+        :header="y18n('layaPlyr.name')"
+        :lead="y18n('tipHeadline')"
       >
         <hr class="my-4">
         <p
-          v-for="str in i18n['layaPlyr.tooltip'].split(';')"
+          v-for="str in y18n('layaPlyr.tooltip').split(';')"
           :key="str.length"
         >
-          {{ str }}
+          <!-- eslint-disable-next-line vue/no-v-html --> <!-- TODO: find a way to avoid v-html -->
+          <span v-html="replacePattern(str, /###([\w\s\-]+)###([A-Z0-9a-z\/.:#]+)###/, linkReplacement(true))"></span>
         </p>
       </b-jumbotron>
 
@@ -48,7 +49,7 @@ Dependencies: @/mixins/locale.vue
             for="laya-plyr-title"
             class="col col-form-label"
           >
-            {{ i18n['title'] }}
+            {{ y18n('title') }}
           </label>
           <div class="form-group col-8">
             <input
@@ -56,7 +57,7 @@ Dependencies: @/mixins/locale.vue
               v-model="title.text"
               type="text"
               class="form-control"
-              :placeholder="i18n['titlePlaceholder']"
+              :placeholder="y18n('titlePlaceholder')"
             >
           </div>
           <div
@@ -67,7 +68,7 @@ Dependencies: @/mixins/locale.vue
               for="show-title-tick"
               class="col col-form-label"
             >
-              {{ i18n['showTitle'] }}
+              {{ y18n('showTitle') }}
               <input
                 id="show-title-tick"
                 v-model="title.show"
@@ -86,7 +87,7 @@ Dependencies: @/mixins/locale.vue
             class="col-2 col-form-label"
           >
             <span class="sr-only">
-              {{ i18n['simpleAlt'] }}
+              {{ y18n('simpleAlt') }}
             </span>
           </label>
           <div class="form-group col-8">
@@ -95,7 +96,7 @@ Dependencies: @/mixins/locale.vue
               v-model="title.simple"
               type="text"
               class="form-control"
-              :placeholder="i18n['simpleAlt']"
+              :placeholder="y18n('simpleAlt')"
             >
           </div>
         </div>
@@ -107,7 +108,7 @@ Dependencies: @/mixins/locale.vue
           for="vid-id"
           class="col-2 col-form-label"
         >
-          {{ i18n['layaPlyr.url'] }}
+          {{ y18n('layaPlyr.url') }}
         </label>
         <div class="col">
           <input
@@ -115,7 +116,7 @@ Dependencies: @/mixins/locale.vue
             v-model="src"
             type="text"
             class="form-control"
-            :placeholder="i18n['layaPlyr.placeholder']"
+            :placeholder="y18n('layaPlyr.placeholder')"
           >
         </div>
       </div>
@@ -123,7 +124,7 @@ Dependencies: @/mixins/locale.vue
       <!-- video props -->
       <div class="form-group row">
         <span class="col-2 col-form-label">
-          {{ i18n['layaPlyr.platform'] }}
+          {{ y18n('layaPlyr.platform') }}
         </span>
         <div class="col-5 form-check form-check-inline align-text-top">
           <input
@@ -140,7 +141,7 @@ Dependencies: @/mixins/locale.vue
             class="form-check-label"
             :class="langIsAr ? 'ml-3' : 'mr-3'"
           >
-            {{ i18n['layaPlyr.upload'] }}
+            {{ y18n('layaPlyr.upload') }}
           </label>
           <input
             id="platform-vimeo"
@@ -155,7 +156,7 @@ Dependencies: @/mixins/locale.vue
             class="form-check-label"
             :class="langIsAr ? 'ml-3' : 'mr-3'"
           >
-            {{ i18n['layaPlyr.vimeo'] }}
+            {{ y18n('layaPlyr.vimeo') }}
           </label>
           <input
             id="platform-yt"
@@ -170,7 +171,7 @@ Dependencies: @/mixins/locale.vue
             class="form-check-label"
             :class="langIsAr ? 'ml-3' : 'mr-3'"
           >
-            {{ i18n['layaPlyr.youtube'] }}
+            {{ y18n('layaPlyr.youtube') }}
           </label>
         </div>
 
@@ -193,7 +194,7 @@ Dependencies: @/mixins/locale.vue
         class="form-group"
       >
         <h4 class="mb-4 mt-4">
-          {{ i18n['captionTypes.captions'] }}
+          {{ y18n('captionTypes.captions') }}
         </h4>
         <!-- table header -->
         <div
@@ -201,19 +202,19 @@ Dependencies: @/mixins/locale.vue
           class="row mb-3"
         >
           <div class="col-2">
-            {{ i18n['type'] }}
+            {{ y18n('type') }}
           </div>
           <div class="col">
-            {{ i18n['layaPlyr.captions.label'] }}
+            {{ y18n('layaPlyr.captions.label') }}
           </div>
           <div class="col-1">
-            {{ i18n['layaPlyr.captions.lang'] }}
+            {{ y18n('layaPlyr.captions.lang') }}
           </div>
           <div class="col">
-            {{ i18n['layaPlyr.captions.src'] }}
+            {{ y18n('layaPlyr.captions.src') }}
           </div>
           <div class="col-1">
-            {{ i18n['layaPlyr.captions.default'] }}
+            {{ y18n('layaPlyr.captions.default') }}
           </div>
           <div class="col-1"></div> <!-- placeholder for alignment -->
         </div>
@@ -229,14 +230,14 @@ Dependencies: @/mixins/locale.vue
               class="form-check-label sr-only"
               :for="`type-select-${i}`"
             >
-              {{ i18n['type'] }}
+              {{ y18n('type') }}
             </label>
             <b-select
               :id="`type-select-${i}`"
               v-model="track.kind"
             >
               <b-select-option value="null">
-                {{ i18n['layaPlyr.captions.chooseType'] }}
+                {{ y18n('layaPlyr.captions.chooseType') }}
               </b-select-option>
               <b-select-option
                 v-for="type in captionTypes"
@@ -253,14 +254,14 @@ Dependencies: @/mixins/locale.vue
               :for="`label-input-${i}`"
               class="form-check-label sr-only"
             >
-              {{ i18n['layaPlyr.captions.label'] }}
+              {{ y18n('layaPlyr.captions.label') }}
             </label>
             <input
               :id="`label-input-${i}`"
               v-model="track.label"
               class="form-control"
               type="text"
-              :placeholder="i18n['layaPlyr.captions.label']"
+              :placeholder="y18n('layaPlyr.captions.label')"
             >
           </div>
           <!-- caption language -->
@@ -269,14 +270,14 @@ Dependencies: @/mixins/locale.vue
               :for="`srclang-input-${i}`"
               class="form-check-label sr-only"
             >
-              {{ i18n['layaPlyr.captions.lang'] }}
+              {{ y18n('layaPlyr.captions.lang') }}
             </label>
             <input
               :id="`srclang-input-${i}`"
               v-model="track.srclang"
               class="form-control"
               type="text"
-              :placeholder="i18n['layaPlyr.captions.lang']"
+              :placeholder="y18n('layaPlyr.captions.lang')"
             >
           </div>
           <!-- caption source -->
@@ -285,14 +286,14 @@ Dependencies: @/mixins/locale.vue
               :for="`src-input-${i}`"
               class="form-check-label sr-only"
             >
-              {{ i18n['layaPlyr.captions.src'] }}
+              {{ y18n('layaPlyr.captions.src') }}
             </label>
             <input
               :id="`src-input-${i}`"
               v-model="track.src"
               class="form-control"
               type="text"
-              :placeholder="i18n['layaPlyr.captions.src']"
+              :placeholder="y18n('layaPlyr.captions.src')"
             >
           </div>
           <!-- caption default -->
@@ -301,7 +302,7 @@ Dependencies: @/mixins/locale.vue
               :for="`default-check-${i}`"
               class="col-form-label sr-only"
             >
-              {{ i18n['layaPlyr.captions.default'] }}
+              {{ y18n('layaPlyr.captions.default') }}
             </label>
             <input
               :id="`default-check-${i}`"
@@ -318,12 +319,12 @@ Dependencies: @/mixins/locale.vue
               v-b-tooltip.auto
               class="m-auto"
               variant="danger"
-              :title="i18n['delete']"
+              :title="y18n('delete')"
               @click.prevent="removeCaption(i)"
             >
               <i class="fas fa-times-circle"></i>
               <span class="sr-only">
-                {{ i18n['delete'] }}
+                {{ y18n('delete') }}
               </span>
             </b-button>
           </div>
@@ -340,7 +341,7 @@ Dependencies: @/mixins/locale.vue
             @click.prevent="addCaption"
           >
             <i class="fas fa-plus-circle"></i>
-            {{ i18n['layaPlyr.captions.add'] }}
+            {{ y18n('layaPlyr.captions.add') }}
           </b-button>
         </div>
       </div>

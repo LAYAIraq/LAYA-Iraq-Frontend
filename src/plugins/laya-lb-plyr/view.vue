@@ -64,7 +64,7 @@ Dependencies:
         @click="onFinish[0]() || {}"
       >
         <span>
-          {{ i18n['nextContent'] }}
+          {{ y18n('nextContent') }}
           <i
             :class="langIsAr?
               'fas fa-arrow-left' :
