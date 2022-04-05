@@ -245,7 +245,7 @@
 	"layaPlyr.name": "Video",
 	"layaPlyr.placeholder": "z.B. https://vimeo.com/346694402",
 	"layaPlyr.platform": "Platform",
-	"layaPlyr.tooltip": "With this component, you can insert a video. You only have to give the link to the video you want to insert. Make sure the URL is correct.;For videos on Youtube or Vimeo, the ID is enough. Make sure to use the correct format!;For uploaded videos, you can also add subtitles. For Vimeo videos, subtitles are loaded automatically.;Afterwards, we provide a player that allows the video to be played within the course interface.",
+	"layaPlyr.tooltip": "With this component, you can insert a video. You only have to give the link to the video you want to insert. Make sure the URL is correct.;For videos on Youtube or Vimeo, the ID is enough. Make sure to use the correct format!;For uploaded videos, make sure the video has a widely supported format, i.e. has one of these extensions: mp4, ogg, webm.;You can also add subtitles for different languages. Make sure the files conforms to the ###WebVTT standard###https://w3c.github.io/webvtt/#introduction###.;For Vimeo videos, subtitles are loaded automatically. Unfortunately, YouTube subtitles cannot be displayed as of now.;After you provided all information, we display a player that allows the video to be played within the course interface.",
 	"layaPlyr.upload": "Upload",
 	"layaPlyr.url": "Video URL",
 	"layaPlyr.vimeo": "Vimeo",
