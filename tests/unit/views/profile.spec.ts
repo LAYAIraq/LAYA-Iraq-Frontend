@@ -1,10 +1,12 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import ProfileView from '@/views/profile.vue'
 import Vuex from 'vuex'
+import { BootstrapVue } from 'bootstrap-vue'
 import 'regenerator-runtime/runtime'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
+localVue.use(BootstrapVue)
 
 describe('profile view', () => {
   let mutations
@@ -15,25 +17,14 @@ describe('profile view', () => {
   beforeEach(() => {
     const getters = {
       profileLang: () => 'en',
-      passwordRepeat: () => 'secret12',
+      passwordRepeat: () => '',
       passwordSet: () => 'secret12'
     }
     state = {
-      avatar: '',
+      avatar: 'mypic.png',
       email: 'admin@laya',
       lang: 'en',
-      prefs: {
-        media: {
-          audio: true,
-          simple: true,
-          text: true,
-          video: true
-        },
-        font: {
-          chosen: 'standard',
-          size: 18
-        }
-      },
+      prefs: {},
       username: 'admin',
       realm: null,
       emailVerified: false,
@@ -73,27 +64,33 @@ describe('profile view', () => {
         }
       },
       localVue,
-      mocks: {
-        $bvToast: {
-          show: jest.fn()
-        }
-      },
       store,
       stubs: [
-        'b-form-input',
-        'b-form-select',
-        'b-form-select-option',
-        'b-toast',
         'password-input'
-      ],
-      watch: {
-        profile: () => jest.fn()
-      }
+      ]
     })
     vm = wrapper.vm as any
   })
 
   it('saves media input as chosen', async () => {
+    const mediaPrefChecks = wrapper.findAll('input')
+    expect(mediaPrefChecks.length).toBe(7)
+    let myAss = 0
+    mediaPrefChecks.wrappers.forEach((wrapper) => {
+      // console.log(wrapper)
+      if (wrapper.attributes('type') === 'checkbox') {
+        myAss++
+        wrapper.setChecked(true)
+      }
+    })
+    expect(myAss).toBe(4)
+    await localVue.nextTick()
+    expect(vm.prefs.media).toStrictEqual({
+      text: true,
+      video: true,
+      audio: true,
+      simple: true
+    })
     const button = wrapper.find('button')
     await button.trigger('click')
     expect(mutations.setPrefs).toHaveBeenCalledWith(
@@ -140,5 +137,11 @@ describe('profile view', () => {
     vm.passwordOk = false
     await vm.$nextTick()
     expect(button.attributes('disabled')).toBeDefined()
+  })
+
+  it('calls store methods on destroy', () => {
+    wrapper.destroy()
+    expect(actions.saveProfile).toHaveBeenCalled()
+    expect(mutations.setPrefs).toHaveBeenCalled()
   })
 })
