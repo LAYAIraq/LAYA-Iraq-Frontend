@@ -1,34 +1,22 @@
 import 'regenerator-runtime/runtime'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount } from '@vue/test-utils'
 import CourseDelete from '@/views/course-edit-tools/course-delete.vue'
 import Vuex from 'vuex'
+import { BootstrapVue } from 'bootstrap-vue'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
+localVue.use(BootstrapVue)
 
 describe('Course delete', () => {
-  it('prompts a modal when clicking button', async () => {
-    const getters = {
-      profileLang: () => 'en'
-    }
-    const store = new Vuex.Store({
-      getters
-    })
-    const wrapper = shallowMount(
-      CourseDelete, {
-        store,
-        stubs: ['b-button', 'b-modal'],
-        localVue
-      }
-    )
-    const button = wrapper.find('#delete-button')
-    await button.trigger('click')
-    const modal = wrapper.find('#author-delCourse-confirm')
-    expect(modal).toBeDefined()
-  })
-
-  it('fires store method deleteCourse', async () => {
-    const getters = {
+  let getters
+  let actions
+  let mutations
+  let wrapper
+  let button
+  let modalButtons
+  beforeEach(() => {
+    getters = {
       profileLang: () => 'en',
       course: () => {
         return {
@@ -36,36 +24,60 @@ describe('Course delete', () => {
         }
       }
     }
-    const actions = {
-      deleteCourse: jest.fn()
+    actions = {
+      deleteCourse: jest.fn(() => {
+        return Promise.resolve()
+      })
     }
-    const mutations = {
-      removeFromCourseList: () => {}
+    mutations = {
+      removeFromCourseList: jest.fn()
     }
     const store = new Vuex.Store({
       getters,
-      actions,
-      mutations
+      mutations,
+      actions
     })
-    const wrapper = shallowMount(
+    wrapper = mount(
       CourseDelete, {
-        store,
-        stubs: ['b-button', 'b-modal'],
         mocks: {
           $router: {
-            push: () => {}
+            push: jest.fn()
           }
         },
+        store,
         localVue
       }
     )
-    const vm = wrapper.vm as any
-    vm.delCourse()
-    expect(actions.deleteCourse).toHaveBeenCalled()
-    // expect(vm.$router.push).toHaveBeenCalled()
+    button = wrapper.findComponent('button')
   })
 
-  it('redirects user and removes from course list', async () => {
+  it('prompts a modal when clicking button', async () => {
+    expect(button.exists()).toBeTruthy()
+    await button.trigger('click')
+    const modal = wrapper.find('#author-del-course-confirm')
+    expect(modal.exists()).toBeTruthy()
+    modalButtons = wrapper.findAll('button')
+    expect(modalButtons.length).toBe(4)
+  })
+
+  it('calls all store methods when clickling ok', async () => {
+    await button.trigger('click')
+    modalButtons = wrapper.findAll('button')
+    modalButtons.wrappers.forEach(wrap => {
+      if (wrap.text() === 'Delete') {
+        button = wrap
+      }
+    })
+    await button.trigger('click')
+    expect(actions.deleteCourse).toHaveBeenCalled()
+    expect(mutations.removeFromCourseList).toHaveBeenCalled()
+    expect(wrapper.vm.$router.push).toHaveBeenCalledWith('/courses')
+    // expect(vm.$router.push).toHaveBeenCalled()
+  })
+})
+
+describe('test for full branch coverage', () => {
+  it('prompts error log when store returns rejection', async () => {
     const getters = {
       profileLang: () => 'en',
       course: () => {
@@ -75,44 +87,39 @@ describe('Course delete', () => {
       }
     }
     const actions = {
-      deleteCourse: () => {
-        return Promise.resolve(true)
-      }
+      deleteCourse: jest.fn(() => {
+        return Promise.reject(new Error('err!'))
+      })
     }
     const mutations = {
       removeFromCourseList: jest.fn()
     }
     const store = new Vuex.Store({
       getters,
-      actions,
-      mutations
+      mutations,
+      actions
     })
-    const wrapper = shallowMount(
-      CourseDelete, {
-        store,
-        stubs: ['b-button', 'b-modal'],
-        mocks: {
-          $router: {
-            push: jest.fn()
-          }
-        },
-        localVue
+    const wrapper = mount(CourseDelete, {
+      mocks: {
+        $router: {
+          push: jest.fn()
+        }
+      },
+      store,
+      localVue
+    })
+    let button = wrapper.find('button')
+    console.error = jest.fn()
+    await button.trigger('click')
+    const modalButtons = wrapper.findAll('button')
+    modalButtons.wrappers.forEach(wrap => {
+      if (wrap.text() === 'Delete') {
+        button = wrap
       }
-    )
-    const vm = wrapper.vm as any
-    const delCourse = () => { // copy of vm.delCourse with returned Promise
-      return new Promise((resolve, reject) => {
-        vm.$store.dispatch('deleteCourse')
-          .then(() => {
-            vm.$store.commit('removeFromCourseList', 'test')
-            vm.$router.push('/courses')
-            resolve(true)
-          })
-          .catch((err) => reject(err))
-      })
-    }
-    await delCourse()
-    expect(mutations.removeFromCourseList).toHaveBeenCalled()
-    expect(vm.$router.push).toHaveBeenCalledWith('/courses')
+    })
+    await button.trigger('click')
+    await localVue.nextTick()
+    expect(actions.deleteCourse).toHaveBeenCalled()
+    expect(console.error).toHaveBeenCalledWith('ERROR:', expect.any(Error))
   })
 })
