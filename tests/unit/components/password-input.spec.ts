@@ -1,7 +1,6 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 import Vuex from 'vuex'
 import PasswordInput from '@/components/password-input.vue'
-import Password from 'vue-password-strength-meter'
 import 'regenerator-runtime/runtime'
 
 const localVue = createLocalVue()
@@ -55,38 +54,23 @@ describe('password input component', () => {
   })
 
   it('shows no error when passwords match and have min length', async () => {
-    await pwdInput.setValue('secret12')
-    await pwdRepeat.setValue('secret12')
+    await pwdRepeat.setValue('verystrongpassword')
+    await pwdInput.setValue('verystrongpassword')
     const diffErr = wrapper.find('#pwd-diff-msg')
     expect(diffErr.element).toBeUndefined()
   })
 
   it('shows error when passwords are not long enough', async () => {
-    await pwdInput.setValue('secret')
     await pwdRepeat.setValue('secret')
+    await pwdInput.setValue('secret')
     const errors = wrapper.find('#errors')
-    expect(errors.text()).toBeTruthy()
+    expect(errors.text()).toBe('Password is not long enough!')
   })
 
   it('warns when passwords are not strong', async () => {
-    const pwd = wrapper.findComponent(Password)
-    // console.log(pwd)
-    expect(pwd.exists).toBeTruthy()
-    const emitSpy = jest.spyOn(pwd.vm, '$emit')
-    const warningSetter = jest.spyOn(wrapper.vm, 'pwdHints')
-    await pwdInput.setValue('password')
-    await pwdRepeat.setValue('password')
-    expect(emitSpy).toHaveBeenLastCalledWith('feedback', expect.objectContaining({
-      suggestions: expect.any(Array),
-      warning: expect.any(String)
-    }))
-    await localVue.nextTick()
-    expect(warningSetter).toHaveBeenCalledWith(expect.objectContaining({
-      suggestions: expect.any(Array),
-      warning: expect.any(String)
-    }))
-    expect(wrapper.vm.warnings.length).toBeTruthy()
-    const errors = wrapper.find('#pwd-suggestions')
+    await pwdRepeat.setValue('abcacabcac')
+    await pwdInput.setValue('abcacabcac')
+    const errors = wrapper.find('#suggestions')
     expect(errors.text()).toBeTruthy()
   })
 })
