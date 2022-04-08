@@ -112,6 +112,7 @@ Dependencies:
         <button
           type="button"
           class="btn btn-warning"
+          :disabled="freeze"
           @click="reset"
         >
           {{ i18n['layaLaRelate.removeInput'] }}
