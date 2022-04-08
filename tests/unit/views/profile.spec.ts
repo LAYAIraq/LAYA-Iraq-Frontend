@@ -11,11 +11,13 @@ localVue.use(BootstrapVue)
 describe('profile view', () => {
   let mutations
   let state
+  let getters
   let actions
   let wrapper
   let vm
+  let store
   beforeEach(() => {
-    const getters = {
+    getters = {
       profileLang: () => 'en',
       passwordRepeat: () => '',
       passwordSet: () => 'secret12'
@@ -41,7 +43,7 @@ describe('profile view', () => {
       saveProfile: jest.fn(),
       changePassword: jest.fn()
     }
-    const store = new Vuex.Store({
+    store = new Vuex.Store({
       getters,
       modules: {
         profile: {
@@ -143,5 +145,70 @@ describe('profile view', () => {
     wrapper.destroy()
     expect(actions.saveProfile).toHaveBeenCalled()
     expect(mutations.setPrefs).toHaveBeenCalled()
+  })
+
+  it('shows toast when password is saved', async () => {
+    actions.changePassword = jest.fn(() => Promise.resolve())
+    getters.passwordRepeat = () => 'secret12'
+    store = new Vuex.Store({
+      getters,
+      modules: {
+        profile: {
+          state,
+          getters: {
+            profile () {
+              return state
+            }
+          },
+          mutations,
+          actions
+        }
+      }
+    })
+    wrapper = shallowMount(ProfileView, {
+      store,
+      localVue,
+      stubs: [
+        'password-input'
+      ]
+    })
+    await wrapper.setData({ passwordOk: true })
+    const button = wrapper.find('button')
+    await button.trigger('click')
+    expect(actions.changePassword).toHaveBeenCalled()
+    expect(wrapper.find('#submit-ok').exists()).toBeTruthy()
+  })
+
+  it('shows toast when password saving failed', async () => {
+    actions.changePassword = jest.fn(() => Promise.reject(new Error('fail')))
+    getters.passwordRepeat = () => 'secret12' // TODO: reduce duplication
+    store = new Vuex.Store({
+      getters,
+      modules: {
+        profile: {
+          state,
+          getters: {
+            profile () {
+              return state
+            }
+          },
+          mutations,
+          actions
+        }
+      }
+    })
+    wrapper = shallowMount(ProfileView, {
+      store,
+      localVue,
+      stubs: [
+        'password-input'
+      ]
+    })
+    await wrapper.setData({ passwordOk: true })
+    const button = wrapper.find('button')
+    await button.trigger('click')
+    expect(actions.changePassword).toHaveBeenCalled()
+    expect(wrapper.find('#submit-failed').exists()).toBeTruthy()
+    // expoect
   })
 })
