@@ -129,7 +129,7 @@ Dependencies:
       </div>
 
       <div>
-        <div>
+        <div class="row">
           <div v-if="showSolutionsBool">
             {{ i18n["layaLaScmc.showCorrect"] }}
             <div
@@ -140,12 +140,34 @@ Dependencies:
             </div>
           </div>
         </div>
-
         <div>
           <div v-if="allAnswersChosen">
             {{ i18n['layaLaRelate.missingAnswerWarning'] }}
           </div>
+          <b-modal
+            id="relate-missing-warning"
+            ok-variant="warning"
+            ok-only
+            centered
+          >
+            {{ i18n['layaLaRelate.missingAnswerWarning'] }}
+          </b-modal>
         </div>
+        <button
+          type="button"
+          class="btn btn-primary btn-lg mt-3 d-block"
+          :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
+          @click="done"
+        >
+        <span>
+          {{ i18n['nextContent'] }}
+          <i
+            :class="langIsAr?
+              'fas fa-arrow-left' :
+              'fas fa-arrow-right'"
+          ></i>
+        </span>
+        </button>
       </div>
     </div>
   </div>
@@ -285,6 +307,7 @@ export default {
         this.$forceUpdate()
       } else {
         this.allAnswersChosen = true
+        this.$bvModal.show('relate-missing-warning')
       }
     },
 
