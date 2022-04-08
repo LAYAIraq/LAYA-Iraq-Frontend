@@ -34,7 +34,6 @@ Dependencies:
           @flagged="title.flagged = true"
         ></laya-flag-icon>
       </div>
-
       <div
         :id="task.id"
         class="flaggable row"
@@ -160,14 +159,14 @@ Dependencies:
           :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
           @click="done"
         >
-        <span>
-          {{ i18n['nextContent'] }}
-          <i
-            :class="langIsAr?
-              'fas fa-arrow-left' :
-              'fas fa-arrow-right'"
-          ></i>
-        </span>
+          <span>
+            {{ i18n['nextContent'] }}
+            <i
+              :class="langIsAr?
+                'fas fa-arrow-left' :
+                'fas fa-arrow-right'"
+            ></i>
+          </span>
         </button>
       </div>
     </div>
