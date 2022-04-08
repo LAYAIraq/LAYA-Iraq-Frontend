@@ -318,7 +318,8 @@ export default {
 }
 
 img {
-  height: 8rem;
+  max-height: 20rem;
+  max-width: 20rem;
 }
 
 .form-group.row {
