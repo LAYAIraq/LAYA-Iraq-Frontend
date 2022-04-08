@@ -126,7 +126,9 @@ Dependencies:
         >
           {{ i18n['check'] }}
         </button>
+      </div>
 
+      <div>
         <div>
           <div v-if="showSolutionsBool">
             {{ i18n["layaLaScmc.showCorrect"] }}
@@ -144,15 +146,6 @@ Dependencies:
             {{ i18n['layaLaRelate.missingAnswerWarning'] }}
           </div>
         </div>
-
-        <button
-          type="button"
-          class="btn btn-primary"
-          :class="langIsAr? 'mr-auto': 'ml-auto'"
-          @click="done"
-        >
-          saveFlags
-        </button>
       </div>
     </div>
   </div>

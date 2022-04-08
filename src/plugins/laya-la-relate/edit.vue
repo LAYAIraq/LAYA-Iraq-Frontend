@@ -271,6 +271,7 @@ Dependencies:
         <!-- relation -->
         <div class="col-auto">
           <select
+            id="rel-solution-dropdown"
             v-model="pairs[i].relation"
             class="custom-select"
           >
@@ -422,6 +423,10 @@ export default {
 </script>
 
 <style scoped>
+#rel-solution-dropdown {
+  max-width: 200px;
+}
+
 *:focus {
   outline: 2px dashed deepskyblue;
   outline-offset: 5px;
