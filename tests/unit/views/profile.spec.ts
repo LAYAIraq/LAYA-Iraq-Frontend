@@ -1,4 +1,4 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import ProfileView from '@/views/profile.vue'
 import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue'
@@ -59,7 +59,7 @@ describe('profile view', () => {
       }
     })
 
-    wrapper = shallowMount(ProfileView, {
+    wrapper = mount(ProfileView, {
       data () {
         return {
           passwordOk: true
@@ -76,17 +76,13 @@ describe('profile view', () => {
 
   it('saves media input as chosen', async () => {
     const mediaPrefChecks = wrapper.findAll('input')
-    expect(mediaPrefChecks.length).toBe(7)
-    let myAss = 0
+    expect(mediaPrefChecks.length).toBe(10)
     mediaPrefChecks.wrappers.forEach((wrapper) => {
       // console.log(wrapper)
       if (wrapper.attributes('type') === 'checkbox') {
-        myAss++
         wrapper.setChecked(true)
       }
     })
-    expect(myAss).toBe(4)
-    await localVue.nextTick()
     expect(vm.prefs.media).toStrictEqual({
       text: true,
       video: true,
@@ -145,6 +141,16 @@ describe('profile view', () => {
     wrapper.destroy()
     expect(actions.saveProfile).toHaveBeenCalled()
     expect(mutations.setPrefs).toHaveBeenCalled()
+  })
+
+  it('sets correct size when range is set', async () => {
+    const fontSelector = wrapper.find('.custom-range')
+    // expect(fontSelector.exists()).toBeTruthy()
+    // fontSelector = fontSelector.wrappers.filter(wrapper => wrapper.attributes('type') === 'range')
+    expect(fontSelector.exists()).toBeTruthy()
+    await fontSelector.setValue(1)
+    await localVue.nextTick()
+    expect(wrapper.vm.chosenSize).toBe(4)
   })
 
   it('shows toast when password is saved', async () => {
