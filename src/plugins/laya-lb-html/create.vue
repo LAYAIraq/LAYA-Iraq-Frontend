@@ -20,7 +20,7 @@ Dependencies:
             for="laya-wysiwyg-title"
             class="col-2 col-form-label"
           >
-            {{ i18n['title'] }}
+            {{ y18n('title') }}
           </label>
           <div class="col-8">
             <input
@@ -28,7 +28,7 @@ Dependencies:
               v-model="title.text"
               type="text"
               class="form-control"
-              :placeholder="i18n['titlePlaceholder']"
+              :placeholder="y18n('titlePlaceholder')"
             >
           </div>
           <!-- show title button -->
@@ -37,7 +37,7 @@ Dependencies:
               for="show-title-tick"
               class="col-form-label"
             >
-              {{ i18n['showTitle'] }}
+              {{ y18n('showTitle') }}
               <input
                 id="show-title-tick"
                 v-model="title.show"
@@ -56,7 +56,7 @@ Dependencies:
             class="col-2 col-form-label"
           >
             <span class="sr-only">
-              {{ i18n['simpleAlt'] }}
+              {{ y18n('simpleAlt') }}
             </span>
           </label>
           <div class="col-8">
@@ -65,7 +65,7 @@ Dependencies:
               v-model="title.simple"
               type="text"
               class="form-control"
-              :placeholder="i18n['simpleAlt']"
+              :placeholder="y18n('simpleAlt')"
             >
           </div>
         </div>
@@ -75,7 +75,7 @@ Dependencies:
       class="laya-wysiwyg-edit bg-light"
       :class="langIsAr? 'text-right' : 'text-left'"
     >
-      <label :for="editorId"> {{ i18n['content'] }} </label>
+      <label :for="editorId"> {{ y18n('content') }} </label>
       <div :id="editorId"></div>
     </div>
   </div>
@@ -143,7 +143,7 @@ export default {
       const self = this
       const quill = new Quill(`#${self.editorId}`, {
         theme: 'snow',
-        placeholder: self.i18n['layaHtml.placeholder'],
+        placeholder: self.y18n('layaHtml.placeholder'),
         modules: {
           toolbar: [
             ['bold', 'italic', 'underline'],

@@ -11,11 +11,11 @@
           <i
             v-b-tooltip.auto
             class="fas fa-key"
-            :title="newInput? i18n['profile.newPwd']: i18n['pwdPH']"
+            :title="newInput? y18n('profile.newPwd'): y18n('pwdPH')"
           ></i>
         </span>
         <span v-else>
-          {{ newInput? i18n['profile.newPwd']: i18n['pwdPH'] }}
+          {{ newInput? y18n('profile.newPwd'): y18n('pwdPH') }}
         </span>
 
       </span>
@@ -25,10 +25,10 @@
           class="pwd-input"
           :class="langIsAr? 'reverse': ''"
           :default-class="'form-control'"
-          :label-hide="i18n['password.hide']"
-          :label-show="i18n['password.show']"
+          :label-hide="y18n('password.hide')"
+          :label-show="y18n('password.show')"
           :secure-length="Number(secureLength)"
-          :placeholder="newInput? i18n['profile.newPwd']: i18n['pwdPH']"
+          :placeholder="newInput? y18n('profile.newPwd'): y18n('pwdPH')"
           :toggle="!langIsAr"
           :badge="!langIsAr"
           aria-describedby="pwd-label"
@@ -56,11 +56,11 @@
           <i
             v-b-tooltip.auto
             class="fas fa-redo-alt"
-            :title="i18n['pwd2PH']"
+            :title="y18n('pwd2PH')"
           ></i>
         </span>
         <span v-else>
-          {{ i18n['pwd2PH'] }}
+          {{ y18n('pwd2PH') }}
         </span>
       </label>
       <div class="col">
@@ -69,7 +69,7 @@
           v-model="pwdRepeat"
           type="password"
           class="form-control"
-          :placeholder="i18n['pwd2PH']"
+          :placeholder="y18n('pwd2PH')"
           aria-describedby="repeat-label"
         >
       </div>
@@ -88,11 +88,11 @@
           <i
             v-b-tooltip.auto
             class="fas fa-lightbulb"
-            :title="i18n['profile.pwdSuggestion']"
+            :title="y18n('profile.pwdSuggestion')"
           ></i>
         </span>
         <span v-else>
-          {{ i18n['profile.pwdSuggestion'] }}
+          {{ y18n('profile.pwdSuggestion') }}
         </span>
       </div>
       <div
@@ -121,11 +121,11 @@
           <i
             v-b-tooltip.auto
             class="fas fa-exclamation-triangle"
-            :title="i18n['password.error']"
+            :title="y18n('password.error')"
           ></i>
         </span>
         <span v-else>
-          {{ i18n['password.error'] }}
+          {{ y18n('password.error') }}
         </span>
       </div>
       <div
@@ -272,7 +272,7 @@ export default {
      * Last Updated: March 24, 2021
      */
     pwdDiffMsg () {
-      return !this.pwdMatch ? this.i18n['profile.pwdDiffer'] : ''
+      return !this.pwdMatch ? this.y18n('profile.pwdDiffer') : ''
     },
 
     /**
@@ -326,7 +326,7 @@ export default {
      */
     pwdSecureLengthNotReachedMsg () {
       return !this.pwdSecureLength
-        ? this.i18n['password.secureLengthNotReached']
+        ? this.y18n('password.secureLengthNotReached')
         : ''
     },
 
@@ -374,7 +374,7 @@ export default {
      */
     wordedPwdStrength () {
       return this.passwordStrength != null
-        ? this.i18n[`pwdStrength${this.passwordStrength}`]
+        ? this.y18n(`pwdStrength${this.passwordStrength}`)
         : ''
     }
   },

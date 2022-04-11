@@ -20,26 +20,26 @@ Dependencies:
         :class="langIsAr? 'float-left' : 'float-right'"
         @click="$bvModal.show('author-delContent-confirm')"
       >
-        <i class="fas fa-exclamation-circle"></i> {{ i18n['deleteContent'] }}
+        <i class="fas fa-exclamation-circle"></i> {{ y18n('deleteContent') }}
       </b-button>
     </div>
 
     <div class="col text-dark">
-      {{ i18n['deleteBlock.deleteContentTip'] }}
+      {{ y18n('deleteBlock.deleteContentTip') }}
     </div>
 
     <b-modal
       id="author-delContent-confirm"
-      :title="i18n['deleteContent']"
+      :title="y18n('deleteContent')"
       header-bg-variant="danger"
       ok-variant="danger"
-      :ok-title="i18n['delete']"
-      :cancel-title="i18n['cancel']"
+      :ok-title="y18n('delete')"
+      :cancel-title="y18n('cancel')"
       centered
       @ok="delContent"
     >
       <p>
-        {{ i18n['deleteBlock.modal.text'] }}
+        {{ y18n('deleteBlock.modal.text') }}
       </p>
     </b-modal>
   </div>

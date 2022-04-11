@@ -24,7 +24,7 @@ Dependencies:
             v-show="filtered.length === 0"
             class="text-center text-muted"
           >
-            {{ i18n['noCourses'] }}
+            {{ y18n('noCourses') }}
           </h2>
         </div>
       </div>
@@ -34,14 +34,14 @@ Dependencies:
         class="row header"
       >
         <div class="col">
-          <h2>{{ i18n['namePH'] }}</h2>
+          <h2>{{ y18n('namePH') }}</h2>
         </div>
         <div class="col">
-          <h4>{{ i18n['cat'] }}</h4>
+          <h4>{{ y18n('cat') }}</h4>
         </div>
         <div class="col-2">
           <h2 class="sr-only">
-            {{ i18n['courseList.properties'] }}
+            {{ y18n('courseList.properties') }}
           </h2>
         </div>
         <div class="col-3">
@@ -93,7 +93,7 @@ Dependencies:
             class="btn indicated-btn"
             @click="decideButtonAction(course)"
           >
-            {{ i18n['courseList.start'] }}
+            {{ y18n('courseList.start') }}
             <i class="fas fa-arrow-right"></i>
           </a>
           <!--          <router-link-->
@@ -102,7 +102,7 @@ Dependencies:
           <!--            v-if="isEnrolled(course)"-->
           <!--            @click="selectedCourse = course.name"-->
           <!--          >-->
-          <!--            {{ i18n['courseList.start'] }}-->
+          <!--            {{ y18n('courseList.start') }}-->
           <!--            <i class="fas fa-arrow-right"></i>-->
           <!--          </router-link>-->
           <!--          <a-->
@@ -110,14 +110,14 @@ Dependencies:
           <!--            v-else-->
           <!--            @click="subscribe(course)"-->
           <!--          >-->
-          <!--            {{ i18n['courseList.subscribe'] }}-->
+          <!--            {{ y18n('courseList.subscribe') }}-->
           <!--            <i class="fas fa-file-signature"></i>-->
           <!--          </a>-->
           <div
             v-if="complicitReady && !complicitCourses.has(course.courseId)"
             v-b-tooltip.top
             class="indicate-icon"
-            :title="i18n['courseList.notComplicit']"
+            :title="y18n('courseList.notComplicit')"
           >
             <i class="fas fa-exclamation-circle"></i>
           </div>
@@ -126,23 +126,23 @@ Dependencies:
     </div>
     <b-modal
       id="noncomplicit-confirm"
-      :title="i18n['courseList.notComplicit.title']"
+      :title="y18n('courseList.notComplicit.title')"
       header-bg-variant="warning"
       centered
       @ok="buttonAction()"
       @cancel="$router.push('/profile')"
     >
       <p>
-        {{ i18n['courseList.notComplicit'] }}.
-        {{ i18n['courseList.notComplicit.text'] }}:
+        {{ y18n('courseList.notComplicit') }}.
+        {{ y18n('courseList.notComplicit.text') }}:
       </p>
       <ul>
         <li
           v-for="thing in nonComplicitList"
           :key="thing"
         >
-          <strong>{{ i18n[`profile.defmedia.${thing}`] }}</strong>:
-          {{ i18n[`courseList.notComplicit.${thing}Hint`] }}
+          <strong>{{ y18n(`profile.defmedia.${thing}`) }}</strong>:
+          {{ y18n(`courseList.notComplicit.${thing}Hint`) }}
         </li>
       </ul>
 
@@ -151,16 +151,16 @@ Dependencies:
           variant="success"
           @click="ok"
         >
-          {{ i18n['courseList.notComplicit.continue'] }}
+          {{ y18n('courseList.notComplicit.continue') }}
         </b-button>
         <b-button
           variant="warning"
           @click="cancel"
         >
-          {{ i18n['courseList.notComplicit.settings'] }}
+          {{ y18n('courseList.notComplicit.settings') }}
         </b-button>
         <b-button @click="hide">
-          {{ i18n['cancel'] }}
+          {{ y18n('cancel') }}
         </b-button>
       </template>
     </b-modal>

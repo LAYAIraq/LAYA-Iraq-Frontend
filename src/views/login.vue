@@ -15,7 +15,7 @@ Dependencies:
         v-if="$route.params.verified"
         class="text-center"
       >
-        {{ i18n['login.verified'] }}
+        {{ y18n('login.verified') }}
       </div>
       <div class="row">
         <form class="d-flex flex-column align-items-center">
@@ -26,7 +26,7 @@ Dependencies:
             class="d-block m-auto w-50"
           >
           <h1 class="text-center">
-            {{ i18n['login.title'] }}
+            {{ y18n('login.title') }}
           </h1>
 
           <div
@@ -36,11 +36,11 @@ Dependencies:
             <input
               id="email-input"
               v-model.trim="email"
-              :placeholder="i18n['emailPH']"
+              :placeholder="y18n('emailPH')"
               type="text"
               autofocus
               autocomplete="on"
-              :aria-label="i18n['emailPH']"
+              :aria-label="y18n('emailPH')"
             >
           </div>
 
@@ -51,10 +51,10 @@ Dependencies:
             <input
               id="pwd-input"
               v-model.trim="pwd"
-              :placeholder="i18n['pwdPH']"
+              :placeholder="y18n('pwdPH')"
               type="password"
               autocomplete="on"
-              :aria-label="i18n['pwdPH']"
+              :aria-label="y18n('pwdPH')"
             >
           </div>
 
@@ -66,7 +66,7 @@ Dependencies:
             aria-describedby="login-error"
             @click.prevent="submit"
           >
-            {{ i18n['login.title'] }}
+            {{ y18n('login.title') }}
             <i class="fas fa-sign-in-alt"></i>
           </button>
 
@@ -75,7 +75,7 @@ Dependencies:
             v-if="busy"
             class="text-center"
           >
-            {{ i18n['busy'] }}
+            {{ y18n('busy') }}
             <i class="fas fa-spinner fa-spin"></i>
           </h5>
           <div aria-live="polite">
@@ -93,18 +93,18 @@ Dependencies:
                 href="#"
                 @click.prevent="$bvModal.show('reset-password-confirm')"
               >
-                {{ i18n['login.passwordForgotten'] }}
+                {{ y18n('login.passwordForgotten') }}
               </a>
             </div>
           </div>
 
           <hr>
           <div class="text-center">
-            {{ i18n['login.registerHint1'] }}
+            {{ y18n('login.registerHint1') }}
             <br>
             <router-link :to="{ name: 'register-view'}">
               <i class="fas fa-user-plus"></i>
-              {{ i18n['login.registerHint2'] }}
+              {{ y18n('login.registerHint2') }}
             </router-link>
           </div>
         </form>
@@ -112,17 +112,17 @@ Dependencies:
     </div>
     <b-modal
       id="reset-password-confirm"
-      :title="i18n['login.passwordReset']"
+      :title="y18n('login.passwordReset')"
       header-bg-variant="warning"
       ok-variant="warning"
-      :ok-title="i18n['login.passwordReset']"
-      :cancel-title="i18n['cancel']"
-      :aria-label="i18n['popupwarning']"
+      :ok-title="y18n('login.passwordReset')"
+      :cancel-title="y18n('cancel')"
+      :aria-label="y18n('popupwarning')"
       centered
       @ok="resetPassword"
     >
       <p>
-        {{ i18n['login.passwordResetHint'] }}
+        {{ y18n('login.passwordResetHint') }}
       </p>
     </b-modal>
   </div>
@@ -217,11 +217,11 @@ export default {
     showToast (type) {
       this.$root.$bvToast.toast(
         type === 'success'
-          ? this.i18n['login.passwordResetText']
-          : this.i18n['login.passwordResetFailedText'], {
+          ? this.y18n('login.passwordResetText')
+          : this.y18n('login.passwordResetFailedText'), {
           title: type === 'success'
-            ? this.i18n['login.passwordReset']
-            : this.i18n['login.passwordResetFailed'],
+            ? this.y18n('login.passwordReset')
+            : this.y18n('login.passwordResetFailed'),
           toaster: 'b-toaster-bottom-center',
           variant: type === 'success' ? type : 'danger'
         })
@@ -243,7 +243,7 @@ export default {
 
       console.log('Submitting...')
       this.busy = true
-      const { $data, $ls, $router, i18n } = this
+      const { $data, $ls, $router } = this
 
       this.$store.dispatch('sendCredentials', {
         email: $data.email,
@@ -260,7 +260,7 @@ export default {
         .catch(err => {
           console.log(err)
           $data.submitFailed = true
-          $data.errMsg = i18n['login.errMsg']
+          $data.errMsg = this.y18n('login.errMsg')
         })
         .finally(() => {
           $data.busy = false

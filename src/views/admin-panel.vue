@@ -15,7 +15,7 @@
       <div class="row">
         <div class="col">
           <h1 class="text-center">
-            {{ i18n['adminPanel.title'] }}
+            {{ y18n('adminPanel.title') }}
           </h1>
         </div>
       </div>
@@ -28,17 +28,17 @@
       >
         <div class="col-2">
           <strong>
-            {{ i18n['adminPanel.filterList'] }}
+            {{ y18n('adminPanel.filterList') }}
           </strong>
         </div>
         <div class="col">
-          {{ i18n['adminPanel.email'] }}
+          {{ y18n('adminPanel.email') }}
           <label
             id="email-filter-label"
             for="email-filter-input"
             class="sr-only"
           >
-            {{ i18n['adminPanel.filterListByEmail'] }}
+            {{ y18n('adminPanel.filterListByEmail') }}
           </label>
           <div class="input-group">
             <input
@@ -51,13 +51,13 @@
           </div>
         </div>
         <div class="col">
-          {{ i18n['namePH'] }}
+          {{ y18n('namePH') }}
           <label
             id="name-filter-label"
             for="name-filter-input"
             class="sr-only"
           >
-            {{ i18n['adminPanel.filterListByName'] }}
+            {{ y18n('adminPanel.filterListByName') }}
           </label>
           <div class="input-group">
             <input
@@ -70,12 +70,12 @@
           </div>
         </div>
         <div class="col">
-          {{ i18n['adminPanel.role'] }}
+          {{ y18n('adminPanel.role') }}
           <span
             id="role-filter-label"
             class="sr-only"
           >
-            {{ i18n['adminPanel.filterListByRole'] }}
+            {{ y18n('adminPanel.filterListByRole') }}
           </span>
           <div class="input-group">
             <b-select
@@ -87,7 +87,7 @@
               <b-select-option
                 value="null"
               >
-                {{ i18n['adminPanel.chooseRole'] }}
+                {{ y18n('adminPanel.chooseRole') }}
               </b-select-option>
               <b-select-option
                 v-for="(role, i) in Object.values(roles)"
@@ -103,24 +103,24 @@
           <b-button
             v-b-tooltip.bottom
             :class="langIsAr? 'ml-2': 'mr-2'"
-            :title="i18n['adminPanel.filterList']"
+            :title="y18n('adminPanel.filterList')"
             @click="setFilter(true)"
           >
             <i class="fas fa-filter"></i>
             <span class="sr-only">
-              {{ i18n['adminPanel.filterList'] }}
+              {{ y18n('adminPanel.filterList') }}
             </span>
           </b-button>
           <b-button
             v-b-tooltip.bottom
             :class="langIsAr? 'ml-2': 'mr-2'"
             variant="warning"
-            :title="i18n['adminPanel.resetFilters']"
+            :title="y18n('adminPanel.resetFilters')"
             @click="setFilter(false)"
           >
             <i class="far fa-times-circle"></i>
             <span class="sr-only">
-              {{ i18n['adminPanel.resetFilters'] }}
+              {{ y18n('adminPanel.resetFilters') }}
             </span>
           </b-button>
         </div>
@@ -134,19 +134,19 @@
         class="row font-weight-bold mb-3"
       >
         <div class="col-3">
-          {{ i18n['adminPanel.user'] }}
+          {{ y18n('adminPanel.user') }}
         </div>
         <div class="col-2">
-          {{ i18n['adminPanel.role'] }}
+          {{ y18n('adminPanel.role') }}
         </div>
         <div class="col-3">
-          {{ i18n['adminPanel.email'] }}
+          {{ y18n('adminPanel.email') }}
         </div>
         <div class="col-1">
-          {{ i18n['adminPanel.emailVerified'] }}
+          {{ y18n('adminPanel.emailVerified') }}
         </div>
         <div class="col-3">
-          {{ i18n['adminPanel.actions'] }}
+          {{ y18n('adminPanel.actions') }}
         </div>
       </div>
       <!-- body -->
@@ -179,12 +179,12 @@
               class="user-mgmt-btn"
               :disabled="user.id === userId"
               :class="langIsAr? 'ml-2': 'mr-2'"
-              :title="i18n['adminPanel.promoteUser']"
+              :title="y18n('adminPanel.promoteUser')"
               @click="openModal(user.id, 'promote-user')"
             >
               <i class="fas fa-arrow-circle-up"></i>
               <span class="sr-only">
-                {{ i18n['adminPanel.promoteUser'] }}
+                {{ y18n('adminPanel.promoteUser') }}
               </span>
             </b-button>
             <!-- edit email -->
@@ -193,13 +193,13 @@
               class="user-mgmt-btn"
               :disabled="user.id === userId"
               :class="langIsAr? 'ml-2': 'mr-2'"
-              :title="i18n['adminPanel.editEmail']"
+              :title="y18n('adminPanel.editEmail')"
               variant="info"
               @click="openModal(user.id, 'edit-email')"
             >
               <i class="fas fa-pen"></i>
               <span class="sr-only">
-                {{ i18n['adminPanel.editEmail'] }}
+                {{ y18n('adminPanel.editEmail') }}
               </span>
             </b-button>
             <!-- reset password -->
@@ -208,13 +208,13 @@
               class="user-mgmt-btn"
               :disabled="user.id === userId"
               :class="langIsAr? 'ml-2': 'mr-2'"
-              :title="i18n['adminPanel.resetPassword']"
+              :title="y18n('adminPanel.resetPassword')"
               variant="warning"
               @click="openModal(user.id, 'reset-password')"
             >
               <i class="fas fa-screwdriver"></i>
               <span class="sr-only">
-                {{ i18n['adminPanel.resetPassword'] }}
+                {{ y18n('adminPanel.resetPassword') }}
               </span>
             </b-button>
             <!-- delete user -->
@@ -223,13 +223,13 @@
               class="user-mgmt-btn"
               :disabled="user.id === userId"
               :class="langIsAr? 'ml-2': 'mr-2'"
-              :title="i18n['adminPanel.deleteUser']"
+              :title="y18n('adminPanel.deleteUser')"
               variant="danger"
               @click="openModal(user.id, 'delete-user')"
             >
               <i class="fas fa-times-circle"></i>
               <span class="sr-only">
-                {{ i18n['adminPanel.deleteUser'] }}
+                {{ y18n('adminPanel.deleteUser') }}
               </span>
             </b-button>
           </div>
@@ -240,13 +240,13 @@
         v-else
         class="text-center"
       >
-        {{ i18n['adminPanel.noMatch'] }}
+        {{ y18n('adminPanel.noMatch') }}
       </div>
 
       <!-- pages -->
       <div class="row mt-5 pt-3 pb-2 bg-dark text-light">
         <div class="col-3">
-          {{ i18n['adminPanel.itemsPerPage'] }}
+          {{ y18n('adminPanel.itemsPerPage') }}
         </div>
         <div class="col-2">
           <b-select
@@ -282,7 +282,7 @@
         @click="openModal(-1, 'create-user')"
       >
         <i class="fas fa-plus-circle"></i>
-        {{ i18n['adminPanel.createUser'] }}
+        {{ y18n('adminPanel.createUser') }}
       </b-button>
     </div>
     <!-- wrap modals -->
@@ -290,20 +290,20 @@
       <!-- change role modal -->
       <b-modal
         id="promote-user"
-        :title="i18n['adminPanel.promoteUser']"
+        :title="y18n('adminPanel.promoteUser')"
         header-bg-variant="warning"
         ok-variant="warning"
-        :ok-title="i18n['adminPanel.promoteUser']"
-        :cancel-title="i18n['cancel']"
+        :ok-title="y18n('adminPanel.promoteUser')"
+        :cancel-title="y18n('cancel')"
         centered
         @ok="changeUserRole"
       >
         <p>
-          {{ i18n['adminPanel.modal.promoteUser'] }}
+          {{ y18n('adminPanel.modal.promoteUser') }}
         </p>
         <b-select v-model="changeRole">
           <b-select-option value="null">
-            {{ i18n['adminPanel.chooseRole'] }}
+            {{ y18n('adminPanel.chooseRole') }}
           </b-select-option>
           <b-select-option
             v-for="role in Object.values(assignableRoles)"
@@ -317,73 +317,73 @@
       <!-- edit email modal -->
       <b-modal
         id="edit-email"
-        :title="i18n['adminPanel.editEmail']"
+        :title="y18n('adminPanel.editEmail')"
         header-bg-variant="warning"
         ok-variant="warning"
-        :ok-title="i18n['adminPanel.editEmail']"
-        :cancel-title="i18n['cancel']"
+        :ok-title="y18n('adminPanel.editEmail')"
+        :cancel-title="y18n('cancel')"
         centered
         @ok="editUserEmail"
       >
         <p>
-          {{ i18n['adminPanel.modal.editEmail'] }}
+          {{ y18n('adminPanel.modal.editEmail') }}
         </p>
         <label
           for="email-change-input"
           class="sr-only"
         >
-          {{ i18n['adminPanel.modal.newEmail'] }}
+          {{ y18n('adminPanel.modal.newEmail') }}
         </label>
         <input
           id="email-change-input"
           v-model="changeEmail"
           type="text"
-          :placeholder="i18n['adminPanel.modal.newEmail']"
+          :placeholder="y18n('adminPanel.modal.newEmail')"
         >
       </b-modal>
       <!-- reset password modal -->
       <b-modal
         id="reset-password"
-        :title="i18n['adminPanel.resetPassword']"
+        :title="y18n('adminPanel.resetPassword')"
         header-bg-variant="warning"
         ok-variant="warning"
-        :ok-title="i18n['adminPanel.resetPassword']"
-        :cancel-title="i18n['cancel']"
+        :ok-title="y18n('adminPanel.resetPassword')"
+        :cancel-title="y18n('cancel')"
         centered
         @ok="resetUserPassword"
       >
         <p>
-          {{ i18n['adminPanel.modal.resetPassword'] }}
+          {{ y18n('adminPanel.modal.resetPassword') }}
         </p>
       </b-modal>
       <!-- delete user modal -->
       <b-modal
         id="delete-user"
-        :title="i18n['adminPanel.deleteUser']"
+        :title="y18n('adminPanel.deleteUser')"
         header-bg-variant="danger"
         ok-variant="danger"
-        :ok-title="i18n['adminPanel.deleteUser']"
-        :cancel-title="i18n['cancel']"
+        :ok-title="y18n('adminPanel.deleteUser')"
+        :cancel-title="y18n('cancel')"
         centered
         @ok="deleteUser"
       >
         <p>
-          {{ i18n['adminPanel.modal.deleteUser'] }}
+          {{ y18n('adminPanel.modal.deleteUser') }}
         </p>
       </b-modal>
       <!-- create user modal -->
       <b-modal
         id="create-user"
-        :title="i18n['adminPanel.createUser']"
+        :title="y18n('adminPanel.createUser')"
         header-bg-variant="warning"
         ok-variant="warning"
-        :ok-title="i18n['adminPanel.createUser']"
-        :cancel-title="i18n['cancel']"
+        :ok-title="y18n('adminPanel.createUser')"
+        :cancel-title="y18n('cancel')"
         centered
         @ok="handleCreateUser"
       >
         <p>
-          {{ i18n['adminPanel.modal.createUser'] }}
+          {{ y18n('adminPanel.modal.createUser') }}
         </p>
 
         <p>
@@ -391,7 +391,7 @@
             for="create-user-name"
             :class="langIsAr? 'ml-auto': 'mr-auto'"
           >
-            {{ i18n['namePH'] }}
+            {{ y18n('namePH') }}
           </label>
           <input
             id="create-user-name"
@@ -401,7 +401,7 @@
               'ml-2': !langIsAr,
               'highlight-border': emptyCreateInput
             }"
-            :placeholder="i18n['namePH']"
+            :placeholder="y18n('namePH')"
           >
         </p>
         <p>
@@ -409,7 +409,7 @@
             for="create-user-email"
             :class="langIsAr? 'ml-auto': 'mr-auto'"
           >
-            {{ i18n['adminPanel.email'] }}
+            {{ y18n('adminPanel.email') }}
           </label>
 
           <input
@@ -420,7 +420,7 @@
               'ml-2': !langIsAr,
               'highlight-border': emptyCreateInput || noEmailFormat
             }"
-            :placeholder="i18n['adminPanel.email']"
+            :placeholder="y18n('adminPanel.email')"
           >
         </p>
         <p>
@@ -428,14 +428,14 @@
             id="user-create-role"
             :class="langIsAr? 'ml-auto': 'mr-auto'"
           >
-            {{ i18n['adminPanel.role'] }}
+            {{ y18n('adminPanel.role') }}
           </label>
           <b-select
             v-model="createUserRole"
             aria-describedby="user-create-role"
           >
             <b-select-option value="null">
-              {{ i18n['adminPanel.chooseRole'] }}
+              {{ y18n('adminPanel.chooseRole') }}
             </b-select-option>
             <b-select-option
               v-for="role in Object.values(assignableRoles)"
@@ -447,16 +447,16 @@
           </b-select>
         </p>
         <p v-if="emptyCreateInput">
-          {{ i18n['courseNavEdit.table.missingInfo'] }}
+          {{ y18n('courseNavEdit.table.missingInfo') }}
         </p>
         <p v-if="noEmailFormat">
-          {{ i18n['emailErr'] }}
+          {{ y18n('emailErr') }}
         </p>
         <p v-if="duplicateProperty">
           {{ duplicateErrMsg }}
         </p>
         <p v-if="noRoleChosen">
-          {{ i18n['adminPanel.modal.chooseRole'] }}
+          {{ y18n('adminPanel.modal.chooseRole') }}
         </p>
       </b-modal>
     </div>
@@ -534,7 +534,7 @@ export default {
      * @returns {string} Error message when name or email is duplicate
      */
     duplicateErrMsg () {
-      return this.i18n['adminPanel.modal.duplicateError'] + this.duplicateProperty
+      return this.y18n('adminPanel.modal.duplicateError') + this.duplicateProperty
     },
 
     /**

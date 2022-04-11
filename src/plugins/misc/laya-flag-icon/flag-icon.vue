@@ -9,8 +9,8 @@
         class="flag-icon"
         :class="refData.flagged ? 'flagged' : 'unflagged'"
         :title="refData.flagged
-          ? i18n['flag.seeDiscussion']
-          : i18n['flag.title']"
+          ? y18n('flag.seeDiscussion')
+          : y18n('flag.title')"
         tabindex="0"
       >
         <router-link

@@ -34,7 +34,7 @@ Dependencies: @/mixins/locale.vue
       v-if="!components"
       class="dev-error"
     >
-      <h3>{{ i18n['layaStepper.noComps'] }}</h3>
+      <h3>{{ y18n('layaStepper.noComps') }}</h3>
     </div>
 
     <div class="controls d-none">
@@ -43,11 +43,11 @@ Dependencies: @/mixins/locale.vue
         class="btn btn-outline-primary m-1"
         @click="back"
       >
-        {{ i18n['layaStepper.back'] }}
+        {{ y18n('layaStepper.back') }}
       </button>
       <!--
       <button type="button" @click="next" class="btn btn-outline-primary m-1">
-        {{ i18n['layaStepper.skipChap'] }}
+        {{ y18n('layaStepper.skipChap') }}
       </button>
       -->
       <button
@@ -55,7 +55,7 @@ Dependencies: @/mixins/locale.vue
         class="btn btn-outline-primary m-1"
         @click="next"
       >
-        {{ i18n['layaStepper.skipStep'] }}
+        {{ y18n('layaStepper.skipStep') }}
       </button>
     </div>
   </div>
@@ -118,7 +118,7 @@ export default {
      * Last Updated: unknown
      */
     stepOfSteps () {
-      const str = this.i18n['layaStepper.step']
+      const str = this.y18n('layaStepper.step')
       str.replace('{step}', this.step)
       str.replace('{steps}', this.components.length)
       return str

@@ -5,7 +5,7 @@
         v-show="$refs.upload && $refs.upload.dropActive"
         class="drop-active"
       >
-        {{ i18n['layaUploadAvatar.dragFileHere'] }}
+        {{ y18n('layaUploadAvatar.dragFileHere') }}
       </div>
       <div
         v-show="!edit"
@@ -18,7 +18,7 @@
               class="d-block rounded-circle avatar-preview"
               alt="User Avatar"
             >
-            <br>{{ i18n['layaUploadAvatar.dragAnywhere'] }}
+            <br>{{ y18n('layaUploadAvatar.dragAnywhere') }}
           </label>
         </div>
         <div class="text-center p-2">
@@ -34,7 +34,7 @@
             @input-filter="inputFilter"
             @input-file="inputFile"
           >
-            {{ i18n['layaUploadAvatar.uploadFile'] }}
+            {{ y18n('layaUploadAvatar.uploadFile') }}
           </file-upload>
         </div>
       </div>
@@ -59,14 +59,14 @@
             class="btn btn-secondary"
             @click.prevent="$refs.upload.clear"
           >
-            {{ i18n['cancel'] }}
+            {{ y18n('cancel') }}
           </button>
           <button
             type="submit"
             class="btn btn-primary"
             @click.prevent="editSave"
           >
-            {{ i18n['save'] }}
+            {{ y18n('save') }}
           </button>
         </div>
       </div>
@@ -80,21 +80,21 @@
         @input-file="inputFile"
         @input-filter="inputFilter"
       >
-        {{ i18n['layaUploadAvatar.uploadFile'] }}
+        {{ y18n('layaUploadAvatar.uploadFile') }}
       </file-upload>
       <button
         v-show="!$refs.upload || !$refs.upload.active"
         type="button"
         @click.prevent="$refs.upload.active = true"
       >
-        {{ i18n['startUpload'] }}
+        {{ y18n('startUpload') }}
       </button>
       <button
         v-show="$refs.upload && $refs.upload.active"
         type="button"
         @click.prevent="$refs.upload.active = false"
       >
-        {{ i18n['stopUpload'] }}
+        {{ y18n('stopUpload') }}
       </button>
     </div>
   </div>
@@ -206,7 +206,7 @@ export default {
       if (newFile && !oldFile) {
         // Filter non-image file
         if (!/\.(jpeg|jpe|jpg|gif|png|webp)$/i.test(newFile.name)) {
-          this.alert(this.i18n['layaUploadAvatar.noPicAlert'])
+          this.alert(this.y18n('layaUploadAvatar.noPicAlert'))
           return prevent()
         }
       }

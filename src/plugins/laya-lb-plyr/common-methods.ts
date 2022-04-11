@@ -45,16 +45,16 @@ export default {
      */
     urlMsg () {
       if (!this.correctURL && this.validUrl) {
-        return this.i18n['layaPlyr.wrongPlatform']
+        return this.y18n('layaPlyr.wrongPlatform')
       } else if (!this.correctURL) {
         const choices = {
-          upload: this.i18n['layaPlyr.wrongURL'],
-          vimeo: this.i18n['layaPlyr.wrongVimeoId'],
-          youtube: this.i18n['layaPlyr.wrongYoutubeId']
+          upload: this.y18n('layaPlyr.wrongURL'),
+          vimeo: this.y18n('layaPlyr.wrongVimeoId'),
+          youtube: this.y18n('layaPlyr.wrongYoutubeId')
         }
         return choices[this.host]
       } else if (this.host === 'upload' && (this.validYtUrl || this.validVimeoUrl)) {
-        return this.i18n['layaPlyr.wrongPlatform']
+        return this.y18n('layaPlyr.wrongPlatform')
       } else {
         return null
       }

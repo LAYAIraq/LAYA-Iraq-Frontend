@@ -114,7 +114,7 @@ Dependencies:
           :disabled="freeze"
           @click="reset"
         >
-          {{ i18n['layaLaRelate.removeInput'] }}
+          {{ y18n('layaLaRelate.removeInput') }}
         </button>
 
         <button
@@ -124,7 +124,7 @@ Dependencies:
           :disabled="freeze"
           @click="check"
         >
-          {{ i18n['check'] }}
+          {{ y18n('check') }}
         </button>
       </div>
 
@@ -142,7 +142,7 @@ Dependencies:
         </div>
         <div>
           <div v-if="allAnswersChosen">
-            {{ i18n['layaLaRelate.missingAnswerWarning'] }}
+            {{ y18n('layaLaRelate.missingAnswerWarning') }}
           </div>
           <b-modal
             id="relate-missing-warning"
@@ -150,7 +150,7 @@ Dependencies:
             ok-only
             centered
           >
-            {{ i18n['layaLaRelate.missingAnswerWarning'] }}
+            {{ y18n('layaLaRelate.missingAnswerWarning') }}
           </b-modal>
         </div>
         <button
@@ -160,7 +160,7 @@ Dependencies:
           @click="done"
         >
           <span>
-            {{ i18n['nextContent'] }}
+            {{ y18n('nextContent') }}
             <i
               :class="langIsAr?
                 'fas fa-arrow-left' :
@@ -254,7 +254,7 @@ export default {
   },
 
   created () {
-    this.defaultOption = this.i18n['layaLaRelate.defaultOption']
+    this.defaultOption = this.y18n('layaLaRelate.defaultOption')
     if (!this.previewData) { // no preview
       this.fetchData()
     }

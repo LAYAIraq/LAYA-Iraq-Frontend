@@ -51,7 +51,7 @@ Dependencies:
       class="btn btn-primary mt-3 d-block ml-auto"
       @click="onFinish[0]() || {}"
     >
-      {{ i18n['nextContent'] }}
+      {{ y18n('nextContent') }}
       <i class="fas fa-arrow-right"></i>
     </button>
   </div>

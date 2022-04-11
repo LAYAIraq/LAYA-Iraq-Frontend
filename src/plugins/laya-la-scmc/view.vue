@@ -109,7 +109,7 @@ vuex,
     <!-- check -->
     <!--
     <div v-if="maxTries > 0" class="text-secondary my-2" tabindex="0">
-      <span>{{ i18n['layaLaScmc.triesLeft'] }}</span>
+      <span>{{ y18n('layaLaScmc.triesLeft') }}</span>
       {{maxTries-tries}}
     </div>
     -->
@@ -120,7 +120,7 @@ vuex,
         :disabled="freeze"
         @click="diffSolution"
       >
-        {{ i18n['check'] }}
+        {{ y18n('check') }}
       </button>
       <div aria-live="polite">
         <div v-if="showSolutionsBool">
@@ -140,7 +140,7 @@ vuex,
         @click="onFinish[0]() || {}"
       >
         <span>
-          {{ i18n['nextContent'] }}
+          {{ y18n('nextContent') }}
           <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
         </span>
       </button>

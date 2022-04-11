@@ -22,19 +22,19 @@ export default {
       const newTimeStamp = typeof (timeStamp) === 'number' ? timeStamp : Date.parse(timeStamp)
       const secondsPast = (now - newTimeStamp) / 1000
       if (secondsPast < 60) {
-        return this.i18n['time.secondsPast'].replace('<T>', Math.round(secondsPast))
+        return this.y18n('time.secondsPast').replace('<T>', Math.round(secondsPast))
       } else if (secondsPast < 3600) {
-        return this.i18n['time.minutesPast'].replace('<T>', Math.round(secondsPast / 60))
+        return this.y18n('time.minutesPast').replace('<T>', Math.round(secondsPast / 60))
       } else if (secondsPast <= 86400) {
-        return this.i18n['time.hoursPast'].replace('<T>', Math.round(secondsPast / 3600))
+        return this.y18n('time.hoursPast').replace('<T>', Math.round(secondsPast / 3600))
       } else if (secondsPast <= 604800) {
-        return this.i18n['time.daysPast'].replace('<T>', Math.round(secondsPast / 86400))
+        return this.y18n('time.daysPast').replace('<T>', Math.round(secondsPast / 86400))
       } else if (secondsPast <= 2592000) {
-        return this.i18n['time.weeksPast'].replace('<T>', Math.round(secondsPast / 604800))
+        return this.y18n('time.weeksPast').replace('<T>', Math.round(secondsPast / 604800))
       } else if (secondsPast <= 31104000) {
-        return this.i18n['time.monthsPast'].replace('<T>', Math.round(secondsPast / 2592000))
+        return this.y18n('time.monthsPast').replace('<T>', Math.round(secondsPast / 2592000))
       } else {
-        return this.i18n['time.moreThanYear']
+        return this.y18n('time.moreThanYear')
       }
     },
 

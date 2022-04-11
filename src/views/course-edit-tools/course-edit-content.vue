@@ -20,12 +20,12 @@ Dependencies:
         append
         :to="{path: 'edit', params: {type: contentToDisplay.name}}"
       >
-        <i class="fas fa-edit"></i> {{ i18n['content.editContent'] }}
+        <i class="fas fa-edit"></i> {{ y18n('content.editContent') }}
       </b-button>
     </div>
 
     <div class="col text-dark">
-      {{ i18n['content.editContentTip'].replace('{step}', step) }}
+      {{ y18n('content.editContentTip').replace('{step}', step) }}
     </div>
   </div>
 </template>
