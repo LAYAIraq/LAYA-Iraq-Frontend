@@ -1,10 +1,12 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount } from '@vue/test-utils'
 import Login from '@/views/login.vue'
 import Vuex from 'vuex'
+import { BootstrapVue } from 'bootstrap-vue'
 import 'regenerator-runtime/runtime'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
+localVue.use(BootstrapVue)
 
 describe('login component', () => {
   let getters
@@ -37,11 +39,10 @@ describe('login component', () => {
     const router = {
       replace: jest.fn()
     }
-    wrapper = shallowMount(
+    wrapper = mount(
       Login, {
         store,
         stubs: [
-          'b-toast',
           'router-link'
         ],
         mocks: {

@@ -110,9 +110,11 @@ describe('register component', () => {
 
   it('error when wrong email address', async () => {
     await emailInput.setValue('abs')
-    expect(emailError.attributes('style')).toBe('')
+    emailError = wrapper.find('#email-err')
+    expect(emailError.exists()).toBeTruthy()
     await emailInput.setValue('abs.de')
-    expect(emailError.attributes('style')).toBe('')
+    emailError = wrapper.find('#email-err')
+    expect(emailError.exists()).toBeTruthy()
     // following are omitted b/c allowed
     // await emailInput.setValue('abs@a')
     // expect(emailError.attributes('style')).toBe('')
@@ -121,15 +123,20 @@ describe('register component', () => {
   })
   it('no error when correct email', async () => {
     await emailInput.setValue('abs@example.com')
-    expect(emailError.attributes('style')).toBe('display: none;')
+    emailError = wrapper.find('#email-err')
+    expect(emailError.exists()).toBeFalsy()
     await emailInput.setValue('some-name@example.com')
-    expect(emailError.attributes('style')).toBe('display: none;')
+    emailError = wrapper.find('#email-err')
+    expect(emailError.exists()).toBeFalsy()
     await emailInput.setValue('some.name@example.com')
-    expect(emailError.attributes('style')).toBe('display: none;')
+    emailError = wrapper.find('#email-err')
+    expect(emailError.exists()).toBeFalsy()
     await emailInput.setValue('abs@complicated-example.com')
-    expect(emailError.attributes('style')).toBe('display: none;')
+    emailError = wrapper.find('#email-err')
+    expect(emailError.exists()).toBeFalsy()
     await emailInput.setValue('abs@subdomain.example.com')
-    expect(emailError.attributes('style')).toBe('display: none;')
+    emailError = wrapper.find('#email-err')
+    expect(emailError.exists()).toBeFalsy()
   })
 
   it('shows button when input is filled correctly', async () => {

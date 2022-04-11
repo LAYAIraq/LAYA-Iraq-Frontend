@@ -1,5 +1,12 @@
 # Changes
 
+## v1.1
+- fixed change role method in admin panel
+- added option for users to restore their password
+- added option to add own videos and captions
+- re-activated relate assessment block
+- added unit tests
+
 ## v1.0.2
 - enforced use of non-reserved characters in new course name and category
 - fixed an issue where uploads were marked as too large

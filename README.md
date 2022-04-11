@@ -153,9 +153,9 @@ or `flag` anywhere in their name.
 ##### mount vs. shallowMount
 `vue-test-utils` provides two different mounting methods for vue components.
 `mount` renders the component including the children, whereas `shallowMount`
-stubs children. Before we have complete code coverage for each component,
-we shall only use `shallowMount` to test that particular component. Later,
-we can start testing integration with `mount`.
+stubs children. We shall only prefer to use  `shallowMount` to test components. 
+However, since we use `BootstrapVue`, it is necessary to use `mount` for some
+components in order to test the actual behavior (e.g. when using `b-button`s)
 
 ##### Mocking vuex
 For components that use vuex, we can mock the store with only the properties
@@ -166,3 +166,139 @@ that we need. Further information in
 We would like to maintain a consistent style throughout the project. Therefore,
 we also enforce it on testing code. To check, run `npm run lint:tests`, for 
 automatic fixes run `npm run lint:tests-fix`.
+
+### `async` tests
+Many of the unit tests will need to test DOM changes. Therefore, we need the test
+to be asynchronous. While user interactions that result in a DOM change can be
+`awaited`, methods that return promises might need an extra step of awaiting the
+next tick on the Vue instance.
+
+### Sample Test
+
+``` typescript
+import 'regenerator-runtime/runtime' /// used for implementing async behavior
+import { createLocalVue, mount } from '@vue/test-utils' // minimal setup
+import CourseDelete from '@/views/course-edit-tools/course-delete.vue'
+import Vuex from 'vuex'
+import { BootstrapVue } from 'bootstrap-vue'
+
+const localVue = createLocalVue() // setting up local vue instance
+localVue.use(Vuex)
+localVue.use(BootstrapVue)
+
+describe('Course delete', () => {
+  let getters
+  let actions
+  let mutations
+  let wrapper
+  let button
+  let modalButtons
+  beforeEach(() => {
+    getters = {
+      profileLang: () => 'en', // necessary in every component for rendering
+      course: () => {
+        return {
+          courseId: 'test'
+        }
+      }
+    }
+    actions = {
+      deleteCourse: jest.fn(() => { // simple mock for store action
+        return Promise.resolve()
+      })
+    }
+    mutations = {
+      removeFromCourseList: jest.fn()
+    }
+    const store = new Vuex.Store({ // mock store for local Vue instance
+      getters,
+      mutations,
+      actions
+    })
+    wrapper = mount(
+      CourseDelete, {
+        mocks: {
+          $router: { // mock for Vue router
+            push: jest.fn()
+          }
+        },
+        store,
+        localVue
+      }
+    )
+    button = wrapper.findComponent('button')
+  })
+
+  it('prompts a modal when clicking button', async () => {
+    expect(button.exists()).toBeTruthy()
+    await button.trigger('click') // note the await keyword
+    const modal = wrapper.find('#author-del-course-confirm')
+    expect(modal.exists()).toBeTruthy()
+    modalButtons = wrapper.findAll('button')
+    expect(modalButtons.length).toBe(4)
+  })
+
+  it('calls all store methods when clickling ok', async () => {
+    await button.trigger('click')
+    modalButtons = wrapper.findAll('button')
+    modalButtons.wrappers.forEach(wrap => {
+      if (wrap.text() === 'Delete') {
+        button = wrap
+      }
+    })
+    await button.trigger('click')
+    expect(actions.deleteCourse).toHaveBeenCalled()
+    expect(mutations.removeFromCourseList).toHaveBeenCalled()
+    expect(wrapper.vm.$router.push).toHaveBeenCalledWith('/courses')
+    // expect(vm.$router.push).toHaveBeenCalled()
+  })
+})
+
+describe('test for full branch coverage', () => {
+  it('prompts error log when store returns rejection', async () => {
+    const getters = {
+      profileLang: () => 'en',
+      course: () => {
+        return {
+          courseId: 'test'
+        }
+      }
+    }
+    const actions = {
+      deleteCourse: jest.fn(() => {
+        return Promise.reject(new Error('err!'))
+      })
+    }
+    const mutations = {
+      removeFromCourseList: jest.fn()
+    }
+    const store = new Vuex.Store({
+      getters,
+      mutations,
+      actions
+    })
+    const wrapper = mount(CourseDelete, {
+      mocks: {
+        $router: {
+          push: jest.fn()
+        }
+      },
+      store,
+      localVue
+    })
+    let button = wrapper.find('button')
+    console.error = jest.fn()
+    await button.trigger('click')
+    const modalButtons = wrapper.findAll('button')
+    modalButtons.wrappers.forEach(wrap => {
+      if (wrap.text() === 'Delete') {
+        button = wrap
+      }
+    })
+    await button.trigger('click')
+    await localVue.nextTick()
+    expect(actions.deleteCourse).toHaveBeenCalled()
+    expect(console.error).toHaveBeenCalledWith('ERROR:', expect.any(Error))
+  })
+})
+```
