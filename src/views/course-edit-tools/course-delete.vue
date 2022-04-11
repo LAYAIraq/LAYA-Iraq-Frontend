@@ -19,28 +19,28 @@ Dependencies:
         @click="$bvModal.show('author-delCourse-confirm')"
       >
         <i class="fas fa-exclamation-circle"></i>
-        {{ i18n['deleteCourse'] }}
+        {{ y18n('deleteCourse') }}
       </b-button>
     </div>
 
     <div
       class="col text-dark"
     >
-      {{ i18n['deleteCourse.deleteCourseTip'] }}
+      {{ y18n('deleteCourse.deleteCourseTip') }}
     </div>
 
     <b-modal
       id="author-delCourse-confirm"
-      :title="i18n['deleteCourse']"
+      :title="y18n('deleteCourse')"
       header-bg-variant="danger"
       ok-variant="danger"
-      :ok-title="i18n['delete']"
-      :cancel-title="i18n['cancel']"
+      :ok-title="y18n('delete')"
+      :cancel-title="y18n('cancel')"
       centered
       @ok="delCourse"
     >
       <p>
-        {{ i18n['deleteCourse.modal.text'] }}
+        {{ y18n('deleteCourse.modal.text') }}
       </p>
     </b-modal>
   </div>

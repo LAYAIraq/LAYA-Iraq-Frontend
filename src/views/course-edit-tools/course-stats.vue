@@ -16,37 +16,37 @@ Dependencies:
         variant="success"
         @click="$bvModal.show('author-courseStats')"
       >
-        <i class="fas fa-info-circle"></i> {{ i18n['stats.seeStats'] }}
+        <i class="fas fa-info-circle"></i> {{ y18n('stats.seeStats') }}
       </b-button>
     </div>
 
     <div class="col text-dark">
-      {{ i18n['stats.statsTip'] }}
+      {{ y18n('stats.statsTip') }}
     </div>
 
     <b-modal
       id="author-courseStats"
       ok-only
-      :title="i18n['stats.modal.title']"
+      :title="y18n('stats.modal.title')"
       centered
     >
       <p>
-        {{ i18n['stats.modal.users'] }}: {{ courseStats.count }}
+        {{ y18n('stats.modal.users') }}: {{ courseStats.count }}
       </p>
       <p>
-        {{ i18n['stats.modal.time'] }}: {{ courseStats.averageTime }}
+        {{ y18n('stats.modal.time') }}: {{ courseStats.averageTime }}
       </p>
       <p>
-        {{ i18n['stats.modal.flags'] }}: 0
+        {{ y18n('stats.modal.flags') }}: 0
       </p>
       <p>
-        {{ i18n['stats.modal.stoppedAt'] }}: {{ courseStats.lostUsersAt }}
+        {{ y18n('stats.modal.stoppedAt') }}: {{ courseStats.lostUsersAt }}
       </p>
       <p>
-        {{ i18n['stats.modal.totalLosses'] }}: {{ courseStats.usersLost }}
+        {{ y18n('stats.modal.totalLosses') }}: {{ courseStats.usersLost }}
       </p>
       <p>
-        {{ i18n['stats.modal.feedback'] }}: {{ courseStats.feedbackAverage }}
+        {{ y18n('stats.modal.feedback') }}: {{ courseStats.feedbackAverage }}
       </p>
     </b-modal>
   </div>

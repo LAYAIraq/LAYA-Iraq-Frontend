@@ -15,24 +15,24 @@ Dependencies:
   >
     <label>
       <h4>
-        {{ i18n['layaLaRelate.name'] }}
+        {{ y18n('layaLaRelate.name') }}
       </h4>
     </label>
     <i
       id="questionmark"
       v-b-tooltip.left
       class="fas fa-question-circle"
-      :title="i18n['showTip']"
+      :title="y18n('showTip')"
       @click="toggleTip"
     ></i>
     <b-jumbotron
       v-if="tooltipOn"
-      :header="i18n['layaLaRelate.name']"
-      :lead="i18n['tipHeadline']"
+      :header="y18n('layaLaRelate.name')"
+      :lead="y18n('tipHeadline')"
     >
       <hr class="my-4">
       <span>
-        {{ i18n['layaLaRelate.tooltip'] }}
+        {{ y18n('layaLaRelate.tooltip') }}
       </span>
     </b-jumbotron>
     <hr>
@@ -45,7 +45,7 @@ Dependencies:
             for="relate-title"
             class="col-2 col-form-label"
           >
-            {{ i18n['title'] }}
+            {{ y18n('title') }}
           </label>
           <div class="col-10">
             <input
@@ -53,7 +53,7 @@ Dependencies:
               v-model="title.text"
               type="text"
               class="form-control"
-              :placeholder="i18n['titlePlaceholder']"
+              :placeholder="y18n('titlePlaceholder')"
             >
           </div>
         </div>
@@ -67,7 +67,7 @@ Dependencies:
             class="col-2 col-form-label"
           >
             <span class="sr-only">
-              {{ i18n['simpleAlt'] }}
+              {{ y18n('simpleAlt') }}
             </span>
           </label>
           <div class="col-8">
@@ -76,7 +76,7 @@ Dependencies:
               v-model="title.simple"
               type="text"
               class="form-control"
-              :placeholder="i18n['simpleAlt']"
+              :placeholder="y18n('simpleAlt')"
             >
           </div>
         </div>
@@ -89,14 +89,14 @@ Dependencies:
             for="relate-task"
             class="col-2 col-form-label"
           >
-            {{ i18n['task'] }}
+            {{ y18n('task') }}
           </label>
           <div class="col-10">
             <textarea
               id="relate-task"
               v-model="task.text"
               class="w-100"
-              :placeholder="i18n['taskPlaceholder']"
+              :placeholder="y18n('taskPlaceholder')"
             >
           </textarea>
           </div>
@@ -111,7 +111,7 @@ Dependencies:
             class="col-2 col-form-label"
           >
             <span class="sr-only">
-              {{ i18n['task'] }}
+              {{ y18n('task') }}
             </span>
           </label>
           <div class="col-10">
@@ -119,7 +119,7 @@ Dependencies:
               id="relate-task-simple"
               v-model="task.simple"
               class="w-100"
-              :placeholder="i18n['simpleAlt']"
+              :placeholder="y18n('simpleAlt')"
             ></textarea>
           </div>
         </div>
@@ -131,7 +131,7 @@ Dependencies:
           for="relate-task-audio"
           class="col-2 col-form-label"
         >
-          {{ i18n['taskAudio'] }}
+          {{ y18n('taskAudio') }}
         </label>
         <div class="col-10">
           <input
@@ -139,12 +139,12 @@ Dependencies:
             v-model="taskAudio"
             type="text"
             class="form-control"
-            :placeholder="i18n['taskAudioPlaceholder']"
+            :placeholder="y18n('taskAudioPlaceholder')"
           >
         </div>
       </div>
 
-      <p><b>{{ i18n['layaLaRelate.edit.solutions'] }}</b></p>
+      <p><b>{{ y18n('layaLaRelate.edit.solutions') }}</b></p>
 
       <div
         v-for="(rel, i) in relations"
@@ -156,7 +156,7 @@ Dependencies:
           class="col-form-label col-2"
           :for="'rel-text-'+i"
         >
-          {{ i18n['text'] }}
+          {{ y18n('text') }}
         </label>
         <div class="col-7">
           <div class="col">
@@ -177,7 +177,7 @@ Dependencies:
                 v-model="relationsSimple[i]"
                 class="form-control"
                 type="text"
-                :placeholder="i18n['simpleAlt']"
+                :placeholder="y18n('simpleAlt')"
               >
             </div>
           </div>
@@ -203,12 +203,12 @@ Dependencies:
             @click="_addRelation"
           >
             <i class="fas fa-plus"></i>
-            {{ i18n['layaLaRelate.edit.solutionAdd'] }}
+            {{ y18n('layaLaRelate.edit.solutionAdd') }}
           </button>
         </div>
       </div>
 
-      <p><b>{{ i18n['items'] }}</b></p>
+      <p><b>{{ y18n('items') }}</b></p>
       <div
         v-for="(pair, i) in pairs"
         :key="'pair-'+i"
@@ -229,7 +229,7 @@ Dependencies:
             v-model="pairs[i].img"
             class="form-control"
             type="text"
-            :placeholder="i18n['layaLaRelate.edit.imgPlaceholder']"
+            :placeholder="y18n('layaLaRelate.edit.imgPlaceholder')"
           >
         </div>
 
@@ -240,7 +240,7 @@ Dependencies:
             v-model="pairs[i].label"
             class="form-control"
             type="text"
-            :placeholder="i18n['layaLaRelate.edit.labelPlaceholder']"
+            :placeholder="y18n('layaLaRelate.edit.labelPlaceholder')"
           >
 
           <!-- alt text simple -->
@@ -252,7 +252,7 @@ Dependencies:
               v-model="pairs[i].labelSimple"
               class="form-control"
               type="text"
-              :placeholder="i18n['simpleAlt']"
+              :placeholder="y18n('simpleAlt')"
             >
           </div>
         </div>
@@ -264,7 +264,7 @@ Dependencies:
             v-model="pairs[i].audio"
             class="form-control"
             type="text"
-            :placeholder="i18n['layaLaRelate.edit.audioPlaceholder']"
+            :placeholder="y18n('layaLaRelate.edit.audioPlaceholder')"
           >
         </div>
 
@@ -279,7 +279,7 @@ Dependencies:
               disabled
               :value="-1"
             >
-              {{ i18n['layaLaRelate.edit.solution'] }}
+              {{ y18n('layaLaRelate.edit.solution') }}
             </option>
             <option
               v-for="(rel,j) in relations"
@@ -309,7 +309,7 @@ Dependencies:
             @click="_addPair"
           >
             <i class="fas fa-plus"></i>
-            {{ i18n['itemAdd'] }}
+            {{ y18n('itemAdd') }}
           </button>
         </div>
       </div>

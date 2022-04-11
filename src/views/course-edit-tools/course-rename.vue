@@ -17,33 +17,33 @@ Dependencies:
         :class="langIsAr? 'float-left' : 'float-right'"
         @click="$bvModal.show('author-renameCourse-confirm')"
       >
-        <i class="fas fa-exclamation-circle"></i> {{ i18n['renameCourse'] }}
+        <i class="fas fa-exclamation-circle"></i> {{ y18n('renameCourse') }}
       </b-button>
     </div>
 
     <div class="col text-dark">
-      {{ i18n['rename.renameCourseTip'] }}
+      {{ y18n('rename.renameCourseTip') }}
     </div>
 
     <b-modal
       id="author-renameCourse-confirm"
-      :title="i18n['renameCourse']"
+      :title="y18n('renameCourse')"
       header-bg-variant="warning"
       ok-variant="warning"
-      :ok-title="i18n['rename.modal.ok']"
-      :cancel-title="i18n['cancel']"
+      :ok-title="y18n('rename.modal.ok')"
+      :cancel-title="y18n('cancel')"
       centered
-      :aria-label="i18n['popupwarning']"
+      :aria-label="y18n('popupwarning')"
       @ok="renameCourse"
     >
       <p>
-        {{ i18n['copy.modal.text'] }}
+        {{ y18n('copy.modal.text') }}
         <input
           v-model="rename"
           type="text"
           class="form-control"
-          :placeholder="i18n['placeholder']"
-          :aria-label="i18n['placeholder']"
+          :placeholder="y18n('placeholder')"
+          :aria-label="y18n('placeholder')"
         >
       </p>
     </b-modal>
@@ -51,7 +51,7 @@ Dependencies:
       id="openPopup"
       style="display:none"
     >
-      {{ i18n['popupwarning'] }}
+      {{ y18n('popupwarning') }}
     </div>
   </div>
 </template>

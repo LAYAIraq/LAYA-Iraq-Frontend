@@ -12,7 +12,7 @@ Dependencies: none
     class="ly-scroll-to-top"
   >
     <button
-      :aria-label="i18n['scrollUp']"
+      :aria-label="y18n('scrollUp')"
       type="button"
       class="btn btn-secondary btn-lg"
       @click="scrollTop"

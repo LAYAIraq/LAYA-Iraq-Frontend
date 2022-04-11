@@ -12,7 +12,7 @@ Dependencies: @/i18n/plugins/misc/laya-course-table
       v-show="filtered.length === 0"
       class="text-center text-muted"
     >
-      {{ i18n['noCourses'] }}
+      {{ y18n('noCourses') }}
     </h3>
 
     <div

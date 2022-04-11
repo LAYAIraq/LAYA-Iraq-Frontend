@@ -6,8 +6,8 @@
   >
     <template slot="button-content">
       <!-- <i class="fas fa-bell"></i>
-      {{ i18n['notifications'] }} -->
-      {{ i18n['notifications'] }}
+      {{ y18n('notifications') }} -->
+      {{ y18n('notifications') }}
       <i class="fas fa-bell fa-lg"></i>
 
       <span
@@ -28,7 +28,7 @@
         :highlight="note.noteId"
         :class="!note.read? 'font-weight-bold':''"
       >
-        {{ i18n[`notifications.${note.type}.title`] }}
+        {{ y18n(`notifications.${note.type}.title`) }}
         <span class="timestamp">
           {{ timeSince(note.time) }}
         </span>
@@ -36,14 +36,14 @@
     </b-dropdown-item>
 
     <b-dropdown-item v-if="!messagesPresent">
-      {{ i18n['notifications.none'] }}
+      {{ y18n('notifications.none') }}
     </b-dropdown-item>
 
     <b-dropdown-divider></b-dropdown-divider>
 
     <b-dropdown-item>
       <router-link to="/notifications">
-        {{ i18n['notifications.seeAll'] }}
+        {{ y18n('notifications.seeAll') }}
       </router-link>
     </b-dropdown-item>
 
@@ -53,7 +53,7 @@
         variant="info"
         @click="markAllAsRead"
       >
-        {{ i18n['markAllAsRead'] }}
+        {{ y18n('markAllAsRead') }}
       </b-button>
     </b-dropdown-item>
 
@@ -62,7 +62,7 @@
         class="w-100"
         @click="getNewNotifications"
       >
-        {{ i18n['notifications.getNew'] }}
+        {{ y18n('notifications.getNew') }}
       </b-button>
     </b-dropdown-item>
 

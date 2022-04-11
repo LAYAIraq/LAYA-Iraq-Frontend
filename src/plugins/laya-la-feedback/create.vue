@@ -13,24 +13,24 @@ Dependencies: @/mixins/locale.vue
   >
     <label>
       <h4>
-        {{ i18n['layaLaFeedback.name'] }}
+        {{ y18n('layaLaFeedback.name') }}
       </h4>
     </label>
     <i
       id="questionmark"
       v-b-tooltip.left
       class="fas fa-question-circle"
-      :title="i18n['showTip']"
+      :title="y18n('showTip')"
       @click="toggleTip"
     ></i>
     <b-jumbotron
       v-if="tooltipOn"
-      :header="i18n['layaLaFeedback.name']"
-      :lead="i18n['tipHeadline']"
+      :header="y18n('layaLaFeedback.name')"
+      :lead="y18n('tipHeadline')"
     >
       <hr class="my-4">
       <span>
-        {{ i18n['layaLaFeedback.tooltip'] }}
+        {{ y18n('layaLaFeedback.tooltip') }}
       </span>
     </b-jumbotron>
     <hr>
@@ -42,7 +42,7 @@ Dependencies: @/mixins/locale.vue
           for="feedback-title"
           class="col-2 col-form-label"
         >
-          {{ i18n['title'] }}
+          {{ y18n('title') }}
         </label>
         <div class="col-10">
           <input
@@ -60,7 +60,7 @@ Dependencies: @/mixins/locale.vue
           for="feedback-task"
           class="col-2 col-form-label"
         >
-          {{ i18n['layaLaFeedback.edit.desc'] }}
+          {{ y18n('layaLaFeedback.edit.desc') }}
         </label>
         <div class="col-10">
           <textarea
@@ -90,7 +90,7 @@ Dependencies: @/mixins/locale.vue
 
       <p>
         <b>
-          {{ i18n['layaLaFeedback.edit.answers'] }}
+          {{ y18n('layaLaFeedback.edit.answers') }}
         </b>
       </p>
       <div
@@ -103,7 +103,7 @@ Dependencies: @/mixins/locale.vue
           class="col-form-label col-2"
           :for="'cat-text-'+i"
         >
-          {{ i18n['text'] }}
+          {{ y18n('text') }}
         </label>
         <div class="col-7">
           <input
@@ -132,12 +132,12 @@ Dependencies: @/mixins/locale.vue
             class="btn btn-primary btn-sm"
             @click="_addCategory"
           >
-            <i class="fas fa-plus"></i>{{ i18n['layaLaFeedback.edit.addAnswer'] }}
+            <i class="fas fa-plus"></i>{{ y18n('layaLaFeedback.edit.addAnswer') }}
           </button>
         </div>
       </div>
 
-      <p><b>{{ i18n['layaLaFeedback.edit.questions'] }}</b></p>
+      <p><b>{{ y18n('layaLaFeedback.edit.questions') }}</b></p>
       <div
         v-for="(item, i) in items"
         :key="'item-'+i"
@@ -147,7 +147,7 @@ Dependencies: @/mixins/locale.vue
         <label
           class="col-form-label col-2"
           :for="item"
-        >{{ i18n['text'] }}</label>
+        >{{ y18n('text') }}</label>
         <div class="col-5">
           <input
             :id="item"
@@ -175,7 +175,7 @@ Dependencies: @/mixins/locale.vue
             class="btn btn-primary btn-sm"
             @click="_addItem"
           >
-            <i class="fas fa-plus"></i>{{ i18n['layaLaFeedback.edit.addQuestion'] }}
+            <i class="fas fa-plus"></i>{{ y18n('layaLaFeedback.edit.addQuestion') }}
           </button>
         </div>
       </div>
@@ -280,10 +280,10 @@ export default {
      */
     fetchData () {
       if (this.title === '') { // prefetch Data at creation
-        this.title = this.i18n['layaLaFeedback.name']
-        this.task = this.i18n['layaLaFeedback.prefetch.task']
-        this.items = this.i18n['layaLaFeedback.prefetch.items'].split(',')
-        this.categories = this.i18n['layaLaFeedback.prefetch.categories'].split(',')
+        this.title = this.y18n('layaLaFeedback.name')
+        this.task = this.y18n('layaLaFeedback.prefetch.task')
+        this.items = this.y18n('layaLaFeedback.prefetch.items').split(',')
+        this.categories = this.y18n('layaLaFeedback.prefetch.categories').split(',')
       }
     }
 

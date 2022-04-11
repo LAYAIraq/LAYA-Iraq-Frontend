@@ -14,16 +14,16 @@ Dependencies: @/mixins/locale.vue
     <div class="container">
       <div class="row">
         <div class="col">
-          <h1> {{ i18n['root.title'] }} </h1>
-          <h2> {{ i18n['root.subtitle'] }} </h2>
-          <p> {{ i18n['root.promoText1'] }} </p>
-          <p> {{ i18n['root.promoText2'] }} </p>
-          <p> {{ i18n['root.promoText3'] }} </p>
-          <p> {{ i18n['root.promoText4'] }} </p>
-          <p> {{ i18n['root.promoText5'] }} </p>
+          <h1> {{ y18n('root.title') }} </h1>
+          <h2> {{ y18n('root.subtitle') }} </h2>
+          <p> {{ y18n('root.promoText1') }} </p>
+          <p> {{ y18n('root.promoText2') }} </p>
+          <p> {{ y18n('root.promoText3') }} </p>
+          <p> {{ y18n('root.promoText4') }} </p>
+          <p> {{ y18n('root.promoText5') }} </p>
 
           <b-link to="/register">
-            {{ i18n['root.register'] }}
+            {{ y18n('root.register') }}
           </b-link>
         </div>
       </div>

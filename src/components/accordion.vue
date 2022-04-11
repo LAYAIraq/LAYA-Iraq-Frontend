@@ -28,7 +28,7 @@ Dependencies: none
     >
       <h3 class="empty text-center">
         <i class="far fa-frown"></i>
-        <span>{{ i18n['noCourses'] }}</span>
+        <span>{{ y18n('noCourses') }}</span>
       </h3>
     </div>
   </div>

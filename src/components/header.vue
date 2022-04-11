@@ -45,9 +45,9 @@ Dependencies:
               class="fas fa-chalkboard-teacher"
               size="2x"
             ></i>
-            {{ i18n['header.courses'] }}
+            {{ y18n('header.courses') }}
           </b-nav-item>
-          <!-- <b-nav-item to="/mycourses">{{ i18n['mycourses.title'] }}</b-nav-item> -->
+          <!-- <b-nav-item to="/mycourses">{{ y18n('mycourses.title') }}</b-nav-item> -->
         </b-navbar-nav>
 
         <!-- right links unauthorized -->
@@ -57,11 +57,11 @@ Dependencies:
         >
           <b-nav-item to="/register">
             <i class="fas fa-user-plus"></i>
-            {{ i18n['header.register'] }}
+            {{ y18n('header.register') }}
           </b-nav-item>
           <b-nav-item to="/login">
             <i class="fas fa-sign-in-alt"></i>
-            {{ i18n['login.title'] }}
+            {{ y18n('login.title') }}
           </b-nav-item>
         </b-navbar-nav>
 
@@ -74,16 +74,16 @@ Dependencies:
             v-if="isAdmin"
             to="/admin"
           >
-            {{ i18n['adminPanel.title'] }}
+            {{ y18n('adminPanel.title') }}
           </b-nav-item>
           <ly-header-notifications></ly-header-notifications>
           <b-nav-item to="/profile">
             <i class="fas fa-user-alt"></i>
-            {{ i18n['header.profile'] }}
+            {{ y18n('header.profile') }}
           </b-nav-item>
           <b-nav-item @click="logout">
             <i class="fas fa-sign-out-alt"></i>
-            {{ i18n['header.logout'] }}
+            {{ y18n('header.logout') }}
           </b-nav-item>
         </b-navbar-nav>
 
@@ -117,7 +117,7 @@ Dependencies:
               <img
                 :src="icons[profileLang]"
                 class="lang-icon"
-                :alt="i18n['langSelect']"
+                :alt="y18n('langSelect')"
               >
             </template>
 

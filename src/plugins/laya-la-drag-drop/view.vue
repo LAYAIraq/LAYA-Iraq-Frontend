@@ -86,7 +86,7 @@ Dependencies:
             :disabled="checked"
             :aria-valuenow="solution[i]"
             :aria-valuetext="categories[solution[i]]"
-            :aria-label="i18n['layaLaDragDrop.label.slider']"
+            :aria-label="y18n('layaLaDragDrop.label.slider')"
           >
           <laya-flag-icon
             v-if="!previewData"
@@ -105,7 +105,7 @@ Dependencies:
         :disabled="checked"
         @click="check"
       >
-        {{ i18n['check'] }}
+        {{ y18n('check') }}
       </button>
       <button
         type="button"
@@ -113,7 +113,7 @@ Dependencies:
         :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
         @click="done"
       >
-        {{ i18n['nextContent'] }}
+        {{ y18n('nextContent') }}
         <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
       </button>
     </div>

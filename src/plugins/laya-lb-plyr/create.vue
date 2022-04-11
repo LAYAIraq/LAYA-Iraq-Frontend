@@ -244,7 +244,7 @@ Dependencies: @/mixins/locale.vue
                 :key="type"
                 :value="type"
               >
-                {{ i18n[`captionTypes.${type}`] }}
+                {{ y18n(`captionTypes.${type}`) }}
               </b-select-option>
             </b-select>
           </div>

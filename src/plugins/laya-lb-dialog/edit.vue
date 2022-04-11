@@ -15,7 +15,7 @@ Dependencies:
   >
     <div class="row">
       <h2 class="d-inline-block mr-auto">
-        {{ i18n['layaLbDialog.name'] }}
+        {{ y18n('layaLbDialog.name') }}
       </h2>
 
       <i
@@ -23,7 +23,7 @@ Dependencies:
         v-b-tooltip.left
         class="fas fa-question-circle"
         :class="langIsAr? 'mr-auto' : 'ml-auto'"
-        :title="i18n['showTip']"
+        :title="y18n('showTip')"
         @click="toggleTip"
       ></i>
     </div>
@@ -31,12 +31,12 @@ Dependencies:
 
     <b-jumbotron
       v-if="tooltipOn"
-      :header="i18n['layaLbDialog.name']"
-      :lead="i18n['tipHeadline']"
+      :header="y18n('layaLbDialog.name')"
+      :lead="y18n('tipHeadline')"
     >
       <hr class="my-4">
       <span>
-        {{ i18n['layaLbDialog.tooltip'] }}
+        {{ y18n('layaLbDialog.tooltip') }}
       </span>
     </b-jumbotron>
 
@@ -48,7 +48,7 @@ Dependencies:
             for="dialog-title"
             class="col-2 col-form-label"
           >
-            {{ i18n['title'] }}
+            {{ y18n('title') }}
           </label>
           <div class="col-8">
             <input
@@ -56,8 +56,8 @@ Dependencies:
               v-model="title.text"
               type="text"
               class="form-control"
-              :placeholder="i18n['titlePlaceholder']"
-              :aria-label="i18n['titlePlaceholder']"
+              :placeholder="y18n('titlePlaceholder')"
+              :aria-label="y18n('titlePlaceholder')"
             >
           </div>
           <div class="col">
@@ -65,7 +65,7 @@ Dependencies:
               for="show-title-tick"
               class="col col-form-label"
             >
-              {{ i18n['showTitle'] }}
+              {{ y18n('showTitle') }}
               <input
                 id="show-title-tick"
                 v-model="title.show"
@@ -84,7 +84,7 @@ Dependencies:
             class="col-2 col-form-label"
           >
             <span class="sr-only">
-              {{ i18n['simpleAlt'] }}
+              {{ y18n('simpleAlt') }}
             </span>
           </label>
           <div class="col-8">
@@ -93,7 +93,7 @@ Dependencies:
               v-model="title.simple"
               type="text"
               class="form-control"
-              :placeholder="i18n['simpleAlt']"
+              :placeholder="y18n('simpleAlt')"
             >
           </div>
         </div>
@@ -105,14 +105,14 @@ Dependencies:
             for="dialog-question"
             class="col-2 col-form-label"
           >
-            {{ i18n['task'] }}
+            {{ y18n('task') }}
           </label>
           <div class="col-10">
             <textarea
               id="dialog-question"
               v-model="question.text"
               class="w-100"
-              :placeholder="i18n['layaLbDialog.optional']"
+              :placeholder="y18n('layaLbDialog.optional')"
             ></textarea>
           </div>
         </div>
@@ -126,7 +126,7 @@ Dependencies:
             class="col-2 col-form-label"
           >
             <span class="sr-only">
-              {{ i18n['task'] }}
+              {{ y18n('task') }}
             </span>
           </label>
           <div class="col-10">
@@ -134,7 +134,7 @@ Dependencies:
               id="dialog-question-simple"
               v-model="question.simple"
               class="w-100"
-              :placeholder="i18n['simpleAlt']"
+              :placeholder="y18n('simpleAlt')"
             ></textarea>
           </div>
         </div>
@@ -146,7 +146,7 @@ Dependencies:
           class="col-2 col-form-label"
           style="word-wrap: anywhere"
         >
-          {{ i18n['layaLbDialog.bgURL'] }}
+          {{ y18n('layaLbDialog.bgURL') }}
         </label>
         <div class="col-10">
           <input
@@ -154,12 +154,12 @@ Dependencies:
             v-model="bg"
             type="text"
             class="form-control"
-            :placeholder="i18n['layaLbDialog.bgPlaceholder']"
+            :placeholder="y18n('layaLbDialog.bgPlaceholder')"
           >
         </div>
       </div>
 
-      <p><b>{{ i18n['layaLbDialog.answers'] }}</b></p>
+      <p><b>{{ y18n('layaLbDialog.answers') }}</b></p>
       <div
         v-for="(answer, i) in answers"
         :key="'answer-'+i"
@@ -171,7 +171,7 @@ Dependencies:
             class="col-form-label col-2"
             :for="'answer-text-'+i"
           >
-            {{ i18n['text'] }}
+            {{ y18n('text') }}
           </label>
           <div class="col-5">
             <textarea
@@ -186,7 +186,7 @@ Dependencies:
             <button
               type="button"
               class="btn btn-danger btn-sm"
-              :aria-label="i18n['deleteField']"
+              :aria-label="y18n('deleteField')"
               @click="_delItem(i)"
             >
               <i class="fas fa-times"></i>
@@ -203,7 +203,7 @@ Dependencies:
             :for="`answer-text-simple-${i}`"
           >
             <span class="sr-only">
-              {{ i18n['text'] }}
+              {{ y18n('text') }}
             </span>
           </label>
           <div class="col-5">
@@ -212,7 +212,7 @@ Dependencies:
               v-model="answer.simple"
               class="form-control"
               style="height: 6rem; font-size: 80%"
-              :placeholder="i18n['simpleAlt']"
+              :placeholder="y18n('simpleAlt')"
             ></textarea>
           </div>
         </div>
@@ -223,10 +223,10 @@ Dependencies:
           type="button"
           class="btn btn-primary btn-sm"
           :class="langIsAr? 'float-right': 'float-left'"
-          @click="_addItem(i18n['layaLaScmc.edit.sampleOption'])"
+          @click="_addItem(y18n('layaLaScmc.edit.sampleOption'))"
         >
           <i class="fas fa-plus"></i>
-          {{ i18n['layaLbDialog.addAnswer'] }}
+          {{ y18n('layaLbDialog.addAnswer') }}
         </button>
       </div>
     </form>

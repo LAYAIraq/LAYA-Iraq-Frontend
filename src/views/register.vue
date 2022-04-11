@@ -20,7 +20,7 @@ Dependencies:
             class="w-50"
           >
           <h1 class="text-center">
-            {{ i18n['register.title'] }}
+            {{ y18n('register.title') }}
           </h1>
 
           <!-- name -->
@@ -32,8 +32,8 @@ Dependencies:
               <input
                 id="register-focus"
                 v-model="name"
-                :placeholder="i18n['namePH']"
-                :aria-label="i18n['namePH']"
+                :placeholder="y18n('namePH')"
+                :aria-label="y18n('namePH')"
                 type="text"
                 :disabled="submitOk"
                 class="form-control"
@@ -60,7 +60,7 @@ Dependencies:
                 :aria-hidden="!nameTaken"
               >
                 <strong>
-                  {{ i18n['nameTaken'] }}
+                  {{ y18n('nameTaken') }}
                 </strong>
               </div>
               <div
@@ -70,7 +70,7 @@ Dependencies:
                 :aria-hidden="nameTaken"
               >
                 <strong>
-                  {{ i18n['nameErrEmpty'] }}
+                  {{ y18n('nameErrEmpty') }}
                 </strong>
               </div>
               <div
@@ -80,8 +80,8 @@ Dependencies:
                 :aria-hidden="nameTaken"
               >
                 <strong>
-                  {{ i18n['nameErr'] }} <br>
-                  {{ i18n['forbiddenChars'] }}:
+                  {{ y18n('nameErr') }} <br>
+                  {{ y18n('forbiddenChars') }}:
                 </strong>
                 <ul class="list-unstyled">
                   <li
@@ -90,7 +90,7 @@ Dependencies:
                     class="d-inline-block"
                     :class="langIsAr? 'ml-3' : 'mr-3'"
                   >
-                    {{ char.replace(' ', i18n['noWhiteSpace']) }}
+                    {{ char.replace(' ', y18n('noWhiteSpace')) }}
                   </li>
                 </ul>
               </div>
@@ -105,8 +105,8 @@ Dependencies:
             <div class="col">
               <input
                 v-model="email"
-                :placeholder="i18n['emailPH']"
-                :aria-label="i18n['emailPH']"
+                :placeholder="y18n('emailPH')"
+                :aria-label="y18n('emailPH')"
                 type="text"
                 :disabled="submitOk"
                 class="form-control"
@@ -130,8 +130,8 @@ Dependencies:
             >
               <i class="fas fa-exclamation-triangle"></i>
               <strong>
-                {{ emailTaken ? i18n['emailTaken'] : i18n['emailErr'] }} <br>
-                {{ missingEmailCharacters.length > 0? i18n['emailErr.missingChars'] : '' }}:
+                {{ emailTaken ? y18n('emailTaken') : y18n('emailErr') }} <br>
+                {{ missingEmailCharacters.length > 0? y18n('emailErr.missingChars') : '' }}:
               </strong>
               <ul class="list-unstyled">
                 <li
@@ -158,7 +158,7 @@ Dependencies:
 
           <!-- <div style="height: 2rem"></div>
           <div class="position-relative">
-            <div class="position-absolute">{{ i18n['profilePic'] }}</div>
+            <div class="position-absolute">{{ y18n('profilePic') }}</div>
 
             <ly-input-img v-model="profileImg"
                           style="width: 7rem"
@@ -176,7 +176,7 @@ Dependencies:
               style="border: 2px solid black"
               @click.prevent="submit"
             >
-              {{ i18n['register.submit'] }}
+              {{ y18n('register.submit') }}
               <i class="fas fa-user-plus"></i>
             </button>
           </h2>
@@ -187,14 +187,14 @@ Dependencies:
             class="text-center"
             :class="{'d-none': !errForm}"
           >
-            {{ i18n['register.formErr'] }}
+            {{ y18n('register.formErr') }}
           </h3>
           <!-- busy note -->
           <h3
             class="text-center"
             :class="{'d-none': !busy}"
           >
-            {{ i18n['busy'] }} <i class="fas fa-spinner fa-spin"></i>
+            {{ y18n('busy') }} <i class="fas fa-spinner fa-spin"></i>
           </h3>
           <!-- submit ok: goto login -->
           <h3
@@ -203,7 +203,7 @@ Dependencies:
           >
             <router-link to="/login">
               <div>
-                <u>{{ i18n['register.success'] }}</u>
+                <u>{{ y18n('register.success') }}</u>
                 <img
                   src="../assets/fertig.svg"
                   alt="Erfolg"
@@ -446,7 +446,7 @@ export default {
         })
         .catch((err) => {
           console.error(err)
-          ctx.errmsg = this.i18n['register.fail']
+          ctx.errmsg = this.y18n('register.fail')
         })
         .finally(() => {
           ctx.busy = false
@@ -471,7 +471,7 @@ export default {
       //   }))
       //   .catch( (err) => {
       //     console.log(err)
-      //     ctx.errmsg = this.i18n['register.fail']
+      //     ctx.errmsg = this.y18n('register.fail')
       //   })
       //   .finally( () => {
       //     ctx.busy = false

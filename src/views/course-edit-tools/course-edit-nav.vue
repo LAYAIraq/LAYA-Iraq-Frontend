@@ -20,7 +20,7 @@ Dependencies:
         append
         :to="{path: 'editNav'}"
       >
-        <i class="fas fa-project-diagram"></i> {{ i18n['nav.editNav'] }}
+        <i class="fas fa-project-diagram"></i> {{ y18n('nav.editNav') }}
       </b-button>
     </div>
 
@@ -30,9 +30,9 @@ Dependencies:
         class="bg-warning mr-1 rounded"
         style="padding: 2px 5px"
       >
-        <i class="fas fa-exclamation-triangle"></i> {{ i18n['nav.editNavIncomplete'] }}
+        <i class="fas fa-exclamation-triangle"></i> {{ y18n('nav.editNavIncomplete') }}
       </span>
-      {{ i18n['nav.editNavTip'].replace('{steps}', content.length ) }}
+      {{ y18n('nav.editNavTip').replace('{steps}', content.length ) }}
     </div>
   </div>
 </template>

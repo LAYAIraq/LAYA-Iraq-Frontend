@@ -20,26 +20,26 @@ Dependencies:
         block
         @click="$bvModal.show('author-changeContentType-confirm')"
       >
-        <i class="fas fa-edit"></i> {{ i18n['type.changeType'] }}
+        <i class="fas fa-edit"></i> {{ y18n('type.changeType') }}
       </b-button>
     </div>
 
     <div class="col text-dark">
-      {{ i18n['type.changeTypeTip'] }}
+      {{ y18n('type.changeTypeTip') }}
     </div>
 
     <b-modal
       id="author-changeContentType-confirm"
-      :title="i18n['type.changeType']"
+      :title="y18n('type.changeType')"
       header-bg-variant="warning"
       ok-variant="warning"
-      :ok-title="i18n['type.modal.ok']"
-      :cancel-title="i18n['cancel']"
+      :ok-title="y18n('type.modal.ok')"
+      :cancel-title="y18n('cancel')"
       centered
       @ok="changeContentType"
     >
       <p>
-        {{ i18n['type.modal.text'] }}
+        {{ y18n('type.modal.text') }}
         <b-form-select
           v-model="changetype"
           :options="plugins"
@@ -97,7 +97,7 @@ export default {
       const lalb = [
         {
           value: null,
-          text: this.i18n['type.changeTypeText'],
+          text: this.y18n('type.changeTypeText'),
           disabled: true
         }
       ]

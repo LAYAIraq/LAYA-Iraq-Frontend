@@ -20,33 +20,33 @@ Dependencies:
         aria-describedby="openPopup"
         @click="$bvModal.show('author-copyCourse-confirm')"
       >
-        <i class="fas fa-exclamation-circle"></i> {{ i18n['copyCourse'] }}
+        <i class="fas fa-exclamation-circle"></i> {{ y18n('copyCourse') }}
       </b-button>
     </div>
 
     <div class="col text-dark">
-      {{ i18n['copy.copyCourseTip'] }}
+      {{ y18n('copy.copyCourseTip') }}
     </div>
 
     <b-modal
       id="author-copyCourse-confirm"
-      :title="i18n['copyCourse']"
+      :title="y18n('copyCourse')"
       header-bg-variant="warning"
       ok-variant="warning"
-      :ok-title="i18n['copy.modal.ok']"
-      :cancel-title="i18n['cancel']"
-      :aria-label="i18n['popupwarning']"
+      :ok-title="y18n('copy.modal.ok')"
+      :cancel-title="y18n('cancel')"
+      :aria-label="y18n('popupwarning')"
       centered
       @ok="copyCourse"
     >
       <p>
-        {{ i18n['copy.modal.text'] }}
+        {{ y18n('copy.modal.text') }}
         <input
           v-model="copy"
           type="text"
           class="form-control"
-          :placeholder="i18n['placeholder']"
-          :aria-label="i18n['placeholder']"
+          :placeholder="y18n('placeholder')"
+          :aria-label="y18n('placeholder')"
         >
       </p>
     </b-modal>
@@ -54,29 +54,29 @@ Dependencies:
       id="openPopup"
       style="display:none"
     >
-      {{ i18n['popupwarning'] }}
+      {{ y18n('popupwarning') }}
     </div>
 
     <b-toast
       id="name-exists"
-      :title="i18n['authorTools']"
+      :title="y18n('authorTools')"
       static
       variant="danger"
       auto-hide-delay="1500"
       class="author-toast"
     >
-      {{ i18n['copy.toast.text'] }}
+      {{ y18n('copy.toast.text') }}
     </b-toast>
 
     <b-toast
       id="copy-success"
-      :title="i18n['authorTools']"
+      :title="y18n('authorTools')"
       static
       variant="success"
       auto-hide-delay="1500"
       class="author-toast"
     >
-      {{ i18n['copy.toast.copySuccess'] }}
+      {{ y18n('copy.toast.copySuccess') }}
     </b-toast>
   </div>
 </template>
