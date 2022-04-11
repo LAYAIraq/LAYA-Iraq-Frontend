@@ -279,7 +279,7 @@ Dependencies:
 import { locale, pwdProps } from '@/mixins'
 import api from '@/backend-url'
 import PasswordInput from '@/components/password-input.vue'
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import fontOptions from '@/misc/font-options'
 import fontSizeOptions from '@/misc/font-size-options'
 // import '@/styles/fonts.css'
@@ -310,7 +310,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['profile']),
+    ...mapGetters(['profile']),
 
     /**
      * avatarURL: return URL of user avatar

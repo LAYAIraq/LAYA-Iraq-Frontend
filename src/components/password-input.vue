@@ -63,7 +63,7 @@
           {{ y18n('pwd2PH') }}
         </span>
       </label>
-      <div class="col">
+      <div :class="`col-${inputWidth}`">
         <input
           id="repeatPwd"
           v-model="pwdRepeat"
@@ -347,22 +347,22 @@ export default {
       }
     },
 
-    /**
-     * showSuggestions: boolean to show suggestions
-     *
-     * Author: cmc
-     *
-     * Last Updated: September 22, 2021
-     * @returns {boolean} true if any of the suggestions aren't empty,
-     *  but not all
-     */
-    showSuggestions () {
-      return (
-        this.warnings !== '' ||
-          this.pwdDiffMsg !== '' ||
-          this.pwdMsg !== '') &&
-        (this.warnings !== this.pwdDiffMsg)
-    },
+    // /**
+    //  * showSuggestions: boolean to show suggestions
+    //  *
+    //  * Author: cmc
+    //  *
+    //  * Last Updated: September 22, 2021
+    //  * @returns {boolean} true if any of the suggestions aren't empty,
+    //  *  but not all
+    //  */
+    // showSuggestions () {
+    //   return (
+    //     this.warnings !== '' ||
+    //       this.pwdDiffMsg !== '' ||
+    //       this.pwdMsg !== '') &&
+    //     (this.warnings !== this.pwdDiffMsg)
+    // },
 
     /**
      * wordedPwdStrength(): word pwd strength for linguistic support
@@ -391,30 +391,28 @@ export default {
      *
      * Author: pj
      *
-     * Last Updated: June 28, 2021
+     * Last Updated: April 5, 2022 by cmc
      * @param suggestions
      * @param warning
      */
     pwdHints ({ suggestions, warning }) {
       if (this.pwdRepeat !== '') { // start checking when user repeated password
-        let k, j// check for different language
-        for (j = 0; j < this.possibleWarnings.length; j++) {
+        for (const j in this.possibleWarnings) {
           if (warning === this.possibleWarnings[j]) {
             warning = this.i18n['pwdLanguageSwitchWarning' + j]
           }
         }
-        for (j = 0; j < suggestions.length; j++) {
-          for (k = 0; k < this.possibleSuggestions.length; k++) {
+        for (const j in suggestions) {
+          for (const k in this.possibleSuggestions) {
             if (suggestions[j] === this.possibleSuggestions[k]) {
               suggestions[j] = this.i18n['pwdLanguageSwitchSuggestion' + k]
             }
           }
         }
-
         if (warning.length !== 0) {
           warning = warning.concat('. ') // fix punctuation
         }
-        for (let i = 0; i < suggestions.length; i++) {
+        for (const i in suggestions) {
           warning = warning.concat(' ' + suggestions[i])
           if (warning[warning.length - 1] !== '.') {
             warning = warning.concat('.') // fix punctuation

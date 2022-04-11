@@ -16,7 +16,7 @@ Dependencies:
         size="sm"
         variant="danger"
         :class="langIsAr? 'float-left' : 'float-right'"
-        @click="$bvModal.show('author-delCourse-confirm')"
+        @click="$bvModal.show('author-del-course-confirm')"
       >
         <i class="fas fa-exclamation-circle"></i>
         {{ y18n('deleteCourse') }}
@@ -30,13 +30,14 @@ Dependencies:
     </div>
 
     <b-modal
-      id="author-delCourse-confirm"
+      id="author-del-course-confirm"
       :title="y18n('deleteCourse')"
       header-bg-variant="danger"
       ok-variant="danger"
       :ok-title="y18n('delete')"
       :cancel-title="y18n('cancel')"
       centered
+      static
       @ok="delCourse"
     >
       <p>

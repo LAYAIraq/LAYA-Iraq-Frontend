@@ -16,6 +16,10 @@
     "test:only": "npm run test:unit -t --",
     "test:unit": "vue-cli-service test:unit"
   },
+  "pre-commit": [
+    "lint",
+    "lint:tests"
+  ],
   "dependencies": {
     "axios": "^0.26.0",
     "bootstrap-vue": "^2.18.0",
@@ -64,6 +68,7 @@
     "language-icons": "^0.3.0",
     "less": "^4.1.2",
     "lodash.clonedeep": "^4.5.0",
+    "pre-commit": "^1.2.2",
     "regenerator-runtime": "^0.13.9",
     "standard": "^16.0.3",
     "ts-jest": "^26.5.6",

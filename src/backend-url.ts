@@ -30,7 +30,7 @@ if (NODE_ENV === 'development') {
   const root = VUE_APP_BACKEND_ROOT || '/api'
   url = host + root
 } else {
-  console.log('unexpected enviroment, defaulting API address')
+  // console.log('unexpected enviroment, defaulting API address')
   url = base
 }
 // const url = `http://localhost:${process.env.VUE_APP_BACKEND_PORT}${process.env.VUE_APP_BACKEND_ROOT}`

@@ -30,7 +30,7 @@ Dependencies:
             </div>
             <div class="col">
               <input
-                id="register-focus"
+                id="name-input"
                 v-model="name"
                 :placeholder="y18n('namePH')"
                 :aria-label="y18n('namePH')"
@@ -104,6 +104,7 @@ Dependencies:
             </div>
             <div class="col">
               <input
+                id="email-input"
                 v-model="email"
                 :placeholder="y18n('emailPH')"
                 :aria-label="y18n('emailPH')"
@@ -146,13 +147,13 @@ Dependencies:
             </div>
           </div>
 
-          <!--- pwd input component -->
-          <LayaPasswordInput
+          <!--- pwd input component test -->
+          <laya-password-input
             class="pwd-input"
             :label-icons-only="true"
             :label-width="1"
             @compliantLength="newPwdOk"
-          ></LayaPasswordInput>
+          ></laya-password-input>
 
           <!-- profile pic -->
 

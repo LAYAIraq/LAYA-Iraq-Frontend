@@ -64,6 +64,18 @@ export default {
     },
 
     /**
+     * function profile: make whole state available via getter
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 18, 2022
+     * @param {object} state all state variables in module
+     */
+    profile (state: object) {
+      return state
+    },
+
+    /**
      * Function profileLang: get stored language
      *
      * Author: cmc
