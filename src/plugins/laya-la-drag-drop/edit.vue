@@ -15,25 +15,25 @@ Dependencies:
   >
     <div class="d-flex">
       <h4 class="d-inline-block mr-auto">
-        {{ i18n['layaLaDragDrop.name'] }}
+        {{ y18n('layaLaDragDrop.name') }}
       </h4>
       <i
         id="questionmark"
         v-b-tooltip.left
         class="fas fa-question-circle"
-        :title="i18n['showTip']"
+        :title="y18n('showTip')"
         @click="toggleTip"
       ></i>
     </div>
 
     <b-jumbotron
       v-if="tooltipOn"
-      :header="i18n['layaLaDragDrop.name']"
-      :lead="i18n['tipHeadline']"
+      :header="y18n('layaLaDragDrop.name')"
+      :lead="y18n('tipHeadline')"
     >
       <hr class="my-4">
       <span>
-        {{ i18n['layaLaDragDrop.tooltip'] }}
+        {{ y18n('layaLaDragDrop.tooltip') }}
       </span>
     </b-jumbotron>
     <hr>
@@ -45,7 +45,7 @@ Dependencies:
           for="drag-drop-title"
           class="col-2 col-form-label"
         >
-          {{ i18n['title'] }}
+          {{ y18n('title') }}
         </label>
         <div class="col-10">
           <input
@@ -53,7 +53,7 @@ Dependencies:
             v-model="title.text"
             type="text"
             class="form-control"
-            :placeholder="i18n['titlePlaceholder']"
+            :placeholder="y18n('titlePlaceholder')"
           >
         </div>
       </div>
@@ -67,7 +67,7 @@ Dependencies:
           class="col-2 col-form-label"
         >
           <span class="sr-only">
-            {{ i18n['simpleAlt'] }}
+            {{ y18n('simpleAlt') }}
           </span>
         </label>
         <div class="col-10">
@@ -76,7 +76,7 @@ Dependencies:
             v-model="title.simple"
             type="text"
             class="form-control"
-            :placeholder="i18n['simpleAlt']"
+            :placeholder="y18n('simpleAlt')"
           >
         </div>
       </div>
@@ -86,14 +86,14 @@ Dependencies:
         <span
           class="col-2 col-form-label"
         >
-          {{ i18n['task'] }}
+          {{ y18n('task') }}
         </span>
         <div class="col-10">
           <textarea
             id="drag-drop-task"
             v-model="task.text"
             class="w-100"
-            :placeholder="i18n['taskPlaceholder']"
+            :placeholder="y18n('taskPlaceholder')"
           ></textarea>
         </div>
       </div>
@@ -106,14 +106,14 @@ Dependencies:
         <span
           class="col-2 col-form-labelsr-only"
         >
-          {{ i18n['simpleAlt'] }}
+          {{ y18n('simpleAlt') }}
         </span>
         <div class="col-10">
           <textarea
             id="drag-drop-task-simple"
             v-model="task.simple"
             class="w-100"
-            :placeholder="i18n['simpleAlt']"
+            :placeholder="y18n('simpleAlt')"
           ></textarea>
         </div>
       </div>
@@ -124,7 +124,7 @@ Dependencies:
           for="drag-drop-task-audio"
           class="col-2 col-form-label"
         >
-          {{ i18n['taskAudio'] }}
+          {{ y18n('taskAudio') }}
         </label>
         <div class="col-10">
           <input
@@ -132,7 +132,7 @@ Dependencies:
             v-model="taskAudio.regular"
             type="text"
             class="form-control"
-            :placeholder="i18n['taskAudioPlaceholder']"
+            :placeholder="y18n('taskAudioPlaceholder')"
           >
         </div>
       </div>
@@ -147,7 +147,7 @@ Dependencies:
           class="col-2 col-form-label"
         >
           <span class="sr-only">
-            {{ i18n['simpleAlt'] }}
+            {{ y18n('simpleAlt') }}
           </span>
         </label>
         <div class="col-10">
@@ -156,12 +156,12 @@ Dependencies:
             v-model="taskAudio.simple"
             type="text"
             class="form-control"
-            :placeholder="i18n['simpleAlt']"
+            :placeholder="y18n('simpleAlt')"
           >
         </div>
       </div>
 
-      <p><b>{{ i18n['layaLaDragDrop.cats'] }}</b></p>
+      <p><b>{{ y18n('layaLaDragDrop.cats') }}</b></p>
       <div
         v-for="(cat, i) in categories"
         :key="'cat-'+i"
@@ -172,7 +172,7 @@ Dependencies:
           <label
             class="col-form-label col-2"
             :for="'cat-text-'+i"
-          >{{ i18n['text'] }}</label>
+          >{{ y18n('text') }}</label>
           <div class="col-7">
             <input
               :id="'cat-text-'+i"
@@ -186,7 +186,7 @@ Dependencies:
             <button
               type="button"
               class="btn btn-danger btn-sm"
-              :aria-label="i18n['deleteField']"
+              :aria-label="y18n('deleteField')"
               @click="_delCategory(i)"
             >
               <i class="fas fa-times"></i>
@@ -204,7 +204,7 @@ Dependencies:
             :for="'cat-simple-'+i"
           >
             <span class="sr-only">
-              {{ i18n['simpleAlt'] }}
+              {{ y18n('simpleAlt') }}
             </span>
           </label>
           <div class="col-7">
@@ -227,14 +227,14 @@ Dependencies:
             @click="_addCategory"
           >
             <i class="fas fa-plus"></i>
-            {{ i18n['layaLaDragDrop.catAdd'] }}
+            {{ y18n('layaLaDragDrop.catAdd') }}
           </button>
         </div>
       </div>
 
       <!-- items -->
       <p>
-        <b>{{ i18n['items'] }}</b>
+        <b>{{ y18n('items') }}</b>
       </p>
       <div
         v-for="(item, i) in items"
@@ -247,7 +247,7 @@ Dependencies:
             class="col-form-label col-2"
             :for="`item-text-${item.id}`"
           >
-            {{ i18n['text'] }}
+            {{ y18n('text') }}
           </label>
           <div class="col-5">
             <input
@@ -268,7 +268,7 @@ Dependencies:
                 disabled
                 :value="-1"
               >
-                {{ i18n['cat'] }}
+                {{ y18n('cat') }}
               </option>
               <option
                 v-for="(cat,j) in categories"
@@ -285,7 +285,7 @@ Dependencies:
             <button
               type="button"
               class="btn btn-danger btn-sm"
-              :aria-label="i18n['deleteField']"
+              :aria-label="y18n('deleteField')"
               @click="_delItem(i)"
             >
               <i class="fas fa-times"></i>
@@ -303,7 +303,7 @@ Dependencies:
             :for="'item-simple-'+i"
           >
             <span class="sr-only">
-              {{ i18n['simpleAlt'] }}
+              {{ y18n('simpleAlt') }}
             </span>
           </label>
           <div class="col-5">
@@ -321,10 +321,10 @@ Dependencies:
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            @click="_addItem(i18n['layaLaScmc.edit.sampleOption'])"
+            @click="_addItem(y18n('layaLaScmc.edit.sampleOption'))"
           >
             <i class="fas fa-plus"></i>
-            {{ i18n['itemAdd'] }}
+            {{ y18n('itemAdd') }}
           </button>
         </div>
       </div>

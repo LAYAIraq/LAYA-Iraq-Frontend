@@ -49,7 +49,7 @@ Dependencies:
           style="margin-top: 1rem"
         >
           <h1 :class="langIsAr? 'text-right' : 'text-left'">
-            {{ i18n['profile.title'] }}
+            {{ y18n('profile.title') }}
           </h1>
           <hr>
 
@@ -58,7 +58,7 @@ Dependencies:
             <label
               for="username"
               class="col-sm-3 col-form-label"
-            >{{ i18n['namePH'] }}</label>
+            >{{ y18n('namePH') }}</label>
             <div class="col-sm-9">
               <input
                 id="username"
@@ -76,7 +76,7 @@ Dependencies:
             <label
               for="email"
               class="col-sm-3 col-form-label"
-            >{{ i18n['emailPH'] }}</label>
+            >{{ y18n('emailPH') }}</label>
             <div class="col-sm-9">
               <input
                 id="email"
@@ -95,14 +95,14 @@ Dependencies:
             <label
               for="oldPwd"
               class="col-sm-3 col-form-label"
-            >{{ i18n['profile.oldPwd'] }}</label>
+            >{{ y18n('profile.oldPwd') }}</label>
             <div class="col-sm-9">
               <input
                 id="oldPwd"
                 v-model="oldPwd"
                 type="password"
                 class="form-control"
-                :placeholder="i18n['profile.oldPwd']"
+                :placeholder="y18n('profile.oldPwd')"
                 autocomplete="on"
               >
             </div>
@@ -136,7 +136,7 @@ Dependencies:
 
           <!-- Default Media Forms -->
           <div class="form-group row">
-            <label class="col-sm-3 col-form-label">{{ i18n['profile.defmedia.label'] }}</label>
+            <label class="col-sm-3 col-form-label">{{ y18n('profile.defmedia.label') }}</label>
             <div class="col-sm-9 d-inline-flex justify-content-between align-items-center">
               <!-- Text -->
               <div class="checkbox-inline">
@@ -145,7 +145,7 @@ Dependencies:
                     v-model="prefs.media.text"
                     type="checkbox"
                   >
-                  {{ i18n['profile.defmedia.text'] }}
+                  {{ y18n('profile.defmedia.text') }}
                 </label>
               </div>
 
@@ -156,7 +156,7 @@ Dependencies:
                     v-model="prefs.media.simple"
                     type="checkbox"
                   >
-                  {{ i18n['profile.defmedia.simple'] }}
+                  {{ y18n('profile.defmedia.simple') }}
                 </label>
               </div>
 
@@ -167,7 +167,7 @@ Dependencies:
                     v-model="prefs.media.video"
                     type="checkbox"
                   >
-                  {{ i18n['profile.defmedia.video'] }}
+                  {{ y18n('profile.defmedia.video') }}
                 </label>
               </div>
 
@@ -178,7 +178,7 @@ Dependencies:
                     v-model="prefs.media.audio"
                     type="checkbox"
                   >
-                  {{ i18n['profile.defmedia.audio'] }}
+                  {{ y18n('profile.defmedia.audio') }}
                 </label>
               </div>
             </div>
@@ -188,14 +188,14 @@ Dependencies:
           <!-- Font Options -->
           <div class="form-group row">
             <label class="col-sm-3 col-form-label">
-              {{ i18n['profile.fontOptions'] }}
+              {{ y18n('profile.fontOptions') }}
             </label>
             <div
               class="col-sm-9 d-inline-flex justify-content-between align-items-center"
             >
               <div class="input-inline">
                 <label>
-                  {{ i18n['profile.font'] }}
+                  {{ y18n('profile.font') }}
                   <b-form-select
                     v-model="prefs.font.chosen"
                   >
@@ -215,7 +215,7 @@ Dependencies:
               <!-- Font Size -->
               <div>
                 <label>
-                  {{ i18n['profile.fontSize'] }}
+                  {{ y18n('profile.fontSize') }}
                   <b-form-input
                     v-model="chosenSize"
                     type="range"
@@ -245,7 +245,7 @@ Dependencies:
               @click.prevent="submit"
             >
               <i class="fas fa-check"></i>
-              {{ i18n['save'] }}
+              {{ y18n('save') }}
             </button>
           </div>
           <strong class="form-text text-center">{{ formMsg }}</strong>
@@ -255,22 +255,22 @@ Dependencies:
     <b-toast
       id="submit-failed"
       variant="danger"
-      :title="i18n['savingFailed']"
+      :title="y18n('savingFailed')"
       class="author-toast"
       auto-hide-delay="1500"
       static
     >
-      {{ i18n['profile.submitFail'] }}
+      {{ y18n('profile.submitFail') }}
     </b-toast>
     <b-toast
       id="submit-ok"
       variant="success"
-      :title="i18n['layaUploadFileList.success']"
+      :title="y18n('layaUploadFileList.success')"
       class="author-toast"
       auto-hide-delay="1500"
       static
     >
-      {{ i18n['profile.submitOk'] }}
+      {{ y18n('profile.submitOk') }}
     </b-toast>
   </div>
 </template>
@@ -279,7 +279,7 @@ Dependencies:
 import { locale, pwdProps } from '@/mixins'
 import api from '@/backend-url'
 import PasswordInput from '@/components/password-input.vue'
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import fontOptions from '@/misc/font-options'
 import fontSizeOptions from '@/misc/font-size-options'
 // import '@/styles/fonts.css'
@@ -310,7 +310,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['profile']),
+    ...mapGetters(['profile']),
 
     /**
      * avatarURL: return URL of user avatar
@@ -352,7 +352,7 @@ export default {
      */
     introFontOptions () {
       return [
-        { value: null, text: this.i18n['profile.fontChoose'] },
+        { value: null, text: this.y18n('profile.fontChoose') },
         ...fontOptions
       ]
     },
@@ -436,7 +436,7 @@ export default {
           })
           .catch(err => {
             console.error(err)
-            this.pwdMsg = this.i18n['profile.pwdFail']
+            this.pwdMsg = this.y18n('profile.pwdFail')
             this.$bvToast.show('submit-failed')
           })
           .finally(() => {

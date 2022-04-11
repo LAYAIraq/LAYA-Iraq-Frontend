@@ -15,15 +15,15 @@ Dependencies:
     <div class="container guide">
       <div class="row title">
         <div class="col">
-          <h4>{{ i18n['courseNavEdit.title'] }}</h4>
+          <h4>{{ y18n('courseNavEdit.title') }}</h4>
           <p>
-            {{ i18n['courseNavEdit.text.p1'] }}
+            {{ y18n('courseNavEdit.text.p1') }}
           </p>
           <p>
-            {{ i18n['courseNavEdit.text.p2'] }}
+            {{ y18n('courseNavEdit.text.p2') }}
           </p>
           <p>
-            {{ i18n['courseNavEdit.text.p3'] }}
+            {{ y18n('courseNavEdit.text.p3') }}
           </p>
         </div>
       </div>
@@ -33,23 +33,23 @@ Dependencies:
     <div class="container table">
       <div class="row">
         <div class="col-2">
-          <b>{{ i18n['courseNavEdit.table.contentNo'] }}</b>
+          <b>{{ y18n('courseNavEdit.table.contentNo') }}</b>
         </div>
 
         <div class="col">
-          <b>{{ i18n['courseNavEdit.table.contentType'] }}</b>
+          <b>{{ y18n('courseNavEdit.table.contentType') }}</b>
         </div>
 
         <div class="col">
-          <b>{{ i18n['title'] }}</b>
+          <b>{{ y18n('title') }}</b>
         </div>
 
         <div class="col-3">
-          <b>{{ i18n['courseNavEdit.table.succContent'] }}</b>
+          <b>{{ y18n('courseNavEdit.table.succContent') }}</b>
         </div>
 
         <div class="col-2">
-          <b>{{ i18n['courseNavEdit.table.swap'] }}</b>
+          <b>{{ y18n('courseNavEdit.table.swap') }}</b>
         </div>
       </div>
 
@@ -76,7 +76,7 @@ Dependencies:
             class="form-control"
             :class="{'is-invalid': !step.nextStep}"
             type="text"
-            :placeholder="i18n['courseNavEdit.table.placeholder']"
+            :placeholder="y18n('courseNavEdit.table.placeholder')"
           >
         </div>
 
@@ -112,7 +112,7 @@ Dependencies:
             @click="renderNavGraph"
           >
             <i class="fas fa-project-diagram"></i>
-            {{ i18n['courseNavEdit.table.renewGraph'] }}
+            {{ y18n('courseNavEdit.table.renewGraph') }}
           </button>
         </div>
 
@@ -126,11 +126,11 @@ Dependencies:
           >
             <span v-if="formInvalid">
               <i class="fas fa-exclamation-triangle"></i>
-              {{ i18n['courseNavEdit.table.missingInfo'] }}
+              {{ y18n('courseNavEdit.table.missingInfo') }}
             </span>
             <span v-else>
               <i class="fas fa-check"></i>
-              {{ i18n['save'] }}
+              {{ y18n('save') }}
             </span>
           </button>
         </div>
@@ -141,9 +141,9 @@ Dependencies:
     <div class="container">
       <div class="row">
         <div class="col">
-          {{ i18n['courseNavEdit.graph'] }}
+          {{ y18n('courseNavEdit.graph') }}
           <span class="text-muted">
-            {{ i18n['courseNavEdit.graphTip'] }}
+            {{ y18n('courseNavEdit.graphTip') }}
           </span>
           <div
             :id="navGraphId"

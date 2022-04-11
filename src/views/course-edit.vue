@@ -62,13 +62,13 @@ Dependencies:
 
     <b-toast
       id="author-toast"
-      :title="i18n['authorTools']"
+      :title="y18n('authorTools')"
       static
       variant="success"
       auto-hide-delay="1500"
       class="author-toast"
     >
-      {{ i18n['successfulSave'] }}
+      {{ y18n('successfulSave') }}
     </b-toast>
   </div>
 </template>

@@ -7,7 +7,7 @@
       <div class="row">
         <div class="col">
           <h1 class="text-center">
-            {{ i18n['notifications'] }}
+            {{ y18n('notifications') }}
           </h1>
         </div>
         <div class="col-3">
@@ -18,7 +18,7 @@
             @click="getNewNotifications"
           >
             <i class="fas fa-download"></i>
-            {{ i18n['notifications.getNew'] }}
+            {{ y18n('notifications.getNew') }}
           </button>
         </div>
       </div>
@@ -31,11 +31,11 @@
       <div class="row font-weight-bold mb-2">
         <div class="col">
           <i class="far fa-envelope"></i>
-          {{ i18n['message'] }}
+          {{ y18n('message') }}
         </div>
         <div class="col-sm-2">
           <i class="fas fa-clock"></i>
-          {{ i18n['timestamp'] }}
+          {{ y18n('timestamp') }}
         </div>
         <div class="col-sm-3 text-nowrap">
           <button
@@ -46,7 +46,7 @@
             @click="markAllAsRead"
           >
             <i class="fas fa-eye"></i>
-            {{ i18n['markAllAsRead'] }}
+            {{ y18n('markAllAsRead') }}
           </button>
         </div>
       </div>
@@ -82,7 +82,7 @@
                     'fas fa-envelope': !note.read
                   }"
                 ></i>
-                {{ i18n[`notifications.${note.type}.title`] }}
+                {{ y18n(`notifications.${note.type}.title`) }}
               </div>
               <div class="col-sm-3">
                 <span
@@ -100,7 +100,7 @@
                   :class="langIsAr? 'float-left' : 'float-right'"
                 >
                   <small>
-                    {{ i18n['message.read'] }}
+                    {{ y18n('message.read') }}
                     <i class="when-open fas fa-chevron-down"></i>
                     <i class="when-closed fas fa-chevron-left"></i>
                   </small>
@@ -128,7 +128,7 @@
                     <router-link
                       :to="linkToCourse(note)"
                     >
-                      {{ i18n[`notifications.${note.type}.cta`] }}
+                      {{ y18n(`notifications.${note.type}.cta`) }}
                     </router-link>
                   </span>
                   <span v-else><i class="fas fa-spinner fa-spin"></i></span>
@@ -142,7 +142,7 @@
         v-else
         class="m-5 p-2 text-center"
       >
-        {{ i18n['notifications.none'] }}
+        {{ y18n('notifications.none') }}
       </div>
       <div class="row mt-5">
         <b-button
@@ -152,7 +152,7 @@
           @click="loadMoreNotifications"
         >
           <i :class="loading? 'fas fa-spinner fa-spin' : 'fas fa-plus'"></i>
-          {{ i18n['notifications.loadMore'] }}
+          {{ y18n('notifications.loadMore') }}
         </b-button>
       </div>
     </div>
@@ -406,7 +406,7 @@ export default {
       switch (note.type) { // replace placeholders for different notifications, only CID as of now
         default: {
           console.log(note)
-          return this.i18n[`notifications.${note.type}.text`]
+          return this.y18n(`notifications.${note.type}.text`)
             .replace('<CID>', this.valueCache[note.data.courseId])
         }
       }

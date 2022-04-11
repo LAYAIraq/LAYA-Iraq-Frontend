@@ -41,7 +41,7 @@ Dependencies:
               id="tab-focus"
               tabindex="0"
             >
-              <b>{{ i18n['mycourses.title'] }}</b>
+              <b>{{ y18n('mycourses.title') }}</b>
             </h2>
           </div>
           <div class="sep"></div>
@@ -67,7 +67,7 @@ Dependencies:
               id="search-bar"
               v-model="searchStr"
               type="text"
-              :placeholder="i18n['searchPH']"
+              :placeholder="y18n('searchPH')"
               autofocus
             >
             <i class="fas fa-search"></i>
@@ -92,7 +92,7 @@ Dependencies:
                     @click.prevent="sortByName"
                   >
                     <i :class="nameSortIcon"></i>
-                    <span class="d-none d-sm-inline">{{ i18n['mycourses.sortByName'] }}</span>
+                    <span class="d-none d-sm-inline">{{ y18n('mycourses.sortByName') }}</span>
                   </a>
                   <a
                     href
@@ -100,7 +100,7 @@ Dependencies:
                     @click.prevent="sortByDate"
                   >
                     <i :class="dateSortIcon"></i>
-                    <span class="d-none d-sm-inline">{{ i18n['mycourses.sortByDate'] }}</span>
+                    <span class="d-none d-sm-inline">{{ y18n('mycourses.sortByDate') }}</span>
                   </a>
                 </div>
               </div>

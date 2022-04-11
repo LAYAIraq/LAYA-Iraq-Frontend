@@ -15,7 +15,7 @@ Dependencies:
   >
     <label>
       <h4>
-        {{ i18n['layaAbleplayer.name'] }}
+        {{ y18n('layaAbleplayer.name') }}
       </h4>
     </label>
     <i
@@ -23,17 +23,17 @@ Dependencies:
       v-b-tooltip.left
       class="fas fa-question-circle"
       :class="langIsAr? 'mr-auto' : 'ml-auto'"
-      :title="i18n['showTip']"
+      :title="y18n('showTip')"
       @click="toggleTip"
     ></i>
     <b-jumbotron
       v-if="tooltipOn"
-      :header="i18n['layaAbleplayer.name']"
-      :lead="i18n['tipHeadline']"
+      :header="y18n('layaAbleplayer.name')"
+      :lead="y18n('tipHeadline')"
     >
       <hr class="my-4">
       <span>
-        {{ i18n['layaAbleplayer.tooltip'] }}
+        {{ y18n('layaAbleplayer.tooltip') }}
       </span>
     </b-jumbotron>
 
@@ -46,7 +46,7 @@ Dependencies:
           <label
             for="ableplayer-title"
           >
-            {{ i18n['title'] }}
+            {{ y18n('title') }}
           </label>
 
           <input
@@ -54,7 +54,7 @@ Dependencies:
             v-model="title.text"
             type="text"
             class="form-control"
-            :placeholder="i18n['titlePlaceholder']"
+            :placeholder="y18n('titlePlaceholder')"
           >
         </div>
         <div
@@ -66,7 +66,7 @@ Dependencies:
             for="show-title-tick"
             class="col"
           >
-            {{ i18n['showTitle'] }}
+            {{ y18n('showTitle') }}
             <input
               id="show-title-tick"
               v-model="title.show"
@@ -76,35 +76,35 @@ Dependencies:
         </div>
       </div>
       <div class="form-group">
-        <label for="able-src-id">{{ i18n['layaAbleplayer.vidURL'] }}</label>
+        <label for="able-src-id">{{ y18n('layaAbleplayer.vidURL') }}</label>
         <input
           id="able-src-id"
           v-model="src"
           type="text"
           class="form-control"
-          :placeholder="i18n['layaAbleplayer.vidPlaceholder']"
+          :placeholder="y18n('layaAbleplayer.vidPlaceholder')"
         >
       </div>
 
       <div class="form-group">
-        <label for="able-sign-id">{{ i18n['layaAbleplayer.signVidURL'] }} </label>
+        <label for="able-sign-id">{{ y18n('layaAbleplayer.signVidURL') }} </label>
         <input
           id="able-sign-id"
           v-model="sign"
           type="text"
           class="form-control"
-          :placeholder="i18n['layaAbleplayer.signVidPlaceholder']"
+          :placeholder="y18n('layaAbleplayer.signVidPlaceholder')"
         >
       </div>
 
       <div class="form-group">
-        <label for="able-sub-id">{{ i18n['layaAbleplayer.subtitle'] }}</label>
+        <label for="able-sub-id">{{ y18n('layaAbleplayer.subtitle') }}</label>
         <input
           id="able-sub-id"
           v-model="sub"
           type="text"
           class="form-control"
-          :placeholder="i18n['layaAbleplayer.subtitlePlaceholder']"
+          :placeholder="y18n('layaAbleplayer.subtitlePlaceholder')"
         >
       </div>
     </form>

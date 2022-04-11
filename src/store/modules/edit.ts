@@ -410,6 +410,28 @@ export default {
     },
 
     /**
+     * function removeFromCourseList: remove a deleted course from
+     *  the course list
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 14, 2022
+     * @param state contains courseList
+     * @param {string} courseId of course to delete
+     */
+    removeFromCourseList (
+      state: {
+        courseList: Array<{
+          courseId: string
+        }>
+      },
+      courseId: string
+    ) {
+      const idx = state.courseList.findIndex(elem => elem.courseId === courseId)
+      state.courseList.splice(idx, 1)
+    },
+
+    /**
      * Function renameCourse: rename a Course
      *
      * Author: core
@@ -772,7 +794,7 @@ export default {
      *
      * @param state contains course object
      */
-    deleteCourse (state) {
+    deleteCourse ({ state }) {
       const cid = state.course.courseId
       const sid = state.course.storageId
       const files = state.course.files

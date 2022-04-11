@@ -11,13 +11,13 @@ Dependencies: @/mixins/locale.vue
     <div class="container">
       <div class="row mb-3">
         <div>
-          <h4>{{ i18n['task'] }}</h4>
+          <h4>{{ y18n('task') }}</h4>
           <p>{{ task }}</p>
         </div>
       </div>
       <div class="row py-2 ly-bg-grey">
         <div class="col-5">
-          <h4>{{ i18n['layaLaSort.unsorted'] }}</h4>
+          <h4>{{ y18n('layaLaSort.unsorted') }}</h4>
           <div class="d-flex flex-column">
             <button
               v-for="(us,i) in unsorted"
@@ -30,7 +30,7 @@ Dependencies: @/mixins/locale.vue
           </div>
         </div>
         <div class="col-5">
-          <h4>{{ i18n['layaLaSort.sortHere'] }}</h4>
+          <h4>{{ y18n('layaLaSort.sortHere') }}</h4>
           <div class="d-flex flex-column">
             <button
               v-for="(s,i) in solution"
@@ -44,7 +44,7 @@ Dependencies: @/mixins/locale.vue
         </div>
         <div class="col-2">
           <h4 style="color: transparent">
-            {{ i18n['layaLaSort.e'] }}
+            {{ y18n('layaLaSort.e') }}
           </h4>
           <div class="d-flex flex-column">
             <i
@@ -64,7 +64,7 @@ Dependencies: @/mixins/locale.vue
           :disabled="unsorted.length !== 0"
           @click="check"
         >
-          {{ i18n['layaLaSort.done'] }}
+          {{ y18n('layaLaSort.done') }}
         </button>
       </div>
     </div>

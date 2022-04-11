@@ -15,7 +15,7 @@ Dependencies: @/mixins/locale.vue
       <div class="row">
         <div class="col">
           <div style="height: 2rem"></div>
-          <h1><b>{{ i18n['imprint'] }}</b></h1>
+          <h1><b>{{ y18n('imprint') }}</b></h1>
           <p>LAYA is an open source learning management system under GNU GPLv3.</p>
           <p>
             LAYA was first conceived by Stefanie Trzecinski at Kopf, Hand + Fuß<a

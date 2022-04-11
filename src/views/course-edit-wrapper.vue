@@ -44,11 +44,11 @@ Dependencies:
             >
               <span v-if="preview">
                 <i class="fas fa-edit"></i>
-                {{ i18n['courseWrapper.edit'] }}
+                {{ y18n('courseWrapper.edit') }}
               </span>
               <span v-else>
                 <i class="fas fa-eye"></i>
-                {{ i18n['courseWrapper.preview'] }}
+                {{ y18n('courseWrapper.preview') }}
               </span>
             </button>
             <button
@@ -56,7 +56,7 @@ Dependencies:
               class="btn btn-primary"
               @click="save"
             >
-              <i class="fas fa-save"></i> {{ i18n['save'] }}
+              <i class="fas fa-save"></i> {{ y18n('save') }}
             </button>
           </div>
 

@@ -2,7 +2,7 @@
   <div class="set-flag">
     <div class="flag-title">
       <h1>
-        {{ i18n['flag.title'] }}
+        {{ y18n('flag.title') }}
       </h1>
     </div>
 
@@ -22,23 +22,23 @@
             aria-labelledby="question-hint"
             class="form-control"
             rows="5"
-            :placeholder="i18n['flag.questionPlaceholder']"
+            :placeholder="y18n('flag.questionPlaceholder')"
           ></textarea>
         </div>
         <div class="form-group row">
-          {{ i18n['flag.anonymous'] }}
+          {{ y18n('flag.anonymous') }}
           <i
             id="questionmark"
             class="fas fa-question-circle"
             :class="langIsAr? 'mr-3': 'ml-3'"
-            :title="i18n['showTip']"
+            :title="y18n('showTip')"
             @click="toggleTip"
           ></i>
           <div aria-live="polite">
             <b-jumbotron
               v-if="tooltipOn"
             >
-              <div>{{ i18n['flag.anonHint'] }}</div>
+              <div>{{ y18n('flag.anonHint') }}</div>
             </b-jumbotron>
           </div>
           <input
@@ -46,7 +46,7 @@
             v-model="anonymous"
             type="checkbox"
             :class="langIsAr? 'mr-3': 'ml-3'"
-            :aria-label="i18n['flag.anonymous']"
+            :aria-label="y18n('flag.anonymous')"
           >
         </div>
 
@@ -55,7 +55,7 @@
             for="set-flag-question"
             type="submit"
           >
-            {{ i18n['flag.setQuestion'] }}
+            {{ y18n('flag.setQuestion') }}
           </b-button>
         </div>
       </form>
@@ -114,8 +114,8 @@ export default {
      */
     setFlagQuestion () {
       if (this.question === '') {
-        this.$bvToast.toast(this.i18n['flag.noQuestion'], {
-          title: this.i18n['flag.noQuestionTitle'],
+        this.$bvToast.toast(this.y18n('flag.noQuestion'), {
+          title: this.y18n('flag.noQuestionTitle'),
           toaster: 'b-toaster-bottom-center',
           variant: 'warning'
         })

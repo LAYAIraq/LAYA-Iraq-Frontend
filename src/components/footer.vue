@@ -28,7 +28,7 @@ Dependencies: @/mixins/locale.vue
                 <b>Powered by LAYA</b>
               </p>
               <p>
-                <b>{{ i18n['footer.laya'] }}</b>
+                <b>{{ y18n('footer.laya') }}</b>
               </p>
             </div>
           </div>
@@ -36,11 +36,11 @@ Dependencies: @/mixins/locale.vue
           <div class="row">
             <div class="col">
               <router-link :to="{ name: 'imprint-view' }">
-                <u class="text-dark">{{ i18n['imprint'] }}</u>
+                <u class="text-dark">{{ y18n('imprint') }}</u>
               </router-link>
               <span>/</span>
               <router-link :to="{ name: 'privacy-view' }">
-                <u class="text-dark">{{ i18n['footer.privacy'] }}</u>
+                <u class="text-dark">{{ y18n('footer.privacy') }}</u>
               </router-link>
             </div>
           </div>
@@ -48,13 +48,11 @@ Dependencies: @/mixins/locale.vue
 
         <!-- partner logo -->
         <div class="col-3 col-lg-3">
-          <a href="#">
-            <img
-              src="../assets/logo-iraq-m.png"
-              alt="Laya - Learn as you are"
-              class="w-100"
-            >
-          </a>
+          <img
+            src="../assets/logo-iraq-m.png"
+            alt="Laya - Learn as you are"
+            class="w-100"
+          >
         </div>
       </div>
       <ly-scroll-to-top tabindex="0"></ly-scroll-to-top>

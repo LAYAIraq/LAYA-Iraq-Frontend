@@ -17,6 +17,7 @@ import edit from './modules/edit'
 import flags from './modules/flags'
 import message from './modules/message'
 import note from './modules/note'
+import password from './modules/password'
 import profile from './modules/profile'
 import users from './modules/users'
 
@@ -32,6 +33,7 @@ export default new Vuex.Store({
     flags,
     message,
     note,
+    password,
     profile,
     users
   },

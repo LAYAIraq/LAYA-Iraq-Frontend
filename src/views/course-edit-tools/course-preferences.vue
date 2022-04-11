@@ -10,7 +10,7 @@
     <div class="row mt-5">
       <!-- booleans -->
       <div class="col-4 text-dark">
-        <strong>{{ i18n['coursePreferences.title'] }}</strong>
+        <strong>{{ y18n('coursePreferences.title') }}</strong>
       </div>
 
       <!--      COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)  -->
@@ -30,7 +30,7 @@
       <!--        >-->
       <!--        <i-->
       <!--          class="fas fa-question-circle"-->
-      <!--          :title="i18n['coursePreferences.enrollment.hint']"-->
+      <!--          :title="y18n('coursePreferences.enrollment.hint')"-->
       <!--          v-b-tooltip.bottom-->
       <!--        ></i>-->
       <!--      </div>-->
@@ -53,7 +53,7 @@
           v-b-tooltip.bottom
           href="#"
           target="_blank"
-          :title="i18n['coursePreferences.simpleLanguage.hint']"
+          :title="y18n('coursePreferences.simpleLanguage.hint')"
         >
           <i class="fas fa-question-circle"></i>
         </a>
@@ -66,7 +66,7 @@
     <!--      <div class="col">-->
     <!--        <label-->
     <!--          for="course-start-date">-->
-    <!--          {{ i18n['coursePreferences.startDate'] }}-->
+    <!--          {{ y18n('coursePreferences.startDate') }}-->
     <!--        </label>-->
     <!--        <input-->
     <!--          id="course-start-date"-->
@@ -77,7 +77,7 @@
     <!--      <div class="col">-->
     <!--        <label-->
     <!--            for="course-end-date">-->
-    <!--          {{ i18n['coursePreferences.endDate'] }}-->
+    <!--          {{ y18n('coursePreferences.endDate') }}-->
     <!--        </label>-->
     <!--        <input-->
     <!--          id="course-end-date"-->
@@ -95,7 +95,7 @@
         class="col"
       >
         <i class="fas fa-exclamation-triangle"></i>
-        {{ i18n['coursePreferences.notAllSimple'] }}
+        {{ y18n('coursePreferences.notAllSimple') }}
       </div>
     </div>
     <div class="row mt-3">
@@ -103,7 +103,7 @@
         variant="success"
         @click="changeSettings"
       >
-        {{ i18n['coursePreferences.save'] }}
+        {{ y18n('coursePreferences.save') }}
       </b-button>
     </div>
   </div>
