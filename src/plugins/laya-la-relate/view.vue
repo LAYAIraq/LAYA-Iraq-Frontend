@@ -20,7 +20,7 @@ Dependencies:
       >
         <div class="col">
           <h4>
-            {{ title.text }}
+            {{ courseSimple? title.simple: title.text }}
             <laya-audio-inline
               v-if="taskAudio"
               :src="taskAudio"
@@ -34,13 +34,12 @@ Dependencies:
           @flagged="title.flagged = true"
         ></laya-flag-icon>
       </div>
-
       <div
         :id="task.id"
         class="flaggable row"
       >
         <div class="col">
-          <p>{{ task.text }}</p>
+          <p>{{ courseSimple? task.simple: task.text }}</p>
         </div>
         <laya-flag-icon
           v-if="!previewData"
@@ -50,7 +49,6 @@ Dependencies:
       </div>
 
       <hr>
-
       <div class="row">
         <div class="col">
           <form>
@@ -75,7 +73,7 @@ Dependencies:
                   :src="pair.audio"
                 >
                 </laya-audio-inline>
-                {{ pair.label }}
+                {{ courseSimple? pair.labelSimple: pair.label }}
               </label>
               <div class="col-sm-6">
                 <select
@@ -90,7 +88,6 @@ Dependencies:
                   <option
                     v-for="opt in options"
                     :key="opt"
-                    :disabled="solution.includes(opt)"
                   >
                     {{ opt }}
                   </option>
@@ -114,6 +111,7 @@ Dependencies:
         <button
           type="button"
           class="btn btn-warning"
+          :disabled="freeze"
           @click="reset"
         >
           {{ i18n['layaLaRelate.removeInput'] }}
@@ -128,26 +126,47 @@ Dependencies:
         >
           {{ i18n['check'] }}
         </button>
+      </div>
 
-        <div>
+      <div>
+        <div class="row">
           <div v-if="showSolutionsBool">
             {{ i18n["layaLaScmc.showCorrect"] }}
             <div
               v-for="(pair, index) in pairs"
               :key="index"
             >
-              {{ pair.label }}: {{ pair.relation }},
+              {{ courseSimple? pair.labelSimple: pair.label }}: {{ pair.relation }},
             </div>
           </div>
         </div>
-
+        <div>
+          <div v-if="allAnswersChosen">
+            {{ i18n['layaLaRelate.missingAnswerWarning'] }}
+          </div>
+          <b-modal
+            id="relate-missing-warning"
+            ok-variant="warning"
+            ok-only
+            centered
+          >
+            {{ i18n['layaLaRelate.missingAnswerWarning'] }}
+          </b-modal>
+        </div>
         <button
           type="button"
-          class="btn btn-primary"
-          :class="langIsAr? 'mr-auto': 'ml-auto'"
+          class="btn btn-primary btn-lg mt-3 d-block"
+          :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
           @click="done"
         >
-          saveFlags
+          <span>
+            {{ i18n['nextContent'] }}
+            <i
+              :class="langIsAr?
+                'fas fa-arrow-left' :
+                'fas fa-arrow-right'"
+            ></i>
+          </span>
         </button>
       </div>
     </div>
@@ -187,22 +206,41 @@ export default {
       solution: [],
       eval: [],
       freeze: false,
-      showSolutionsBool: false
+      showSolutionsBool: false,
+      allAnswersChosen: false
     }
   },
 
   computed: {
-    ...mapGetters(['content']),
+    ...mapGetters(['content',
+      'courseSimple']),
 
     /**
      * options: map pairs to their relation
      *
-     * Author: core
+     * Author: pj
      *
-     * Last Updated: unknown
+     * Last Updated: 03.03.2022
      */
     options () {
-      return this.pairs.map(p => p.relation)
+      let shuffled = []
+      if (this.courseSimple) {
+        for (let i = 0; i < this.relations.length; i++) {
+          if (!shuffled.includes(this.relationsSimple[i])) {
+            shuffled.push(this.relationsSimple[i])
+          }
+        }
+      } else {
+        for (let i = 0; i < this.relations.length; i++) {
+          if (!shuffled.includes(this.relations[i])) {
+            shuffled.push(this.relations[i])
+          }
+        }
+      }
+      shuffled = shuffled.map(value => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value)
+      return shuffled
     }
   },
 
@@ -254,29 +292,37 @@ export default {
      * Last Updated: March 19, 2021
      */
     check () {
-      for (let i = 0; i < this.pairs.length; ++i) {
-        if (this.pairs[i].relation === this.solution[i]) {
-          this.eval[i] = { 'fa fa-check fa-2x text-success': true }
-        } else {
-          this.solution[i] = this.pairs[i].relation
-          this.eval[i] = { 'fa fa-times fa-2x text-danger': true }
+      if ((this.solution.length === this.pairs.length) && !this.solution.includes(undefined)) {
+        this.allAnswersChosen = false
+        for (let i = 0; i < this.pairs.length; ++i) {
+          if (this.pairs[i].relation === this.solution[i]) {
+            this.eval[i] = { 'fa fa-check fa-2x text-success': true }
+          } else {
+            this.solution[i] = this.pairs[i].relation
+            this.eval[i] = { 'fa fa-times fa-2x text-danger': true }
+          }
         }
+        this.freeze = true
+        this.showSolutionsBool = true
+        this.$forceUpdate()
+      } else {
+        this.allAnswersChosen = true
+        this.$bvModal.show('relate-missing-warning')
       }
-      this.freeze = true
-      this.showSolutionsBool = true
-      this.$forceUpdate()
     },
 
     /**
-     * Function fetchData: fethc data from vuex and create data property
+     * Function fetchData: fetch data from vuex and create data property
      *
      * Author: cmc
      *
-     * Last Updated: March 19, 2021
+     * Last Updated: March 03, 2022
      */
     fetchData () {
       const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
+      this.relations = preData.relations
+      this.relationsSimple = preData.relationsSimple
       this.title = preData.title
       this.task = preData.task
       this.taskAudio = preData.taskAudio
@@ -295,7 +341,8 @@ export default {
 }
 
 img {
-  height: 8rem;
+  max-height: 20rem;
+  max-width: 20rem;
 }
 
 .form-group.row {
