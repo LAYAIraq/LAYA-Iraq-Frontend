@@ -12,7 +12,7 @@ Dependencies:
 <template>
   <div class="laya-course-new-view">
     <h3 :class="langIsAr? 'text-right' : 'text-left'">
-      {{ i18n['courseCreate.createCourse'] }}
+      {{ y18n('courseCreate.createCourse') }}
     </h3>
     <hr>
     <form class="mt-3">
@@ -21,7 +21,7 @@ Dependencies:
           for="new-course-name"
           class="col-3 col-form-label"
         >
-          {{ i18n['courseCreate.courseName'] }}
+          {{ y18n('courseCreate.courseName') }}
         </label>
         <div class="col">
           <input
@@ -29,7 +29,7 @@ Dependencies:
             v-model="newCourse.name"
             type="text"
             class="form-control"
-            :placeholder="i18n['courseCreate.courseName']"
+            :placeholder="y18n('courseCreate.courseName')"
           >
         </div>
       </div>
@@ -38,7 +38,7 @@ Dependencies:
           for="new-course-category"
           class="col-3 col-form-label"
         >
-          {{ i18n['cat'] }}
+          {{ y18n('cat') }}
         </label>
         <div class="col">
           <input
@@ -46,14 +46,14 @@ Dependencies:
             v-model="newCourse.category"
             type="text"
             class="form-control"
-            :placeholder="i18n['cat']"
+            :placeholder="y18n('cat')"
           >
         </div>
       </div>
       <!--      COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)-->
       <!--      <div class="form-group row">-->
       <!--        <label for="new-course-enrollment" class="col-3 col-form-label">-->
-      <!--          {{ i18n['courseCreate.enrollment'] }}-->
+      <!--          {{ y18n('courseCreate.enrollment') }}-->
       <!--        </label>-->
       <!--        <div class="col">-->
       <!--          <input -->
@@ -78,7 +78,7 @@ Dependencies:
             @click.prevent="duplicateCheck"
           >
             <i class="fas fa-check"></i>
-            {{ i18n['save'] }}
+            {{ y18n('save') }}
           </button>
         </div>
       </div>
@@ -169,7 +169,7 @@ export default {
     duplicateCheck () {
       for (const entry of this.courseList) {
         if (this.newCourse.name === entry.name) {
-          this.msg = this.i18n['courseCreate.courseExists']
+          this.msg = this.y18n('courseCreate.courseExists')
           return
         }
       }
@@ -188,7 +188,7 @@ export default {
       this.checkNames()
       const { auth, newCourse } = this
       if (this.newCourseNeedsEncoding) {
-        this.msg = this.i18n['courseList.needsEncoding']
+        this.msg = this.y18n('courseList.needsEncoding')
       } else {
         // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
         // let enrBool = self.needsEnrollment
@@ -227,7 +227,7 @@ export default {
           // }
         }).catch((err) => {
           console.log(err)
-          this.msg = this.i18n['savingFailed']
+          this.msg = this.y18n('savingFailed')
         })
       }
     },

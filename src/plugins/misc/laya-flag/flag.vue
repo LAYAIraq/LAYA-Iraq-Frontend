@@ -14,7 +14,7 @@
         v-b-tooltip.bottom
         class="flag-icon"
         :class="clicked? 'collapsed' : 'expanded'"
-        :title="refData.flagged? i18n['flag.seeDiscussion'] : i18n['flag.title']"
+        :title="refData.flagged? y18n('flag.seeDiscussion') : y18n('flag.title')"
         tabindex="0"
         @click="toggleClicked"
         @keypress="toggleClicked"
@@ -32,7 +32,7 @@
         >
           <div class="flag-title">
             <div class="title-text">
-              {{ i18n['flag.title'] }}
+              {{ y18n('flag.title') }}
             </div>
             <div
               class="close-btn"
@@ -52,21 +52,21 @@
                 for="set-flag-question"
                 class=""
               >
-                {{ i18n['flag.typeHere'] }}
+                {{ y18n('flag.typeHere') }}
               </label>
               <textarea
                 id="set-flag-question"
                 v-model="question"
                 class="form-control"
                 rows="5"
-                :placeholder="i18n['flag.questionPlaceholder']"
+                :placeholder="y18n('flag.questionPlaceholder')"
               ></textarea>
 
               <!--              Added if non-anonymous questions are possible-->
               <!--              <label-->
               <!--                for="anonymous-question"-->
               <!--                >-->
-              <!--                {{ i18n['flag.anonymous'] }}-->
+              <!--                {{ y18n('flag.anonymous') }}-->
               <!--              </label>-->
               <!--              <input-->
               <!--                id ="anonymous-question"-->
@@ -78,7 +78,7 @@
                 for="set-flag-question"
                 type="submit"
               >
-                {{ i18n['flag.setQuestion'] }}
+                {{ y18n('flag.setQuestion') }}
               </b-button>
             </form>
           </div>
@@ -89,7 +89,7 @@
         >
           <div class="flag-title">
             <div class="title-text">
-              {{ i18n['flag.provideClarification'] }}
+              {{ y18n('flag.provideClarification') }}
             </div>
             <div
               class="close-btn"
@@ -103,7 +103,7 @@
           </div>
           <div class="flag-question">
             <div class="heading">
-              {{ i18n['flag.question'] }}
+              {{ y18n('flag.question') }}
             </div>
             <div class="question-text">
               {{ showFlagQuestion() }}
@@ -115,7 +115,7 @@
           </div>
           <div class="flag-discussion">
             <div class="heading">
-              {{ i18n['layaLbDialog.answers'] }}
+              {{ y18n('layaLbDialog.answers') }}
             </div>
             <div
               v-for="(answer,i) in currentFlag.answers"
@@ -124,7 +124,7 @@
               class="discussion-post"
               :class="answer.authorId === courseCreator ? 'creator' : ''"
               :title="answer.authorId === courseCreator ?
-                i18n['flag.creatorAnswer']
+                y18n('flag.creatorAnswer')
                 : ''
               "
             >
@@ -141,7 +141,7 @@
             </div>
             <div class="add-answer">
               <div class="heading">
-                {{ i18n['flag.postAnswer'] }}
+                {{ y18n('flag.postAnswer') }}
               </div>
               <form @submit.prevent="addAnswer">
                 <div>
@@ -159,7 +159,7 @@
                     class="mr-auto"
                     :disabled="answerSent"
                   >
-                    {{ i18n['flag.enterToSubmit'] }}
+                    {{ y18n('flag.enterToSubmit') }}
                   </b-button>
                 </div>
                 <div class="answer-hint">
@@ -168,13 +168,13 @@
                     for="my-answer"
                     class="m-auto"
                   >
-                    {{ i18n['flag.enterToSubmit'] }}
+                    {{ y18n('flag.enterToSubmit') }}
                   </label>
                   <label
                     v-else-if="answerSent"
                     class="m-auto"
                   >
-                    {{ i18n['flag.ty'] }}
+                    {{ y18n('flag.ty') }}
                   </label>
                 </div>
               </form>
@@ -366,8 +366,8 @@ export default {
      */
     setFlagQuestion () {
       if (this.question === '') {
-        this.$bvToast.toast(this.i18n['flag.noQuestion'], {
-          title: this.i18n['flag.noQuestionTitle'],
+        this.$bvToast.toast(this.y18n('flag.noQuestion'), {
+          title: this.y18n('flag.noQuestionTitle'),
           toaster: 'b-toaster-bottom-center',
           variant: 'warning'
         })

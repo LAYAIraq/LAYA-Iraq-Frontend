@@ -26,7 +26,7 @@ Dependencies:
               'fas fa-chevron-right':
               'fas fa-chevron-left'"
           ></i>
-          {{ i18n['header.overview'] }}
+          {{ y18n('header.overview') }}
         </b-button>
 
         <!-- jump to content number -->
@@ -39,7 +39,7 @@ Dependencies:
           <b-dropdown
             v-if="!langIsAr"
             id="cid-dd"
-            :text="i18n['header.jumpTo']"
+            :text="y18n('header.jumpTo')"
             size="sm"
             variant="secondary"
             no-flip
@@ -55,7 +55,7 @@ Dependencies:
                 params: { name, step: id+1+'' }
               }"
             >
-              {{ i18n['header.listContent'] }}
+              {{ y18n('header.listContent') }}
               <b>
                 {{ id+1 }}
               </b>:
@@ -68,7 +68,7 @@ Dependencies:
           <b-dropdown
             v-else
             id="cid-dd"
-            :text="i18n['header.jumpTo']"
+            :text="y18n('header.jumpTo')"
             size="sm"
             variant="secondary"
             no-flip
@@ -83,7 +83,7 @@ Dependencies:
               }"
               class="text-right"
             >
-              {{ i18n['header.listContent'] }}
+              {{ y18n('header.listContent') }}
               <b>
                 {{ id+1 }}
               </b>:

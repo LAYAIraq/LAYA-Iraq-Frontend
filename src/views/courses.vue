@@ -21,7 +21,7 @@ Dependencies:
         <img
           class="mx-auto"
           src="../assets/kurse.svg"
-          :alt="i18n['courses.brain']"
+          :alt="y18n('courses.brain')"
         >
       </div>
 
@@ -30,7 +30,7 @@ Dependencies:
       <div class="row">
         <div class="col">
           <h1 class="text-center">
-            <strong>{{ i18n['courses.title'] }}</strong>
+            <strong>{{ y18n('courses.title') }}</strong>
           </h1>
         </div>
       </div>
@@ -44,8 +44,8 @@ Dependencies:
               id="search-bar"
               v-model="search"
               type="text"
-              :placeholder="i18n['searchPH']"
-              :aria-label="i18n['searchPH.label']"
+              :placeholder="y18n('searchPH')"
+              :aria-label="y18n('searchPH.label')"
             >
             <i class="icon fas fa-search"></i>
           </div>

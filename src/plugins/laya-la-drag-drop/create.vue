@@ -13,25 +13,25 @@ Dependencies: @/mixins/locale.vue
   >
     <div class="d-flex">
       <h4 class="d-inline-block mr-auto">
-        {{ i18n['layaLaDragDrop.name'] }}
+        {{ y18n('layaLaDragDrop.name') }}
       </h4>
       <i
         id="questionmark"
         v-b-tooltip.left
         class="fas fa-question-circle"
-        :title="i18n['showTip']"
+        :title="y18n('showTip')"
         @click="toggleTip"
       ></i>
     </div>
 
     <b-jumbotron
       v-if="tooltipOn"
-      :header="i18n['layaLaDragDrop.name']"
-      :lead="i18n['tipHeadline']"
+      :header="y18n('layaLaDragDrop.name')"
+      :lead="y18n('tipHeadline')"
     >
       <hr class="my-4">
       <span>
-        {{ i18n['layaLaDragDrop.tooltip'] }}
+        {{ y18n('layaLaDragDrop.tooltip') }}
       </span>
     </b-jumbotron>
     <hr>
@@ -43,7 +43,7 @@ Dependencies: @/mixins/locale.vue
           for="drag-drop-title"
           class="col-2 col-form-label"
         >
-          {{ i18n['title'] }}
+          {{ y18n('title') }}
         </label>
         <div class="col-10">
           <input
@@ -51,7 +51,7 @@ Dependencies: @/mixins/locale.vue
             v-model="title.text"
             type="text"
             class="form-control"
-            :placeholder="i18n['titlePlaceholder']"
+            :placeholder="y18n('titlePlaceholder')"
           >
         </div>
       </div>
@@ -65,7 +65,7 @@ Dependencies: @/mixins/locale.vue
           class="col-2 col-form-label"
         >
           <span class="sr-only">
-            {{ i18n['simpleAlt'] }}
+            {{ y18n('simpleAlt') }}
           </span>
         </label>
         <div class="col-10">
@@ -74,7 +74,7 @@ Dependencies: @/mixins/locale.vue
             v-model="title.simple"
             type="text"
             class="form-control"
-            :placeholder="i18n['simpleAlt']"
+            :placeholder="y18n('simpleAlt')"
           >
         </div>
       </div>
@@ -84,14 +84,14 @@ Dependencies: @/mixins/locale.vue
         <span
           class="col-2 col-form-label"
         >
-          {{ i18n['task'] }}
+          {{ y18n('task') }}
         </span>
         <div class="col-10">
           <textarea
             id="drag-drop-task"
             v-model="task.text"
             class="w-100"
-            :placeholder="i18n['taskPlaceholder']"
+            :placeholder="y18n('taskPlaceholder')"
           ></textarea>
         </div>
       </div>
@@ -104,14 +104,14 @@ Dependencies: @/mixins/locale.vue
         <span
           class="col-2 col-form-labelsr-only"
         >
-          {{ i18n['simpleAlt'] }}
+          {{ y18n('simpleAlt') }}
         </span>
         <div class="col-10">
           <textarea
             id="drag-drop-task-simple"
             v-model="task.simple"
             class="w-100"
-            :placeholder="i18n['simpleAlt']"
+            :placeholder="y18n('simpleAlt')"
           ></textarea>
         </div>
       </div>
@@ -122,7 +122,7 @@ Dependencies: @/mixins/locale.vue
           for="drag-drop-task-audio"
           class="col-2 col-form-label"
         >
-          {{ i18n['taskAudio'] }}
+          {{ y18n('taskAudio') }}
         </label>
         <div class="col-10">
           <input
@@ -130,7 +130,7 @@ Dependencies: @/mixins/locale.vue
             v-model="taskAudio.regular"
             type="text"
             class="form-control"
-            :placeholder="i18n['taskAudioPlaceholder']"
+            :placeholder="y18n('taskAudioPlaceholder')"
           >
         </div>
       </div>
@@ -145,7 +145,7 @@ Dependencies: @/mixins/locale.vue
           class="col-2 col-form-label"
         >
           <span class="sr-only">
-            {{ i18n['simpleAlt'] }}
+            {{ y18n('simpleAlt') }}
           </span>
         </label>
         <div class="col-10">
@@ -154,12 +154,12 @@ Dependencies: @/mixins/locale.vue
             v-model="taskAudio.simple"
             type="text"
             class="form-control"
-            :placeholder="i18n['simpleAlt']"
+            :placeholder="y18n('simpleAlt')"
           >
         </div>
       </div>
 
-      <p><b>{{ i18n['layaLaDragDrop.cats'] }}</b></p>
+      <p><b>{{ y18n('layaLaDragDrop.cats') }}</b></p>
       <div
         v-for="(cat, i) in categories"
         :key="'cat-'+i"
@@ -170,7 +170,7 @@ Dependencies: @/mixins/locale.vue
           <label
             class="col-form-label col-2"
             :for="'cat-text-'+i"
-          >{{ i18n['text'] }}</label>
+          >{{ y18n('text') }}</label>
           <div class="col-7">
             <input
               :id="'cat-text-'+i"
@@ -201,7 +201,7 @@ Dependencies: @/mixins/locale.vue
             class="col-form-label col-2"
           >
             <span class="sr-only">
-              {{ i18n['simpleAlt'] }}
+              {{ y18n('simpleAlt') }}
             </span>
           </label>
           <div class="col-7">
@@ -224,14 +224,14 @@ Dependencies: @/mixins/locale.vue
             @click="_addCategory"
           >
             <i class="fas fa-plus"></i>
-            {{ i18n['layaLaDragDrop.catAdd'] }}
+            {{ y18n('layaLaDragDrop.catAdd') }}
           </button>
         </div>
       </div>
 
       <!-- items -->
       <p>
-        <b>{{ i18n['items'] }}</b>
+        <b>{{ y18n('items') }}</b>
       </p>
       <div
         v-for="(it, i) in items"
@@ -244,7 +244,7 @@ Dependencies: @/mixins/locale.vue
             class="col-form-label col-2"
             :for="'item-text-'+i"
           >
-            {{ i18n['text'] }}
+            {{ y18n('text') }}
           </label>
           <div class="col-5">
             <input
@@ -265,7 +265,7 @@ Dependencies: @/mixins/locale.vue
                 disabled
                 :value="-1"
               >
-                {{ i18n['cat'] }}
+                {{ y18n('cat') }}
               </option>
               <option
                 v-for="(cat,j) in categories"
@@ -299,7 +299,7 @@ Dependencies: @/mixins/locale.vue
             class="col-form-label col-2"
           >
             <span class="sr-only">
-              {{ i18n['simpleAlt'] }}
+              {{ y18n('simpleAlt') }}
             </span>
           </label>
           <div class="col-5">
@@ -317,10 +317,10 @@ Dependencies: @/mixins/locale.vue
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            @click="_addItem(i18n['layaLaScmc.edit.sampleOption'])"
+            @click="_addItem(y18n('layaLaScmc.edit.sampleOption'))"
           >
             <i class="fas fa-plus"></i>
-            {{ i18n['itemAdd'] }}
+            {{ y18n('itemAdd') }}
           </button>
         </div>
       </div>
@@ -371,7 +371,7 @@ export default {
     fillFormSamples () {
       // fill item and category props with localized tokens
       if (this.categories.length === 0) {
-        const temp = this.i18n['layaLaDragDrop.answer'] + ' 1'
+        const temp = this.y18n('layaLaDragDrop.answer') + ' 1'
         const tmpItem = {
           label: temp,
           simple: 'simple lang alternative',
@@ -382,7 +382,7 @@ export default {
         this.items.push(tmpItem)
 
         for (let i = 1; i < 3; i++) {
-          const tmp = this.i18n['cat'] + ' ' + i
+          const tmp = this.y18n('cat') + ' ' + i
           this.categories.push({
             text: tmp,
             simple: 'simple language alternative'

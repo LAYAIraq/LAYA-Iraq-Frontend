@@ -10,7 +10,7 @@
           :class="langIsAr? 'ml-auto': 'mr-auto'"
           @click="$router.push({ name: 'course-detail-view' })"
         >
-          {{ i18n['backToCourse'] }}
+          {{ y18n('backToCourse') }}
         </b-button>
       </div>
     </div>

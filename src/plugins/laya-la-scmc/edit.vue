@@ -15,25 +15,25 @@ Dependencies:
   >
     <div class="d-flex">
       <h3 class="d-inline-block mr-auto">
-        {{ i18n['layaLaScmc.name'] }}
+        {{ y18n('layaLaScmc.name') }}
       </h3>
       <i
         id="questionmark"
         v-b-tooltip.left
         class="fas fa-question-circle"
-        :title="i18n['showTip']"
+        :title="y18n('showTip')"
         @click="toggleTip"
       ></i>
     </div>
 
     <b-jumbotron
       v-if="tooltipOn"
-      :header="i18n['layaLaScmc.name']"
-      :lead="i18n['tipHeadline']"
+      :header="y18n('layaLaScmc.name')"
+      :lead="y18n('tipHeadline')"
     >
       <hr class="my-4">
       <span>
-        {{ i18n['layaLaScmc.tooltip'] }}
+        {{ y18n('layaLaScmc.tooltip') }}
       </span>
     </b-jumbotron>
     <hr>
@@ -41,7 +41,7 @@ Dependencies:
       <!-- type -->
       <div class="form-group row">
         <label class="col-2 col-form-label">
-          {{ i18n['type'] }}
+          {{ y18n('type') }}
         </label>
         <div class="col-10">
           <div class="form-check form-check-inline align-text-top">
@@ -56,7 +56,7 @@ Dependencies:
               for="scmc-sc"
               class="form-check-label"
             >
-              {{ i18n['layaLaScmc.edit.sc'] }}
+              {{ y18n('layaLaScmc.edit.sc') }}
             </label>
           </div>
           <div class="form-check form-check-inline align-text-top">
@@ -72,7 +72,7 @@ Dependencies:
               for="scmc-mc"
               class="form-check-label"
             >
-              {{ i18n['layaLaScmc.edit.mc'] }}
+              {{ y18n('layaLaScmc.edit.mc') }}
             </label>
           </div>
         </div>
@@ -85,7 +85,7 @@ Dependencies:
             for="scmc-title"
             class="col-2 col-form-label"
           >
-            {{ i18n['title'] }}
+            {{ y18n('title') }}
           </label>
           <div class="col-10">
             <input
@@ -93,7 +93,7 @@ Dependencies:
               v-model="title.text"
               type="text"
               class="form-control"
-              :placeholder="i18n['titlePlaceholder']"
+              :placeholder="y18n('titlePlaceholder')"
             >
           </div>
         </div>
@@ -107,7 +107,7 @@ Dependencies:
             class="col-2 col-form-label"
           >
             <span class="sr-only">
-              {{ i18n['simpleAlt'] }}
+              {{ y18n('simpleAlt') }}
             </span>
           </label>
           <div class="col-10">
@@ -116,7 +116,7 @@ Dependencies:
               v-model="title.simple"
               type="text"
               class="form-control"
-              :placeholder="i18n['simpleAlt']"
+              :placeholder="y18n('simpleAlt')"
             >
           </div>
         </div>
@@ -129,14 +129,14 @@ Dependencies:
             for="scmc-task"
             class="col-2 col-form-label"
           >
-            {{ i18n['task'] }}
+            {{ y18n('task') }}
           </label>
           <div class="col-10">
             <textarea
               id="scmc-task"
               v-model="task.text"
               class="w-100"
-              :placeholder="i18n['taskPlaceholder']"
+              :placeholder="y18n('taskPlaceholder')"
             >
             </textarea>
           </div>
@@ -151,7 +151,7 @@ Dependencies:
             class="col-2 col-form-label"
           >
             <span class="sr-only">
-              {{ i18n['simpleAlt'] }}
+              {{ y18n('simpleAlt') }}
             </span>
           </label>
           <div class="col-10">
@@ -159,7 +159,7 @@ Dependencies:
               id="scmc-task-simple"
               v-model="task.simple"
               class="w-100"
-              :placeholder="i18n['simpleAlt']"
+              :placeholder="y18n('simpleAlt')"
             >
             </textarea>
           </div>
@@ -173,7 +173,7 @@ Dependencies:
             for="scmc-task-audio"
             class="col-2 col-form-label"
           >
-            {{ i18n['taskAudio'] }}
+            {{ y18n('taskAudio') }}
           </label>
           <div class="col-10">
             <input
@@ -181,7 +181,7 @@ Dependencies:
               v-model="taskAudio.regular"
               type="text"
               class="form-control"
-              :placeholder="i18n['taskAudioPlaceholder']"
+              :placeholder="y18n('taskAudioPlaceholder')"
             >
           </div>
         </div>
@@ -195,7 +195,7 @@ Dependencies:
             class="col-2 col-form-label"
           >
             <span class="sr-only">
-              {{ i18n['simpleAlt'] }}
+              {{ y18n('simpleAlt') }}
             </span>
           </label>
           <div class="col-10">
@@ -204,13 +204,13 @@ Dependencies:
               v-model="taskAudio.simple"
               type="text"
               class="form-control"
-              :placeholder="i18n['simpleAlt']"
+              :placeholder="y18n('simpleAlt')"
             >
           </div>
         </div>
       </div>
 
-      <p><b>{{ i18n['items'] }}</b></p>
+      <p><b>{{ y18n('items') }}</b></p>
       <div
         v-for="(option, i) in options"
         :key="'item-'+i"
@@ -222,7 +222,7 @@ Dependencies:
             class="col-form-label col-2"
             :for="'option-text-'+i"
           >
-            {{ i18n['text'] }}
+            {{ y18n('text') }}
           </label>
           <div class="col-7">
             <input
@@ -246,7 +246,7 @@ Dependencies:
               class="form-check-label"
               :for="'option-corr-'+i"
             >
-              {{ i18n['layaLaScmc.edit.correct'] }}
+              {{ y18n('layaLaScmc.edit.correct') }}
             </label>
           </div>
 
@@ -255,7 +255,7 @@ Dependencies:
             <button
               type="button"
               class="btn btn-danger btn-sm"
-              :aria-label="i18n['deleteField']"
+              :aria-label="y18n('deleteField')"
               @click="_delItem(i)"
             >
               <i class="fas fa-times"></i>
@@ -271,7 +271,7 @@ Dependencies:
             class="col-form-label col-2"
           >
             <span class="sr-only">
-              {{ i18n['simpleAlt'] }}
+              {{ y18n('simpleAlt') }}
             </span>
           </label>
           <div class="col-7">
@@ -290,7 +290,7 @@ Dependencies:
         class="btn btn-primary btn-sm"
         @click="_addItem"
       >
-        <i class="fas fa-plus"></i>{{ i18n['itemAdd'] }}
+        <i class="fas fa-plus"></i>{{ y18n('itemAdd') }}
       </button>
     </form>
   </div>
@@ -349,7 +349,7 @@ export default {
      */
     _addItem () {
       this.options.push({
-        text: this.i18n['layaLaScmc.edit.sampleOption'],
+        text: this.y18n('layaLaScmc.edit.sampleOption'),
         flagged: false,
         id: uuidv4()
       })

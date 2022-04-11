@@ -15,18 +15,18 @@ Dependencies:
         v-if="$route.params.verified"
         class="text-center"
       >
-        {{ i18n['login.verified'] }}
+        {{ y18n('login.verified') }}
       </div>
       <div class="row">
         <form class="d-flex flex-column align-items-center">
-          <div style="height: 2rem"></div>
+          <div class="h-2rem"></div>
           <img
             src="../assets/anmelden.svg"
             alt="Login"
             class="d-block m-auto w-50"
           >
           <h1 class="text-center">
-            {{ i18n['login.title'] }}
+            {{ y18n('login.title') }}
           </h1>
 
           <div
@@ -36,11 +36,11 @@ Dependencies:
             <input
               id="email-input"
               v-model.trim="email"
-              :placeholder="i18n['emailPH']"
+              :placeholder="y18n('emailPH')"
               type="text"
               autofocus
               autocomplete="on"
-              :aria-label="i18n['emailPH']"
+              :aria-label="y18n('emailPH')"
             >
           </div>
 
@@ -49,15 +49,16 @@ Dependencies:
             :class="{error: errPwd}"
           >
             <input
+              id="pwd-input"
               v-model.trim="pwd"
-              :placeholder="i18n['pwdPH']"
+              :placeholder="y18n('pwdPH')"
               type="password"
               autocomplete="on"
-              :aria-label="i18n['pwdPH']"
+              :aria-label="y18n('pwdPH')"
             >
           </div>
 
-          <div style="height: 2rem"></div>
+          <div class="h-2rem"></div>
           <button
             id="login-button"
             type="submit"
@@ -65,7 +66,7 @@ Dependencies:
             aria-describedby="login-error"
             @click.prevent="submit"
           >
-            {{ i18n['login.title'] }}
+            {{ y18n('login.title') }}
             <i class="fas fa-sign-in-alt"></i>
           </button>
 
@@ -74,7 +75,7 @@ Dependencies:
             v-if="busy"
             class="text-center"
           >
-            {{ i18n['busy'] }}
+            {{ y18n('busy') }}
             <i class="fas fa-spinner fa-spin"></i>
           </h5>
           <div aria-live="polite">
@@ -86,26 +87,48 @@ Dependencies:
             >
               <i class="fas fa-exclamation-triangle"></i>
               {{ errMsg }}
+              <br>
+              <a
+                id="forgotten-password"
+                href="#"
+                @click.prevent="$bvModal.show('reset-password-confirm')"
+              >
+                {{ y18n('login.passwordForgotten') }}
+              </a>
             </div>
           </div>
 
           <hr>
           <div class="text-center">
-            {{ i18n['login.registerHint1'] }}
+            {{ y18n('login.registerHint1') }}
             <br>
             <router-link :to="{ name: 'register-view'}">
               <i class="fas fa-user-plus"></i>
-              {{ i18n['login.registerHint2'] }}
+              {{ y18n('login.registerHint2') }}
             </router-link>
           </div>
         </form>
       </div>
     </div>
+    <b-modal
+      id="reset-password-confirm"
+      :title="y18n('login.passwordReset')"
+      header-bg-variant="warning"
+      ok-variant="warning"
+      :ok-title="y18n('login.passwordReset')"
+      :cancel-title="y18n('cancel')"
+      :aria-label="y18n('popupwarning')"
+      centered
+      @ok="resetPassword"
+    >
+      <p>
+        {{ y18n('login.passwordResetHint') }}
+      </p>
+    </b-modal>
   </div>
 </template>
 
 <script>
-import http from 'axios'
 import { locale } from '@/mixins'
 
 export default {
@@ -120,7 +143,6 @@ export default {
       /* form */
       email: '',
       pwd: '',
-
       /* temp */
       busy: false,
       errMsg: '',
@@ -170,6 +192,40 @@ export default {
   },
 
   methods: {
+    /**
+     * function resetPassword: fire password reset request
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 16, 2022
+     */
+    resetPassword () {
+      this.$store.dispatch('resetUserPassword', this.email)
+        .then(() => this.showToast('success'))
+        .catch(() => this.showToast('error'))
+    },
+
+    /**
+     * function showToast: show a toast in root instance depending on type,
+     *  is used for bootstrap variant and message
+     *
+     * Author cmc
+     *
+     * Last Updated: April 4, 2022
+     * @param type {'error', 'success'}
+     */
+    showToast (type) {
+      this.$root.$bvToast.toast(
+        type === 'success'
+          ? this.y18n('login.passwordResetText')
+          : this.y18n('login.passwordResetFailedText'), {
+          title: type === 'success'
+            ? this.y18n('login.passwordReset')
+            : this.y18n('login.passwordResetFailed'),
+          toaster: 'b-toaster-bottom-center',
+          variant: type === 'success' ? type : 'danger'
+        })
+    },
 
     /**
      * Function submit: submit login, on success load profile,
@@ -187,34 +243,24 @@ export default {
 
       console.log('Submitting...')
       this.busy = true
-      const { $data, $ls, $router, $store, i18n } = this
+      const { $data, $ls, $router } = this
 
-      http.post('accounts/login', {
+      this.$store.dispatch('sendCredentials', {
         email: $data.email,
         password: $data.pwd
       })
-        .then(({ data }) => {
-        /* set login state */
-          $store.commit('login', data)
-
-          /* load profile */
-          $store.dispatch('fetchProfile')
-          $store.dispatch('fetchRole')
-
-          /* store auth for reloads */
-          const { id, userId, created } = data
+        .then(({ id, userId, created }) => {
           const expire = new Date(created)
           expire.setSeconds(expire.getSeconds() + 604800) // user stays logged-in for 7 days (604800seconds)
           console.log('Auth expires on', expire)
           $ls.set('auth', { id: id, userId: userId }, expire.getTime())
-
           /* move to view */
           $router.push('/courses')
         })
         .catch(err => {
           console.log(err)
           $data.submitFailed = true
-          $data.errMsg = i18n['login.errMsg']
+          $data.errMsg = this.y18n('login.errMsg')
         })
         .finally(() => {
           $data.busy = false
@@ -245,5 +291,9 @@ a {
 
 #login-button {
   border: 2px solid black;
+}
+
+.h-2rem {
+  height: 2rem;
 }
 </style>

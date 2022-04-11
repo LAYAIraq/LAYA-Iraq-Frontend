@@ -21,11 +21,11 @@ Dependencies:
       >
         <template slot="button-content">
           <i class="fas fa-plus"></i>
-          {{ i18n['newBlock.newContent'] }}
+          {{ y18n('newBlock.newContent') }}
         </template>
 
         <b-dropdown-header>
-          {{ i18n['newBlock.newContentBlock'] }}
+          {{ y18n('newBlock.newContentBlock') }}
         </b-dropdown-header>
 
         <b-dropdown-item
@@ -51,7 +51,7 @@ Dependencies:
         <b-dropdown-divider></b-dropdown-divider>
 
         <b-dropdown-header>
-          {{ i18n['newBlock.newContentAssmnt'] }}
+          {{ y18n('newBlock.newContentAssmnt') }}
         </b-dropdown-header>
 
         <b-dropdown-item
@@ -78,17 +78,17 @@ Dependencies:
         id="new-content-dd"
         variant="primary"
         class="w-100"
-        :class="text-right"
+        :class="langIsAr? 'text-right' : ''"
         menu-class="drop-wrap"
         dropleft
       >
         <template slot="button-content">
           <i class="fas fa-plus"></i>
-          {{ i18n['newBlock.newContent'] }}
+          {{ y18n('newBlock.newContent') }}
         </template>
 
         <b-dropdown-header class="text-right">
-          {{ i18n['newBlock.newContentBlock'] }}
+          {{ y18n('newBlock.newContentBlock') }}
         </b-dropdown-header>
 
         <b-dropdown-item
@@ -114,7 +114,7 @@ Dependencies:
         <b-dropdown-divider></b-dropdown-divider>
 
         <b-dropdown-header class="text-right">
-          {{ i18n['newBlock.newContentAssmnt'] }}
+          {{ y18n('newBlock.newContentAssmnt') }}
         </b-dropdown-header>
 
         <b-dropdown-item
@@ -138,7 +138,7 @@ Dependencies:
     </div>
 
     <div class="col text-dark">
-      {{ i18n['newBlock.newContentTip'] }}
+      {{ y18n('newBlock.newContentTip') }}
       <b>{{ nextId }}</b>.
     </div>
   </div>

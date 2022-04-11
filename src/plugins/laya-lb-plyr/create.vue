@@ -13,25 +13,30 @@ Dependencies: @/mixins/locale.vue
     <form>
       <div class="form-group row">
         <h4 class="d-inline-block mr-auto">
-          {{ i18n['layaPlyr.name'] }}
+          {{ y18n('layaPlyr.name') }}
         </h4>
         <i
           id="questionmark"
-          v-b-tooltip.left
+          v-b-tooltip.auto
           class="fas fa-question-circle"
-          :title="i18n['showTip']"
+          :title="y18n('showTip')"
           @click="toggleTip"
         ></i>
       </div>
 
       <b-jumbotron
         v-if="tooltipOn"
-        :header="i18n['layaPlyr.name']"
-        :lead="i18n['tipHeadline']"
+        id="helptext"
+        :header="y18n('layaPlyr.name')"
+        :lead="y18n('tipHeadline')"
       >
         <hr class="my-4">
-        <p>
-          {{ i18n['layaPlyr.tooltip'] }}
+        <p
+          v-for="str in y18n('layaPlyr.tooltip').split(';')"
+          :key="str.length"
+        >
+          <!-- eslint-disable-next-line vue/no-v-html --> <!-- TODO: find a way to avoid v-html -->
+          <span v-html="replacePattern(str, /###([\w\s\-]+)###([A-Z0-9a-z\/.:#]+)###/, linkReplacement(true))"></span>
         </p>
       </b-jumbotron>
 
@@ -44,7 +49,7 @@ Dependencies: @/mixins/locale.vue
             for="laya-plyr-title"
             class="col col-form-label"
           >
-            {{ i18n['title'] }}
+            {{ y18n('title') }}
           </label>
           <div class="form-group col-8">
             <input
@@ -52,7 +57,7 @@ Dependencies: @/mixins/locale.vue
               v-model="title.text"
               type="text"
               class="form-control"
-              :placeholder="i18n['titlePlaceholder']"
+              :placeholder="y18n('titlePlaceholder')"
             >
           </div>
           <div
@@ -63,7 +68,7 @@ Dependencies: @/mixins/locale.vue
               for="show-title-tick"
               class="col col-form-label"
             >
-              {{ i18n['showTitle'] }}
+              {{ y18n('showTitle') }}
               <input
                 id="show-title-tick"
                 v-model="title.show"
@@ -82,7 +87,7 @@ Dependencies: @/mixins/locale.vue
             class="col-2 col-form-label"
           >
             <span class="sr-only">
-              {{ i18n['simpleAlt'] }}
+              {{ y18n('simpleAlt') }}
             </span>
           </label>
           <div class="form-group col-8">
@@ -91,7 +96,7 @@ Dependencies: @/mixins/locale.vue
               v-model="title.simple"
               type="text"
               class="form-control"
-              :placeholder="i18n['simpleAlt']"
+              :placeholder="y18n('simpleAlt')"
             >
           </div>
         </div>
@@ -103,7 +108,7 @@ Dependencies: @/mixins/locale.vue
           for="vid-id"
           class="col-2 col-form-label"
         >
-          {{ i18n['layaPlyr.url'] }}
+          {{ y18n('layaPlyr.url') }}
         </label>
         <div class="col">
           <input
@@ -111,58 +116,233 @@ Dependencies: @/mixins/locale.vue
             v-model="src"
             type="text"
             class="form-control"
-            :placeholder="i18n['layaPlyr.placeholder']"
-            @blur="checkURL"
+            :placeholder="y18n('layaPlyr.placeholder')"
           >
         </div>
       </div>
 
       <!-- video props -->
       <div class="form-group row">
-        <label
-          for="platform-vimeo"
-          class="col-2 col-form-label"
-        >
-          {{ i18n['layaPlyr.platform'] }}
-        </label>
-
-        <div class="col-2 form-check form-check-inline align-text-top">
+        <span class="col-2 col-form-label">
+          {{ y18n('layaPlyr.platform') }}
+        </span>
+        <div class="col-5 form-check form-check-inline align-text-top">
+          <input
+            id="platform-upload"
+            :checked="host === 'upload'"
+            class="form-check-input"
+            :class="langIsAr ? 'mr-3' : 'ml-3'"
+            type="radio"
+            name="platform"
+            @click="setHost('upload')"
+          >
+          <label
+            for="platform-upload"
+            class="form-check-label"
+            :class="langIsAr ? 'ml-3' : 'mr-3'"
+          >
+            {{ y18n('layaPlyr.upload') }}
+          </label>
           <input
             id="platform-vimeo"
-            v-model="youtube"
+            :checked="host === 'vimeo'"
             class="form-check-input"
             type="radio"
             name="platform"
-            :value="false"
-            disabled
+            @click="setHost('vimeo')"
           >
           <label
             for="platform-vimeo"
             class="form-check-label"
+            :class="langIsAr ? 'ml-3' : 'mr-3'"
           >
-            {{ i18n['layaPlyr.vimeo'] }}
+            {{ y18n('layaPlyr.vimeo') }}
           </label>
-        </div>
-        <div class="col-2 form-check form-check-inline align-text-top">
           <input
             id="platform-yt"
-            v-model="youtube"
+            :checked="host === 'youtube'"
             class="form-check-input"
             type="radio"
             name="platform"
-            :value="true"
-            disabled
+            @click="setHost('youtube')"
           >
           <label
             for="platform-yt"
             class="form-check-label"
+            :class="langIsAr ? 'ml-3' : 'mr-3'"
           >
-            {{ i18n['layaPlyr.youtube'] }}
+            {{ y18n('layaPlyr.youtube') }}
           </label>
         </div>
 
-        <div class="col form-check form-check-inline align-text-top">
-          <span class="text-danger form-control-plaintext text-right"> {{ urlMsg }}</span>
+        <!-- URL warning -->
+        <div
+          v-if="urlMsg"
+          id="url-hint"
+          class="col form-check form-check-inline align-text-top"
+        >
+          <span class="text-danger form-control-plaintext text-right">
+            {{ urlMsg }}
+          </span>
+        </div>
+      </div>
+
+      <!-- caption tracks -->
+      <div
+        v-if="host === 'upload'"
+        id="caption-input"
+        class="form-group"
+      >
+        <h4 class="mb-4 mt-4">
+          {{ y18n('captionTypes.captions') }}
+        </h4>
+        <!-- table header -->
+        <div
+          id="caption-input-header"
+          class="row mb-3"
+        >
+          <div class="col-2">
+            {{ y18n('type') }}
+          </div>
+          <div class="col">
+            {{ y18n('layaPlyr.captions.label') }}
+          </div>
+          <div class="col-1">
+            {{ y18n('layaPlyr.captions.lang') }}
+          </div>
+          <div class="col">
+            {{ y18n('layaPlyr.captions.src') }}
+          </div>
+          <div class="col-1">
+            {{ y18n('layaPlyr.captions.default') }}
+          </div>
+          <div class="col-1"></div> <!-- placeholder for alignment -->
+        </div>
+        <!-- input fields -->
+        <div
+          v-for="(track, i) in captions.tracks"
+          :key="`track-${i}`"
+          class="row"
+        >
+          <!-- caption type -->
+          <div class="col-2">
+            <label
+              class="form-check-label sr-only"
+              :for="`type-select-${i}`"
+            >
+              {{ y18n('type') }}
+            </label>
+            <b-select
+              :id="`type-select-${i}`"
+              v-model="track.kind"
+            >
+              <b-select-option value="null">
+                {{ y18n('layaPlyr.captions.chooseType') }}
+              </b-select-option>
+              <b-select-option
+                v-for="type in captionTypes"
+                :key="type"
+                :value="type"
+              >
+                {{ y18n(`captionTypes.${type}`) }}
+              </b-select-option>
+            </b-select>
+          </div>
+          <!-- caption label -->
+          <div class="col">
+            <label
+              :for="`label-input-${i}`"
+              class="form-check-label sr-only"
+            >
+              {{ y18n('layaPlyr.captions.label') }}
+            </label>
+            <input
+              :id="`label-input-${i}`"
+              v-model="track.label"
+              class="form-control"
+              type="text"
+              :placeholder="y18n('layaPlyr.captions.label')"
+            >
+          </div>
+          <!-- caption language -->
+          <div class="col-1">
+            <label
+              :for="`srclang-input-${i}`"
+              class="form-check-label sr-only"
+            >
+              {{ y18n('layaPlyr.captions.lang') }}
+            </label>
+            <input
+              :id="`srclang-input-${i}`"
+              v-model="track.srclang"
+              class="form-control"
+              type="text"
+              :placeholder="y18n('layaPlyr.captions.lang')"
+            >
+          </div>
+          <!-- caption source -->
+          <div class="col">
+            <label
+              :for="`src-input-${i}`"
+              class="form-check-label sr-only"
+            >
+              {{ y18n('layaPlyr.captions.src') }}
+            </label>
+            <input
+              :id="`src-input-${i}`"
+              v-model="track.src"
+              class="form-control"
+              type="text"
+              :placeholder="y18n('layaPlyr.captions.src')"
+            >
+          </div>
+          <!-- caption default -->
+          <div class="col-1">
+            <label
+              :for="`default-check-${i}`"
+              class="col-form-label sr-only"
+            >
+              {{ y18n('layaPlyr.captions.default') }}
+            </label>
+            <input
+              :id="`default-check-${i}`"
+              class="ml-auto mr-auto"
+              type="radio"
+              :checked="captions.default === i"
+              @click="makeDefault(i)"
+            >
+          </div>
+          <!-- delete button -->
+          <div class="col-1">
+            <b-button
+              :id="`delete-button-${i}`"
+              v-b-tooltip.auto
+              class="m-auto"
+              variant="danger"
+              :title="y18n('delete')"
+              @click.prevent="removeCaption(i)"
+            >
+              <i class="fas fa-times-circle"></i>
+              <span class="sr-only">
+                {{ y18n('delete') }}
+              </span>
+            </b-button>
+          </div>
+        </div>
+        <!-- table footer -->
+        <div
+          id="caption-input-footer"
+          class="row mt-3"
+        >
+          <b-button
+            id="add-caption"
+            variant="success"
+            class="m-auto"
+            @click.prevent="addCaption"
+          >
+            <i class="fas fa-plus-circle"></i>
+            {{ y18n('layaPlyr.captions.add') }}
+          </b-button>
         </div>
       </div>
     </form>
@@ -170,78 +350,19 @@ Dependencies: @/mixins/locale.vue
 </template>
 
 <script>
-import { locale, tooltipIcon } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
+import plyrEditMethods from './common-methods'
 
 export default {
   name: 'LayaPlyrNew',
 
   mixins: [
-    locale,
-    tooltipIcon
+    plyrEditMethods
   ],
-
-  data () {
-    return {
-      src: '',
-      youtube: false,
-      title: {
-        text: '',
-        flagged: false,
-        show: false,
-        id: ''
-      },
-      videoFlag: {
-        flagged: false,
-        id: ''
-      }
-    }
-  },
-
-  computed: {
-
-    /**
-     * urlMsg: return warning if URL is not supported
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 17, 2021
-     */
-    urlMsg () {
-      return this.correctURL ? '' : this.i18n['layaPlyr.wrongURL']
-    },
-
-    /**
-     * correctURL: checks if video is on yt or vimeo
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 17, 2021
-     */
-    correctURL () {
-      return (this.src.includes('youtube') || this.src.includes('vimeo'))
-    }
-  },
 
   created () {
     this.title.id = uuidv4()
     this.videoFlag.id = uuidv4()
-  },
-
-  methods: {
-
-    /**
-     * function checkURL: check if video is from youtube or vimeo
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 17, 2021
-     */
-    checkURL () {
-      (this.correctURL && this.src.includes('youtube'))
-        ? this.youtube = true
-        : this.youtube = false
-    }
   }
 }
 </script>

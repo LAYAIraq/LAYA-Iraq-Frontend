@@ -1,7 +1,7 @@
 <template>
   <div class="container text-center">
     <div v-if="success">
-      {{ i18n['verify.success'] }}
+      {{ y18n('verify.success') }}
     </div>
     <div v-else-if="busy">
       <i class="fas fa-spinner"></i>

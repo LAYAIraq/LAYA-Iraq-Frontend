@@ -5,13 +5,13 @@
     <div class="flag-title">
       <div class="title-text">
         <h1>
-          {{ i18n['flag.provideClarification'] }}
+          {{ y18n('flag.provideClarification') }}
         </h1>
       </div>
     </div>
     <div class="flag-question">
       <div class="heading">
-        {{ i18n['flag.question'] }}
+        {{ y18n('flag.question') }}
       </div>
       <div
         v-if="!editQuestion"
@@ -27,7 +27,7 @@
           for="question-editor"
           class="sr-only"
         >
-          {{ i18n['flag.editQuestion'] }}
+          {{ y18n('flag.editQuestion') }}
         </label>
         <textarea
           id="question-editor"
@@ -40,7 +40,7 @@
           @keydown.enter="saveQuestion"
         >
           <i class="fas fa-save"></i>
-          {{ i18n['save'] }}
+          {{ y18n('save') }}
         </b-button>
       </div>
       <div class="question-meta row">
@@ -48,7 +48,7 @@
           v-if="!anonQuestion || isCourseCreator"
           class="col-5"
         >
-          {{ i18n['by'] }}
+          {{ y18n('by') }}
           #{{ showUserName(flagAuthor) }},
           {{ timeSince(currentFlag.created) }}
         </div>
@@ -62,7 +62,7 @@
           v-if="currentFlag.question.edited"
           class="col-5"
         >
-          {{ i18n['edited'] }} {{ timeSince(currentFlag.question.editTime) }}
+          {{ y18n('edited') }} {{ timeSince(currentFlag.question.editTime) }}
         </div>
         <div
           v-if="userId === currentFlag.authorId"
@@ -74,8 +74,8 @@
             class="fas fa-edit eventful"
             :class="langIsAr? 'float-left': 'float-right'"
             tabindex="0"
-            :title="i18n['flag.editQuestion']"
-            :aria-label="i18n['flag.editQuestion']"
+            :title="y18n('flag.editQuestion')"
+            :aria-label="y18n('flag.editQuestion')"
             @click="editQuestion = true; $event.target.blur()"
             @keydown.enter="editQuestion = true; $event.target.blur()"
           >
@@ -90,7 +90,7 @@
       <div
         class="heading"
       >
-        {{ i18n['flag.discussion'] }}
+        {{ y18n('flag.discussion') }}
       </div>
       <div
         v-for="(answer,i) in sortedAnswers"
@@ -116,13 +116,13 @@
               for="edit-answer"
               class="sr-only"
             >
-              {{ i18n['flag.editAnswer'] }}
+              {{ y18n('flag.editAnswer') }}
             </label>
             <i
               id="edit-answer"
               v-b-tooltip.bottom
               class="fas fa-edit eventful"
-              :title="i18n['flag.editAnswer']"
+              :title="y18n('flag.editAnswer')"
               @click="e => prepareAnswerEdit(e, answer)"
               @keydown.enter="e => prepareAnswerEdit(e, answer)"
             ></i>
@@ -137,7 +137,7 @@
               for="answer-editor"
               class="sr-only"
             >
-              {{ i18n['flag.editQuestion'] }}
+              {{ y18n('flag.editQuestion') }}
             </label>
             <textarea
               id="answer-editor"
@@ -153,14 +153,14 @@
                 @keydown.enter="saveAnswer(answer)"
               >
                 <i class="fas fa-save"></i>
-                {{ i18n['save'] }}
+                {{ y18n('save') }}
               </b-button>
               <b-button
                 :class="langIsAr? 'mr-2': 'ml-2'"
                 @click="editAnswer =''"
                 @keydown.enter="editAnswer =''"
               >
-                {{ i18n['cancel'] }}
+                {{ y18n('cancel') }}
               </b-button>
             </div>
             <div class="col">
@@ -168,7 +168,7 @@
                 for="answerQuestion2"
                 class="form-check-label"
               >
-                <strong>{{ i18n['flag.answerQuestion'] }}</strong>
+                <strong>{{ y18n('flag.answerQuestion') }}</strong>
               </label>
               <input
                 id="answerQuestion2"
@@ -190,25 +190,25 @@
               for="author-icon"
               class="sr-only"
             >
-              {{ i18n['flag.answerAuthor'] }}
+              {{ y18n('flag.answerAuthor') }}
             </label>
             <i
               id="author-icon"
               v-b-tooltip.bottom
               class="fas fa-user ml-2 mr-2"
-              :title="i18n['flag.answerAuthor']"
+              :title="y18n('flag.answerAuthor')"
             ></i>
-            <small>{{ i18n['by'] }} #{{ showUserName(answer.authorId) }}</small>
+            <small>{{ y18n('by') }} #{{ showUserName(answer.authorId) }}</small>
           </div>
           <div class="answer-edited col-1">
             <span v-if="answer.edited">
               <i
                 v-b-tooltip.bottom
                 class="fas fa-pen"
-                :title="i18n['flag.editedAnswer']"
+                :title="y18n('flag.editedAnswer')"
               ></i>
               <small class="sr-only">
-                {{ i18n['flag.editedAnswer'] }}
+                {{ y18n('flag.editedAnswer') }}
               </small>
             </span>
           </div>
@@ -217,13 +217,13 @@
               for="answer-time"
               class="sr-only"
             >
-              {{ i18n['flag.answerTime'] }}
+              {{ y18n('flag.answerTime') }}
             </label>
             <i
               id="answer-time"
               v-b-tooltip.bottom
               class="fas fa-clock ml-2 mr-2"
-              :title="i18n['flag.answerTime']"
+              :title="y18n('flag.answerTime')"
             ></i>
             <small>
               {{ timeAndDate(answer.timestamp) }}
@@ -237,7 +237,7 @@
               for="vote-up"
               class="sr-only"
             >
-              {{ i18n['flag.voteUp'] }}
+              {{ y18n('flag.voteUp') }}
             </label>
             <i
               id="vote-up"
@@ -245,7 +245,7 @@
               class="fas fa-arrow-up"
               :class="voted(answer) === 1? 'active' : ''"
               tabindex="0"
-              :title="i18n['flag.voteUp']"
+              :title="y18n('flag.voteUp')"
               @click="vote(answer, 1); $event.target.blur()"
               @keydown.enter="vote(answer, 1); $event.target.blur()"
             ></i>
@@ -253,7 +253,7 @@
               for="vote-down"
               class="sr-only"
             >
-              {{ i18n['flag.voteUp'] }}
+              {{ y18n('flag.voteUp') }}
             </label>
             <i
               id="vote-down"
@@ -261,7 +261,7 @@
               class="fas fa-arrow-down"
               :class="voted(answer) === -1? 'active' : ''"
               tabindex="0"
-              :title="i18n['flag.voteDown']"
+              :title="y18n('flag.voteDown')"
               @click="vote(answer, -1); $event.target.blur()"
               @keydown.enter="vote(answer, -1); $event.target.blur()"
             ></i>
@@ -273,7 +273,7 @@
           v-b-tooltip.bottom
           class="answer-icon"
           tabindex="0"
-          :title="i18n['flag.creatorAnswer']"
+          :title="y18n('flag.creatorAnswer')"
         >
           <i class="fas fa-user-graduate">
           </i>
@@ -283,7 +283,7 @@
           v-b-tooltip.bottom
           class="answer-icon"
           tabindex="0"
-          :title="i18n['flag.answerIsQuestion']"
+          :title="y18n('flag.answerIsQuestion')"
         >
           <i class="fas fa-question">
           </i>
@@ -292,7 +292,7 @@
     </div>
     <div class="add-answer">
       <h2 class="heading">
-        {{ i18n['flag.postAnswer'] }}
+        {{ y18n('flag.postAnswer') }}
       </h2>
       <form @submit.prevent="addAnswer">
         <div class="form-group">
@@ -301,7 +301,7 @@
               for="my-answer"
               class="sr-only"
             >
-              {{ i18n['flag.typeAnswer'] }}
+              {{ y18n('flag.typeAnswer') }}
             </label>
 
             <textarea
@@ -309,7 +309,7 @@
               v-model="newAnswer"
               rows="5"
               class="form-control"
-              :placeholder="i18n['flag.typeAnswer']"
+              :placeholder="y18n('flag.typeAnswer')"
               :disabled="answerSent || noNewAnswer"
               @focus="subFocus = true"
               @blur="subFocus = false"
@@ -322,7 +322,7 @@
                 :class="langIsAr? 'ml-auto': 'mr-auto'"
                 :disabled="answerSent || noNewAnswer"
               >
-                {{ i18n['flag.sendAnswer'] }}
+                {{ y18n('flag.sendAnswer') }}
               </b-button>
             </div>
             <div class="col">
@@ -330,12 +330,12 @@
                 for="answerQuestion"
                 class="form-check-label"
               >
-                <strong>{{ i18n['flag.answerQuestion'] }}</strong>
+                <strong>{{ y18n('flag.answerQuestion') }}</strong>
                 <i
                   v-b-tooltip.bottom
                   class="fas fa-question-circle"
                   :class="langIsAr? 'mr-2': 'ml-2'"
-                  :title="i18n['flag.answerQuestionHint']"
+                  :title="y18n('flag.answerQuestionHint')"
                 ></i>
               </label>
               <input
@@ -498,8 +498,8 @@ export default {
      */
     answerHint () {
       return this.answerSent
-        ? this.i18n['flag.ty']
-        : this.noNewAnswer ? this.i18n['flag.noNewAnswer'] : ''
+        ? this.y18n('flag.ty')
+        : this.noNewAnswer ? this.y18n('flag.noNewAnswer') : ''
     },
 
     /**
@@ -624,8 +624,8 @@ export default {
     vote (answer, val) {
       // console.trace(answer)
       if (answer.authorId === this.userId) { // no voting on own answer
-        this.$bvToast.toast(this.i18n['flag.noSelfVote'], {
-          title: this.i18n['flag.noSelfVoteTitle'],
+        this.$bvToast.toast(this.y18n('flag.noSelfVote'), {
+          title: this.y18n('flag.noSelfVoteTitle'),
           toaster: 'b-toaster-bottom-center',
           variant: 'danger'
         })

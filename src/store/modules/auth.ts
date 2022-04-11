@@ -125,24 +125,45 @@ export default {
     },
 
     /**
-     * function resetOwnPassword: fire request to change password
+     * function sendCredentials: fire login request
      *
      * Author: cmc
      *
-     * Last Updated: February 21, 2022
-     * @param state not used, but neccessary in signature
-     * @param data contains userId, verificationToken, password
+     * Last Updated: March 16, 2022
+     * @param {state, commit, dispatch} any store variables
+     * @param {object} data email, password
      */
-    resetOwnPassword ({ state }, data: {
-      userId: string,
-      verificationToken: string,
-      password: string
-    }) {
+    sendCredentials (
+      { state, commit, dispatch },
+      data: {
+        email: string,
+        password: string
+      }
+    ) {
       return new Promise((resolve, reject) => {
-        http.post('/accounts/set-pwd/', data
-        )
-          .then(() => resolve(null))
-          .catch(err => reject(err))
+        http.post('accounts/login', {
+          email: data.email,
+          password: data.password
+        })
+          .then(({ data }) => {
+            /* set login state */
+            commit('login', data)
+
+            /* load profile */
+            dispatch('fetchProfile')
+            dispatch('fetchRole')
+
+            /* return data for local storage */
+
+            resolve({
+              id: data.id,
+              userId: data.userId,
+              created: data.created
+            })
+          })
+          .catch(err => {
+            reject(err)
+          })
       })
     }
   }

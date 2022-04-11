@@ -31,13 +31,13 @@
             v-if="busy"
             class="fas fa-spinner"
           ></i>
-          {{ i18n['password.submit'] }}
+          {{ y18n('password.submit') }}
         </b-button>
       </div>
     </div>
     <!-- redirect message after successful change request -->
     <div v-else>
-      {{ i18n['password.redirectMsg'] }}
+      {{ y18n('password.redirectMsg') }}
     </div>
   </div>
 </template>
@@ -110,7 +110,7 @@ export default {
      */
     resetPassword () {
       this.busy = true
-      this.$store.dispatch('resetOwnPassword', {
+      this.$store.dispatch('resetPassword', {
         userId: this.$route.query.uid,
         verificationToken: this.$route.query.token,
         password: this.passwordSet
@@ -151,8 +151,8 @@ export default {
      * @param type {'error', 'success'}
      */
     showToast (type) {
-      this.$root.$bvToast.toast(this.i18n[`password.${type}Msg`], {
-        title: this.i18n[`password.${type}`],
+      this.$root.$bvToast.toast(this.y18n(`password.${type}Msg`), {
+        title: this.y18n(`password.${type}`),
         toaster: 'b-toaster-bottom-center',
         variant: type === 'success' ? type : 'danger'
       })

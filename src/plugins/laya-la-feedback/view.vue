@@ -10,24 +10,24 @@ Dependencies: @/mixins/locale.vue
   <div class="laya-feedback">
     <b-toast
       id="feedback-new"
-      :title="i18n['layaLaFeedback.name']"
+      :title="y18n('layaLaFeedback.name')"
       static
       variant="success"
       auto-hide-delay="1500"
       class="feedback-toast"
     >
-      {{ i18n['successfulSave'] }}
+      {{ y18n('successfulSave') }}
     </b-toast>
 
     <b-toast
       id="feedback-updated"
-      :title="i18n['layaLaFeedback.title']"
+      :title="y18n('layaLaFeedback.title')"
       static
       variant="success"
       auto-hide-delay="1500"
       class="feedback-toast"
     >
-      {{ i18n['layaLaFeedback.bToast.feedbackUpdated'] }}
+      {{ y18n('layaLaFeedback.bToast.feedbackUpdated') }}
     </b-toast>
 
     <div class="feedback-container-main">
@@ -68,7 +68,7 @@ Dependencies: @/mixins/locale.vue
               :max="categoriesLocal.length-1"
               :aria-valuenow="choice[i]"
               :aria-valuetext="categoriesLocal[choice[i]]"
-              :aria-label="i18n['layaLaFeedback.label.slider']"
+              :aria-label="y18n('layaLaFeedback.label.slider')"
             >
             <laya-flag-icon
               :ref-data="item"
@@ -82,12 +82,12 @@ Dependencies: @/mixins/locale.vue
 
       <div class="row mt-5">
         <div class="col">
-          <h4>{{ i18n['layaLaFeedback.addFreetext'] }}</h4>
+          <h4>{{ y18n('layaLaFeedback.addFreetext') }}</h4>
           <textarea
             v-model="freetext"
             class="w-100 mt-1"
             rows="5"
-            :aria-label="i18n['layaLaFeedback.label.freetext']"
+            :aria-label="y18n('layaLaFeedback.label.freetext')"
           ></textarea>
         </div>
       </div>
@@ -99,7 +99,7 @@ Dependencies: @/mixins/locale.vue
             @click="storeFeedback"
           >
             <i class="fas fa-check"></i>
-            {{ i18n['save'] }}
+            {{ y18n('save') }}
           </button>
         </div>
       </div>
@@ -111,7 +111,7 @@ Dependencies: @/mixins/locale.vue
           :class="langIsAr? 'float-right': 'float-left'"
           @click="done"
         >
-          {{ i18n['nextContent'] }}
+          {{ y18n('nextContent') }}
           <i
             :class="langIsAr?
               'fas fa-arrow-left':
