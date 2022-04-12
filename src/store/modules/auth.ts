@@ -107,6 +107,41 @@ export default {
     }
   },
   actions: {
+    /**
+     * checkEmailTaken: check if email is already taken by another user
+     *
+     * Author: cmc
+     *
+     * Last Updated: April 12, 2022
+     * @param state store variables
+     * @param email the email address to check
+     */
+    checkEmailTaken ({ state }, email: string) {
+      return new Promise((resolve, reject) => {
+        http.get(`accounts/email/${email}`)
+          .then(({ data }) => {
+            resolve(data)
+          })
+          .catch((err) => { reject(err) })
+      })
+    },
+
+    /**
+     * function checkNameTaken: check if given string already exists as name
+     *
+     * Author: cmc
+     *
+     * Last Updated: April 12, 2022
+     * @param state store variables
+     * @param name name to check
+     */
+    checkNameTaken ({ state }, name: string) {
+      return new Promise((resolve, reject) => {
+        http.get(`accounts/name/${name}`)
+          .then(({ data }) => { resolve(data) })
+          .catch((err) => { reject(err) })
+      })
+    },
 
     /**
      * Function fetchRole: fetch role of logged user
@@ -122,6 +157,24 @@ export default {
         .get(`accounts/${state.userId}/role`)
         .then(({ data }) => commit('setRole', data.role))
         .catch((err) => console.error(err))
+    },
+
+    registerUser ({ state }, data: {
+      email: string,
+      username: string,
+      password: string,
+      lang: string
+    }) {
+      return new Promise((resolve, reject) => {
+        http.post('accounts/student', {
+          email: data.email,
+          username: data.username,
+          password: data.password,
+          lang: data.lang
+        })
+          .then(({ data }) => resolve(data))
+          .catch(err => reject(err))
+      })
     },
 
     /**
