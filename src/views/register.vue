@@ -434,7 +434,7 @@ export default {
         username: this.name,
         password: this.passwordSet,
         // avatar: avatarFileName,
-        lang: this.$store.state.profile.lang
+        lang: this.profileLang
       })
         .then(() => {
           this.submitOk = true
