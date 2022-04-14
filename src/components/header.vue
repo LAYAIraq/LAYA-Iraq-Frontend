@@ -141,7 +141,6 @@ Dependencies:
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-import http from 'axios'
 import { icons } from '@/misc/langs.js'
 import { locale } from '@/mixins'
 
@@ -194,28 +193,14 @@ export default {
       const store = this.$store
       /*
       * get browser locale */
-      http.get('lang')
-        .then(({ data }) => {
-          const lang = data.substring(0, data.indexOf('-'))
+      this.$store.dispatch('getBrowserLocale')
+        .then(lang => {
           store.commit('setLang', lang)
-          const html = document.documentElement
-          html.setAttribute('lang', lang)
+          document.documentElement.setAttribute('lang', lang)
         })
         .catch(() => {
-          store.commit('setLang', 'de')
+          store.commit('setLang', 'en')
         })
-    },
-
-    /**
-     * Function toggleMedia (deprecated): toggle media preferences for user
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     *
-     */
-    toggleMedia (type) {
-      this.$store.commit('toggleMedia', type)
     },
 
     /**
@@ -243,7 +228,7 @@ export default {
       this.$store.commit('setLang', newlang)
       if (this.$store.state.auth.online) {
         const data = {
-          lang: this.$store.state.profile.lang,
+          lang: this.profileLang,
           uid: this.$store.state.auth.userId
         }
         this.$store.dispatch('setUserLang', data)
