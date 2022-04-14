@@ -52,20 +52,20 @@ Dependencies:
           >
         </div>
       </div>
-<!--        COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)-->
-<!--        <div class="form-group row">-->
-<!--          <label for="new-course-enrollment" class="col-3 col-form-label">-->
-<!--            {{ y18n('courseCreate.enrollment') }}-->
-<!--          </label>-->
-<!--          <div class="col">-->
-<!--            <input-->
-<!--              id="new-course-enrollment"-->
-<!--              type="checkbox"-->
-<!--              class="form-control"-->
-<!--              ref="enrollmentRequired"-->
-<!--            >-->
-<!--          </div>-->
-<!--        </div>-->
+      <!--        COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)-->
+      <!--        <div class="form-group row">-->
+      <!--          <label for="new-course-enrollment" class="col-3 col-form-label">-->
+      <!--            {{ y18n('courseCreate.enrollment') }}-->
+      <!--          </label>-->
+      <!--          <div class="col">-->
+      <!--            <input-->
+      <!--              id="new-course-enrollment"-->
+      <!--              type="checkbox"-->
+      <!--              class="form-control"-->
+      <!--              ref="enrollmentRequired"-->
+      <!--            >-->
+      <!--          </div>-->
+      <!--        </div>-->
       <div class="form-group row">
         <div
           id="error-msg"

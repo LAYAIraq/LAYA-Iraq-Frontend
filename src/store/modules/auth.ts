@@ -232,6 +232,26 @@ export default {
     },
 
     /**
+     * function getBrowserLocale: return promise of 2-digit language code
+     *
+     * Author: cmc
+     *
+     * Last Updated: April 14, 2022
+     * @param state state varaibles
+     */
+    getBrowserLocale (state) {
+      return new Promise((resolve, reject) => {
+        http.get('lang')
+          .then(({ data }) => {
+            resolve(data.substring(0, data.indexOf('-')))
+          })
+          .catch((err) => {
+            reject(new Error(err))
+          })
+      })
+    },
+
+    /**
     * function registerUser: create new user
     *
     * Author: cmc
