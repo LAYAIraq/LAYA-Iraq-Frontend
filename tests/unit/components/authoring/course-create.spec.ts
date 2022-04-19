@@ -73,7 +73,7 @@ describe('Course create', () => {
     await nameInput.setValue('Is anything correct?')
     await catInput.setValue('something')
     await button.trigger('click')
-    let msg = wrapper.find('#error-msg')
+    const msg = wrapper.find('#error-msg')
     expect(msg.text()).toBeTruthy()
     await nameInput.setValue('no reserved characters')
     await catInput.setValue('Or can I put these: !=&')

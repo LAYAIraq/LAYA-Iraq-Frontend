@@ -8,10 +8,10 @@ const localVue = createLocalVue()
 localVue.use(BootstrapVue)
 localVue.use(Vuex)
 
-describe ('Header unauthorized', () => {
+describe('Header unauthorized', () => {
   let wrapper
   let actions
-  beforeEach (() => {
+  beforeEach(() => {
     const getters = {
       profileLang: () => 'en'
     }
@@ -35,18 +35,17 @@ describe ('Header unauthorized', () => {
     })
   })
 
-  it ('has 4 links', async () => {
+  it('has 4 links', async () => {
     const links = wrapper.findAll('a')
     expect(links.length).toBe(4)
   })
-
 })
 
-describe ('Header authorized', () => {
+describe('Header authorized', () => {
   let wrapper
   let mutations
   let actions
-  beforeEach (() => {
+  beforeEach(() => {
     const getters = {
       isAdmin: () => false,
       messages: () => [],
@@ -58,7 +57,7 @@ describe ('Header authorized', () => {
       setLang: jest.fn()
     }
     actions = {
-      getBrowserLocale: jest.fn(() => Promise.reject()),
+      getBrowserLocale: jest.fn(() => Promise.reject(new Error('none'))),
       setUserLang: jest.fn()
     }
     const auth = {
@@ -89,12 +88,12 @@ describe ('Header authorized', () => {
     })
   })
 
-  it ('has 5 links', async () => {
+  it('has 5 links', async () => {
     const links = wrapper.findAll('a')
     expect(links.length).toBe(5)
   })
 
-  it ('triggers logout and redirects when clicked', async () => {
+  it('triggers logout and redirects when clicked', async () => {
     const logoutAnchor = wrapper.findAll('a').wrappers[3]
     expect(logoutAnchor.text()).toBe('Logout')
     await logoutAnchor.trigger('click')
@@ -103,7 +102,7 @@ describe ('Header authorized', () => {
     expect(mutations.logout).toHaveBeenCalled()
   })
 
-  it ('fires changes language request', async () => {
+  it('fires changes language request', async () => {
     const langButtons = wrapper.find('.dropdown-menu').findAll('button')
     await langButtons.wrappers.forEach(wrapper => wrapper.trigger('click'))
     expect(mutations.setLang).toHaveBeenCalledTimes(4)
@@ -111,7 +110,7 @@ describe ('Header authorized', () => {
   })
 })
 
-describe ('Header admin', () => {
+describe('Header admin', () => {
   it('has 6 links', () => {
     const getters = {
       profileLang: () => 'en',

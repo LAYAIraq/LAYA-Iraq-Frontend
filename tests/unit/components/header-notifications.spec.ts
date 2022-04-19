@@ -42,7 +42,9 @@ describe('header notifications dropdown', () => {
         msg: 'mofo', time: 6, read: false
       })),
       updateReadProp: jest.fn(() => {
-        state.messages.forEach(msg => msg.read = true)
+        state.messages.forEach(msg => {
+          msg.read = true
+        })
       })
     }
     const store = new Vuex.Store({
@@ -75,7 +77,7 @@ describe('header notifications dropdown', () => {
     expect(mutations.allRead).toHaveBeenCalled()
   })
 
-  it ('fetches more messages on click', async () => {
+  it('fetches more messages on click', async () => {
     const button = wrapper.findAll('button').wrappers[2] // 'fetch more' button
     await button.trigger('click')
     expect(actions.getNewMessages).toHaveBeenCalled()
