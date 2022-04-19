@@ -76,6 +76,12 @@ Dependencies:
           >
             {{ y18n('adminPanel.title') }}
           </b-nav-item>
+          <b-nav-item
+            v-if="isEditor"
+            to="/editor"
+          >
+            Editor Panel
+          </b-nav-item>
           <ly-header-notifications></ly-header-notifications>
           <b-nav-item to="/profile">
             <i class="fas fa-user-alt"></i>
@@ -167,6 +173,7 @@ export default {
     ...mapState(['auth']),
     ...mapGetters([
       'isAdmin',
+      'isEditor',
       'profileLang'
     ])
   },
@@ -226,7 +233,7 @@ export default {
      * Last Updated: unknown
      */
     checkCourse () {
-      this.isCourse = /courses[/]./.test(location.hash)
+      this.isCourse = /courses\/./.test(location.hash)
       this.$forceUpdate()
     },
 

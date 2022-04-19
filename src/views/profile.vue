@@ -33,9 +33,9 @@ Dependencies:
             class="d-block rounded-circle mx-auto avatar"
           >
 
-          <h1 class="text-center text-light">
+          <h2 class="text-center text-light">
             {{ profile.username }}
-          </h1>
+          </h2>
         </div>
       </div>
       <!-- row -->
@@ -251,6 +251,29 @@ Dependencies:
           <strong class="form-text text-center">{{ formMsg }}</strong>
         </form>
       </div>
+      <hr>
+      <div
+        v-if="!isAuthor"
+        class="row"
+      >
+        <div class="col-3">
+          Apply as author
+          <i
+            v-b-tooltip.auto
+            class="fas fa-question-circle"
+            title="You can apply as author for LAYA. Your application will be revisited by the editor board. Click here to fill out your application!"
+          ></i>
+        </div>
+        <div class="col">
+          <b-button
+            block
+            variant="secondary"
+            @click="$bvModal.show('author-application')"
+          >
+            Fill out application
+          </b-button>
+        </div>
+      </div>
     </div>
     <b-toast
       id="submit-failed"
@@ -272,6 +295,64 @@ Dependencies:
     >
       {{ y18n('profile.submitOk') }}
     </b-toast>
+    <b-modal
+      id="author-application"
+      title="Apply as author"
+      header-bg-variant="info"
+      ok-variant="success"
+      ok-title="Send application"
+      :cancel-title="y18n('cancel')"
+      centered
+      static
+      @ok="sendApplication"
+    >
+      <div class="form-group p-2">
+        <div class="form-group row">
+          <label
+            for="applicant-name"
+            class="col-form-label"
+          >
+            Full Name
+          </label>
+          <input
+            id="applicant-name"
+            class="form-control"
+            type="text"
+          >
+        </div>
+        <div class="form-group row">
+          <label
+            for="applicant-institution"
+            class="col-form-label"
+          >
+            Institution
+          </label>
+          <input
+            id="applicant-institution"
+            class="form-control"
+            type="text"
+          >
+        </div>
+        <div class="form-group row">
+          <label
+            for="applicant-text"
+            class="col-form-label"
+          >
+            Application text
+            <i
+              v-b-tooltip.auto
+              class="fas fa-question-circle"
+              title="Enter your application here. Please mention your area of expertisea and degrees if applicable. Please expand on the courses you plan on creating for LAYA."
+            ></i>
+          </label>
+          <textarea
+            id="applicant-text"
+            class="form-control"
+            rows="5"
+          ></textarea>
+        </div>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -310,7 +391,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['profile']),
+    ...mapGetters(['isAuthor', 'profile']),
 
     /**
      * avatarURL: return URL of user avatar
