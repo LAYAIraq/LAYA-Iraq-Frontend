@@ -16,17 +16,23 @@ describe('laya course list', () => {
   let mutations
   let wrapper
   beforeEach(() => {
+    jest.spyOn(console, 'warn').mockImplementation(() => {})
     getters = {
       mediaPrefs: () => {
         return { audio: true, simple: true, text: true, video: false }
       },
       profileLang: () => 'en',
-      course: () => {},
+      course: () => {
+        return {
+          name: 'Video Test',
+          courseId: 2
+        }
+      },
       courseList: () => [
-        { category: 'Test', courseId: 1, name: 'testtest', properties: { simple: true } },
-        { category: 'Video', courseId: 2, name: 'Video Test', properties: { video: true } },
-        { category: 'Text', courseId: 3, name: 'Text Samples', properties: { text: true } },
-        { category: 'SimpleLanguage', courseId: 4, name: 'Simple Language Test', properties: { simpleLanguage: true } }
+        { category: 'Test', courseId: 1, name: 'testtest', properties: { audio: true, simple: true, text: true, video: false, simpleLanguage: true } },
+        { category: 'Video', courseId: 2, name: 'Video Test', properties: { audio: true, simple: true, text: true, video: true, simpleLanguage: true } },
+        { category: 'Text', courseId: 3, name: 'Text Samples', properties: { audio: true, simple: true, text: true, video: false, simpleLanguage: true } },
+        { category: 'SimpleLanguage', courseId: 4, name: 'Simple Language Test', properties: { audio: true, simple: true, text: true, video: false, simpleLanguage: true } }
       ]
     }
     actions = {
@@ -63,13 +69,19 @@ describe('laya course list', () => {
     expect(wrapper.findAll('.course').length).toBe(3)
   })
 
-  it('sets button action correctly', async () => {
-    wrapper.setProps({ filter: 'Video' })
+  it('sets button action correctly', async () => { // FIXME: does't work
+    wrapper.setProps({ filter: 'video' })
     await localVue.nextTick()
     const button = wrapper.find('a')
     await button.trigger('click')
-    await localVue.nextTick()
-    // expect(wrapper.vm.$router.push).toHaveBeenCalled()
-    expect(wrapper.find('#noncomplicit-confirm').exists()).toBeTruthy()
+    expect(wrapper.findAll('.indicate-icon').length).toBe(1)
+    const modal = wrapper.find('#noncomplicit-confirm')
+    expect(modal.exists()).toBeTruthy()
+  })
+
+  it('sets button action correctly (complicit course)', async () => {
+    const button = wrapper.find('a')
+    await button.trigger('click')
+    expect(wrapper.vm.$router.push).toHaveBeenCalledWith('/courses/testtest/1')
   })
 })
