@@ -33,7 +33,6 @@ Dependencies:
         <div class="col">
           <div id="main-content-anchor"></div>
 
-          <!-- v-if="viewPermit()" removed, readd when enrollment is reactivated -->
           <component
             :is="contentToDisplay.name"
             v-if="contentToDisplay"
@@ -89,8 +88,7 @@ export default {
 
   data () {
     return {
-      // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
-      // enrollment: {},
+      enrollment: {},
       rename: '',
       copy: '',
       changetype: null
@@ -122,17 +120,16 @@ export default {
       })
     },
 
-    // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
-    // /**
-    //  * userEnrolled: returns enrollment status
-    //  *
-    //  * Author: cmc
-    //  *
-    //  * Last Updated: October 27, 2020
-    //  */
-    // userEnrolled() {
-    //   return this.$store.state.edit.userEnrolled
-    // },
+    /**
+     * userEnrolled: returns enrollment status
+     *
+     * Author: cmc
+     *
+     * Last Updated: October 27, 2020
+     */
+    userEnrolled () {
+      return this.$store.state.edit.userEnrolled
+    },
 
     /**
      * contentToDisplay: return current content object
@@ -143,24 +140,23 @@ export default {
      */
     contentToDisplay () {
       return this.content ? this.content[this.step - 1] : false
+    },
+
+    /**
+     * viewPermit: returns true if user is allowed to see selected course
+     *
+     * Author: core
+     *
+     * Last Updated: October 27, 2020
+     */
+    viewPermit () {
+      if (this.contentToDisplay) {
+        return this.course.properties.enrollment
+          ? (!!(this.isAuthor || this.userEnrolled))
+          : true
+      }
+      return false
     }
-
-    // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
-    // /**
-    //  * viewPermit: returns true if user is allowed to see selected course
-    //  *
-    //  * Author: core
-    //  *
-    //  * Last Updated: October 27, 2020
-    //  */
-    // viewPermit() {
-    //   if( this.contentToDisplay ) {
-    //     return this.course.properties.enrollment ?
-    //       (!!(this.isAuthor || this.userEnrolled)) : true
-    //   }
-    //   return false
-    // },
-
   },
 
   watch: {
@@ -194,15 +190,14 @@ export default {
 
   created () {
     this.getCourse()
-    // this.fetchEnrollment()
+    this.fetchEnrollment()
     // this.fetchFlags()
     // this.fetchCourseStats()
   },
 
   beforeDestroy () {
-    // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
-    // if(this.enrollment.length > 0) this.updateEnrollment()
-    // this.saveFlags()
+    if (this.enrollment.length > 0) this.updateEnrollment()
+    this.saveFlags()
   },
 
   methods: {

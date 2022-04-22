@@ -50,20 +50,22 @@ Dependencies:
           >
         </div>
       </div>
-      <!--      COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)-->
-      <!--      <div class="form-group row">-->
-      <!--        <label for="new-course-enrollment" class="col-3 col-form-label">-->
-      <!--          {{ y18n('courseCreate.enrollment') }}-->
-      <!--        </label>-->
-      <!--        <div class="col">-->
-      <!--          <input -->
-      <!--            id="new-course-enrollment"-->
-      <!--            type="checkbox"-->
-      <!--            class="form-control"-->
-      <!--            ref="enrollmentRequired"-->
-      <!--          >-->
-      <!--        </div>-->
-      <!--      </div>-->
+      <div class="form-group row">
+        <label
+          for="new-course-enrollment"
+          class="col-3 col-form-label"
+        >
+          {{ i18n['courseCreate.enrollment'] }}
+        </label>
+        <div class="col">
+          <input
+            id="new-course-enrollment"
+            ref="enrollmentRequired"
+            type="checkbox"
+            class="form-control"
+          >
+        </div>
+      </div>
       <div class="form-group row">
         <div class="col">
           <span class="text-danger form-control-plaintext text-right">
@@ -190,8 +192,8 @@ export default {
       if (this.newCourseNeedsEncoding) {
         this.msg = this.y18n('courseList.needsEncoding')
       } else {
-        // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
-        // let enrBool = self.needsEnrollment
+        const enrBool = this.needsEnrollment
+        console.log(enrBool)
         const newId = uuidv4()
         console.log(`New Id: ${newId}`)
 
@@ -205,26 +207,25 @@ export default {
         http.post('courses', {
           ...newCourse,
           authorId: auth.userId,
-          storageId: newId
-          // properties: { enrollment: enrBool }
+          storageId: newId,
+          properties: { enrollment: enrBool }
         }).then(() => {
           // console.log(resp)
           this.$router.push(`/courses/${newCourse.name}/1`)
 
           /* create enrollment for creator */
-          // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
-          // if (enrBool) {
-          //     http.get(`courses/getCourseId?courseName=${newCourse.name}`).
-          //       then( resp => {
-          //         const newEnrollment = {
-          //           courseId: resp.data.courseId,
-          //           studentId: self.auth.userId
-          //         }
-          //         http.patch('enrollments', {
-          //           ...newEnrollment
-          //         }).catch((err) => {console.log(err)})
-          //       })
-          // }
+          if (enrBool) {
+            http.get(`courses/getCourseId?courseName=${newCourse.name}`)
+              .then(resp => {
+                const newEnrollment = {
+                  courseId: resp.data.courseId,
+                  studentId: this.auth.userId
+                }
+                http.patch('enrollments', {
+                  ...newEnrollment
+                }).catch((err) => { console.log(err) })
+              })
+          }
         }).catch((err) => {
           console.log(err)
           this.msg = this.y18n('savingFailed')
