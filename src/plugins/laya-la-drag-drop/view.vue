@@ -117,7 +117,10 @@ Dependencies:
         <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
       </button>
     </div>
-    <div v-if="showSolutionsBool">
+    <div
+      v-if="showSolutionsBool"
+      id="solutions"
+    >
       {{ i18n["layaLaScmc.showCorrect"] }}
       <div
         v-for="(item, index) in items"
@@ -185,8 +188,8 @@ export default {
   },
 
   created () {
-    this.mapSolutions()
     if (!this.previewData) this.fetchData()
+    this.mapSolutions()
   },
 
   methods: {
