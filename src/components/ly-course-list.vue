@@ -129,6 +129,7 @@ Dependencies:
       :title="y18n('courseList.notComplicit.title')"
       header-bg-variant="warning"
       centered
+      static
       @ok="buttonAction()"
       @cancel="$router.push('/profile')"
     >
@@ -251,18 +252,18 @@ export default {
   },
 
   methods: {
-    // TEST
-    debounce (fn, delay) {
-      let timeoutID = null
-      return () => {
-        clearTimeout(timeoutID)
-        const args = arguments
-        const ctx = this
-        timeoutID = setTimeout(() => {
-          fn.apply(ctx, args)
-        }, delay)
-      }
-    },
+    // // TEST, commented out for coverage reasons
+    // debounce (fn, delay) {
+    //   let timeoutID = null
+    //   return () => {
+    //     clearTimeout(timeoutID)
+    //     const args = arguments
+    //     const ctx = this
+    //     timeoutID = setTimeout(() => {
+    //       fn.apply(ctx, args)
+    //     }, delay)
+    //   }
+    // },
 
     /**
      * function markAsNonComplicit: add array in nonComplicitSettings if not
