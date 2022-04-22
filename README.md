@@ -173,6 +173,15 @@ to be asynchronous. While user interactions that result in a DOM change can be
 `awaited`, methods that return promises might need an extra step of awaiting the
 next tick on the Vue instance.
 
+### Bootstrap Components
+Many of our components use Bootstrap components. When a tested component is using them
+(indicated by the `b-` snippet, e.g. `<b-button>`), we need to mount BootstrapVue to
+our test wrapper (see [mount vs. shallowMount](#mount-vs-shallowmount)). When using
+BModals, make sure the modal container has the `static` property. This ensures the modal
+is rendered within the component container, not the global `<body>`, allowing us to
+test the modal via `wrapper.find()` (see [BootstrapVue docs](https://bootstrap-vue.org/docs/components/modal#overview))
+for reference).
+
 ### Sample Test
 
 ``` typescript
