@@ -193,7 +193,6 @@ export default {
         this.msg = this.y18n('courseList.needsEncoding')
       } else {
         const enrBool = this.needsEnrollment
-        console.log(enrBool)
         const newId = uuidv4()
         console.log(`New Id: ${newId}`)
 
