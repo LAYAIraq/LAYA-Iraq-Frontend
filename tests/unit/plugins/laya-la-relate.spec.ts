@@ -234,13 +234,25 @@ describe('Relate View component', () => {
   })
 
   it('gives correct feedback on wrong answer', async () => {
-    wrapper.setData({ solution: [1] })
+    let wrongSolution
+    for (const i in wrapper.vm.options) {
+      if (wrapper.vm.options[i] === wrapper.vm.relations[1]) {
+        wrongSolution = i
+      }
+    }
+    wrapper.setData({ solution: [wrongSolution] })
     await wrapper.find('.btn-link').trigger('click')
     expect(wrapper.find('.text-danger').exists()).toBeTruthy()
   })
 
   it('gives correct feedback on correct answer', async () => {
-    wrapper.setData({ solution: [0] })
+    let correctSolution
+    for (const i in wrapper.vm.options) {
+      if (wrapper.vm.options[i] === wrapper.vm.relations[0]) {
+        correctSolution = i
+      }
+    }
+    wrapper.setData({ solution: [correctSolution] })
     await wrapper.find('.btn-link').trigger('click')
     expect(wrapper.find('.text-success').exists()).toBeTruthy()
   })

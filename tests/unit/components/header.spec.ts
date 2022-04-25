@@ -24,6 +24,7 @@ describe('Header unauthorized', () => {
       getBrowserLocale: jest.fn(() => Promise.resolve())
     }
     const store = new Vuex.Store({
+      actions,
       getters,
       modules: {
         auth
@@ -105,7 +106,7 @@ describe('Header authorized', () => {
   it('fires changes language request', async () => {
     const langButtons = wrapper.find('.dropdown-menu').findAll('button')
     await langButtons.wrappers.forEach(wrapper => wrapper.trigger('click'))
-    expect(mutations.setLang).toHaveBeenCalledTimes(4)
+    expect(mutations.setLang).toHaveBeenCalledTimes(5)
     expect(actions.setUserLang).toHaveBeenCalledTimes(4)
   })
 })
@@ -124,8 +125,13 @@ describe('Header admin', () => {
         online: true
       }
     }
+    const mutations = {
+      logout: jest.fn(),
+      setLang: jest.fn()
+    }
     const store = new Vuex.Store({
       actions,
+      mutations,
       getters,
       modules: {
         auth
