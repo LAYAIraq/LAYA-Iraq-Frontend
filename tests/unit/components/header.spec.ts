@@ -46,9 +46,15 @@ describe('Header authorized', () => {
   let wrapper
   let mutations
   let actions
+  let state
   beforeEach(() => {
+    state = {
+      admin: false,
+      editor: false
+    }
     const getters = {
-      isAdmin: () => false,
+      isAdmin: () => state.admin,
+      isEditor: () => state.editor,
       messages: () => [],
       profileLang: () => 'en',
       unreadMessages: () => 0
@@ -67,6 +73,7 @@ describe('Header authorized', () => {
       }
     }
     const store = new Vuex.Store({
+      state,
       actions,
       getters,
       mutations,
@@ -109,39 +116,30 @@ describe('Header authorized', () => {
     expect(mutations.setLang).toHaveBeenCalledTimes(5)
     expect(actions.setUserLang).toHaveBeenCalledTimes(4)
   })
-})
 
-describe('Header admin', () => {
-  it('has 6 links', () => {
-    const getters = {
-      profileLang: () => 'en',
-      isAdmin: () => true
-    }
-    const actions = {
-      getBrowserLocale: () => Promise.resolve()
-    }
-    const auth = {
-      state: {
-        online: true
-      }
-    }
-    const mutations = {
-      logout: jest.fn(),
-      setLang: jest.fn()
-    }
-    const store = new Vuex.Store({
-      actions,
-      mutations,
-      getters,
-      modules: {
-        auth
-      }
-    })
-    const wrapper = mount(Header, {
-      store,
-      stubs: ['ly-header-notifications'],
-      localVue
-    })
+  it('for admin has 6 links, one to admin panel', async () => {
+    state.admin = true
+    await localVue.nextTick()
     expect(wrapper.findAll('a').length).toBe(6)
+    let adminPanelPresent = false
+    wrapper.findAll('a').wrappers.forEach(wrap => {
+      if (wrap.text() === 'Admin Panel') {
+        adminPanelPresent = true
+      }
+    })
+    expect(adminPanelPresent).toBeTruthy()
+  })
+
+  it('for editor has 6 links, one to editor panel', async () => {
+    state.editor = true
+    await localVue.nextTick()
+    expect(wrapper.findAll('a').length).toBe(6)
+    let editorPanelPresent = false
+    wrapper.findAll('a').wrappers.forEach(wrap => {
+      if (wrap.text() === 'Editor Panel') {
+        editorPanelPresent = true
+      }
+    })
+    expect(editorPanelPresent).toBeTruthy()
   })
 })

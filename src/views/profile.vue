@@ -266,6 +266,7 @@ Dependencies:
         </div>
         <div class="col">
           <b-button
+            id="application-button"
             block
             variant="secondary"
             @click="$bvModal.show('author-application')"
@@ -329,6 +330,19 @@ Dependencies:
           </label>
           <input
             id="applicant-institution"
+            class="form-control"
+            type="text"
+          >
+        </div>
+        <div class="form-group row">
+          <label
+            for="applicant-expertise"
+            class="col-form-label"
+          >
+            Area of Expertise
+          </label>
+          <input
+            id="applicant-expertise"
             class="form-control"
             type="text"
           >

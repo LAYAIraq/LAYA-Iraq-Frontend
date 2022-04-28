@@ -17,11 +17,15 @@ describe('profile view', () => {
   let vm
   let store
   let spy
+  const authorState = {
+    author: false
+  }
   beforeEach(() => {
     getters = {
       profileLang: () => 'en',
       passwordRepeat: () => '',
-      passwordSet: () => 'secret12'
+      passwordSet: () => 'secret12',
+      isAuthor: () => authorState.author
     }
     state = {
       avatar: 'mypic.png',
@@ -45,6 +49,7 @@ describe('profile view', () => {
       changePassword: jest.fn()
     }
     store = new Vuex.Store({
+      state: authorState,
       getters,
       modules: {
         profile: {
@@ -219,5 +224,27 @@ describe('profile view', () => {
     expect(actions.changePassword).toHaveBeenCalled()
     expect(wrapper.find('#submit-failed').exists()).toBeTruthy()
     // expoect
+  })
+
+  it('shows application button for non-authors, not for authors', async () => {
+    expect(wrapper.find('#application-button').exists()).toBeTruthy()
+    authorState.author = true
+    await localVue.nextTick()
+    expect(wrapper.find('#application-button').exists()).toBeFalsy()
+  })
+
+  it('shows application modal when clicking application button', async () => {
+    await wrapper.find('#application-button').trigger('click')
+    const applicationForm = wrapper.find('#author-application')
+    expect(applicationForm.exists()).toBeTruthy()
+  })
+
+  it('shows application form has for name, aoe, instution and application', async () => {
+    await wrapper.find('#application-button').trigger('click')
+    const applicationForm = wrapper.find('#author-application')
+    expect(applicationForm.find('#applicant-name').exists()).toBeTruthy()
+    expect(applicationForm.find('#applicant-institution').exists()).toBeTruthy()
+    expect(applicationForm.find('#applicant-expertise').exists()).toBeTruthy()
+    expect(applicationForm.find('#applicant-text').exists()).toBeTruthy()
   })
 })
