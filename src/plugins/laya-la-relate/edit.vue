@@ -13,18 +13,18 @@ Dependencies:
     class="laya-la-relate-edit"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
-    <label>
-      <h4>
+    <div class="d-flex">
+      <h4 class="mr-auto">
         {{ y18n('layaLaRelate.name') }}
       </h4>
-    </label>
-    <i
-      id="questionmark"
-      v-b-tooltip.left
-      class="fas fa-question-circle"
-      :title="y18n('showTip')"
-      @click="toggleTip"
-    ></i>
+      <i
+        id="questionmark"
+        v-b-tooltip.left
+        class="fas fa-question-circle"
+        :title="y18n('showTip')"
+        @click="toggleTip"
+      ></i>
+    </div>
     <b-jumbotron
       v-if="tooltipOn"
       :header="y18n('layaLaRelate.name')"
@@ -154,7 +154,7 @@ Dependencies:
         <!-- text regular -->
         <label
           class="col-form-label col-2"
-          :for="'rel-text-'+i"
+          :for="'rel-text-' + i"
         >
           {{ y18n('text') }}
         </label>
@@ -211,7 +211,7 @@ Dependencies:
       <p><b>{{ y18n('items') }}</b></p>
       <div
         v-for="(pair, i) in pairs"
-        :key="'pair-'+i"
+        :key="'pair-' + i"
         class="form-group row"
       >
         <div
@@ -226,7 +226,7 @@ Dependencies:
         >
           <input
             :id="'pair-text-'+i"
-            v-model="pairs[i].img"
+            v-model="pair.img"
             class="form-control"
             type="text"
             :placeholder="y18n('layaLaRelate.edit.imgPlaceholder')"
@@ -237,7 +237,7 @@ Dependencies:
         <div class="col">
           <input
             :id="'pair-label-'+i"
-            v-model="pairs[i].label"
+            v-model="pair.label"
             class="form-control"
             type="text"
             :placeholder="y18n('layaLaRelate.edit.labelPlaceholder')"
@@ -249,7 +249,7 @@ Dependencies:
           >
             <input
               :id="'pair-label-simple-'+i"
-              v-model="pairs[i].labelSimple"
+              v-model="pair.labelSimple"
               class="form-control"
               type="text"
               :placeholder="y18n('simpleAlt')"
@@ -261,7 +261,7 @@ Dependencies:
         <div class="col">
           <input
             :id="'pair-text-'+i"
-            v-model="pairs[i].audio"
+            v-model="pair.audio"
             class="form-control"
             type="text"
             :placeholder="y18n('layaLaRelate.edit.audioPlaceholder')"
@@ -272,7 +272,7 @@ Dependencies:
         <div class="col-auto">
           <select
             id="rel-solution-dropdown"
-            v-model="pairs[i].relation"
+            v-model="pair.relation"
             class="custom-select"
           >
             <option
@@ -282,8 +282,9 @@ Dependencies:
               {{ y18n('layaLaRelate.edit.solution') }}
             </option>
             <option
-              v-for="(rel,j) in relations"
+              v-for="(rel,j) in courseSimple? relationsSimple: relations"
               :key="rel+'-'+i+'-'+j"
+              :value="j"
             >
               {{ rel }}
             </option>
@@ -295,7 +296,7 @@ Dependencies:
           <button
             type="button"
             class="btn btn-danger btn-sm"
-            @click="_delItem(i)"
+            @click="_delPair(i)"
           >
             <i class="fas fa-times"></i>
           </button>
@@ -319,13 +320,14 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import { v4 as uuidv4 } from 'uuid'
 import { locale, tooltipIcon } from '@/mixins'
+import commonMethods from '@/plugins/laya-la-relate/common-methods'
 
 export default {
   name: 'LayaLaRelateEdit',
 
   mixins: [
+    commonMethods,
     locale,
     tooltipIcon
   ],
@@ -350,57 +352,6 @@ export default {
   },
 
   methods: {
-
-    /**
-     * Function _delItem: remove item at position idx
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     *
-     * @param {*} idx index at which to remove
-     */
-    _delPair (idx) {
-      this.pairs.splice(idx, 1)
-    },
-
-    /**
-     * Function _addPair: add an empty pair
-     *
-     * Author: core
-     *
-     * Last Updated: June 28, 2021
-     */
-    _addPair () {
-      this.pairs.push({ img: '', audio: '', relation: -1, label: '', flagged: false, id: uuidv4() })
-    },
-
-    /**
-     * Function _delRelation: remove a relation
-     *
-     * Author: core
-     *
-     * Last Updated: unkown
-     *
-     * @param {*} idx index of relation to remove
-     */
-    _delRelation (idx) {
-      this.relations.splice(idx, 1)
-      this.relationsSimple.splice(idx, 1)
-    },
-
-    /**
-     * Function _addRelation: add an empty relation
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     */
-    _addRelation () {
-      this.relations.push('')
-      this.relationsSimple.push('')
-    },
-
     /**
      * Function fetchData: fetch data from vuex and make data property
      *
