@@ -207,7 +207,7 @@ Dependencies:
                 <u>{{ y18n('register.success') }}</u>
                 <img
                   src="../assets/fertig.svg"
-                  alt="Erfolg"
+                  :alt="y18n('layaUploadFileList.success')"
                   style="width: 3rem"
                 >
               </div>
@@ -224,7 +224,6 @@ Dependencies:
 </template>
 
 <script>
-import http from 'axios'
 import { locale, pwdProps } from '@/mixins'
 import LayaPasswordInput from '@/components/password-input.vue'
 
@@ -369,7 +368,9 @@ export default {
 
   created () {
     // relocate logged users
-    if (this.$ls.get('auth', false)) this.$router.replace('/')
+    if (this.$ls.get('auth', false)) {
+      this.$router.replace('/')
+    }
   },
 
   methods: {
@@ -379,19 +380,16 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: unknown
+     * Last Updated: April 12, 2022 by cmc
      */
     isNameTaken () {
-      const ctx = this
-      if (ctx.name.length === 0) {
-        ctx.nameTaken = false
+      if (this.name.length === 0) {
+        this.nameTaken = false
         return
       }
-      http.get(`accounts/name/${ctx.name}`)
-        .then(({ data }) => {
-          ctx.nameTaken = data
-        })
-        .catch(() => { ctx.nameTaken = false })
+      this.$store.dispatch('checkNameTaken', this.name)
+        .then(resp => { this.nameTaken = resp })
+        .catch(() => { this.nameTaken = false })
     },
 
     /**
@@ -399,19 +397,16 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: unknown
+     * Last Updated: April 12, 2022 by cmc
      */
     isEmailTaken () {
-      const ctx = this
-      if (ctx.email.length === 0) {
-        ctx.emailTaken = false
+      if (this.email.length === 0) {
+        this.emailTaken = false
         return
       }
-      http.get(`accounts/email/${ctx.email}`)
-        .then(({ data }) => {
-          ctx.emailTaken = data
-        })
-        .catch(() => { ctx.emailTaken = false })
+      this.$store.dispatch('checkEmailTaken', this.email)
+        .then(() => { this.emailTaken = true })
+        .catch(() => { this.emailTaken = false })
     },
 
     /**
@@ -429,36 +424,35 @@ export default {
 
       // console.log('Submitting...')
       this.busy = true
-      const ctx = this
 
-      // const avatarFileName = ctx.profileImg
-      //   ? `${ctx.name}.${ctx.profileImg.name.split('.').slice(-1).pop()}` : ''
+      // const avatarFileName = this.profileImg
+      //   ? `${this.name}.${this.profileImg.name.split('.').slice(-1).pop()}` : ''
 
       // let requests = [
-      http.post('accounts/student', {
-        email: ctx.email,
-        username: ctx.name,
-        password: ctx.passwordSet,
+      this.$store.dispatch('registerUser', {
+        email: this.email,
+        username: this.name,
+        password: this.passwordSet,
         // avatar: avatarFileName,
-        lang: ctx.$store.state.profile.lang
+        lang: this.profileLang
       })
         .then(() => {
-          ctx.submitOk = true
+          this.submitOk = true
         })
         .catch((err) => {
           console.error(err)
-          ctx.errmsg = this.y18n('register.fail')
+          this.errmsg = this.y18n('register.fail')
         })
         .finally(() => {
-          ctx.busy = false
+          this.busy = false
         })
       // ]
 
       //
       // upload profile pic if set
-      // if (ctx.profileImg) {
+      // if (this.profileImg) {
       //   const data = new FormData()
-      //   data.append('file', ctx.profileImg)
+      //   data.append('file', this.profileImg)
       //   requests.push(
       //     http.post(`storage/img/upload?name=${avatarFileName}`, data)
       //     .then(res => console.log(res))
@@ -468,14 +462,14 @@ export default {
 
       // http.all(requests)
       //   .then(http.spread( () => {
-      //     ctx.submitOk = true
+      //     this.submitOk = true
       //   }))
       //   .catch( (err) => {
       //     console.log(err)
-      //     ctx.errmsg = this.y18n('register.fail')
+      //     this.errmsg = this.y18n('register.fail')
       //   })
       //   .finally( () => {
-      //     ctx.busy = false
+      //     this.busy = false
       //   })
     }
   }

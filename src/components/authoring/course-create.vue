@@ -30,6 +30,7 @@ Dependencies:
             type="text"
             class="form-control"
             :placeholder="y18n('courseCreate.courseName')"
+            @blur="trimNames"
           >
         </div>
       </div>
@@ -47,25 +48,29 @@ Dependencies:
             type="text"
             class="form-control"
             :placeholder="y18n('cat')"
+            @blur="trimNames"
           >
         </div>
       </div>
-      <!--      COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)-->
-      <!--      <div class="form-group row">-->
-      <!--        <label for="new-course-enrollment" class="col-3 col-form-label">-->
-      <!--          {{ y18n('courseCreate.enrollment') }}-->
-      <!--        </label>-->
-      <!--        <div class="col">-->
-      <!--          <input -->
-      <!--            id="new-course-enrollment"-->
-      <!--            type="checkbox"-->
-      <!--            class="form-control"-->
-      <!--            ref="enrollmentRequired"-->
-      <!--          >-->
+      <!--        COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)-->
+      <!--        <div class="form-group row">-->
+      <!--          <label for="new-course-enrollment" class="col-3 col-form-label">-->
+      <!--            {{ y18n('courseCreate.enrollment') }}-->
+      <!--          </label>-->
+      <!--          <div class="col">-->
+      <!--            <input-->
+      <!--              id="new-course-enrollment"-->
+      <!--              type="checkbox"-->
+      <!--              class="form-control"-->
+      <!--              ref="enrollmentRequired"-->
+      <!--            >-->
+      <!--          </div>-->
       <!--        </div>-->
-      <!--      </div>-->
       <div class="form-group row">
-        <div class="col">
+        <div
+          id="error-msg"
+          class="col"
+        >
           <span class="text-danger form-control-plaintext text-right">
             {{ msg }}
           </span>
@@ -87,10 +92,8 @@ Dependencies:
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
-import http from 'axios'
+import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
-import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'CourseCreate',
@@ -111,8 +114,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['note', 'auth']),
-    ...mapGetters(['courseList']),
+    ...mapGetters(['courseList', 'userId']),
 
     /**
      * formValid: to test if both name and category are set
@@ -133,7 +135,7 @@ export default {
      * Last updated: unknown
      */
     needsEnrollment () {
-      return this.$refs.enrollmentRequired.checked
+      return !!this.$refs.enrollmentRequired.checked
     }
 
   },
@@ -186,49 +188,30 @@ export default {
      *  */
     storeNewCourse () {
       this.checkNames()
-      const { auth, newCourse } = this
+      const { newCourse, userId } = this
       if (this.newCourseNeedsEncoding) {
         this.msg = this.y18n('courseList.needsEncoding')
       } else {
+        this.msg = ''
         // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
         // let enrBool = self.needsEnrollment
-        const newId = uuidv4()
-        console.log(`New Id: ${newId}`)
-
-        /* create storage */
-        http.post('storage', {
-          name: newId
-        }).then(() => console.log(`New Storage: ${newId}`))
-          .catch((err) => console.error(err))
-
-        /* create course */
-        http.post('courses', {
+        this.$store.dispatch('createCourse', {
           ...newCourse,
-          authorId: auth.userId,
-          storageId: newId
-          // properties: { enrollment: enrBool }
-        }).then(() => {
-          // console.log(resp)
-          this.$router.push(`/courses/${newCourse.name}/1`)
-
-          /* create enrollment for creator */
-          // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
-          // if (enrBool) {
-          //     http.get(`courses/getCourseId?courseName=${newCourse.name}`).
-          //       then( resp => {
-          //         const newEnrollment = {
-          //           courseId: resp.data.courseId,
-          //           studentId: self.auth.userId
-          //         }
-          //         http.patch('enrollments', {
-          //           ...newEnrollment
-          //         }).catch((err) => {console.log(err)})
-          //       })
-          // }
-        }).catch((err) => {
-          console.log(err)
-          this.msg = this.y18n('savingFailed')
+          userId: userId
         })
+          .then(() => {
+            this.$router.push(`/courses/${newCourse.name}/1`)
+          })
+          .catch(err => {
+            console.log(err)
+            this.msg = this.y18n('savingFailed')
+          })
+        if (this.needsEnrollment) {
+          this.$store.dispatch('createAuthorEnrollment', {
+            name: newCourse.name,
+            userId: userId
+          })
+        }
       }
     },
 
