@@ -10,11 +10,17 @@ export default {
     editorVotes: (state: { editorVotes: object }) => state.editorVotes
   },
   mutations: {
-    addEditorVote ({ state }, { applicationId, editorId, vote } : {
+    addEditorVote (state: { editorVotes: object }, { applicationId, editorId, vote } : {
       applicationId: string,
       editorId: string,
       vote: boolean
     }) {
+      if (!state.editorVotes[applicationId]) {
+        state.editorVotes[applicationId] = {}
+      }
+      if (!state.editorVotes[applicationId][editorId]) {
+        state.editorVotes[applicationId][editorId] = { decision: null }
+      }
       state.editorVotes[applicationId][editorId].decision = vote
     },
     /**
@@ -45,7 +51,7 @@ export default {
     }) {
       // check if votes are stored yet, retrieve if not
       const applicationsVotes = state.editorVotes[application.id]
-      if (applicationsVotes && Object.keys(applicationsVotes).length !== 0) {
+      if (!applicationsVotes || Object.keys(applicationsVotes).length !== 0) {
         await dispatch('getEditorVotes', application.id)
       }
       // create vote in database if not present, increment vote count
@@ -102,7 +108,7 @@ export default {
     getEditorVotes ({ commit }, applicationId: string) {
       return new Promise((resolve, reject) => {
         http.get('/editor-votes', { params: { filter: { where: { applicationId: applicationId } } } })
-          .then((resp) => {
+          .then(resp => {
             resp.data.forEach(voteEntry => {
               commit('addEditorVote', {
                 applicationId: applicationId,
@@ -133,7 +139,7 @@ export default {
             http.patch('/editor-votes', {
               applicationId: applicationId,
               editorId: editorId,
-              vote: state.editorVotes[applicationId][editorId].vote,
+              vote: state.editorVotes[applicationId][editorId].decision,
               date: Date.now()
             })
               .catch(err => console.error(err))
