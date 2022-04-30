@@ -7,7 +7,6 @@ import http from 'axios'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
-// localVue.use(BootstrapVue) // uncomment if component uses bootstrap
 
 describe('editor store module', () => {
   let store
@@ -18,15 +17,38 @@ describe('editor store module', () => {
     )
   })
 
-  it('mutation changeVote calls getEditorVotes with empty applications list', () => {
-    const dispatchSpy = jest.spyOn(store, 'dispatch')
+  it('mutation addEditorVote works changes state', () => {
+    store.commit('addEditorVote', { editorId: '2', applicationId: '1', vote: true })
+    expect(store.state.editorVotes).toStrictEqual([{ editorId: '2', applicationId: '1', decision: true }])
+  })
+
+  it('mutation changeVote updates editor vote and vote count', () => {
+    const application = {
+      id: '1',
+      votes: 3
+    }
+    store.state.applicationList.push(application)
+    store.state.editorVotes.push({ editorId: '1', applicationId: '1', decision: false })
+    expect(store.state.applicationList).toContain(application)
     store.commit('changeVote', {
-      editorId: '2',
-      application: { id: '1', votes: 4 },
+      application,
+      editorId: '1',
       vote: true
     })
-    expect(dispatchSpy).toHaveBeenCalledWith('getEditorVotes')
-  }) // FIXME
+    expect(store.state.editorVotes).toStrictEqual([{
+      editorId: '1', applicationId: '1', decision: true, changed: true
+    }])
+    expect(application.votes).toBe(4)
+    store.commit('changeVote', {
+      application,
+      editorId: '1',
+      vote: false
+    })
+    expect(store.state.editorVotes).toStrictEqual([{
+      editorId: '1', applicationId: '1', decision: false, changed: true
+    }])
+    expect(application.votes).toBe(3)
+  })
 
   it('action createEditorVote sends correct post request', async () => {
     httpMock = jest.spyOn(http, 'post')
@@ -56,9 +78,9 @@ describe('editor store module', () => {
     }))
     await store.dispatch('getEditorVotes', 1)
     expect(httpMock).toHaveBeenCalled()
-    expect(store.state.editorVotes).toStrictEqual({
-      1: { 2: { decision: false } }
-    })
+    expect(store.state.editorVotes).toStrictEqual([{
+      editorId: 2, applicationId: 1, decision: false
+    }])
   })
 
   it('action saveEditedVotes sends correct patch request', async () => {
