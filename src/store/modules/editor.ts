@@ -7,9 +7,23 @@ export default {
   },
   getters: {
     applicationList: (state: { applicationList: Array<object> }) => state.applicationList,
-    editorVotes: (state: { editorVotes: Array<object> }) => state.editorVotes
+    editorVotes: (state: { editorVotes: Array<object> }) => state.editorVotes,
+    userApplication: (state: { applicationList: Array<object> }) => state.applicationList[0]
   },
   mutations: {
+    /**
+     * function addApplication: append application to applicationList
+     *
+     * Author: cmc
+     *
+     * Last Updated: May 1, 2022
+     * @param state contains applicationList
+     * @param application item to append
+     */
+    addApplication (state: { applicationList: Array<object> }, application: object) {
+      state.applicationList.push(application)
+    },
+
     /**
      * function addEditorVote: push editorVote into editorVotes array
      *
@@ -69,6 +83,31 @@ export default {
         console.log('Vote not changed')
       }
       editorVote.decision = vote
+    },
+    /**
+     * decideOnApplication: use to decide on application - `accepted: null` withdraws
+     *
+     * Author: cmc
+     *
+     * Last Updated: May 1, 2022
+     * @param state
+     * @param data application: reference to object in state, decision: whether to accept
+     */
+    decideOnApplication (state,
+      //                      { applicationList: Array<{
+      // accepted: boolean,
+      // decidedOn: Date
+      // }> }
+      data: {
+        application: {
+          accepted: boolean,
+          decidedOn: number
+        },
+        decision: boolean
+      }
+    ) {
+      data.application.accepted = data.decision
+      data.application.decidedOn = Date.now()
     }
   },
   actions: {
@@ -97,6 +136,63 @@ export default {
     },
 
     /**
+     * getApplications: get 10 undecided applications, when n already in state
+     *  skip n
+     *
+     * Author: cmc
+     *
+     * Last Updated: May 1, 2022
+     * @param state contains applicationList
+     * @param commit state mutations
+     * @param dispatch actions
+     */
+    getApplications ({ state, commit, dispatch }) {
+      return new Promise((resolve, reject) => {
+        http.get('applications', {
+          params: {
+            filter: {
+              limit: 10,
+              order: 'created DESC',
+              skip: state.applicationList.length,
+              where: {
+                decidedOn: null
+              }
+            }
+          }
+        })
+          .then(resp => {
+            resp.data.forEach(application => {
+              commit('addApplication', application)
+              dispatch('getEditorVotes', application.id)
+                .catch(err => reject(err))
+                .finally(() => resolve('applications loaded!'))
+            })
+          })
+          .catch(err => reject(err))
+      })
+    },
+
+    /**
+     * getApplicationUser: return user's application if it exists
+     *
+     * Author: cmc
+     *
+     * Last Updated: May 1, 2022
+     * @param state store state
+     * @param commit state mutations
+     * @param userId id for user
+     */
+    getApplicationUser ({ state, commit }, userId: number) {
+      return new Promise((resolve, reject) => {
+        http.get('applications',
+          { params: { filter: { where: { applicantId: userId } } } }
+        )
+          .then(resp => resolve(resp))
+          .catch(err => reject(err))
+      })
+    },
+
+    /**
      * function getEditorVotes: retrieve exisiting votes for specified application
      *
      * Author: cmc
@@ -107,7 +203,13 @@ export default {
      */
     getEditorVotes ({ commit }, applicationId: number) {
       return new Promise((resolve, reject) => {
-        http.get('/editor-votes', { params: { filter: { where: { applicationId: applicationId } } } })
+        http.get('/editor-votes', {
+          params: {
+            filter: {
+              where: { applicationId: applicationId }
+            }
+          }
+        })
           .then(resp => {
             resp.data.forEach(voteEntry => {
               commit('addEditorVote', {
@@ -132,16 +234,10 @@ export default {
      * @param data payload for patch request
      */
     saveEditedVote ({ state }, data: {
-      applicationId: number,
-      editorId: number,
       id: number,
       vote: boolean
     }) {
-      const { id, ...updateData } = data
-      http.patch(`/editor-votes/${data.id}`, {
-        updateData,
-        date: Date.now()
-      })
+      http.patch(`/editor-votes/${data.id}/update-vote`, data.vote)
         .catch(err => console.error(err))
     },
 
@@ -155,7 +251,7 @@ export default {
      * @param dispatch store dispatch function
      */
     saveEditedVotes ({ state, dispatch }) {
-      // iterate through all keys in editorVotes (i.e. each application)
+      // iterate through all members of editorVotes (i.e. each application)
       state.editorVotes.forEach(vote => {
         // if vote has changed, update in database
         if (typeof (vote.changed) !== 'undefined') {
