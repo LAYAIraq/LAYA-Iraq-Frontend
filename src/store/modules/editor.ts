@@ -3,11 +3,13 @@ import http from 'axios'
 export default {
   state: {
     applicationList: [],
-    editorVotes: []
+    editorVotes: [],
+    numberOfEditors: 0
   },
   getters: {
     applicationList: (state: { applicationList: Array<object> }) => state.applicationList,
     editorVotes: (state: { editorVotes: Array<object> }) => state.editorVotes,
+    numberOfEditors: (state: { numberOfEditors: number }) => state.numberOfEditors,
     userApplication: (state: { applicationList: Array<object> }) => state.applicationList[0]
   },
   mutations: {
@@ -25,26 +27,35 @@ export default {
     },
 
     /**
-     * function addEditorVote: push editorVote into editorVotes array
+     * function addEditorVote: push editorVote into editorVotes array, update
+     *  application`s vote count accordingly
      *
      * Author: cmc
      *
      * Last Updated: April 30, 2022
      * @param state contains editorVotes array
-     * @param applicationId id for application
-     * @param editorId id for editor
-     * @param vote boolean for decision
+     * @param vote object representing editor vote
      */
     addEditorVote (
-      state: { editorVotes: Array<object> },
-      { applicationId, editorId, vote } : {
-      applicationId: number,
-      editorId: number,
-      vote: boolean
-      }
+      state: {
+        applicationList: Array<{ id: number, votes?: number }>
+        editorVotes: Array<object>
+      },
+      vote: { applicationId: number, vote: boolean }
     ) {
-      state.editorVotes.push({ applicationId, editorId, decision: vote })
+      state.editorVotes.push(vote)
+      const associatedApplication = state.applicationList.find(
+        elem => elem.id === vote.applicationId
+      )
+      associatedApplication.votes = associatedApplication.votes // depending if votes already exist
+        ? vote.vote
+          ? ++associatedApplication.votes // increment if vote is true
+          : associatedApplication.votes // do nothing if vote is false
+        : vote.vote // votes non-exisitent yet
+          ? 1 // set to 1 if vote true
+          : 0 // else
     },
+
     /**
      * function changeVote: change value for editor's vote on application, call only if
      *  vote for editor already exists
@@ -61,8 +72,10 @@ export default {
         // applicationsList: [{ (id): number, votes: number }],
         editorVotes: Array<{
           applicationId: number,
+          date: number,
           editorId: number,
-          decision: boolean,
+          vote: boolean,
+          edited: Array<{ date: number, vote: boolean }>,
           changed?: boolean
         }>
       }, { application, editorId, vote }: {
@@ -74,16 +87,21 @@ export default {
       const editorVote = state.editorVotes.find(elem =>
         elem.editorId === editorId && elem.applicationId === application.id
       ) // return vote for application and editor
-      if (editorVote.decision !== vote) {
+      if (editorVote.vote !== vote) { // push old decision to edited array, update
         editorVote.changed = true
+        editorVote.edited
+          ? editorVote.edited.push({ date: editorVote.date, vote: editorVote.vote })
+          : editorVote.edited = [{ date: editorVote.date, vote: editorVote.vote }]
+        editorVote.date = Date.now()
         vote
           ? application.votes++ // vote changed from no to yes, increment count
           : application.votes-- // vote changed from yes to no, decrement count
       } else {
         console.log('Vote not changed')
       }
-      editorVote.decision = vote
+      editorVote.vote = vote
     },
+
     /**
      * decideOnApplication: use to decide on application - `accepted: null` withdraws
      *
@@ -93,21 +111,34 @@ export default {
      * @param state
      * @param data application: reference to object in state, decision: whether to accept
      */
-    decideOnApplication (state,
-      //                      { applicationList: Array<{
-      // accepted: boolean,
-      // decidedOn: Date
-      // }> }
-      data: {
-        application: {
-          accepted: boolean,
-          decidedOn: number
-        },
+    decideOnApplication (state: {
+      applicationList: Array<{
+        accepted?: boolean,
+        decidedOn?: number,
+        id: number
+      }>
+    },
+    data: {
+        applicationId: number,
         decision: boolean
       }
     ) {
-      data.application.accepted = data.decision
-      data.application.decidedOn = Date.now()
+      const app = state.applicationList.find(app => app.id === data.applicationId)
+      app.accepted = data.decision
+      app.decidedOn = Date.now()
+    },
+
+    /**
+     * function setNumberOfEditors: set number of editors
+     *
+     * Author: cmc
+     *
+     * Last Updated: May 1, 2022
+     * @param state contains numberOfEditors
+     * @param num number to set
+     */
+    setNumberOfEditors (state: { numberOfEditors: number }, num: number) {
+      state.numberOfEditors = num
     }
   },
   actions: {
@@ -161,14 +192,14 @@ export default {
           }
         })
           .then(resp => {
-            resp.data.forEach(application => {
+            resp.data.forEach(async (application) => {
               commit('addApplication', application)
-              dispatch('getEditorVotes', application.id)
+              await dispatch('getEditorVotes', application.id)
                 .catch(err => reject(err))
-                .finally(() => resolve('applications loaded!'))
             })
           })
           .catch(err => reject(err))
+          .finally(() => resolve('applications loaded!'))
       })
     },
 
@@ -187,7 +218,11 @@ export default {
         http.get('applications',
           { params: { filter: { where: { applicantId: userId } } } }
         )
-          .then(resp => resolve(resp))
+          .then(resp => {
+            console.log(resp)
+            commit('addApplication', resp.data)
+            resolve(resp)
+          })
           .catch(err => reject(err))
       })
     },
@@ -212,11 +247,7 @@ export default {
         })
           .then(resp => {
             resp.data.forEach(voteEntry => {
-              commit('addEditorVote', {
-                applicationId: applicationId,
-                editorId: voteEntry.editorId,
-                vote: voteEntry.vote
-              })
+              commit('addEditorVote', voteEntry)
             })
             resolve('editor votes loaded')
           })
@@ -225,43 +256,21 @@ export default {
     },
 
     /**
-     * function saveEditedVote: send patch request for changed vote
+     * function getNumberOfEditors: retriev number of editors from db
      *
      * Author: cmc
      *
-     * Last Updated: April 30, 2022
-     * @param state for signature
-     * @param data payload for patch request
+     * Last Updated: May 1, 2022
+     * @param commit state mutation
      */
-    saveEditedVote ({ state }, data: {
-      id: number,
-      vote: boolean
-    }) {
-      http.patch(`/editor-votes/${data.id}/update-vote`, data.vote)
+    getNumberOfEditors ({ commit }) {
+      http.get('/accounts/editors')
+        .then(resp => commit('setNumberOfEditors', resp.data.editors))
         .catch(err => console.error(err))
     },
 
     /**
-     * update changed votes in database
-     *
-     * Author: cmc
-     *
-     * Last Updated: April 28, 2022
-     * @param state has editorVotes property
-     * @param dispatch store dispatch function
-     */
-    saveEditedVotes ({ state, dispatch }) {
-      // iterate through all members of editorVotes (i.e. each application)
-      state.editorVotes.forEach(vote => {
-        // if vote has changed, update in database
-        if (typeof (vote.changed) !== 'undefined') {
-          dispatch('saveEditedVote', { ...vote })
-        }
-      })
-    },
-
-    /**
-     * function saveVote: send post request for new vote
+     * function saveVote: send post request for vote
      *
      * Author: cmc
      *
@@ -269,17 +278,14 @@ export default {
      * @param state for signature
      * @param data payload for post request
      */
-    saveVote ({ state }, data: {
-      applicationId: number,
-      editorId: number,
-      vote: boolean
-    }) {
-      http.post('/editor-votes', { ...data })
+    saveVote ({ state }, data: { id: number }) {
+      const { id, ...updatedVote } = data
+      http.patch(`/editor-votes/${data.id}`, updatedVote)
         .catch(err => console.error(err))
     },
 
     /**
-     * function saveVotes: send post requests for all new votes
+     * function saveVotes: send post requests for all changed votes
      *
      * Author: cmc
      *
@@ -290,8 +296,8 @@ export default {
     saveVotes ({ state, dispatch }) {
       // iterate through all keys in editorVotes (i.e. each application)
       state.editorVotes.forEach(vote => {
-        // if vote has not changed, i.e. is new, persist in database
-        if (typeof (vote.changed) === 'undefined') {
+        // if vote has changed, persist in database
+        if (typeof (vote.changed) !== 'undefined') {
           dispatch('saveVote', { ...vote })
         }
       })
