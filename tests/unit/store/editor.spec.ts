@@ -145,6 +145,63 @@ describe('editor store mutations', () => {
   })
 })
 
+describe('editor store getters', () => {
+  let store
+  let sampleVote
+  let sampleApplication
+  beforeEach(() => {
+    store = new Vuex.Store(cloneDeep(editor))
+    sampleApplication = {
+      created: 12345678910,
+      areaOfExpertise: 'Bullshitting',
+      institution: 'Institute of Proctology, MIT',
+      fullName: 'Dr. A. Rsehole',
+      applicationText: 'I am a laureate PhD in Bovine Proctology and want to shed some light on the field',
+      id: 1,
+      edited: null,
+      accepted: false,
+      decidedOn: null,
+      applicantId: 2
+    }
+    sampleVote = sampleVote = {
+      date: Date.now(),
+      edited: null,
+      vote: false,
+      id: 1,
+      editorId: 2,
+      applicationId: 1
+    }
+  })
+
+  it('applicationList is a list and contains objects', () => {
+    expect(store.getters.applicationList).toStrictEqual(expect.any(Array))
+    store.commit('addApplication', sampleApplication)
+    expect(store.getters.applicationList).toHaveLength(1)
+    expect(store.getters.applicationList).toContain(sampleApplication)
+  })
+
+  it('editorVotes is a list and contains objects', () => {
+    expect(store.getters.editorVotes).toStrictEqual(expect.any(Array))
+    store.commit('addApplication', sampleApplication) // addEditorVote needs application in store
+    store.commit('addEditorVote', sampleVote)
+    expect(store.getters.editorVotes).toHaveLength(1)
+    expect(store.getters.editorVotes).toContain(sampleVote)
+  })
+
+  it('userApplication is an object', () => {
+    store.commit('addApplication', sampleApplication)
+    expect(store.getters.userApplication).toStrictEqual(expect.any(Object))
+    expect(store.getters.userApplication).toStrictEqual(sampleApplication)
+  })
+
+  it('numberOfEditors is number', () => {
+    expect(store.getters.numberOfEditors).toStrictEqual(expect.any(Number))
+    expect(store.getters.numberOfEditors).toBe(0)
+    store.commit('setNumberOfEditors', 123)
+    expect(store.getters.numberOfEditors).toBe(123)
+  })
+})
+
 describe('editor store actions', () => {
   let store
   let sampleApplication
@@ -174,6 +231,7 @@ describe('editor store actions', () => {
       editorId: 2,
       applicationId: 1
     }
+    httpMock = () => {} // in order to re-assign it every run
   })
 
   it('createEditorVote sends correct post request', async () => {
@@ -207,7 +265,7 @@ describe('editor store actions', () => {
     expect(store.state.applicationList.length).toBe(10)
   })
 
-  it('getApplicationUser returns exactly one application', async () => {
+  it('getApplicationUser sets one application in store', async () => {
     httpMock = jest.spyOn(http, 'get').mockImplementation(() => Promise.resolve({
       data: sampleApplication
     }))
@@ -234,5 +292,58 @@ describe('editor store actions', () => {
     await store.dispatch('getNumberOfEditors')
     expect(httpMock).toHaveBeenCalledWith('/accounts/editors')
     expect(store.state.numberOfEditors).toBe(15)
+  })
+
+  it('saveVote fires correct request', async () => {
+    httpMock = jest.spyOn(http, 'patch')
+      .mockImplementation(() => Promise.resolve('done'))
+    await store.dispatch('saveVote', sampleVote)
+    const { id, ...expectedPayload } = sampleVote
+    expect(httpMock).toHaveBeenCalledWith('/editor-votes/1', expectedPayload)
+  })
+
+  it('saveVotes dispatches saveVote for changed votes', async () => {
+    // const consoleError = console.error
+    console.error = () => {} // mute console output for Promise rejections
+    const errorSpy = jest.spyOn(console, 'error')
+    const commitSpy = jest.spyOn(store, 'commit')
+    store.commit('addApplication', sampleApplication)
+    httpMock = jest.spyOn(http, 'patch')
+      .mockImplementation(() => Promise.reject(new Error('fail')))
+    for (let i = 0; i < 10; i++) {
+      const myVote = cloneDeep(sampleVote)
+      if (i % 2 === 0) { // mark every 2nd vote as changed
+        // console.log(i)
+        myVote.changed = true
+      }
+      myVote.id = myVote.id + i
+      myVote.editorId = myVote.editorId + i
+      // console.log(myVote)
+      store.commit('addEditorVote', myVote)
+    } // have a list of 10 votes, 5 have changed
+    // console.log(store.state.editorVotes)
+    expect(commitSpy).toHaveBeenCalledTimes(11)
+    expect(store.state.editorVotes.length).toBe(10)
+    await store.dispatch('saveVotes')
+    expect(httpMock).toHaveBeenCalled() // returns different value when running in isolation, so generic test for now
+    expect(errorSpy).toHaveBeenCalledTimes(5) // for Promise rejection output
+    // console.error = consoleError
+  })
+
+  it('sendApplication sends correct http request', () => {
+    httpMock = jest.spyOn(http, 'post')
+      .mockImplementation(() => Promise.resolve())
+    const resp = store.dispatch('sendApplication', sampleApplication)
+    expect(httpMock).toHaveBeenCalledWith('/applications', sampleApplication)
+    expect(resp).toStrictEqual(expect.any(Promise))
+  })
+
+  it('updateApplication fires correct request', async () => {
+    httpMock = jest.spyOn(http, 'patch')
+      .mockImplementation(() => Promise.resolve())
+    const resp = store.dispatch('updateApplication', sampleApplication)
+    const { id, ...expectedPayload } = sampleApplication
+    expect(httpMock).toHaveBeenCalledWith('/applications/1', expectedPayload)
+    expect(resp).toStrictEqual(expect.any(Promise))
   })
 })

@@ -219,7 +219,6 @@ export default {
           { params: { filter: { where: { applicantId: userId } } } }
         )
           .then(resp => {
-            console.log(resp)
             commit('addApplication', resp.data)
             resolve(resp)
           })
@@ -256,7 +255,7 @@ export default {
     },
 
     /**
-     * function getNumberOfEditors: retriev number of editors from db
+     * function getNumberOfEditors: retrieve number of editors from db
      *
      * Author: cmc
      *
@@ -286,6 +285,7 @@ export default {
 
     /**
      * function saveVotes: send post requests for all changed votes
+     *  (new votes are handled by createEditorVote)
      *
      * Author: cmc
      *
@@ -297,7 +297,7 @@ export default {
       // iterate through all keys in editorVotes (i.e. each application)
       state.editorVotes.forEach(vote => {
         // if vote has changed, persist in database
-        if (typeof (vote.changed) !== 'undefined') {
+        if (vote.changed) {
           dispatch('saveVote', { ...vote })
         }
       })
@@ -332,9 +332,7 @@ export default {
     updateApplication ({ state }, data: { id: number }) {
       const { id, ...updateData } = data
       return new Promise((resolve, reject) => {
-        http.patch(`/applications/${data.id}`, {
-          updateData
-        })
+        http.patch(`/applications/${data.id}`, updateData)
           .then(resp => resolve(resp))
           .catch(err => reject(err))
       })
