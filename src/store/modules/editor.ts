@@ -129,6 +129,26 @@ export default {
     },
 
     /**
+     * function editApplication: only call for applicants, updated instance returned by
+     *  userApplication getter
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: May 3, 2022
+     * @param state contains applicationList with exactly one element
+     * @param data updated
+     */
+    editApplication (state: { applicationList: [{ id: number }?] }, data: { id: number }) {
+      if (state.applicationList.length === 0) {
+        console.error('empty applicationList!')
+      } else if (state.applicationList[0].id !== data.id) {
+        console.error('IDs don`t match!')
+      } else {
+        state.applicationList[0] = { ...data }
+      }
+    },
+
+    /**
      * function setNumberOfEditors: set number of editors
      *
      * Author: cmc
@@ -219,7 +239,9 @@ export default {
           { params: { filter: { where: { applicantId: userId } } } }
         )
           .then(resp => {
-            commit('addApplication', resp.data)
+            if (resp.data.length === 1) {
+              commit('addApplication', resp.data[0])
+            }
             resolve(resp)
           })
           .catch(err => reject(err))

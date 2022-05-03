@@ -26,6 +26,10 @@ describe('Header unauthorized', () => {
     const store = new Vuex.Store({
       actions,
       getters,
+      mutations: {
+        logout: jest.fn(),
+        setLang: jest.fn()
+      },
       modules: {
         auth
       }

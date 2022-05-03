@@ -136,6 +136,32 @@ describe('editor store mutations', () => {
     expect(store.state.applicationList[0].accepted).toBe(null)
   })
 
+  it('editApplication returns error with empty store', () => {
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation()
+    store.commit('editApplication', sampleApplication)
+    expect(errorSpy).toHaveBeenCalled()
+  })
+
+  it('editApplication returns error with non-matching ids', () => {
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation()
+    store.commit('addApplication', sampleApplication)
+    store.commit('editApplication', { ...sampleApplication, id: 3 })
+    expect(errorSpy).toHaveBeenCalled()
+  })
+
+  it('editApplication updates store correctly', () => {
+    store.commit('addApplication', sampleApplication)
+    store.commit('editApplication', {
+      ...sampleApplication,
+      fullName: 'Dr. van Nostrand',
+      institution: 'State of New York'
+    })
+    expect(store.getters.userApplication).toStrictEqual(expect.objectContaining({
+      fullName: 'Dr. van Nostrand',
+      institution: 'State of New York'
+    }))
+  })
+
   it('setNumberOfEditors works correctly', () => {
     expect(store.state.numberOfEditors).toBe(0)
     store.commit('setNumberOfEditors', 4)
@@ -267,7 +293,7 @@ describe('editor store actions', () => {
 
   it('getApplicationUser sets one application in store', async () => {
     httpMock = jest.spyOn(http, 'get').mockImplementation(() => Promise.resolve({
-      data: sampleApplication
+      data: [sampleApplication]
     }))
     await store.dispatch('getApplicationUser', 2)
     expect(store.state.applicationList.length).toBe(1)

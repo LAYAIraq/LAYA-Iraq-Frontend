@@ -238,6 +238,7 @@ Dependencies:
           <!-- Save Button -->
           <div class="form-group">
             <button
+              id="save-profile"
               type="submit"
               :disabled="busy || !passwordInputOk"
               class="btn btn-block btn-lg btn-outline-dark"
@@ -254,6 +255,7 @@ Dependencies:
       <hr>
       <div
         v-if="!isAuthor"
+        id="author-application"
         class="row"
       >
         <div class="col-3">
@@ -269,7 +271,7 @@ Dependencies:
             id="application-button"
             block
             variant="secondary"
-            @click="$bvModal.show('author-application')"
+            @click="$bvModal.show('author-application-form')"
           >
             Fill out application
           </b-button>
@@ -297,7 +299,7 @@ Dependencies:
       {{ y18n('profile.submitOk') }}
     </b-toast>
     <b-modal
-      id="author-application"
+      id="author-application-form"
       title="Apply as author"
       header-bg-variant="info"
       ok-variant="success"
@@ -305,7 +307,7 @@ Dependencies:
       :cancel-title="y18n('cancel')"
       centered
       static
-      @ok="sendApplication"
+      @ok="prepareApplication"
     >
       <div class="form-group p-2">
         <div class="form-group row">
@@ -317,6 +319,7 @@ Dependencies:
           </label>
           <input
             id="applicant-name"
+            v-model="fullName"
             class="form-control"
             type="text"
           >
@@ -330,6 +333,7 @@ Dependencies:
           </label>
           <input
             id="applicant-institution"
+            v-model="institution"
             class="form-control"
             type="text"
           >
@@ -343,6 +347,7 @@ Dependencies:
           </label>
           <input
             id="applicant-expertise"
+            v-model="areaOfExpertise"
             class="form-control"
             type="text"
           >
@@ -361,6 +366,7 @@ Dependencies:
           </label>
           <textarea
             id="applicant-text"
+            v-model="applicationText"
             class="form-control"
             rows="5"
           ></textarea>
@@ -374,7 +380,7 @@ Dependencies:
 import { locale, pwdProps } from '@/mixins'
 import api from '@/backend-url'
 import PasswordInput from '@/components/password-input.vue'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import fontOptions from '@/misc/font-options'
 import fontSizeOptions from '@/misc/font-size-options'
 // import '@/styles/fonts.css'
@@ -400,12 +406,21 @@ export default {
       formMsg: '',
       busy: false,
       prefs: {},
-      fontSizeOptions: fontSizeOptions
+      institution: '',
+      areaOfExpertise: '',
+      fullName: '',
+      applicationText: '',
+      edited: null
     }
   },
 
   computed: {
-    ...mapGetters(['isAuthor', 'profile']),
+    ...mapGetters([
+      'isAuthor',
+      'profile',
+      'userApplication',
+      'userId'
+    ]),
 
     /**
      * avatarURL: return URL of user avatar
@@ -452,6 +467,10 @@ export default {
       ]
     },
 
+    fontSizeOptions () {
+      return fontSizeOptions
+    },
+
     /**
      * function newPasswordInput: returns something when password input is set
      *
@@ -486,6 +505,12 @@ export default {
       handler () {
         this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
       }
+    },
+    userApplication (val) {
+      this.applicationText = val.applicationText
+      this.institution = val.institution
+      this.areaOfExpertise = val.areaOfExpertise
+      this.fullName = val.fullName
     }
   },
 
@@ -508,9 +533,23 @@ export default {
         size: 18
       }
     }
+    if (!this.userApplication) {
+      this.getApplicationUser(this.userId)
+    }
   },
 
   methods: {
+    ...mapActions([
+      'getApplicationUser',
+      'sendApplication',
+      'updateApplication'
+    ]),
+
+    prepareApplication () {
+      // const applicationData = {
+      //
+      // }
+    },
 
     /**
      * Function submit: get password change request and fire it
