@@ -6,6 +6,12 @@ Date: unknown
 Dependencies: @/mixins/locale.vue
 -->
 
+<!--
+Reorganisation
+Author: nv
+Last Updated: May 04, 2022
+-->
+
 <template>
   <div class="laya-feedback">
     <b-toast
@@ -30,35 +36,82 @@ Dependencies: @/mixins/locale.vue
       {{ y18n('layaLaFeedback.bToast.feedbackUpdated') }}
     </b-toast>
 
-    <div class="feedback-container-main">
-      <div class="row mb-3">
-        <div class="col">
-          <h2>
-            {{ title.text }}
-          </h2>
-          <p>{{ task.text }}</p>
-        </div>
+    <div class="container">
+      <div
+      :id="title.id"
+      class="flaggable row mb-3"
+      >
+     
+      <hr>
+       <div
+          id="title"
+          class="col"
+        >
+        <h2>
+          {{  courseSimple? title.simple : title.text }}
+          <laya-audio-inline
+            v-if="taskAudioExists"
+            :src="courseSimple?
+              taskAudio.simple :
+              taskAudio.text"
+          ></laya-audio-inline>
+        </h2>
+      </div>
+      <laya-flag-icon
+        v-if="!previewData"
+        :ref-data="title"
+        @flagged="title.flagged = true"
+      ></laya-flag-icon>
       </div>
 
-      <hr>
+      <div
+      :id="task.id"
+      class="flaggable row"
+    >
+      <div
+          id="task"
+          class="col"
+        >
+        <p>{{ courseSimple? task.simple : task.text }}</p>
+      </div>
+      <laya-flag-icon
+        v-if="!previewData"
+        :ref-data="task"
 
+        @flagged="task.flagged = true"
+      ></laya-flag-icon>
+      </div>
+      <hr>
+    
       <div class="row">
         <div class="col">
           <div
             v-for="(item, i) in items"
-            :key="item.text"
-            class="item flaggable interactive"
+            :id="item.id"
+            :key="item.id"
+            class="item flaggable item mb-5"
           >
-            <h3 class="text-center item-label">
-              {{ item.text }}
-            </h3>
-            <div class="d-flex justify-content-between">
-              <b
-                v-for="cat in categoriesLocal"
-                :key="cat"
-                aria-hidden="true"
-              >{{ cat }}</b>
-            </div>
+           <h3 class="text-center item-label">
+            {{ courseSimple? item.simple : item.label }}
+            <i
+              v-if="checked"
+              class="fas"
+              :class="{
+                'fa-check text-success': eval[i],
+                'fa-times text-danger': !eval[i]
+              }"
+            >
+            </i>
+          </h3>
+          
+          <div class="d-flex justify-content-between">
+            <b
+              v-for="cat in categories"
+              :key="cat.text"
+            >
+              {{ courseSimple? cat.simple : cat.text }}
+            </b>
+          </div>
 
             <input
               v-model.number="choice[i]"
@@ -66,16 +119,17 @@ Dependencies: @/mixins/locale.vue
               class="custom-range"
               min="0"
               :max="categoriesLocal.length-1"
+              :disabled="checked"
               :aria-valuenow="choice[i]"
               :aria-valuetext="categoriesLocal[choice[i]]"
               :aria-label="y18n('layaLaFeedback.label.slider')"
             >
             <laya-flag-icon
-              :ref-data="item"
-              :flagged="item.flagged"
-              :interactive="true"
-            >
-            </laya-flag-icon>
+            v-if="!previewData"
+            :ref-data="item"
+            :interactive="true"
+            @flagged="item.flagged = true"
+          ></laya-flag-icon>
           </div>
         </div>
       </div>
@@ -91,6 +145,24 @@ Dependencies: @/mixins/locale.vue
           ></textarea>
         </div>
       </div>
+      
+      <div class="row mt-5">
+      <div class="col">
+        <star-rating 
+          @rating-selected="rating = $event" :rating="rating"
+          >
+        </star-rating>
+        <div>
+          {{ y18n('selected.rating') }}: {{rating}}
+        </div>
+        <div>
+          <a href="#" @click.prevent="rating = 0">
+          {{ y18n('reset.rating') }}</a>
+        </div> 
+      </div>
+      </div>
+      
+      
       <div class="row mt-1">
         <div class="col">
           <button
@@ -107,8 +179,8 @@ Dependencies: @/mixins/locale.vue
       <div class="row">
         <button
           type="button"
-          class="btn btn-primary mt-3 ml-auto"
-          :class="langIsAr? 'float-right': 'float-left'"
+          class="btn btn-primary mt-3 ml"
+          :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
           @click="done"
         >
           {{ y18n('nextContent') }}
@@ -124,9 +196,12 @@ Dependencies: @/mixins/locale.vue
 </template>
 
 <script>
-import { locale, watchContent } from '@/mixins'
+import { locale, viewPluginProps, watchContent } from '@/mixins'
 import { mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
+import '@/styles/flaggables.css'
+import {StarRating} from 'vue-rate-it'
+
 
 // import layaWsyisyg from '../misc/laya-html'
 export default {
@@ -134,16 +209,18 @@ export default {
 
   mixins: [
     locale,
+    viewPluginProps,
     watchContent
   ],
+  
+  components: {
+    StarRating
+  },
+  
   props: {
     init: {
       type: Object,
       default () { return null }
-    },
-    onFinish: {
-      type: Array,
-      default () { return [] }
     },
     onSave: {
       type: Function,
@@ -152,7 +229,18 @@ export default {
   },
 
   data () {
+    if (this.previewData) { // show preview
+      return {
+        ...this.previewData,
+        checked: false,
+        solution: [], // users solution as index
+        eval: []
+      }
+    }
+    
     return {
+      title: {},
+      task: {},
       choice: [], // users choice as index
       freetext: '',
       answered: false,
@@ -162,7 +250,8 @@ export default {
       items: [],
       prevFeedback: '',
       categoriesLocal: '',
-      numberOfFeedbacksEntries: 0
+      numberOfFeedbacksEntries: 0,
+      rating: 0
     }
   },
 
@@ -185,7 +274,7 @@ export default {
       this.categoriesLocal = this.categories
       const mid = Math.floor((this.categories.length) / 2)
       const s = this.items.map(() => mid)
-      this.solution = [...s]
+      this.choice = [...s]
     },
 
     /**
@@ -201,6 +290,7 @@ export default {
         if ((this.prevFeedback[this.numberOfFeedbacksEntries] !== null) && this.prevFeedback.length !== 0) {
           this.answered = true
           this.freetext = this.prevFeedback[this.numberOfFeedbacksEntries].freetext
+          this.rating = this.prevFeedback[this.numberOffFeedbackEntries].rating
           this.choice = this.prevFeedback[this.numberOfFeedbacksEntries].choice
           this.created = this.prevFeedback[this.numberOfFeedbacksEntries].choice
           this.step = this.prevFeedback[this.numberOfFeedbacksEntries].step
@@ -249,6 +339,7 @@ export default {
         created: Date.now(),
         choice: this.choice,
         freetext: this.freetext,
+        rating: this.rating,
         id: this.id,
         numberOfFeedbacksEntries: this.numberOfFeedbacksEntries,
         options: {
@@ -297,9 +388,9 @@ export default {
     /**
      * Function fetchData(): fetch data from vuex and make data property
      *
-     * Author: pj
+     * Author: nvgut
      *
-     * Last Updated: September 10, 2021
+     * Last Updated: May 04, 2022
      */
     fetchData () {
       for (let i = 0; i < this.step; i++) {
@@ -307,7 +398,8 @@ export default {
           this.numberOfFeedbacksEntries++
         }
       }
-      const preData = JSON.parse(JSON.stringify(this.content[this.step].input))
+      const idx = this.$route.params.step - 1
+      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.title = preData.title
       this.task = preData.task
       this.taskAudio = preData.taskAudio
