@@ -20,6 +20,8 @@ describe('profile view', () => {
   let state
   let store
   let spy
+  let commitSpy
+  let dispatchSpy
 
   beforeEach(() => {
     state = {
@@ -67,7 +69,8 @@ describe('profile view', () => {
           getters: {
             profile () {
               return profileState
-            }
+            },
+            userId: () => profileState.id
           },
           mutations,
           actions
@@ -76,6 +79,8 @@ describe('profile view', () => {
       }
     })
     spy = jest.spyOn(console, 'error').mockImplementation() // exists to silence console errors
+    commitSpy = jest.spyOn(store, 'commit')
+    dispatchSpy = jest.spyOn(store, 'dispatch').mockImplementation(() => Promise.resolve())
     wrapper = mount(ProfileView, {
       data () {
         return {
@@ -146,7 +151,7 @@ describe('profile view', () => {
           simple: true
         }
       }))
-    expect(actions.saveProfile).toHaveBeenCalled()
+    expect(dispatchSpy).toHaveBeenCalledWith('saveProfile')
     // expect(actions.changePassword).toHaveBeenCalled()
     // expect(actions.saveProfile).toHaveBeenCalledTimes(3)
   })
@@ -161,8 +166,8 @@ describe('profile view', () => {
 
   it('calls store methods on destroy', () => {
     wrapper.destroy()
-    expect(actions.saveProfile).toHaveBeenCalled()
-    expect(mutations.setPrefs).toHaveBeenCalled()
+    expect(dispatchSpy).toHaveBeenCalledWith('saveProfile')
+    expect(commitSpy).toHaveBeenCalledWith('setPrefs', expect.any(Object))
   })
 
   // it('sets correct size when range is set', async () => {
@@ -178,8 +183,8 @@ describe('profile view', () => {
 
   it('shows toast when password is saved', async () => {
     actions.changePassword = jest.fn(() => Promise.resolve())
-    getters.passwordRepeat = () => 'secret12'
     store = new Vuex.Store({
+      state,
       getters,
       modules: {
         profile: {
@@ -191,7 +196,8 @@ describe('profile view', () => {
           },
           mutations,
           actions
-        }
+        },
+        editor
       }
     })
     wrapper = shallowMount(ProfileView, {
@@ -205,6 +211,7 @@ describe('profile view', () => {
         'password-input'
       ]
     })
+    state.repeatPwd = 'secret12'
     // const toastSpy = jest.spyOn(wrapper.vm.$bvToast, 'show')
     // expect(wrapper.find('#submit-ok').exists()).toBeFalsy()
     await wrapper.setData({ passwordOk: true })
@@ -217,8 +224,8 @@ describe('profile view', () => {
 
   it('shows toast when password saving failed', async () => {
     actions.changePassword = jest.fn(() => Promise.reject(new Error('fail')))
-    getters.passwordRepeat = () => 'secret12' // TODO: reduce duplication
     store = new Vuex.Store({
+      state,
       getters,
       modules: {
         profile: {
@@ -230,7 +237,8 @@ describe('profile view', () => {
           },
           mutations,
           actions
-        }
+        },
+        editor
       }
     })
     wrapper = shallowMount(ProfileView, {
@@ -244,6 +252,7 @@ describe('profile view', () => {
         'password-input'
       ]
     })
+    state.repeatPwd = 'secret12'
     await wrapper.setData({ passwordOk: true })
     const button = wrapper.find('button')
     await button.trigger('click')
@@ -258,22 +267,7 @@ describe('profile view', () => {
 
   it('doesn`t for non-authors', async () => {
     state.author = true
-    wrapper = shallowMount(ProfileView, {
-      data () {
-        return {
-          passwordOk: true
-        }
-      },
-      directives: {
-        'b-tooltip': () => {}
-      },
-      localVue,
-      store,
-      stubs: [
-        'password-input'
-      ]
-    })
-    // await localVue.nextTick()
+    await localVue.nextTick()
     expect(wrapper.find('#application-button').exists()).toBeFalsy()
     expect(wrapper.find('#author-application').exists()).toBeFalsy()
   })
@@ -295,16 +289,89 @@ describe('profile view', () => {
     expect(applicationForm.find('#applicant-text').exists()).toBeTruthy()
   })
 
-  it('pre-fills the application should it exist', async () => {
-    // const watchSpy = jest.spyOn(vm.watch, 'userApplication')
+  it('tries to dispatch an application onCreated', () => {
+    // dispatchSpy = dispatchSpy.mockImplementation(() => Promise.resolve(true))
+    // wrapper = mount(ProfileView, {
+    //   data () {
+    //     return {
+    //       passwordOk: true
+    //     }
+    //   },
+    //   directives: {
+    //     'b-tooltip': () => {
+    //     }
+    //   },
+    //   localVue,
+    //   store,
+    //   stubs: [
+    //     'password-input'
+    //   ]
+    // })
+    // store.commit('addApplication', sampleApplication)
+    expect(dispatchSpy).toHaveBeenCalledWith('getApplicationUser', 1)
+    // const applicationForm = wrapper.find('#author-application-form')
+    // expect(applicationForm.find('#applicant-name').element.value).toBe('Dr. A. Rsehole')
+    // expect(applicationForm.find('#applicant-institution').element.value).toBe('Institute of Proctology, MIT')
+    // expect(applicationForm.find('#applicant-expertise').element.value).toBe('Bullshitting')
+    // expect(applicationForm.find('#applicant-text').element.value).toBe('I am a laureate PhD in Bovine Proctology and want to shed some light on the field')
+  })
+
+  // it('pre-fills the application should it exist', async () => { // tested watcher that is removed
+  //   // const watchSpy = jest.spyOn(vm.watch, 'userApplication')
+  //   store.commit('addApplication', sampleApplication)
+  //   expect(store.getters.userApplication).toStrictEqual(sampleApplication)
+  //   // expect(watchSpy).toHaveBeenCalled()
+  //   await localVue.nextTick()
+  //   const applicationForm = wrapper.find('#author-application-form')
+  //   expect(applicationForm.find('#applicant-name').element.value).toBe('Dr. A. Rsehole')
+  //   expect(applicationForm.find('#applicant-institution').element.value).toBe('Institute of Proctology, MIT')
+  //   expect(applicationForm.find('#applicant-expertise').element.value).toBe('Bullshitting')
+  //   expect(applicationForm.find('#applicant-text').element.value).toBe('I am a laureate PhD in Bovine Proctology and want to shed some light on the field')
+  // })
+
+  it('updates data in store if application changed', async () => {
     store.commit('addApplication', sampleApplication)
-    expect(store.getters.userApplication).toStrictEqual(sampleApplication)
-    // expect(watchSpy).toHaveBeenCalled()
-    await localVue.nextTick()
-    const applicationForm = wrapper.find('#author-application-form')
-    expect(applicationForm.find('#applicant-name').element.value).toBe('Dr. A. Rsehole')
-    expect(applicationForm.find('#applicant-institution').element.value).toBe('Institute of Proctology, MIT')
-    expect(applicationForm.find('#applicant-expertise').element.value).toBe('Bullshitting')
-    expect(applicationForm.find('#applicant-text').element.value).toBe('I am a laureate PhD in Bovine Proctology and want to shed some light on the field')
+    await wrapper.find('#applicant-expertise').setValue('Bovine Defecation')
+    await wrapper.find('#application-button').trigger('click')
+    const applicationSaveButton = wrapper.find('.btn.btn-success')
+    expect(applicationSaveButton.text()).toBe('Save application')
+    await applicationSaveButton.trigger('click') // click ok button on modal, saving the application
+    expect(commitSpy).toHaveBeenLastCalledWith('editApplication', expect.objectContaining({
+      areaOfExpertise: 'Bovine Defecation'
+    }))
+    expect(store.getters.applicationList[0]).toStrictEqual(
+      expect.objectContaining({ areaOfExpertise: 'Bovine Defecation' })
+    )
+    expect(store.getters.userApplication).toStrictEqual(
+      expect.objectContaining({ areaOfExpertise: 'Bovine Defecation' })
+    )
+  })
+
+  it('dispatches updateApplication onDestroy if one exisited', async () => {
+    store.commit('addApplication', sampleApplication)
+    wrapper.find('#applicant-expertise').setValue('Bovine Defecation')
+    await wrapper.find('btn.btn-success').trigger('click')
+    wrapper.destroy()
+    expect(dispatchSpy).toHaveBeenCalledWith('updateApplication',
+      expect.objectContaining({ areaOfExpertise: 'Bovine Defecation' })
+    )
+  })
+
+  it('dispatches sendApplication onDestroy if application is new', async () => {
+    wrapper.find('#applicant-expertise').setValue('Post-Modern Literary Theory')
+    wrapper.find('#applicant-institution').setValue('Institute of Literature, Harvard')
+    wrapper.find('#applicant-name').setValue('Dr. Francois Lyotard')
+    wrapper.find('#applicant-text').setValue('Guys cmon you know me')
+    await wrapper.find('btn.btn-success').trigger('click') // click ok button on modal, sending the application
+    wrapper.destroy()
+    expect(dispatchSpy).toHaveBeenCalledWith('sendApplication',
+      expect.objectContaining({
+        areaOfExpertise: 'Post-Modern Literary Theory',
+        fullName: 'Dr. Francois Lyotard',
+        applicationText: 'Guys cmon you know me',
+        applicantId: store.getters.userId,
+        institution: 'Institute of Literature, Harvard'
+      })
+    )
   })
 })

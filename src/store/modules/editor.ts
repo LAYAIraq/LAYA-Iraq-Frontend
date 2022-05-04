@@ -1,4 +1,5 @@
 import http from 'axios'
+import Vue from 'vue'
 
 export default {
   state: {
@@ -10,7 +11,13 @@ export default {
     applicationList: (state: { applicationList: Array<object> }) => state.applicationList,
     editorVotes: (state: { editorVotes: Array<object> }) => state.editorVotes,
     numberOfEditors: (state: { numberOfEditors: number }) => state.numberOfEditors,
-    userApplication: (state: { applicationList: Array<object> }) => state.applicationList[0]
+    userApplication: (state: { applicationList: [{
+      id: number,
+      applicationText: string,
+      areaOfExpertise: string,
+      fullName: string,
+      institution: string
+    }] }) => state.applicationList[0]
   },
   mutations: {
     /**
@@ -144,7 +151,10 @@ export default {
       } else if (state.applicationList[0].id !== data.id) {
         console.error('IDs don`t match!')
       } else {
-        state.applicationList[0] = { ...data }
+        // console.log(data)
+        Vue.set(state.applicationList, 0, { ...state.applicationList[0], ...data }) // to retain reactivity
+        // state.applicationList[0] = { ...state.applicationList[0], ...data }
+        // console.log(state.applicationList[0])
       }
     },
 
@@ -241,8 +251,10 @@ export default {
           .then(resp => {
             if (resp.data.length === 1) {
               commit('addApplication', resp.data[0])
+              resolve(true)
+            } else { // no application for userId
+              resolve(false)
             }
-            resolve(resp)
           })
           .catch(err => reject(err))
       })

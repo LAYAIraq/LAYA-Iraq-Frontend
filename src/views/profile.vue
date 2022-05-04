@@ -303,11 +303,11 @@ Dependencies:
       title="Apply as author"
       header-bg-variant="info"
       ok-variant="success"
-      ok-title="Send application"
+      ok-title="Save application"
       :cancel-title="y18n('cancel')"
       centered
       static
-      @ok="prepareApplication"
+      @ok="saveApplication"
     >
       <div class="form-group p-2">
         <div class="form-group row">
@@ -361,7 +361,7 @@ Dependencies:
             <i
               v-b-tooltip.auto
               class="fas fa-question-circle"
-              title="Enter your application here. Please mention your area of expertisea and degrees if applicable. Please expand on the courses you plan on creating for LAYA."
+              title="Enter your application here. Please mention your area of expertise and degrees if applicable. Please expand on the courses you plan on creating for LAYA."
             ></i>
           </label>
           <textarea
@@ -380,7 +380,7 @@ Dependencies:
 import { locale, pwdProps } from '@/mixins'
 import api from '@/backend-url'
 import PasswordInput from '@/components/password-input.vue'
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import fontOptions from '@/misc/font-options'
 import fontSizeOptions from '@/misc/font-size-options'
 // import '@/styles/fonts.css'
@@ -410,7 +410,8 @@ export default {
       areaOfExpertise: '',
       fullName: '',
       applicationText: '',
-      edited: null
+      edited: null,
+      applicationNew: true
     }
   },
 
@@ -505,19 +506,14 @@ export default {
       handler () {
         this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
       }
-    },
-    userApplication (val) {
-      this.applicationText = val.applicationText
-      this.institution = val.institution
-      this.areaOfExpertise = val.areaOfExpertise
-      this.fullName = val.fullName
     }
   },
 
   beforeDestroy () {
     // save changes in profile
-    this.$store.commit('setPrefs', this.prefs)
-    this.$store.dispatch('saveProfile')
+    this.setPrefs(this.prefs)
+    this.saveProfile()
+    this.submitApplication()
   },
 
   created () {
@@ -535,20 +531,50 @@ export default {
     }
     if (!this.userApplication) {
       this.getApplicationUser(this.userId)
+        .then(resp => { // resp is boolean
+          if (resp) { // application for userId in database
+            this.applicationNew = false
+            this.applicationText = this.userApplication.applicationText
+            this.institution = this.userApplication.institution
+            this.areaOfExpertise = this.userApplication.areaOfExpertise
+            this.fullName = this.userApplication.fullName
+          }
+        })
+        .catch(err => console.error(err))
     }
   },
 
   methods: {
     ...mapActions([
       'getApplicationUser',
+      'saveProfile',
       'sendApplication',
       'updateApplication'
     ]),
+    ...mapMutations(['editApplication', 'setPrefs']),
 
-    prepareApplication () {
-      // const applicationData = {
-      //
-      // }
+    /**
+     * functionSaveApplication: save edits to application in store
+     *
+     * Author: cmc
+     *
+     * Last Updated: May 4, 2022
+     */
+    saveApplication () {
+      const {
+        applicationText,
+        areaOfExpertise,
+        fullName,
+        institution
+      } = this
+      // noinspection JSCheckFunctionSignatures
+      this.editApplication({
+        id: this.userApplication.id,
+        applicationText: applicationText,
+        areaOfExpertise: areaOfExpertise,
+        fullName: fullName,
+        institution: institution
+      })
     },
 
     /**
@@ -581,6 +607,23 @@ export default {
       /* update state and save profile preferences */
       this.$store.commit('setPrefs', this.prefs)
       this.$store.dispatch('saveProfile')
+    },
+
+    /**
+     * function submitApplication: depending on if application existed before,
+     *  update existing or send new application, to be called onDestoy
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: May 4, 2022
+     */
+    submitApplication () {
+      const { applicationNew, userApplication } = this
+      if (applicationNew) {
+        this.updateApplication(userApplication)
+      } else {
+        this.sendApplication(userApplication)
+      }
     }
   }
 }
