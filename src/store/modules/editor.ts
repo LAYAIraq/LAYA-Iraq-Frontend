@@ -110,6 +110,19 @@ export default {
     },
 
     /**
+     * function createApplication: create new application in applicationList
+     *
+     * Author: cmc
+     *
+     * Last Updated: May 1, 2022
+     * @param state contains applicationList
+     * @param application item to append
+     */
+    createApplication (state: { applicationList: [] }, application: object) {
+      Vue.set(state.applicationList, 0, application)
+    },
+
+    /**
      * decideOnApplication: use to decide on application - `accepted: null` withdraws
      *
      * Author: cmc
@@ -343,12 +356,11 @@ export default {
      * Author: cmc
      *
      * Last Updated: April 30, 2022
-     * @param state for signature
-     * @param data payload for post request
+     * @param getters consists userApplication
      */
-    sendApplication ({ state }, data: object) {
+    sendApplication ({ getters }) {
       return new Promise((resolve, reject) => {
-        http.post('/applications', data)
+        http.post('/applications', getters.userApplication)
           .then(resp => resolve(resp))
           .catch(err => reject(err))
       })
@@ -366,7 +378,7 @@ export default {
     updateApplication ({ state }, data: { id: number }) {
       const { id, ...updateData } = data
       return new Promise((resolve, reject) => {
-        http.patch(`/applications/${data.id}`, updateData)
+        http.patch(`/applications/${data.id}/edit`, updateData)
           .then(resp => resolve(resp))
           .catch(err => reject(err))
       })

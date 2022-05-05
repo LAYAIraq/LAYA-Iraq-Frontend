@@ -122,6 +122,11 @@ describe('editor store mutations', () => {
     expect(store.state.applicationList[0].accepted).toBe(false)
   })
 
+  it('createApplication sets userApplication', () => {
+    store.commit('addApplication', sampleApplication)
+    expect(store.getters.userApplication).toStrictEqual(sampleApplication)
+  })
+
   it('decideOnApplication sets values correctly (accept)', () => {
     store.commit('addApplication', sampleApplication)
     store.commit('decideOnApplication', { applicationId: 1, decision: true })
@@ -218,6 +223,15 @@ describe('editor store getters', () => {
     store.commit('addApplication', sampleApplication)
     expect(store.getters.userApplication).toStrictEqual(expect.any(Object))
     expect(store.getters.userApplication).toStrictEqual(sampleApplication)
+  })
+
+  it('userApplication changes when state is changed', () => {
+    store.commit('addApplication', sampleApplication)
+    expect(store.getters.userApplication).toStrictEqual(expect.any(Object))
+    store.commit('editApplication', { id: 1, fullName: 'Something Else' })
+    expect(store.getters.userApplication).toStrictEqual(expect.objectContaining({
+      fullName: 'Something Else'
+    }))
   })
 
   it('numberOfEditors is number', () => {
@@ -359,8 +373,9 @@ describe('editor store actions', () => {
   it('sendApplication sends correct http request', () => {
     httpMock = jest.spyOn(http, 'post')
       .mockImplementation(() => Promise.resolve())
+    store.commit('addApplication', sampleApplication)
     const resp = store.dispatch('sendApplication', sampleApplication)
-    expect(httpMock).toHaveBeenCalledWith('/applications', sampleApplication)
+    expect(httpMock).toHaveBeenCalledWith('/applications', store.getters.userApplication)
     expect(resp).toStrictEqual(expect.any(Promise))
   })
 

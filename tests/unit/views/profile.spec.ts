@@ -1,4 +1,5 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import cloneDeep from 'lodash.clonedeep'
 import ProfileView from '@/views/profile.vue'
 import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue'
@@ -75,18 +76,18 @@ describe('profile view', () => {
           mutations,
           actions
         },
-        editor
+        editor: cloneDeep(editor)
       }
     })
     spy = jest.spyOn(console, 'error').mockImplementation() // exists to silence console errors
     commitSpy = jest.spyOn(store, 'commit')
-    dispatchSpy = jest.spyOn(store, 'dispatch').mockImplementation(() => Promise.resolve())
+    dispatchSpy = jest.spyOn(store, 'dispatch').mockImplementation(() => Promise.resolve(true))
     wrapper = mount(ProfileView, {
-      data () {
-        return {
-          passwordOk: true
-        }
-      },
+      // data () {
+      //   return {
+      //     passwordOk: true
+      //   }
+      // },
       directives: {
         'b-tooltip': () => {
         }
@@ -101,6 +102,7 @@ describe('profile view', () => {
   })
 
   it('saves media input as chosen', async () => {
+    await wrapper.setData({ passwordOk: true })
     const mediaPrefChecks = wrapper.findAll('input')
     expect(mediaPrefChecks.length).toBe(13)
     mediaPrefChecks.wrappers.forEach((wrapper) => {
@@ -157,6 +159,7 @@ describe('profile view', () => {
   })
 
   it('disables button when password input wrong', async () => {
+    await wrapper.setData({ passwordOk: true })
     const button = wrapper.find('#save-profile')
     expect(button.attributes('disabled')).toBeUndefined()
     await wrapper.setData({ passwordOk: false })
@@ -331,6 +334,7 @@ describe('profile view', () => {
 
   it('updates data in store if application changed', async () => {
     store.commit('addApplication', sampleApplication)
+    await wrapper.setData({ applicationNew: false })
     await wrapper.find('#applicant-expertise').setValue('Bovine Defecation')
     await wrapper.find('#application-button').trigger('click')
     const applicationSaveButton = wrapper.find('.btn.btn-success')
@@ -348,23 +352,34 @@ describe('profile view', () => {
   })
 
   it('dispatches updateApplication onDestroy if one exisited', async () => {
+    wrapper.setData({ applicationNew: false })
     store.commit('addApplication', sampleApplication)
-    wrapper.find('#applicant-expertise').setValue('Bovine Defecation')
-    await wrapper.find('btn.btn-success').trigger('click')
+    expect(store.getters.applicationList.length).toBe(1)
+    await localVue.nextTick()
+    // expect(wrapper.vm.applicationNew).toBeFalsy()
     wrapper.destroy()
-    expect(dispatchSpy).toHaveBeenCalledWith('updateApplication',
-      expect.objectContaining({ areaOfExpertise: 'Bovine Defecation' })
+    expect(dispatchSpy).toHaveBeenLastCalledWith('updateApplication',
+      sampleApplication
     )
   })
 
   it('dispatches sendApplication onDestroy if application is new', async () => {
-    wrapper.find('#applicant-expertise').setValue('Post-Modern Literary Theory')
-    wrapper.find('#applicant-institution').setValue('Institute of Literature, Harvard')
-    wrapper.find('#applicant-name').setValue('Dr. Francois Lyotard')
-    wrapper.find('#applicant-text').setValue('Guys cmon you know me')
-    await wrapper.find('btn.btn-success').trigger('click') // click ok button on modal, sending the application
+    expect(store.getters.applicationList.length).toBe(0)
+    wrapper.setData({ applicationNew: true })
+    // dispatchSpy = jest.spyOn(store, 'dispatch').mockImplementation(() => Promise.reject(new Error('fail')))
+    await wrapper.find('#application-button').trigger('click')
+    await wrapper.find('#applicant-expertise').setValue('Post-Modern Literary Theory')
+    await wrapper.find('#applicant-institution').setValue('Institute of Literature, Harvard')
+    await wrapper.find('#applicant-name').setValue('Dr. Francois Lyotard')
+    await wrapper.find('#applicant-text').setValue('Guys cmon you know me')
+    await wrapper.find('.btn.btn-success').trigger('click') // click ok button on modal, sending the application
+    // expect(wrapper.vm.applicationNew).toBeTruthy()
+    // expect(methodSpy).toHaveBeenCalled()
+    // expect(commitSpy).toHaveBeenCalledWith('addApplication', expect.any(Object))
+    // expect(store.getters.userApplication).toBeTruthy()
+    await localVue.nextTick()
     wrapper.destroy()
-    expect(dispatchSpy).toHaveBeenCalledWith('sendApplication',
+    expect(dispatchSpy).toHaveBeenLastCalledWith('sendApplication',
       expect.objectContaining({
         areaOfExpertise: 'Post-Modern Literary Theory',
         fullName: 'Dr. Francois Lyotard',

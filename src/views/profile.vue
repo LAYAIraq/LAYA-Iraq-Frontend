@@ -411,7 +411,7 @@ export default {
       fullName: '',
       applicationText: '',
       edited: null,
-      applicationNew: true
+      applicationNew: false
     }
   },
 
@@ -506,6 +506,12 @@ export default {
       handler () {
         this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
       }
+    },
+    userApplication (val) { // mirror changes in store for render (e.g. when new application is set)
+      this.applicationText = val.applicationText
+      this.institution = val.institution
+      this.areaOfExpertise = val.areaOfExpertise
+      this.fullName = val.fullName
     }
   },
 
@@ -531,16 +537,17 @@ export default {
     }
     if (!this.userApplication) {
       this.getApplicationUser(this.userId)
-        .then(resp => { // resp is boolean
-          if (resp) { // application for userId in database
-            this.applicationNew = false
-            this.applicationText = this.userApplication.applicationText
-            this.institution = this.userApplication.institution
-            this.areaOfExpertise = this.userApplication.areaOfExpertise
-            this.fullName = this.userApplication.fullName
+        .then(resp => {
+          if (!resp) { // application doesn't exist
+            this.applicationNew = true
           }
         })
         .catch(err => console.error(err))
+    } else { // userApplication already in store, set values for render
+      this.applicationText = this.userApplication.applicationText
+      this.institution = this.userApplication.institution
+      this.areaOfExpertise = this.userApplication.areaOfExpertise
+      this.fullName = this.userApplication.fullName
     }
   },
 
@@ -551,7 +558,11 @@ export default {
       'sendApplication',
       'updateApplication'
     ]),
-    ...mapMutations(['editApplication', 'setPrefs']),
+    ...mapMutations([
+      'addApplication',
+      'editApplication',
+      'setPrefs'
+    ]),
 
     /**
      * functionSaveApplication: save edits to application in store
@@ -568,13 +579,23 @@ export default {
         institution
       } = this
       // noinspection JSCheckFunctionSignatures
-      this.editApplication({
-        id: this.userApplication.id,
-        applicationText: applicationText,
-        areaOfExpertise: areaOfExpertise,
-        fullName: fullName,
-        institution: institution
-      })
+      if (this.applicationNew) {
+        this.addApplication({
+          applicationText: applicationText,
+          areaOfExpertise: areaOfExpertise,
+          fullName: fullName,
+          institution: institution,
+          applicantId: this.userId
+        })
+      } else {
+        this.editApplication({
+          id: this.userApplication.id,
+          applicationText: applicationText,
+          areaOfExpertise: areaOfExpertise,
+          fullName: fullName,
+          institution: institution
+        })
+      }
     },
 
     /**
@@ -618,11 +639,10 @@ export default {
      *  Last Updated: May 4, 2022
      */
     submitApplication () {
-      const { applicationNew, userApplication } = this
-      if (applicationNew) {
-        this.updateApplication(userApplication)
+      if (this.applicationNew) {
+        this.sendApplication(this.userApplication)
       } else {
-        this.sendApplication(userApplication)
+        this.updateApplication(this.userApplication)
       }
     }
   }
