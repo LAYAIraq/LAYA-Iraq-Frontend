@@ -201,7 +201,7 @@ describe('editor store getters', () => {
       decidedOn: null,
       applicantId: 2
     }
-    sampleVote = sampleVote = {
+    sampleVote = {
       date: Date.now(),
       edited: null,
       vote: false,

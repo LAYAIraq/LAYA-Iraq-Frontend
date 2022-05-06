@@ -25,12 +25,16 @@
     </div>
     <hr>
     <!-- table content -->
-    <div class="row mb-3">
+    <div
+      v-for="(application, i) in applicationList"
+      :key="`application-${i}`"
+      class="row mb-3"
+    >
       <div class="col">
-        Some applicant
+        {{ application.fullName }}
       </div>
       <div class="col">
-        Psychology
+        {{ application.institution }}
       </div>
       <div class="col">
         <b-button
@@ -40,7 +44,7 @@
         </b-button>
       </div>
       <div class="col">
-        2 / 3
+        {{ application.votes }} / {{ acceptThreshold }}
       </div>
     </div>
     <div class="row">
@@ -155,8 +159,34 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
-  name: 'EditorPanel'
+  name: 'EditorPanel',
+
+  computed: {
+    ...mapGetters([
+      'applicationList',
+      'isEditor',
+      'numberOfEditors'
+    ]),
+
+    acceptThreshold  () {
+      return Math.ceil((this.numberOfEditors * 0.25))
+    }
+  },
+
+  created () {
+    if (!this.isEditor) {
+      this.$router.replace('/')
+    }
+    this.getApplications()
+    this.$store.dispatch('getNumberOfEditors')
+  },
+
+  methods: {
+    ...mapActions(['getApplications'])
+  }
 }
 </script>
 
