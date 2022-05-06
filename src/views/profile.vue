@@ -253,27 +253,79 @@ Dependencies:
         </form>
       </div>
       <hr>
+      <!-- author application -->
       <div
         v-if="!isAuthor"
         id="author-application"
         class="row"
       >
         <div class="col-3">
-          Apply as author
+          {{ y18n('profile.application') }}
           <i
             v-b-tooltip.auto
             class="fas fa-question-circle"
-            title="You can apply as author for LAYA. Your application will be revisited by the editor board. Click here to fill out your application!"
+            :title="y18n('profile.application.tooltip')"
           ></i>
         </div>
-        <div class="col">
+        <div
+          v-if="applicationNew"
+          class="col"
+        >
           <b-button
             id="application-button"
             block
             variant="secondary"
             @click="$bvModal.show('author-application-form')"
           >
-            Fill out application
+            {{ y18n('profile.application.fillOut') }}
+          </b-button>
+        </div>
+        <div
+          v-else-if="userApplication &&
+            userApplication.decidedOn"
+          class="col"
+        >
+          <span
+            v-if="userApplication.status === 'withdrawn'"
+            id="application-withdrawn"
+          >
+            {{ y18n('profile.application.withdrawn')
+              .replace('{DATE}', Date(userApplication.decidedOn)
+                .toLocaleString()) }}
+          </span>
+          <span
+            v-else
+            id="application-decided"
+          >
+            {{ y18n('profile.application.decided')
+              .replace('{date}', Date(userApplication.decidedOn)
+                .toLocaleString()
+              ).replace('{status}', userApplication.status)
+            }}
+          </span>
+          <span v-if="userApplication.status === 'accepted'">
+            {{ y18n('profile.application.congrats') }}
+          </span>
+        </div>
+        <div
+          v-else
+          class="col"
+        >
+          <b-button
+            id="edit-application-button"
+            block
+            variant="secondary"
+            @click="$bvModal.show('author-application-form')"
+          >
+            {{ y18n('profile.application.edit') }}
+          </b-button>
+          <b-button
+            id="withdraw-application-button"
+            block
+            variant="warning"
+            @click="$bvModal.show('application-withdraw-modal')"
+          >
+            {{ y18n('profile.application.withdraw') }}
           </b-button>
         </div>
       </div>
@@ -300,10 +352,10 @@ Dependencies:
     </b-toast>
     <b-modal
       id="author-application-form"
-      title="Apply as author"
+      :title="y18n('profile.application')"
       header-bg-variant="info"
       ok-variant="success"
-      ok-title="Save application"
+      :ok-title="y18n('profile.application.save')"
       :cancel-title="y18n('cancel')"
       centered
       static
@@ -315,11 +367,11 @@ Dependencies:
             for="applicant-name"
             class="col-form-label"
           >
-            Full Name
+            {{ y18n('profile.application.fullName') }}
           </label>
           <input
             id="applicant-name"
-            v-model="fullName"
+            v-model="formInput.fullName"
             class="form-control"
             type="text"
           >
@@ -329,11 +381,11 @@ Dependencies:
             for="applicant-institution"
             class="col-form-label"
           >
-            Institution
+            {{ y18n('profile.application.institution') }}
           </label>
           <input
             id="applicant-institution"
-            v-model="institution"
+            v-model="formInput.institution"
             class="form-control"
             type="text"
           >
@@ -343,11 +395,11 @@ Dependencies:
             for="applicant-expertise"
             class="col-form-label"
           >
-            Area of Expertise
+            {{ y18n('profile.application.areaOfExpertise') }}
           </label>
           <input
             id="applicant-expertise"
-            v-model="areaOfExpertise"
+            v-model="formInput.areaOfExpertise"
             class="form-control"
             type="text"
           >
@@ -357,21 +409,36 @@ Dependencies:
             for="applicant-text"
             class="col-form-label"
           >
-            Application text
+            {{ y18n('profile.application.text') }}
             <i
               v-b-tooltip.auto
               class="fas fa-question-circle"
-              title="Enter your application here. Please mention your area of expertise and degrees if applicable. Please expand on the courses you plan on creating for LAYA."
+              :title="y18n('profile.application.textTooltip')"
             ></i>
           </label>
           <textarea
             id="applicant-text"
-            v-model="applicationText"
+            v-model="formInput.applicationText"
             class="form-control"
             rows="5"
           ></textarea>
         </div>
       </div>
+    </b-modal>
+    <b-modal
+      id="application-withdraw-modal"
+      :title="y18n('profile.application.withdraw')"
+      header-bg-variant="warning"
+      ok-variant="warning"
+      :ok-title="y18n('profile.application.withdraw')"
+      :cancel-title="y18n('cancel')"
+      centered
+      static
+      @ok="withdrawApplication"
+    >
+      <p>
+        {{ y18n('profile.application.withdrawConfirm') }}
+      </p>
     </b-modal>
   </div>
 </template>
@@ -406,11 +473,13 @@ export default {
       formMsg: '',
       busy: false,
       prefs: {},
-      institution: '',
-      areaOfExpertise: '',
-      fullName: '',
-      applicationText: '',
-      edited: null,
+      formInput: {
+        applicationText: '',
+        areaOfExpertise: '',
+        fullName: '',
+        institution: ''
+      },
+      applicationEdited: -1, // increments once when data is loaded from store
       applicationNew: false
     }
   },
@@ -501,6 +570,12 @@ export default {
   },
 
   watch: {
+    formInput: { // watch for changed on form input
+      handler () {
+        this.applicationEdited++
+      },
+      deep: true
+    },
     profile: {
       deep: true,
       handler () {
@@ -508,10 +583,10 @@ export default {
       }
     },
     userApplication (val) { // mirror changes in store for render (e.g. when new application is set)
-      this.applicationText = val.applicationText
-      this.institution = val.institution
-      this.areaOfExpertise = val.areaOfExpertise
-      this.fullName = val.fullName
+      this.formInput.applicationText = val.applicationText
+      this.formInput.institution = val.institution
+      this.formInput.areaOfExpertise = val.areaOfExpertise
+      this.formInput.fullName = val.fullName
     }
   },
 
@@ -523,32 +598,8 @@ export default {
   },
 
   created () {
-    // make profile settings mutable
-    this.avatar = this.profile.avatar
-    this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
-    if (!this.prefs.media) { // avoid render error when no prefs set
-      this.prefs.media = {}
-    }
-    if (!this.prefs.font) {
-      this.prefs.font = {
-        chosen: 'standard',
-        size: 18
-      }
-    }
-    if (!this.userApplication) {
-      this.getApplicationUser(this.userId)
-        .then(resp => {
-          if (!resp) { // application doesn't exist
-            this.applicationNew = true
-          }
-        })
-        .catch(err => console.error(err))
-    } else { // userApplication already in store, set values for render
-      this.applicationText = this.userApplication.applicationText
-      this.institution = this.userApplication.institution
-      this.areaOfExpertise = this.userApplication.areaOfExpertise
-      this.fullName = this.userApplication.fullName
-    }
+    this.setProfileForRender()
+    this.setUserApplication()
   },
 
   methods: {
@@ -556,10 +607,12 @@ export default {
       'getApplicationUser',
       'saveProfile',
       'sendApplication',
+      'sendApplicationDecision',
       'updateApplication'
     ]),
     ...mapMutations([
       'addApplication',
+      'decideOnApplication',
       'editApplication',
       'setPrefs'
     ]),
@@ -577,7 +630,7 @@ export default {
         areaOfExpertise,
         fullName,
         institution
-      } = this
+      } = this.formInput
       // noinspection JSCheckFunctionSignatures
       if (this.applicationNew) {
         this.addApplication({
@@ -587,7 +640,7 @@ export default {
           institution: institution,
           applicantId: this.userId
         })
-      } else {
+      } else if (this.applicationEdited > 0) {
         this.editApplication({
           id: this.userApplication.id,
           applicationText: applicationText,
@@ -595,6 +648,53 @@ export default {
           fullName: fullName,
           institution: institution
         })
+      }
+    },
+
+    /**
+     * function setProfileForRender: deep copy prefs for mutation, render
+     *
+     * Author: cmc
+     *
+     * Last Updated: May 6, 2022
+     */
+    setProfileForRender () {
+      // make profile settings mutable and render
+      this.avatar = this.profile.avatar
+      this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
+      if (!this.prefs.media) { // avoid render error when no prefs set
+        this.prefs.media = {}
+      }
+      if (!this.prefs.font) {
+        this.prefs.font = {
+          chosen: 'standard',
+          size: 18
+        }
+      }
+    },
+
+    /**
+     * function setUserApplication: set mutable application parts, fetch
+     *  application if none present
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: May 6, 2022
+     */
+    setUserApplication () {
+      if (!this.userApplication) {
+        this.getApplicationUser(this.userId)
+          .then(resp => {
+            if (!resp) { // application doesn't exist
+              this.applicationNew = true
+            }
+          })
+          .catch(err => console.error(err))
+      } else { // userApplication already in store, set values for render
+        this.formInput.applicationText = this.userApplication.applicationText
+        this.formInput.institution = this.userApplication.institution
+        this.formInput.areaOfExpertise = this.userApplication.areaOfExpertise
+        this.formInput.fullName = this.userApplication.fullName
       }
     },
 
@@ -644,6 +744,18 @@ export default {
       } else {
         this.updateApplication(this.userApplication)
       }
+    },
+
+    /**
+     * function withdrawApplication: withdraw application, save in store
+     *
+     * Author: cmc
+     *
+     * Last Updated: May 6, 2022
+     */
+    withdrawApplication () {
+      this.decideOnApplication({ applicationId: this.userApplication.id, decision: 'withdrawn' })
+      this.sendApplicationDecision()
     }
   }
 }

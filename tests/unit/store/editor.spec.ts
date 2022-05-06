@@ -127,18 +127,25 @@ describe('editor store mutations', () => {
     expect(store.getters.userApplication).toStrictEqual(sampleApplication)
   })
 
-  it('decideOnApplication sets values correctly (accept)', () => {
-    store.commit('addApplication', sampleApplication)
-    store.commit('decideOnApplication', { applicationId: 1, decision: true })
-    expect(store.state.applicationList[0].decidedOn).toBeTruthy()
-    expect(store.state.applicationList[0].accepted).toBe(true)
-  })
-
   it('decideOnApplication sets values correctly (withdraw)', () => {
     store.commit('addApplication', sampleApplication)
-    store.commit('decideOnApplication', { applicationId: 1, decision: null })
+    store.commit('decideOnApplication', { applicationId: 1, decision: 'withdrawn' })
     expect(store.state.applicationList[0].decidedOn).toBeTruthy()
-    expect(store.state.applicationList[0].accepted).toBe(null)
+    expect(store.state.applicationList[0].status).toBe('withdrawn')
+  })
+
+  it('decideOnApplication sets values correctly (accept)', () => {
+    store.commit('addApplication', sampleApplication)
+    store.commit('decideOnApplication', { applicationId: 1, decision: 'accepted' })
+    expect(store.state.applicationList[0].decidedOn).toBeTruthy()
+    expect(store.state.applicationList[0].status).toBe('accepted')
+  })
+
+  it('decideOnApplication sets values correctly (refuse)', () => {
+    store.commit('addApplication', sampleApplication)
+    store.commit('decideOnApplication', { applicationId: 1, decision: 'rejected' })
+    expect(store.state.applicationList[0].decidedOn).toBeTruthy()
+    expect(store.state.applicationList[0].status).toBe('rejected')
   })
 
   it('editApplication returns error with empty store', () => {
@@ -379,12 +386,28 @@ describe('editor store actions', () => {
     expect(resp).toStrictEqual(expect.any(Promise))
   })
 
+  it('sendApplicationDecision sends correct http request', () => {
+    const decidedApplication = {
+      ...sampleApplication,
+      decidedOn: Date.now(),
+      status: 'withdrawn'
+    }
+    httpMock = jest.spyOn(http, 'patch')
+      .mockImplementation(() => Promise.resolve())
+    store.commit('addApplication', decidedApplication)
+    const resp = store.dispatch('sendApplicationDecision')
+    expect(httpMock).toHaveBeenCalledWith('/applications/1/decide',
+      { status: decidedApplication.status, decidedOn: decidedApplication.decidedOn }
+    )
+    expect(resp).toStrictEqual(expect.any(Promise))
+  })
+
   it('updateApplication fires correct request', async () => {
     httpMock = jest.spyOn(http, 'patch')
       .mockImplementation(() => Promise.resolve())
     const resp = store.dispatch('updateApplication', sampleApplication)
     const { id, ...expectedPayload } = sampleApplication
-    expect(httpMock).toHaveBeenCalledWith('/applications/1', expectedPayload)
+    expect(httpMock).toHaveBeenCalledWith(`/applications/${id}/edit`, expectedPayload)
     expect(resp).toStrictEqual(expect.any(Promise))
   })
 })

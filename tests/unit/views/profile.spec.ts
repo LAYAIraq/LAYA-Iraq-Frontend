@@ -264,6 +264,7 @@ describe('profile view', () => {
   }) // FIXME: succeeds but doesn't really test the toast
 
   it('shows application button for non-authors', async () => {
+    await wrapper.setData({ applicationNew: true })
     expect(wrapper.find('#application-button').exists()).toBeTruthy()
     expect(wrapper.find('#author-application').exists()).toBeTruthy()
   })
@@ -276,14 +277,15 @@ describe('profile view', () => {
   })
 
   it('shows application modal when clicking application button', async () => {
+    await wrapper.setData({ applicationNew: true })
     const button = wrapper.find('#application-button')
-    expect(button.exists()).toBeTruthy()
     await button.trigger('click')
     const applicationForm = wrapper.find('#author-application-form')
     expect(applicationForm.exists()).toBeTruthy()
   })
 
   it('shows application form has for name, aoe, instution and application', async () => {
+    await wrapper.setData({ applicationNew: true })
     await wrapper.find('#application-button').trigger('click')
     const applicationForm = wrapper.find('#author-application-form')
     expect(applicationForm.find('#applicant-name').exists()).toBeTruthy()
@@ -293,30 +295,7 @@ describe('profile view', () => {
   })
 
   it('tries to dispatch an application onCreated', () => {
-    // dispatchSpy = dispatchSpy.mockImplementation(() => Promise.resolve(true))
-    // wrapper = mount(ProfileView, {
-    //   data () {
-    //     return {
-    //       passwordOk: true
-    //     }
-    //   },
-    //   directives: {
-    //     'b-tooltip': () => {
-    //     }
-    //   },
-    //   localVue,
-    //   store,
-    //   stubs: [
-    //     'password-input'
-    //   ]
-    // })
-    // store.commit('addApplication', sampleApplication)
     expect(dispatchSpy).toHaveBeenCalledWith('getApplicationUser', 1)
-    // const applicationForm = wrapper.find('#author-application-form')
-    // expect(applicationForm.find('#applicant-name').element.value).toBe('Dr. A. Rsehole')
-    // expect(applicationForm.find('#applicant-institution').element.value).toBe('Institute of Proctology, MIT')
-    // expect(applicationForm.find('#applicant-expertise').element.value).toBe('Bullshitting')
-    // expect(applicationForm.find('#applicant-text').element.value).toBe('I am a laureate PhD in Bovine Proctology and want to shed some light on the field')
   })
 
   // it('pre-fills the application should it exist', async () => { // tested watcher that is removed
@@ -335,8 +314,9 @@ describe('profile view', () => {
   it('updates data in store if application changed', async () => {
     store.commit('addApplication', sampleApplication)
     await wrapper.setData({ applicationNew: false })
+    await wrapper.find('#edit-application-button').trigger('click')
     await wrapper.find('#applicant-expertise').setValue('Bovine Defecation')
-    await wrapper.find('#application-button').trigger('click')
+    // await wrapper.find('.btn.btn-primary').trigger('click')
     const applicationSaveButton = wrapper.find('.btn.btn-success')
     expect(applicationSaveButton.text()).toBe('Save application')
     await applicationSaveButton.trigger('click') // click ok button on modal, saving the application
@@ -349,6 +329,50 @@ describe('profile view', () => {
     expect(store.getters.userApplication).toStrictEqual(
       expect.objectContaining({ areaOfExpertise: 'Bovine Defecation' })
     )
+  })
+
+  it('gives option to edit and withdraw when applications exists', () => {
+    store.commit('addApplication', sampleApplication)
+    const applicationButtons = wrapper.find('#author-application').findAll('button')
+    expect(applicationButtons.length).toBe(2)
+    expect(applicationButtons.at(0).attributes('id')).toBe('edit-application-button')
+    expect(applicationButtons.at(1).attributes('id')).toBe('withdraw-application-button')
+  })
+
+  it('shows application modal when clicking edit application button', async () => {
+    store.commit('addApplication', sampleApplication)
+    await wrapper.find('#edit-application-button').trigger('click')
+    // expect(button.exists()).toBeTruthy()
+    expect(wrapper.find('#author-application-form').exists()).toBeTruthy()
+  })
+
+  it('shows withdrawal modal when clicking withdraw application button', async () => {
+    store.commit('addApplication', sampleApplication)
+    await wrapper.find('#withdraw-application-button').trigger('click')
+    const withdrawModal = wrapper.find('#application-withdraw-modal')
+    expect(withdrawModal.exists()).toBeTruthy()
+  })
+
+  it('calls decideOn when withdrawal is confirmed', async () => {
+    store.commit('addApplication', sampleApplication)
+    await wrapper.find('#withdraw-application-button').trigger('click')
+    const withdrawModal = wrapper.find('#application-withdraw-modal')
+    await withdrawModal.find('.btn.btn-warning').trigger('click')
+    await localVue.nextTick()
+    expect(commitSpy).toHaveBeenLastCalledWith('decideOnApplication', {
+      applicationId: 1,
+      decision: 'withdrawn'
+    })
+    wrapper.destroy()
+    expect(dispatchSpy).toHaveBeenCalledWith('sendApplicationDecision')
+  })
+
+  it('shows hint that user withdrew if they did', async () => {
+    store.commit('addApplication', sampleApplication)
+    await wrapper.find('#withdraw-application-button').trigger('click')
+    const withdrawModal = wrapper.find('#application-withdraw-modal')
+    await withdrawModal.find('.btn.btn-warning').trigger('click')
+    expect(wrapper.find('#application-withdrawn').exists()).toBeTruthy()
   })
 
   it('dispatches updateApplication onDestroy if one exisited', async () => {
@@ -365,7 +389,7 @@ describe('profile view', () => {
 
   it('dispatches sendApplication onDestroy if application is new', async () => {
     expect(store.getters.applicationList.length).toBe(0)
-    wrapper.setData({ applicationNew: true })
+    await wrapper.setData({ applicationNew: true })
     // dispatchSpy = jest.spyOn(store, 'dispatch').mockImplementation(() => Promise.reject(new Error('fail')))
     await wrapper.find('#application-button').trigger('click')
     await wrapper.find('#applicant-expertise').setValue('Post-Modern Literary Theory')

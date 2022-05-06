@@ -123,28 +123,29 @@ export default {
     },
 
     /**
-     * decideOnApplication: use to decide on application - `accepted: null` withdraws
+     * decideOnApplication: use to decide on application
      *
      * Author: cmc
      *
      * Last Updated: May 1, 2022
      * @param state
-     * @param data application: reference to object in state, decision: whether to accept
+     * @param data application: reference to object in state, decision: one of
+     *  'withdrawn', 'accepted', 'rejected'
      */
     decideOnApplication (state: {
       applicationList: Array<{
-        accepted?: boolean,
+        status?: string,
         decidedOn?: number,
         id: number
       }>
     },
     data: {
         applicationId: number,
-        decision: boolean
+        decision: string
       }
     ) {
       const app = state.applicationList.find(app => app.id === data.applicationId)
-      app.accepted = data.decision
+      app.status = data.decision
       app.decidedOn = Date.now()
     },
 
@@ -361,6 +362,24 @@ export default {
     sendApplication ({ getters }) {
       return new Promise((resolve, reject) => {
         http.post('/applications', getters.userApplication)
+          .then(resp => resolve(resp))
+          .catch(err => reject(err))
+      })
+    },
+
+    /**
+     * function sendApplicationDecision: send patch request for decided
+     *  application
+     *
+     * Author: cmc
+     *
+     * Last Updated: May 6, 2022
+     * @param getters consists userApplication
+     */
+    sendApplicationDecision ({ getters }) {
+      const { id, status, decidedOn } = getters.userApplication
+      return new Promise((resolve, reject) => {
+        http.patch(`/applications/${id}/decide`, { decidedOn, status })
           .then(resp => resolve(resp))
           .catch(err => reject(err))
       })
