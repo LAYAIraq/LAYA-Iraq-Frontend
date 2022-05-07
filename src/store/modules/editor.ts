@@ -54,6 +54,8 @@ export default {
       const associatedApplication = state.applicationList.find(
         elem => elem.id === vote.applicationId
       )
+      const applicationIdx = state.applicationList.findIndex(el =>
+        el === associatedApplication)
       associatedApplication.votes = associatedApplication.votes // depending if votes already exist
         ? vote.vote
           ? ++associatedApplication.votes // increment if vote is true
@@ -61,6 +63,7 @@ export default {
         : vote.vote // votes non-exisitent yet
           ? 1 // set to 1 if vote true
           : 0 // else
+      Vue.set(state.applicationList, applicationIdx, associatedApplication)
     },
 
     /**
@@ -76,7 +79,7 @@ export default {
      * @param vote true if endorsed, false if not
      */
     changeVote (state: {
-        // applicationsList: [{ (id): number, votes: number }],
+        applicationList: [{ id: number, votes: number }],
         editorVotes: Array<{
           applicationId: number,
           date: number,
@@ -94,6 +97,7 @@ export default {
       const editorVote = state.editorVotes.find(elem =>
         elem.editorId === editorId && elem.applicationId === application.id
       ) // return vote for application and editor
+      const applicationIdx = state.applicationList.findIndex(el => el === application)
       if (editorVote.vote !== vote) { // push old decision to edited array, update
         editorVote.changed = true
         editorVote.edited
@@ -103,6 +107,7 @@ export default {
         vote
           ? application.votes++ // vote changed from no to yes, increment count
           : application.votes-- // vote changed from yes to no, decrement count
+        Vue.set(state.applicationList, applicationIdx, application)
       } else {
         console.log('Vote not changed')
       }
