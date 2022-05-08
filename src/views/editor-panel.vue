@@ -23,6 +23,11 @@
             Voting status
           </strong>
         </div>
+        <div class="col">
+          <strong>
+            Your decision
+          </strong>
+        </div>
       </div>
       <hr>
       <!-- table content -->
@@ -45,9 +50,45 @@
             View Application
           </b-button>
         </div>
-        <div class="col">
-          <span class="vote-count">{{ application.votes || 0 }}</span> / {{
-            acceptThreshold }}
+        <div class="col application-status">
+          <span v-if="!application.votes || application.votes !== acceptThreshold">
+            <span class="vote-count">{{ application.votes || 0 }}</span>
+            / {{ acceptThreshold }}
+          </span>
+          <span v-else>
+            <b-button
+              variant="success"
+              disabled
+            >
+              Approved
+            </b-button>
+          </span>
+        </div>
+        <div class="col editor-decision">
+          <span v-if="showDecision(application.id) === true">
+            <b-button
+              variant="success"
+              disabled
+            >
+              Approved
+            </b-button>
+          </span>
+          <span v-else-if="showDecision(application.id) === false">
+            <b-button
+              variant="danger"
+              disabled
+            >
+              Rejected
+            </b-button>
+          </span>
+          <span v-else>
+            <b-button
+              variant="secondary"
+              disabled
+            >
+              Awaiting decision
+            </b-button>
+          </span>
         </div>
       </div>
     </div>
@@ -148,6 +189,7 @@
       </div>
       <template #modal-footer="{ ok, cancel, hide }">
         <b-button
+          id="approve-button"
           variant="success"
           :disabled="approved"
           @click="ok"
@@ -155,6 +197,7 @@
           Approve Application
         </b-button>
         <b-button
+          id="revoke-button"
           variant="danger"
           :disabled="!approved"
           @click="cancel"
@@ -216,7 +259,8 @@ export default {
         return null
       }
       return this.editorVotes.find(elem =>
-        elem.applicationId === this.currentApplication.id
+        (elem.applicationId === this.currentApplication.id) &&
+        (elem.editorId === this.userId)
       )
     }
   },
@@ -248,6 +292,11 @@ export default {
         editorId: this.userId,
         vote: false
       })
+    },
+
+    showDecision (id) {
+      const editorVote = this.editorVotes.find(el => el.applicationId === id && el.editorId === this.userId)
+      return editorVote ? editorVote.vote : null
     },
 
     voteOnApplication () {

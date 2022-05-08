@@ -21,7 +21,7 @@ describe('editor panel', () => {
   let state
   let store
   let wrapper
-  beforeEach(() => {
+  beforeAll(() => {
     state = {
       role: 'editor'
     }
@@ -38,10 +38,8 @@ describe('editor panel', () => {
         editor: cloneDeep(editor)
       }
     })
-    commitSpy = jest.spyOn(store, 'commit')
-    dispatchSpy = jest.spyOn(store, 'dispatch')
-      .mockImplementation(() => Promise.resolve())
 
+    // fill store with data
     for (let i = 0; i < 10; i++) { // fill store with applications and votes
       const randomBool = () => {
         return Math.round(Math.random()) === 1
@@ -53,19 +51,24 @@ describe('editor panel', () => {
       app.id += i
       app.applicantId += i
       store.commit('addApplication', app)
-      const vote1 = sampleVote
+      const vote1 = cloneDeep(sampleVote)
       vote1.id += (2 * i)
       vote1.vote = randomBool()
       vote1.applicationId = 1 + i
       vote1.editorId = randomId() % 3
       store.commit('addEditorVote', vote1)
-      const vote2 = sampleVote
-      vote2.id += (2 * i)
+      const vote2 = { ...sampleVote }
+      vote2.id += (2 * i) + 1
       vote2.vote = randomBool()
       vote2.applicationId = 1 + i
       vote2.editorId = randomId() % 3
       store.commit('addEditorVote', vote2)
     }
+  })
+  beforeEach(() => {
+    commitSpy = jest.spyOn(store, 'commit')
+    dispatchSpy = jest.spyOn(store, 'dispatch')
+      .mockImplementation(() => Promise.resolve())
 
     wrapper = mount(EditorPanel, {
       store,
@@ -132,10 +135,13 @@ describe('editor panel', () => {
     })
 
   it('increments count of application when editor votes yes', async () => {
+    expect(store.getters.editorVotes.some(e => e.editorId === 42)).toBeFalsy()
     await wrapper.find('.btn-secondary').trigger('click')
     let voteCount = wrapper.vm.currentApplication.votes
-    expect(wrapper.find('.btn-success').attributes('disabled')).toBeUndefined()
-    await wrapper.find('.btn-success').trigger('click')
+    expect(wrapper.vm.existingVote).toBeFalsy()
+    expect(wrapper.vm.approved).toBeFalsy()
+    expect(wrapper.find('#approve-button').attributes('disabled')).toBeUndefined()
+    await wrapper.find('#approve-button').trigger('click')
     await localVue.nextTick()
     expect(commitSpy).toHaveBeenLastCalledWith('addEditorVote', expect.objectContaining({
       editorId: 42,
@@ -161,7 +167,43 @@ describe('editor panel', () => {
       editorId: 42,
       vote: false
     }))
-
     expect(wrapper.find('.vote-count').text()).toBe(String(voteCount))
+  })
+
+  it('shows editor`s decision for each application', async () => {
+    for (let i = 1; i <= 10; i++) { // have all decisions in editorVotes
+      if (i % 3 !== 0) { // leave out every third application
+        store.commit('addEditorVote', {
+          applicationId: i,
+          editorId: 42,
+          vote: (i % 2 === 0) // approve if index is even
+        })
+      }
+    }
+    await localVue.nextTick()
+    expect(store.getters.editorVotes.some(el => el.editorId === 42 && el.applicationId % 3 === 0)).toBeFalsy()
+    const applications = wrapper.findAll('.application-entry')
+    for (let i = 1; i < applications.length; i++) {
+      const editorStatus = applications.at(i - 1).find('.editor-decision').text()
+      if (i % 3 === 0) {
+        expect(editorStatus).toBe('Awaiting decision')
+      } else {
+        expect(editorStatus).toMatch(/(Approved)|(Rejected)/)
+      }
+    }
+  })
+
+  it('shows approved button when application reaches threshold', async () => { // TODO: finish test
+    store.commit('setNumberOfEditors', 3)
+    let v = 0
+    // console.log(store.getters.editorVotes)
+    store.getters.editorVotes.forEach(e => {
+      console.log(e.applicationId)
+      if (e.applicationId === 1) {
+        e.vote = true
+        v++
+      }
+    })
+    console.log(v)
   })
 })

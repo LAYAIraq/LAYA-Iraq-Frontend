@@ -8,8 +8,19 @@ export default {
     numberOfEditors: 0
   },
   getters: {
-    applicationList: (state: { applicationList: Array<object> }) => state.applicationList,
-    editorVotes: (state: { editorVotes: Array<object> }) => state.editorVotes,
+    applicationList: (state: { applicationList: Array<{
+      applicationText: string,
+      areaOfExpertise: string,
+      fullName: string,
+      id: number,
+      institution: string,
+      votes?: number
+    }> }) => state.applicationList,
+    editorVotes: (state: { editorVotes: Array<{
+      applicationId: number,
+      editorId: number,
+      vote: boolean
+    }> }) => state.editorVotes,
     numberOfEditors: (state: { numberOfEditors: number }) => state.numberOfEditors,
     userApplication: (state: { applicationList: [{
       id: number,
