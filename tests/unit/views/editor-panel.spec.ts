@@ -13,11 +13,11 @@ localVue.use(Vuex)
 localVue.use(BootstrapVue)
 
 describe('editor panel', () => {
-  let actions
+  // let actions
   let commitSpy
   let dispatchSpy
   let getters
-  let mutations
+  // let mutations
   let state
   let store
   let wrapper
@@ -108,8 +108,12 @@ describe('editor panel', () => {
   it('shows the correct name, institution and vote count for each application', () => {
     const applicationEntries = wrapper.findAll('.application-entry')
     for (const i in store.getters.applicationList) {
-      expect(applicationEntries.at(i).find('.vote-count').text() ===
-        String(store.getters.applicationList[i].votes)).toBeTruthy()
+      expect(applicationEntries.at(i).find('.application-status').text())
+        .toMatch(/(Approved)|(\d\s*\n?\/\s*\d)/)
+      if (applicationEntries.at(i).find('.vote-count').exists()) {
+        expect(applicationEntries.at(i).find('.vote-count').text())
+          .toBe(String(store.getters.applicationList[i].votes))
+      }
       expect(applicationEntries.at(i).find('.applicant-name').text() ===
         String(store.getters.applicationList[i].fullName)).toBeTruthy()
       expect(applicationEntries.at(i).find('.applicant-institution').text() ===
@@ -135,6 +139,7 @@ describe('editor panel', () => {
     })
 
   it('increments count of application when editor votes yes', async () => {
+    store.commit('setNumberOfEditors', 42)
     expect(store.getters.editorVotes.some(e => e.editorId === 42)).toBeFalsy()
     await wrapper.find('.btn-secondary').trigger('click')
     let voteCount = wrapper.vm.currentApplication.votes
@@ -151,26 +156,49 @@ describe('editor panel', () => {
   })
 
   it('decreases count of application when editor revokes vote', async () => {
+    store.commit('setNumberOfEditors', 42)
     store.commit('addEditorVote', { applicationId: 1, editorId: 42, vote: true })
     const modalButton = wrapper.find('.btn-secondary')
     await modalButton.trigger('click')
     const modal = wrapper.find('#view-application')
     const approveButton = modal.find('.btn-success')
     const revokeButton = modal.find('.btn-danger')
-    let voteCount = wrapper.vm.currentApplication.votes
+    const voteCount = wrapper.vm.currentApplication.votes
     expect(approveButton.attributes('disabled')).toBe('disabled')
     expect(revokeButton.attributes('disabled')).toBeUndefined()
     await revokeButton.trigger('click')
     await localVue.nextTick()
-    expect(store.getters.applicationList[0].votes).toBe(--voteCount)
+    expect(store.getters.applicationList[0].votes).toBe(voteCount - 1)
     expect(commitSpy).toHaveBeenLastCalledWith('changeVote', expect.objectContaining({
       editorId: 42,
       vote: false
     }))
-    expect(wrapper.find('.vote-count').text()).toBe(String(voteCount))
+    expect(wrapper.find('.vote-count').text()).toBe(String(voteCount - 1))
+  })
+
+  it('increases count of application when editor changes vote from no to yes', async () => {
+    store.commit('setNumberOfEditors', 42)
+    store.commit('addEditorVote', { applicationId: 1, editorId: 42, vote: false })
+    const modalButton = wrapper.find('.btn-secondary')
+    await modalButton.trigger('click')
+    const modal = wrapper.find('#view-application')
+    const approveButton = modal.find('.btn-success')
+    const revokeButton = modal.find('.btn-danger')
+    const voteCount = wrapper.vm.currentApplication.votes
+    expect(approveButton.attributes('disabled')).toBeUndefined()
+    expect(revokeButton.attributes('disabled')).toBe('disabled')
+    await approveButton.trigger('click')
+    await localVue.nextTick()
+    expect(store.getters.applicationList[0].votes).toBe(voteCount + 1)
+    expect(commitSpy).toHaveBeenLastCalledWith('changeVote', expect.objectContaining({
+      editorId: 42,
+      vote: true
+    }))
+    expect(wrapper.find('.vote-count').text()).toBe(String(voteCount + 1))
   })
 
   it('shows editor`s decision for each application', async () => {
+    store.commit('setNumberOfEditors', 42)
     for (let i = 1; i <= 10; i++) { // have all decisions in editorVotes
       if (i % 3 !== 0) { // leave out every third application
         store.commit('addEditorVote', {
@@ -185,25 +213,28 @@ describe('editor panel', () => {
     const applications = wrapper.findAll('.application-entry')
     for (let i = 1; i < applications.length; i++) {
       const editorStatus = applications.at(i - 1).find('.editor-decision').text()
-      if (i % 3 === 0) {
-        expect(editorStatus).toBe('Awaiting decision')
-      } else {
-        expect(editorStatus).toMatch(/(Approved)|(Rejected)/)
-      }
+      expect(editorStatus).toMatch(/(Approved)|(Rejected)|(Awaiting decision)/)
     }
   })
 
-  it('shows approved button when application reaches threshold', async () => { // TODO: finish test
-    store.commit('setNumberOfEditors', 3)
-    let v = 0
-    // console.log(store.getters.editorVotes)
-    store.getters.editorVotes.forEach(e => {
-      console.log(e.applicationId)
-      if (e.applicationId === 1) {
-        e.vote = true
-        v++
-      }
+  it('shows approved button when application reaches threshold, "0 / 2" else',
+    async () => {
+      store.commit('setNumberOfEditors', 8)
+      // let v = 0
+      // console.log(store.getters.editorVotes)
+      store.getters.applicationList.forEach(a => {
+        const i = store.getters.applicationList.findIndex(el => el === a)
+        a.votes = i % 2 === 0 ? 2 : 0
+      })
+      await localVue.nextTick()
+      const applications = wrapper.findAll('.application-status')
+      applications.wrappers.forEach(wrap => {
+        expect(wrap.text()).toMatch(/(Approved)|(0\s*\n?\/\s*2)/)
+      })
     })
-    console.log(v)
+
+  it('saves votes beforeDestroy', () => {
+    wrapper.destroy()
+    expect(dispatchSpy).toHaveBeenCalledWith('saveVotes')
   })
 })

@@ -51,7 +51,7 @@
           </b-button>
         </div>
         <div class="col application-status">
-          <span v-if="!application.votes || application.votes !== acceptThreshold">
+          <span v-if="!application.votes || application.votes < acceptThreshold">
             <span class="vote-count">{{ application.votes || 0 }}</span>
             / {{ acceptThreshold }}
           </span>
@@ -73,14 +73,15 @@
               Approved
             </b-button>
           </span>
-          <span v-else-if="showDecision(application.id) === false">
-            <b-button
-              variant="danger"
-              disabled
-            >
-              Rejected
-            </b-button>
-          </span>
+          <!-- third option should vetoing be possible -->
+          <!--          <span v-else-if="showDecision(application.id) === false">-->
+          <!--            <b-button-->
+          <!--              variant="danger"-->
+          <!--              disabled-->
+          <!--            >-->
+          <!--              Rejected-->
+          <!--            </b-button>-->
+          <!--          </span>-->
           <span v-else>
             <b-button
               variant="secondary"
@@ -92,39 +93,40 @@
         </div>
       </div>
     </div>
-    <hr>
-    <div class="row mt-5">
-      <h2>Your recommendations</h2>
-    </div>
-    <!-- table header -->
-    <div class="row mt-5">
-      <div class="col">
-        <strong>
-          Applicant's name
-        </strong>
-      </div>
-      <div class="col">
-        <strong>
-          Voting status
-        </strong>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        Doktor Ahmad
-      </div>
-      <div class="col">
-        Pending
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        Doktor Layla
-      </div>
-      <div class="col">
-        Approved
-      </div>
-    </div>
+    <!-- recommendations omitted for v1.3 -->
+    <!--    <hr>-->
+    <!--    <div class="row mt-5">-->
+    <!--      <h2>Your recommendations</h2>-->
+    <!--    </div>-->
+    <!--    &lt;!&ndash; table header &ndash;&gt;-->
+    <!--    <div class="row mt-5">-->
+    <!--      <div class="col">-->
+    <!--        <strong>-->
+    <!--          Applicant's name-->
+    <!--        </strong>-->
+    <!--      </div>-->
+    <!--      <div class="col">-->
+    <!--        <strong>-->
+    <!--          Voting status-->
+    <!--        </strong>-->
+    <!--      </div>-->
+    <!--    </div>-->
+    <!--    <div class="row">-->
+    <!--      <div class="col">-->
+    <!--        Doktor Ahmad-->
+    <!--      </div>-->
+    <!--      <div class="col">-->
+    <!--        Pending-->
+    <!--      </div>-->
+    <!--    </div>-->
+    <!--    <div class="row">-->
+    <!--      <div class="col">-->
+    <!--        Doktor Layla-->
+    <!--      </div>-->
+    <!--      <div class="col">-->
+    <!--        Approved-->
+    <!--      </div>-->
+    <!--    </div>-->
     <b-modal
       id="view-application"
       title="View Author Application"
@@ -273,8 +275,12 @@ export default {
     this.$store.dispatch('getNumberOfEditors')
   },
 
+  beforeDestroy () {
+    this.saveVotes()
+  },
+
   methods: {
-    ...mapActions(['getApplications']),
+    ...mapActions(['getApplications', 'saveVotes']),
     ...mapMutations(['addEditorVote', 'changeVote']),
 
     prepareViewModal (index) {
@@ -294,17 +300,28 @@ export default {
       })
     },
 
-    showDecision (id) {
+    showDecision (id) { // TODO: cache for performance
       const editorVote = this.editorVotes.find(el => el.applicationId === id && el.editorId === this.userId)
       return editorVote ? editorVote.vote : null
     },
 
     voteOnApplication () {
-      this.addEditorVote({
-        applicationId: this.currentApplication.id,
+      const voteData = {
         editorId: this.userId,
         vote: true
-      })
+      }
+      if (!this.existingVote) { // create new vote if none existed
+        this.addEditorVote({
+          ...voteData,
+          applicationId: this.currentApplication.id,
+          changed: true
+        })
+      } else {
+        this.changeVote({
+          ...voteData,
+          application: this.currentApplication
+        })
+      }
     }
   }
 }

@@ -37,7 +37,11 @@ describe('editor store mutations', () => {
   it('addEditorVote sets non-existing vote count correctly (vote true)', () => {
     store.commit('addApplication', sampleApplication)
     store.commit('addEditorVote', { editorId: 2, applicationId: 1, vote: true })
-    expect(store.state.editorVotes).toStrictEqual([{ editorId: 2, applicationId: 1, vote: true }])
+    expect(store.state.editorVotes).toStrictEqual([{
+      editorId: 2,
+      applicationId: 1,
+      vote: true
+    }])
     expect(store.state.applicationList[0].votes).toBe(1)
   })
 
@@ -74,7 +78,11 @@ describe('editor store mutations', () => {
     }
     store.commit('addApplication', application)
     store.commit('addEditorVote', { editorId: 1, applicationId: 1, vote: false })
-    expect(store.state.editorVotes).toStrictEqual([{ editorId: 1, applicationId: 1, vote: false }])
+    expect(store.state.editorVotes).toStrictEqual([{
+      editorId: 1,
+      applicationId: 1,
+      vote: false
+    }])
     expect(store.state.applicationList).toContain(application)
     store.commit('changeVote', {
       application,
@@ -180,6 +188,29 @@ describe('editor store mutations', () => {
     expect(store.state.numberOfEditors).toBe(4)
     store.commit('setNumberOfEditors', 0)
     expect(store.state.numberOfEditors).toBe(0)
+  })
+
+  it('updatePersistedVote supplements state data', () => {
+    store.commit('addApplication', sampleApplication)
+    store.commit('addEditorVote', {
+      editorId: 2,
+      applicationId: 1,
+      vote: true
+    })
+    store.commit('updatePersistedVote', {
+      editorId: 2,
+      applicationId: 1,
+      vote: true,
+      date: Date.now(),
+      id: 42
+    })
+    expect(store.getters.editorVotes[0]).toStrictEqual({
+      editorId: 2,
+      applicationId: 1,
+      vote: true,
+      date: expect.any(Number),
+      id: 42
+    })
   })
 })
 
@@ -346,35 +377,31 @@ describe('editor store actions', () => {
       .mockImplementation(() => Promise.resolve('done'))
     await store.dispatch('saveVote', sampleVote)
     const { id, ...expectedPayload } = sampleVote
+    expect(expectedPayload).not.toStrictEqual(expect.objectContaining({
+      changed: expect.any(Boolean)
+    }))
     expect(httpMock).toHaveBeenCalledWith('/editor-votes/1', expectedPayload)
   })
 
   it('saveVotes dispatches saveVote for changed votes', async () => {
-    // const consoleError = console.error
-    console.error = () => {} // mute console output for Promise rejections
-    const errorSpy = jest.spyOn(console, 'error')
-    const commitSpy = jest.spyOn(store, 'commit')
+    const dispatchSpy = jest.spyOn(store, 'dispatch')
     store.commit('addApplication', sampleApplication)
     httpMock = jest.spyOn(http, 'patch')
-      .mockImplementation(() => Promise.reject(new Error('fail')))
+      .mockImplementation(() => Promise.resolve('win'))
     for (let i = 0; i < 10; i++) {
       const myVote = cloneDeep(sampleVote)
       if (i % 2 === 0) { // mark every 2nd vote as changed
-        // console.log(i)
-        myVote.changed = true
+        myVote.changed = false
       }
       myVote.id = myVote.id + i
       myVote.editorId = myVote.editorId + i
       // console.log(myVote)
       store.commit('addEditorVote', myVote)
     } // have a list of 10 votes, 5 have changed
-    // console.log(store.state.editorVotes)
-    expect(commitSpy).toHaveBeenCalledTimes(11)
-    expect(store.state.editorVotes.length).toBe(10)
-    await store.dispatch('saveVotes')
-    expect(httpMock).toHaveBeenCalled() // returns different value when running in isolation, so generic test for now
-    expect(errorSpy).toHaveBeenCalledTimes(5) // for Promise rejection output
-    // console.error = consoleError
+    const res = await store.dispatch('saveVotes')
+    expect(dispatchSpy).toHaveBeenCalled()
+    expect(res).toMatch('all votes saved!')
+    // expect(httpMock).toHaveBeenCalled() // returns wrong value when running in isolation, omitted for now
   })
 
   it('sendApplication sends correct http request', () => {

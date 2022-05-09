@@ -59,8 +59,9 @@ export default {
         applicationList: Array<{ id: number, votes?: number }>
         editorVotes: Array<object>
       },
-      vote: { applicationId: number, vote: boolean }
+      vote: { applicationId: number, vote: boolean, changed?: boolean }
     ) {
+      // vote.changed = true // flag changed to be persisted by saveVotes
       state.editorVotes.push(vote)
       const associatedApplication = state.applicationList.find(
         elem => elem.id === vote.applicationId
@@ -199,11 +200,34 @@ export default {
      */
     setNumberOfEditors (state: { numberOfEditors: number }, num: number) {
       state.numberOfEditors = num
+    },
+
+    /**
+     * function updatePersistedVote: change state after new vote is saved in db
+     *
+     * Author: cmc
+     * @param state has editorVotes
+     * @param getters has editorVotes
+     * @param data vote supplemented by created, id
+     */
+    updatePersistedVote (
+      state: { editorVotes: Array<{
+          applicationId: number,
+          editorId: number
+      }>},
+      data: {
+      editorId: number, applicationId: number
+    }) {
+      const editorVoteIdx = state.editorVotes.findIndex(
+        el => el.editorId === data.editorId && el.applicationId === data.applicationId
+      )
+      Vue.set(state.editorVotes, editorVoteIdx, data)
     }
   },
   actions: {
     /**
-     * function createEditorVote: persist vote in database
+     * function createEditorVote: persist vote in database, update editorVote
+     *  entry with persisted data
      *
      * Author: cmc
      *
@@ -213,17 +237,23 @@ export default {
      * @param editorId id of voting editor
      * @param vote value of vote
      */
-    createEditorVote ({ state }, { applicationId, editorId, vote } : {
+    createEditorVote ({ state, commit }, { applicationId, editorId, vote } : {
       applicationId: number,
       editorId: number,
       vote: boolean,
     }) {
-      http.post('/editor-votes', {
-        applicationId: applicationId,
-        editorId: editorId,
-        vote: vote
+      return new Promise((resolve, reject) => {
+        http.post('/editor-votes', {
+          applicationId: applicationId,
+          editorId: editorId,
+          vote: vote
+        })
+          .then(resp => {
+            commit('updatePersistedVote', resp.data)
+            resolve(resp.data)
+          })
+          .catch(err => reject(err))
       })
-        .catch(err => console.error(err))
     },
 
     /**
@@ -343,13 +373,17 @@ export default {
      */
     saveVote ({ state }, data: { id: number }) {
       const { id, ...updatedVote } = data
-      http.patch(`/editor-votes/${data.id}`, updatedVote)
-        .catch(err => console.error(err))
+      // console.log(updatedVote)
+      return new Promise((resolve, reject) => {
+        http.patch(`/editor-votes/${data.id}`, updatedVote)
+          .then(resp => resolve(resp.data))
+          .catch(err => reject(err))
+      })
     },
 
     /**
-     * function saveVotes: send post requests for all changed votes
-     *  (new votes are handled by createEditorVote)
+     * function saveVotes: send patch requests for all changed votes,
+     *  dispatch createEditorVote for new votes
      *
      * Author: cmc
      *
@@ -359,11 +393,22 @@ export default {
      */
     saveVotes ({ state, dispatch }) {
       // iterate through all keys in editorVotes (i.e. each application)
-      state.editorVotes.forEach(vote => {
-        // if vote has changed, persist in database
-        if (vote.changed) {
-          dispatch('saveVote', { ...vote })
-        }
+      return new Promise((resolve, reject) => {
+        state.editorVotes.forEach(async vote => {
+          // if vote has changed, persist in database
+          if (vote.changed) {
+            if (vote.id) { // vote existed before
+              const { changed, ...voteToSave } = vote // strip changed property
+              await dispatch('saveVote', voteToSave)
+                .catch(err => reject(err))
+            } else { // new vote, no ID yet
+              const { changed, ...newVote } = vote
+              await dispatch('createEditorVote', newVote)
+                .catch(err => reject(err))
+            }
+          }
+        })
+        resolve('all votes saved!')
       })
     },
 
