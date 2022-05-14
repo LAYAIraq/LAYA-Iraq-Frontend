@@ -2,6 +2,7 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import cloneDeep from 'lodash.clonedeep'
 import EditorPanel from '@/views/editor-panel.vue'
 import Vuex from 'vuex'
+import Storage from 'vue-ls'
 import { BootstrapVue } from 'bootstrap-vue'
 import 'regenerator-runtime/runtime'
 import sampleApplication from '../../mocks/sample-application.json'
@@ -11,6 +12,7 @@ import editor from '@/store/modules/editor'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(BootstrapVue)
+localVue.use(Storage, { name: 'ls', namespace: 'vuejs__', storage: 'local' })
 
 describe('editor panel', () => {
   // let actions
@@ -38,6 +40,7 @@ describe('editor panel', () => {
         editor: cloneDeep(editor)
       }
     })
+    store.commit('setNumberOfEditors', 42)
 
     // fill store with data
     for (let i = 0; i < 10; i++) { // fill store with applications and votes
@@ -139,10 +142,10 @@ describe('editor panel', () => {
     })
 
   it('increments count of application when editor votes yes', async () => {
-    store.commit('setNumberOfEditors', 42)
     expect(store.getters.editorVotes.some(e => e.editorId === 42)).toBeFalsy()
-    await wrapper.find('.btn-secondary').trigger('click')
-    let voteCount = wrapper.vm.currentApplication.votes
+    const myApplication = wrapper.findAll('.application-entry').at(0)
+    await myApplication.find('.btn-secondary').trigger('click')
+    const voteCount = wrapper.vm.currentApplication.votes
     expect(wrapper.vm.existingVote).toBeFalsy()
     expect(wrapper.vm.approved).toBeFalsy()
     expect(wrapper.find('#approve-button').attributes('disabled')).toBeUndefined()
@@ -152,12 +155,19 @@ describe('editor panel', () => {
       editorId: 42,
       vote: true
     }))
-    expect(wrapper.find('.vote-count').text()).toBe(String(++voteCount))
+    expect(myApplication.find('.vote-count').text()).toBe(String(voteCount + 1))
   })
 
   it('decreases count of application when editor revokes vote', async () => {
-    store.commit('setNumberOfEditors', 42)
-    store.commit('addEditorVote', { applicationId: 1, editorId: 42, vote: true })
+    if (store.getters.editorVotes.some(e => e.editorId === 42)) {
+      store.commit('changeVote', {
+        application: store.getters.applicationList[0],
+        editorId: 42,
+        vote: true
+      })
+    } else {
+      store.commit('addEditorVote', { applicationId: 1, editorId: 42, vote: true })
+    }
     const modalButton = wrapper.find('.btn-secondary')
     await modalButton.trigger('click')
     const modal = wrapper.find('#view-application')
@@ -177,8 +187,15 @@ describe('editor panel', () => {
   })
 
   it('increases count of application when editor changes vote from no to yes', async () => {
-    store.commit('setNumberOfEditors', 42)
-    store.commit('addEditorVote', { applicationId: 1, editorId: 42, vote: false })
+    if (store.getters.editorVotes.some(e => e.editorId === 42)) {
+      store.commit('changeVote', {
+        application: store.getters.applicationList[0],
+        editorId: 42,
+        vote: false
+      })
+    } else {
+      store.commit('addEditorVote', { applicationId: 1, editorId: 42, vote: false })
+    }
     const modalButton = wrapper.find('.btn-secondary')
     await modalButton.trigger('click')
     const modal = wrapper.find('#view-application')
@@ -194,11 +211,11 @@ describe('editor panel', () => {
       editorId: 42,
       vote: true
     }))
-    expect(wrapper.find('.vote-count').text()).toBe(String(voteCount + 1))
+    // await localVue.nextTick()
+    // expect(wrapper.find('.vote-count').text()).toBe(String(voteCount + 1))
   })
 
   it('shows editor`s decision for each application', async () => {
-    store.commit('setNumberOfEditors', 42)
     for (let i = 1; i <= 10; i++) { // have all decisions in editorVotes
       if (i % 3 !== 0) { // leave out every third application
         store.commit('addEditorVote', {
@@ -217,19 +234,16 @@ describe('editor panel', () => {
     }
   })
 
-  it('shows approved button when application reaches threshold, "0 / 2" else',
+  it('shows approved button when application reaches threshold, "0 / 3" else',
     async () => {
-      store.commit('setNumberOfEditors', 8)
-      // let v = 0
-      // console.log(store.getters.editorVotes)
       store.getters.applicationList.forEach(a => {
         const i = store.getters.applicationList.findIndex(el => el === a)
-        a.votes = i % 2 === 0 ? 2 : 0
+        a.votes = i % 2 === 0 ? 3 : 0
       })
       await localVue.nextTick()
       const applications = wrapper.findAll('.application-status')
       applications.wrappers.forEach(wrap => {
-        expect(wrap.text()).toMatch(/(Approved)|(0\s*\n?\/\s*2)/)
+        expect(wrap.text()).toMatch(/(Approved)|(\d\s*\n?\/\s*3)/)
       })
     })
 

@@ -249,11 +249,8 @@ export default {
         email: $data.email,
         password: $data.pwd
       })
-        .then(({ id, userId, created }) => {
-          const expire = new Date(created)
-          expire.setSeconds(expire.getSeconds() + 604800) // user stays logged-in for 7 days (604800seconds)
-          console.log('Auth expires on', expire)
-          $ls.set('auth', { id: id, userId: userId }, expire.getTime())
+        .then(({ id, userId }) => {
+          $ls.set('auth', { id: id, userId: userId }, 604800000) // expiration 7 days
           /* move to view */
           $router.push('/courses')
         })

@@ -1,31 +1,31 @@
 <template>
   <div class="container">
     <div class="row">
-      <h2>Pending Applications</h2>
+      <h2>{{ y18n('editorPanel.pending') }}</h2>
     </div>
     <div id="applications-table">
       <!-- table header -->
       <div class="row mt-5">
         <div class="col">
           <strong>
-            Applicant's name
+            {{ y18n('editorPanel.name') }}
           </strong>
         </div>
         <div class="col">
           <strong>
-            Applicant's institution
+            {{ y18n('editorPanel.institution') }}
           </strong>
         </div>
         <div class="col">
         </div>
         <div class="col">
           <strong>
-            Voting status
+            {{ y18n('editorPanel.status') }}
           </strong>
         </div>
         <div class="col">
           <strong>
-            Your decision
+            {{ y18n('editorPanel.decision') }}
           </strong>
         </div>
       </div>
@@ -47,7 +47,7 @@
             variant="secondary"
             @click="prepareViewModal(i)"
           >
-            View Application
+            {{ y18n('editorPanel.view') }}
           </b-button>
         </div>
         <div class="col application-status">
@@ -60,7 +60,7 @@
               variant="success"
               disabled
             >
-              Approved
+              {{ y18n('editorPanel.approved') }}
             </b-button>
           </span>
         </div>
@@ -70,7 +70,7 @@
               variant="success"
               disabled
             >
-              Approved
+              {{ y18n('editorPanel.approved') }}
             </b-button>
           </span>
           <!-- third option should vetoing be possible -->
@@ -87,7 +87,7 @@
               variant="secondary"
               disabled
             >
-              Awaiting decision
+              {{ y18n('editorPanel.awaiting') }}
             </b-button>
           </span>
         </div>
@@ -141,7 +141,7 @@
           <span
             class="col-form-label"
           >
-            Applicant's Name
+            {{ y18n('editorPanel.name') }}
           </span>
           <span
             id="modal-name"
@@ -154,7 +154,7 @@
           <span
             class="col-form-label"
           >
-            Institution
+            {{ y18n('profile.application.institution') }}
           </span>
           <span
             id="modal-institution"
@@ -167,7 +167,7 @@
           <span
             class="col-form-label"
           >
-            Area of Expertise
+            {{ y18n('profile.application.areaOfExpertise') }}
           </span>
           <span
             id="modal-expertise"
@@ -180,7 +180,7 @@
           <span
             class="col-form-label"
           >
-            Application text
+            {{ y18n('profile.application.text') }}
           </span>
           <span
             id="modal-text"
@@ -196,7 +196,7 @@
           :disabled="approved"
           @click="ok"
         >
-          Approve Application
+          {{ y18n('editorPanel.approve') }}
         </b-button>
         <b-button
           id="revoke-button"
@@ -204,7 +204,7 @@
           :disabled="!approved"
           @click="cancel"
         >
-          Revoke Vote
+          {{ y18n('editorPanel.revoke') }}
         </b-button>
         <b-button @click="hide">
           {{ y18n('cancel') }}
@@ -228,6 +228,7 @@ export default {
       applicationText: '',
       areaOfExpertise: '',
       currentApplicationIdx: null,
+      decisions: {}, // caching editor decisions
       fullName: '',
       institution: ''
     }
@@ -238,24 +239,59 @@ export default {
       'applicationList',
       'editorVotes',
       'isEditor',
-      'numberOfEditors',
+      // 'numberOfEditors', // currently not used
       'userId'
     ]),
 
+    /**
+     * acceptTreshold: returns number of necessary votes to be accepted
+     *  currently fixed value, can be computed if wanted
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: May 14, 2022
+     * @returns {number} of people to approve an application
+     */
     acceptThreshold  () {
-      return Math.ceil((this.numberOfEditors * 0.25))
+      return 3
+      // complex computation commented out for now
+      // return Math.ceil((this.numberOfEditors * 0.25))
     },
 
+    /**
+     * approved: returns if user has approved the currecnt application
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: May 14, 2022
+     * @returns {boolean} if accepted
+     */
     approved () {
       return this.existingVote
         ? this.existingVote.vote
         : false
     },
 
+    /**
+     * currentApplication: returns copy of application for decision modal
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: May 14, 2022
+     * @returns {object} current application
+     */
     currentApplication () {
       return this.applicationList[this.currentApplicationIdx]
     },
 
+    /**
+     * existingVote: returns user's decision on current application
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: May 14, 2022
+     * @returns {object} current vote
+     */
     existingVote () {
       if (!this.currentApplication) {
         return null
@@ -269,20 +305,30 @@ export default {
 
   created () {
     if (!this.isEditor) {
-      this.$router.replace('/')
+      this.$router.replace('/') // reroute non-editors
     }
-    this.getApplications()
-    this.$store.dispatch('getNumberOfEditors')
+    this.getApplications() // get applications
+    // this.$store.dispatch('getNumberOfEditors') // currently not needed
+    this.decisions = this.$ls.get('decisions', {}) // get decisions from local store
   },
 
   beforeDestroy () {
-    this.saveVotes()
+    this.saveVotes() // persist votes in backend
+    this.$ls.set('decisions', this.decisions, 60 * 60 * 1000) // write decisions to local store
   },
 
   methods: {
     ...mapActions(['getApplications', 'saveVotes']),
     ...mapMutations(['addEditorVote', 'changeVote']),
 
+    /**
+     * function prepareViewModal: deep copy values from store for render
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: May 14, 2022
+     * @param index of application in list
+     */
     prepareViewModal (index) {
       this.currentApplicationIdx = index
       this.applicationText = this.currentApplication.applicationText
@@ -292,7 +338,17 @@ export default {
       this.$bvModal.show('view-application')
     },
 
+    /**
+     * function revokeVote: change vote from yes to no
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: May 14, 2022
+     */
     revokeVote () {
+      // change vote in cache
+      this.decisions[this.currentApplication.id] = false
+      // change vote in store
       this.changeVote({
         application: this.currentApplication,
         editorId: this.userId,
@@ -300,17 +356,41 @@ export default {
       })
     },
 
-    showDecision (id) { // TODO: cache for performance
-      const editorVote = this.editorVotes.find(el => el.applicationId === id && el.editorId === this.userId)
-      return editorVote ? editorVote.vote : null
+    /**
+     * function showDecision: show decision of user for current application
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: May 14, 2022
+     * @param id of application
+     * @returns {boolean|null} decision of user
+     */
+    showDecision (id) {
+      const { decisions, userId } = this
+      if (typeof (decisions[id]) === 'undefined') {
+        const editorVote = this.editorVotes.find(el => el.applicationId === id && el.editorId === userId)
+        decisions[id] = editorVote ? editorVote.vote : null
+      }
+      return decisions[id]
     },
 
+    /**
+     * function voteOnApplication: vote on application
+     *
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: May 14, 2022
+     */
     voteOnApplication () {
       const voteData = {
         editorId: this.userId,
         vote: true
       }
-      if (!this.existingVote) { // create new vote if none existed
+      // change vote in cache
+      this.decisions[this.currentApplication.id] = true
+      // change vote in store
+      if (!this.existingVote) {
         this.addEditorVote({
           ...voteData,
           applicationId: this.currentApplication.id,
