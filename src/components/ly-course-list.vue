@@ -89,18 +89,11 @@ Dependencies:
         </div>
 
         <div class="col-3">
-          <!--          <a
-            class="btn indicated-btn"
-            @click="decideButtonAction(course)"
-          >
-            {{ y18n('courseList.start') }}
-            <i class="fas fa-arrow-right"></i>
-          </a>-->
           <router-link
             v-if="isEnrolled(course)"
             :to="'/courses/'+course.name+'/1'"
             class="btn indicated-btn"
-            @click="selectedCourse = course.name"
+            @click="decideButtonAction(course)"
           >
             {{ i18n['courseList.start'] }}
             <i class="fas fa-arrow-right"></i>
@@ -113,23 +106,6 @@ Dependencies:
             {{ i18n['courseList.subscribe'] }}
             <i class="fas fa-file-signature"></i>
           </a>
-          <!--          <router-link-->
-          <!--            :to="'/courses/'+course.name+'/1'"-->
-          <!--            class="btn indicated-btn"-->
-          <!--            v-if="isEnrolled(course)"-->
-          <!--            @click="selectedCourse = course.name"-->
-          <!--          >-->
-          <!--            {{ y18n('courseList.start') }}-->
-          <!--            <i class="fas fa-arrow-right"></i>-->
-          <!--          </router-link>-->
-          <!--          <a-->
-          <!--            class="btn indicated-btn"-->
-          <!--            v-else-->
-          <!--            @click="subscribe(course)"-->
-          <!--          >-->
-          <!--            {{ y18n('courseList.subscribe') }}-->
-          <!--            <i class="fas fa-file-signature"></i>-->
-          <!--          </a>-->
           <div
             v-if="complicitReady && !complicitCourses.has(course.courseId)"
             v-b-tooltip.top
@@ -188,15 +164,12 @@ Dependencies:
 import http from 'axios'
 import { mapGetters } from 'vuex'
 import { locale, storeHandler } from '@/mixins'
-
 export default {
   name: 'LayaCourseList',
-
   mixins: [
     locale,
     storeHandler
   ],
-
   props: {
     filter: {
       type: String,
@@ -205,7 +178,6 @@ export default {
       }
     }
   },
-
   data () {
     return {
       buttonAction: null,
@@ -218,15 +190,14 @@ export default {
       selectedCourse: ''
     }
   },
-
   computed: {
     ...mapGetters([
       'course',
       'courseList',
       'mediaPrefs',
-      'userId'
+      'userId',
+      'fetchSingleEnrollment'
     ]),
-
     /**
      * function complicitReady(): returns true if complicit Set has any members
      *
@@ -238,7 +209,6 @@ export default {
     complicitReady () {
       return this.complicitCourses !== null
     },
-
     /**
      * filtered: filter course list depending on user input
      *
@@ -252,20 +222,17 @@ export default {
       return this.filteredList.filter(course => filterByCourseName.test(course.name))
     }
   },
-
   watch: {
     // watch course list in order to have non-complicit indicator at first load
     courseList () {
       this.getComplicitCourses()
     }
   },
-
   created () {
     this.getSubs()
     this.filteredList = [...this.courseList]
     this.getComplicitCourses()
   },
-
   methods: {
     // TEST
     debounce (fn, delay) {
@@ -279,7 +246,6 @@ export default {
         }, delay)
       }
     },
-
     /**
      * function markAsNonComplicit: add array in nonComplicitSettings if not
      *  present for courseId, add property to array
@@ -293,7 +259,6 @@ export default {
       this.nonComplicitSettings[courseId].push(property)
       // this.complicitCourses.delete(courseId)
     },
-
     /**
      * function getComplicitCourses: check user's preferences and
      *  check if course complies to them, if not, remove from
@@ -308,7 +273,7 @@ export default {
       // check all courses for complicity with user preferences
       for (const course of this.courseList) {
         // eslint-disable-next-line
-          const props = (({enrollment, ...o}) => o) (course.properties) // filter enrollment, can be removed when it is reinstated
+        const props = (({enrollment, ...o}) => o) (course.properties) // filter enrollment, can be removed when it is reinstated
         let complicit = true
         for (const prop of Object.keys(this.mediaPrefs)) { // check each user pref
           // check prop settings in course's props array
@@ -325,7 +290,6 @@ export default {
         }
       }
     },
-
     /**
      * function decideButtonAction: redirect to course or show modal
      *  depending on course status concerning media preferences
@@ -356,7 +320,6 @@ export default {
         this.buttonAction()
       }
     },
-
     /**
      * function getIcon: return string for icon corresponding to setting prop
      *
@@ -380,7 +343,6 @@ export default {
           return ''
       }
     },
-
     /**
      * Function getSubs: get a list of all courses the user enrolled in
      *
@@ -389,23 +351,13 @@ export default {
      * Last Updated: unknown
      */
     getSubs () {
-      const self = this
-      const studentId = this.userId
-      http
-        .get(`enrollments/getAllByStudentId/?uid=${studentId}`)
-        .then(({ data }) => {
-          const list = data.sublist
-          for (const item of list) {
-            console.log(item)
-            self.enrolledIn.push(item.courseId)
-          }
-        })
-        .catch(err => {
-          // console.log(`No enrollments for ${studentId} found`)
-          console.error(err)
-        })
+      const data = this.fetchSingleEnrollment
+      console.log(this.fetchSingleEnrollment)
+      const list = data.sublist
+      for (const item of list) {
+        this.enrolledIn.push(item.courseId)
+      }
     },
-
     /**
      * Function isEnrolled: return true if course needs an enrollment
      *  AND user is not enrolled, false if nono enrollment needed or user
@@ -418,12 +370,10 @@ export default {
      * @returns true if course needs enrollment and user is not enrolled
      */
     isEnrolled (course) {
-      console.log(JSON.stringify('prop: ' + course.properties.enrollment))
       return course.properties.enrollment
         ? this.enrolledIn.find(x => x === course.courseId)
         : true
     },
-
     /**
      * Function subscribe: Lets user enroll in a course
      *

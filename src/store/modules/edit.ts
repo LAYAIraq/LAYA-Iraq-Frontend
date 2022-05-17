@@ -1,5 +1,7 @@
 import http from 'axios'
 import { v4 as uuidv4 } from 'uuid'
+import auth from '@/store/modules/auth'
+import any = jasmine.any;
 
 export default {
   state: {
@@ -13,6 +15,32 @@ export default {
   },
 
   getters: {
+
+    /**
+       * fetchEnrollemnt
+       *
+       * Author: pj
+       *
+       * Last updated: May 09, 2022
+       * @param data
+       */
+    fetchSingleEnrollment (
+      payload: {
+                studentId: any
+            }
+    ) {
+      http
+        .get(`enrollments/getAllByStudentId/?uid=${payload.studentId}`)
+        .then(({ data }) => {
+          console.log('test ' + payload.studentId)
+          return data
+        })
+        .catch(err => {
+          // console.log(`No enrollments for ${studentId} found`)
+          console.error(err)
+          return null
+        })
+    },
 
     /**
      * Function getEnrollmentFeedback: returns the current feedback
@@ -195,6 +223,87 @@ export default {
   },
 
   mutations: {
+
+    /**
+       * Create Storage
+       *
+       * Author: pj
+       *
+       * Last updated: May 09, 2022
+        * @param id
+       */
+    createStorage (
+      id: {
+         newId: String
+    }
+    ) {
+      http.post('storage', {
+        name: id.newId
+      }).then(() => console.log(`New Storage: ${id.newId}`))
+        .catch((err) => console.error(err))
+    },
+
+    /**
+       * CreateCourse
+       *
+       * Author: pj
+       *
+       * Last updated: May 09, 2022
+       * @param data
+       */
+    createCourse (
+      data: {
+              newCourse: any
+              newId: any
+              enrBool: Boolean
+              userId: any
+          }
+    ) {
+      http.post('courses', {
+        ...data.newCourse,
+        authorId: data.userId,
+        storageId: data.newId,
+        properties: { enrollment: data.enrBool }
+      }).then(() => {
+        // console.log(resp)
+        this.$router.push(`/courses/${data.newCourse.name}/1`)
+        if (data.enrBool) {
+          http.get(`courses/getCourseId?courseName=${data.newCourse.name}`)
+            .then(resp => {
+              const newEnrollment = {
+                courseId: resp.data.courseId,
+                studentId: this.auth.userId
+              }
+              http.patch('enrollments', {
+                ...newEnrollment
+              }).catch((err) => { console.log(err) })
+            })
+        }
+      }).catch((err) => {
+        console.log(err)
+        this.msg = this.y18n('savingFailed')
+      })
+    },
+
+    /**
+       * createEnrollment
+       *
+       * Author: pj
+       *
+       * Last updated: May 09, 2022
+       * @param data
+       */
+    /* createEnrollment (
+      data: {
+              newEnrollment: any
+          },
+    ) {
+      http.post('enrollments/create', data.newEnrollment)
+        .then((resp) => {
+          enrolledIn.push(resp.data.enrol.courseId)
+        })
+        .catch((err) => console.error(err))
+    }, */
 
     /**
      * appendFeedback: Append new Feedback to feedback-array or update existing feedback

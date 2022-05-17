@@ -32,26 +32,6 @@
           :title="y18n('coursePreferences.enrollment.hint')"
         ></i>
       </div>
-      <div class="col text-dark">
-        <label
-          for="course-enrollment"
-          class="col-form-label"
-        >
-          {{ i18n['coursePreferences.enrollment' ] }}
-        </label>
-        <input
-          id="course-enrollment"
-          v-model="enrollment"
-          class="mr-2 ml-2"
-          type="checkbox"
-          @click="toggleEnrollment"
-        >
-        <i
-          v-b-tooltip.bottom
-          class="fas fa-question-circle"
-          :title="i18n['coursePreferences.enrollment.hint']"
-        ></i>
-      </div>
 
       <div class="col text-dark form-check">
         <label

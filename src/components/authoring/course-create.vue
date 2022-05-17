@@ -90,7 +90,6 @@ Dependencies:
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import http from 'axios'
 import { locale } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -194,41 +193,15 @@ export default {
       } else {
         const enrBool = this.needsEnrollment
         const newId = uuidv4()
-        console.log(`New Id: ${newId}`)
+        /* console.log(`New Id: ${newId}`) */
 
         /* create storage */
-        http.post('storage', {
-          name: newId
-        }).then(() => console.log(`New Storage: ${newId}`))
-          .catch((err) => console.error(err))
+        this.$store.commit('createStorage', newId)
 
         /* create course */
-        http.post('courses', {
-          ...newCourse,
-          authorId: auth.userId,
-          storageId: newId,
-          properties: { enrollment: enrBool }
-        }).then(() => {
-          // console.log(resp)
-          this.$router.push(`/courses/${newCourse.name}/1`)
-
-          /* create enrollment for creator */
-          if (enrBool) {
-            http.get(`courses/getCourseId?courseName=${newCourse.name}`)
-              .then(resp => {
-                const newEnrollment = {
-                  courseId: resp.data.courseId,
-                  studentId: this.auth.userId
-                }
-                http.patch('enrollments', {
-                  ...newEnrollment
-                }).catch((err) => { console.log(err) })
-              })
-          }
-        }).catch((err) => {
-          console.log(err)
-          this.msg = this.y18n('savingFailed')
-        })
+        const userid = auth.userId
+        const data = { newCourse, newId, enrBool, userid }
+        this.$store.commit('createCourse', data)
       }
     },
 

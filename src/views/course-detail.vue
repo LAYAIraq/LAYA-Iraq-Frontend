@@ -35,7 +35,7 @@ Dependencies:
 
           <component
             :is="contentToDisplay.name"
-            v-if="contentToDisplay"
+            v-if="contentToDisplay && viewPermit"
             :key="name+'-'+step"
             :on-finish="nextStep(contentToDisplay.nextStep)"
           >
@@ -196,8 +196,8 @@ export default {
   },
 
   beforeDestroy () {
-    if (this.enrollment.length > 0) this.updateEnrollment()
-    this.saveFlags()
+    /* if (this.enrollment.length > 0) this.updateEnrollment()
+    this.saveFlags() */
   },
 
   methods: {
