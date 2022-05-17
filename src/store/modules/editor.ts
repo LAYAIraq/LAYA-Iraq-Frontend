@@ -127,6 +127,18 @@ export default {
     },
 
     /**
+     * cleatApplicationList: reset application list
+     *
+     * Author: cmc
+     *
+     * Last Updated: May 17, 2022
+     * @param state contains applicationList
+     */
+    clearApplicationList (state: { applicationList: Array<object> }) {
+      state.applicationList = []
+    },
+
+    /**
      * function createApplication: create new application in applicationList
      *
      * Author: cmc
@@ -207,7 +219,6 @@ export default {
      *
      * Author: cmc
      * @param state has editorVotes
-     * @param getters has editorVotes
      * @param data vote supplemented by created, id
      */
     updatePersistedVote (
@@ -233,6 +244,7 @@ export default {
      *
      * Last Updated: April 28, 2022
      * @param state state variables
+     * @param commit state mutation
      * @param applicationId id of vote application
      * @param editorId id of voting editor
      * @param vote value of vote

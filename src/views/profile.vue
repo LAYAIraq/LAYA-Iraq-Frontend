@@ -268,7 +268,7 @@ Dependencies:
           ></i>
         </div>
         <div
-          v-if="applicationNew"
+          v-if="applicationNew && applicationEdited === -1"
           class="col"
         >
           <b-button
@@ -595,6 +595,7 @@ export default {
     this.setPrefs(this.prefs)
     this.saveProfile()
     this.submitApplication()
+    this.$store.commit('clearApplicationList')
   },
 
   created () {

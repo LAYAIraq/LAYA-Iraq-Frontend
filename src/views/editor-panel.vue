@@ -129,7 +129,7 @@
     <!--    </div>-->
     <b-modal
       id="view-application"
-      title="View Author Application"
+      :title="y18n('editorPanel.view')"
       header-bg-variant="primary"
       centered
       static
@@ -145,7 +145,7 @@
           </span>
           <span
             id="modal-name"
-            class="ml-auto"
+            :class="langIsAr? 'mr-auto': 'ml-auto'"
           >
             {{ fullName }}
           </span>
@@ -158,7 +158,7 @@
           </span>
           <span
             id="modal-institution"
-            class="ml-auto"
+            :class="langIsAr? 'mr-auto': 'ml-auto'"
           >
             {{ institution }}
           </span>
@@ -171,22 +171,24 @@
           </span>
           <span
             id="modal-expertise"
-            class="ml-auto"
+            :class="langIsAr? 'mr-auto': 'ml-auto'"
           >
             {{ areaOfExpertise }}
           </span>
         </div>
         <div class="form-group row">
-          <span
-            class="col-form-label"
+          <div
+            class="col-form-label w-100"
+            :class="langIsAr? 'text-right' : 'text-left'"
           >
             {{ y18n('profile.application.text') }}
-          </span>
-          <span
+          </div>
+          <div
             id="modal-text"
+            class="row m-1"
           >
             {{ applicationText }}
-          </span>
+          </div>
         </div>
       </div>
       <template #modal-footer="{ ok, cancel, hide }">
