@@ -601,6 +601,9 @@ export default {
   created () {
     this.setProfileForRender()
     this.setUserApplication()
+    window.addEventListener('beforeunload', () => {
+      this.$destroy()
+    })
   },
 
   methods: {
@@ -650,6 +653,11 @@ export default {
           institution: institution
         })
       }
+      this.$bvToast.toast(this.y18n('profile.application.saved'), {
+        title: this.y18n('profile.success'),
+        toaster: 'b-toaster-bottom-center',
+        variant: 'success'
+      })
     },
 
     /**

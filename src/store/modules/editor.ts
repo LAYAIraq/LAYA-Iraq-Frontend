@@ -194,7 +194,7 @@ export default {
       } else if (state.applicationList[0].id !== data.id) {
         console.error('IDs don`t match!')
       } else {
-        // console.log(data)
+        console.log(data)
         Vue.set(state.applicationList, 0, { ...state.applicationList[0], ...data }) // to retain reactivity
         // state.applicationList[0] = { ...state.applicationList[0], ...data }
         // console.log(state.applicationList[0])

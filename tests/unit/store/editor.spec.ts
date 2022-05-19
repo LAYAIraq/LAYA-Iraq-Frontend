@@ -131,7 +131,7 @@ describe('editor store mutations', () => {
   })
 
   it('createApplication sets userApplication', () => {
-    store.commit('addApplication', sampleApplication)
+    store.commit('createApplication', sampleApplication)
     expect(store.getters.userApplication).toStrictEqual(sampleApplication)
   })
 
@@ -327,6 +327,20 @@ describe('editor store actions', () => {
     })
   })
 
+  it('createEditorVote sends reject if request fails', async () => {
+    httpMock = jest.spyOn(http, 'post')
+      .mockImplementation(() => Promise.reject(fail))
+    try {
+      await store.dispatch('createEditorVote', {
+        editorId: 2,
+        applicationId: 1,
+        vote: true
+      })
+    } catch (e) {
+      expect(httpMock).toHaveBeenCalled()
+    }
+  })
+
   it('getApplications returns an array of applications and calls addApplication', async () => {
     const myAppList = []
     for (let i = 1; i <= 10; i++) {
@@ -343,6 +357,18 @@ describe('editor store actions', () => {
     expect(store.state.applicationList.length).toBe(10)
   })
 
+  it('getApplications rejects if request fails', async () => {
+    httpMock = jest.spyOn(http, 'get').mockImplementation(() => Promise.reject(
+      new Error('fail')
+    ))
+    try {
+      await store.dispatch('getApplications')
+    } catch (e) {
+      expect(httpMock).toHaveBeenCalled()
+      expect(store.state.applicationList.length).toBe(0)
+    }
+  })
+
   it('getApplicationUser sets one application in store', async () => {
     httpMock = jest.spyOn(http, 'get').mockImplementation(() => Promise.resolve({
       data: [sampleApplication]
@@ -350,6 +376,24 @@ describe('editor store actions', () => {
     await store.dispatch('getApplicationUser', 2)
     expect(store.state.applicationList.length).toBe(1)
     expect(store.state.applicationList[0]).toBe(sampleApplication)
+  })
+
+  it('getApplicationUser sets no application in store if none returned', async () => {
+    httpMock = jest.spyOn(http, 'get').mockImplementation(() => Promise.resolve({
+      data: []
+    }))
+    const ret = await store.dispatch('getApplicationUser', 2)
+    expect(ret).toBeFalsy()
+    expect(store.state.applicationList.length).toBe(0)
+  })
+
+  it('getApplicationUser sets one application in store', async () => {
+    httpMock = jest.spyOn(http, 'get').mockImplementation(() => Promise.reject(new Error('fail')))
+    try {
+      await store.dispatch('getApplicationUser', 2)
+    } catch (e) {
+      expect(store.state.applicationList.length).toBe(0)
+    }
   })
 
   it('getEditorVotes calls addEditorVote correctly', async () => {
@@ -372,6 +416,16 @@ describe('editor store actions', () => {
     expect(store.state.numberOfEditors).toBe(15)
   })
 
+  it('getNumberOfEditors logs error when request is rejected', async () => {
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation()
+    httpMock = jest.spyOn(http, 'get').mockImplementation(() => Promise.reject(
+      new Error('Fail')
+    ))
+    await store.dispatch('getNumberOfEditors')
+    expect(httpMock).toHaveBeenCalledWith('/accounts/editors')
+    expect(errorSpy).toHaveBeenCalled()
+  })
+
   it('saveVote fires correct request', async () => {
     httpMock = jest.spyOn(http, 'patch')
       .mockImplementation(() => Promise.resolve('done'))
@@ -391,7 +445,7 @@ describe('editor store actions', () => {
     for (let i = 0; i < 10; i++) {
       const myVote = cloneDeep(sampleVote)
       if (i % 2 === 0) { // mark every 2nd vote as changed
-        myVote.changed = false
+        myVote.changed = true
       }
       myVote.id = myVote.id + i
       myVote.editorId = myVote.editorId + i
@@ -413,6 +467,17 @@ describe('editor store actions', () => {
     expect(resp).toStrictEqual(expect.any(Promise))
   })
 
+  it('sendApplication rejects if http request fails', async () => {
+    httpMock = jest.spyOn(http, 'post')
+      .mockImplementation(() => Promise.reject(new Error('fail')))
+    store.commit('addApplication', sampleApplication)
+    try {
+      await store.dispatch('sendApplication', sampleApplication)
+    } catch (e) {
+      expect(httpMock).toHaveBeenCalledWith('/applications', store.getters.userApplication)
+    }
+  })
+
   it('sendApplicationDecision sends correct http request', () => {
     const decidedApplication = {
       ...sampleApplication,
@@ -429,6 +494,22 @@ describe('editor store actions', () => {
     expect(resp).toStrictEqual(expect.any(Promise))
   })
 
+  it('sendApplicationDecision rejects when request fails', async () => {
+    const decidedApplication = {
+      ...sampleApplication,
+      decidedOn: Date.now(),
+      status: 'withdrawn'
+    }
+    httpMock = jest.spyOn(http, 'patch')
+      .mockImplementation(() => Promise.reject(new Error('fail')))
+    store.commit('addApplication', decidedApplication)
+    try {
+      await store.dispatch('sendApplicationDecision')
+    } catch (e) {
+      expect(httpMock).toHaveBeenCalled()
+    }
+  })
+
   it('updateApplication fires correct request', async () => {
     httpMock = jest.spyOn(http, 'patch')
       .mockImplementation(() => Promise.resolve())
@@ -436,5 +517,15 @@ describe('editor store actions', () => {
     const { id, ...expectedPayload } = sampleApplication
     expect(httpMock).toHaveBeenCalledWith(`/applications/${id}/edit`, expectedPayload)
     expect(resp).toStrictEqual(expect.any(Promise))
+  })
+
+  it('updateApplication rejects when request fails', async () => {
+    httpMock = jest.spyOn(http, 'patch')
+      .mockImplementation(() => Promise.reject(new Error('fail')))
+    try {
+      await store.dispatch('updateApplication', sampleApplication)
+    } catch (e) {
+      expect(httpMock).toHaveBeenCalled()
+    }
   })
 })

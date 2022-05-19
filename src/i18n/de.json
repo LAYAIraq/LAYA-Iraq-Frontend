@@ -395,6 +395,7 @@
 	"profile.application.fullName": "Vollständiger Name",
 	"profile.application.institution": "Einrichtung",
 	"profile.application.save": "Bewerbung speichern",
+	"profile.application.saved": "Änderungen erfolgreich gespeichert!",
 	"profile.application.text": "Bewerbungstext",
 	"profile.application.textTooltip": "Hier Bewerbungstext eingeben. Bitte gehe auf dein Spezialgebiet ein und erwähne deine Titel falls vorhanden. Bitte gehe darauf ein, welche Kurse du auf LAYA anbieten möchtest!",
 	"profile.application.tooltip": "Du kannst dich als Autor für LAYA bewerben. Deine Bewerbung wird vom Editor-Board überprüft. Hier klicken um die Bewerbung auszufüllen!",

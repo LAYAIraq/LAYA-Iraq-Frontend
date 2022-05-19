@@ -395,6 +395,7 @@
 	"profile.application.fullName": "Full Name",
 	"profile.application.institution": "Institution",
 	"profile.application.save": "Save application",
+	"profile.application.saved": "Changes successfully saved!",
 	"profile.application.text": "Application text",
 	"profile.application.textTooltip": "Enter your application here. Please mention your area of expertise and degrees if applicable. Please expand on the courses you plan on creating for LAYA.",
 	"profile.application.tooltip": "You can apply as author for LAYA. Your application will be revisited by the editor board. Click here to fill out your application!",
