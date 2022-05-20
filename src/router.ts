@@ -18,6 +18,7 @@ const CourseDetail = () => import('./views/course-detail.vue')
 const CourseEditWrapper = () => import('./views/course-edit-wrapper.vue')
 const CourseNavEdit = () => import('./views/edit-course-nav.vue')
 const Courses = () => import('./views/courses.vue')
+const EditorPanel = () => import('./views/editor-panel.vue')
 const Flag = () => import('./views/flag.vue')
 const Imprint = () => import('./views/imprint.vue')
 const Login = () => import('./views/login.vue')
@@ -50,6 +51,11 @@ export default new Router({
       path: '/admin',
       name: 'admin-panel',
       component: AdminPanel
+    },
+    {
+      path: '/editor',
+      name: 'editor-panel',
+      component: EditorPanel
     },
     {
       path: '/register',
