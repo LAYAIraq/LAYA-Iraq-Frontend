@@ -330,7 +330,7 @@ export default {
     getIcon (setting) {
       switch (setting) {
         case 'enrollment':
-          return 'key'
+          return 'fas fa-key'
         case 'simpleLanguage':
           return 'fas fa-check-circle'
         case 'text':

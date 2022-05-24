@@ -251,30 +251,25 @@ export default {
           storageId: data.newId,
           properties: { enrollment: data.enrBool }
         }).then(() => {
-          // console.log(resp)
-          this.$router.push(`/courses/${data.newCourse.name}/1`).then(() => {
-            if (data.enrBool) {
-              return new Promise<void>(() => {
-                http.get(`courses/getCourseId?courseName=${data.newCourse.name}`)
-                  .then(resp => {
-                    const newEnrollment = {
-                      courseId: resp.data.courseId,
-                      studentId: this.auth.userId
-                    }
-                    return new Promise<void>(() => {
-                      http.patch('enrollments', {
-                        ...newEnrollment
-                      }).catch((err) => {
-                        console.log(err)
-                      })
+          // this.$router.push(`/courses/${data.newCourse.name}/1`).then(() => {
+          if (data.enrBool) {
+            return new Promise<void>(() => {
+              http.get(`courses/getCourseId?courseName=${data.newCourse.name}`)
+                .then(resp => {
+                  const newEnrollment = {
+                    courseId: resp.data.courseId,
+                    studentId: data.userId
+                  }
+                  return new Promise<void>(() => {
+                    http.patch('enrollments', {
+                      ...newEnrollment
+                    }).catch((err) => {
+                      console.log(err)
                     })
                   })
-              })
-            }
-          }).catch((err) => {
-            console.log(err)
-            this.msg = this.y18n('savingFailed')
-          })
+                })
+            })
+          }
         }
         )
       })

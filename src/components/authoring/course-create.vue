@@ -202,6 +202,11 @@ export default {
         const userid = auth.userId
         const data = { newCourse, newId, enrBool, userid }
         this.$store.commit('createCourse', data)
+        this.$router.push(`/courses/${data.newCourse.name}/1`)
+          .catch((err) => {
+            console.log(err)
+            this.msg = this.y18n('savingFailed')
+          })
       }
     },
 
