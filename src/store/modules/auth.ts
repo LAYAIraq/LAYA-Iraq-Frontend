@@ -109,6 +109,26 @@ export default {
   actions: {
 
     /**
+       * fetchSingleEnrollment
+       *
+       * Author: pj
+       *
+       * Last updated: May 24, 2022
+       * @param state
+       */
+    fetchSingleEnrollment ({ state }
+    ) {
+      return new Promise((resolve, reject) => {
+        http
+          .get(`enrollments/getAllByStudentId/?uid=${state.userId}`).then(data => {
+            resolve(data)
+          }, error => {
+            reject(error)
+          })
+      })
+    },
+
+    /**
      * Function fetchRole: fetch role of logged user
      *
      * Author: core

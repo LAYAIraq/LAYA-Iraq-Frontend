@@ -161,7 +161,6 @@ Dependencies:
 </template>
 
 <script>
-import http from 'axios'
 import { mapGetters } from 'vuex'
 import { locale, storeHandler } from '@/mixins'
 export default {
@@ -195,8 +194,7 @@ export default {
       'course',
       'courseList',
       'mediaPrefs',
-      'userId',
-      'fetchSingleEnrollment'
+      'userId'
     ]),
     /**
      * function complicitReady(): returns true if complicit Set has any members
@@ -348,15 +346,15 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: unknown
+     * Last Updated: May 24, 2022
      */
     getSubs () {
-      const data = this.fetchSingleEnrollment
-      console.log(this.fetchSingleEnrollment)
-      const list = data.sublist
-      for (const item of list) {
-        this.enrolledIn.push(item.courseId)
-      }
+      this.$store.dispatch('fetchSingleEnrollment').then((data) => {
+        const list = data.data.sublist
+        for (const item of list) {
+          this.enrolledIn.push(item.courseId)
+        }
+      })
     },
     /**
      * Function isEnrolled: return true if course needs an enrollment
@@ -381,7 +379,7 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: March 12, 2021
+     * Last Updated: May 24, 2022
      *
      */
     subscribe (course) {
@@ -391,14 +389,13 @@ export default {
         studentId: this.userId
       }
       //   /* create enrollment */
-      http.post('enrollments/create', newEnrollment)
-        .then((resp) => {
-          self.enrolledIn.push(resp.data.enrol.courseId)
-        })
-        .catch((err) => console.error(err))
+      this.$store.dispatch('createEnrollment', newEnrollment).then((data) => {
+        self.enrolledIn.push(data)
+      })
     }
   }
 }
+
 </script>
 
 <style scoped>
