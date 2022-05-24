@@ -8,7 +8,7 @@ module.exports = {
 
   moduleNameMapper: {
     '/^@\/(.*)$/': '<rootDir>/src/$1',
-    '.*\\.(css|styl|less|sass|scss)$': '<rootDir>/tests/mocks/style-mock.ts'
+    '.*\\.(css|styl|less|sass|scss|svg)$': '<rootDir>/tests/mocks/style-mock.ts'
   },
 
   resolver: null,

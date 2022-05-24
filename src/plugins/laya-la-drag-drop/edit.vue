@@ -335,12 +335,13 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import { locale, tooltipIcon } from '@/mixins'
-import { v4 as uuidv4 } from 'uuid'
+import commonMethods from './common-methods'
 
 export default {
   name: 'LayaLaDragDropEdit',
 
   mixins: [
+    commonMethods,
     locale,
     tooltipIcon
   ],
@@ -364,54 +365,6 @@ export default {
   },
 
   methods: {
-    /**
-     * Function _delItem: remove item at position idx
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     *
-     * @param {*} idx index at which to remove
-     */
-    _delItem (idx) {
-      this.items.splice(idx, 1)
-    },
-
-    /**
-     * Function _addItem: Add new item to items
-     * Author: core
-     * Last Updated: June 6, 2021
-     * @param {string} str string to be added
-     */
-    _addItem (str) {
-      this.items.push({ label: str, category: -1, flagged: false, id: uuidv4() })
-    },
-
-    /**
-     * Function _delCategory: delete category at position idx
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     *
-     * @param {*} idx index at which to remove the category
-     */
-    _delCategory (idx) {
-      this.categories.splice(idx, 1)
-    },
-
-    /**
-     * Function _addCategory: Add new category to categories
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     *
-     */
-    _addCategory () {
-      this.categories.push({})
-    },
-
     /**
      * Function fetchData(): fetch data from vuex and make data property
      *

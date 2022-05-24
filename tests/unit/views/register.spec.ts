@@ -12,14 +12,23 @@ describe('register component', () => {
     passwordRepeat: () => 'secret',
     passwordSet: () => 'secret12'
   }
+  const actions = {
+    checkEmailTaken: jest.fn(() => Promise.reject(new Error('404'))),
+    checkNameTaken: jest.fn(() => Promise.resolve(false)),
+    registerUser: jest.fn(() => Promise.resolve)
+  }
   let wrapper
   let vm
   let nameInput
   let nameError
   let emailInput
   let emailError
+  let store
   beforeEach(() => {
-    const store = new Vuex.Store({ getters })
+    store = new Vuex.Store({
+      getters,
+      actions
+    })
     wrapper = shallowMount(RegisterView, {
       data () {
         return {
@@ -28,7 +37,7 @@ describe('register component', () => {
       },
       mocks: {
         $ls: {
-          get: () => jest.fn()
+          get: () => false
         },
         $router: {
           replace: () => jest.fn()
@@ -161,5 +170,113 @@ describe('register component', () => {
     const sendButton = wrapper.find('button')
     expect(sendButton).toBeDefined()
     expect(sendButton.attributes('disabled')).toBe('disabled')
+  })
+
+  it('fires register request when button is clicked', async () => {
+    // wrapper.vm.passwordOk = true
+    await nameInput.trigger('blur')
+    await nameInput.setValue('CorrectName')
+    await nameInput.trigger('blur')
+    await localVue.nextTick()
+    expect(actions.checkNameTaken).toHaveBeenCalled()
+    await emailInput.trigger('blur')
+    await emailInput.setValue('correct@email.com')
+    await emailInput.trigger('blur')
+    expect(actions.checkEmailTaken).toHaveBeenCalled()
+    const sendButton = wrapper.find('button')
+    await sendButton.trigger('click')
+    expect(actions.registerUser).toHaveBeenCalled()
+  })
+
+  it('catches rejects of store promises', async () => {
+    console.error = jest.fn()
+    const tmpGetters = {
+      profileLang: () => 'en',
+      passwordRepeat: () => 'a',
+      passwordSet: () => 'a'
+    }
+    const tmpActions = {
+      checkEmailTaken: jest.fn(() => Promise.resolve),
+      checkNameTaken: jest.fn(() => Promise.reject(new Error('false'))),
+      registerUser: jest.fn(() => Promise.reject(new Error('false')))
+    }
+    store = new Vuex.Store({
+      getters: tmpGetters,
+      actions: tmpActions
+    })
+    wrapper = shallowMount(
+      RegisterView, {
+        mocks: {
+          $ls: {
+            get: () => jest.fn()
+          },
+          $router: {
+            replace: () => jest.fn()
+          }
+        },
+        store,
+        stubs: ['router-link'],
+        localVue
+      }
+    )
+    await nameInput.setValue('CorrectName')
+    await nameInput.trigger('blur')
+    await emailInput.setValue('correct@email.com')
+    await emailInput.trigger('blur')
+    const button = wrapper.find('button')
+    await button.trigger('click')
+    // wrapper.vm.passwordOk = true
+    wrapper.vm.submit()
+    wrapper.vm.passwordOk = true
+    wrapper.vm.submit()
+    expect(tmpActions.registerUser).toHaveBeenCalled()
+  })
+
+  it('has form error correct', async () => {
+    const tmpGetters = {
+      profileLang: () => 'en',
+      passwordRepeat: () => '',
+      passwordSet: () => ''
+    }
+    store = new Vuex.Store({
+      getters: tmpGetters,
+      actions
+    })
+    wrapper = shallowMount(
+      RegisterView, {
+        mocks: {
+          $ls: {
+            get: () => jest.fn()
+          },
+          $router: {
+            replace: () => jest.fn()
+          }
+        },
+        store,
+        stubs: ['router-link'],
+        localVue
+      }
+    )
+    const button = wrapper.find('button')
+    expect(button.attributes('disabled')).toBeTruthy()
+  })
+
+  it('redirects logged users', () => {
+    wrapper = shallowMount(
+      RegisterView, {
+        mocks: {
+          $ls: {
+            get: () => true
+          },
+          $router: {
+            replace: jest.fn()
+          }
+        },
+        store,
+        stubs: ['router-link'],
+        localVue
+      }
+    )
+    expect(wrapper.vm.$router.replace).toHaveBeenCalled()
   })
 })
