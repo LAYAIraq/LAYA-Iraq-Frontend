@@ -120,9 +120,9 @@ export default {
           ? application.votes++ // vote changed from no to yes, increment count
           : application.votes-- // vote changed from yes to no, decrement count
         Vue.set(state.applicationList, applicationIdx, application)
-      } else {
+      } /* else {
         console.log('Vote not changed')
-      }
+      } */
       editorVote.vote = vote
     },
 
@@ -194,7 +194,7 @@ export default {
       } else if (state.applicationList[0].id !== data.id) {
         console.error('IDs don`t match!')
       } else {
-        console.log(data)
+        // console.log(data)
         Vue.set(state.applicationList, 0, { ...state.applicationList[0], ...data }) // to retain reactivity
         // state.applicationList[0] = { ...state.applicationList[0], ...data }
         // console.log(state.applicationList[0])
