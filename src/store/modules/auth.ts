@@ -120,11 +120,11 @@ export default {
     ) {
       return new Promise((resolve, reject) => {
         http
-          .get(`enrollments/getAllByStudentId/?uid=${state.userId}`).then(data => {
+          .get(`enrollments/getAllByStudentId/?uid=${state.userId}`)
+          .then(data => {
             resolve(data)
-          }, error => {
-            reject(error)
           })
+          .catch(error => { reject(error) })
       })
     },
 
