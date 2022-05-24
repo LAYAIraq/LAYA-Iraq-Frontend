@@ -43,12 +43,9 @@ Last Updated: May 04, 2022
       >
      
       <hr>
-       <div
-          id="title"
-          class="col"
-        >
+       <div class="col">
         <h2>
-          {{  courseSimple? title.simple : title.text }}
+          {{  courseSimple? title.simple : title }}
           <laya-audio-inline
             v-if="taskAudioExists"
             :src="courseSimple?
@@ -68,11 +65,8 @@ Last Updated: May 04, 2022
       :id="task.id"
       class="flaggable row"
     >
-      <div
-          id="task"
-          class="col"
-        >
-        <p>{{ courseSimple? task.simple : task.text }}</p>
+      <div class="col">
+        <p>{{ courseSimple? task.simple : task }}</p>
       </div>
       <laya-flag-icon
         v-if="!previewData"
@@ -89,7 +83,7 @@ Last Updated: May 04, 2022
             v-for="(item, i) in items"
             :id="item.id"
             :key="item.id"
-            class="item flaggable item mb-5"
+            class="flaggable item mb-5"
           >
            <h3 class="text-center item-label">
             {{ courseSimple? item.simple : item.label }}
@@ -97,8 +91,8 @@ Last Updated: May 04, 2022
               v-if="checked"
               class="fas"
               :class="{
-                'fa-check text-success': eval[i],
-                'fa-times text-danger': !eval[i]
+                'fa-check text-success': answered[i],
+                'fa-times text-danger': !answered[i]
               }"
             >
             </i>
@@ -118,10 +112,10 @@ Last Updated: May 04, 2022
               type="range"
               class="custom-range"
               min="0"
-              :max="categoriesLocal.length-1"
+              :max="categories.length-1"
               :disabled="checked"
               :aria-valuenow="choice[i]"
-              :aria-valuetext="categoriesLocal[choice[i]]"
+              :aria-valuetext="categories[choice[i]]"
               :aria-label="y18n('layaLaFeedback.label.slider')"
             >
             <laya-flag-icon
@@ -150,6 +144,7 @@ Last Updated: May 04, 2022
       <div class="col">
         <star-rating 
           @rating-selected="rating = $event" :rating="rating"
+          @rating-selected="e => rating = e"
           >
         </star-rating>
         <div>
@@ -233,23 +228,24 @@ export default {
       return {
         ...this.previewData,
         checked: false,
-        solution: [], // users solution as index
-        eval: []
+        choice: [], // users solution as index
+        answered: []
       }
     }
     
     return {
+      checked: false,
       title: {},
       task: {},
       choice: [], // users choice as index
       freetext: '',
-      answered: false,
+      answered: [],
       // step: this.init.fno,
       step: this.$route.params.step - 1,
       id: uuidv4(),
       items: [],
       prevFeedback: '',
-      categoriesLocal: '',
+      categories: '',
       numberOfFeedbacksEntries: 0,
       rating: 0
     }
@@ -257,21 +253,44 @@ export default {
 
   computed: {
     ...mapGetters(['content']),
-    ...mapGetters(['getEnrollmentFeedback'])
+    ...mapGetters(['getEnrollmentFeedback']),
+    
+    /**
+     * function taskAudioExists: returns true if taskAudio object doesn't
+     *  contain empty strings
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: October 31, 2021
+     * @returns {boolean} true if strings are set
+     */
+    taskAudioExists () {
+      return this.courseSimple
+        ? this.taskAudio.regular !== ''
+        : this.taskAudio.regular !== '' && this.taskAudio.simple !== ''
+    }
   },
 
   created () {
+  
+  /*
     this.fetchData()
     this.mapSolutions()
     this.getPrevFeedback()
+    */
+    
+    if (!this.previewData){ 
+    this.fetchData()
+    this.getPrevFeedback()
+    this.mapSolutions()
+    }
   },
   beforeDestroy () {
     // add saving feedback data
-
+    this.storefeedback()
   },
   methods: {
     mapSolutions () {
-      this.categoriesLocal = this.categories
       const mid = Math.floor((this.categories.length) / 2)
       const s = this.items.map(() => mid)
       this.choice = [...s]

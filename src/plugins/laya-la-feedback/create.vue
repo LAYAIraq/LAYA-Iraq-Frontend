@@ -14,7 +14,7 @@ Last Updated: May 04, 2022
 
 <template>
   <div
-    class="laya-la-feedback-edit"
+    class="laya-la-feedback-create"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <label>
@@ -53,7 +53,7 @@ Last Updated: May 04, 2022
         <div class="col-10">
           <input
             id="feedback-title"
-            v-model="title.text"
+            v-model="title"
             type="text"
             class="form-control"
             :placeholder="y18n('titlePlaceholder')"
@@ -91,12 +91,12 @@ Last Updated: May 04, 2022
         <span
           class="col-2 col-form-label"
         >
-          {{ y18n('layaLaFeedback.edit.desc') }}
+          {{ y18n('task') }}
         </span>
         <div class="col-10">
           <textarea
             id="feedback-task"
-            v-model="task.text"
+            v-model="task"
             class="w-100"
             :placeholder="y18n('taskPlaceholder')"
           >
@@ -178,14 +178,14 @@ Last Updated: May 04, 2022
         <div class="row">
         <label
           class="col-form-label col-2"
-          :for="`item-text-${item.id}`"
+          :for="'item-text-'+i"
         >
           {{ y18n('text') }}
         </label>
         <div class="col-5">
           <input
-            :id="`item-text-${item.id}`"
-            v-model="item.label"
+            :id="'item-text-'+i"
+            v-model="items[i].label"
             class="form-control"
             type="text"
           >
@@ -198,7 +198,7 @@ Last Updated: May 04, 2022
           <!-- simple item -->
           <label
             class="col-form-label col-2"
-            :for="`item-simple-${item.id}`"
+            :for="'item-simple-'+i"
           >
             <span class="sr-only">
               {{ y18n('simpleAlt') }}
@@ -206,7 +206,7 @@ Last Updated: May 04, 2022
           </label>
           <div class="col-5">
             <input
-              :id="`item-simple-${item.id}`"
+              :id="'item-simple-'+i"
               v-model="item.simple"
               class="form-control"
               type="text"
@@ -333,7 +333,7 @@ import { locale, tooltipIcon } from '@/mixins'
 import commonMethods from './common-methods'
 
 export default {
-  name: 'LayaLaFeedbackEdit',
+  name: 'LayaLaFeedbackCreate',
 
   mixins: [
     locale,
@@ -359,37 +359,50 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['content'])
+    ...mapGetters(['courseSimple'])
   },
 
   created () {
-    this.fetchData()
+    this.fillFormSamples()
+    this.populateVars()
   },
 
   methods: {
    
-    /**
-     * Function fetchData: Fill in localized sample input
-     *
-     * Author: cmc
-     *
-     * Last Updated: August 15, 2021
-     */
-    /* fetchData() {
-      if (this.title === '') { //prefetch Data at creation
-        this.title = this.y18n('layaLaFeedback.name')
-        this.task = this.y18n('layaLaFeedback.prefetch.task')
-        this.items = this.y18n('layaLaFeedback.prefetch.items').split(',')
-        this.categories = this.y18n('layaLaFeedback.prefetch.categories').split(',')
+    fillFormSamples () {
+      // fill item and category props with localized tokens
+      if (this.categories.length === 0) {
+        const temp = this.y18n('layaLaFeedback.edit.answers') + ' 1'
+        const tmpItem = {
+          label: temp,
+          simple: 'simple lang alternative',
+          category: -1,
+          flagged: false,
+          id: uuidv4()
+        }
+        this.items.push(tmpItem)
+
+        for (let i = 1; i < 3; i++) {
+          const tmp = this.y18n('layaLaFeedback.edit.questions') + ' ' + i
+          this.categories.push({
+            text: tmp,
+            simple: 'simple language alternative'
+          })
+        }
       }
-    } */
-    fetchData () {
-      const idx = this.$route.params.step - 1
-      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
-      this.title = preData.title
-      this.task = preData.task
-      this.items = preData.items
-      this.categories = preData.categories
+    },
+
+    populateVars () {
+      this.title = {
+        text: '',
+        flagged: false,
+        id: uuidv4()
+      }
+      this.task = {
+        text: '',
+        flagged: false,
+        id: uuidv4()
+      }
     }
   }
 }

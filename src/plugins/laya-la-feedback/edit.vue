@@ -53,7 +53,7 @@ Last Updated: May 04, 2022
         <div class="col-10">
           <input
             id="feedback-title"
-            v-model="title.text"
+            v-model="title"
             type="text"
             class="form-control"
             :placeholder="y18n('titlePlaceholder')"
@@ -96,7 +96,7 @@ Last Updated: May 04, 2022
         <div class="col-10">
           <textarea
             id="feedback-task"
-            v-model="task.text"
+            v-model="task"
             class="w-100"
             :placeholder="y18n('taskPlaceholder')"
           >
@@ -198,7 +198,7 @@ Last Updated: May 04, 2022
           <!-- simple item -->
           <label
             class="col-form-label col-2"
-            :for="`item-simple-${item.id}`"
+            :for="'item-simple-'+i"
           >
             <span class="sr-only">
               {{ y18n('simpleAlt') }}
@@ -206,7 +206,7 @@ Last Updated: May 04, 2022
           </label>
           <div class="col-5">
             <input
-              :id="`item-simple-${item.id}`"
+              :id="'item-simple-'+i"
               v-model="item.simple"
               class="form-control"
               type="text"
@@ -388,6 +388,7 @@ export default {
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.title = preData.title
       this.task = preData.task
+      this.taskAudio = preData.taskAudio
       this.items = preData.items
       this.categories = preData.categories
     }
