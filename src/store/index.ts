@@ -14,6 +14,7 @@ import Vuex from 'vuex'
 /* modules */
 import auth from './modules/auth'
 import edit from './modules/edit'
+import editor from './modules/editor'
 import flags from './modules/flags'
 import message from './modules/message'
 import note from './modules/note'
@@ -30,6 +31,7 @@ export default new Vuex.Store({
   modules: {
     auth,
     edit,
+    editor,
     flags,
     message,
     note,

@@ -18,7 +18,10 @@ Dependencies:
         :id="title.id"
         class="flaggable row mb-3"
       >
-        <div class="col">
+        <div
+          id="title"
+          class="col"
+        >
           <h4>
             {{ courseSimple? title.simple: title.text }}
             <laya-audio-inline
@@ -38,7 +41,10 @@ Dependencies:
         :id="task.id"
         class="flaggable row"
       >
-        <div class="col">
+        <div
+          id="task"
+          class="col"
+        >
           <p>{{ courseSimple? task.simple: task.text }}</p>
         </div>
         <laya-flag-icon
@@ -60,12 +66,12 @@ Dependencies:
             >
               <label
                 :for="pair.label+i"
-                class="col-sm-6 col-form-label"
+                class="col-sm-6 col-form-label answer-text"
               >
                 <img
                   v-if="pair.img"
                   :src="pair.img"
-                  :alt="pair.label"
+                  :alt="courseSimple? pair.labelSimple: pair.label"
                 >
                 <laya-audio-inline
                   v-if="pair.audio"
@@ -77,17 +83,21 @@ Dependencies:
               </label>
               <div class="col-sm-6">
                 <select
-                  :id="pair.label+i"
+                  :id="'item-' + i"
                   v-model="solution[i]"
                   :disabled="freeze"
                   class="custom-select"
                 >
-                  <option disabled>
+                  <option
+                    disabled
+                    value="-1"
+                  >
                     {{ defaultOption }}
                   </option>
                   <option
-                    v-for="opt in options"
-                    :key="opt"
+                    v-for="(opt, j) in options"
+                    :key="'option-' + j"
+                    :value="j"
                   >
                     {{ opt }}
                   </option>
@@ -130,13 +140,17 @@ Dependencies:
 
       <div>
         <div class="row">
-          <div v-if="showSolutionsBool">
+          <div
+            v-if="showSolutionsBool"
+            id="solutions"
+          >
             {{ i18n["layaLaScmc.showCorrect"] }}
             <div
               v-for="(pair, index) in pairs"
               :key="index"
             >
-              {{ courseSimple? pair.labelSimple: pair.label }}: {{ pair.relation }},
+              {{ courseSimple? pair.labelSimple: pair.label }}:
+              {{ courseSimple? relationsSimple[pair.relation] : relations[pair.relation] }},
             </div>
           </div>
         </div>
@@ -146,9 +160,12 @@ Dependencies:
           </div>
           <b-modal
             id="relate-missing-warning"
+            :title="y18n('password.error')"
             ok-variant="warning"
+            header-bg-variant="warning"
             ok-only
             centered
+            static
           >
             {{ y18n('layaLaRelate.missingAnswerWarning') }}
           </b-modal>
@@ -198,16 +215,18 @@ export default {
       }
     }
     return {
-      title: {},
-      task: {},
-      taskAudio: '',
-      pairs: [],
+      allAnswersChosen: false,
       defaultOption: '',
-      solution: [],
       eval: [],
       freeze: false,
+      pairs: [],
+      relations: [],
+      relationsSimple: [],
       showSolutionsBool: false,
-      allAnswersChosen: false
+      solution: [],
+      task: {},
+      taskAudio: '',
+      title: {}
     }
   },
 
@@ -258,6 +277,10 @@ export default {
     if (!this.previewData) { // no preview
       this.fetchData()
     }
+    // eslint-disable-next-line no-unused-vars
+    for (const i in this.pairs) {
+      this.solution.push(-1)
+    }
   },
 
   methods: {
@@ -270,7 +293,7 @@ export default {
      * Last Updated: unknown
      */
     reset () {
-      this.solution = this.pairs.map(() => this.defaultOption)
+      this.solution = this.pairs.map(() => -1)
     },
 
     /**
@@ -292,13 +315,20 @@ export default {
      * Last Updated: March 19, 2021
      */
     check () {
-      if ((this.solution.length === this.pairs.length) && !this.solution.includes(undefined)) {
+      // map shuffeled answers to their actual equivalents
+      const realAnswer = this.solution.map(idx =>
+        this.courseSimple
+          ? this.relationsSimple.indexOf(this.options[idx])
+          : this.relations.indexOf(this.options[idx])
+      )
+      // console.log(realAnswer)
+      if (!this.solution.includes(-1)) {
         this.allAnswersChosen = false
         for (let i = 0; i < this.pairs.length; ++i) {
-          if (this.pairs[i].relation === this.solution[i]) {
+          if (this.pairs[i].relation === realAnswer[i]) {
             this.eval[i] = { 'fa fa-check fa-2x text-success': true }
           } else {
-            this.solution[i] = this.pairs[i].relation
+            // this.solution[i] = this.pairs[i].relation
             this.eval[i] = { 'fa fa-times fa-2x text-danger': true }
           }
         }

@@ -30,6 +30,7 @@ Dependencies:
             type="text"
             class="form-control"
             :placeholder="y18n('courseCreate.courseName')"
+            @blur="trimNames"
           >
         </div>
       </div>
@@ -47,6 +48,7 @@ Dependencies:
             type="text"
             class="form-control"
             :placeholder="y18n('cat')"
+            @blur="trimNames"
           >
         </div>
       </div>
@@ -55,7 +57,7 @@ Dependencies:
           for="new-course-enrollment"
           class="col-3 col-form-label"
         >
-          {{ i18n['courseCreate.enrollment'] }}
+          {{ y18n('courseCreate.enrollment') }}
         </label>
         <div class="col">
           <input
@@ -67,7 +69,10 @@ Dependencies:
         </div>
       </div>
       <div class="form-group row">
-        <div class="col">
+        <div
+          id="error-msg"
+          class="col"
+        >
           <span class="text-danger form-control-plaintext text-right">
             {{ msg }}
           </span>
@@ -89,9 +94,8 @@ Dependencies:
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
-import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'CourseCreate',
@@ -112,8 +116,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['note', 'auth']),
-    ...mapGetters(['courseList']),
+    ...mapGetters(['courseList', 'userId']),
 
     /**
      * formValid: to test if both name and category are set
@@ -134,7 +137,7 @@ export default {
      * Last updated: unknown
      */
     needsEnrollment () {
-      return this.$refs.enrollmentRequired.checked
+      return !!this.$refs.enrollmentRequired.checked
     }
 
   },
@@ -187,23 +190,27 @@ export default {
      *  */
     storeNewCourse () {
       this.checkNames()
-      const { auth, newCourse } = this
+      const { newCourse, userId } = this
+      console.log(newCourse)
       if (this.newCourseNeedsEncoding) {
         this.msg = this.y18n('courseList.needsEncoding')
       } else {
-        const enrBool = this.needsEnrollment
-        const newId = uuidv4()
-        /* console.log(`New Id: ${newId}`) */
-
-        /* create storage */
-        this.$store.commit('createStorage', newId)
-
-        /* create course */
-        const userid = auth.userId
-        const data = { newCourse, newId, enrBool, userid }
-        this.$store.commit('createCourse', data)
-        this.$router.push(`/courses/${data.newCourse.name}/1`)
-          .catch((err) => {
+        this.msg = ''
+        this.$store.dispatch('createCourse', {
+          ...newCourse,
+          userId: userId,
+          enrollment: this.needsEnrollment
+        })
+          .then(() => {
+            this.$router.push(`/courses/${newCourse.name}/1`)
+            if (this.needsEnrollment) {
+              this.$store.dispatch('createAuthorEnrollment', {
+                courseName: newCourse.name,
+                userId: userId
+              })
+            }
+          })
+          .catch(err => {
             console.log(err)
             this.msg = this.y18n('savingFailed')
           })

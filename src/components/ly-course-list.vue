@@ -89,22 +89,19 @@ Dependencies:
         </div>
 
         <div class="col-3">
-          <router-link
-            v-if="isEnrolled(course)"
-            :to="'/courses/'+course.name+'/1'"
+          <a
             class="btn indicated-btn"
             @click="decideButtonAction(course)"
           >
-            {{ i18n['courseList.start'] }}
+            <span v-if="isEnrolled(course)">
+              {{ y18n('courseList.start') }}
             <i class="fas fa-arrow-right"></i>
-          </router-link>
-          <a
-            v-else
-            class="btn indicated-btn"
-            @click="subscribe(course)"
-          >
-            {{ i18n['courseList.subscribe'] }}
+            </span>
+            <span v-else>
+              {{ y18n('courseList.subscribe') }}
             <i class="fas fa-file-signature"></i>
+            </span>
+
           </a>
           <div
             v-if="complicitReady && !complicitCourses.has(course.courseId)"
@@ -122,6 +119,7 @@ Dependencies:
       :title="y18n('courseList.notComplicit.title')"
       header-bg-variant="warning"
       centered
+      static
       @ok="buttonAction()"
       @cancel="$router.push('/profile')"
     >
@@ -161,14 +159,18 @@ Dependencies:
 </template>
 
 <script>
+// import http from 'axios'
 import { mapGetters } from 'vuex'
 import { locale, storeHandler } from '@/mixins'
+
 export default {
   name: 'LayaCourseList',
+
   mixins: [
     locale,
     storeHandler
   ],
+
   props: {
     filter: {
       type: String,
@@ -177,6 +179,7 @@ export default {
       }
     }
   },
+
   data () {
     return {
       buttonAction: null,
@@ -189,6 +192,7 @@ export default {
       selectedCourse: ''
     }
   },
+
   computed: {
     ...mapGetters([
       'course',
@@ -196,6 +200,7 @@ export default {
       'mediaPrefs',
       'userId'
     ]),
+
     /**
      * function complicitReady(): returns true if complicit Set has any members
      *
@@ -207,6 +212,7 @@ export default {
     complicitReady () {
       return this.complicitCourses !== null
     },
+
     /**
      * filtered: filter course list depending on user input
      *
@@ -220,30 +226,34 @@ export default {
       return this.filteredList.filter(course => filterByCourseName.test(course.name))
     }
   },
+
   watch: {
     // watch course list in order to have non-complicit indicator at first load
     courseList () {
       this.getComplicitCourses()
     }
   },
+
   created () {
     this.getSubs()
     this.filteredList = [...this.courseList]
     this.getComplicitCourses()
   },
+
   methods: {
-    // TEST
-    debounce (fn, delay) {
-      let timeoutID = null
-      return () => {
-        clearTimeout(timeoutID)
-        const args = arguments
-        const ctx = this
-        timeoutID = setTimeout(() => {
-          fn.apply(ctx, args)
-        }, delay)
-      }
-    },
+    // // TEST, commented out for coverage reasons
+    // debounce (fn, delay) {
+    //   let timeoutID = null
+    //   return () => {
+    //     clearTimeout(timeoutID)
+    //     const args = arguments
+    //     const ctx = this
+    //     timeoutID = setTimeout(() => {
+    //       fn.apply(ctx, args)
+    //     }, delay)
+    //   }
+    // },
+
     /**
      * function markAsNonComplicit: add array in nonComplicitSettings if not
      *  present for courseId, add property to array
@@ -257,6 +267,7 @@ export default {
       this.nonComplicitSettings[courseId].push(property)
       // this.complicitCourses.delete(courseId)
     },
+
     /**
      * function getComplicitCourses: check user's preferences and
      *  check if course complies to them, if not, remove from
@@ -288,6 +299,7 @@ export default {
         }
       }
     },
+
     /**
      * function decideButtonAction: redirect to course or show modal
      *  depending on course status concerning media preferences
@@ -318,6 +330,7 @@ export default {
         this.buttonAction()
       }
     },
+
     /**
      * function getIcon: return string for icon corresponding to setting prop
      *
