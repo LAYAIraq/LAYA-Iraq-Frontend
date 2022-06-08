@@ -184,8 +184,8 @@ export default {
               name: data.name,
               category: data.category,
               authorId: data.userId,
-              storageId: storageId
-              // properties: { enrollment: data.enrollment }
+              storageId: storageId,
+              properties: { enrollment: data.enrollment }
             })
               .then(() => {
                 resolve('Course successfully created')
@@ -223,8 +223,28 @@ export default {
               })
               .then(() => resolve('author enrollment created'))
               .catch(err => reject(new Error(err)))
-              .catch(err => reject(new Error(err)))
           })
+          .catch(err => reject(new Error(err)))
+      })
+    },
+
+    /**
+       * fetchSingleEnrollment
+       *
+       * Author: pj
+       *
+       * Last updated: May 24, 2022
+       * @param state
+       */
+    fetchSingleEnrollment ({ state }
+    ) {
+      return new Promise((resolve, reject) => {
+        http
+          .get(`enrollments/getAllByStudentId/?uid=${state.userId}`)
+          .then(data => {
+            resolve(data)
+          })
+          .catch(error => { reject(error) })
       })
     },
 

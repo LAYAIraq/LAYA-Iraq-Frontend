@@ -52,20 +52,22 @@ Dependencies:
           >
         </div>
       </div>
-      <!--        COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)-->
-      <!--        <div class="form-group row">-->
-      <!--          <label for="new-course-enrollment" class="col-3 col-form-label">-->
-      <!--            {{ y18n('courseCreate.enrollment') }}-->
-      <!--          </label>-->
-      <!--          <div class="col">-->
-      <!--            <input-->
-      <!--              id="new-course-enrollment"-->
-      <!--              type="checkbox"-->
-      <!--              class="form-control"-->
-      <!--              ref="enrollmentRequired"-->
-      <!--            >-->
-      <!--          </div>-->
-      <!--        </div>-->
+      <div class="form-group row">
+        <label
+          for="new-course-enrollment"
+          class="col-3 col-form-label"
+        >
+          {{ y18n('courseCreate.enrollment') }}
+        </label>
+        <div class="col">
+          <input
+            id="new-course-enrollment"
+            ref="enrollmentRequired"
+            type="checkbox"
+            class="form-control"
+          >
+        </div>
+      </div>
       <div class="form-group row">
         <div
           id="error-msg"
@@ -189,29 +191,29 @@ export default {
     storeNewCourse () {
       this.checkNames()
       const { newCourse, userId } = this
+      console.log(newCourse)
       if (this.newCourseNeedsEncoding) {
         this.msg = this.y18n('courseList.needsEncoding')
       } else {
         this.msg = ''
-        // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
-        // let enrBool = self.needsEnrollment
         this.$store.dispatch('createCourse', {
           ...newCourse,
-          userId: userId
+          userId: userId,
+          enrollment: this.needsEnrollment
         })
           .then(() => {
             this.$router.push(`/courses/${newCourse.name}/1`)
+            if (this.needsEnrollment) {
+              this.$store.dispatch('createAuthorEnrollment', {
+                courseName: newCourse.name,
+                userId: userId
+              })
+            }
           })
           .catch(err => {
             console.log(err)
             this.msg = this.y18n('savingFailed')
           })
-        if (this.needsEnrollment) {
-          this.$store.dispatch('createAuthorEnrollment', {
-            name: newCourse.name,
-            userId: userId
-          })
-        }
       }
     },
 
