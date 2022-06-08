@@ -246,6 +246,7 @@ export default {
 
     /**
      * function getBrowserLocale: return promise of 2-digit language code
+     * DEPRECATED AS OF JUNE 2022
      *
      * Author: cmc
      *
