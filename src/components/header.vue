@@ -194,20 +194,18 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: March 12, 2021
+     * Last Updated: June 8, 2022 by cmc
      */
     getLocale () {
-      const store = this.$store
-      /*
-      * get browser locale */
-      this.$store.dispatch('getBrowserLocale')
-        .then(lang => {
-          store.commit('setLang', lang)
-          document.documentElement.setAttribute('lang', lang)
-        })
-        .catch(() => {
-          store.commit('setLang', 'en')
-        })
+      const locales = navigator.languages
+      let lang
+      if (locales.length !== 0) {
+        lang = locales[0].substring(0, 2)
+      } else {
+        lang = navigator.language
+      }
+      this.$store.commit('setLang', lang)
+      document.documentElement.setAttribute('lang', lang)
     },
 
     /**
