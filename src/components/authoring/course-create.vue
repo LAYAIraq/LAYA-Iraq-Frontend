@@ -191,7 +191,6 @@ export default {
     storeNewCourse () {
       this.checkNames()
       const { newCourse, userId } = this
-      console.log(newCourse)
       if (this.newCourseNeedsEncoding) {
         this.msg = this.y18n('courseList.needsEncoding')
       } else {
