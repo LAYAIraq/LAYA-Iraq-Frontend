@@ -37,12 +37,12 @@ Dependencies:
           <h2>{{ y18n('namePH') }}</h2>
         </div>
         <div class="col">
-          <h4>{{ y18n('cat') }}</h4>
+          <h3>{{ y18n('cat') }}</h3>
         </div>
         <div class="col-2">
-          <h2 class="sr-only">
+          <h4 class="sr-only">
             {{ y18n('courseList.properties') }}
-          </h2>
+          </h4>
         </div>
         <div class="col-3">
         </div>
@@ -95,11 +95,11 @@ Dependencies:
           >
             <span v-if="isEnrolled(course)">
               {{ y18n('courseList.start') }}
-            <i class="fas fa-arrow-right"></i>
+              <i class="fas fa-arrow-right"></i>
             </span>
             <span v-else>
               {{ y18n('courseList.subscribe') }}
-            <i class="fas fa-file-signature"></i>
+              <i class="fas fa-file-signature"></i>
             </span>
 
           </a>
