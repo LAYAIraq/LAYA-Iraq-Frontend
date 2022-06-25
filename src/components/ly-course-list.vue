@@ -40,7 +40,8 @@ Dependencies:
           <h3>{{ y18n('cat') }}</h3>
         </div>
         <div class="col-2">
-          <h4 class="sr-only">
+          <h4 class="sr-only"
+          aria-hidden="true">
             {{ y18n('courseList.properties') }}
           </h4>
         </div>

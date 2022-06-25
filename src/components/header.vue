@@ -131,6 +131,7 @@ Dependencies:
               v-for="(svg, lang) in icons"
               :key="lang"
               @click="setLang(lang)"
+              :aria-label="languageAria[lang]"
             >
               <img
                 :src="svg"
@@ -164,7 +165,8 @@ export default {
   data () {
     return {
       icons,
-      isCourse: Boolean
+      isCourse: Boolean,
+      languageAria: []
     }
   },
 
