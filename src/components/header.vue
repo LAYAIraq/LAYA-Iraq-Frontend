@@ -130,8 +130,8 @@ Dependencies:
             <b-dropdown-item-btn
               v-for="(svg, lang) in icons"
               :key="lang"
-              @click="setLang(lang)"
               :aria-label="languageAria[lang]"
+              @click="setLang(lang)"
             >
               <img
                 :src="svg"
