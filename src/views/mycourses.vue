@@ -68,7 +68,6 @@ Dependencies:
               v-model="searchStr"
               type="text"
               :placeholder="y18n('searchPH')"
-              autofocus
             >
             <i class="fas fa-search"></i>
           </div>

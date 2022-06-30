@@ -22,12 +22,15 @@ Dependencies:
         v-b-tooltip.left
         class="fas fa-question-circle"
         :title="y18n('showTip')"
+        aria-labelledby="tooltipText"
+        aria-live="polite"
         @click="toggleTip"
       ></i>
     </div>
 
     <b-jumbotron
       v-if="tooltipOn"
+      id="tooltipText"
       :header="y18n('layaLaDragDrop.name')"
       :lead="y18n('tipHeadline')"
     >

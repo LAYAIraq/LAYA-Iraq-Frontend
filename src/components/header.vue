@@ -130,6 +130,7 @@ Dependencies:
             <b-dropdown-item-btn
               v-for="(svg, lang) in icons"
               :key="lang"
+              :aria-label="languageAria[lang]"
               @click="setLang(lang)"
             >
               <img
@@ -164,7 +165,8 @@ export default {
   data () {
     return {
       icons,
-      isCourse: Boolean
+      isCourse: Boolean,
+      languageAria: []
     }
   },
 

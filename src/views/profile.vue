@@ -33,9 +33,9 @@ Dependencies:
             class="d-block rounded-circle mx-auto avatar"
           >
 
-          <h2 class="text-center text-light">
+          <h1 class="text-center text-light">
             {{ profile.username }}
-          </h2>
+          </h1>
         </div>
       </div>
       <!-- row -->
@@ -48,9 +48,9 @@ Dependencies:
           class="w-100"
           style="margin-top: 1rem"
         >
-          <h1 :class="langIsAr? 'text-right' : 'text-left'">
+          <h2 :class="langIsAr? 'text-right' : 'text-left'">
             {{ y18n('profile.title') }}
-          </h1>
+          </h2>
           <hr>
 
           <!-- Name -->
