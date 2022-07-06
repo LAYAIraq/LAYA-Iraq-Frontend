@@ -44,7 +44,20 @@ export default {
      * @returns true if role is author or admin
      */
     isAuthor (state: { role: string }) {
-      return state.role === roles.AUTHOR || state.role === roles.ADMIN
+      return state.role === roles.AUTHOR || state.role === roles.EDITOR || state.role === roles.ADMIN
+    },
+
+    /**
+     * getter isEditor: return true if user is in admin role
+     *
+     * Author: cmc
+     *
+     * Last Updated: April 19, 2022
+     * @param state holds role string
+     * @returns {boolean} true if user is admin
+     */
+    isEditor (state: { role: string }) {
+      return state.role === roles.EDITOR
     },
 
     /**
@@ -171,8 +184,8 @@ export default {
               name: data.name,
               category: data.category,
               authorId: data.userId,
-              storageId: storageId
-              // properties: { enrollment: data.enrollment }
+              storageId: storageId,
+              properties: { enrollment: data.enrollment }
             })
               .then(() => {
                 resolve('Course successfully created')
@@ -210,8 +223,28 @@ export default {
               })
               .then(() => resolve('author enrollment created'))
               .catch(err => reject(new Error(err)))
-              .catch(err => reject(new Error(err)))
           })
+          .catch(err => reject(new Error(err)))
+      })
+    },
+
+    /**
+       * fetchSingleEnrollment
+       *
+       * Author: pj
+       *
+       * Last updated: May 24, 2022
+       * @param state
+       */
+    fetchSingleEnrollment ({ state }
+    ) {
+      return new Promise((resolve, reject) => {
+        http
+          .get(`enrollments/getAllByStudentId/?uid=${state.userId}`)
+          .then(data => {
+            resolve(data)
+          })
+          .catch(error => { reject(error) })
       })
     },
 
@@ -233,6 +266,7 @@ export default {
 
     /**
      * function getBrowserLocale: return promise of 2-digit language code
+     * DEPRECATED AS OF JUNE 2022
      *
      * Author: cmc
      *

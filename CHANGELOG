@@ -1,5 +1,11 @@
 # Changes
 
+## v1.2
+- moved http calls to vuex
+- added more unit tests
+- added editor panel
+- adde option to apply for authorship
+
 ## v1.1
 - fixed change role method in admin panel
 - added option for users to restore their password

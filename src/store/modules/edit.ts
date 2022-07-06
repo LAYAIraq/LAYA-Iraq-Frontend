@@ -1,5 +1,6 @@
 import http from 'axios'
 import { v4 as uuidv4 } from 'uuid'
+import auth from '@/store/modules/auth'
 
 export default {
   state: {
@@ -9,7 +10,8 @@ export default {
     courseList: [],
     courseUpdated: false,
     enrollment: {},
-    userEnrolled: false
+    userEnrolled: false,
+    studentId: []
   },
 
   getters: {
@@ -195,6 +197,83 @@ export default {
   },
 
   mutations: {
+
+    /**
+     * Create Storage
+     *
+     * Author: pj
+     *
+     * Last updated: May 22, 2022
+     * @param state
+     * @param id
+     */
+    createStorage ({ state },
+      id: {
+         newId: String
+    }
+    ) {
+      return new Promise<void>(() => {
+        http.post('storage', {
+          name: id
+        }).then(() => console.log(`New Storage: ${id}`)
+        )
+          .catch((err) => console.error(err))
+      })
+    },
+
+    /*      http.post('storage', {
+        name: id.newId
+      }).then(() => console.log(`New Storage: ${id.newId}`))
+        .catch((err) => console.error(err))
+    }, */
+
+    /**
+     * CreateCourse
+     *
+     * Author: pj
+     *
+     * Last updated: May 24, 2022
+     * @param state
+     * @param data
+     */
+    createCourse ({ state },
+      data: {
+              newCourse: any
+              newId: any
+              enrBool: Boolean
+              userId: any
+          }
+    ) {
+      return new Promise<void>(() => {
+        http.post('courses', {
+          ...data.newCourse,
+          authorId: data.userId,
+          storageId: data.newId,
+          properties: { enrollment: data.enrBool }
+        }).then(() => {
+          // this.$router.push(`/courses/${data.newCourse.name}/1`).then(() => {
+          if (data.enrBool) {
+            return new Promise<void>(() => {
+              http.get(`courses/getCourseId?courseName=${data.newCourse.name}`)
+                .then(resp => {
+                  const newEnrollment = {
+                    courseId: resp.data.courseId,
+                    studentId: data.userId
+                  }
+                  return new Promise<void>(() => {
+                    http.patch('enrollments', {
+                      ...newEnrollment
+                    }).catch((err) => {
+                      console.log(err)
+                    })
+                  })
+                })
+            })
+          }
+        }
+        )
+      })
+    },
 
     /**
      * appendFeedback: Append new Feedback to feedback-array or update existing feedback
@@ -643,6 +722,30 @@ export default {
   },
 
   actions: {
+
+    /**
+       * createEnrollment
+       *
+       * Author: pj
+       *
+       * Last updated: May 24, 2022
+       * @param state
+       * @param data
+       */
+    createEnrollment ({ state },
+      data: {
+              newEnrollment: any
+          }
+    ) {
+      return new Promise((resolve) => {
+        http.post('enrollments/create', data)
+          .then((resp) => {
+            resolve(resp.data.enrol.courseId)
+          })
+          .catch((err) => console.error(err))
+      })
+    },
+
     /**
      * Function copyCourse: copy course and all the files
      *  FIXME: Files are not copied

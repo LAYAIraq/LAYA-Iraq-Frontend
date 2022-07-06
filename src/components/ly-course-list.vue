@@ -93,26 +93,16 @@ Dependencies:
             class="btn indicated-btn"
             @click="decideButtonAction(course)"
           >
-            {{ y18n('courseList.start') }}
+            <span v-if="isEnrolled(course)">
+              {{ y18n('courseList.start') }}
             <i class="fas fa-arrow-right"></i>
+            </span>
+            <span v-else>
+              {{ y18n('courseList.subscribe') }}
+            <i class="fas fa-file-signature"></i>
+            </span>
+
           </a>
-          <!--          <router-link-->
-          <!--            :to="'/courses/'+course.name+'/1'"-->
-          <!--            class="btn indicated-btn"-->
-          <!--            v-if="isEnrolled(course)"-->
-          <!--            @click="selectedCourse = course.name"-->
-          <!--          >-->
-          <!--            {{ y18n('courseList.start') }}-->
-          <!--            <i class="fas fa-arrow-right"></i>-->
-          <!--          </router-link>-->
-          <!--          <a-->
-          <!--            class="btn indicated-btn"-->
-          <!--            v-else-->
-          <!--            @click="subscribe(course)"-->
-          <!--          >-->
-          <!--            {{ y18n('courseList.subscribe') }}-->
-          <!--            <i class="fas fa-file-signature"></i>-->
-          <!--          </a>-->
           <div
             v-if="complicitReady && !complicitCourses.has(course.courseId)"
             v-b-tooltip.top
@@ -195,7 +185,7 @@ export default {
       buttonAction: null,
       complicitCourses: null,
       complicitCheck: null,
-      // enrolledIn: [],
+      enrolledIn: [],
       filteredList: [],
       nonComplicitSettings: {},
       nonComplicitList: [],
@@ -245,8 +235,7 @@ export default {
   },
 
   created () {
-    // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
-    // this.getSubs()
+    this.getSubs()
     this.filteredList = [...this.courseList]
     this.getComplicitCourses()
   },
@@ -293,7 +282,7 @@ export default {
       // check all courses for complicity with user preferences
       for (const course of this.courseList) {
         // eslint-disable-next-line
-          const props = (({enrollment, ...o}) => o) (course.properties) // filter enrollment, can be removed when it is reinstated
+        const props = (({enrollment, ...o}) => o) (course.properties) // filter enrollment, can be removed when it is reinstated
         let complicit = true
         for (const prop of Object.keys(this.mediaPrefs)) { // check each user pref
           // check prop settings in course's props array
@@ -323,14 +312,14 @@ export default {
     decideButtonAction (course) {
       // boolean if course is complicit w/ user settings
       const complicit = this.complicitCourses.has(course.courseId)
-      this.buttonAction = // this.isEnrolled(course) ? // commented out case of enrollment
-        () => {
-          if (course.name !== this.course.name) {
-            this.fetchCourse(course.name)
+      this.buttonAction = this.isEnrolled(course)
+        ? () => {
+            if (course.name !== this.course.name) {
+              this.fetchCourse(course.name)
+            }
+            this.$router.push('/courses/' + course.name + '/1')
           }
-          this.$router.push('/courses/' + course.name + '/1')
-        } // :
-        // () => { this.subscribe(course) }
+        : () => { this.subscribe(course) }
       if (this.complicitReady && !complicit) {
         // console.log('not complicit, adding' +
         //   this.nonComplicitSettings[course.courseId] + ' to list...')
@@ -353,8 +342,8 @@ export default {
      */
     getIcon (setting) {
       switch (setting) {
-        // case 'enrollment':
-        //   return 'key' // commented out b/c enrollment is disabled
+        case 'enrollment':
+          return 'fas fa-key'
         case 'simpleLanguage':
           return 'fas fa-check-circle'
         case 'text':
@@ -364,80 +353,62 @@ export default {
         default:
           return ''
       }
+    },
+    /**
+     * Function getSubs: get a list of all courses the user enrolled in
+     *
+     * Author: cmc
+     *
+     * Last Updated: May 24, 2022
+     */
+    getSubs () {
+      this.$store.dispatch('fetchSingleEnrollment').then((data) => {
+        const list = data.data.sublist
+        for (const item of list) {
+          this.enrolledIn.push(item.courseId)
+        }
+      })
+    },
+    /**
+     * Function isEnrolled: return true if course needs an enrollment
+     *  AND user is not enrolled, false if nono enrollment needed or user
+     *  is enrolled
+     *
+     * Author: cmc
+     *
+     * Last Updated: October 26, 2021
+     * @param course the Course object for which it's checked
+     * @returns true if course needs enrollment and user is not enrolled
+     */
+    isEnrolled (course) {
+      return course.properties.enrollment
+        ? this.enrolledIn.find(x => x === course.courseId)
+        : true
+    },
+    /**
+     * Function subscribe: Lets user enroll in a course
+     *
+     * @param course the course the user wants to enroll in
+     *
+     * Author: cmc
+     *
+     * Last Updated: May 24, 2022
+     *
+     */
+    subscribe (course) {
+      const self = this
+      const newEnrollment = {
+        courseId: course.courseId,
+        studentId: this.userId
+      }
+      //   /* create enrollment */
+      this.$store.dispatch('createEnrollment', newEnrollment).then((data) => {
+        self.enrolledIn.push(data)
+      })
     }
-
-    // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
-    // /**
-    //  * Function getSubs: get a list of all courses the user enrolled in
-    //  *
-    //  * Author: cmc
-    //  *
-    //  * Last Updated: unknown
-    //  */
-    // getSubs() {
-    //   let self = this
-    //   let studentId = this.userId
-    //
-    //   http
-    //     .get(`enrollments/getAllByStudentId/?uid=${studentId}`)
-    //     .then(({ data }) => {
-    //       const list = data.sublist
-    //       for(let item of list) {
-    //         self.enrolledIn.push(item.courseId)
-    //       }
-    //     })
-    //     .catch(err => {
-    //       // console.log(`No enrollments for ${studentId} found`)
-    //       console.error(err)
-    //     })
-    //
-    // },
-    //
-    // /**
-    //  * Function isEnrolled: return true if course needs an enrollment
-    //  *  AND user is not enrolled, false if nono enrollment needed or user
-    //  *  is enrolled
-    //  *
-    //  * Author: cmc
-    //  *
-    //  * Last Updated: October 26, 2021
-    //  * @param course the Course object for which it's checked
-    //  * @returns true if course needs enrollment and user is not enrolled
-    //  */
-    // isEnrolled(course) {
-    //   return course.properties.enrollment?
-    //    this.enrolledIn.find(x => x === course.courseId) :
-    //    true
-    // },
-
-    // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
-    // /**
-    //  * Function subscribe: Lets user enroll in a course
-    //  *
-    //  * @param course the course the user wants to enroll in
-    //  *
-    //  * Author: cmc
-    //  *
-    //  * Last Updated: March 12, 2021
-    //  *
-    //  */
-    // subscribe(course) {
-    //   const self = this
-    //   const newEnrollment = {
-    //     courseId: course.courseId,
-    //     studentId: this.userId
-    //   }
-    //
-    //   /* create enrollment */
-    //   http.post('enrollments/create', newEnrollment)
-    //     .then((resp) => {
-    //       self.enrolledIn.push(resp.data.enrol.courseId)
-    //     })
-    //     .catch((err) => console.error(err))
-    //
-    // }
   }
 }
+
 </script>
 
 <style scoped>

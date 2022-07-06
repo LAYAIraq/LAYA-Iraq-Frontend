@@ -43,6 +43,9 @@ describe('Relate Create component', () => {
     })
     // @ts-ignore
     wrapper = mount(RelateCreate, { // use mount if component uses bootstrap
+      directives: {
+        'b-tooltip': () => {}
+      },
       store,
       // stubs: ['router-link'], // uncomment if component has router links
       localVue
@@ -113,6 +116,9 @@ describe('Relate edit component', () => {
     })
     // @ts-ignore
     const wrapper = mount(RelateEdit, { // use mount if component uses bootstrap
+      directives: {
+        'b-tooltip': () => {}
+      },
       mocks: {
         $route: {
           params: {

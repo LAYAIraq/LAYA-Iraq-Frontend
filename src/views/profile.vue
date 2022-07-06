@@ -33,9 +33,9 @@ Dependencies:
             class="d-block rounded-circle mx-auto avatar"
           >
 
-          <h1 class="text-center text-light">
+          <h2 class="text-center text-light">
             {{ profile.username }}
-          </h1>
+          </h2>
         </div>
       </div>
       <!-- row -->
@@ -238,6 +238,7 @@ Dependencies:
           <!-- Save Button -->
           <div class="form-group">
             <button
+              id="save-profile"
               type="submit"
               :disabled="busy || !passwordInputOk"
               class="btn btn-block btn-lg btn-outline-dark"
@@ -250,6 +251,83 @@ Dependencies:
           </div>
           <strong class="form-text text-center">{{ formMsg }}</strong>
         </form>
+      </div>
+      <hr>
+      <!-- author application -->
+      <div
+        v-if="!isAuthor"
+        id="author-application"
+        class="row"
+      >
+        <div class="col-3">
+          {{ y18n('profile.application') }}
+          <i
+            v-b-tooltip.auto
+            class="fas fa-question-circle"
+            :title="y18n('profile.application.tooltip')"
+          ></i>
+        </div>
+        <div
+          v-if="applicationNew && applicationEdited === -1"
+          class="col"
+        >
+          <b-button
+            id="application-button"
+            block
+            variant="secondary"
+            @click="$bvModal.show('author-application-form')"
+          >
+            {{ y18n('profile.application.fillOut') }}
+          </b-button>
+        </div>
+        <div
+          v-else-if="userApplication &&
+            userApplication.decidedOn"
+          class="col"
+        >
+          <span
+            v-if="userApplication.status === 'withdrawn'"
+            id="application-withdrawn"
+          >
+            {{ y18n('profile.application.withdrawn')
+              .replace('{DATE}', Date(userApplication.decidedOn)
+                .toLocaleString()) }}
+          </span>
+          <span
+            v-else
+            id="application-decided"
+          >
+            {{ y18n('profile.application.decided')
+              .replace('{date}', Date(userApplication.decidedOn)
+                .toLocaleString()
+              ).replace('{status}', userApplication.status)
+            }}
+          </span>
+          <span v-if="userApplication.status === 'accepted'">
+            {{ y18n('profile.application.congrats') }}
+          </span>
+        </div>
+        <div
+          v-else
+          class="col"
+        >
+          <b-button
+            id="edit-application-button"
+            block
+            variant="secondary"
+            @click="$bvModal.show('author-application-form')"
+          >
+            {{ y18n('profile.application.edit') }}
+          </b-button>
+          <b-button
+            id="withdraw-application-button"
+            block
+            variant="warning"
+            @click="$bvModal.show('application-withdraw-modal')"
+          >
+            {{ y18n('profile.application.withdraw') }}
+          </b-button>
+        </div>
       </div>
     </div>
     <b-toast
@@ -272,6 +350,96 @@ Dependencies:
     >
       {{ y18n('profile.submitOk') }}
     </b-toast>
+    <b-modal
+      id="author-application-form"
+      :title="y18n('profile.application')"
+      header-bg-variant="info"
+      ok-variant="success"
+      :ok-title="y18n('profile.application.save')"
+      :cancel-title="y18n('cancel')"
+      centered
+      static
+      @ok="saveApplication"
+    >
+      <div class="form-group p-2">
+        <div class="form-group row">
+          <label
+            for="applicant-name"
+            class="col-form-label"
+          >
+            {{ y18n('profile.application.fullName') }}
+          </label>
+          <input
+            id="applicant-name"
+            v-model="formInput.fullName"
+            class="form-control"
+            type="text"
+          >
+        </div>
+        <div class="form-group row">
+          <label
+            for="applicant-institution"
+            class="col-form-label"
+          >
+            {{ y18n('profile.application.institution') }}
+          </label>
+          <input
+            id="applicant-institution"
+            v-model="formInput.institution"
+            class="form-control"
+            type="text"
+          >
+        </div>
+        <div class="form-group row">
+          <label
+            for="applicant-expertise"
+            class="col-form-label"
+          >
+            {{ y18n('profile.application.areaOfExpertise') }}
+          </label>
+          <input
+            id="applicant-expertise"
+            v-model="formInput.areaOfExpertise"
+            class="form-control"
+            type="text"
+          >
+        </div>
+        <div class="form-group row">
+          <label
+            for="applicant-text"
+            class="col-form-label"
+          >
+            {{ y18n('profile.application.text') }}
+            <i
+              v-b-tooltip.auto
+              class="fas fa-question-circle"
+              :title="y18n('profile.application.textTooltip')"
+            ></i>
+          </label>
+          <textarea
+            id="applicant-text"
+            v-model="formInput.applicationText"
+            class="form-control"
+            rows="5"
+          ></textarea>
+        </div>
+      </div>
+    </b-modal>
+    <b-modal
+      id="application-withdraw-modal"
+      :title="y18n('profile.application.withdraw')"
+      header-bg-variant="warning"
+      ok-variant="warning"
+      :ok-title="y18n('profile.application.withdraw')"
+      :cancel-title="y18n('cancel')"
+      centered
+      static
+      @ok="withdrawApplication"
+    >
+      <p>
+        {{ y18n('profile.application.withdrawConfirm') }}
+      </p>
+    </b-modal>
   </div>
 </template>
 
@@ -279,7 +447,7 @@ Dependencies:
 import { locale, pwdProps } from '@/mixins'
 import api from '@/backend-url'
 import PasswordInput from '@/components/password-input.vue'
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import fontOptions from '@/misc/font-options'
 import fontSizeOptions from '@/misc/font-size-options'
 // import '@/styles/fonts.css'
@@ -305,12 +473,24 @@ export default {
       formMsg: '',
       busy: false,
       prefs: {},
-      fontSizeOptions: fontSizeOptions
+      formInput: {
+        applicationText: '',
+        areaOfExpertise: '',
+        fullName: '',
+        institution: ''
+      },
+      applicationEdited: -1, // increments once when data is loaded from store
+      applicationNew: false
     }
   },
 
   computed: {
-    ...mapGetters(['profile']),
+    ...mapGetters([
+      'isAuthor',
+      'profile',
+      'userApplication',
+      'userId'
+    ]),
 
     /**
      * avatarURL: return URL of user avatar
@@ -357,6 +537,10 @@ export default {
       ]
     },
 
+    fontSizeOptions () {
+      return fontSizeOptions
+    },
+
     /**
      * function newPasswordInput: returns something when password input is set
      *
@@ -386,36 +570,142 @@ export default {
   },
 
   watch: {
+    formInput: { // watch for changed on form input
+      handler () {
+        this.applicationEdited++
+      },
+      deep: true
+    },
     profile: {
       deep: true,
       handler () {
         this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
       }
+    },
+    userApplication (val) { // mirror changes in store for render (e.g. when new application is set)
+      this.formInput.applicationText = val.applicationText
+      this.formInput.institution = val.institution
+      this.formInput.areaOfExpertise = val.areaOfExpertise
+      this.formInput.fullName = val.fullName
     }
   },
 
   beforeDestroy () {
     // save changes in profile
-    this.$store.commit('setPrefs', this.prefs)
-    this.$store.dispatch('saveProfile')
+    this.setPrefs(this.prefs)
+    this.saveProfile()
+    this.submitApplication()
+    this.$store.commit('clearApplicationList')
   },
 
   created () {
-    // make profile settings mutable
-    this.avatar = this.profile.avatar
-    this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
-    if (!this.prefs.media) { // avoid render error when no prefs set
-      this.prefs.media = {}
-    }
-    if (!this.prefs.font) {
-      this.prefs.font = {
-        chosen: 'standard',
-        size: 18
-      }
-    }
+    this.setProfileForRender()
+    this.setUserApplication()
+    window.addEventListener('beforeunload', () => {
+      this.$destroy()
+    })
   },
 
   methods: {
+    ...mapActions([
+      'getApplicationUser',
+      'saveProfile',
+      'sendApplication',
+      'sendApplicationDecision',
+      'updateApplication'
+    ]),
+    ...mapMutations([
+      'addApplication',
+      'decideOnApplication',
+      'editApplication',
+      'setPrefs'
+    ]),
+
+    /**
+     * functionSaveApplication: save edits to application in store
+     *
+     * Author: cmc
+     *
+     * Last Updated: May 4, 2022
+     */
+    saveApplication () {
+      const {
+        applicationText,
+        areaOfExpertise,
+        fullName,
+        institution
+      } = this.formInput
+      // noinspection JSCheckFunctionSignatures
+      if (this.applicationNew) {
+        this.addApplication({
+          applicationText: applicationText,
+          areaOfExpertise: areaOfExpertise,
+          fullName: fullName,
+          institution: institution,
+          applicantId: this.userId
+        })
+      } else if (this.applicationEdited > 0) {
+        this.editApplication({
+          id: this.userApplication.id,
+          applicationText: applicationText,
+          areaOfExpertise: areaOfExpertise,
+          fullName: fullName,
+          institution: institution
+        })
+      }
+      this.$bvToast.toast(this.y18n('profile.application.saved'), {
+        title: this.y18n('profile.success'),
+        toaster: 'b-toaster-bottom-center',
+        variant: 'success'
+      })
+    },
+
+    /**
+     * function setProfileForRender: deep copy prefs for mutation, render
+     *
+     * Author: cmc
+     *
+     * Last Updated: May 6, 2022
+     */
+    setProfileForRender () {
+      // make profile settings mutable and render
+      this.avatar = this.profile.avatar
+      this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
+      if (!this.prefs.media) { // avoid render error when no prefs set
+        this.prefs.media = {}
+      }
+      if (!this.prefs.font) {
+        this.prefs.font = {
+          chosen: 'standard',
+          size: 18
+        }
+      }
+    },
+
+    /**
+     * function setUserApplication: set mutable application parts, fetch
+     *  application if none present
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: May 6, 2022
+     */
+    setUserApplication () {
+      if (!this.userApplication) {
+        this.getApplicationUser(this.userId)
+          .then(resp => {
+            if (!resp) { // application doesn't exist
+              this.applicationNew = true
+            }
+          })
+          .catch(err => console.error(err))
+      } else { // userApplication already in store, set values for render
+        this.formInput.applicationText = this.userApplication.applicationText
+        this.formInput.institution = this.userApplication.institution
+        this.formInput.areaOfExpertise = this.userApplication.areaOfExpertise
+        this.formInput.fullName = this.userApplication.fullName
+      }
+    },
 
     /**
      * Function submit: get password change request and fire it
@@ -447,6 +737,34 @@ export default {
       /* update state and save profile preferences */
       this.$store.commit('setPrefs', this.prefs)
       this.$store.dispatch('saveProfile')
+    },
+
+    /**
+     * function submitApplication: depending on if application existed before,
+     *  update existing or send new application, to be called onDestoy
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: May 4, 2022
+     */
+    submitApplication () {
+      if (this.applicationNew) {
+        this.sendApplication(this.userApplication)
+      } else {
+        this.updateApplication(this.userApplication)
+      }
+    },
+
+    /**
+     * function withdrawApplication: withdraw application, save in store
+     *
+     * Author: cmc
+     *
+     * Last Updated: May 6, 2022
+     */
+    withdrawApplication () {
+      this.decideOnApplication({ applicationId: this.userApplication.id, decision: 'withdrawn' })
+      this.sendApplicationDecision()
     }
   }
 }
