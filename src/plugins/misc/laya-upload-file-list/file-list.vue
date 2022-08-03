@@ -242,6 +242,7 @@
               class="btn btn-primary"
               :custom-action="uploadFile"
               :post-action="uploadUrl"
+              :headers="headers"
               :multiple="true"
               :drop="true"
               :drop-directory="true"
@@ -335,6 +336,13 @@ export default {
       'courseFiles',
       'courseStorage'
     ]),
+
+    headers () {
+      const idToken = this.$ls.get('auth').id
+      return {
+        Authorization: `${idToken}`
+      }
+    },
 
     sortedFiles () {
       return this.sortList(this.courseFiles)
