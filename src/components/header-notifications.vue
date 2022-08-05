@@ -44,7 +44,7 @@
     <b-dropdown-item>
       <router-link
         to="/notifications"
-        class="font-weight-bold-showAll-Notifications"
+        class="font-weight-bold"
       >
         {{ y18n('notifications.seeAll') }}
       </router-link>
