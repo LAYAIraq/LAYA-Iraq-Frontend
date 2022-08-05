@@ -51,6 +51,7 @@
 	"courseDetail.bToast.text": "Speichern erfolgreich!",
 	"courseDetail.content": "Dieser Inhalt ist noch leer",
 	"courseDetail.noPermit": "Sie sind nicht berechtigt, diesen Inhalt zu betrachten!",
+	"courseList.authorRights": "Du kannst diesen Kurs bearbeiten.",
 	"courseList.needsEncoding": "Bitte Eingaben prüfen! Folgende Zeichen dürfen nicht enthalten sein:\n: / ? # [ ] @ ! $ % & ' ( ) * + , ; =",
 	"courseList.notComplicit": "Dieser Kurs entspricht nicht Ihren Media-Einstellungen",
 	"courseList.notComplicit.audioHint": "Dieser Kurs enthält keine Audio-Beschreibungen",
