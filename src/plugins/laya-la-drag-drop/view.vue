@@ -85,7 +85,7 @@ Dependencies:
             :max="categories.length-1"
             :disabled="checked"
             :aria-valuenow="solution[i]"
-            :aria-valuetext="categories[solution[i]].simple"
+            :aria-valuetext="courseSimple? categories[solution[i]].simple: categories[solution[i]].text"
             :aria-label="y18n('layaLaDragDrop.label.slider')"
           >
           <laya-flag-icon
