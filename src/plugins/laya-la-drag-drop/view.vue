@@ -85,7 +85,7 @@ Dependencies:
             :max="categories.length-1"
             :disabled="checked"
             :aria-valuenow="solution[i]"
-            :aria-valuetext="categories[solution[i]]"
+            :aria-valuetext="courseSimple? categories[solution[i]].simple: categories[solution[i]].text"
             :aria-label="y18n('layaLaDragDrop.label.slider')"
           >
           <laya-flag-icon
@@ -103,6 +103,7 @@ Dependencies:
         class="btn btn-link mt-3"
         :class="langIsAr? 'float-right': 'float-left'"
         :disabled="checked"
+        aria-labelledby="solutions"
         @click="check"
       >
         {{ y18n('check') }}

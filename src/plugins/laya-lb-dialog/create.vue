@@ -23,6 +23,8 @@ Dependencies:
         class="fas fa-question-circle"
         :class="langIsAr? 'mr-auto' : 'ml-auto'"
         :title="y18n('showTip')"
+        aria-labelledby="tooltipText"
+        aria-live="polite"
         @click="toggleTip"
       ></i>
     </div>
@@ -30,6 +32,7 @@ Dependencies:
 
     <b-jumbotron
       v-if="tooltipOn"
+      id="tooltipText"
       :header="y18n('layaLbDialog.name')"
       :lead="y18n('tipHeadline')"
     >

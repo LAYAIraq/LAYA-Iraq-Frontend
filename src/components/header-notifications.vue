@@ -42,7 +42,10 @@
     <b-dropdown-divider></b-dropdown-divider>
 
     <b-dropdown-item>
-      <router-link to="/notifications">
+      <router-link
+        to="/notifications"
+        class="font-weight-bold"
+      >
         {{ y18n('notifications.seeAll') }}
       </router-link>
     </b-dropdown-item>
@@ -176,12 +179,16 @@ export default {
   border-radius: 50%;
   padding: 3px;
   color: whitesmoke;
-  background-color: tomato;
+  background-color: #006100;
   min-width: 20px;
 }
 
 .timestamp {
   color: rgba(0, 0, 0, 0.5);
+}
+
+[class^="font-weight-bold"] {
+ color: #0056B3;
 }
 
 </style>

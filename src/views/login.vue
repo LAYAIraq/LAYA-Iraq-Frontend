@@ -38,7 +38,6 @@ Dependencies:
               v-model.trim="email"
               :placeholder="y18n('emailPH')"
               type="text"
-              autofocus
               autocomplete="on"
               :aria-label="y18n('emailPH')"
             >
@@ -63,7 +62,6 @@ Dependencies:
             id="login-button"
             type="submit"
             class="btn btn-lg btn-outline-dark"
-            aria-describedby="login-error"
             @click.prevent="submit"
           >
             {{ y18n('login.title') }}
@@ -82,7 +80,7 @@ Dependencies:
             <div
               v-if="submitFailed"
               id="login-error"
-              :aria-hidden="!submitFailed? 'false' : 'true'"
+              :aria-hidden="submitFailed? 'false' : 'true'"
               class="font-weight-bold text-center mt-3"
             >
               <i class="fas fa-exclamation-triangle"></i>
