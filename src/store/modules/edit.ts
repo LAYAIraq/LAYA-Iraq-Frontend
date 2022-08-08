@@ -360,6 +360,29 @@ export default {
     },
 
     /**
+     * function changeCourseCategory: update course category
+     *
+     * Author: cmc
+     *
+     * Last Updated: August 8, 2022
+     * @param state contains course object
+     * @param newCategory new category
+     */
+    changeCourseProperties (
+      state: {
+        course: {
+          category: String
+        }
+      },
+      newCategory: String
+    ) {
+      state.course.properties = {
+        ...state.course.properties,
+        ...properties
+      }
+    },
+
+    /**
      * function changeCourseProperties: update course properties
      *
      * Author: cmc
