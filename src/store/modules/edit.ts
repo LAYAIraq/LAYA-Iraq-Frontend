@@ -1,6 +1,6 @@
 import http from 'axios'
 import { v4 as uuidv4 } from 'uuid'
-import auth from '@/store/modules/auth'
+// import auth from '@/store/modules/auth'
 
 export default {
   state: {
@@ -368,18 +368,15 @@ export default {
      * @param state contains course object
      * @param newCategory new category
      */
-    changeCourseProperties (
+    changeCourseCategory (
       state: {
         course: {
-          category: String
+          category: string
         }
       },
-      newCategory: String
+      newCategory: string
     ) {
-      state.course.properties = {
-        ...state.course.properties,
-        ...properties
-      }
+      state.course.category = newCategory
     },
 
     /**
@@ -1187,6 +1184,34 @@ export default {
         http.patch(
           `courses/${state.course.courseId}`,
           newFileData
+        )
+          .then((resp) => {
+            // console.log(resp)
+            resolve(resp)
+          })
+          .catch(err => {
+            // console.error(err)
+            reject(err)
+          })
+      })
+    },
+
+    /**
+     * function updateCourse: update course in database
+     *
+     * Auhtor: cmc
+     *
+     * Last Updated: August 9, 2022
+     * @param state state variables
+     */
+    updateCourse ({ state }) {
+      return new Promise((resolve, reject) => {
+        http.patch(
+          `courses/${state.course.courseId}`,
+          {
+            ...state.course,
+            lastChanged: Date.now()
+          }
         )
           .then((resp) => {
             // console.log(resp)

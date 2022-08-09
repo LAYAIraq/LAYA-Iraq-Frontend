@@ -30,20 +30,20 @@ Dependencies:
       :title="y18n('changeCategory')"
       header-bg-variant="warning"
       ok-variant="warning"
-      :ok-title="y18n('rename.modal.ok')"
+      :ok-title="y18n('save')"
       :cancel-title="y18n('cancel')"
       centered
       :aria-label="y18n('popupwarning')"
       @ok="changeCourseCategory"
     >
       <p>
-        {{ y18n('copy.modal.text') }}
+        {{ y18n('changeCategory') }}
         <input
           v-model="newCategory"
           type="text"
           class="form-control"
-          :placeholder="y18n('placeholder')"
-          :aria-label="y18n('placeholder')"
+          :placeholder="y18n('changeCategory.new')"
+          :aria-label="y18n('changeCategory.new')"
         >
       </p>
     </b-modal>
@@ -81,17 +81,20 @@ export default {
   methods: {
 
     /**
-     * Function renameCourse: rename Course, change route to new name
+     * Function changeCourseCategory: change course category
      *
      * Author: cmc
      *
-     * Last Updated: March 24, 2021
+     * Last Updated: August 9, 2022
      */
     changeCourseCategory () {
       if (!this.newCategory) return
       this.$store.commit('changeCourseCategory', this.newCategory)
-      this.$store.dispatch('updateCourse', this.course)
-        .then(() => this.$emit('changedCategory'))
+      this.$store.dispatch('updateCourse')
+        .then(() => {
+          this.$store.dispatch('fetchCourseList')
+          this.$emit('changedCategory')
+        })
         .catch(err => console.error(err))
     }
   }

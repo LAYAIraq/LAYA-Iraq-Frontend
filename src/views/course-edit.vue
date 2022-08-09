@@ -46,6 +46,8 @@ Dependencies:
 
       <course-rename @renamed="$bvToast.show('author-toast')"></course-rename>
 
+      <course-change-category @changedCategory="$bvToast.show('author-toast')"></course-change-category>
+
       <course-copy @success="$bvToast.show('author-toast')"></course-copy>
 
       <course-delete-block
@@ -77,6 +79,7 @@ Dependencies:
 import { locale, routeProps } from '@/mixins'
 import { mapGetters } from 'vuex'
 import {
+  courseChangeCategory,
   courseCopy,
   courseDelete,
   courseDeleteBlock,
@@ -93,6 +96,7 @@ import {
 export default {
   name: 'CourseEdit',
   components: { // not lazily loaded b/c visible first
+    courseChangeCategory,
     courseCopy,
     courseDelete,
     courseDeleteBlock,
