@@ -52,6 +52,8 @@ Dependencies:
 
       <course-copy @success="storeCourse"></course-copy>
 
+      <course-change-category @changedCategory="storeCourse"></course-change-category>
+
       <course-delete-block
         :name="name"
         :step="step"
@@ -81,6 +83,7 @@ Dependencies:
 import { locale, routeProps } from '@/mixins'
 import { mapGetters } from 'vuex'
 import {
+  courseChangeCategory,
   courseCopy,
   courseDelete,
   courseDeleteBlock,
@@ -97,6 +100,7 @@ import {
 export default {
   name: 'CourseEdit',
   components: { // not lazily loaded b/c visible first
+    courseChangeCategory,
     courseCopy,
     courseDelete,
     courseDeleteBlock,
