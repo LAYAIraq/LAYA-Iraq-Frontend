@@ -1,6 +1,6 @@
 import http from 'axios'
 import { v4 as uuidv4 } from 'uuid'
-import auth from '@/store/modules/auth'
+// import auth from '@/store/modules/auth'
 
 export default {
   state: {
@@ -1011,7 +1011,8 @@ export default {
               category: courseObject.category,
               name: courseObject.name,
               properties: courseObject.properties,
-              courseId: courseObject.courseId
+              courseId: courseObject.courseId,
+              author: courseObject.authorId
             }
             courseObject.content.forEach(block => {
               if (courseObject.properties.simpleLanguage) {
