@@ -171,6 +171,8 @@ Last Updated: May 04, 2022
         </div>
       </div>
 
+
+
       <div class="row">
         <button
           type="button"
@@ -272,22 +274,17 @@ export default {
   },
 
   created () {
-  
-  /*
-    this.fetchData()
-    this.mapSolutions()
-    this.getPrevFeedback()
-    */
-    
+
     if (!this.previewData){ 
     this.fetchData()
     this.getPrevFeedback()
     this.mapSolutions()
     }
+
   },
   beforeDestroy () {
     // add saving feedback data
-    this.storefeedback()
+    this.storeFeedback()
   },
   methods: {
     mapSolutions () {
@@ -303,22 +300,22 @@ export default {
      *
      * Last Updated: unknown
      */
-    getPrevFeedback () {
-      if (typeof this.getEnrollmentFeedback !== 'undefined') {
-        this.prevFeedback = JSON.parse(JSON.stringify(this.getEnrollmentFeedback))
-        if ((this.prevFeedback[this.numberOfFeedbacksEntries] !== null) && this.prevFeedback.length !== 0) {
-          this.answered = true
-          this.freetext = this.prevFeedback[this.numberOfFeedbacksEntries].freetext
-          this.rating = this.prevFeedback[this.numberOffFeedbackEntries].rating
-          this.choice = this.prevFeedback[this.numberOfFeedbacksEntries].choice
-          this.created = this.prevFeedback[this.numberOfFeedbacksEntries].choice
-          this.step = this.prevFeedback[this.numberOfFeedbacksEntries].step
-          if (typeof this.choice === 'undefined') {
-            this.choice = []
-          }
-        }
+   getPrevFeedback () {
+     if (typeof this.getEnrollmentFeedback !== 'undefined') {
+       this.prevFeedback = JSON.parse(JSON.stringify(this.getEnrollmentFeedback))
+       if ((this.prevFeedback[this.numberOfFeedbacksEntries] !== null) && this.prevFeedback.length !== 0) {
+         this.answered = true
+         this.freetext = this.prevFeedback[this.numberOfFeedbacksEntries].freetext
+         this.rating = this.prevFeedback[this.numberOffFeedbackEntries].rating
+         this.choice = this.prevFeedback[this.numberOfFeedbacksEntries].choice
+         this.created = this.prevFeedback[this.numberOfFeedbacksEntries].created
+         this.step = this.prevFeedback[this.numberOfFeedbacksEntries].step
+         if (typeof this.choice === 'undefined') {
+           this.choice = []
+         }
+       }
       }
-    },
+   },
 
     /*  getPreviousFeedback() {
       for (var i of this.init) {
@@ -366,6 +363,8 @@ export default {
           answers: this.categories
         }
       }
+
+
     },
 
     /* save() {
@@ -407,7 +406,7 @@ export default {
     /**
      * Function fetchData(): fetch data from vuex and make data property
      *
-     * Author: nvgut
+     * Author: nv
      *
      * Last Updated: May 04, 2022
      */
@@ -425,9 +424,10 @@ export default {
       this.items = preData.items
       this.categories = preData.categories
     },
+
     fetchEnrollment () {
-      this.$store.dispatch('fetchEnrollment', this.course.courseId)
-    }
+     this.$store.dispatch('fetchEnrollment', this.course.courseId)
+   }
   }
 }
 </script>

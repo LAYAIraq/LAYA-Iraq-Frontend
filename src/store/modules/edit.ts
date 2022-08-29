@@ -296,6 +296,7 @@ export default {
         created: number,
         choice: String,
         freetext: String,
+        rating: number,
         id: number,
         numberOfFeedbacksEntries: number,
         // options: object
@@ -305,6 +306,10 @@ export default {
         }
       }
     ) {
+      console.log(state)
+      console.log(state.enrollment)
+      console.log(state.enrollment.feedback)
+      console.log(state.enrollment.feedback.length)
       if (feedbackData.numberOfFeedbacksEntries + 1 > state.enrollment.feedback.length) {
         for (let i = state.enrollment.feedback.length; i < feedbackData.numberOfFeedbacksEntries + 1; i++) {
           state.enrollment.feedback.push(null)
