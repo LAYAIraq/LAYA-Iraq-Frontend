@@ -60,8 +60,8 @@ Last Updated: May 04, 2022
           >
         </div>
       </div>
-      
-       <!-- simple language alt -->
+
+      <!-- simple language alt -->
       <div
         v-if="courseSimple"
         class="form-group row"
@@ -84,7 +84,6 @@ Last Updated: May 04, 2022
           >
         </div>
       </div>
-      
 
       <!-- task -->
       <div class="form-group row">
@@ -103,8 +102,8 @@ Last Updated: May 04, 2022
           </textarea>
         </div>
       </div>
-    
-    <!-- task simple -->
+
+      <!-- task simple -->
       <div
         v-if="courseSimple"
         class="form-group row"
@@ -123,25 +122,26 @@ Last Updated: May 04, 2022
           ></textarea>
         </div>
       </div>
-      
 
       <!-- task audio -->
       <div class="form-group row">
-        <label for="feedback-task-audio" 
-        class="col-2 col-form-label"
+        <label
+          for="feedback-task-audio"
+          class="col-2 col-form-label"
         >
           {{ y18n('taskAudio') }}
         </label>
         <div class="col-10">
-          <input id="feedback-task-audio"
-                 type="text"
-                 v-model="taskAudio.regular"
-                 class="form-control"
-                 placeholder="y18n('taskAudioPlaceholder')"
-                 >
+          <input
+            id="feedback-task-audio"
+            v-model="taskAudio.regular"
+            type="text"
+            class="form-control"
+            placeholder="y18n('taskAudioPlaceholder')"
+          >
         </div>
       </div>
-      
+
       <!-- task audio simple -->
       <div
         v-if="courseSimple"
@@ -165,7 +165,7 @@ Last Updated: May 04, 2022
           >
         </div>
       </div>
-      
+
       <!-- Questions -->
       <p><b>{{ y18n('layaLaFeedback.edit.questions') }}</b></p>
       <div
@@ -173,63 +173,60 @@ Last Updated: May 04, 2022
         :key="'item-'+i"
         class="form-group"
       >
-      
         <!-- text -->
         <div class="row">
-        <label
-          class="col-form-label col-2"
-          :for="`item-text-${item.id}`"
-        >
-          {{ y18n('text') }}
-        </label>
-        <div class="col-5">
-          <input
-            :id="`item-text-${item.id}`"
-            v-model="item.label"
-            class="form-control"
-            type="text"
-          >
-        </div>
-        
-        <div
-          v-if="courseSimple"
-          class="row"
-        >
-          <!-- simple item -->
           <label
             class="col-form-label col-2"
-            :for="'item-simple-'+i"
+            :for="`item-text-${item.id}`"
           >
-            <span class="sr-only">
-              {{ y18n('simpleAlt') }}
-            </span>
+            {{ y18n('text') }}
           </label>
           <div class="col-5">
             <input
-              :id="'item-simple-'+i"
-              v-model="item.simple"
+              :id="`item-text-${item.id}`"
+              v-model="item.label"
               class="form-control"
               type="text"
             >
           </div>
-        </div>
-        
 
-        <!-- delete -->
-        <div class="col-auto align-self-center">
-          <button
-            type="button"
-            class="btn btn-danger btn-sm"
-            :aria-label="y18n('deleteField')"
-            @click="_delItem(i)"
+          <div
+            v-if="courseSimple"
+            class="row"
           >
-            <i class="fas fa-times"></i>
-          </button>
+            <!-- simple item -->
+            <label
+              class="col-form-label col-2"
+              :for="'item-simple-'+i"
+            >
+              <span class="sr-only">
+                {{ y18n('simpleAlt') }}
+              </span>
+            </label>
+            <div class="col-5">
+              <input
+                :id="'item-simple-'+i"
+                v-model="item.simple"
+                class="form-control"
+                type="text"
+              >
+            </div>
+          </div>
+
+          <!-- delete -->
+          <div class="col-auto align-self-center">
+            <button
+              type="button"
+              class="btn btn-danger btn-sm"
+              :aria-label="y18n('deleteField')"
+              @click="_delItem(i)"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
         </div>
       </div>
-      </div>
- 
-      
+
       <div class="form-group row">
         <div class="col-10 offset-2">
           <button
@@ -237,13 +234,11 @@ Last Updated: May 04, 2022
             class="btn btn-primary btn-sm"
             @click="_addItem('')"
           >
-          <i class="fas fa-plus"></i>{{ y18n('layaLaFeedback.edit.addQuestion') }}
-            
+            <i class="fas fa-plus"></i>{{ y18n('layaLaFeedback.edit.addQuestion') }}
           </button>
         </div>
       </div>
-      
-      
+
       <!-- Answers -->
       <p>
         <b>
@@ -263,53 +258,52 @@ Last Updated: May 04, 2022
           >
             {{ y18n('text') }}
           </label>
-        <div class="col-7">
-          <input
-            :id="'cat-text-'+i"
-            v-model="cat.text"
-            class="form-control"
-            type="text"
-          >
-        </div>
-        
-        <!-- simple alt -->
-        <div
-          v-if="courseSimple"
-          class="row"
-        >
-          <label
-            class="col-form-label col-2"
-            :for="'cat-simple-'+i"
-          >
-            <span class="sr-only">
-              {{ y18n('simpleAlt') }}
-            </span>
-          </label>
           <div class="col-7">
             <input
-              :id="'cat-simple-'+i"
-              v-model="cat.simple"
+              :id="'cat-text-'+i"
+              v-model="cat.text"
               class="form-control"
               type="text"
             >
           </div>
-        </div>
-      
-        
-        <!-- delete -->
-        <div class="col-auto align-self-center">
-          <button
-            type="button"
-            class="btn btn-danger btn-sm"
-            :aria-label="y18n('deleteField')"
-            @click="_delCategory(i)"
+
+          <!-- simple alt -->
+          <div
+            v-if="courseSimple"
+            class="row"
           >
-            <i class="fas fa-times"></i>
-          </button>
+            <label
+              class="col-form-label col-2"
+              :for="'cat-simple-'+i"
+            >
+              <span class="sr-only">
+                {{ y18n('simpleAlt') }}
+              </span>
+            </label>
+            <div class="col-7">
+              <input
+                :id="'cat-simple-'+i"
+                v-model="cat.simple"
+                class="form-control"
+                type="text"
+              >
+            </div>
+          </div>
+
+          <!-- delete -->
+          <div class="col-auto align-self-center">
+            <button
+              type="button"
+              class="btn btn-danger btn-sm"
+              :aria-label="y18n('deleteField')"
+              @click="_delCategory(i)"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
         </div>
       </div>
-      </div>
-    
+
       <div class="form-group row">
         <div class="col-10 offset-2">
           <button
@@ -317,12 +311,10 @@ Last Updated: May 04, 2022
             class="btn btn-primary btn-sm"
             @click="_addCategory('')"
           >
-          <i class="fas fa-plus"></i>{{ y18n('layaLaFeedback.edit.addAnswer') }}
+            <i class="fas fa-plus"></i>{{ y18n('layaLaFeedback.edit.addAnswer') }}
           </button>
         </div>
       </div>
-
-      
     </form>
   </div>
 </template>
@@ -367,7 +359,7 @@ export default {
   },
 
   methods: {
-   
+
     /**
      * Function fetchData: Fill in localized sample input
      *

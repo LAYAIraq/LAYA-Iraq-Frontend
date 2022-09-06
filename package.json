@@ -6,7 +6,7 @@
   "scripts": {
     "build": "vue-cli-service build",
     "build:docker": "docker build -t laya-frontend .",
-    "lint": "eslint ./src/**/*.{vue,ts,js}",
+    "lint": "eslint ./src/**/*.{js,ts,vue}",
     "lint:fix": "eslint ./src/**/*.{vue,ts,js} --fix",
     "lint:tests": "eslint ./tests/**/*.spec.ts",
     "lint:tests-fix": "eslint ./tests/**/*.spec.ts --fix",

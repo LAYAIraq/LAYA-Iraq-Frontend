@@ -1,6 +1,6 @@
 import http from 'axios'
 import { v4 as uuidv4 } from 'uuid'
-import auth from '@/store/modules/auth'
+// import auth from '@/store/modules/auth'
 
 export default {
   state: {
@@ -17,7 +17,7 @@ export default {
   getters: {
 
     /**
-     * Function getEnrollmentFeedback: returns the current feedback
+     * Function enrollmentFeedback: returns the current feedback
      *
      * Author: pj
      *
@@ -25,7 +25,7 @@ export default {
      * @param state contains feedback array
      * @returns feedback array
      */
-    getEnrollmentFeedback (
+    enrollmentFeedback (
       state: {
         enrollment: {
           feedback: Array<object>
@@ -193,6 +193,16 @@ export default {
      */
     courseUpdated (state: { courseUpdated: boolean }) {
       return state.courseUpdated
+    },
+
+    /** Function enrollment: returns enrollment object
+     *
+     * Created by: cmc
+     *
+     * Last Updated: September 6, 2022
+     */
+    enrollment (state: { enrollment: object }) {
+      return state.enrollment
     }
   },
 

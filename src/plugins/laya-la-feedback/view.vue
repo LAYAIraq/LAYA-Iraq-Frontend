@@ -38,45 +38,44 @@ Last Updated: May 04, 2022
 
     <div class="container">
       <div
-      :id="title.id"
-      class="flaggable row mb-3"
+        :id="title.id"
+        class="flaggable row mb-3"
       >
-     
-      <hr>
-       <div class="col">
-        <h2>
-          {{  courseSimple? title.simple : title }}
-          <laya-audio-inline
-            v-if="taskAudioExists"
-            :src="courseSimple?
-              taskAudio.simple :
-              taskAudio.text"
-          ></laya-audio-inline>
-        </h2>
-      </div>
-      <laya-flag-icon
-        v-if="!previewData"
-        :ref-data="title"
-        @flagged="title.flagged = true"
-      ></laya-flag-icon>
+        <hr>
+        <div class="col">
+          <h2>
+            {{ courseSimple? title.simple : title.text }}
+            <laya-audio-inline
+              v-if="taskAudioExists"
+              :src="courseSimple?
+                taskAudio.simple :
+                taskAudio.text"
+            ></laya-audio-inline>
+          </h2>
+        </div>
+        <laya-flag-icon
+          v-if="!previewData"
+          :ref-data="title"
+          @flagged="title.flagged = true"
+        ></laya-flag-icon>
       </div>
 
       <div
-      :id="task.id"
-      class="flaggable row"
-    >
-      <div class="col">
-        <p>{{ courseSimple? task.simple : task }}</p>
-      </div>
-      <laya-flag-icon
-        v-if="!previewData"
-        :ref-data="task"
+        :id="task.id"
+        class="flaggable row"
+      >
+        <div class="col">
+          <p>{{ courseSimple? task.simple : task }}</p>
+        </div>
+        <laya-flag-icon
+          v-if="!previewData"
+          :ref-data="task"
 
-        @flagged="task.flagged = true"
-      ></laya-flag-icon>
+          @flagged="task.flagged = true"
+        ></laya-flag-icon>
       </div>
       <hr>
-    
+
       <div class="row">
         <div class="col">
           <div
@@ -85,27 +84,27 @@ Last Updated: May 04, 2022
             :key="item.id"
             class="flaggable item mb-5"
           >
-           <h3 class="text-center item-label">
-            {{ courseSimple? item.simple : item.label }}
-            <i
-              v-if="checked"
-              class="fas"
-              :class="{
-                'fa-check text-success': answered[i],
-                'fa-times text-danger': !answered[i]
-              }"
-            >
-            </i>
-          </h3>
-          
-          <div class="d-flex justify-content-between">
-            <b
-              v-for="cat in categories"
-              :key="cat.text"
-            >
-              {{ courseSimple? cat.simple : cat.text }}
-            </b>
-          </div>
+            <h3 class="text-center item-label">
+              {{ courseSimple? item.simple : item.label }}
+              <i
+                v-if="checked"
+                class="fas"
+                :class="{
+                  'fa-check text-success': answered[i],
+                  'fa-times text-danger': !answered[i]
+                }"
+              >
+              </i>
+            </h3>
+
+            <div class="d-flex justify-content-between">
+              <b
+                v-for="cat in categories"
+                :key="cat.text"
+              >
+                {{ courseSimple? cat.simple : cat.text }}
+              </b>
+            </div>
 
             <input
               v-model.number="choice[i]"
@@ -119,11 +118,11 @@ Last Updated: May 04, 2022
               :aria-label="y18n('layaLaFeedback.label.slider')"
             >
             <laya-flag-icon
-            v-if="!previewData"
-            :ref-data="item"
-            :interactive="true"
-            @flagged="item.flagged = true"
-          ></laya-flag-icon>
+              v-if="!previewData"
+              :ref-data="item"
+              :interactive="true"
+              @flagged="item.flagged = true"
+            ></laya-flag-icon>
           </div>
         </div>
       </div>
@@ -139,25 +138,27 @@ Last Updated: May 04, 2022
           ></textarea>
         </div>
       </div>
-      
+
       <div class="row mt-5">
-      <div class="col">
-        <star-rating 
-          @rating-selected="rating = $event" :rating="rating"
-          @rating-selected="e => rating = e"
+        <div class="col">
+          <star-rating
+            :rating="rating"
+            @rating-selected="e => rating = e"
           >
-        </star-rating>
-        <div>
-          {{ y18n('selected.rating') }}: {{rating}}
+          </star-rating>
+          <div>
+            {{ y18n('selected.rating') }}: {{ rating }}
+          </div>
+          <div>
+            <a
+              href="#"
+              @click.prevent="rating = 0"
+            >
+              {{ y18n('reset.rating') }}</a>
+          </div>
         </div>
-        <div>
-          <a href="#" @click.prevent="rating = 0">
-          {{ y18n('reset.rating') }}</a>
-        </div> 
       </div>
-      </div>
-      
-      
+
       <div class="row mt-1">
         <div class="col">
           <button
@@ -170,8 +171,6 @@ Last Updated: May 04, 2022
           </button>
         </div>
       </div>
-
-
 
       <div class="row">
         <button
@@ -194,26 +193,25 @@ Last Updated: May 04, 2022
 
 <script>
 import { locale, viewPluginProps, watchContent } from '@/mixins'
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 import '@/styles/flaggables.css'
-import {StarRating} from 'vue-rate-it'
-
+import { StarRating } from 'vue-rate-it'
 
 // import layaWsyisyg from '../misc/laya-html'
 export default {
   name: 'LayaFeedback',
+
+  components: {
+    StarRating
+  },
 
   mixins: [
     locale,
     viewPluginProps,
     watchContent
   ],
-  
-  components: {
-    StarRating
-  },
-  
+
   props: {
     init: {
       type: Object,
@@ -234,7 +232,7 @@ export default {
         answered: []
       }
     }
-    
+
     return {
       checked: false,
       title: {},
@@ -254,9 +252,16 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['content']),
-    ...mapGetters(['getEnrollmentFeedback']),
-    
+    ...mapActions([
+      'fetchEnrollment'
+    ]),
+    ...mapGetters([
+      'content',
+      'courseId',
+      'courseSimple',
+      'enrollmentFeedback'
+    ]),
+
     /**
      * function taskAudioExists: returns true if taskAudio object doesn't
      *  contain empty strings
@@ -274,13 +279,15 @@ export default {
   },
 
   created () {
-
-    if (!this.previewData){ 
-    this.fetchData()
-    this.getPrevFeedback()
-    this.mapSolutions()
+    if (!this.previewData) {
+      this.fetchData()
+      this.getPrevFeedback()
+      this.mapSolutions()
     }
 
+    if (!this.enrollmentFeedback) {
+      this.fetchEnrollment(this.courseId)
+    }
   },
   beforeDestroy () {
     // add saving feedback data
@@ -298,24 +305,38 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: unknown
+     * Last Updated: September 6, 2022
      */
-   getPrevFeedback () {
-     if (typeof this.getEnrollmentFeedback !== 'undefined') {
-       this.prevFeedback = JSON.parse(JSON.stringify(this.getEnrollmentFeedback))
-       if ((this.prevFeedback[this.numberOfFeedbacksEntries] !== null) && this.prevFeedback.length !== 0) {
-         this.answered = true
-         this.freetext = this.prevFeedback[this.numberOfFeedbacksEntries].freetext
-         this.rating = this.prevFeedback[this.numberOffFeedbackEntries].rating
-         this.choice = this.prevFeedback[this.numberOfFeedbacksEntries].choice
-         this.created = this.prevFeedback[this.numberOfFeedbacksEntries].created
-         this.step = this.prevFeedback[this.numberOfFeedbacksEntries].step
-         if (typeof this.choice === 'undefined') {
-           this.choice = []
-         }
-       }
+    getPrevFeedback () {
+      if (typeof this.enrollmentFeedback !== 'undefined') {
+        this.prevFeedback = JSON.parse(JSON.stringify(this.enrollmentFeedback))
+        console.log(this.prevFeedback)
+        for (const i in this.prevFeedback) {
+          console.log(this.prevFeedback[i])
+          if (this.prevFeedback[i].step === this.step) {
+            console.log('found it!')
+            this.choice = this.prevFeedback[i].choice
+            this.freetext = this.prevFeedback[i].freetext
+            this.rating = this.prevFeedback[i].rating
+            this.answered = this.prevFeedback[i].answered
+            this.numberOfFeedbacksEntries = this.prevFeedback.length
+            break
+          }
+        }
+        // if ((this.prevFeedback[this.content.id] !== null) && this.prevFeedback.length !== 0) {
+        //   this.answered = true
+        //   this.freetext = this.prevFeedback[this.content.id].freetext
+        //   this.rating = this.prevFeedback[this.content.id].rating
+        //   this.choice = this.prevFeedback[this.content.id].choice
+        //   this.created = this.prevFeedback[this.content.id].created
+        //   this.step = this.prevFeedback[this.content.id].step
+        //   this.id = this.prevFeedback[this.content.id].id
+        //   if (typeof this.choice === 'undefined') {
+        //     this.choice = []
+        //   }
+        // }
       }
-   },
+    },
 
     /*  getPreviousFeedback() {
       for (var i of this.init) {
@@ -357,14 +378,12 @@ export default {
         freetext: this.freetext,
         rating: this.rating,
         id: this.id,
-        numberOfFeedbacksEntries: this.numberOfFeedbacksEntries,
-        options: {
-          questions: this.items,
-          answers: this.categories
-        }
+        numberOfFeedbacksEntries: this.numberOfFeedbacksEntries
+        // options: {
+        //   questions: this.items,
+        //   answers: this.categories
+        // }
       }
-
-
     },
 
     /* save() {
@@ -421,13 +440,10 @@ export default {
       this.title = preData.title
       this.task = preData.task
       this.taskAudio = preData.taskAudio
+      this.id = preData.id
       this.items = preData.items
       this.categories = preData.categories
-    },
-
-    fetchEnrollment () {
-     this.$store.dispatch('fetchEnrollment', this.course.courseId)
-   }
+    }
   }
 }
 </script>
