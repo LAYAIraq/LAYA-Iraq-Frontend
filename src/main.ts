@@ -25,6 +25,10 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(BootstrapVue)
 // Vue.use(BootstrapVueIcons)
 
+/* authenticated images */
+import VueAuthImg from 'vue-auth-image'
+Vue.use(VueAuthImg)
+
 /* Laya Interface */
 import Laya from './laya'
 Vue.use(Laya)
