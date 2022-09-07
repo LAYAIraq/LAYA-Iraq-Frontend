@@ -53,7 +53,7 @@ Last Updated: May 04, 2022
         <div class="col-10">
           <input
             id="feedback-title"
-            v-model="title"
+            v-model="title.text"
             type="text"
             class="form-control"
             :placeholder="y18n('titlePlaceholder')"
@@ -95,7 +95,7 @@ Last Updated: May 04, 2022
         <div class="col-10">
           <textarea
             id="feedback-task"
-            v-model="task"
+            v-model="task.text"
             class="w-100"
             :placeholder="y18n('taskPlaceholder')"
           >
@@ -134,10 +134,10 @@ Last Updated: May 04, 2022
         <div class="col-10">
           <input
             id="feedback-task-audio"
-            v-model="taskAudio.regular"
+            v-model="taskAudio"
             type="text"
             class="form-control"
-            placeholder="y18n('taskAudioPlaceholder')"
+            :placeholder="y18n('taskAudioPlaceholder')"
           >
         </div>
       </div>
@@ -346,8 +346,8 @@ export default {
       task: '',
       taskAudio: '',
       items: [],
-      categories: []
-
+      categories: [],
+      id: uuidv4()
     }
   },
 
@@ -368,7 +368,7 @@ export default {
         const temp = this.y18n('layaLaFeedback.edit.answers') + ' 1'
         const tmpItem = {
           label: temp,
-          simple: 'simple lang alternative',
+          simple: this.y18n('simpleAlt') + ' 1',
           category: -1,
           flagged: false,
           id: uuidv4()
@@ -379,7 +379,7 @@ export default {
           const tmp = this.y18n('layaLaFeedback.edit.questions') + ' ' + i
           this.categories.push({
             text: tmp,
-            simple: 'simple language alternative'
+            simple: this.y18n('simpleAlt') + ' ' + i
           })
         }
       }
