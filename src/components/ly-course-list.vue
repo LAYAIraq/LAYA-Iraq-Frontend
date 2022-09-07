@@ -95,11 +95,11 @@ Dependencies:
           >
             <span v-if="isEnrolled(course)">
               {{ y18n('courseList.start') }}
-            <i class="fas fa-arrow-right"></i>
+              <i class="fas fa-arrow-right"></i>
             </span>
             <span v-else>
               {{ y18n('courseList.subscribe') }}
-            <i class="fas fa-file-signature"></i>
+              <i class="fas fa-file-signature"></i>
             </span>
 
           </a>
