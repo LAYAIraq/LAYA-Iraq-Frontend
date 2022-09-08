@@ -10,7 +10,6 @@
 
 import http from 'axios'
 import roles from '../../misc/roles'
-import { v4 as uuidv4 } from 'uuid'
 
 export default {
   state: {
@@ -154,49 +153,6 @@ export default {
         http.get(`accounts/name/${name}`)
           .then(({ data }) => { resolve(data) })
           .catch((err) => { reject(err) })
-      })
-    },
-
-    /**
-     * function createCourse: create storage and course in backend
-     *
-     * Author: cmc
-     *
-     * Last Updated: April 14, 2022
-     * @param state state variables
-     * @param data course properties
-     */
-    createCourse (state, data: {
-      name: string,
-      category: string,
-      userId: number,
-      enrollment?: boolean
-    }) {
-      const storageId = uuidv4()
-      return new Promise((resolve, reject) => {
-        /* create storage */
-        http.post('storage', {
-          name: storageId
-        })
-          .then(() => {
-          /* storage created, create course */
-            http.post('courses', {
-              name: data.name,
-              category: data.category,
-              authorId: data.userId,
-              storageId: storageId,
-              properties: { enrollment: data.enrollment }
-            })
-              .then(() => {
-                resolve('Course successfully created')
-              })
-              .catch((err) => {
-                reject(new Error(err)) // error creating course
-              })
-          })
-          .catch((err) => {
-            reject(new Error(err)) // error creating storage
-          })
       })
     },
 

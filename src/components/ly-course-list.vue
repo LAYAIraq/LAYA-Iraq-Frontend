@@ -406,19 +406,17 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: May 24, 2022
+     * Last Updated: September 8, 2022
      *
      */
     subscribe (course) {
-      const self = this
       const newEnrollment = {
         courseId: course.courseId,
         studentId: this.userId
       }
-      //   /* create enrollment */
-      this.$store.dispatch('createEnrollment', newEnrollment).then((data) => {
-        self.enrolledIn.push(data)
-      })
+      // create enrollment in database
+      this.$store.dispatch('createEnrollment', newEnrollment)
+        .then(courseId => self.enrolledIn.push(courseId))
     }
   }
 }

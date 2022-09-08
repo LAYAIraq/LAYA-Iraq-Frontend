@@ -17,38 +17,6 @@ export default {
   getters: {
 
     /**
-     * Function enrollmentFeedback: returns the current feedback
-     *
-     * Author: pj
-     *
-     * Last Updated: January 27, 2022
-     * @param state contains feedback array
-     * @returns feedback array
-     */
-    enrollmentFeedback (
-      state: {
-        enrollment: {
-          feedback: Array<object>
-        }
-      }) {
-      return state.enrollment.feedback
-    },
-
-    /**
-     * Function isUserEnrolled: returns if user is enrolled
-     *
-     * Author: cmc
-     *
-     * Last Updated: unknown
-     *
-     * @param state contains userEnrolled boolean
-     * @returns true if user is enrolled
-     */
-    isUserEnrolled (state: { userEnrolled: boolean }) {
-      return state.userEnrolled
-    },
-
-    /**
      * Function content: returns content of given course
      *
      * Author: cmc
@@ -203,87 +171,42 @@ export default {
      */
     enrollment (state: { enrollment: object }) {
       return state.enrollment
+    },
+
+    /**
+     * Function enrollmentFeedback: returns the current feedback
+     *
+     * Author: pj
+     *
+     * Last Updated: January 27, 2022
+     * @param state contains feedback array
+     * @returns feedback array
+     */
+    enrollmentFeedback (
+      state: {
+        enrollment: {
+          feedback: Array<object>
+        }
+      }) {
+      return state.enrollment.feedback
+    },
+
+    /**
+     * Function isUserEnrolled: returns if user is enrolled
+     *
+     * Author: cmc
+     *
+     * Last Updated: unknown
+     *
+     * @param state contains userEnrolled boolean
+     * @returns true if user is enrolled
+     */
+    isUserEnrolled (state: { userEnrolled: boolean }) {
+      return state.userEnrolled
     }
   },
 
   mutations: {
-
-    /**
-     * Create Storage
-     *
-     * Author: pj
-     *
-     * Last updated: May 22, 2022
-     * @param state
-     * @param id
-     */
-    createStorage ({ state },
-      id: {
-         newId: String
-    }
-    ) {
-      return new Promise<void>(() => {
-        http.post('storage', {
-          name: id
-        }).then(() => console.log(`New Storage: ${id}`)
-        )
-          .catch((err) => console.error(err))
-      })
-    },
-
-    /*      http.post('storage', {
-        name: id.newId
-      }).then(() => console.log(`New Storage: ${id.newId}`))
-        .catch((err) => console.error(err))
-    }, */
-
-    /**
-     * CreateCourse
-     *
-     * Author: pj
-     *
-     * Last updated: May 24, 2022
-     * @param state
-     * @param data
-     */
-    createCourse ({ state },
-      data: {
-              newCourse: any
-              newId: any
-              enrBool: Boolean
-              userId: any
-          }
-    ) {
-      return new Promise<void>(() => {
-        http.post('courses', {
-          ...data.newCourse,
-          authorId: data.userId,
-          storageId: data.newId,
-          properties: { enrollment: data.enrBool }
-        }).then(() => {
-          // this.$router.push(`/courses/${data.newCourse.name}/1`).then(() => {
-          if (data.enrBool) {
-            return new Promise<void>(() => {
-              http.get(`courses/getCourseId?courseName=${data.newCourse.name}`)
-                .then(resp => {
-                  const newEnrollment = {
-                    courseId: resp.data.courseId,
-                    studentId: data.userId
-                  }
-                  return new Promise<void>(() => {
-                    http.patch('enrollments', {
-                      ...newEnrollment
-                    }).catch((err) => {
-                      console.log(err)
-                    })
-                  })
-                })
-            })
-          }
-        }
-        )
-      })
-    },
 
     /**
      * appendFeedback: Append new Feedback to feedback-array or update existing feedback
@@ -757,27 +680,65 @@ export default {
   },
 
   actions: {
+    /**
+     * function createCourse: create storage and course in backend
+     *
+     * Author: cmc
+     *
+     * Last Updated: April 14, 2022
+     * @param state state variables
+     * @param data course properties
+     */
+    createCourse (state, data: {
+      name: string,
+      category: string,
+      userId: number,
+      enrollment?: boolean
+    }) {
+      const storageId = uuidv4()
+      return new Promise((resolve, reject) => {
+        /* create storage */
+        http.post('storage', {
+          name: storageId
+        })
+          .then(() => {
+            /* storage created, create course */
+            http.post('courses', {
+              name: data.name,
+              category: data.category,
+              authorId: data.userId,
+              storageId: storageId,
+              properties: { enrollment: data.enrollment }
+            })
+              .then(() => {
+                resolve('Course successfully created')
+              })
+              .catch((err) => {
+                reject(new Error(err)) // error creating course
+              })
+          })
+          .catch((err) => {
+            reject(new Error(err)) // error creating storage
+          })
+      })
+    },
 
     /**
        * createEnrollment
        *
-       * Author: pj
+       * Author: cmc
        *
-       * Last updated: May 24, 2022
+       * Last updated: September 8, 2022
        * @param state
        * @param data
        */
     createEnrollment ({ state },
-      data: {
-              newEnrollment: any
-          }
+      data: object
     ) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         http.post('enrollments/create', data)
-          .then((resp) => {
-            resolve(resp.data.enrol.courseId)
-          })
-          .catch((err) => console.error(err))
+          .then(resp => resolve(resp.data.enrol.courseId))
+          .catch(err => reject(err))
       })
     },
 
