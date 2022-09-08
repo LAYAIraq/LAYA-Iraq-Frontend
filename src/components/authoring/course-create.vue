@@ -208,7 +208,6 @@ export default {
               })
             }
             this.$router.push(`/courses/${newCourse.name}/1`)
-
           })
           .catch(err => {
             console.log(err)

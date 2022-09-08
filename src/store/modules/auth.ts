@@ -157,54 +157,6 @@ export default {
     },
 
     /**
-     * function createAuthorEnrollment: create enrollment for course author
-     *
-     * Author: cmc
-     *
-     * Last Updated: April 14, 2022
-     * @param state state variables
-     * @param data course name, user ID
-     */
-    createAuthorEnrollment (state, data: {
-      courseName: string,
-      userId: number
-    }) {
-      return new Promise((resolve, reject) => {
-        http.get(`courses/getCourseId?courseName=${data.courseName}`)
-          .then(resp => {
-            http
-              .post('enrollments', {
-                courseId: resp.data.courseId,
-                studentId: data.userId
-              })
-              .then(() => resolve('author enrollment created'))
-              .catch(err => reject(new Error(err)))
-          })
-          .catch(err => reject(new Error(err)))
-      })
-    },
-
-    /**
-       * fetchSingleEnrollment
-       *
-       * Author: pj
-       *
-       * Last updated: May 24, 2022
-       * @param state
-       */
-    fetchSingleEnrollment ({ state }
-    ) {
-      return new Promise((resolve, reject) => {
-        http
-          .get(`enrollments/getAllByStudentId/?uid=${state.userId}`)
-          .then(data => {
-            resolve(data)
-          })
-          .catch(error => { reject(error) })
-      })
-    },
-
-    /**
      * Function fetchRole: fetch role of logged user
      *
      * Author: core

@@ -376,12 +376,13 @@ export default {
      * Last Updated: May 24, 2022
      */
     getSubs () {
-      this.$store.dispatch('fetchSingleEnrollment').then((data) => {
-        const list = data.data.sublist
-        for (const item of list) {
-          this.enrolledIn.push(item.courseId)
-        }
-      })
+      this.$store.dispatch('fetchUserEnrollments')
+        .then((data) => {
+          const list = data.data.sublist
+          for (const item of list) {
+            this.enrolledIn.push(item.courseId)
+          }
+        })
     },
     /**
      * Function isEnrolled: return true if course needs an enrollment

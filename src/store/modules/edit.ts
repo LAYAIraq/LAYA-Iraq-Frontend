@@ -9,8 +9,6 @@ export default {
     },
     courseList: [],
     courseUpdated: false,
-    enrollment: {},
-    userEnrolled: false,
     studentId: []
   },
 
@@ -161,99 +159,10 @@ export default {
      */
     courseUpdated (state: { courseUpdated: boolean }) {
       return state.courseUpdated
-    },
-
-    /** Function enrollment: returns enrollment object
-     *
-     * Created by: cmc
-     *
-     * Last Updated: September 6, 2022
-     */
-    enrollment (state: { enrollment: object }) {
-      return state.enrollment
-    },
-
-    /**
-     * Function enrollmentFeedback: returns the current feedback
-     *
-     * Author: pj
-     *
-     * Last Updated: January 27, 2022
-     * @param state contains feedback array
-     * @returns feedback array
-     */
-    enrollmentFeedback (
-      state: {
-        enrollment: {
-          feedback: Array<object>
-        }
-      }) {
-      return state.enrollment.feedback
-    },
-
-    /**
-     * Function isUserEnrolled: returns if user is enrolled
-     *
-     * Author: cmc
-     *
-     * Last Updated: unknown
-     *
-     * @param state contains userEnrolled boolean
-     * @returns true if user is enrolled
-     */
-    isUserEnrolled (state: { userEnrolled: boolean }) {
-      return state.userEnrolled
     }
   },
 
   mutations: {
-
-    /**
-     * appendFeedback: Append new Feedback to feedback-array or update existing feedback
-     *
-     * Author: pj
-     *
-     * Last Updated: January 27, 2022
-     *
-     * @param state contains feedback
-     * @param feedbackData contains feedbackData to be stored in feedback
-     */
-    appendFeedback (
-      state: {
-        enrollment: {
-          feedback: Array<object>
-        }
-      },
-      feedbackData: {
-        step: any,
-        created: number,
-        choice: String,
-        freetext: String,
-        rating: number,
-        id: number,
-        numberOfFeedbacksEntries: number,
-        // options: object
-        options: {
-          questions: String,
-          answers: String
-        }
-      }
-    ) {
-      console.log(state)
-      console.log(state.enrollment)
-      console.log(state.enrollment.feedback)
-      console.log(state.enrollment.feedback.length)
-      if (feedbackData.numberOfFeedbacksEntries + 1 > state.enrollment.feedback.length) {
-        for (let i = state.enrollment.feedback.length; i < feedbackData.numberOfFeedbacksEntries + 1; i++) {
-          state.enrollment.feedback.push(null)
-        }
-      }
-      if (state.enrollment.feedback.length !== 0) {
-        state.enrollment.feedback[feedbackData.numberOfFeedbacksEntries] = feedbackData
-      } else {
-        state.enrollment.feedback.push(feedbackData)
-      }
-    },
 
     /**
      * Function appendContent: add a content block to content array
@@ -490,27 +399,6 @@ export default {
     },
 
     /**
-     * Function setEnrollment: set an enrollment for current user
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 27, 2022
-     *
-     * @param state contains enrollment, userEnrolled
-     * @param enrollmentData enrollment object
-     */
-    setEnrollment (
-      state: {
-        enrollment: object,
-        userEnrolled: boolean
-      },
-      enrollmentData: object
-    ) {
-      state.enrollment = enrollmentData
-      state.userEnrolled = true
-    },
-
-    /**
      * Function setCourse: set state to given course
      *
      * Author: core
@@ -720,25 +608,6 @@ export default {
           .catch((err) => {
             reject(new Error(err)) // error creating storage
           })
-      })
-    },
-
-    /**
-       * createEnrollment
-       *
-       * Author: cmc
-       *
-       * Last updated: September 8, 2022
-       * @param state
-       * @param data
-       */
-    createEnrollment ({ state },
-      data: object
-    ) {
-      return new Promise((resolve, reject) => {
-        http.post('enrollments/create', data)
-          .then(resp => resolve(resp.data.enrol.courseId))
-          .catch(err => reject(err))
       })
     },
 
@@ -1074,44 +943,6 @@ export default {
     },
 
     /**
-     * Function fetchEnrollment: fetch user's enrollment associated with courseId
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 27, 2022
-     *
-     * @param param0 state variables
-     * @param courseId identifier for enrollment
-     */
-    fetchEnrollment (
-      { commit, rootState },
-      courseId: String
-    ) {
-      const uid = rootState.auth.userId
-      const cid = courseId
-      commit('setBusy', true)
-      http.get('enrollments/findOne', {
-        params: {
-          filter: {
-            where: {
-              studentId: uid,
-              courseId: cid
-            }
-          }
-        }
-      })
-        .then(({ data }) => {
-          // console.log('Enrollment exists!')
-          commit('setEnrollment', data)
-        })
-        .catch(err => {
-          // console.log('No enrollment found!')
-          console.error(err)
-        })
-        .finally(() => { commit('setBusy', false) })
-    },
-
-    /**
      * Function storeCourse: persist changes to store in database
      *
      * Author: core
@@ -1199,31 +1030,6 @@ export default {
             reject(err)
           })
       })
-    },
-
-    /**
-     * function updateEnrollment: update enrollment object
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 27, 2022
-     *
-     * @param param0 state variables
-     */
-    updateEnrollment ({ state }) {
-      const enrol = state.enrollment
-
-      // TODO: why is this not returning a Promise?
-      http.patch(
-        `enrollments/${enrol.id}`,
-        enrol
-      )
-        .then(() => {
-          console.log('Enrollment updated!')
-        })
-        .catch(err => {
-          console.error(err)
-        })
     },
 
     /**
