@@ -330,6 +330,7 @@ export default {
             if (course.name !== this.course.name) {
               this.fetchCourse(course.name)
             }
+            this.$store.dispatch('fetchEnrollment', course.courseId)
             this.$router.push('/courses/' + course.name + '/1')
           }
         : () => { this.subscribe(course) }

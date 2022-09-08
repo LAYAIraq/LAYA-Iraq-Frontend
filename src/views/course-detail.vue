@@ -88,7 +88,7 @@ export default {
 
   data () {
     return {
-      enrollment: {},
+      // enrollment: {},
       rename: '',
       copy: '',
       changetype: null
@@ -103,6 +103,7 @@ export default {
       'content',
       'course',
       'courseFlags',
+      'enrollment',
       'storeBusy',
       'userId'
     ]),

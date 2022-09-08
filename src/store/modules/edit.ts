@@ -17,7 +17,7 @@ export default {
   getters: {
 
     /**
-     * Function getEnrollmentFeedback: returns the current feedback
+     * Function enrollmentFeedback: returns the current feedback
      *
      * Author: pj
      *
@@ -25,7 +25,7 @@ export default {
      * @param state contains feedback array
      * @returns feedback array
      */
-    getEnrollmentFeedback (
+    enrollmentFeedback (
       state: {
         enrollment: {
           feedback: Array<object>
@@ -193,6 +193,16 @@ export default {
      */
     courseUpdated (state: { courseUpdated: boolean }) {
       return state.courseUpdated
+    },
+
+    /** Function enrollment: returns enrollment object
+     *
+     * Created by: cmc
+     *
+     * Last Updated: September 6, 2022
+     */
+    enrollment (state: { enrollment: object }) {
+      return state.enrollment
     }
   },
 
@@ -296,6 +306,7 @@ export default {
         created: number,
         choice: String,
         freetext: String,
+        rating: number,
         id: number,
         numberOfFeedbacksEntries: number,
         // options: object
@@ -305,6 +316,10 @@ export default {
         }
       }
     ) {
+      console.log(state)
+      console.log(state.enrollment)
+      console.log(state.enrollment.feedback)
+      console.log(state.enrollment.feedback.length)
       if (feedbackData.numberOfFeedbacksEntries + 1 > state.enrollment.feedback.length) {
         for (let i = state.enrollment.feedback.length; i < feedbackData.numberOfFeedbacksEntries + 1; i++) {
           state.enrollment.feedback.push(null)
