@@ -61,7 +61,7 @@ export default {
 
   mutations: {
     /**
-     * addFeedback: Append new Feedback to feedback-array or update existing feedback
+     * addFeedback: Add new Feedback to feedback object or update existing feedback
      *
      * Author: cmc
      *
@@ -86,8 +86,8 @@ export default {
       }
     ) {
       const { id } = feedbackData
-      feedbackData = { id, ...feedbackData }
-      console.log(feedbackData)
+      // @ts-ignore
+      state.enrollment.feedback[id] = (({ id, ...o }) => o)(feedbackData)
     },
 
     /**
@@ -218,7 +218,7 @@ export default {
           .then(data => {
             resolve(data)
           })
-          .catch(error => { reject(error) })
+          .catch(error => reject(error))
       })
     },
 

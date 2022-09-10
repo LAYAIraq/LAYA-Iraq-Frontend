@@ -256,7 +256,7 @@ export default {
     if (!this.previewData) {
       this.fetchData()
       this.mapSolutions()
-      // this.getPrevFeedback()
+      this.getPrevFeedback()
     }
 
     if (!this.enrollmentFeedback) {
@@ -279,52 +279,18 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: September 6, 2022
+     * Last Updated: September 10, 2022
      */
     getPrevFeedback () {
       if (typeof this.enrollmentFeedback !== 'undefined') {
-        this.prevFeedback = JSON.parse(JSON.stringify(this.enrollmentFeedback))
-        console.log(this.prevFeedback)
-        for (const i in this.prevFeedback) {
-          console.log(this.prevFeedback[i])
-          if (this.prevFeedback[i].step === this.step) {
-            console.log('found it!')
-            this.choice = this.prevFeedback[i].choice
-            this.freetext = this.prevFeedback[i].freetext
-            this.rating = this.prevFeedback[i].rating
-            this.answered = this.prevFeedback[i].answered
-            this.numberOfFeedbacksEntries = this.prevFeedback.length
-            break
-          }
+        this.prevFeedback = JSON.parse(JSON.stringify(this.enrollmentFeedback))[this.id] // get feedback by content id
+        if (this.prevFeedback) {
+          this.choice = this.prevFeedback.choice
+          this.freetext = this.prevFeedback.freetext
+          this.rating = this.prevFeedback.rating
         }
-        // if ((this.prevFeedback[this.content.id] !== null) && this.prevFeedback.length !== 0) {
-        //   this.answered = true
-        //   this.freetext = this.prevFeedback[this.content.id].freetext
-        //   this.rating = this.prevFeedback[this.content.id].rating
-        //   this.choice = this.prevFeedback[this.content.id].choice
-        //   this.created = this.prevFeedback[this.content.id].created
-        //   this.step = this.prevFeedback[this.content.id].step
-        //   this.id = this.prevFeedback[this.content.id].id
-        //   if (typeof this.choice === 'undefined') {
-        //     this.choice = []
-        //   }
-        // }
       }
     },
-
-    /*  getPreviousFeedback() {
-      for (var i of this.init) {
-        if(i.step === this.step) {
-          this.answered = true
-          let tmp = i
-          this.freetext = tmp.freetext
-          this.choice = tmp.choice
-          this.created = tmp.created
-          this.step = tmp.step
-          return
-        }
-      }
-    }, */
 
     /**
      * Function done: execute function from onFinish[0]
@@ -342,21 +308,15 @@ export default {
      *
      * Author: pj
      *
-     * Last Updated: September 10, 2021
+     * Last Updated: September 10, 2022
      */
     bundleFeedback () {
       return {
-        step: this.step,
         created: Date.now(),
         choice: this.choice,
         freetext: this.freetext,
         rating: this.rating,
-        id: this.id,
-        numberOfFeedbacksEntries: this.numberOfFeedbacksEntries
-        // options: {
-        //   questions: this.items,
-        //   answers: this.categories
-        // }
+        id: this.id
       }
     },
 
@@ -384,12 +344,12 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: September 10, 2021
+     * Last Updated: September 10, 2022
      */
     storeFeedback () {
       const newFeedback = this.bundleFeedback()
       this.$store.commit('addFeedback', newFeedback)
-      this.$forceUpdate()
+      // this.$forceUpdate()
       this.$store.dispatch('updateEnrollment')
       !this.answered
         ? this.$bvToast.show('feedback-new')
