@@ -46,6 +46,8 @@ Dependencies:
 
       <course-rename @renamed="$bvToast.show('author-toast')"></course-rename>
 
+      <course-feedback @success="$bvToast.show('author-toast')"></course-feedback>
+
       <course-copy @success="$bvToast.show('author-toast')"></course-copy>
 
       <course-delete-block
@@ -86,7 +88,8 @@ import {
   courseEditType,
   courseNewBlock,
   coursePreferences,
-  courseRename
+  courseRename,
+  courseFeedback
   // courseStats
 } from './course-edit-tools/'
 
@@ -102,7 +105,8 @@ export default {
     courseEditType,
     courseNewBlock,
     coursePreferences,
-    courseRename
+    courseRename,
+    courseFeedback
     // courseStats
   },
   mixins: [

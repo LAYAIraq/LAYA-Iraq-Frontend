@@ -131,6 +131,20 @@ export default {
     },
 
     /**
+     * Function courseName: returns the course name string
+     * Author: nv
+     * Last Updated: September 14, 2022
+     * @param state
+     */
+    courseName (state: {
+      course: {
+        name: string
+      }
+    }) {
+      return state.course.name
+    },
+
+    /**
      * Function courseList: returns list of courses
      *
      * Author: cmc
@@ -316,10 +330,10 @@ export default {
         }
       }
     ) {
-      console.log(state)
-      console.log(state.enrollment)
-      console.log(state.enrollment.feedback)
-      console.log(state.enrollment.feedback.length)
+      // console.log(state)
+      // console.log(state.enrollment)
+      // console.log(state.enrollment.feedback)
+      // console.log(state.enrollment.feedback.length)
       if (feedbackData.numberOfFeedbacksEntries + 1 > state.enrollment.feedback.length) {
         for (let i = state.enrollment.feedback.length; i < feedbackData.numberOfFeedbacksEntries + 1; i++) {
           state.enrollment.feedback.push(null)
