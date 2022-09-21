@@ -105,6 +105,7 @@ export default {
       'courseFlags',
       'enrollment',
       'storeBusy',
+      'userEnrolled',
       'userId'
     ]),
 
@@ -133,17 +134,6 @@ export default {
           return () => {}
         }
       })
-    },
-
-    /**
-     * userEnrolled: returns enrollment status
-     *
-     * Author: cmc
-     *
-     * Last Updated: October 27, 2020
-     */
-    userEnrolled () {
-      return this.$store.state.edit.userEnrolled
     },
 
     /**
