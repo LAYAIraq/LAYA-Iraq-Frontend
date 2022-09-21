@@ -39,6 +39,7 @@ export default {
     fetchEnrollment () {
       if (this.course.needsEnrollment) {
         this.$store.dispatch('fetchEnrollment', this.course.courseId)
+          .catch(err => console.error(err))
       }
     },
 

@@ -330,6 +330,7 @@ export default {
             if (course.name !== this.course.name) {
               this.fetchCourse(course.name)
             }
+            this.$store.dispatch('fetchEnrollment', course.courseId)
             this.$router.push('/courses/' + course.name + '/1')
           }
         : () => { this.subscribe(course) }
@@ -375,12 +376,13 @@ export default {
      * Last Updated: May 24, 2022
      */
     getSubs () {
-      this.$store.dispatch('fetchSingleEnrollment').then((data) => {
-        const list = data.data.sublist
-        for (const item of list) {
-          this.enrolledIn.push(item.courseId)
-        }
-      })
+      this.$store.dispatch('fetchUserEnrollments')
+        .then((data) => {
+          const list = data.data.sublist
+          for (const item of list) {
+            this.enrolledIn.push(item.courseId)
+          }
+        })
     },
     /**
      * Function isEnrolled: return true if course needs an enrollment
@@ -405,19 +407,17 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: May 24, 2022
+     * Last Updated: September 8, 2022
      *
      */
     subscribe (course) {
-      const self = this
       const newEnrollment = {
         courseId: course.courseId,
         studentId: this.userId
       }
-      //   /* create enrollment */
-      this.$store.dispatch('createEnrollment', newEnrollment).then((data) => {
-        self.enrolledIn.push(data)
-      })
+      // create enrollment in database
+      this.$store.dispatch('createEnrollment', newEnrollment)
+        .then(courseId => this.enrolledIn.push(courseId))
     }
   }
 }

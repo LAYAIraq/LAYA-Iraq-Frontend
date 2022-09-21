@@ -88,7 +88,7 @@ export default {
 
   data () {
     return {
-      enrollment: {},
+      // enrollment: {},
       rename: '',
       copy: '',
       changetype: null
@@ -103,7 +103,9 @@ export default {
       'content',
       'course',
       'courseFlags',
+      'enrollment',
       'storeBusy',
+      'userEnrolled',
       'userId'
     ]),
 
@@ -132,17 +134,6 @@ export default {
           return () => {}
         }
       })
-    },
-
-    /**
-     * userEnrolled: returns enrollment status
-     *
-     * Author: cmc
-     *
-     * Last Updated: October 27, 2020
-     */
-    userEnrolled () {
-      return this.$store.state.edit.userEnrolled
     },
 
     /**
