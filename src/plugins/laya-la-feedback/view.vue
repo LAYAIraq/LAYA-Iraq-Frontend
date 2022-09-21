@@ -49,7 +49,7 @@ Last Updated: May 04, 2022
               v-if="taskAudioExists"
               :src="courseSimple?
                 taskAudio.simple :
-                taskAudio.text"
+                taskAudio.regular"
             ></laya-audio-inline>
           </h2>
         </div>
@@ -65,12 +65,11 @@ Last Updated: May 04, 2022
         class="flaggable row"
       >
         <div class="col">
-          <p>{{ courseSimple? task.simple : task }}</p>
+          <p>{{ courseSimple? task.simple : task.text }}</p>
         </div>
         <laya-flag-icon
           v-if="!previewData"
           :ref-data="task"
-
           @flagged="task.flagged = true"
         ></laya-flag-icon>
       </div>
@@ -86,15 +85,6 @@ Last Updated: May 04, 2022
           >
             <h3 class="text-center item-label">
               {{ courseSimple? item.simple : item.label }}
-              <i
-                v-if="checked"
-                class="fas"
-                :class="{
-                  'fa-check text-success': answered[i],
-                  'fa-times text-danger': !answered[i]
-                }"
-              >
-              </i>
             </h3>
 
             <div class="d-flex justify-content-between">
@@ -112,7 +102,6 @@ Last Updated: May 04, 2022
               class="custom-range"
               min="0"
               :max="categories.length-1"
-              :disabled="checked"
               :aria-valuenow="choice[i]"
               :aria-valuetext="categories[choice[i]]"
               :aria-label="y18n('layaLaFeedback.label.slider')"
@@ -193,7 +182,7 @@ Last Updated: May 04, 2022
 
 <script>
 import { locale, viewPluginProps, watchContent } from '@/mixins'
-import { mapActions, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 import '@/styles/flaggables.css'
 import { StarRating } from 'vue-rate-it'
@@ -212,31 +201,19 @@ export default {
     watchContent
   ],
 
-  props: {
-    init: {
-      type: Object,
-      default () { return null }
-    },
-    onSave: {
-      type: Function,
-      default () { return () => {} }
-    }
-  },
-
   data () {
     if (this.previewData) { // show preview
       return {
         ...this.previewData,
-        checked: false,
         choice: [], // users solution as index
         answered: []
       }
     }
 
     return {
-      checked: false,
       title: {},
       task: {},
+      taskAudio: {},
       choice: [], // users choice as index
       freetext: '',
       answered: [],
@@ -252,9 +229,6 @@ export default {
   },
 
   computed: {
-    ...mapActions([
-      'fetchEnrollment'
-    ]),
     ...mapGetters([
       'content',
       'courseId',
@@ -281,12 +255,12 @@ export default {
   created () {
     if (!this.previewData) {
       this.fetchData()
-      this.getPrevFeedback()
       this.mapSolutions()
+      this.getPrevFeedback()
     }
 
     if (!this.enrollmentFeedback) {
-      this.fetchEnrollment(this.courseId)
+      this.$store.dispatch('fetchEnrollment', this.courseId)
     }
   },
   beforeDestroy () {
@@ -305,52 +279,18 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: September 6, 2022
+     * Last Updated: September 10, 2022
      */
     getPrevFeedback () {
       if (typeof this.enrollmentFeedback !== 'undefined') {
-        this.prevFeedback = JSON.parse(JSON.stringify(this.enrollmentFeedback))
-        console.log(this.prevFeedback)
-        for (const i in this.prevFeedback) {
-          console.log(this.prevFeedback[i])
-          if (this.prevFeedback[i].step === this.step) {
-            console.log('found it!')
-            this.choice = this.prevFeedback[i].choice
-            this.freetext = this.prevFeedback[i].freetext
-            this.rating = this.prevFeedback[i].rating
-            this.answered = this.prevFeedback[i].answered
-            this.numberOfFeedbacksEntries = this.prevFeedback.length
-            break
-          }
+        this.prevFeedback = JSON.parse(JSON.stringify(this.enrollmentFeedback))[this.id] // get feedback by content id
+        if (this.prevFeedback) {
+          this.choice = this.prevFeedback.choice
+          this.freetext = this.prevFeedback.freetext
+          this.rating = this.prevFeedback.rating
         }
-        // if ((this.prevFeedback[this.content.id] !== null) && this.prevFeedback.length !== 0) {
-        //   this.answered = true
-        //   this.freetext = this.prevFeedback[this.content.id].freetext
-        //   this.rating = this.prevFeedback[this.content.id].rating
-        //   this.choice = this.prevFeedback[this.content.id].choice
-        //   this.created = this.prevFeedback[this.content.id].created
-        //   this.step = this.prevFeedback[this.content.id].step
-        //   this.id = this.prevFeedback[this.content.id].id
-        //   if (typeof this.choice === 'undefined') {
-        //     this.choice = []
-        //   }
-        // }
       }
     },
-
-    /*  getPreviousFeedback() {
-      for (var i of this.init) {
-        if(i.step === this.step) {
-          this.answered = true
-          let tmp = i
-          this.freetext = tmp.freetext
-          this.choice = tmp.choice
-          this.created = tmp.created
-          this.step = tmp.step
-          return
-        }
-      }
-    }, */
 
     /**
      * Function done: execute function from onFinish[0]
@@ -368,21 +308,15 @@ export default {
      *
      * Author: pj
      *
-     * Last Updated: September 10, 2021
+     * Last Updated: September 10, 2022
      */
     bundleFeedback () {
       return {
-        step: this.step,
         created: Date.now(),
         choice: this.choice,
         freetext: this.freetext,
         rating: this.rating,
-        id: this.id,
-        numberOfFeedbacksEntries: this.numberOfFeedbacksEntries
-        // options: {
-        //   questions: this.items,
-        //   answers: this.categories
-        // }
+        id: this.id
       }
     },
 
@@ -410,12 +344,12 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: September 10, 2021
+     * Last Updated: September 10, 2022
      */
     storeFeedback () {
       const newFeedback = this.bundleFeedback()
-      this.$store.commit('appendFeedback', newFeedback)
-      this.$forceUpdate()
+      this.$store.commit('addFeedback', newFeedback)
+      // this.$forceUpdate()
       this.$store.dispatch('updateEnrollment')
       !this.answered
         ? this.$bvToast.show('feedback-new')
@@ -430,11 +364,11 @@ export default {
      * Last Updated: May 04, 2022
      */
     fetchData () {
-      for (let i = 0; i < this.step; i++) {
-        if (this.content[i].name === 'laya-course-feedback') {
-          this.numberOfFeedbacksEntries++
-        }
-      }
+      // for (let i = 0; i < this.step; i++) {
+      //   if (this.content[i].name === 'laya-course-feedback') {
+      //     this.numberOfFeedbacksEntries++
+      //   }
+      // }
       const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.title = preData.title

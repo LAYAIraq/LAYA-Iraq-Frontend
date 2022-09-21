@@ -27,10 +27,13 @@ Last Updated: May 04, 2022
       v-b-tooltip.left
       class="fas fa-question-circle"
       :title="y18n('showTip')"
+      aria-labelledby="tooltipText"
+      aria-live="polite"
       @click="toggleTip"
     ></i>
     <b-jumbotron
       v-if="tooltipOn"
+      id="tooltipText"
       :header="y18n('layaLaFeedback.name')"
       :lead="y18n('tipHeadline')"
     >

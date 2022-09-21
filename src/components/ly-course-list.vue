@@ -37,12 +37,15 @@ Dependencies:
           <h2>{{ y18n('namePH') }}</h2>
         </div>
         <div class="col">
-          <h4>{{ y18n('cat') }}</h4>
+          <h3>{{ y18n('cat') }}</h3>
         </div>
         <div class="col-2">
-          <h2 class="sr-only">
+          <h4
+            class="sr-only"
+            aria-hidden="true"
+          >
             {{ y18n('courseList.properties') }}
-          </h2>
+          </h4>
         </div>
         <div class="col-3">
         </div>
@@ -54,6 +57,16 @@ Dependencies:
         class="row py-3 course"
       >
         <div class="col">
+          <span
+            v-if="course.author === userId"
+            :class="langIsAr? 'author-icon-right': 'author-icon-left'"
+          >
+            <i
+              v-b-tooltip.bottom
+              class="fas fa-user-graduate"
+              :title="y18n('courseList.authorRights')"
+            ></i>
+          </span>
           {{ course.name }}
         </div>
 
@@ -95,7 +108,7 @@ Dependencies:
           >
             <span v-if="isEnrolled(course)">
               {{ y18n('courseList.start') }}
-              <i class="fas fa-arrow-right"></i>
+              <i :class="langIsAr? 'fas fa-arrow-left': 'fas fa-arrow-right'"></i>
             </span>
             <span v-else>
               {{ y18n('courseList.subscribe') }}
@@ -363,12 +376,13 @@ export default {
      * Last Updated: May 24, 2022
      */
     getSubs () {
-      this.$store.dispatch('fetchSingleEnrollment').then((data) => {
-        const list = data.data.sublist
-        for (const item of list) {
-          this.enrolledIn.push(item.courseId)
-        }
-      })
+      this.$store.dispatch('fetchUserEnrollments')
+        .then((data) => {
+          const list = data.data.sublist
+          for (const item of list) {
+            this.enrolledIn.push(item.courseId)
+          }
+        })
     },
     /**
      * Function isEnrolled: return true if course needs an enrollment
@@ -393,19 +407,17 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: May 24, 2022
+     * Last Updated: September 8, 2022
      *
      */
     subscribe (course) {
-      const self = this
       const newEnrollment = {
         courseId: course.courseId,
         studentId: this.userId
       }
-      //   /* create enrollment */
-      this.$store.dispatch('createEnrollment', newEnrollment).then((data) => {
-        self.enrolledIn.push(data)
-      })
+      // create enrollment in database
+      this.$store.dispatch('createEnrollment', newEnrollment)
+        .then(courseId => this.enrolledIn.push(courseId))
     }
   }
 }
@@ -462,6 +474,18 @@ export default {
 
 i.icons-list {
   font-size: 1.75rem;
+}
+
+.author-icon-left {
+  font-size: 1.5rem;
+  margin-left: -3rem;
+  margin-right: 1.5rem;
+}
+
+.author-icon-right {
+  font-size: 1.5rem;
+  margin-left: 1.5rem;
+  margin-right: -3rem;
 }
 
 </style>

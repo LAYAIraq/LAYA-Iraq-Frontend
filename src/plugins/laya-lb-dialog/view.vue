@@ -17,8 +17,8 @@ Dependencies: @/mixins/locale.vue
     <!--    </div>-->
     <img
       v-if="bg"
+      v-auth-image="bg"
       class="bg"
-      :src="bg"
       alt=""
     >
     <div

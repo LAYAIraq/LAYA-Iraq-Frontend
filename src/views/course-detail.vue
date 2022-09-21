@@ -54,7 +54,7 @@ Dependencies:
     </div>
 
     <courseEdit
-      v-if="isAuthor && content"
+      v-if="isCourseAuthor && content"
       :name="name"
       :step="step"
     ></courseEdit>
@@ -98,13 +98,28 @@ export default {
 
   computed: {
     ...mapGetters([
+      'isAdmin',
       'isAuthor',
       'content',
       'course',
       'courseFlags',
       'enrollment',
-      'storeBusy'
+      'storeBusy',
+      'userEnrolled',
+      'userId'
     ]),
+
+    /**
+     * isCourseAuthor: return true if logged user is admin or author of the course
+     *
+     * Author: cmc
+     *
+     * Last Updated: August 5, 2022
+     * @returns {boolean} true if logged user is admin or author of the course
+     */
+    isCourseAuthor () {
+      return (this.isAuthor && this.course.authorId === this.userId) || this.isAdmin
+    },
 
     /**
      *  onFinishDummy: returns empty function on every [] invocation
@@ -119,17 +134,6 @@ export default {
           return () => {}
         }
       })
-    },
-
-    /**
-     * userEnrolled: returns enrollment status
-     *
-     * Author: cmc
-     *
-     * Last Updated: October 27, 2020
-     */
-    userEnrolled () {
-      return this.$store.state.edit.userEnrolled
     },
 
     /**

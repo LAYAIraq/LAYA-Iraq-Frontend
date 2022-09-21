@@ -14,11 +14,15 @@ Dependencies:
     <course-edit-header
       :name="name"
       :step="step"
+      @save="changesToSave = true"
     >
     </course-edit-header>
 
     <!-- mounts course-edit-wrapper & edit-course-nav -->
-    <router-view @saved="$bvToast.show('author-toast')"></router-view>
+    <router-view
+      :save-changes="changesToSave"
+      @saved="storeCourse"
+    ></router-view>
 
     <div
       v-if="$route.name === 'course-detail-view'"
@@ -44,7 +48,11 @@ Dependencies:
 
       <course-edit-nav></course-edit-nav>
 
-      <course-rename @renamed="$bvToast.show('author-toast')"></course-rename>
+      <course-rename @renamed="storeCourse"></course-rename>
+
+      <course-copy @success="storeCourse"></course-copy>
+
+      <course-change-category @changedCategory="storeCourse"></course-change-category>
 
       <course-feedback @success="$bvToast.show('author-toast')"></course-feedback>
 
@@ -79,6 +87,7 @@ Dependencies:
 import { locale, routeProps } from '@/mixins'
 import { mapGetters } from 'vuex'
 import {
+  courseChangeCategory,
   courseCopy,
   courseDelete,
   courseDeleteBlock,
@@ -96,6 +105,7 @@ import {
 export default {
   name: 'CourseEdit',
   components: { // not lazily loaded b/c visible first
+    courseChangeCategory,
     courseCopy,
     courseDelete,
     courseDeleteBlock,
@@ -114,6 +124,12 @@ export default {
     routeProps
   ],
 
+  data () {
+    return {
+      changesToSave: false
+    }
+  },
+
   computed: {
     // ...mapState(['edit']),
     ...mapGetters(['content', 'course'])
@@ -128,9 +144,8 @@ export default {
      * Last Updated: January 11, 2021
      *  */
     storeCourse () {
-      const ctx = this
       this.$store.dispatch('storeCourse')
-        .then(() => ctx.$bvToast.show('author-toast'))
+        .then(() => this.$bvToast.show('author-toast'))
         .catch((err) => console.error(err))
     }
 

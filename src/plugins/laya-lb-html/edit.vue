@@ -177,6 +177,10 @@ export default {
 </script>
 
 <style>
+.laya-wysiwyg-edit {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+}
 .laya-wysiwyg-edit .ql-active {
   color: whitesmoke !important;
   border-radius: 2px;
@@ -197,6 +201,9 @@ export default {
 }
 .ql-container.ql-snow {
  min-height: 200px;
+}
+.ql-container {
+  font-size: 18px;
 }
 
 </style>

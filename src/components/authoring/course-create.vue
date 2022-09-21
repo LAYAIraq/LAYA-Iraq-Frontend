@@ -201,13 +201,13 @@ export default {
           enrollment: this.needsEnrollment
         })
           .then(() => {
-            this.$router.push(`/courses/${newCourse.name}/1`)
             if (this.needsEnrollment) {
               this.$store.dispatch('createAuthorEnrollment', {
                 courseName: newCourse.name,
                 userId: userId
               })
             }
+            this.$router.push(`/courses/${newCourse.name}/1`)
           })
           .catch(err => {
             console.log(err)
