@@ -417,7 +417,7 @@ export default {
       }
       // create enrollment in database
       this.$store.dispatch('createEnrollment', newEnrollment)
-        .then(courseId => self.enrolledIn.push(courseId))
+        .then(courseId => this.enrolledIn.push(courseId))
     }
   }
 }
