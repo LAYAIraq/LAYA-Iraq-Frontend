@@ -41,13 +41,15 @@ Dependencies:
 <script>
 
 import { mapActions, mapGetters } from 'vuex'
-import { locale } from '@/mixins'
+import { storeHandler, locale } from '@/mixins'
 import { jsPDF } from 'jspdf'
+import http from 'axios'
 
 export default {
   name: 'CourseFeedback',
 
   mixins: [
+    storeHandler,
     locale
   ],
 
@@ -60,8 +62,7 @@ export default {
     ]),
     ...mapGetters([
       'enrollmentFeedback',
-      'courseId',
-      'courseName'
+      'courseId'
     ])
   },
 
@@ -71,39 +72,66 @@ export default {
      * Author: nv
      * Last Updated: September 14, 2022
      */
-    printPDF () {
+    async printPDF () {
       if (typeof this.enrollmentFeedback !== 'undefined') {
-        console.log(this.courseName)
-        const id = this.courseId
         /* eslint-disable */
-        const doc = new jsPDF()
+        const doc = new jsPDF('p','pt')
         /* eslint-enable */
-        doc.text('This is the Feedback for course ' + id, 10, 10)
+        const id = this.courseId
+        let name
+        let feedback = []
+        const x = 30
+        let y = 30
+        const lineheight = doc.getTextDimensions('Sample Text').h + 5
+        let blockheight = 0
 
+        await http.get(`courses/getCourseName?courseId=${id}`)
+          .then(({ data }) => {
+            console.log(data.courseName)
+            name = data.courseName
+          })
+        await http.get(`enrollments/getAllByCourseId?courseId=${id}`)
+          .then(({ data }) => {
+            console.log(data.subs[0].feedback)
+            feedback = data.subs[0].feedback
+          })
+        doc.text(this.y18n('feedback.document.title') + name, x, y)
+        y += lineheight + 20
         // display of choice answers
-        const choice = JSON.stringify(this.enrollmentFeedback.map(function (item) {
+        const choice = JSON.stringify(feedback.map(function (item) {
           return item['choice']
         }))
-        doc.text('Choice answers: ', 10, 25)
-        doc.text(choice, 10, 35)
-
+        doc.text(this.y18n('feedback.document.choices'), x, y)
+        y += lineheight
+        const splitchoice = doc.splitTextToSize(choice, 180)
+        doc.text(splitchoice, 30, y)
+        blockheight = splitchoice.length * lineheight + 5
+        y += blockheight
         // display of free text answers
-        const freetext = this.enrollmentFeedback.map(function (item) {
+        const freetext = JSON.stringify(feedback.map(function (item) {
           return item['freetext']
-        })
-        doc.text('Freetext answers: ', 10, 50)
-        doc.text(freetext, 10, 60)
-
+        }))
+        doc.text(this.y18n('feedback.document.freetext'), x, y)
+        y += lineheight
+        const splitfreetext = doc.splitTextToSize(freetext, 180)
+        doc.text(splitfreetext, 30, y)
+        blockheight = splitfreetext.length * lineheight + 5
+        y += blockheight
         // display of rating answers
-        const rating = JSON.stringify(this.enrollmentFeedback.map(function (item) {
+        const rating = JSON.stringify(feedback.map(function (item) {
           return item['rating']
         }))
-        doc.text('Ratings: ', 10, 75)
-        doc.text(rating, 10, 85)
+        doc.text(this.y18n('feedback.document.rating'), 30, y)
+        y += lineheight
+        const splitrating = doc.splitTextToSize(rating, 180)
+        doc.text(splitrating, 30, y)
+        blockheight = splitchoice.length * lineheight + 5
+        y += blockheight
 
-        doc.save('Feedback-' + id + '.pdf')
+        const date = doc.getCreationDate()
+        doc.save(date + ' - ' + this.y18n('feedback.document.file') + ' - ' + name + '.pdf')
       } else {
-        console.log('No Feedback for this course available.')
+        console.log(this.y18n('feedback.document.unavailable'))
       }
     }
   }
