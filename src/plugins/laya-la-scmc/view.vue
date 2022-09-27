@@ -249,7 +249,7 @@ export default {
      */
     populateShowSolutions () {
       for (let i = 0; i < this.options.length; i++) {
-        if (this.solutions[i] === null || this.solutions[i] === false) {
+        if (this.solutions.includes(i)) {
           this.showSolutions.push(this.options[i].text)
         }
       }
@@ -312,16 +312,16 @@ export default {
           // is also answer ?
           if (this.answers.includes(i)) {
             this.eval[i] = { 'far fa-check-circle text-success': true }
-          } else {
-            this.eval[i] = { 'far fa-times-circle text-danger': true }
-          }
+          } // else {
+          // this.eval[i] = { 'far fa-times-circle text-danger': true }
+          // }
         } else {
           // but is answer ?
           if (this.answers.includes(i)) {
             this.eval[i] = { 'far fa-times-circle text-danger': true }
-          } else {
-            this.eval[i] = { 'far fa-check-circle text-success': true }
-          }
+          }// else {
+          // this.eval[i] = { 'far fa-check-circle text-success': true }
+          // }
         }
       }
       this.freeze = true
