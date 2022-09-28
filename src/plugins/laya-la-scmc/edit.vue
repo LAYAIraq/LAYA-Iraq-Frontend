@@ -78,6 +78,22 @@ Dependencies:
               {{ y18n('layaLaScmc.edit.mc') }}
             </label>
           </div>
+          <div class="form-check form-check-inline align-text-top">
+            <input
+              id="scmc-tf"
+              v-model="multiple"
+              class="form-check-input"
+              type="radio"
+              name="tf"
+              :value="true"
+            >
+            <label
+              for="scmc-tf"
+              class="form-check-label"
+            >
+              {{ y18n('layaLaScmc.edit.tf') }}
+            </label>
+          </div>
         </div>
       </div>
 
@@ -320,7 +336,8 @@ export default {
       options: [],
       solutions: [],
       maxTries: 1,
-      multiple: false
+      multiple: false,
+      tf: false
     }
   },
 
