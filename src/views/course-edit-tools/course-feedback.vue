@@ -30,10 +30,14 @@ Dependencies:
       ok-variant="warning"
       :ok-title="y18n('feedback.modal.ok')"
       :cancel-title="y18n('cancel')"
+      static
       centered
       :aria-label="y18n('popupwarning')"
       @ok="printPDF"
     >
+      <p>
+        {{ y18n('feedback.modal.text') }}
+      </p>
     </b-modal>
   </div>
 </template>
@@ -43,10 +47,9 @@ Dependencies:
 import { mapActions, mapGetters } from 'vuex'
 import { storeHandler, locale } from '@/mixins'
 import { jsPDF } from 'jspdf'
-import http from 'axios'
 
 export default {
-  name: 'CourseFeedback',
+  name: 'CourseFeedbackDownload',
 
   mixins: [
     storeHandler,
@@ -58,11 +61,11 @@ export default {
 
   computed: {
     ...mapActions([
-      'fetchEnrollment'
+      'fetchFeedbackDownload'
     ]),
     ...mapGetters([
       'enrollmentFeedback',
-      'courseId'
+      'course'
     ])
   },
 
@@ -70,31 +73,30 @@ export default {
     /**
      * Function printPDF: prints feedback in a PDF tp download
      * Author: nv
-     * Last Updated: September 14, 2022
+     * Last Updated: September 28, 2022 by nv
      */
     async printPDF () {
       if (typeof this.enrollmentFeedback !== 'undefined') {
         /* eslint-disable */
         const doc = new jsPDF('p','pt')
         /* eslint-enable */
-        const id = this.courseId
-        let name
         let feedback = []
+        const name = this.course.name
         const x = 30
         let y = 30
         const lineheight = doc.getTextDimensions('Sample Text').h + 5
         let blockheight = 0
+        const promise = this.$store.dispatch('fetchFeedbackDownload', name)
 
-        await http.get(`courses/getCourseName?courseId=${id}`)
-          .then(({ data }) => {
-            console.log(data.courseName)
-            name = data.courseName
-          })
-        await http.get(`enrollments/getAllByCourseId?courseId=${id}`)
-          .then(({ data }) => {
-            console.log(data.subs[0].feedback)
-            feedback = data.subs[0].feedback
-          })
+        for (let i = 0; i < promise.subs.length; i++) {
+          feedback = promise.subs[i].feedback
+        }
+
+        // await http.get(`enrollments/getAllByCourseId?courseId=${id}`)
+        // .then(({ data }) => {
+        //   console.log(data.subs[0].feedback)
+        //   feedback = data.subs[0].feedback
+        //  })
         doc.text(this.y18n('feedback.document.title') + name, x, y)
         y += lineheight + 20
         // display of choice answers

@@ -139,6 +139,7 @@
 	"feedback.modal.users": "Users eligible to give Feedback: ",
 	"feedback.modal.ok": "Start Download",
 	"feedback.modal.title": "Feedback",
+	"feedback.modal.text": "Feedback for you course will be compiled in a PDF file and automatically downloaded.",
 	"flag.anonHint": "This option hides your identity from other participants. Course editors always see who asks a question!",
 	"flag.anonymous": "Ask question anonymously",
 	"flag.answerAuthor": "Author of the answer",
