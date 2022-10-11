@@ -127,7 +127,7 @@ Dependencies:
         v-for="(item, index) in items"
         :key="index"
       >
-        {{ item.label }}: {{ courseSimple? categories[items[index].category].simple: categories[items[index].category].text }}
+        {{ item.label }}: {{ courseSimple? item.simple: item.text }}
       </div>
     </div>
   </div>
