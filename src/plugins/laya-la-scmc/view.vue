@@ -312,7 +312,7 @@ export default {
         if (this.solutions.includes(i) && this.answers.includes(i)) {
           // is correct answer ?
           this.eval[i] = { 'far fa-check-circle text-success': true }
-        } else if (this.answers.includes(i)) {
+        } else if (this.answers.includes(i) || this.solutions.includes(i)) {
           // is wrong answer ?
           this.eval[i] = { 'far fa-times-circle text-danger': true }
         }
