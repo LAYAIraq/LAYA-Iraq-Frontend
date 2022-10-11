@@ -15,7 +15,7 @@ Dependencies:
         size="sm"
         variant="warning"
         :class="langIsAr? 'float-left' : 'float-right'"
-        @click="$bvModal.show('author-renameCourse-confirm')"
+        @click="$bvModal.show('author-rename-course-confirm')"
       >
         <i class="fas fa-exclamation-circle"></i> {{ y18n('renameCourse') }}
       </b-button>
@@ -26,13 +26,14 @@ Dependencies:
     </div>
 
     <b-modal
-      id="author-renameCourse-confirm"
+      id="author-rename-course-confirm"
       :title="y18n('renameCourse')"
       header-bg-variant="warning"
       ok-variant="warning"
       :ok-title="y18n('rename.modal.ok')"
       :cancel-title="y18n('cancel')"
       centered
+      static
       :aria-label="y18n('popupwarning')"
       @ok="renameCourse"
     >
@@ -75,7 +76,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['course'])
+    ...mapGetters(['course', 'courseList'])
   },
 
   methods: {
