@@ -312,14 +312,15 @@ export default {
         if (this.solutions.includes(i) && this.answers.includes(i)) {
           // is correct answer ?
           this.eval[i] = { 'far fa-check-circle text-success': true }
-        } else if (this.answers.includes(i) || this.solutions.includes(i)) {
+        } else if (this.answers.includes(i) ||
+          (this.solutions.includes(i) && this.answers.length === 0) // no answer is chosen
+        ) {
           // is wrong answer ?
           this.eval[i] = { 'far fa-times-circle text-danger': true }
         }
       }
       this.freeze = true
       this.showSolutionsBool = true
-      this.$forceUpdate()
     },
 
     /**
