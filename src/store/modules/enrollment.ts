@@ -245,23 +245,24 @@ export default {
         : Promise.reject(new Error('No enrollment found!'))
     },
     /**
-     * function fetchFeedbackDownload: fetches Feedback for download
+     * function fetchEnrollmentData: fetches enrollment data including feedback
      *
      * Author: nv
      *
-     * Last Updated: September 28, 2022
+     * Last Updated: October 12, 2022
      *
-     * @param data course name
+     * @param data course id
+     * @param state state variables
      */
-    fetchFeedbackDownload (data: {
+    fetchEnrollmentData (state, data: {
       courseId: string
     }) {
       return new Promise((resolve, reject) => {
         http
           .get(`enrollments/getAllByCourseId?courseId=${data.courseId}`)
-          .then(data => {
-            console.log(data)
-            resolve(data)
+          .then(resp => {
+            console.log(resp)
+            resolve(resp.data)
           })
           .catch(error => reject(error))
       })

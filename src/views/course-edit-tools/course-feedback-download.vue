@@ -61,11 +61,12 @@ export default {
 
   computed: {
     ...mapActions([
-      'fetchFeedbackDownload'
+      'fetchEnrollmentData'
     ]),
     ...mapGetters([
       'enrollmentFeedback',
-      'course'
+      'course',
+      'courseId'
     ])
   },
 
@@ -73,15 +74,16 @@ export default {
     /**
      * Function getFeedback: gets feedback from store
      * Author: nv
-     * Last Updated: October 11, 2022 by nv
+     * Last Updated: October 12, 2022 by nv
      */
     getFeedback (feedback) {
-      const promise = this.$store.dispatch('fetchFeedbackDownload', name)
-      for (let i = 0; i < promise.subs.length; i++) {
+      const promise = this.$store.dispatch('fetchEnrollmentData', this.courseId)
+      for (const i in promise.subs) {
         feedback = promise.subs[i].feedback
       }
       return feedback
     },
+
     /**
      * Function printPDF: prints feedback in a PDF tp download
      * Author: nv
@@ -96,93 +98,84 @@ export default {
 
         const name = this.course.name
         const x = 30
-        let y = 30
+        const y = 30
         const lineheight = doc.getTextDimensions('Sample Text').h + 5
         const blockheight = 0
 
-        const parameters = [doc, feedback, x, lineheight, blockheight]
+        const parameters = [doc, feedback, x, y, lineheight, blockheight]
 
-        doc.text(this.y18n('feedback.document.title') + name, x, y)
-        y += lineheight + 20
+        parameters['doc'].text(this.y18n('feedback.document.title') + name, parameters['x'], parameters['y'])
+        parameters['y'] += parameters['lineheight'] + 20
 
-        this.printChoices(parameters, y)
-        this.printFreetext(parameters, y)
-        this.printRating(parameters, y)
+        this.printChoices(parameters)
+        this.printFreetext(parameters)
+        this.printRating(parameters)
 
-        const date = doc.getCreationDate('jsDate')
-        doc.save(date + ' - ' + this.y18n('feedback.document.file') + ' - ' + name + '.pdf')
+        const date = parameters['doc'].getCreationDate('jsDate')
+        parameters['doc'].save(date + ' - ' + this.y18n('feedback.document.file') + ' - ' + name + '.pdf')
       } else {
         console.log(this.y18n('feedback.document.unavailable'))
       }
     },
+
     /**
      * Function printChoices: prints choices answers into PDF
      * Author: nv
      * Last Updated: October 11, 2022 by nv
      */
-    printChoices (parameters, y) {
-      const choice = JSON.stringify(parameters['feedback'].map(function (item) {
+    printChoices (parameters) {
+      const choice = JSON.stringify(parameters['feedback'].map(item => {
         return item['choice']
       }))
-      const doc = parameters['doc']
-      const x = parameters['x']
-      const lineheight = parameters['lineheight']
-      let blockheight = parameters['blockheight']
 
-      doc.text(this.y18n('feedback.document.choices'), x, y)
-      y += lineheight
-      const splitchoice = doc.splitTextToSize(choice, 180)
-      doc.text(splitchoice, 30, y)
-      blockheight = splitchoice.length * lineheight + 5
-      y += blockheight
+      parameters['doc'].text(this.y18n('feedback.document.choices'), parameters['x'], parameters['y'])
+      parameters['y'] += parameters['lineheight']
+      const splitchoice = parameters['doc'].splitTextToSize(choice, 180)
+      parameters['doc'].text(splitchoice, 30, parameters['y'])
+      parameters['blockheight'] = splitchoice.length * parameters['lineheight'] + 5
+      parameters['y'] += parameters['blockheight']
 
-      return doc
+      return parameters
     },
+
     /**
      * Function printFreetext: prints freetext answers into PDF
      * Author: nv
      * Last Updated: October 11, 2022 by nv
      */
-    printFreetext (parameters, y) {
-      const freetext = JSON.stringify(parameters['feedback'].map(function (item) {
+    printFreetext (parameters) {
+      const freetext = JSON.stringify(parameters['feedback'].map(item => {
         return item['freetext']
       }))
-      const doc = parameters['doc']
-      const x = parameters['x']
-      const lineheight = parameters['lineheight']
-      let blockheight = parameters['blockheight']
 
-      doc.text(this.y18n('feedback.document.freetext'), x, y)
-      y += lineheight
-      const splitfreetext = doc.splitTextToSize(freetext, 180)
-      doc.text(splitfreetext, 30, y)
-      blockheight = splitfreetext.length * lineheight + 5
-      y += blockheight
+      parameters['doc'].text(this.y18n('feedback.document.freetext'), parameters['x'], parameters['y'])
+      parameters['y'] += parameters['lineheight']
+      const splitfreetext = parameters['doc'].splitTextToSize(freetext, 180)
+      parameters['doc'].text(splitfreetext, 30, parameters['y'])
+      parameters['blockheight'] = splitfreetext.length * parameters['lineheight'] + 5
+      parameters['y'] += parameters['blockheight']
 
-      return doc
+      return parameters
     },
+
     /**
      * Function printRating: prints rating answers into PDF
      * Author: nv
      * Last Updated: October 11, 2022 by nv
      */
-    printRating (parameters, y) {
-      const rating = JSON.stringify(parameters['feedback'].map(function (item) {
+    printRating (parameters) {
+      const rating = JSON.stringify(parameters['feedback'].map(item => {
         return item['rating']
       }))
-      const doc = parameters['doc']
-      const x = parameters['x']
-      const lineheight = parameters['lineheight']
-      let blockheight = parameters['blockheight']
 
-      doc.text(this.y18n('feedback.document.rating'), x, y)
-      y += lineheight
-      const splitrating = doc.splitTextToSize(rating, 180)
-      doc.text(splitrating, 30, y)
-      blockheight = splitrating.length * lineheight + 5
-      y += blockheight
+      parameters['doc'].text(this.y18n('feedback.document.rating'), parameters['x'], parameters['y'])
+      parameters['y'] += parameters['lineheight']
+      const splitrating = parameters['doc'].splitTextToSize(rating, 180)
+      parameters['doc'].text(splitrating, 30, parameters['y'])
+      parameters['blockheight'] = splitrating.length * parameters['lineheight'] + 5
+      parameters['y'] += parameters['blockheight']
 
-      return doc
+      return parameters
     }
   }
 }
