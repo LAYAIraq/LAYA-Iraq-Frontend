@@ -242,8 +242,9 @@ Dependencies:
               :id="'option-corr-'+i"
               v-model="solutions[i]"
               class="form-check-input"
-              type="radio"
-              :value="i"
+              :type="multiple ? 'checkbox' : 'radio'"
+              @click="() => { if (!multiple) {for (const ix in solutions) { ix === i ? solutions[ix] = true : solutions[ix] = false } } }"
+              :value="true"
             >
             <label
               class="form-check-label"
@@ -326,6 +327,14 @@ export default {
 
   computed: {
     ...mapGetters(['content', 'courseSimple'])
+  },
+
+  watch: {
+    multiple (val) { // reset solutions when changed to single choice
+      if (!val) {
+        this.solutions = this.solutions.map((s, i) => s = false)
+      }
+    }
   },
 
   created () {
