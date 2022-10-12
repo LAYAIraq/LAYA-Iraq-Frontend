@@ -71,70 +71,118 @@ export default {
 
   methods: {
     /**
+     * Function getFeedback: gets feedback from store
+     * Author: nv
+     * Last Updated: October 11, 2022 by nv
+     */
+    getFeedback (feedback) {
+      const promise = this.$store.dispatch('fetchFeedbackDownload', name)
+      for (let i = 0; i < promise.subs.length; i++) {
+        feedback = promise.subs[i].feedback
+      }
+      return feedback
+    },
+    /**
      * Function printPDF: prints feedback in a PDF tp download
      * Author: nv
-     * Last Updated: September 28, 2022 by nv
+     * Last Updated: October 11, 2022 by nv
      */
     async printPDF () {
       if (typeof this.enrollmentFeedback !== 'undefined') {
         /* eslint-disable */
         const doc = new jsPDF('p','pt')
         /* eslint-enable */
-        let feedback = []
+        const feedback = this.getFeedback()
+
         const name = this.course.name
         const x = 30
         let y = 30
         const lineheight = doc.getTextDimensions('Sample Text').h + 5
-        let blockheight = 0
-        const promise = this.$store.dispatch('fetchFeedbackDownload', name)
+        const blockheight = 0
 
-        for (let i = 0; i < promise.subs.length; i++) {
-          feedback = promise.subs[i].feedback
-        }
+        const parameters = [doc, feedback, x, lineheight, blockheight]
 
-        // await http.get(`enrollments/getAllByCourseId?courseId=${id}`)
-        // .then(({ data }) => {
-        //   console.log(data.subs[0].feedback)
-        //   feedback = data.subs[0].feedback
-        //  })
         doc.text(this.y18n('feedback.document.title') + name, x, y)
         y += lineheight + 20
-        // display of choice answers
-        const choice = JSON.stringify(feedback.map(function (item) {
-          return item['choice']
-        }))
-        doc.text(this.y18n('feedback.document.choices'), x, y)
-        y += lineheight
-        const splitchoice = doc.splitTextToSize(choice, 180)
-        doc.text(splitchoice, 30, y)
-        blockheight = splitchoice.length * lineheight + 5
-        y += blockheight
-        // display of free text answers
-        const freetext = JSON.stringify(feedback.map(function (item) {
-          return item['freetext']
-        }))
-        doc.text(this.y18n('feedback.document.freetext'), x, y)
-        y += lineheight
-        const splitfreetext = doc.splitTextToSize(freetext, 180)
-        doc.text(splitfreetext, 30, y)
-        blockheight = splitfreetext.length * lineheight + 5
-        y += blockheight
-        // display of rating answers
-        const rating = JSON.stringify(feedback.map(function (item) {
-          return item['rating']
-        }))
-        doc.text(this.y18n('feedback.document.rating'), 30, y)
-        y += lineheight
-        const splitrating = doc.splitTextToSize(rating, 180)
-        doc.text(splitrating, 30, y)
-        blockheight = splitchoice.length * lineheight + 5
-        y += blockheight
 
-        const date = doc.getCreationDate()
+        this.printChoices(parameters, y)
+        this.printFreetext(parameters, y)
+        this.printRating(parameters, y)
+
+        const date = doc.getCreationDate('jsDate')
         doc.save(date + ' - ' + this.y18n('feedback.document.file') + ' - ' + name + '.pdf')
       } else {
         console.log(this.y18n('feedback.document.unavailable'))
       }
+    },
+    /**
+     * Function printChoices: prints choices answers into PDF
+     * Author: nv
+     * Last Updated: October 11, 2022 by nv
+     */
+    printChoices (parameters, y) {
+      const choice = JSON.stringify(parameters['feedback'].map(function (item) {
+        return item['choice']
+      }))
+      const doc = parameters['doc']
+      const x = parameters['x']
+      const lineheight = parameters['lineheight']
+      let blockheight = parameters['blockheight']
+
+      doc.text(this.y18n('feedback.document.choices'), x, y)
+      y += lineheight
+      const splitchoice = doc.splitTextToSize(choice, 180)
+      doc.text(splitchoice, 30, y)
+      blockheight = splitchoice.length * lineheight + 5
+      y += blockheight
+
+      return doc
+    },
+    /**
+     * Function printFreetext: prints freetext answers into PDF
+     * Author: nv
+     * Last Updated: October 11, 2022 by nv
+     */
+    printFreetext (parameters, y) {
+      const freetext = JSON.stringify(parameters['feedback'].map(function (item) {
+        return item['freetext']
+      }))
+      const doc = parameters['doc']
+      const x = parameters['x']
+      const lineheight = parameters['lineheight']
+      let blockheight = parameters['blockheight']
+
+      doc.text(this.y18n('feedback.document.freetext'), x, y)
+      y += lineheight
+      const splitfreetext = doc.splitTextToSize(freetext, 180)
+      doc.text(splitfreetext, 30, y)
+      blockheight = splitfreetext.length * lineheight + 5
+      y += blockheight
+
+      return doc
+    },
+    /**
+     * Function printRating: prints rating answers into PDF
+     * Author: nv
+     * Last Updated: October 11, 2022 by nv
+     */
+    printRating (parameters, y) {
+      const rating = JSON.stringify(parameters['feedback'].map(function (item) {
+        return item['rating']
+      }))
+      const doc = parameters['doc']
+      const x = parameters['x']
+      const lineheight = parameters['lineheight']
+      let blockheight = parameters['blockheight']
+
+      doc.text(this.y18n('feedback.document.rating'), x, y)
+      y += lineheight
+      const splitrating = doc.splitTextToSize(rating, 180)
+      doc.text(splitrating, 30, y)
+      blockheight = splitrating.length * lineheight + 5
+      y += blockheight
+
+      return doc
     }
   }
 }
