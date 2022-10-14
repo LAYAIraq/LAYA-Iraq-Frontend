@@ -56,9 +56,6 @@ export default {
     locale
   ],
 
-  data () {
-  },
-
   computed: {
     ...mapActions([
       'fetchEnrollmentData'
