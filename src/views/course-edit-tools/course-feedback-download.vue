@@ -77,7 +77,7 @@ export default {
      * Last Updated: October 12, 2022 by nv
      */
     getFeedback (feedback) {
-      const promise = this.$store.dispatch('fetchEnrollmentData', this.courseId)
+      const promise = this.$store.dispatch('fetchEnrollmentData', { courseId: this.courseId })
       for (const i in promise.subs) {
         feedback = promise.subs[i].feedback
       }
