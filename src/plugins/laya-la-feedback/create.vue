@@ -364,11 +364,16 @@ export default {
   },
 
   methods: {
-
+    /**
+     * Function fillFormSamples: Fill in sample input
+     *
+     * Author: unknown
+     *
+     * Last Updated: Ocotber 15, 2022 by nv
+     */
     fillFormSamples () {
-      // fill item and category props with localized tokens
       if (this.categories.length === 0) {
-        const temp = this.y18n('layaLaFeedback.edit.answers') + ' 1'
+        const temp = this.y18n('layaLaFeedback.edit.questions') + ' 1'
         const tmpItem = {
           label: temp,
           simple: this.y18n('simpleAlt') + ' 1',
@@ -379,7 +384,7 @@ export default {
         this.items.push(tmpItem)
 
         for (let i = 1; i < 3; i++) {
-          const tmp = this.y18n('layaLaFeedback.edit.questions') + ' ' + i
+          const tmp = this.y18n('layaLaFeedback.edit.answers') + ' ' + i
           this.categories.push({
             text: tmp,
             simple: this.y18n('simpleAlt') + ' ' + i

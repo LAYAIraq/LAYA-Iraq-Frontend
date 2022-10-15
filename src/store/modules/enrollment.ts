@@ -261,8 +261,7 @@ export default {
         http
           .get(`enrollments/getAllByCourseId?courseId=${data.courseId}`)
           .then(resp => {
-            console.log(resp)
-            resolve(resp.data)
+            resolve(resp.data.subs)
           })
           .catch(error => reject(error))
       })

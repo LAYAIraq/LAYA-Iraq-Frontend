@@ -370,14 +370,6 @@ export default {
      *
      * Last Updated: August 15, 2021
      */
-    /* fetchData() {
-      if (this.title === '') { //prefetch Data at creation
-        this.title = this.y18n('layaLaFeedback.name')
-        this.task = this.y18n('layaLaFeedback.prefetch.task')
-        this.items = this.y18n('layaLaFeedback.prefetch.items').split(',')
-        this.categories = this.y18n('layaLaFeedback.prefetch.categories').split(',')
-      }
-    } */
     fetchData () {
       const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
