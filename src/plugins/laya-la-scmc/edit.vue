@@ -236,15 +236,15 @@ Dependencies:
             >
           </div>
 
-          <!-- correct for sc -->
+          <!-- correct -->
           <div class="form-check form-check-inline ">
             <input
               :id="'option-corr-'+i"
               v-model="solutions[i]"
               class="form-check-input"
               :type="multiple ? 'checkbox' : 'radio'"
-              @click="() => { if (!multiple) {for (const ix in solutions) { ix === i ? solutions[ix] = true : solutions[ix] = false } } }"
               :value="true"
+              @click="() => { if (!multiple) {for (const ix in solutions) { ix === i ? solutions[ix] = true : solutions[ix] = false } } }"
             >
             <label
               class="form-check-label"
@@ -303,12 +303,13 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import { locale, tooltipIcon } from '@/mixins'
-import { v4 as uuidv4 } from 'uuid'
+import commonMethods from './choices-common-methods'
 
 export default {
   name: 'LayaLaScmcEdit',
 
   mixins: [
+    commonMethods,
     locale,
     tooltipIcon
   ],
@@ -329,43 +330,11 @@ export default {
     ...mapGetters(['content', 'courseSimple'])
   },
 
-  watch: {
-    multiple (val) { // reset solutions when changed to single choice
-      if (!val) {
-        this.solutions = this.solutions.map((s, i) => s = false)
-      }
-    }
-  },
-
   created () {
     this.fetchData()
   },
 
   methods: {
-
-    /**
-     * Function _delItem(idx): Delete item at given index
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     */
-    _delItem (idx) {
-      this.options.splice(idx, 1)
-    },
-
-    /**
-     * Function _addItem: Add item to options
-     * Author: core
-     * Last Updated: June 28, 2021
-     */
-    _addItem () {
-      this.options.push({
-        text: this.y18n('layaLaScmc.edit.sampleOption'),
-        flagged: false,
-        id: uuidv4()
-      })
-    },
 
     /**
      * Function fetchData: fetch data from vuex and make data property
