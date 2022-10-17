@@ -42,7 +42,10 @@ export default {
      * @param state contains course object
      * @returns course object
      */
-    course (state: { course: object }) {
+    course (state: { course: {
+      properties: object
+      }
+    }) {
       return state.course
     },
 
@@ -458,13 +461,19 @@ export default {
         prefs: object
       }
     ) {
+      console.log('course list before: ', state.courseList)
       const listEntry = state.courseList.find(x => x.courseId === data.course.courseId)
       if (listEntry) { // update properties of listEntry if present
+        console.log('updating properties of course in course list')
+        console.log('entry: ', listEntry)
+        console.log('data: ', data)
         listEntry.properties = {
           ...listEntry.properties,
           ...data.prefs
         }
+        console.log('updated entry: ', listEntry)
       }
+      console.log('course list after: ', state.courseList)
     },
 
     /**
@@ -869,7 +878,7 @@ export default {
       { commit, state }
     ) {
       commit('setBusy', true)
-      http.get('courses?filter[include]=author')
+      http.get('courses')
         .then(({ data }) => {
           for (const courseObject of data) {
             const listData = {
