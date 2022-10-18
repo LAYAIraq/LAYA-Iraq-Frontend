@@ -37,11 +37,16 @@ describe('laya course list', () => {
           courseId: 2
         }
       },
-      courseList: () => state.courseList
+      courseList: () => state.courseList,
+      userId: () => 1
     }
     actions = {
       fetchCourse: jest.fn(() => Promise.resolve()),
+      fetchEnrollment: jest.fn(() => Promise.resolve()),
       fetchSingleEnrollment: jest.fn(() => Promise.resolve({
+        data: { sublist: [] }
+      })),
+      fetchUserEnrollments: jest.fn(() => Promise.resolve({
         data: { sublist: [] }
       }))
     }
@@ -72,14 +77,12 @@ describe('laya course list', () => {
 
   it('filters correctly', async () => {
     expect(wrapper.findAll('.course').length).toBe(4)
-    wrapper.setProps({ filter: 'Test' })
-    await localVue.nextTick()
+    await wrapper.setProps({ filter: 'Test' })
     expect(wrapper.findAll('.course').length).toBe(3)
   })
 
   it('sets button action correctly', async () => {
-    wrapper.setProps({ filter: 'video' })
-    await localVue.nextTick()
+    await wrapper.setProps({ filter: 'video' })
     const button = wrapper.find('a')
     await button.trigger('click')
     expect(wrapper.findAll('.indicate-icon').length).toBe(1)
