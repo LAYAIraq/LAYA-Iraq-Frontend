@@ -22,12 +22,15 @@ Dependencies:
         v-b-tooltip.left
         class="fas fa-question-circle"
         :title="y18n('showTip')"
+        aria-labelledby="tooltipText"
+        aria-live="polite"
         @click="toggleTip"
       ></i>
     </div>
 
     <b-jumbotron
       v-if="tooltipOn"
+      id="tooltipText"
       :header="y18n('layaLaScmc.name')"
       :lead="y18n('tipHeadline')"
     >
@@ -234,13 +237,14 @@ Dependencies:
           </div>
 
           <!-- correct -->
-          <div class="form-check form-check-inline">
+          <div class="form-check form-check-inline ">
             <input
               :id="'option-corr-'+i"
               v-model="solutions[i]"
               class="form-check-input"
-              type="checkbox"
-              :true-value="i"
+              :type="multiple ? 'checkbox' : 'radio'"
+              :value="true"
+              @click="() => { if (!multiple) {for (const ix in solutions) { ix === i ? solutions[ix] = true : solutions[ix] = false } } }"
             >
             <label
               class="form-check-label"
@@ -299,12 +303,13 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import { locale, tooltipIcon } from '@/mixins'
-import { v4 as uuidv4 } from 'uuid'
+import commonMethods from './choices-common-methods'
 
 export default {
   name: 'LayaLaScmcEdit',
 
   mixins: [
+    commonMethods,
     locale,
     tooltipIcon
   ],
@@ -330,30 +335,6 @@ export default {
   },
 
   methods: {
-
-    /**
-     * Function _delItem(idx): Delete item at given index
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     */
-    _delItem (idx) {
-      this.options.splice(idx, 1)
-    },
-
-    /**
-     * Function _addItem: Add item to options
-     * Author: core
-     * Last Updated: June 28, 2021
-     */
-    _addItem () {
-      this.options.push({
-        text: this.y18n('layaLaScmc.edit.sampleOption'),
-        flagged: false,
-        id: uuidv4()
-      })
-    },
 
     /**
      * Function fetchData: fetch data from vuex and make data property

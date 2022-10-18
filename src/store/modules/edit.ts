@@ -1,5 +1,6 @@
 import http from 'axios'
 import { v4 as uuidv4 } from 'uuid'
+// import auth from '@/store/modules/auth'
 
 export default {
   state: {
@@ -8,43 +9,10 @@ export default {
     },
     courseList: [],
     courseUpdated: false,
-    enrollment: {},
-    userEnrolled: false
+    studentId: []
   },
 
   getters: {
-
-    /**
-     * Function getEnrollmentFeedback: returns the current feedback
-     *
-     * Author: pj
-     *
-     * Last Updated: January 27, 2022
-     * @param state contains feedback array
-     * @returns feedback array
-     */
-    getEnrollmentFeedback (
-      state: {
-        enrollment: {
-          feedback: Array<object>
-        }
-      }) {
-      return state.enrollment.feedback
-    },
-
-    /**
-     * Function isUserEnrolled: returns if user is enrolled
-     *
-     * Author: cmc
-     *
-     * Last Updated: unknown
-     *
-     * @param state contains userEnrolled boolean
-     * @returns true if user is enrolled
-     */
-    isUserEnrolled (state: { userEnrolled: boolean }) {
-      return state.userEnrolled
-    },
 
     /**
      * Function content: returns content of given course
@@ -197,48 +165,6 @@ export default {
   mutations: {
 
     /**
-     * appendFeedback: Append new Feedback to feedback-array or update existing feedback
-     *
-     * Author: pj
-     *
-     * Last Updated: January 27, 2022
-     *
-     * @param state contains feedback
-     * @param feedbackData contains feedbackData to be stored in feedback
-     */
-    appendFeedback (
-      state: {
-        enrollment: {
-          feedback: Array<object>
-        }
-      },
-      feedbackData: {
-        step: any,
-        created: number,
-        choice: String,
-        freetext: String,
-        id: number,
-        numberOfFeedbacksEntries: number,
-        // options: object
-        options: {
-          questions: String,
-          answers: String
-        }
-      }
-    ) {
-      if (feedbackData.numberOfFeedbacksEntries + 1 > state.enrollment.feedback.length) {
-        for (let i = state.enrollment.feedback.length; i < feedbackData.numberOfFeedbacksEntries + 1; i++) {
-          state.enrollment.feedback.push(null)
-        }
-      }
-      if (state.enrollment.feedback.length !== 0) {
-        state.enrollment.feedback[feedbackData.numberOfFeedbacksEntries] = feedbackData
-      } else {
-        state.enrollment.feedback.push(feedbackData)
-      }
-    },
-
-    /**
      * Function appendContent: add a content block to content array
      *
      * Author: core
@@ -278,6 +204,26 @@ export default {
       courseListItem: object
     ) {
       state.courseList.push(courseListItem)
+    },
+
+    /**
+     * function changeCourseCategory: update course category
+     *
+     * Author: cmc
+     *
+     * Last Updated: August 8, 2022
+     * @param state contains course object
+     * @param newCategory new category
+     */
+    changeCourseCategory (
+      state: {
+        course: {
+          category: string
+        }
+      },
+      newCategory: string
+    ) {
+      state.course.category = newCategory
     },
 
     /**
@@ -453,27 +399,6 @@ export default {
     },
 
     /**
-     * Function setEnrollment: set an enrollment for current user
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 27, 2022
-     *
-     * @param state contains enrollment, userEnrolled
-     * @param enrollmentData enrollment object
-     */
-    setEnrollment (
-      state: {
-        enrollment: object,
-        userEnrolled: boolean
-      },
-      enrollmentData: object
-    ) {
-      state.enrollment = enrollmentData
-      state.userEnrolled = true
-    },
-
-    /**
      * Function setCourse: set state to given course
      *
      * Author: core
@@ -643,6 +568,49 @@ export default {
   },
 
   actions: {
+    /**
+     * function createCourse: create storage and course in backend
+     *
+     * Author: cmc
+     *
+     * Last Updated: April 14, 2022
+     * @param state state variables
+     * @param data course properties
+     */
+    createCourse (state, data: {
+      name: string,
+      category: string,
+      userId: number,
+      enrollment?: boolean
+    }) {
+      const storageId = uuidv4()
+      return new Promise((resolve, reject) => {
+        /* create storage */
+        http.post('storage', {
+          name: storageId
+        })
+          .then(() => {
+            /* storage created, create course */
+            http.post('courses', {
+              name: data.name,
+              category: data.category,
+              authorId: data.userId,
+              storageId: storageId,
+              properties: { enrollment: data.enrollment }
+            })
+              .then(() => {
+                resolve('Course successfully created')
+              })
+              .catch((err) => {
+                reject(new Error(err)) // error creating course
+              })
+          })
+          .catch((err) => {
+            reject(new Error(err)) // error creating storage
+          })
+      })
+    },
+
     /**
      * Function copyCourse: copy course and all the files
      *  FIXME: Files are not copied
@@ -908,7 +876,8 @@ export default {
               category: courseObject.category,
               name: courseObject.name,
               properties: courseObject.properties,
-              courseId: courseObject.courseId
+              courseId: courseObject.courseId,
+              author: courseObject.authorId
             }
             courseObject.content.forEach(block => {
               if (courseObject.properties.simpleLanguage) {
@@ -970,44 +939,6 @@ export default {
           }
         })
         .catch(err => console.error(err))
-        .finally(() => { commit('setBusy', false) })
-    },
-
-    /**
-     * Function fetchEnrollment: fetch user's enrollment associated with courseId
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 27, 2022
-     *
-     * @param param0 state variables
-     * @param courseId identifier for enrollment
-     */
-    fetchEnrollment (
-      { commit, rootState },
-      courseId: String
-    ) {
-      const uid = rootState.auth.userId
-      const cid = courseId
-      commit('setBusy', true)
-      http.get('enrollments/findOne', {
-        params: {
-          filter: {
-            where: {
-              studentId: uid,
-              courseId: cid
-            }
-          }
-        }
-      })
-        .then(({ data }) => {
-          // console.log('Enrollment exists!')
-          commit('setEnrollment', data)
-        })
-        .catch(err => {
-          // console.log('No enrollment found!')
-          console.error(err)
-        })
         .finally(() => { commit('setBusy', false) })
     },
 
@@ -1074,28 +1005,31 @@ export default {
     },
 
     /**
-     * function updateEnrollment: update enrollment object
+     * function updateCourse: update course in database
      *
-     * Author: cmc
+     * Auhtor: cmc
      *
-     * Last Updated: January 27, 2022
-     *
-     * @param param0 state variables
+     * Last Updated: August 9, 2022
+     * @param state state variables
      */
-    updateEnrollment ({ state }) {
-      const enrol = state.enrollment
-
-      // TODO: why is this not returning a Promise?
-      http.patch(
-        `enrollments/${enrol.id}`,
-        enrol
-      )
-        .then(() => {
-          console.log('Enrollment updated!')
-        })
-        .catch(err => {
-          console.error(err)
-        })
+    updateCourse ({ state }) {
+      return new Promise((resolve, reject) => {
+        http.patch(
+          `courses/${state.course.courseId}`,
+          {
+            ...state.course,
+            lastChanged: Date.now()
+          }
+        )
+          .then((resp) => {
+            // console.log(resp)
+            resolve(resp)
+          })
+          .catch(err => {
+            // console.error(err)
+            reject(err)
+          })
+      })
     },
 
     /**

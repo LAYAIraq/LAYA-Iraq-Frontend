@@ -178,7 +178,9 @@ export default {
         checked: [],
         feedback: '',
         freeze: false,
-        eval: []
+        eval: [],
+        showSolutions: [],
+        showSolutionsBool: false
       }
     }
     return {
@@ -245,12 +247,12 @@ export default {
      *
      * Author: pj
      *
-     * Last Updated: October 22, 2021
+     * Last Updated: October 12, 2022 by cmc
      */
     populateShowSolutions () {
-      for (let i = 0; i < this.options.length; i++) {
-        if (this.solutions[i] === null || this.solutions[i] === false) {
-          this.showSolutions.push(this.options[i].text)
+      for (let i = 0; i <= this.options.length; i++) {
+        if (this.solutions[i]) {
+          this.showSolutions.push(this.courseSimple ? this.options[i].simple : this.options[i].text)
         }
       }
     },
@@ -303,30 +305,22 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: March 19, 2021
+     * Last Updated: October 12, 2022 by cmc
      */
     diffSolution () {
       for (let i = 0; i < this.options.length; ++i) {
-        // is solution ?
-        if (this.solutions.includes(i)) {
-          // is also answer ?
-          if (this.answers.includes(i)) {
-            this.eval[i] = { 'far fa-check-circle text-success': true }
-          } else {
-            this.eval[i] = { 'far fa-times-circle text-danger': true }
-          }
-        } else {
-          // but is answer ?
-          if (this.answers.includes(i)) {
-            this.eval[i] = { 'far fa-times-circle text-danger': true }
-          } else {
-            this.eval[i] = { 'far fa-check-circle text-success': true }
-          }
+        if (this.solutions[i] && this.answers.includes(i)) {
+          // is correct answer ?
+          this.eval[i] = { 'far fa-check-circle text-success': true }
+        } else if (this.answers.includes(i) ||
+          (this.solutions[i] && this.answers.length === 0) // no answer is chosen
+        ) {
+          // is wrong answer ?
+          this.eval[i] = { 'far fa-times-circle text-danger': true }
         }
       }
       this.freeze = true
       this.showSolutionsBool = true
-      this.$forceUpdate()
     },
 
     /**

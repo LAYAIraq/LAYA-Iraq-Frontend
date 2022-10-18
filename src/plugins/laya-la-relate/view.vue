@@ -70,7 +70,7 @@ Dependencies:
               >
                 <img
                   v-if="pair.img"
-                  :src="pair.img"
+                  v-auth-image="pair.img"
                   :alt="courseSimple? pair.labelSimple: pair.label"
                 >
                 <laya-audio-inline

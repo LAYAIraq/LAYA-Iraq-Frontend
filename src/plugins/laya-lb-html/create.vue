@@ -185,6 +185,10 @@ export default {
   margin-right: 0;
 }
 
+.ql-container {
+  font-size: 18px;
+}
+
 .ql-container.ql-snow {
  min-height: 200px;
 }

@@ -40,7 +40,10 @@ describe('laya course list', () => {
       courseList: () => state.courseList
     }
     actions = {
-      fetchCourse: jest.fn(() => Promise.resolve())
+      fetchCourse: jest.fn(() => Promise.resolve()),
+      fetchSingleEnrollment: jest.fn(() => Promise.resolve({
+        data: { sublist: [] }
+      }))
     }
     mutations = {
       unsetCourseUpdated: jest.fn()

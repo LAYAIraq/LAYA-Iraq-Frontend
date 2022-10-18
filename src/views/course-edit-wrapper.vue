@@ -91,6 +91,12 @@ export default {
       default () {
         return ''
       }
+    },
+    saveChanges: {
+      type: Boolean,
+      default () {
+        return false
+      }
     }
   },
 
@@ -154,6 +160,14 @@ export default {
       }
       // eslint-disable-next-line
       return (({tooltipOn, ...o}) => o) (input) //strip tooltipOn var from data
+    }
+  },
+
+  watch: {
+    saveChanges (val) {
+      if (val) {
+        this.save()
+      }
     }
   },
 
