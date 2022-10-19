@@ -870,7 +870,7 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: January 27, 2022
+     * Last Updated: October 19, 2022
      *
      * @param param0 state variables
      */
@@ -889,36 +889,35 @@ export default {
               author: courseObject.authorId
             }
             courseObject.content.forEach(block => {
-              if (courseObject.properties.simpleLanguage) {
+              if (courseObject.properties.simpleLanguage) { // check if course is completely available in simple language
                 // TODO:
                 // following is duplicate of checkForSimpleLanguage() in
                 // @/views/course-edit-tools/course-preferences.vue
                 // might be refactored to reduce redundancy
-                const hasSimple = (elem) => {
+                courseObject.properties.simple = true // set properties.simple true first
+
+                const hasSimple = (elem) => { // check if all keys have a simple language version
                   return Object.prototype.hasOwnProperty.call(elem, 'simple')
-                    ? elem.simple !== ''
-                    : false
+                    ? elem.simple !== '' // if simple language version exists, check if it is not empty
+                    : Object.prototype.hasOwnProperty.call(elem, 'ops') // if simple language version does not exist, check if it is a quill object
                 }
-                const iterInput = Object.values(block)
-                for (const elem of iterInput) {
-                  if (typeof (elem) === 'object') {
-                    if (Array.isArray(elem)) {
-                      for (const iter of elem) {
+                const iterInput = Object.values(block.input) // values of content input array
+
+                for (const elem of iterInput) { // for each element in input array
+                  if (typeof (elem) === 'object') { // if element is an object
+                    if (Array.isArray(elem)) { // if it's an array, descent into array
+                      for (const iter of elem) { // for each element in array
                         if (iter) {
-                          if (!hasSimple(iter)) {
-                            // console.log(iter)
-                            // console.log(' doesnt have simple')
+                          if (!hasSimple(iter)) { // element does not have a simple language version
                             courseObject.properties.simple = false
-                            break
+                            break // we can stop looking further
                           }
                         }
                       }
-                    } else if (elem) {
-                      if (!hasSimple(elem)) {
-                        // console.log(elem)
-                        // console.log(' doesnt have simple')
+                    } else if (elem) { // element is an object
+                      if (!hasSimple(elem)) { // element does not have a simple language version
                         courseObject.properties.simple = false
-                        break
+                        break // we can stop looking further
                       }
                     }
                   }
@@ -932,9 +931,10 @@ export default {
                 case 'laya-wysiwyg':
                   listData.properties.text = true
                   break
-                case 'laya-ableplayer':
-                  listData.properties.video = true
-                  break
+                // commented out b/c ableplayer is disabled, 2022-10-19
+                // case 'laya-ableplayer':
+                //   listData.properties.video = true
+                //   break
                 case 'laya-dialog':
                   listData.properties.text = true
                   break
