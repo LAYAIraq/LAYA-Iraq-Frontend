@@ -93,10 +93,6 @@ vuex,
           ></i>
         </div>
 
-        <!--
-        <i class="ml-2" :class="{'far fa-check-circle text-success': true}"></i>
-        <i class="ml-2" :class="{'far fa-times-circle text-danger': true}"></i>
-        -->
         <laya-flag-icon
           v-if="!previewData"
           :ref-data="option"
