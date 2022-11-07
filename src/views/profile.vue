@@ -71,6 +71,52 @@ Dependencies:
             </div>
           </div>
 
+          <!-- Intitution -->
+          <div class="form-group row">
+            <label
+              for="institution"
+              class="col-sm-3 col-form-label"
+            >{{ y18n('institutionPH') }}</label>
+            <div class="col-sm-9">
+              <b-form-select
+                v-model="institution"
+              >
+                <b-form-select-option
+                  v-for="(opt, i) in chooseInstitution"
+                  :key="i"
+                  :value="opt.value"
+                >
+                  <span :class="opt.value">
+                    {{ opt.text }}
+                  </span>
+                </b-form-select-option>
+              </b-form-select>
+            </div>
+          </div>
+
+          <!-- Status Group -->
+          <div class="form-group row">
+            <label
+              for="statusgroup"
+              class="col-sm-3 col-form-label"
+            >{{ y18n('statusgroupPH') }}</label>
+            <div class="col-sm-9">
+              <b-form-select
+                v-model="statusgroup"
+              >
+                <b-form-select-option
+                  v-for="(opt, i) in chooseStatusGroup"
+                  :key="i"
+                  :value="opt.value"
+                >
+                  <span :class="opt.value">
+                    {{ opt.text }}
+                  </span>
+                </b-form-select-option>
+              </b-form-select>
+            </div>
+          </div>
+
           <!-- Email -->
           <div class="form-group row">
             <label
@@ -252,6 +298,7 @@ Dependencies:
           <strong class="form-text text-center">{{ formMsg }}</strong>
         </form>
       </div>
+
       <hr>
       <!-- author application -->
       <div
@@ -448,6 +495,8 @@ import { locale, pwdProps } from '@/mixins'
 import api from '@/backend-url'
 import PasswordInput from '@/components/password-input.vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+import institutions from '@/misc/institutions'
+import statusgroups from '@/misc/statusgroups'
 import fontOptions from '@/misc/font-options'
 import fontSizeOptions from '@/misc/font-size-options'
 // import '@/styles/fonts.css'
@@ -472,6 +521,8 @@ export default {
       pwdMsg: '',
       formMsg: '',
       busy: false,
+      institution: '',
+      statusgroup: '',
       prefs: {},
       formInput: {
         applicationText: '',
@@ -521,6 +572,28 @@ export default {
       set (newVal) {
         this.prefs.font.size = this.fontSizeOptions[newVal]
       }
+    },
+
+    /**
+     * chooseInstitution(): add institutions
+     *
+     * Author: nv
+     *
+     * Last Updated: November 07, 2022
+     */
+    chooseInstitution () {
+      return institutions
+    },
+
+    /**
+     * chooseStatusGroup(): add status group
+     *
+     * Author: nv
+     *
+     * Last Updated: November 07, 2022
+     */
+    chooseStatusGroup () {
+      return statusgroups
     },
 
     /**
