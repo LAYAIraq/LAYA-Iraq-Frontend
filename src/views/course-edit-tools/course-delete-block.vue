@@ -11,9 +11,12 @@ Dependencies:
 <template>
   <div
     v-if="contentToDisplay"
+    id="delete-content"
     class="row mt-5"
   >
-    <div class="col">
+    <div
+      class="col"
+    >
       <b-button
         size="sm"
         variant="danger"
@@ -36,6 +39,7 @@ Dependencies:
       :ok-title="y18n('delete')"
       :cancel-title="y18n('cancel')"
       centered
+      static
       @ok="delContent"
     >
       <p>
@@ -46,7 +50,7 @@ Dependencies:
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import { locale, routeProps } from '@/mixins'
 
 export default {
@@ -59,10 +63,6 @@ export default {
 
   computed: {
     ...mapGetters(['content']),
-    ...mapState(['edit'])
-  },
-
-  methods: {
 
     /**
      * Function contentToDisplay: return current content block
@@ -73,7 +73,10 @@ export default {
      */
     contentToDisplay () {
       return this.content[this.step - 1]
-    },
+    }
+  },
+
+  methods: {
 
     /**
      * Function delContent: remove current content block in store

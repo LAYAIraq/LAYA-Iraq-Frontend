@@ -34,7 +34,7 @@ describe('Plyr create component', () => {
   it('shows a helper box when clicking the questionmark', async () => {
     const questionmark = wrapper.find('#questionmark')
     await questionmark.trigger('click')
-    const helpText = wrapper.find('#helptext')
+    const helpText = wrapper.find('.jumbotron')
     expect(helpText.exists()).toBeTruthy()
   })
 

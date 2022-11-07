@@ -56,7 +56,7 @@ describe('Relate Create component', () => {
     await localVue.nextTick()
     const questionmark = wrapper.find('#questionmark')
     await questionmark.trigger('click')
-    const helpText = wrapper.find('#helptext')
+    const helpText = wrapper.find('#tooltipText')
     expect(helpText.exists()).toBeTruthy()
   })
 
