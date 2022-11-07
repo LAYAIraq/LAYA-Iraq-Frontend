@@ -10,7 +10,7 @@ import SampleCourse from '../../mocks/sample-course-short.json'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
-describe('store module edit', () => {
+describe.skip('store module edit', () => {
   const store = new Vuex.Store({
     modules: {
       edit: cloneDeep(edit)
