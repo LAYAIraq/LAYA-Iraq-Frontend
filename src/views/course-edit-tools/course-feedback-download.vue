@@ -73,29 +73,31 @@ export default {
      * Author: nv
      * Last Updated: October 15, 2022 by nv
      */
-    async getFeedback () {
-      const promise = await this.$store.dispatch('fetchEnrollmentData', { courseId: this.courseId })
+    getFeedback () {
       const feedback = []
-
-      for (const i in promise) {
-        if (promise[i].feedback[promise[i].feedback.length - 1] !== undefined) {
-          feedback[i] = promise[i].feedback[promise[i].feedback.length - 1]
+      this.$store.dispatch('fetchEnrollmentData', { courseId: this.courseId }).then((promise) => {
+        for (const i in promise) {
+          if (promise[i].feedback[promise[i].feedback.length - 1] !== undefined) {
+            feedback[i] = promise[i].feedback[promise[i].feedback.length - 1]
+          }
         }
-      }
+      }).catch(err => {
+        console.log(err)
+      })
       return feedback
     },
 
     /**
-     * Function printPDF: prints feedback in a PDF tp download
+     * Function printPDF: prints feedback in a PDF to download
      * Author: nv
      * Last Updated: October 15, 2022 by nv
      */
-    async printPDF () {
+    printPDF () {
       if (typeof this.getFeedback() !== 'undefined') {
         /* eslint-disable */
         const doc = new jsPDF('p','pt')
         /* eslint-enable */
-        const feedback = await this.getFeedback()
+        const feedback = this.getFeedback()
 
         const name = this.course.name
         const x = 30
@@ -103,7 +105,7 @@ export default {
         const lineheight = doc.getTextDimensions('Sample Text').h + 5
         const blockheight = 0
 
-        const parameters = { doc: doc, feedback: feedback, x: x, y: y, lineheight: lineheight, blockheigt: blockheight }
+        const parameters = { doc, feedback, x, y, lineheight, blockheight }
 
         parameters.doc.text(this.y18n('feedback.document.title') + name, parameters.x, parameters.y)
         parameters.y += parameters.lineheight + 20
@@ -126,12 +128,8 @@ export default {
      */
     printChoices (parameters) {
       const temp = []
-      for (const i in parameters.feedback) {
-        for (const key in parameters.feedback[i]) {
-          if (key === 'choice') {
-            temp[i] = parameters.feedback[i].choice
-          }
-        }
+      for (const feedback in parameters.feedback) {
+        temp.push(feedback.choice)
       }
       const choice = JSON.stringify(temp)
 
@@ -152,12 +150,8 @@ export default {
      */
     printFreetext (parameters) {
       const temp = []
-      for (const i in parameters.feedback) {
-        for (const key in parameters.feedback[i]) {
-          if (key === 'freetext') {
-            temp[i] = parameters.feedback[i].freetext
-          }
-        }
+      for (const feedback in parameters.feedback) {
+        temp.push(feedback.freetext)
       }
       const freetext = JSON.stringify(temp)
 
@@ -178,12 +172,8 @@ export default {
      */
     printRating (parameters) {
       const temp = []
-      for (const i in parameters.feedback) {
-        for (const key in parameters.feedback[i]) {
-          if (key === 'rating') {
-            temp[i] = parameters.feedback[i].rating
-          }
-        }
+      for (const feedback in parameters.feedback) {
+        temp.push(feedback.rating)
       }
       const rating = JSON.stringify(temp)
 

@@ -367,15 +367,14 @@ export default {
     /**
      * Function fillFormSamples: Fill in sample input
      *
-     * Author: unknown
+     * Author: cmc
      *
-     * Last Updated: Ocotber 15, 2022 by nv
+     * Last Updated: October 15, 2022 by nv
      */
     fillFormSamples () {
       if (this.categories.length === 0) {
-        const temp = this.y18n('layaLaFeedback.edit.questions') + ' 1'
         const tmpItem = {
-          label: temp,
+          label: this.y18n('layaLaFeedback.edit.questions') + ' 1',
           simple: this.y18n('simpleAlt') + ' 1',
           category: -1,
           flagged: false,
@@ -384,9 +383,8 @@ export default {
         this.items.push(tmpItem)
 
         for (let i = 1; i < 3; i++) {
-          const tmp = this.y18n('layaLaFeedback.edit.answers') + ' ' + i
           this.categories.push({
-            text: tmp,
+            text: this.y18n('layaLaFeedback.edit.answers') + ' ' + i,
             simple: this.y18n('simpleAlt') + ' ' + i
           })
         }
