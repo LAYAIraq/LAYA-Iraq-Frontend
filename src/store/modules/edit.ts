@@ -26,7 +26,8 @@ export default {
      */
     content (state: {
       course: {
-        content: Array<object>
+        content: Array<object>,
+        name: string
       }
     }) {
       return state.course.content
@@ -189,24 +190,6 @@ export default {
     },
 
     /**
-     * Function appendToCourseList: add course object
-     *  to courseList array
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 27, 2022
-     *
-     * @param state contains courseList array
-     * @param courseListItem course object to be added to list
-     */
-    appendToCourseList (
-      state: { courseList: Array<object> },
-      courseListItem: object
-    ) {
-      state.courseList.push(courseListItem)
-    },
-
-    /**
      * function changeCourseCategory: update course category
      *
      * Author: cmc
@@ -247,6 +230,78 @@ export default {
         ...state.course.properties,
         ...properties
       }
+    },
+
+    /**
+     * Function courseListAppend: add course object
+     *  to courseList array
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 7, 2022 by cmc
+     *
+     * @param state contains courseList array
+     * @param courseListItem course object to be added to list
+     */
+    courseListAppend (
+      state: { courseList: Array<object> },
+      courseListItem: {
+        author: number,
+        category: string,
+        courseId: string,
+        name: string,
+        properties: object
+      }
+    ) {
+      state.courseList.push(courseListItem)
+    },
+
+    /**
+     * function courseListRemove: remove an item from the course list
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 7, 2022
+     * @param state contains courseList
+     * @param {string} courseId of course item to delete
+     */
+    courseListRemove (
+      state: {
+        courseList: Array<{
+          courseId: string
+        }>
+      },
+      courseId: string
+    ) {
+      const idx = state.courseList.findIndex(elem => elem.courseId === courseId)
+      state.courseList.splice(idx, 1)
+    },
+
+    /**
+     * Function courseListUpdate: update courseList after name change of course
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 7, 2022
+     * @param state contains courseList
+     * @param courseId id of updated course
+     */
+    courseListUpdate (
+      state: {
+        course: { name: string },
+        courseList: Array<{
+          courseId: string,
+          name: string
+        }>
+      },
+      courseId: string
+    ) {
+      console.log('courseListUpdate')
+      const listItem = state.courseList.find((item: { courseId: string, name: string }) => item.courseId === courseId)
+      console.log(listItem)
+      listItem.name = state.course.name
+      console.log(listItem)
+      console.log(state.courseList)
     },
 
     /**
@@ -353,28 +408,6 @@ export default {
       //     }
       //   }
       // }
-    },
-
-    /**
-     * function removeFromCourseList: remove a deleted course from
-     *  the course list
-     *
-     * Author: cmc
-     *
-     * Last Updated: March 14, 2022
-     * @param state contains courseList
-     * @param {string} courseId of course to delete
-     */
-    removeFromCourseList (
-      state: {
-        courseList: Array<{
-          courseId: string
-        }>
-      },
-      courseId: string
-    ) {
-      const idx = state.courseList.findIndex(elem => elem.courseId === courseId)
-      state.courseList.splice(idx, 1)
     },
 
     /**
@@ -934,7 +967,7 @@ export default {
             if (!state.courseList.some( // add to course list if not present
               (e: { courseId: String }) => e.courseId === listData.courseId)
             ) {
-              commit('appendToCourseList', listData)
+              commit('courseListAppend', listData)
             }
           }
         })
@@ -1043,13 +1076,14 @@ export default {
      * @returns Promise to update renamed course
      */
     updateRenamedCourse (
-      { state }: {
+      { state, commit }: {
         state: {
           course: {
             courseId: string,
             name: string
           }
-        }
+        },
+        commit: Function
       }
     ) {
       const newNameData = {
@@ -1063,6 +1097,7 @@ export default {
       newNameData
         )
           .then(() => {
+            commit('courseListUpdate', state.course.courseId)
             resolve('Updated Course name!')
           })
           .catch((err) => {

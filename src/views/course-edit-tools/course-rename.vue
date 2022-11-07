@@ -35,7 +35,8 @@ Dependencies:
       centered
       static
       :aria-label="y18n('popupwarning')"
-      @ok="renameCourse"
+      :ok-disabled="rename === course.name"
+      @ok="handleOk"
     >
       <p>
         {{ y18n('copy.modal.text') }}
@@ -43,9 +44,28 @@ Dependencies:
           v-model="rename"
           type="text"
           class="form-control"
+          :class="{ 'border-danger': !renameOk }"
           :placeholder="y18n('placeholder')"
           :aria-label="y18n('placeholder')"
         >
+      </p>
+      <p
+        v-if="dupeName"
+        id="duplicate-name-error"
+      >
+        {{ y18n('rename.modal.dupeName') }}
+      </p>
+      <p
+        v-if="noName"
+        id="no-input-error"
+      >
+        {{ y18n('rename.modal.noName') }}
+      </p>
+      <p
+        v-if="rename === course.name"
+        id="same-name-error"
+      >
+        {{ y18n('rename.modal.sameName') }}
       </p>
     </b-modal>
     <div
@@ -70,13 +90,35 @@ export default {
 
   data () {
     return {
+      dupeName: false,
+      noName: false,
       rename: '',
       oldName: ''
     }
   },
 
   computed: {
-    ...mapGetters(['course', 'courseList'])
+    ...mapGetters(['course', 'courseList']),
+
+    renameOk () {
+      return this.rename !== ''
+        && !this.dupeName
+        && !this.noName
+        && this.rename !== this.course.name
+    }
+  },
+
+  watch: {
+    noName (val) { // reset dupeName if noName is true
+      if (val) {
+        this.dupeName = false
+      }
+    },
+    rename () { // reset dupeName when input changes
+      if (this.dupeName) {
+        this.dupeName = false
+      }
+    }
   },
 
   methods: {
@@ -87,18 +129,11 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: March 24, 2021
+     * Last Updated: November 7, 2022
      */
 
-    duplicateCheck (click) {
-      click.preventDefault()
-      if (!this.rename) {
-        this.$nextTick(() => {
-          this.$bvModal.hide('author-rename-course-confirm')
-        })
-        return
-      }
-      if (!this.courseList) this.$store.dispatch('fetchCourseList')
+    duplicateCheck () {
+      if (this.courseList.length === 0) this.$store.dispatch('fetchCourseList')
       if (this.courseList.some(e => e.name === this.rename)) {
         this.dupeName = true
       } else {
@@ -108,27 +143,45 @@ export default {
     },
 
     /**
+     * Function handleOk: trigger validation of rename
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 7, 2022
+     */
+    handleOk (e) {
+      e.preventDefault()
+      if (!this.rename) { // no input
+        this.noName = true
+      } else { // input, check for duplicate
+        this.noName = false
+        this.duplicateCheck()
+      }
+    },
+
+    /**
      * Function renameCourse: rename Course, change route to new name
      *
      * Author: cmc
      *
-     * Last Updated: March 24, 2021
+     * Last Updated: November 7, 2022 by cmc
      */
     renameCourse () {
-      if (!this.rename) return
-      const newName = this.rename
+      this.$nextTick(() => {
+        this.$bvModal.hide('author-rename-course-confirm')
+      })
+      const newName = this.rename.trim()
+      this.oldName = this.course.name
       const step = this.$route.params.step
       this.$store.commit('renameCourse', newName)
       const renamed = this.$store.dispatch('updateRenamedCourse')
 
       renamed.then(() => {
         this.$router.replace(`/courses/${newName}/${step}`)
-        console.log('Renaming successful!')
         this.$emit('renamed')
       })
         .catch(err => {
           console.error(err)
-          console.log('Renaming failed!')
         })
     }
   }
