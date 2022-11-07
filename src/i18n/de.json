@@ -468,6 +468,8 @@
 	"register.submit": "Anmelden",
 	"register.title": "Anmeldung",
 	"rename.modal.dupeName": "Dieser Kursname existiert bereits!",
+	"rename.modal.noName": "Der Kursname darf nicht leer sein!",
+	"rename.modal.sameName": "Das ist bereits der Name des Kurses!",
 	"rename.modal.ok": "Umbenennen",
 	"rename.renameCourseTip": "Der Kurs wird umbenannt.",
 	"renameCourse": "Kurs umbenennen",

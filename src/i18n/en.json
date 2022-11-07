@@ -469,6 +469,8 @@
 	"register.submit": "Register",
 	"register.title": "Registration",
 	"rename.modal.dupeName": "This Course Name already exists!",
+	"rename.modal.noName": "The Course Name cannot be empty!",
+	"rename.modal.sameName": "That already is the Course Name!",
 	"rename.modal.ok": "Rename",
 	"rename.renameCourseTip": "The course will be renamed.",
 	"renameCourse": "Rename Course",
