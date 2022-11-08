@@ -882,6 +882,7 @@ export default {
                 // console.log(data)
                 commit('setCourse', data)
                 commit('setCourseUpdated')
+                commit('setCourseContent', data)
                 dispatch('getCourseFlags', state.course.courseId)
                 resolve('Course loaded')
               })
