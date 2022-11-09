@@ -84,7 +84,7 @@ export default new Router({
       component: Courses
     },
     {
-      path: '/courses/:name/:step',
+      path: '/courses/:coursePath',
       name: 'course-detail-view',
       component: CourseDetail,
       props: true,

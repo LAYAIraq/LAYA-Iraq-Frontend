@@ -5,7 +5,14 @@
  * @dependencies none
  */
 // @ts-ignore
-import { ContentInput, LegacyContentBlock, CourseNavigation, breakSteps } from '@/misc/course-structure'
+import {
+  CourseNavigationItem,
+  LegacyContentBlock,
+  CourseNavigation,
+  breakSteps,
+  LegacyContentInput,
+  LegacyCourse, slugify, getPaths
+} from '@/misc/course-structure'
 import { v4 as uuidv4 } from 'uuid'
 export default {
 
@@ -13,28 +20,54 @@ export default {
     courseContent: {},
     courseNav: {
       start: null,
-      chapters: []
+      structure: []
+    },
+    courseRoutes: {}
+  },
+
+  getters: {
+    courseContent: (state: { courseContent: CourseNavigationItem }) => state.courseContent,
+    courseNav: (state: { courseNav: CourseNavigation }) => state.courseNav,
+    courseRoutes: (state: { courseRoutes: any }) => state.courseRoutes,
+    courseSlugs: (state: { courseRoutes: any }) => {
+      const slugs = {}
+      for (const path in state.courseRoutes) {
+        const slug = path.split('/').pop()
+        slugs[slug] = state.courseRoutes[path]
+      }
+      return slugs
     }
   },
 
   mutations: {
     setCourseContent (
       // rootState: { content: LegacyContentBlock[] },
-      state: { courseContent: any, courseNav: CourseNavigation },
-      course: any
+      state: {
+        courseContent: any,
+        courseNav: CourseNavigation,
+        courseRoutes: any
+      },
+      course: LegacyCourse
     ) {
-      const content = course.content
       // console.log('setCourseContent', content)
-      for (const block of content) {
-        const blockId = uuidv4()
-        const i = content.indexOf(block)
+      for (const block of course.content) {
+        const blockId = uuidv4().split('-')[0] // legacy content blocks have no id
+        const i = course.content.indexOf(block)
         // const block = content[i]
-        state.courseContent[blockId] = { ...block.input, id: blockId, name: block.name }
-        state.courseNav.chapters[i] = { id: blockId, follow: breakSteps(block) }
+        state.courseContent[blockId] = { ...block.input, name: block.name } // this is analogous to the new course structure
+        console.log('slug would be', slugify(block.input.title.text))
+        console.log('but we use only numbers for now')
+        state.courseNav.structure[i] = {
+          id: blockId,
+          slug: i,
+          follow: breakSteps(block)
+        }
         if (i === 0) {
           state.courseNav.start = i
         }
       }
+      // traverse course content and create routes
+      state.courseRoutes = getPaths(state.courseNav)
     }
   }
 }

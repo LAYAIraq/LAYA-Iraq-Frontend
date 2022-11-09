@@ -35,8 +35,9 @@ Dependencies:
 
           <component
             :is="contentToDisplay.name"
+            :previewData="contentToDisplay"
             v-if="contentToDisplay && viewPermit"
-            :key="name+'-'+step"
+            :key="contentToDisplay.title.text"
             :on-finish="nextStep(contentToDisplay.nextStep)"
           >
           </component>
@@ -102,7 +103,11 @@ export default {
       'isAuthor',
       'content',
       'course',
+      'courseContent',
       'courseFlags',
+      'courseNav',
+      'courseRoutes',
+      'courseSlugs',
       'enrollment',
       'storeBusy',
       'userEnrolled',
@@ -144,7 +149,12 @@ export default {
      * Last Updated: March 24, 2021
      */
     contentToDisplay () {
-      return this.content ? this.content[this.step - 1] : false
+      // return this.content ? this.content[this.step - 1] : false
+      if (/\//.test(this.coursePath)) { // no slash in slug, load first content
+        return this.courseNav.start === 0 ? this.courseContent[this.courseNav.structure[0].id] : null
+      } else {
+        return this.courseNav.start === 0 ? this.courseContent[this.courseNav.structure[0].id] : null
+      }
     },
 
     /**

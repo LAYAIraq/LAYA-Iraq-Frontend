@@ -331,7 +331,7 @@ export default {
               this.fetchCourse(course.name)
             }
             this.$store.dispatch('fetchEnrollment', course.courseId)
-            this.$router.push('/courses/' + course.name + '/1')
+            this.$router.push({ name: 'course-detail-view', path: '/courses', params:  { coursePath: course.name } })
           }
         : () => { this.subscribe(course) }
       if (this.complicitReady && !complicit) {

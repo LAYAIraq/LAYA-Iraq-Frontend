@@ -145,6 +145,7 @@ export default {
      * Last Updated: January 16, 2021
      */
     fetchData () {
+      // this.$data = { ...this.displayContent }
       // dereference store data
       const preData = JSON.parse(JSON.stringify(this.content[this.idx].input))
       // replace data stubs with stored data

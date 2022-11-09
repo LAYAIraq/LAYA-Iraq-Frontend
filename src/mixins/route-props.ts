@@ -8,7 +8,25 @@
 
 export default {
   props: {
+    coursePath: {
+      type: String,
+      default () {
+        return ''
+      }
+    },
     name: {
+      type: String,
+      default () {
+        return ''
+      }
+    },
+    chapters: {
+      type: String,
+      default () {
+        return ''
+      }
+    },
+    slug: {
       type: String,
       default () {
         return ''
