@@ -22,20 +22,35 @@ export default {
       start: null,
       structure: []
     },
-    courseRoutes: {}
+    courseRoutes: []
   },
 
   getters: {
     courseContent: (state: { courseContent: CourseNavigationItem }) => state.courseContent,
     courseNav: (state: { courseNav: CourseNavigation }) => state.courseNav,
     courseRoutes: (state: { courseRoutes: any }) => state.courseRoutes,
-    courseSlugs: (state: { courseRoutes: any }) => {
-      const slugs = {}
-      for (const path in state.courseRoutes) {
-        const slug = path.split('/').pop()
-        slugs[slug] = state.courseRoutes[path]
+    courseContentIdRouteMap: (state: { courseRoutes: any }) => {
+      const map = {}
+      for (const [route, id] of state.courseRoutes) {
+        if (!(map[id] === '')) {
+          map[id] = route
+        }
       }
-      return slugs
+      return map
+    },
+    courseContentRouteIdMap: (state: { courseRoutes: any }) => {
+      const map = {}
+      for (const [route, id] of state.courseRoutes) {
+        map[route] = id
+      }
+      return map
+    },
+    courseContentSlugIdMap: (state: { courseRoutes: [[route: string, id: string]] }) => {
+      const map = {}
+      for (const [route, id] of state.courseRoutes) {
+        map[route.split('/').pop()] = id
+      }
+      return map
     }
   },
 

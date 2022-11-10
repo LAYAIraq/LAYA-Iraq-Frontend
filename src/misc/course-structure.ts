@@ -127,14 +127,17 @@ export const slugify = (text: string): string => {
 /**
  * @description traverse course nav object, return set of all slugs
  * @param courseNav course navigation object
+ * @returns list of tuples with route and id
  */
-export const getPaths = (courseNav: CourseNavigation): { [key: string]: string } => {
-  const routes = {}
+export const getPaths = (courseNav: CourseNavigation): [[route: string, id: string]] => {
+  // @ts-ignore
+  const routes: [[route: string, id: string]] = []
   const addStartRoute = (item: CourseNavigationItem, start: number | string, idx?: number): void => {
-    if (typeof start === 'number' && idx === start) {
-      routes[''] = item.id
-    } else if (typeof start === 'string' && item.slug === start) {
-      routes[''] = item.id
+    if (
+      (typeof start === 'number' && idx === start) || // start element is given by number => index
+      (typeof start === 'string' && item.slug === start) // start element is given by string => id
+    ) {
+      routes.push(['', item.id])
     } else {
       console.warn('start property does not match any slug')
     }
@@ -143,12 +146,13 @@ export const getPaths = (courseNav: CourseNavigation): { [key: string]: string }
     if (structure instanceof Array) { // stucture is CourseNavigationItem[]
       structure.forEach((item) => {
         addStartRoute(item, courseNav.start, structure.indexOf(item))
-        routes[currentPath + '/' + item.slug] = item.id // can have alternative path
+        routes.push([currentPath + '/' + item.slug, item.id]) // can have alternative path
       })
     } else if (Object.prototype.hasOwnProperty.call(structure, 'follow')) { // structure is CourseNavigationItem
       // @ts-ignore
       addStartRoute(structure, courseNav.start)
-      routes[currentPath + '/' + structure.slug] = structure.id
+      // @ts-ignore
+      routes.push([currentPath + '/' + structure.slug, structure.id])
     } else { // structure is CourseNavigationChapter
       for (const chapter in structure) {
         console.log('chapter', chapter)
@@ -166,4 +170,15 @@ export const getPaths = (courseNav: CourseNavigation): { [key: string]: string }
  */
 export const validateSlug = (slug: string): boolean => {
   return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)
+}
+
+export const getContentRoute = (follow: number | string, currentRoute: string): string => {
+  if (typeof follow === 'number') {
+    const path = currentRoute.split('/')
+    return isNaN(parseInt(path[-1]))
+      ? path.join('/') + '/' + follow
+      : path.slice(0, -1).join('/') + '/' + follow
+  } else {
+    return follow // TODO  do other cases: string (slug or id)
+  }
 }

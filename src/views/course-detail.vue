@@ -35,10 +35,10 @@ Dependencies:
 
           <component
             :is="contentToDisplay.name"
-            :previewData="contentToDisplay"
             v-if="contentToDisplay && viewPermit"
             :key="contentToDisplay.title.text"
-            :on-finish="nextStep(contentToDisplay.nextStep)"
+            :preview-data="contentToDisplay"
+            :on-finish="followContent(contentToDisplay.follow)"
           >
           </component>
 
@@ -107,7 +107,9 @@ export default {
       'courseFlags',
       'courseNav',
       'courseRoutes',
-      'courseSlugs',
+      'courseContentRouteIdMap',
+      'courseContentIdRouteMap',
+      'courseContentSlugIdMap',
       'enrollment',
       'storeBusy',
       'userEnrolled',
@@ -150,7 +152,7 @@ export default {
      */
     contentToDisplay () {
       // return this.content ? this.content[this.step - 1] : false
-      if (/\//.test(this.coursePath)) { // no slash in slug, load first content
+      if (!this.coursePath) { // no slash in slug, load first content
         return this.courseNav.start === 0 ? this.courseContent[this.courseNav.structure[0].id] : null
       } else {
         return this.courseNav.start === 0 ? this.courseContent[this.courseNav.structure[0].id] : null
@@ -235,25 +237,28 @@ export default {
         this.course.name !== this.$route.params.name || // course in store doesn't match the route params
         Object.keys(this.course).length === 0 // course in store has no properties
       ) {
-        // console.log('Fetching Course...')
+        console.log('Fetching Course...')
         this.fetchCourse()
       }
     },
 
     /**
-     * Function nextStep: map 'steps' string to components
+     * Function nextStep: map 'follow' string to components
      *
      * Author: core
      *
      * Last Updated: October 27, 2020
      *
-     * @param {string} steps next steps
+     * @param follow next content to display (can be number, string, or array of each)
      */
-    nextStep (steps) { // string e.g. '1,2'
-      if (!steps) return []
+    followContent (follow) { // string e.g. '1,2'
+      if (!follow) return []
 
       const { name, $router } = this
-      return steps.split(',').map(step => {
+      if (typeof follow === 'number' || typeof follow === 'string') { // single follow
+        $router.push({ name: 'course-detail-view', params: { name, courseRoute: this.getContentRoute(follow) } })
+      }
+      return follow.forEach(step => {
         return () => {
           // if(this.enrollment.length >0) this.enrollment.progress = Number(step)
           $router.push({ name: 'course-detail-view', params: { name, step } })
