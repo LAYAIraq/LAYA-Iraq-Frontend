@@ -172,13 +172,20 @@ export const validateSlug = (slug: string): boolean => {
   return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)
 }
 
+/**
+ * @description generates follow
+ * @param follow
+ * @param currentRoute
+ */
 export const getContentRoute = (follow: number | string, currentRoute: string): string => {
   if (typeof follow === 'number') {
-    const path = currentRoute.split('/')
-    return isNaN(parseInt(path[-1]))
-      ? path.join('/') + '/' + follow
-      : path.slice(0, -1).join('/') + '/' + follow
-  } else {
+    const path = currentRoute.split('/') // split path into array
+    if (isNaN(parseInt(path[-1]))) { // if last element is not a number, it is the beginning of a chapter
+      return follow === 0 ? currentRoute : currentRoute + '/' + follow // 0 is beginning of chapter, otherwise add number
+    } else { // last element is a number
+      return follow === 0 ? currentRoute : path.slice(0, -1).join('/') + '/' + follow
+    }
+  } else { // follow is string
     return follow // TODO  do other cases: string (slug or id)
   }
 }
