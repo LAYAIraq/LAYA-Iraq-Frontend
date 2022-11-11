@@ -44,6 +44,7 @@ export default {
      * @returns course object
      */
     course (state: { course: {
+      name: string,
       properties: object
       }
     }) {

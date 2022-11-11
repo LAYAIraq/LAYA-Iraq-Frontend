@@ -84,17 +84,12 @@ export default new Router({
       component: Courses
     },
     {
-      path: '/courses/:name',
+      path: '/courses/:name/:coursePath?',
       name: 'course-detail-view',
       component: CourseDetail,
       props: true,
 
       children: [
-        {
-          path: '/:coursePath',
-          component: CourseDetail,
-          props: true
-        },
         {
           path: 'edit',
           name: 'edit-course-wrapper',

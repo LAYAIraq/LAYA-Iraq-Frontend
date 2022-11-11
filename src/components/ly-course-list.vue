@@ -175,6 +175,7 @@ Dependencies:
 // import http from 'axios'
 import { mapGetters } from 'vuex'
 import { locale, storeHandler } from '@/mixins'
+import { slugify } from '@/misc/course-structure'
 
 export default {
   name: 'LayaCourseList',
@@ -331,7 +332,7 @@ export default {
               this.fetchCourse(course.name)
             }
             this.$store.dispatch('fetchEnrollment', course.courseId)
-            this.$router.push({ name: 'course-detail-view', path: '/courses', params: { name: course.name } })
+            this.$router.push({ name: 'course-detail-view', path: '/courses', params: { name: slugify(course.name) } })
           }
         : () => { this.subscribe(course) }
       if (this.complicitReady && !complicit) {

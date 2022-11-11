@@ -6,12 +6,14 @@
  */
 // @ts-ignore
 import {
+  CourseNavigation,
   CourseNavigationItem,
   LegacyContentBlock,
-  CourseNavigation,
-  breakSteps,
   LegacyContentInput,
-  LegacyCourse, slugify, getPaths
+  LegacyCourse,
+  breakSteps,
+  getPaths,
+  slugify
 } from '@/misc/course-structure'
 import { v4 as uuidv4 } from 'uuid'
 export default {
@@ -26,7 +28,7 @@ export default {
   },
 
   getters: {
-    courseContent: (state: { courseContent: CourseNavigationItem }) => state.courseContent,
+    courseContent: (state: { courseContent: { [id: string]: CourseNavigationItem } }) => state.courseContent,
     courseNav: (state: { courseNav: CourseNavigation }) => state.courseNav,
     courseRoutes: (state: { courseRoutes: any }) => state.courseRoutes,
     courseContentIdRouteMap: (state: { courseRoutes: any }) => {
@@ -55,6 +57,11 @@ export default {
   },
 
   mutations: {
+    /**
+     * @description Set the course content when loading a course from old backend
+     * @param state Vuex state
+     * @param course LegacyCourse object
+     */
     setCourseContent (
       // rootState: { content: LegacyContentBlock[] },
       state: {

@@ -21,7 +21,7 @@ Dependencies:
       <div class="row">
         <div class="col">
           <h1 class="text-center text-light py-5">
-            <b>{{ name }}</b>
+            <b>{{ course.name }}</b>
           </h1>
         </div>
       </div>

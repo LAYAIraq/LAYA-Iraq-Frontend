@@ -2,6 +2,7 @@ import edit from '@/store/modules/edit'
 import axios from 'axios'
 import SampleCourse from '../../mocks/sample-course-short.json'
 import SampleCourseSimple from '../../mocks/sample-course-simple.json'
+import 'regenerator-runtime/runtime'
 
 // console.log(edit.actions)
 // jest.mock('axios')
