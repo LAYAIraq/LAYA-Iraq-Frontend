@@ -9,7 +9,7 @@
 export default {
   props: {
     onFinish: {
-      type: Function || Array,
+      type: [Function, Array],
       default () {
         return () => {}
       }

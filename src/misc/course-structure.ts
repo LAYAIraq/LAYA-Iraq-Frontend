@@ -114,15 +114,12 @@ export type ContentBlock = {
  * @param block course content block containing nextStep property
  */
 export const breakSteps = (block: LegacyContentBlock): number[] | number => {
-  console.log(block.name, block.nextStep)
   if (block.nextStep === null) {
     return null
   }
   const stepsArray = block.nextStep.split(',')
   const stepsInt = stepsArray.map((step) => parseInt(step))
-  const result = stepsInt.length > 1 ? stepsInt : stepsInt[0]
-  console.log(result)
-  return result
+  return stepsInt.length > 1 ? stepsInt : stepsInt[0] // return array if more than one step
 }
 
 /**

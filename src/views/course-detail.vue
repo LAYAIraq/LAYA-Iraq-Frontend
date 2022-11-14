@@ -153,17 +153,13 @@ export default {
      * Last Updated: November 14, 2022 by cmc
      */
     contentToDisplay () {
-      // return this.content ? this.content[this.step - 1] : false
       if (!this.coursePath) { // course path is not set --> first content in course
         return this.courseContent[this.courseNav.start]
       } else { // course path is set --> content with slug
         const idx = parseInt(this.coursePath)
-        console.log('idx', idx)
-        const content = isNaN(idx)
+        return isNaN(idx) // TODO: remove number check after migration to new course structure
           ? this.courseContent[this.courseContentRouteIdMap[this.coursePath]] // path is no number -> route
           : this.courseContent[this.courseContentIndexIdMap[this.coursePath]] // path is number -> index
-        console.log('content', content)
-        return content
       }
     },
 
@@ -262,15 +258,15 @@ export default {
     followContent (contentBlock) {
       const follow = this.courseNav.structure
         .find((block) => block.id === contentBlock.id).follow // follow array in course nav structure
-      return typeof follow === 'object'
+      return typeof follow === 'object' // TODO: update for id lookup in new course structure
         ? follow.map(el => // create a router.push call for each element in follow array
           () => this.$router.push(
             { params: { name: this.name, coursePath: `${el}` } }
           )
         )
         : () => this.$router.push( // follow is single element
-          { params: { name: this.name, coursePath: `${follow}` } }
-        )
+            { params: { name: this.name, coursePath: `${follow}` } }
+          )
     }
   }
 }
