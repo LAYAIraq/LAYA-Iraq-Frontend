@@ -38,7 +38,7 @@ Dependencies:
             v-if="contentToDisplay && viewPermit"
             :key="contentToDisplay.title.text"
             :preview-data="contentToDisplay"
-            :on-finish="followContent(contentToDisplay.follow)"
+            :on-finish="followContent(contentToDisplay)"
           >
           </component>
 
@@ -99,18 +99,20 @@ export default {
 
   computed: {
     ...mapGetters([
-      'isAdmin',
-      'isAuthor',
       'content',
       'course',
       'courseContent',
+      'courseContentIdRouteMap',
+      'courseContentIndexIdMap',
+      'courseContentRouteIdMap',
+      'courseContentSlugIdMap',
       'courseFlags',
       'courseNav',
       'courseRoutes',
-      'courseContentRouteIdMap',
-      'courseContentIdRouteMap',
-      'courseContentSlugIdMap',
+      'courseSlug',
       'enrollment',
+      'isAdmin',
+      'isAuthor',
       'storeBusy',
       'userEnrolled',
       'userId'
@@ -148,14 +150,20 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: March 24, 2021
+     * Last Updated: November 14, 2022 by cmc
      */
     contentToDisplay () {
       // return this.content ? this.content[this.step - 1] : false
-      if (!this.coursePath) { // no slash in slug, load first content
-        return this.courseNav.start === 0 ? this.courseContent[this.courseNav.structure[0].id] : null
-      } else {
-        return this.courseNav.start === 0 ? this.courseContent[this.courseNav.structure[0].id] : null
+      if (!this.coursePath) { // course path is not set --> first content in course
+        return this.courseContent[this.courseNav.start]
+      } else { // course path is set --> content with slug
+        const idx = parseInt(this.coursePath)
+        console.log('idx', idx)
+        const content = isNaN(idx)
+          ? this.courseContent[this.courseContentRouteIdMap[this.coursePath]] // path is no number -> route
+          : this.courseContent[this.courseContentIndexIdMap[this.coursePath]] // path is number -> index
+        console.log('content', content)
+        return content
       }
     },
 
@@ -231,39 +239,38 @@ export default {
       const ctx = this
 
       window.scrollTo(0, 0)
-      document.title = `Laya - ${ctx.name}`
+      document.title = `Laya - ${ctx.course.name}`
       if (
-        !this.course || // course is undefined in store
-        this.course.name !== this.$route.params.name || // course in store doesn't match the route params
+        !this.course.name || // course is undefined in store
+        this.courseSlug !== this.name || // course in store doesn't match the route params
         Object.keys(this.course).length === 0 // course in store has no properties
       ) {
         console.log('Fetching Course...')
-        this.fetchCourse()
+        this.fetchCourse(this.name)
       }
     },
 
     /**
-     * Function nextStep: map 'follow' string to components
+     * Function followContent: returns follow set for content block
      *
      * Author: core
      *
-     * Last Updated: October 27, 2020
+     * Last Updated: November 14, 2022 by cmc
      *
-     * @param follow next content to display (can be number, string, or array of each)
+     * @param contentBlock content block object
      */
-    followContent (follow) { // string e.g. '1,2'
-      if (!follow) return []
-
-      const { name, $router } = this
-      if (typeof follow === 'number' || typeof follow === 'string') { // single follow
-        $router.push({ name: 'course-detail-view', params: { name, courseRoute: this.getContentRoute(follow) } })
-      }
-      return follow.forEach(step => {
-        return () => {
-          // if(this.enrollment.length >0) this.enrollment.progress = Number(step)
-          $router.push({ name: 'course-detail-view', params: { name, step } })
-        }
-      })
+    followContent (contentBlock) {
+      const follow = this.courseNav.structure
+        .find((block) => block.id === contentBlock.id).follow // follow array in course nav structure
+      return typeof follow === 'object'
+        ? follow.map(el => // create a router.push call for each element in follow array
+          () => this.$router.push(
+            { params: { name: this.name, coursePath: `${el}` } }
+          )
+        )
+        : () => this.$router.push( // follow is single element
+          { params: { name: this.name, coursePath: `${follow}` } }
+        )
     }
   }
 }

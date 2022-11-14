@@ -29,7 +29,7 @@ Dependencies:
         type="button"
         class="btn btn-primary mt-3 d-block"
         :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-        @click="onFinish[0]() || {}"
+        @click="onFinish() || {}"
       >
         {{ y18n('nextContent') }}
         <i

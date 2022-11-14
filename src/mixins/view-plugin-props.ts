@@ -9,9 +9,9 @@
 export default {
   props: {
     onFinish: {
-      type: Array,
+      type: Function || Array,
       default () {
-        return [() => {}]
+        return () => {}
       }
     },
     previewData: {

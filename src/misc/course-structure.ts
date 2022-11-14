@@ -51,10 +51,9 @@ export interface LegacyCourse {
  ***************************************************/
 
 /**
- * @description follwing content can be marked with number (step) or string
- * (id/slug), also as array
+ * @description following content is marked by string (id) or array of strings (ids)
  */
-type FollowingContent = string | number | string[] | number[]
+type FollowingContent = string | string[]
 
 /**
  * @description Course navigation item has id and slug with optional follow
@@ -66,7 +65,7 @@ type FollowingContent = string | number | string[] | number[]
  */
 export type CourseNavigationItem = {
   id: string,
-  slug: string | number,
+  slug: string,
   follow?: FollowingContent
 }
 
@@ -86,8 +85,21 @@ type CourseNavigationStructure =
  * @property structure course navigation structure (nested object or array)
  */
 export type CourseNavigation = {
-  start: string | number,
+  start: string,
   structure: CourseNavigationStructure
+}
+
+/**
+ * @description Course content block (new back end)
+ * @property id - unique id for course content block
+ * @property name - name of content plugin type (e.g. 'laya-dialog')
+ * @property title - title of content block
+ */
+export type ContentBlock = {
+  id: string,
+  name: string,
+  title: { text: string },
+  [prop: string]: any
 }
 
 /**************************************************************
@@ -102,12 +114,15 @@ export type CourseNavigation = {
  * @param block course content block containing nextStep property
  */
 export const breakSteps = (block: LegacyContentBlock): number[] | number => {
+  console.log(block.name, block.nextStep)
   if (block.nextStep === null) {
     return null
   }
   const stepsArray = block.nextStep.split(',')
   const stepsInt = stepsArray.map((step) => parseInt(step))
-  return stepsArray.length > 1 ? stepsInt : stepsInt[0]
+  const result = stepsInt.length > 1 ? stepsInt : stepsInt[0]
+  console.log(result)
+  return result
 }
 
 /**
@@ -178,7 +193,7 @@ export const validateSlug = (slug: string): boolean => {
  * @param currentRoute
  */
 export const getContentRoute = (follow: number | string, currentRoute: string): string => {
-  if (typeof follow === 'number') {
+  if (typeof follow === 'number') { // follow is number => step TODO: remove when old course structure is removed
     const path = currentRoute.split('/') // split path into array
     if (isNaN(parseInt(path[-1]))) { // if last element is not a number, it is the beginning of a chapter
       return follow === 0 ? currentRoute : currentRoute + '/' + follow // 0 is beginning of chapter, otherwise add number

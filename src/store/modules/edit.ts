@@ -1,12 +1,11 @@
 import http from 'axios'
 import { v4 as uuidv4 } from 'uuid'
+import { slugify } from '@/misc/course-structure'
 // import auth from '@/store/modules/auth'
 
 export default {
   state: {
-    course: {
-      properties: {}
-    },
+    course: {},
     courseList: [],
     courseUpdated: false,
     studentId: []
@@ -26,7 +25,7 @@ export default {
      */
     content (state: {
       course: {
-        content: Array<object>,
+        content: Array<{ input: object }>,
         name: string
       }
     }) {
@@ -44,6 +43,7 @@ export default {
      * @returns course object
      */
     course (state: { course: {
+      authorId: number,
       name: string,
       properties: object
       }
@@ -133,6 +133,12 @@ export default {
     }) {
       return state.course.properties.simpleLanguage
     },
+
+    /**
+     * @description returns course name slugified
+     * @param state contains course object
+     */
+    courseSlug: (state: { course: { name: string } }) => slugify(state.course.name ?? ''),
 
     /**
      * Function courseStorage: returns id of course storage
@@ -254,7 +260,8 @@ export default {
         category: string,
         courseId: string,
         name: string,
-        properties: object
+        properties: object,
+        slug: string
       }
     ) {
       state.courseList.push(courseListItem)
@@ -295,7 +302,8 @@ export default {
         course: { name: string },
         courseList: Array<{
           courseId: string,
-          name: string
+          name: string,
+          slug: string
         }>
       },
       courseId: string
@@ -304,6 +312,7 @@ export default {
       const listItem = state.courseList.find((item: { courseId: string, name: string }) => item.courseId === courseId)
       console.log(listItem)
       listItem.name = state.course.name
+      listItem.slug = slugify(state.course.name)
       console.log(listItem)
       console.log(state.courseList)
     },
@@ -873,7 +882,7 @@ export default {
       if (rootState.note.busy) return null
       return new Promise((resolve, reject) => {
         commit('setBusy', true)
-
+        console.log(name)
         // get course ID from name
         http.get(`courses/getCourseId?courseName=${name}`)
           .then(({ data }) => {
@@ -892,9 +901,28 @@ export default {
                 reject(err)
               })
           })
-          .catch(err => {
-            console.error(err)
-            reject(err)
+          .catch(() => {
+            // course name not found -> fallback to slug lookup TODO: remove this fallback after switching to new back end
+            // console.error(err)
+            http.get('courses')
+              .then(({ data }) => {
+                console.log('slug lookup')
+                console.log(data)
+                const course = data.find((course: any) => slugify(course.name) === name)
+                if (course) {
+                  commit('setCourse', course)
+                  commit('setCourseUpdated')
+                  commit('setCourseContent', course)
+                  dispatch('getCourseFlags', state.course.courseId)
+                  resolve('Course loaded')
+                } else {
+                  reject(new Error('Course not found'))
+                }
+              })
+              .catch(err => {
+                console.error(err)
+                reject(err)
+              })
           })
           .finally(() => commit('setBusy', false))
       })
@@ -919,6 +947,7 @@ export default {
             const listData = {
               category: courseObject.category,
               name: courseObject.name,
+              slug: slugify(courseObject.name),
               properties: courseObject.properties,
               courseId: courseObject.courseId,
               author: courseObject.authorId

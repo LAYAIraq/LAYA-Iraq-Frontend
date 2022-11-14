@@ -20,6 +20,7 @@ export default {
 
   state: {
     courseContent: {},
+    courseIds: {},
     courseNav: {
       start: null,
       structure: []
@@ -40,10 +41,11 @@ export default {
       }
       return map
     },
+    courseContentIndexIdMap: (state: { courseIds: { [id: string]: number } }) => state.courseIds,
     courseContentRouteIdMap: (state: { courseRoutes: any }) => {
       const map = {}
       for (const [route, id] of state.courseRoutes) {
-        map[route] = id
+        map[route.substring(1)] = id
       }
       return map
     },
@@ -66,6 +68,7 @@ export default {
       // rootState: { content: LegacyContentBlock[] },
       state: {
         courseContent: any,
+        courseIds: any,
         courseNav: CourseNavigation,
         courseRoutes: any
       },
@@ -76,16 +79,17 @@ export default {
         const blockId = uuidv4().split('-')[0] // legacy content blocks have no id
         const i = course.content.indexOf(block)
         // const block = content[i]
-        state.courseContent[blockId] = { ...block.input, name: block.name } // this is analogous to the new course structure
-        console.log('slug would be', slugify(block.input.title.text))
-        console.log('but we use only numbers for now')
+        state.courseContent[blockId] = { ...block.input, name: block.name, id: blockId } // this is analogous to the new course structure
+        state.courseIds[i] = blockId // index of block in content array for legacy content
+        // console.log('slug would be', slugify(block.input.title.text))
+        // console.log('but we use only numbers for now')
         state.courseNav.structure[i] = {
           id: blockId,
-          slug: i,
+          slug: slugify(block.input.title.text),
           follow: breakSteps(block)
         }
         if (i === 0) {
-          state.courseNav.start = i
+          state.courseNav.start = blockId
         }
       }
       // traverse course content and create routes
