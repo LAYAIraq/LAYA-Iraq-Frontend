@@ -216,6 +216,12 @@ export default {
     // this.fetchCourseStats()
   },
 
+  mounted () {
+    if (!this.contentToDisplay && !this.$router.params.type) {
+      this.$forceUpdate()
+    }
+  },
+
   beforeDestroy () {
     /* if (this.enrollment.length > 0) this.updateEnrollment()
     this.saveFlags() */
@@ -258,6 +264,7 @@ export default {
     followContent (contentBlock) {
       const follow = this.courseNav.structure
         .find((block) => block.id === contentBlock.id).follow // follow array in course nav structure
+      if (!follow) return () => {} // no follow set
       return typeof follow === 'object' // TODO: update for id lookup in new course structure
         ? follow.map(el => // create a router.push call for each element in follow array
           () => this.$router.push(

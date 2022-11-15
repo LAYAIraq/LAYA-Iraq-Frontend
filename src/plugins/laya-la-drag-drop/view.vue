@@ -151,23 +151,11 @@ export default {
   ],
 
   data () {
-    if (this.previewData) { // show preview
-      return {
-        ...this.previewData,
-        checked: false,
-        solution: [], // users solution as index
-        eval: []
-      }
-    }
     return {
+      ...this.previewData,
       checked: false,
       solution: [], // users solution as index
-      eval: [], // list of booleans
-      title: {},
-      task: {},
-      taskAudio: '',
-      items: [],
-      categories: [],
+      eval: [],
       showSolutionsBool: false
     }
   },
@@ -192,7 +180,7 @@ export default {
   },
 
   created () {
-    if (!this.previewData) this.fetchData()
+    // if (!this.previewData) this.fetchData()
     this.mapSolutions()
   },
 

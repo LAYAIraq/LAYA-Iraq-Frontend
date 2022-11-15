@@ -64,7 +64,7 @@ export default {
      * @param state Vuex state
      * @param course LegacyCourse object
      */
-    setCourseContent (
+    setCourseContentAndNav (
       // rootState: { content: LegacyContentBlock[] },
       state: {
         courseContent: any,
@@ -74,7 +74,7 @@ export default {
       },
       course: LegacyCourse
     ) {
-      // console.log('setCourseContent', content)
+      // console.log('setCourseContentAndNav', content)
       for (const block of course.content) {
         const blockId = uuidv4().split('-')[0] // legacy content blocks have no id
         const i = course.content.indexOf(block)

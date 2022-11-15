@@ -892,7 +892,7 @@ export default {
                 // console.log(data)
                 commit('setCourse', data)
                 commit('setCourseUpdated')
-                commit('setCourseContent', data)
+                commit('setCourseContentAndNav', data)
                 dispatch('getCourseFlags', state.course.courseId)
                 resolve('Course loaded')
               })
@@ -912,7 +912,7 @@ export default {
                 if (course) {
                   commit('setCourse', course)
                   commit('setCourseUpdated')
-                  commit('setCourseContent', course)
+                  commit('setCourseContentAndNav', course)
                   dispatch('getCourseFlags', state.course.courseId)
                   resolve('Course loaded')
                 } else {
