@@ -6,6 +6,7 @@
  */
 // @ts-ignore
 import {
+  Course,
   CourseNavigation,
   CourseNavigationItem,
   LegacyContentBlock,
@@ -59,6 +60,19 @@ export default {
   },
 
   mutations: {
+    // TODO: finish
+    parseChapters (
+      state: {
+        courseContent: { },
+        courseIds: { [id: string]: number },
+        courseNav: CourseNavigation,
+        courseRoutes: any
+      },
+      course: Course
+    ) {
+      state.courseNav.start = course.start
+    },
+
     /**
      * @description Set the course content when loading a course from old backend
      * @param state Vuex state

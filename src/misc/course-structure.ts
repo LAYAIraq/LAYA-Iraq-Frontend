@@ -90,6 +90,25 @@ export type CourseNavigation = {
 }
 
 /**
+ * @description new course structure
+ * @property id - unique id for course
+ * @property name - name of course
+ * @property abstract - abstract of course
+ * @property category - category of course
+ * @property chapters - content of course structured as nested object
+ * @property start - id of first content block
+ */
+export type Course = {
+  courseId: string,
+  name: string,
+  abstract: string,
+  category: string,
+  chapters: CourseNavigationStructure,
+  start: string,
+  [key: string]: any
+}
+
+/**
  * @description Course content block (new back end)
  * @property id - unique id for course content block
  * @property name - name of content plugin type (e.g. 'laya-dialog')
@@ -175,14 +194,6 @@ export const getPaths = (courseNav: CourseNavigation): [[route: string, id: stri
   }
   traverse(courseNav.structure, '')
   return routes
-}
-
-/**
- * @description validates slug
- * @param slug slug to validate
- */
-export const validateSlug = (slug: string): boolean => {
-  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)
 }
 
 /**

@@ -30,7 +30,7 @@
         "id": "99test45"
       }
     },
-    "nextStep": "2,3"
+    "nextStep": ""
   },
   {
     "name": "laya-plyr",
@@ -42,7 +42,7 @@
         "flagged": false
       }
     },
-    "nextStep": "4"
+    "nextStep": null
   },
   {
     "name": "laya-wysiwyg",
@@ -60,7 +60,7 @@
         ]
       }
     },
-    "nextStep": "4"
+    "nextStep": ""
   },
   {
     "input":
@@ -84,11 +84,11 @@
       "title": {
         "flagged": false,
         "id": "99test23",
-        "text": "SCMC Text"
+        "text": ""
       }
     },
     "name": "laya-scmc",
-    "nextStep": "6"
+    "nextStep": ""
 },
   {
     "input":
@@ -120,16 +120,18 @@
       "title": {
         "flagged": false,
         "id": "99test26",
-        "text": "Relate Sample"
+        "text": ""
       }
     },
     "name": "laya-quiz-drag-drop",
-    "nextStep": "7"
+    "nextStep": ""
   }
   ],
   "feedback": [],
   "files": [],
   "locked": false,
+  "properties": {},
+  "lastChanged": "2019-03-19T14:00:00.000Z",
   "name": "Testkurs",
   "courseId": "t3stkur5",
   "storageId": "st0r31d"
