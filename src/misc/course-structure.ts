@@ -73,7 +73,7 @@ export type CourseNavigationItem = {
  * @description Course navigation can be either a nested object or an array
  *  (like old course structure)
  */
-type CourseNavigationStructure =
+export type CourseNavigationStructure =
   { [chapterName: string]: CourseNavigationStructure } |
   CourseNavigationItem[] |
   CourseNavigationItem
@@ -101,10 +101,10 @@ export type CourseNavigation = {
 export type Course = {
   courseId: string,
   name: string,
+  start: string,
   abstract: string,
   category: string,
   chapters: CourseNavigationStructure,
-  start: string,
   [key: string]: any
 }
 
@@ -158,58 +158,75 @@ export const slugify = (text: string): string => {
 
 /**
  * @description traverse course nav object, return set of all slugs
+ *  use for old course structure
  * @param courseNav course navigation object
+ * @param start course starting point (id or array index)
  * @returns list of tuples with route and id
  */
-export const getPaths = (courseNav: CourseNavigation): [[route: string, id: string]] => {
+export const getPaths =
+  (courseNav: CourseNavigationStructure, start: number | string): [[route: string, id: string]] => {
   // @ts-ignore
-  const routes: [[route: string, id: string]] = []
-  const addStartRoute = (item: CourseNavigationItem, start: number | string, idx?: number): void => {
-    if (
-      (typeof start === 'number' && idx === start) || // start element is given by number => index
-      (typeof start === 'string' && item.slug === start) // start element is given by string => id
-    ) {
-      routes.push(['', item.id])
-    } else {
-      console.warn('start property does not match any slug')
+    const routes: [[route: string, id: string]] = []
+    const addStartRoute = (item: CourseNavigationItem, start: number | string, idx?: number): void => {
+      if (
+        (typeof start === 'number' && idx === start) || // start element is given by number => index
+        (typeof start === 'string' && item.slug === start) // start element is given by string => id
+      ) {
+        routes.push(['', item.id])
+      } else {
+        console.warn('start property does not match any slug')
+      }
     }
+    const traverse = (structure: CourseNavigationStructure, currentPath: string) => {
+      if (structure instanceof Array) { // stucture is CourseNavigationItem[]
+        structure.forEach((item) => {
+          addStartRoute(item, start, structure.indexOf(item))
+          routes.push([currentPath + '/' + item.slug, item.id]) // can have alternative path
+        })
+      } else if (Object.prototype.hasOwnProperty.call(structure, 'id')) { // structure is CourseNavigationItem
+      // @ts-ignore
+        addStartRoute(structure, start)
+        // @ts-ignore
+        routes.push([currentPath + '/' + structure.slug, structure.id])
+      } else { // structure is CourseNavigationChapter
+        for (const chapter in structure) {
+          console.log('chapter', chapter)
+          traverse(structure[chapter], currentPath + '/' + chapter)
+        }
+      }
+    }
+    traverse(courseNav, '')
+    return routes
   }
-  const traverse = (structure: CourseNavigationStructure, currentPath: string) => {
+
+/**
+ * @description traverse course nav object, return object of all ids
+ * @param courseChapters course structure object
+ * @returns [courseContent, courseRoutes] - courseContent: object with ids as
+ *  keys, courseRoutes: list of tuples [route, id]
+ */
+export const traverseCourseChapters = (courseChapters: CourseNavigationStructure):
+  [
+    { [id: string]: {} },
+    [[route: string, id: string]]
+  ] => {
+  const ids: { [id: string]: {} } = {}
+  // const routes: [[route: string, id: string]] = []
+  const traverse = (structure: CourseNavigationStructure) => {
     if (structure instanceof Array) { // stucture is CourseNavigationItem[]
       structure.forEach((item) => {
-        addStartRoute(item, courseNav.start, structure.indexOf(item))
-        routes.push([currentPath + '/' + item.slug, item.id]) // can have alternative path
+        ids[item.id] = {}
       })
-    } else if (Object.prototype.hasOwnProperty.call(structure, 'follow')) { // structure is CourseNavigationItem
+    } else if (Object.prototype.hasOwnProperty.call(structure, 'id')) { // structure is CourseNavigationItem
       // @ts-ignore
-      addStartRoute(structure, courseNav.start)
-      // @ts-ignore
-      routes.push([currentPath + '/' + structure.slug, structure.id])
+      ids[structure.id] = {}
     } else { // structure is CourseNavigationChapter
       for (const chapter in structure) {
-        console.log('chapter', chapter)
-        traverse(structure[chapter], currentPath + '/' + chapter)
+        traverse(structure[chapter])
       }
     }
   }
-  traverse(courseNav.structure, '')
-  return routes
-}
-
-/**
- * @description generates follow
- * @param follow
- * @param currentRoute
- */
-export const getContentRoute = (follow: number | string, currentRoute: string): string => {
-  if (typeof follow === 'number') { // follow is number => step TODO: remove when old course structure is removed
-    const path = currentRoute.split('/') // split path into array
-    if (isNaN(parseInt(path[-1]))) { // if last element is not a number, it is the beginning of a chapter
-      return follow === 0 ? currentRoute : currentRoute + '/' + follow // 0 is beginning of chapter, otherwise add number
-    } else { // last element is a number
-      return follow === 0 ? currentRoute : path.slice(0, -1).join('/') + '/' + follow
-    }
-  } else { // follow is string
-    return follow // TODO  do other cases: string (slug or id)
-  }
+  traverse(courseChapters)
+  const routes = getPaths(courseChapters, 0)
+  return [ids, routes]
 }

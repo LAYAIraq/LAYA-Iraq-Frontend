@@ -1,8 +1,7 @@
 import courseContent from '@/store/modules/course-content'
 import SampleCourse from '../../mocks/sample-course-short.json'
 import SampleCourseChapters from '../../mocks/sample-course-chapters.json'
-import SampleCourseChaptersContent from '../../mocks/sample-course-chapters-content.json'
-import axios from 'axios'
+// import SampleCourseChaptersContent from '../../mocks/sample-course-chapters-content.json'
 import 'regenerator-runtime/runtime'
 
 describe('store module course-content mutations', () => {
@@ -17,7 +16,9 @@ describe('store module course-content mutations', () => {
         start: null,
         structure: []
       },
-      courseRoutes: []
+      courseChapters: {},
+      courseRoutes: [],
+      courseStart: ''
     }
   })
 
@@ -35,8 +36,8 @@ describe('store module course-content mutations', () => {
     })
 
     it('recreates the content array in courseNav', () => {
-      expect(state.courseNav.structure.length).toBe(SampleCourse.content.length)
-      state.courseNav.structure.forEach((item, index) => { // check that the courseNav.structure array is in the same order as the course content
+      expect(state.courseChapters.length).toBe(SampleCourse.content.length)
+      state.courseChapters.forEach((item, index) => { // check that the courseNav.structure array is in the same order as the course content
         expect(state.courseContent[item.id]).toStrictEqual(
           expect.objectContaining(Course.content[index].input)
         )
@@ -44,7 +45,7 @@ describe('store module course-content mutations', () => {
     })
 
     it('sets the start property in courseNav', () => {
-      expect(state.courseContent[state.courseNav.start]).toStrictEqual(
+      expect(state.courseContent[state.courseStart]).toStrictEqual(
         expect.objectContaining(SampleCourse.content[0].input)
       )
     })
@@ -56,24 +57,21 @@ describe('store module course-content mutations', () => {
     })
   })
 
-  describe('parseCourseNav', () => {
-    jest.spyOn(axios, 'get').mockImplementation((url: string) => {
-      if (/course-content\/[a-z0-9-]+/.test(url)) {
-        const id = url.split('/').pop()
-        return Promise.resolve({ data: SampleCourseChaptersContent[id] })
-      } else {
-        return Promise.reject(new Error('not found'))
-      }
-    })
-
+  describe('courseStructureDestructure', () => {
     beforeAll(() => {
-      state.courseNav = {}
-      state.courseContent = {}
-      mutations.parseChapters(state, SampleCourseChapters)
+      state.courseChapters = {}
+      mutations.courseStructureDestructure(state, SampleCourseChapters)
     })
-
     it('creates an entry in courseContent for each course block', () => {
       expect(Object.keys(state.courseContent).length).toBe(5)
+    })
+
+    it('sets the start property', () => {
+      expect(state.courseStart).toBe('e1ns')
+    })
+
+    it('copies the chapters in store', () => {
+      expect(state.courseChapters).toStrictEqual(SampleCourseChapters.chapters)
     })
   })
 })
