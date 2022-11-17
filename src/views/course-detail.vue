@@ -217,9 +217,9 @@ export default {
   },
 
   mounted () {
-    if (!this.contentToDisplay && !this.$router.params.type) {
-      this.$forceUpdate()
-    }
+    // if (!this.contentToDisplay && !this.$router.params.type) {
+    //   this.$forceUpdate()
+    // }
   },
 
   beforeDestroy () {
@@ -262,6 +262,7 @@ export default {
      * @param contentBlock content block object
      */
     followContent (contentBlock) {
+      if (!this.contentToDisplay) return () => {}
       const follow = this.courseNav.structure
         .find((block) => block.id === contentBlock.id).follow // follow array in course nav structure
       if (!follow) return () => {} // no follow set

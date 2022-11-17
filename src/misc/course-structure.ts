@@ -144,21 +144,75 @@ export const breakSteps = (block: LegacyContentBlock): number[] | number => {
 
 /**
   * @description converts string to slug
-  * @author mathewbyrne
+  * @author mathewbyrne, edited by cmc
   * @see https://gist.github.com/mathewbyrne/1280286
+ *  @param text string to convert
  */
 export const slugify = (text: string): string => {
   return text.toString().toLowerCase()
     .replace(/\s+/g, '-') // Replace spaces with -
     .replace(/[^\w-]+/g, '') // Remove all non-word chars
+    .replace(/_/g, '-') // Replace _ with -
     .replace(/--+/g, '-') // Replace multiple - with single -
     .replace(/^-+/, '') // Trim - from start of text
     .replace(/-+$/, '') // Trim - from end of text
 }
 
 /**
- * @description traverse course nav object, return set of all slugs
- *  use for old course structure
+ * @description add start route to array of routes
+ * @param item course navigation item
+ * @param start start of course (id or index)
+ * @param routes array of routes
+ * @param idx index of item in array (for old course structure)
+ */
+const addStartRoute = (
+  item: CourseNavigationItem,
+  start: number | string,
+  routes: Array<any>,
+  idx?: number
+): void => {
+  if (
+    (typeof start === 'number' && idx === start) || // start element is given by number => index
+    (typeof start === 'string' && item.id === start) // start element is given by string => id
+  ) {
+    routes.push(['', item.id])
+  }
+}
+
+/**
+ * @description descent into course navigation structure and add routes to array
+ * @param structure - course navigation structure
+ * @param start - start of course navigation
+ * @param currentPath - current path in course navigation structure
+ * @param routes - array of routes
+ */
+const traverseNavStructure = (
+  structure: CourseNavigationStructure,
+  start: string | number,
+  currentPath: string,
+  routes: Array<[route: string, id: string]>
+) => {
+  if (structure instanceof Array) { // stucture is CourseNavigationItem[]
+    structure.forEach((item) => {
+      addStartRoute(item, start, routes, structure.indexOf(item))
+      routes.push([currentPath + '/' + item.slug, item.id]) // can have alternative path
+    })
+  } else if (Object.prototype.hasOwnProperty.call(structure, 'id')) { // structure is CourseNavigationItem
+    // @ts-ignore
+    addStartRoute(structure, start, routes)
+    // @ts-ignore
+    routes.push([currentPath + '/' + structure.slug, structure.id])
+  } else { // structure is CourseNavigationChapter
+    for (const chapter in structure) {
+      console.log('chapter', chapter)
+      traverseNavStructure(structure[chapter], start, currentPath + '/' + chapter, routes)
+    }
+  }
+}
+
+/**
+ * @description traverse course nav object, return set of all paths
+ *  use for old course structure TODO: remove when old course structure is removed
  * @param courseNav course navigation object
  * @param start course starting point (id or array index)
  * @returns list of tuples with route and id
@@ -167,66 +221,76 @@ export const getPaths =
   (courseNav: CourseNavigationStructure, start: number | string): [[route: string, id: string]] => {
   // @ts-ignore
     const routes: [[route: string, id: string]] = []
-    const addStartRoute = (item: CourseNavigationItem, start: number | string, idx?: number): void => {
-      if (
-        (typeof start === 'number' && idx === start) || // start element is given by number => index
-        (typeof start === 'string' && item.slug === start) // start element is given by string => id
-      ) {
-        routes.push(['', item.id])
-      } else {
-        console.warn('start property does not match any slug')
-      }
-    }
-    const traverse = (structure: CourseNavigationStructure, currentPath: string) => {
-      if (structure instanceof Array) { // stucture is CourseNavigationItem[]
-        structure.forEach((item) => {
-          addStartRoute(item, start, structure.indexOf(item))
-          routes.push([currentPath + '/' + item.slug, item.id]) // can have alternative path
-        })
-      } else if (Object.prototype.hasOwnProperty.call(structure, 'id')) { // structure is CourseNavigationItem
-      // @ts-ignore
-        addStartRoute(structure, start)
-        // @ts-ignore
-        routes.push([currentPath + '/' + structure.slug, structure.id])
-      } else { // structure is CourseNavigationChapter
-        for (const chapter in structure) {
-          console.log('chapter', chapter)
-          traverse(structure[chapter], currentPath + '/' + chapter)
-        }
-      }
-    }
-    traverse(courseNav, '')
+    traverseNavStructure(courseNav, start, '', routes)
     return routes
   }
 
 /**
+ * @description traverse course structure object, add content ids to object
+ * @param structure course structure object
+ * @param ids object containing ids of content blocks
+ */
+const traverseCourseStructure = (structure: CourseNavigationStructure, ids: any) => {
+  if (structure instanceof Array) { // stucture is CourseNavigationItem[]
+    structure.forEach((item) => {
+      ids[item.id] = {}
+    })
+  } else if (Object.prototype.hasOwnProperty.call(structure, 'id')) { // structure is CourseNavigationItem
+    // @ts-ignore
+    ids[structure.id] = {}
+  } else { // structure is CourseNavigationChapter
+    for (const chapter in structure) {
+      traverseCourseStructure(structure[chapter], ids)
+    }
+  }
+}
+
+/**
+ * @description find chapters with only one item and remove slug
+ * @param routes list of routes
+ */
+const subChapterSlugTrim = (routes:
+  Array<[route: string, id: string]>
+): void => {
+  routes.forEach((route) => {
+    const pathList = route[0].split('/') // split path into list
+    if (pathList.length >= 2) { // more than one member => subchapters
+      console.log('subchapter', pathList.slice(-1).join('/'))
+      const subChapter = routes.find(
+        e => e[0].includes(pathList.slice(-1).join('/'))
+      )// find all subchapters i.e. all paths with same prefix
+      console.log('subchapter has route', subChapter)
+      // @ts-ignore
+      if (subChapter.length === 1) { // only one subchapter => remove title from path
+        console.log('replacing', route[0], 'with', pathList.slice(-1).join('/'))
+        route[0] = route[0].split('/').slice(-1).join('/')
+      }
+    }
+  })
+}
+
+/**
  * @description traverse course nav object, return object of all ids
  * @param courseChapters course structure object
+ * @param start course starting point (id)
+ * @param subChapterSlug course property (trim subchapter slug when only one subchapter)
  * @returns [courseContent, courseRoutes] - courseContent: object with ids as
  *  keys, courseRoutes: list of tuples [route, id]
  */
-export const traverseCourseChapters = (courseChapters: CourseNavigationStructure):
+export const descentCourseChapters = (
+  courseChapters: CourseNavigationStructure,
+  start: string,
+  subChapterSlug?: boolean
+):
   [
     { [id: string]: {} },
     [[route: string, id: string]]
   ] => {
   const ids: { [id: string]: {} } = {}
-  // const routes: [[route: string, id: string]] = []
-  const traverse = (structure: CourseNavigationStructure) => {
-    if (structure instanceof Array) { // stucture is CourseNavigationItem[]
-      structure.forEach((item) => {
-        ids[item.id] = {}
-      })
-    } else if (Object.prototype.hasOwnProperty.call(structure, 'id')) { // structure is CourseNavigationItem
-      // @ts-ignore
-      ids[structure.id] = {}
-    } else { // structure is CourseNavigationChapter
-      for (const chapter in structure) {
-        traverse(structure[chapter])
-      }
-    }
+  traverseCourseStructure(courseChapters, ids)
+  const routes = getPaths(courseChapters, start)
+  if (subChapterSlug) {
+    subChapterSlugTrim(routes)
   }
-  traverse(courseChapters)
-  const routes = getPaths(courseChapters, 0)
   return [ids, routes]
 }

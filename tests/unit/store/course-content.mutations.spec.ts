@@ -1,31 +1,27 @@
 import courseContent from '@/store/modules/course-content'
 import SampleCourse from '../../mocks/sample-course-short.json'
 import SampleCourseChapters from '../../mocks/sample-course-chapters.json'
-// import SampleCourseChaptersContent from '../../mocks/sample-course-chapters-content.json'
-import 'regenerator-runtime/runtime'
 
 describe('store module course-content mutations', () => {
   let state
+  const emptyState = {
+    courseContent: {},
+    courseIds: {},
+    courseNav: {
+      start: null,
+      structure: []
+    },
+    courseChapters: {},
+    courseRoutes: [],
+    courseStart: ''
+  }
   const mutations = courseContent.mutations
   const Course = { ...SampleCourse, properties: {}, lastChanged: Date.now() }
-  beforeAll(() => {
-    state = {
-      courseContent: {},
-      courseIds: {},
-      courseNav: {
-        start: null,
-        structure: []
-      },
-      courseChapters: {},
-      courseRoutes: [],
-      courseStart: ''
-    }
-  })
 
   describe('setCourseContentAndNav', () => {
     beforeAll(() => {
+      state = emptyState
       mutations.setCourseContentAndNav(state, Course)
-      console.log(state.courseContent)
     })
     it('creates an entry in courseContent for each course block', () => {
       expect(Object.keys(state.courseContent).length).toBe(SampleCourse.content.length)
@@ -55,14 +51,59 @@ describe('store module course-content mutations', () => {
         expect(item.slug).toBeTruthy()
       })
     })
+
+    it('saves a follow property for each course block', () => {
+      state.courseNav.structure.forEach((item: any) => {
+        expect(item.follow).toBeTruthy()
+      })
+    })
+
+    it('creates a courseRoutes array', () => {
+      expect(state.courseRoutes.length).toBeGreaterThan(0)
+    })
+  })
+
+  describe('courseContentSet', () => {
+    beforeAll(() => {
+      state = emptyState
+    })
+
+    it('adds a new block to courseContent', () => {
+      const block = {
+        id: 'test',
+        title: {
+          text: 'Test'
+        },
+        name: 'some-component'
+      }
+      mutations.courseContentSet(state, block)
+      expect(state.courseContent.test).toStrictEqual(block)
+    })
+
+    it('updates an existing block in courseContent', () => { // only run in suite
+      expect(state.courseContent.test.title.text).toBe('Test') // will fail here if run alone
+      const block = {
+        id: 'test',
+        title: {
+          text: 'Updated Test Title'
+        },
+        name: 'different-component'
+      }
+      mutations.courseContentSet(state, block)
+      expect(state.courseContent.test).toStrictEqual(block)
+    })
+  })
+
+  describe.skip('courseContentRemove', () => {
+    // skipped because it would only test stripKey function in misc.js
   })
 
   describe('courseStructureDestructure', () => {
     beforeAll(() => {
-      state.courseChapters = {}
+      state = emptyState
       mutations.courseStructureDestructure(state, SampleCourseChapters)
     })
-    it('creates an entry in courseContent for each course block', () => {
+    it.skip('creates an entry in courseContent for each course block', () => { // skipped b/c this is function in course-structure.ts
       expect(Object.keys(state.courseContent).length).toBe(5)
     })
 
@@ -72,6 +113,14 @@ describe('store module course-content mutations', () => {
 
     it('copies the chapters in store', () => {
       expect(state.courseChapters).toStrictEqual(SampleCourseChapters.chapters)
+    })
+
+    it('creates an entry in courseRoutes for each course block', () => {
+      expect(state.courseRoutes.length).toBeGreaterThanOrEqual(5)
+    })
+
+    it.skip('sets start property in courseRoutes correctly', () => { // skipped b/c this is function in course-structure.ts
+      expect(state.courseRoutes).toContainEqual(['', 'e1ns'])
     })
   })
 })

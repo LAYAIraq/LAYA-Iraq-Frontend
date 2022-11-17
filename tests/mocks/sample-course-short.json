@@ -132,5 +132,6 @@
   "locked": false,
   "name": "Testkurs",
   "courseId": "t3stkur5",
-  "storageId": "st0r31d"
+  "storageId": "st0r31d",
+  "properties": {}
 }

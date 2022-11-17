@@ -15,9 +15,9 @@ import {
   LegacyContentInput,
   LegacyCourse,
   breakSteps,
+  descentCourseChapters,
   getPaths,
-  slugify,
-  traverseCourseChapters
+  slugify
 } from '@/misc/course-structure'
 import { stripKey } from '@/misc/utils.js'
 import { v4 as uuidv4 } from 'uuid'
@@ -85,7 +85,11 @@ export default {
       },
       course: Course
     ) {
-      [state.courseContent, state.courseRoutes] = traverseCourseChapters(course.chapters)
+      [state.courseContent, state.courseRoutes] = descentCourseChapters(
+        course.chapters,
+        course.start,
+        course.properties ? course.properties.showSingleSubChapterTitleSlug : null
+      )
       state.courseChapters = course.chapters
       state.courseStart = course.start
     },
@@ -144,7 +148,7 @@ export default {
       return new Promise((resolve, reject) => {
         http.get(`course-content/${contentId}`)
           .then((response: AxiosResponse<ContentBlock>) => {
-            commit('setCourseContent', response.data)
+            commit('courseContentSet', response.data)
             resolve(response)
           })
           .catch((error) => {
@@ -160,17 +164,20 @@ export default {
      * @param block - block to update
      */
     courseContentPersist ({ commit }, verb: string, block: ContentBlock) {
+      if (verb === 'get') {
+        return Promise.reject(new Error('Cannot use GET verb for course content persist'))
+      }
       commit('setBusy', true)
       return new Promise((resolve, reject) => {
         http[verb](`course-content/${block.id}`, block)
-          .then((response: AxiosResponse<ContentBlock>) => {
+          .finally(() => {
+            commit('setBusy', false)
+          })
+          .then((response: any) => {
             resolve(response)
           })
           .catch((error) => {
             reject(error)
-          })
-          .finally(() => {
-            commit('setBusy', false)
           })
       })
     },

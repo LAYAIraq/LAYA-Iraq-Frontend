@@ -1,5 +1,6 @@
 {
   "e1ns": {
+    "id": "e1ns",
     "name": "laya-dialog",
     "bg": "",
     "question": {
@@ -26,6 +27,7 @@
     }
   },
   "zw31": {
+    "id": "zw31",
     "name": "laya-plyr",
     "src": "https://vimeo.com/27244727",
     "title": {
@@ -35,6 +37,7 @@
     }
   },
   "dr31": {
+    "id": "dr31",
     "name": "laya-wysiwyg",
     "title": {
       "text": "WYSIWYG",
@@ -50,6 +53,7 @@
     }
   },
   "v13r": {
+    "id": "v13r",
     "maxTries": "1",
     "multiple": false,
     "options": [
@@ -76,6 +80,7 @@
     "name": "laya-scmc"
   },
   "fu3nf": {
+    "id": "fu3nf",
     "categories": [
       {
         "text": "Kategorie 1",

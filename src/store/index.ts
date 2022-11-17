@@ -32,6 +32,7 @@ if (debug) console.log('vuex in debug mode')
 export default new Vuex.Store({
   modules: {
     auth,
+    // @ts-ignore
     courseContent,
     edit,
     editor,
