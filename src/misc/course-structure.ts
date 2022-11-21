@@ -53,7 +53,7 @@ export interface LegacyCourse {
 /**
  * @description following content is marked by string (id) or array of strings (ids)
  */
-type FollowingContent = string | string[]
+type FollowingContent = string | string[] | number | number[]
 
 /**
  * @description Course navigation item has id and slug with optional follow
@@ -212,7 +212,6 @@ const traverseNavStructure = (
 
 /**
  * @description traverse course nav object, return set of all paths
- *  use for old course structure TODO: remove when old course structure is removed
  * @param courseNav course navigation object
  * @param start course starting point (id or array index)
  * @returns list of tuples with route and id

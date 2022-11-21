@@ -1,6 +1,14 @@
 import SampleCourse from '../../mocks/sample-course-short.json'
 import SampleCourseChapters from '../../mocks/sample-course-chapters.json'
-import { LegacyCourse, Course, breakSteps, LegacyContentBlock, slugify, getPaths } from '@/misc/course-structure'
+import {
+  LegacyCourse,
+  Course,
+  breakSteps,
+  LegacyContentBlock,
+  slugify,
+  getPaths,
+  descentCourseChapters
+} from '@/misc/course-structure'
 import { validateSlug } from '../../helpers/validations'
 
 describe('content-structure types', () => {
@@ -122,10 +130,29 @@ describe('content-structure methods', () => {
   })
   describe('getPaths', () => { // FIXME
     it('returns correct paths for old courses', () => {
-      // // const courseChapters = [{ id: 'ba3b89ef', slug: 'dialog-sample', follow: [1, 2] }, { id: 'c7c75ede', slug: 'video', follow: 2 }, { id: '562a0638', slug: 'wysiwyg', follow: 3 }, { id: 'a7bd9c9c', slug: 'multiple-choice-test', follow: 4 }, { id: 'd0b662f2', slug: 'drag-drop-sample', follow: -1 }]
-      // // const paths = getPaths(courseChapters, 0)
-      // expect(paths).toHaveLength(3)
-      // expect(paths).toEqual(['/', '/1', '/2'])
+      const courseChapters = [{ id: 'ba3b89ef', slug: 'dialog-sample', follow: [1, 2] }, {
+        id: 'c7c75ede',
+        slug: 'video',
+        follow: 2
+      }, { id: '562a0638', slug: 'wysiwyg', follow: 3 }, {
+        id: 'a7bd9c9c',
+        slug: 'multiple-choice-test',
+        follow: 4
+      }, { id: 'd0b662f2', slug: 'drag-drop-sample', follow: -1 }]
+      const paths = getPaths(courseChapters, 0)
+      expect(paths).toHaveLength(6)
+      expect(paths).toContainEqual(['', 'ba3b89ef'])
+      expect(paths).toContainEqual(['/video', 'c7c75ede'])
+    })
+  })
+  describe('descentCourseChapters', () => {
+    it('returns correct paths for new courses (no trimming)', () => {
+      const courseChapters = SampleCourseChapters.chapters
+      const [ids, paths] = descentCourseChapters(courseChapters, 'e1ns')
+      expect(Object.keys(ids).length).toBe(5)
+      expect(paths).toHaveLength(6)
+      expect(paths).toContainEqual(['', 'e1ns'])
+      expect(paths).toContainEqual(['/video/video', 'zw31'])
     })
   })
 })
