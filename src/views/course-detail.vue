@@ -156,10 +156,7 @@ export default {
       if (!this.coursePath) { // course path is not set --> first content in course
         return this.courseContent[this.courseNav.start]
       } else { // course path is set --> content with slug
-        const idx = parseInt(this.coursePath)
-        return isNaN(idx) // TODO: remove number check after migration to new course structure
-          ? this.courseContent[this.courseContentRouteIdMap[this.coursePath]] // path is no number -> route
-          : this.courseContent[this.courseContentIndexIdMap[this.coursePath]] // path is number -> index
+        return this.courseContent[this.courseContentRouteIdMap[this.coursePath]] // path is no number -> route
       }
     },
 

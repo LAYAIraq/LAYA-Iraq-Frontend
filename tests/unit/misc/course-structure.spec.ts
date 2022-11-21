@@ -142,7 +142,7 @@ describe('content-structure methods', () => {
       const paths = getPaths(courseChapters, 0)
       expect(paths).toHaveLength(6)
       expect(paths).toContainEqual(['', 'ba3b89ef'])
-      expect(paths).toContainEqual(['/video', 'c7c75ede'])
+      expect(paths).toContainEqual(['video', 'c7c75ede'])
     })
   })
   describe('descentCourseChapters', () => {
@@ -152,7 +152,7 @@ describe('content-structure methods', () => {
       expect(Object.keys(ids).length).toBe(5)
       expect(paths).toHaveLength(6)
       expect(paths).toContainEqual(['', 'e1ns'])
-      expect(paths).toContainEqual(['/video/video', 'zw31'])
+      expect(paths).toContainEqual(['video/video', 'zw31'])
     })
   })
 })

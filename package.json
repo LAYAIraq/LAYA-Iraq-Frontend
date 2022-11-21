@@ -18,7 +18,8 @@
   },
   "pre-commit": [
     "lint",
-    "lint:tests"
+    "lint:tests",
+    "test:unit"
   ],
   "dependencies": {
     "axios": "^0.27.2",

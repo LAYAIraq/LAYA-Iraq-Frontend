@@ -52,10 +52,16 @@ export default {
       return map
     },
     courseContentIndexIdMap: (state: { courseIds: { [id: string]: number } }) => state.courseIds,
-    courseContentRouteIdMap: (state: { courseRoutes: any }) => {
+    courseContentRouteIdMap: (state: { courseRoutes: any, courseStart: string }) => {
       const map = {}
       for (const [route, id] of state.courseRoutes) {
-        map[route.substring(1)] = id
+        if (id === state.courseStart) {
+          if (route === '') { // only add start route to map
+            map[route] = id
+          }
+        } else {
+          map[route] = id
+        }
       }
       return map
     },

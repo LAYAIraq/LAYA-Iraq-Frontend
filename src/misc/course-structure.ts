@@ -221,6 +221,11 @@ export const getPaths =
   // @ts-ignore
     const routes: [[route: string, id: string]] = []
     traverseNavStructure(courseNav, start, '', routes)
+    for (const route of routes) {
+      if (route[0][0] === '/') {
+        route[0] = route[0].substring(1)
+      } // remove leading slash
+    }
     return routes
   }
 
