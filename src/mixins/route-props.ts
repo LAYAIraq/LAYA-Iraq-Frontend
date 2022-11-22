@@ -5,6 +5,7 @@
  * Date: February 8, 2022
  * Dependencies: none
  */
+import { mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -37,6 +38,12 @@ export default {
       default () {
         return ''
       }
+    }
+  },
+  computed: {
+    ...mapGetters(['courseContentPathId']),
+    pathId () {
+      return this.courseContentPathId(this.coursePath)
     }
   }
 }

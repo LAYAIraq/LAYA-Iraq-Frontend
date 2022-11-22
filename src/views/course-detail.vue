@@ -57,7 +57,7 @@ Dependencies:
     <courseEdit
       v-if="isCourseAuthor && content"
       :name="name"
-      :step="step"
+      :course-path="coursePath"
     ></courseEdit>
   </div>
 </template>

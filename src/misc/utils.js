@@ -61,4 +61,6 @@ export default {
  * @param obj - object containing `key`
  * @returns object without `key`
  */
-export const stripKey = (key, obj) => ((({ key, ...o }) => o)(obj))
+export const stripKey = (key, obj) => {
+  return (({ [key]: any, ...o }) => o)(obj)
+}

@@ -94,8 +94,21 @@ describe('store module course-content mutations', () => {
     })
   })
 
-  describe.skip('courseContentRemove', () => {
-    // skipped because it would only test stripKey function in misc.js
+  describe('courseContentRemove', () => {
+    beforeAll(() => {
+      state = {
+        courseContent: {
+          test: {
+            id: 'test'
+          }
+        }
+      }
+    })
+
+    it('removes a block from courseContent', () => {
+      mutations.courseContentRemove(state, 'test')
+      expect(state.courseContent.test).toBeUndefined()
+    })
   })
 
   describe('courseStructureDestructure', () => {
@@ -121,6 +134,19 @@ describe('store module course-content mutations', () => {
 
     it.skip('sets start property in courseRoutes correctly', () => { // skipped b/c this is function in course-structure.ts
       expect(state.courseRoutes).toContainEqual(['', 'e1ns'])
+    })
+  })
+
+  describe('courseContentRouteId', () => {
+    const getters = courseContent.getters
+    beforeAll(() => {
+      state = emptyState
+      mutations.courseStructureDestructure(state, SampleCourseChapters)
+    })
+
+    it('returns the id of the block with the given route', () => {
+      expect(getters.courseContentPathId(state)('')).toBe('e1ns')
+      expect(getters.courseContentPathId(state)('video/video')).toBe('zw31')
     })
   })
 })

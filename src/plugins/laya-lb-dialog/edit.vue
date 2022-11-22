@@ -237,7 +237,7 @@ Dependencies:
 </template>
 
 <script>
-import { locale, tooltipIcon } from '@/mixins'
+import { locale, routeProps, tooltipIcon } from '@/mixins'
 import { mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -246,7 +246,8 @@ export default {
 
   mixins: [
     locale,
-    tooltipIcon
+    tooltipIcon,
+    routeProps
   ],
 
   data () {
@@ -259,18 +260,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['content']),
-
-    /**
-     * step: return the step of the content block
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 16, 2021
-     */
-    step () {
-      return this.$route.params.step
-    }
+    ...mapGetters(['courseContent'])
   },
 
   created () {
@@ -313,9 +303,8 @@ export default {
      * Last Updated: March 19, 2021
      */
     fetchData () {
-      const idx = this.$route.params.step - 1 // comply with array indexing in store
       // create deep copy of store object to manipulate in vue instance
-      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
+      const preData = JSON.parse(JSON.stringify(this.courseContent[this.pathId]))
       this.bg = preData.bg
       this.question = preData.question
       this.answers = preData.answers

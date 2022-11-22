@@ -172,12 +172,14 @@ export default {
       })
       const newName = this.rename.trim()
       this.oldName = this.course.name
-      const step = this.$route.params.step
       this.$store.commit('renameCourse', newName)
       const renamed = this.$store.dispatch('updateRenamedCourse')
 
       renamed.then(() => {
-        this.$router.replace(`/courses/${newName}/${step}`)
+        this.$router.replace({
+          name: 'course-detail-view',
+          params: { name: newName }
+        })
         this.$emit('renamed')
       })
         .catch(err => {

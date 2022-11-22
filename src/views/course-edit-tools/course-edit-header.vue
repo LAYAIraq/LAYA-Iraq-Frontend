@@ -18,7 +18,13 @@ Dependencies:
           size="sm"
           :class="langIsAr? 'float-right' : 'float-left'"
           active-class="active"
-          :to="{name: 'course-detail-view', params: {name, coursePath}}"
+          :to="{
+            name: 'course-detail-view',
+            params: {
+              name,
+              coursePath: coursePath === '' ? undefined : coursePath
+            }
+          }"
           exact
           @click.prevent="$emit('save')"
         >

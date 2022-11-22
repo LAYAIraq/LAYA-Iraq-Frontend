@@ -51,7 +51,7 @@ Dependencies:
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import { locale, routeProps } from '@/mixins'
 
 export default {
@@ -69,8 +69,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['profileLang', 'content']),
-    ...mapState(['edit']),
+    ...mapGetters(['courseContent']),
 
     /**
      * contentToDisplay: return current content block
@@ -80,7 +79,7 @@ export default {
      * Last Updated: October 27, 2020
      */
     contentToDisplay () {
-      return this.content[this.step - 1]
+      return this.courseContent[this.pathId]
     },
 
     /**
@@ -94,13 +93,12 @@ export default {
     plugins () {
       const la = this.$laya.la
       const lb = this.$laya.lb
-      const lalb = [
-        {
-          value: null,
-          text: this.y18n('type.changeTypeText'),
-          disabled: true
-        }
-      ]
+      const lalb = []
+      lalb.push({
+        value: null,
+        text: this.y18n('type.changeTypeText'),
+        disabled: true
+      })
 
       // add lb elements by name and id
       for (const id in lb) {
@@ -124,7 +122,7 @@ export default {
 
     /**
      * Function changeContentType: change content type, remove all
-     *  input for old type
+     *
      *
      * Author: cmc
      *
@@ -133,17 +131,13 @@ export default {
     changeContentType () {
       if (!this.changetype) return
 
-      const step = this.step - 1
       const updatedStep = {
+        id: this.contentToDisplay.id,
         name: this.changetype,
-        input: null,
-        nextStep: null
+        title: this.contentToDisplay.title
       }
       // console.log(`Change type of step ${step} to ${updatedStep.name}`)
-      this.$store.commit('updateStep', {
-        step,
-        updatedStep
-      })
+      this.$store.commit('courseContentSet', updatedStep)
       this.$emit('changedType')
     }
   }

@@ -43,7 +43,7 @@ export default {
   ],
 
   computed: {
-    ...mapGetters(['content']),
+    ...mapGetters(['courseContent']),
 
     /**
      * contentToDisplay: return current content object
@@ -53,7 +53,7 @@ export default {
      * Last Updated: October 27, 2020
      */
     contentToDisplay () {
-      return this.content[this.step - 1]
+      return this.courseContent[this.pathId]
     }
   }
 

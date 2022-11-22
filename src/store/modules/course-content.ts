@@ -71,6 +71,19 @@ export default {
         map[route.split('/').pop()] = id
       }
       return map
+    },
+    /**
+     * @description returns the id of a course block by its path
+     * @param state the state of the store
+     * @param path the path of the course block
+     * @returns the id of the course block
+     */
+    courseContentPathId: (state: { courseRoutes: [[route: string, id: string]] }) => (path: string): string => {
+      console.log('finding id for path', path)
+      if (path === undefined) {
+        path = ''
+      }
+      return state.courseRoutes.find(([route, _]) => route === path)[1]
     }
   },
 
@@ -100,12 +113,17 @@ export default {
       state.courseStart = course.start
     },
 
+    courseContentAdd (state: { courseContent: { [id: string]: ContentBlock } }, content: any) {
+      const newId = uuidv4().split('-')[0]
+      state.courseContent[newId] = { ...content, id: newId }
+    },
+
     courseContentSet (state: { courseContent: { [id: string]: ContentBlock } }, block: ContentBlock) {
       state.courseContent[block.id] = block
     },
 
-    courseContentRemove (state: { courseContent: object }, id: string) {
-      state.courseContent = stripKey(id, state.courseContent)
+    courseContentRemove (state: { courseContent: any }, id: string) {
+      state.courseContent = stripKey(state.courseContent, id)
     },
 
     /**
