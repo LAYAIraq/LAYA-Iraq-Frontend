@@ -62,7 +62,7 @@ export default {
   ],
 
   computed: {
-    ...mapGetters(['content']),
+    ...mapGetters(['courseContent']),
 
     /**
      * Function contentToDisplay: return current content block
@@ -72,7 +72,7 @@ export default {
      * Last Updated: March 24, 2021
      */
     contentToDisplay () {
-      return this.content[this.step - 1]
+      return this.courseContent[this.pathId]
     }
   },
 
@@ -86,7 +86,7 @@ export default {
      * Last Updated: October 27, 2020
      */
     delContent () {
-      this.$store.commit('delContent', this.step - 1)
+      this.$store.commit('courseContentRemove', this.pathId)
       this.$store.dispatch('storeCourse')
     }
 
