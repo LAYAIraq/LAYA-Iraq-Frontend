@@ -10,7 +10,7 @@ Dependencies:
 
 <template>
   <div
-    v-if="content.length > 0"
+    v-if="Object.keys(courseContent).length > 0"
     class="row mb-2"
   >
     <div class="col">
@@ -32,7 +32,7 @@ Dependencies:
       >
         <i class="fas fa-exclamation-triangle"></i> {{ y18n('nav.editNavIncomplete') }}
       </span>
-      {{ y18n('nav.editNavTip').replace('{steps}', content.length ) }}
+      {{ y18n('nav.editNavTip').replace('{steps}', Object.keys(courseContent).length ) }}
     </div>
   </div>
 </template>
@@ -60,7 +60,7 @@ export default {
      *
      * Last Updated: October 27, 2020
      */
-    courseNavIncomplete () {
+    courseNavIncomplete () { // TODO update with new courseContent structure
       return this.content.reduce((all, c) => (!c.nextStep || all), false)
     }
   }

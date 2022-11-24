@@ -274,7 +274,7 @@ const subChapterSlugTrim = (routes:
 }
 
 /**
- * @description traverse course nav object, return object of all ids
+ * @description traverse course nav object, return tuple: object with ids of content blocks and list of routes
  * @param courseChapters course structure object
  * @param start course starting point (id)
  * @param subChapterSlug course property (trim subchapter slug when only one subchapter)
@@ -297,4 +297,28 @@ export const descentCourseChapters = (
     subChapterSlugTrim(routes)
   }
   return [ids, routes]
+}
+
+const hasFollowUp = (item: CourseNavigationItem): boolean => {
+  return item.follow !== undefined && item.follow !== null
+}
+
+export const courseNavFilledOut = (courseNav: CourseNavigationStructure): boolean => { // TODO finish
+  if (courseNav instanceof Array) {
+    let filledOut = true
+    courseNav.forEach((item) => {
+      if (courseNav.indexOf(item) === courseNav.length - 1) {
+        filledOut = hasFollowUp(item)
+      }
+    })
+  } else if (Object.prototype.hasOwnProperty.call(courseNav, 'id')) {
+    return courseNav.follow !== undefined && courseNav.follow !== null
+  } else {
+    for (const chapter in courseNav) {
+      if (courseNavFilledOut(courseNav[chapter])) {
+        return true
+      }
+    }
+  }
+  return false
 }
