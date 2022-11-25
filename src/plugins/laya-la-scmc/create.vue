@@ -53,6 +53,7 @@ Dependencies: @/mixins/locale.vue
               name="single"
               type="radio"
               :value="single"
+              @click="populateData"
             >
             <label
               for="scmc-sc"
@@ -68,7 +69,8 @@ Dependencies: @/mixins/locale.vue
               class="form-check-input"
               type="radio"
               name="multiple"
-              :value="multiple"
+              :value="multi"
+              @click="populateData"
             >
             <label
               for="scmc-mc"
@@ -85,6 +87,7 @@ Dependencies: @/mixins/locale.vue
               type="radio"
               name="tf"
               :value="tf"
+              @click="populateData"
             >
             <label
               for="scmc-tf"
@@ -335,8 +338,15 @@ export default {
       solutions: [],
       maxTries: 1,
       single: 0,
-      multiple: 1,
-      tf: 2
+      multi: 1,
+      tf: 2,
+      multiple: 0
+    }
+  },
+
+  watch: {
+    multiple: function (val) {
+      this.populateData()
     }
   },
 
@@ -353,7 +363,8 @@ export default {
      * Last Updated: October 17, 2022 by nv
      */
     populateData () {
-      if (this.value === this.tf) {
+      if (this.multiple === this.tf) {
+        this.options = []
         this.options.push({
           text: this.y18n('layaLaScmc.edit.true'),
           flagged: false,
@@ -364,7 +375,8 @@ export default {
           flagged: false,
           id: uuidv4()
         })
-      } else {
+      } if (this.multiple === this.single || this.multiple === this.multi) {
+        this.options = []
         this.options.push({
           text: this.y18n('layaLaScmc.edit.sampleOption'),
           flagged: false,

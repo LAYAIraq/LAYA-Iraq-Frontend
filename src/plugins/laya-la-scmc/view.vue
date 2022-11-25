@@ -60,7 +60,7 @@ vuex,
       >
         <div>
           <input
-            v-if="multiple"
+            v-if="multi"
             :id="'mchoice-in-'+i"
             v-model="answers"
             class="position-absolute mt-2"

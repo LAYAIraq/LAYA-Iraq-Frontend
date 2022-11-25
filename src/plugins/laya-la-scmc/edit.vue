@@ -53,7 +53,7 @@ Dependencies:
               v-model="multiple"
               class="form-check-input"
               type="radio"
-              :value="false"
+              :value="single"
             >
             <label
               for="scmc-sc"
@@ -69,7 +69,7 @@ Dependencies:
               class="form-check-input"
               type="radio"
               name="multiple"
-              :value="true"
+              :value="multi"
             >
             <label
               for="scmc-mc"
@@ -85,7 +85,7 @@ Dependencies:
               class="form-check-input"
               type="radio"
               name="tf"
-              :value="true"
+              :value="tf"
             >
             <label
               for="scmc-tf"
@@ -336,8 +336,10 @@ export default {
       options: [],
       solutions: [],
       maxTries: 1,
-      multiple: false,
-      tf: false
+      single: 0,
+      multi: 1,
+      tf: 2,
+      multiple: 0
     }
   },
 
