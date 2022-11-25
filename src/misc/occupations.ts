@@ -1,8 +1,8 @@
 /**
- * Filename: statusgroups.ts
- * Use: Define selectable statusgroups in profile
+ * Filename: occupations.ts
+ * Use: Define selectable occupations in profile
  * Creator: nv
- * Date: November 07, 2022
+ * Date: November 25, 2022
  * Dependencies: none
  */
 export default [

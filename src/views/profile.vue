@@ -53,12 +53,12 @@ Dependencies:
           </h2>
           <hr>
 
-          <!-- Name -->
+          <!-- Username -->
           <div class="form-group row">
             <label
               for="username"
               class="col-sm-3 col-form-label"
-            >{{ y18n('namePH') }}</label>
+            >{{ y18n('usernamePH') }}</label>
             <div class="col-sm-9">
               <input
                 id="username"
@@ -67,6 +67,42 @@ Dependencies:
                 class="form-control"
                 readonly
                 tabindex="-1"
+              >
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group row">
+            <label
+              for="email"
+              class="col-sm-3 col-form-label"
+            >{{ y18n('emailPH') }}</label>
+            <div class="col-sm-9">
+              <input
+                id="email"
+                v-model="profile.email"
+                type="text"
+                class="form-control"
+                readonly
+                tabindex="-1"
+              >
+            </div>
+          </div>
+
+          <!-- Full Name -->
+          <div class="form-group row">
+            <label
+              for="fullname"
+              class="col-sm-3 col-form-label"
+            >{{ y18n('namePH') }}</label>
+            <div class="col-sm-9">
+              <input
+                id="fullname"
+                v-model="fullName"
+                type="text"
+                class="form-control"
+                :placeholder="y18n('namePH')"
+                autocomplete="on"
               >
             </div>
           </div>
@@ -94,18 +130,18 @@ Dependencies:
             </div>
           </div>
 
-          <!-- Status Group -->
+          <!-- Occupation -->
           <div class="form-group row">
             <label
               for="statusgroup"
               class="col-sm-3 col-form-label"
-            >{{ y18n('statusgroupPH') }}</label>
+            >{{ y18n('occupationPH') }}</label>
             <div class="col-sm-9">
               <b-form-select
-                v-model="statusgroup"
+                v-model="occupation"
               >
                 <b-form-select-option
-                  v-for="(opt, i) in chooseStatusGroup"
+                  v-for="(opt, i) in chooseOccupation"
                   :key="i"
                   :value="opt.value"
                 >
@@ -117,49 +153,43 @@ Dependencies:
             </div>
           </div>
 
-          <!-- Email -->
-          <div class="form-group row">
-            <label
-              for="email"
-              class="col-sm-3 col-form-label"
-            >{{ y18n('emailPH') }}</label>
-            <div class="col-sm-9">
-              <input
-                id="email"
-                v-model="profile.email"
-                type="text"
-                class="form-control"
-                readonly
-                tabindex="-1"
-              >
-            </div>
-          </div>
-
           <hr>
-          <!-- Old Password -->
-          <div class="form-group row">
-            <label
-              for="oldPwd"
-              class="col-sm-3 col-form-label"
-            >{{ y18n('profile.oldPwd') }}</label>
-            <div class="col-sm-9">
-              <input
-                id="oldPwd"
-                v-model="oldPwd"
-                type="password"
-                class="form-control"
-                :placeholder="y18n('profile.oldPwd')"
-                autocomplete="on"
-              >
+          <b-modal
+            id="change-password-form"
+            :title="y18n('profile.password')"
+            header-bg-variant="info"
+            ok-variant="success"
+            :ok-title="y18n('profile.password.save')"
+            :cancel-title="y18n('cancel')"
+            centered
+            static
+            @ok="submit"
+          >
+            <!-- Old Password -->
+            <div class="form-group row">
+              <label
+                for="oldPwd"
+                class="col-sm-3 col-form-label"
+              >{{ y18n('profile.oldPwd') }}</label>
+              <div class="col-sm-9">
+                <input
+                  id="oldPwd"
+                  v-model="oldPwd"
+                  type="password"
+                  class="form-control"
+                  :placeholder="y18n('profile.oldPwd')"
+                  autocomplete="on"
+                >
+              </div>
             </div>
-          </div>
 
-          <PasswordInput
-            class="pwd-input"
-            :label-icons-only="false"
-            :label-width="3"
-            @compliantLength="newPwdOk"
-          ></PasswordInput>
+            <PasswordInput
+              class="pwd-input"
+              :label-icons-only="false"
+              :label-width="3"
+              @compliantLength="newPwdOk"
+            ></PasswordInput>
+          </b-modal>
           <hr>
 
           <!-- avatar upload TODO: FIX Cropper Problems
@@ -496,7 +526,7 @@ import api from '@/backend-url'
 import PasswordInput from '@/components/password-input.vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import institutions from '@/misc/institutions'
-import statusgroups from '@/misc/statusgroups'
+import occupations from '@/misc/occupations'
 import fontOptions from '@/misc/font-options'
 import fontSizeOptions from '@/misc/font-size-options'
 // import '@/styles/fonts.css'
@@ -522,13 +552,12 @@ export default {
       formMsg: '',
       busy: false,
       institution: '',
-      statusgroup: '',
+      occupation: '',
       prefs: {},
+      fullName: '',
       formInput: {
         applicationText: '',
-        areaOfExpertise: '',
-        fullName: '',
-        institution: ''
+        areaOfExpertise: ''
       },
       applicationEdited: -1, // increments once when data is loaded from store
       applicationNew: false
@@ -586,14 +615,14 @@ export default {
     },
 
     /**
-     * chooseStatusGroup(): add status group
+     * chooseOccupation(): add occupation
      *
      * Author: nv
      *
-     * Last Updated: November 07, 2022
+     * Last Updated: November 25, 2022
      */
-    chooseStatusGroup () {
-      return statusgroups
+    chooseOccupation () {
+      return occupations
     },
 
     /**
