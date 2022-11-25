@@ -166,98 +166,91 @@ Dependencies:
                 </h3>
                 <hr>
                 <div class="row">
+                  <!-- change email -->
                   <div class="column">
                     <b-button
                       id="password-button"
                       block
                       variant="secondary"
-                      @click="$bvModal.show('change-password-form')"
+                      @click="$bvModal.show('change-username-form')"
                     >
-                      {{ y18n('profile.changePassword') }}
+                      {{ y18n('profile.changeUsername') }}
                     </b-button>
                     <b-modal
-                      id="change-password-form"
-                      :title="y18n('profile.password')"
+                      id="change-username-form"
+                      :title="y18n('profile.changeUsername')"
                       header-bg-variant="info"
                       ok-variant="success"
-                      :ok-title="y18n('profile.password.save')"
+                      :ok-title="y18n('profile.username.save')"
                       :cancel-title="y18n('cancel')"
                       centered
                       static
                       @ok="submit"
                     >
-                      <!-- Old Password -->
+                      <!-- Old username -->
                       <div class="form-group row">
                         <label
                           for="oldPwd"
                           class="col-sm-3 col-form-label"
-                        >{{ y18n('profile.oldPwd') }}</label>
+                        >{{ y18n('profile.oldUsername') }}</label>
                         <div class="col-sm-9">
                           <input
                             id="oldPwd"
-                            v-model="oldPwd"
-                            type="password"
+                            v-model="oldUsername"
+                            type="username"
                             class="form-control"
-                            :placeholder="y18n('profile.oldPwd')"
+                            :placeholder="y18n('profile.oldUsername')"
                             autocomplete="on"
                           >
                         </div>
                       </div>
-
-                      <PasswordInput
-                        class="pwd-input"
-                        :label-icons-only="false"
-                        :label-width="3"
-                        @compliantLength="newPwdOk"
-                      ></PasswordInput>
+                      <!-- new username -->
                     </b-modal>
                   </div>
+
+                  <!-- change email -->
                   <div class="column">
                     <b-button
                       id="password-button"
                       block
                       variant="secondary"
-                      @click="$bvModal.show('change-password-form')"
+                      @click="$bvModal.show('change-email-form')"
                     >
-                      {{ y18n('profile.changePassword') }}
+                      {{ y18n('profile.changeEmail') }}
                     </b-button>
                     <b-modal
-                      id="change-password-form"
-                      :title="y18n('profile.password')"
+                      id="change-email-form"
+                      :title="y18n('profile.changeEmail')"
                       header-bg-variant="info"
                       ok-variant="success"
-                      :ok-title="y18n('profile.password.save')"
+                      :ok-title="y18n('profile.email.save')"
                       :cancel-title="y18n('cancel')"
                       centered
                       static
                       @ok="submit"
                     >
-                      <!-- Old Password -->
+                      <!-- Old email -->
                       <div class="form-group row">
                         <label
-                          for="oldPwd"
+                          for="oldEmail"
                           class="col-sm-3 col-form-label"
-                        >{{ y18n('profile.oldPwd') }}</label>
+                        >{{ y18n('profile.oldEmail') }}</label>
                         <div class="col-sm-9">
                           <input
-                            id="oldPwd"
-                            v-model="oldPwd"
-                            type="password"
+                            id="oldEmail"
+                            v-model="oldEmail"
+                            type="email"
                             class="form-control"
-                            :placeholder="y18n('profile.oldPwd')"
+                            :placeholder="y18n('profile.oldEmail')"
                             autocomplete="on"
                           >
                         </div>
                       </div>
-
-                      <PasswordInput
-                        class="pwd-input"
-                        :label-icons-only="false"
-                        :label-width="3"
-                        @compliantLength="newPwdOk"
-                      ></PasswordInput>
+                      <!-- new email -->
                     </b-modal>
                   </div>
+
+                  <!-- change password -->
                   <div class="column">
                     <b-button
                       id="password-button"
@@ -269,7 +262,7 @@ Dependencies:
                     </b-button>
                     <b-modal
                       id="change-password-form"
-                      :title="y18n('profile.password')"
+                      :title="y18n('profile.changePassword')"
                       header-bg-variant="info"
                       ok-variant="success"
                       :ok-title="y18n('profile.password.save')"
@@ -295,7 +288,7 @@ Dependencies:
                           >
                         </div>
                       </div>
-
+                      <!-- new password -->
                       <PasswordInput
                         class="pwd-input"
                         :label-icons-only="false"
