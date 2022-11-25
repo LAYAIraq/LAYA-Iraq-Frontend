@@ -124,7 +124,7 @@ export default {
     /**
      * Function printChoices: prints choices answers into PDF
      * Author: nv
-     * Last Updated: October 15, 2022 by nv
+     * Last Updated: November 25, 2022 by nv
      */
     printChoices (parameters) {
       const temp = []
@@ -144,7 +144,7 @@ export default {
     /**
      * Function printFreetext: prints freetext answers into PDF
      * Author: nv
-     * Last Updated: October 15, 2022 by nv
+     * Last Updated: November 25, 2022 by nv
      */
     printFreetext (parameters) {
       const temp = []
@@ -164,7 +164,7 @@ export default {
     /**
      * Function printRating: prints rating answers into PDF
      * Author: nv
-     * Last Updated: October 15, 2022 by nv
+     * Last Updated: November 25, 2022 by nv
      */
     printRating (parameters) {
       const temp = []
