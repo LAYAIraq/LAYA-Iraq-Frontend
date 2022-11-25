@@ -48,9 +48,9 @@ Dependencies:
           class="w-100"
           style="margin-top: 1rem"
         >
-          <h2 :class="langIsAr? 'text-right' : 'text-left'">
+          <h3 :class="langIsAr? 'text-right' : 'text-left'">
             {{ y18n('profile.title') }}
-          </h2>
+          </h3>
           <hr>
 
           <!-- Username -->
@@ -154,42 +154,160 @@ Dependencies:
           </div>
 
           <hr>
-          <b-modal
-            id="change-password-form"
-            :title="y18n('profile.password')"
-            header-bg-variant="info"
-            ok-variant="success"
-            :ok-title="y18n('profile.password.save')"
-            :cancel-title="y18n('cancel')"
-            centered
-            static
-            @ok="submit"
-          >
-            <!-- Old Password -->
-            <div class="form-group row">
-              <label
-                for="oldPwd"
-                class="col-sm-3 col-form-label"
-              >{{ y18n('profile.oldPwd') }}</label>
-              <div class="col-sm-9">
-                <input
-                  id="oldPwd"
-                  v-model="oldPwd"
-                  type="password"
-                  class="form-control"
-                  :placeholder="y18n('profile.oldPwd')"
-                  autocomplete="on"
-                >
-              </div>
-            </div>
 
-            <PasswordInput
-              class="pwd-input"
-              :label-icons-only="false"
-              :label-width="3"
-              @compliantLength="newPwdOk"
-            ></PasswordInput>
-          </b-modal>
+          <div class="container">
+            <div class="row">
+              <form
+                class="w-100"
+                style="margin-top: 1rem"
+              >
+                <h3 :class="langIsAr? 'text-right' : 'text-left'">
+                  {{ y18n('profile.change') }}
+                </h3>
+                <hr>
+                <div class="row">
+                  <div class="column">
+                    <b-button
+                      id="password-button"
+                      block
+                      variant="secondary"
+                      @click="$bvModal.show('change-password-form')"
+                    >
+                      {{ y18n('profile.changePassword') }}
+                    </b-button>
+                    <b-modal
+                      id="change-password-form"
+                      :title="y18n('profile.password')"
+                      header-bg-variant="info"
+                      ok-variant="success"
+                      :ok-title="y18n('profile.password.save')"
+                      :cancel-title="y18n('cancel')"
+                      centered
+                      static
+                      @ok="submit"
+                    >
+                      <!-- Old Password -->
+                      <div class="form-group row">
+                        <label
+                          for="oldPwd"
+                          class="col-sm-3 col-form-label"
+                        >{{ y18n('profile.oldPwd') }}</label>
+                        <div class="col-sm-9">
+                          <input
+                            id="oldPwd"
+                            v-model="oldPwd"
+                            type="password"
+                            class="form-control"
+                            :placeholder="y18n('profile.oldPwd')"
+                            autocomplete="on"
+                          >
+                        </div>
+                      </div>
+
+                      <PasswordInput
+                        class="pwd-input"
+                        :label-icons-only="false"
+                        :label-width="3"
+                        @compliantLength="newPwdOk"
+                      ></PasswordInput>
+                    </b-modal>
+                  </div>
+                  <div class="column">
+                    <b-button
+                      id="password-button"
+                      block
+                      variant="secondary"
+                      @click="$bvModal.show('change-password-form')"
+                    >
+                      {{ y18n('profile.changePassword') }}
+                    </b-button>
+                    <b-modal
+                      id="change-password-form"
+                      :title="y18n('profile.password')"
+                      header-bg-variant="info"
+                      ok-variant="success"
+                      :ok-title="y18n('profile.password.save')"
+                      :cancel-title="y18n('cancel')"
+                      centered
+                      static
+                      @ok="submit"
+                    >
+                      <!-- Old Password -->
+                      <div class="form-group row">
+                        <label
+                          for="oldPwd"
+                          class="col-sm-3 col-form-label"
+                        >{{ y18n('profile.oldPwd') }}</label>
+                        <div class="col-sm-9">
+                          <input
+                            id="oldPwd"
+                            v-model="oldPwd"
+                            type="password"
+                            class="form-control"
+                            :placeholder="y18n('profile.oldPwd')"
+                            autocomplete="on"
+                          >
+                        </div>
+                      </div>
+
+                      <PasswordInput
+                        class="pwd-input"
+                        :label-icons-only="false"
+                        :label-width="3"
+                        @compliantLength="newPwdOk"
+                      ></PasswordInput>
+                    </b-modal>
+                  </div>
+                  <div class="column">
+                    <b-button
+                      id="password-button"
+                      block
+                      variant="secondary"
+                      @click="$bvModal.show('change-password-form')"
+                    >
+                      {{ y18n('profile.changePassword') }}
+                    </b-button>
+                    <b-modal
+                      id="change-password-form"
+                      :title="y18n('profile.password')"
+                      header-bg-variant="info"
+                      ok-variant="success"
+                      :ok-title="y18n('profile.password.save')"
+                      :cancel-title="y18n('cancel')"
+                      centered
+                      static
+                      @ok="submit"
+                    >
+                      <!-- Old Password -->
+                      <div class="form-group row">
+                        <label
+                          for="oldPwd"
+                          class="col-sm-3 col-form-label"
+                        >{{ y18n('profile.oldPwd') }}</label>
+                        <div class="col-sm-9">
+                          <input
+                            id="oldPwd"
+                            v-model="oldPwd"
+                            type="password"
+                            class="form-control"
+                            :placeholder="y18n('profile.oldPwd')"
+                            autocomplete="on"
+                          >
+                        </div>
+                      </div>
+
+                      <PasswordInput
+                        class="pwd-input"
+                        :label-icons-only="false"
+                        :label-width="3"
+                        @compliantLength="newPwdOk"
+                      ></PasswordInput>
+                    </b-modal>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
           <hr>
 
           <!-- avatar upload TODO: FIX Cropper Problems
@@ -210,122 +328,134 @@ Dependencies:
           <hr>
           -->
 
-          <!-- Default Media Forms -->
-          <div class="form-group row">
-            <label class="col-sm-3 col-form-label">{{ y18n('profile.defmedia.label') }}</label>
-            <div class="col-sm-9 d-inline-flex justify-content-between align-items-center">
-              <!-- Text -->
-              <div class="checkbox-inline">
-                <label>
-                  <input
-                    v-model="prefs.media.text"
-                    type="checkbox"
-                  >
-                  {{ y18n('profile.defmedia.text') }}
-                </label>
-              </div>
+          <div class="container">
+            <div class="row">
+              <form
+                class="w-100"
+                style="margin-top: 1rem"
+              >
+                <h3 :class="langIsAr? 'text-right' : 'text-left'">
+                  {{ y18n('profile.accessibility') }}
+                </h3>
+                <hr>
+                <!-- Default Media Forms -->
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">{{ y18n('profile.defmedia.label') }}</label>
+                  <div class="col-sm-9 d-inline-flex justify-content-between align-items-center">
+                    <!-- Text -->
+                    <div class="checkbox-inline">
+                      <label>
+                        <input
+                          v-model="prefs.media.text"
+                          type="checkbox"
+                        >
+                        {{ y18n('profile.defmedia.text') }}
+                      </label>
+                    </div>
 
-              <!-- Simple -->
-              <div class="checkbox-inline">
-                <label>
-                  <input
-                    v-model="prefs.media.simple"
-                    type="checkbox"
-                  >
-                  {{ y18n('profile.defmedia.simple') }}
-                </label>
-              </div>
+                    <!-- Simple -->
+                    <div class="checkbox-inline">
+                      <label>
+                        <input
+                          v-model="prefs.media.simple"
+                          type="checkbox"
+                        >
+                        {{ y18n('profile.defmedia.simple') }}
+                      </label>
+                    </div>
 
-              <!-- Video -->
-              <div class="checkbox-inline">
-                <label>
-                  <input
-                    v-model="prefs.media.video"
-                    type="checkbox"
-                  >
-                  {{ y18n('profile.defmedia.video') }}
-                </label>
-              </div>
+                    <!-- Video -->
+                    <div class="checkbox-inline">
+                      <label>
+                        <input
+                          v-model="prefs.media.video"
+                          type="checkbox"
+                        >
+                        {{ y18n('profile.defmedia.video') }}
+                      </label>
+                    </div>
 
-              <!-- Audio -->
-              <div class="checkbox-inline">
-                <label>
-                  <input
-                    v-model="prefs.media.audio"
-                    type="checkbox"
-                  >
-                  {{ y18n('profile.defmedia.audio') }}
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <hr>
-          <!-- Font Options -->
-          <div class="form-group row">
-            <label class="col-sm-3 col-form-label">
-              {{ y18n('profile.fontOptions') }}
-            </label>
-            <div
-              class="col-sm-9 d-inline-flex justify-content-between align-items-center"
-            >
-              <div class="input-inline">
-                <label>
-                  {{ y18n('profile.font') }}
-                  <b-form-select
-                    v-model="prefs.font.chosen"
-                  >
-                    <b-form-select-option
-                      v-for="(opt, i) in introFontOptions"
-                      :key="i"
-                      :value="opt.value"
-                      :class="`laya-font-${opt.value}`"
-                    >
-                      <span :class="opt.value? `laya-font-${opt.value}`:''">
-                        {{ opt.text }}
-                      </span>
-                    </b-form-select-option>
-                  </b-form-select>
-                </label>
-              </div>
-              <!-- Font Size -->
-              <div>
-                <label>
-                  {{ y18n('profile.fontSize') }}
-                  <b-form-input
-                    v-model="chosenSize"
-                    type="range"
-                    min="0"
-                    :max="fontSizeOptions.length-1"
-                  ></b-form-input>
-                </label>
-                <div class="d-flex justify-content-between w-100">
-                  <div
-                    v-for="(opt, i) in fontSizeOptions"
-                    :key="`text-option-${i}`"
-                  >
-                    {{ opt }}
+                    <!-- Audio -->
+                    <div class="checkbox-inline">
+                      <label>
+                        <input
+                          v-model="prefs.media.audio"
+                          type="checkbox"
+                        >
+                        {{ y18n('profile.defmedia.audio') }}
+                      </label>
+                    </div>
                   </div>
                 </div>
-              </div>
+
+                <!-- Font Options -->
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">
+                    {{ y18n('profile.fontOptions') }}
+                  </label>
+                  <div
+                    class="col-sm-9 d-inline-flex justify-content-between align-items-center"
+                  >
+                    <div class="input-inline">
+                      <label>
+                        {{ y18n('profile.font') }}
+                        <b-form-select
+                          v-model="prefs.font.chosen"
+                        >
+                          <b-form-select-option
+                            v-for="(opt, i) in introFontOptions"
+                            :key="i"
+                            :value="opt.value"
+                            :class="`laya-font-${opt.value}`"
+                          >
+                            <span :class="opt.value? `laya-font-${opt.value}`:''">
+                              {{ opt.text }}
+                            </span>
+                          </b-form-select-option>
+                        </b-form-select>
+                      </label>
+                    </div>
+                    <!-- Font Size -->
+                    <div>
+                      <label>
+                        {{ y18n('profile.fontSize') }}
+                        <b-form-input
+                          v-model="chosenSize"
+                          type="range"
+                          min="0"
+                          :max="fontSizeOptions.length-1"
+                        ></b-form-input>
+                      </label>
+                      <div class="d-flex justify-content-between w-100">
+                        <div
+                          v-for="(opt, i) in fontSizeOptions"
+                          :key="`text-option-${i}`"
+                        >
+                          {{ opt }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Save Button -->
+                <div class="form-group">
+                  <button
+                    id="save-profile"
+                    type="submit"
+                    :disabled="busy || !passwordInputOk"
+                    class="btn btn-block btn-lg btn-outline-dark"
+                    style="border-width: 2px"
+                    @click.prevent="submit"
+                  >
+                    <i class="fas fa-check"></i>
+                    {{ y18n('save') }}
+                  </button>
+                </div>
+                <strong class="form-text text-center">{{ formMsg }}</strong>
+              </form>
             </div>
           </div>
-
-          <!-- Save Button -->
-          <div class="form-group">
-            <button
-              id="save-profile"
-              type="submit"
-              :disabled="busy || !passwordInputOk"
-              class="btn btn-block btn-lg btn-outline-dark"
-              style="border-width: 2px"
-              @click.prevent="submit"
-            >
-              <i class="fas fa-check"></i>
-              {{ y18n('save') }}
-            </button>
-          </div>
-          <strong class="form-text text-center">{{ formMsg }}</strong>
         </form>
       </div>
 
