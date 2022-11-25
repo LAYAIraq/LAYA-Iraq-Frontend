@@ -131,11 +131,9 @@ export default {
       for (const feedback in parameters.feedback) {
         temp.push(feedback.choice)
       }
-      const choice = JSON.stringify(temp)
-
       parameters.doc.text(this.y18n('feedback.document.choices'), parameters.x, parameters.y)
       parameters.y += parameters.lineheight
-      const splitchoice = parameters.doc.splitTextToSize(choice, 180)
+      const splitchoice = parameters.doc.splitTextToSize(JSON.stringify(temp), 180)
       parameters.doc.text(splitchoice, 30, parameters.y)
       parameters.blockheight = splitchoice.length * parameters.lineheight + 5
       parameters.y += parameters.blockheight
@@ -153,11 +151,9 @@ export default {
       for (const feedback in parameters.feedback) {
         temp.push(feedback.freetext)
       }
-      const freetext = JSON.stringify(temp)
-
       parameters.doc.text(this.y18n('feedback.document.freetext'), parameters.x, parameters.y)
       parameters.y += parameters.lineheight
-      const splitfreetext = parameters.doc.splitTextToSize(freetext, 180)
+      const splitfreetext = parameters.doc.splitTextToSize(JSON.stringify(temp), 180)
       parameters.doc.text(splitfreetext, 30, parameters.y)
       parameters.blockheight = splitfreetext.length * parameters.lineheight + 5
       parameters.y += parameters.blockheight
@@ -175,11 +171,9 @@ export default {
       for (const feedback in parameters.feedback) {
         temp.push(feedback.rating)
       }
-      const rating = JSON.stringify(temp)
-
       parameters.doc.text(this.y18n('feedback.document.rating'), parameters.x, parameters.y)
       parameters.y += parameters.lineheight
-      const splitrating = parameters.doc.splitTextToSize(rating, 180)
+      const splitrating = parameters.doc.splitTextToSize(JSON.stringify(temp), 180)
       parameters.doc.text(splitrating, 30, parameters.y)
       parameters.blockheight = splitrating.length * parameters.lineheight + 5
       parameters.y += parameters.blockheight
