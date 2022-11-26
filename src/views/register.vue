@@ -30,10 +30,10 @@ Dependencies:
             </div>
             <div class="col">
               <input
-                id="name-input"
-                v-model="name"
-                :placeholder="y18n('namePH')"
-                :aria-label="y18n('namePH')"
+                id="username-input"
+                v-model="username"
+                :placeholder="y18n('usernamePH')"
+                :aria-label="y18n('usernamePH')"
                 type="text"
                 :disabled="submitOk"
                 class="form-control"
@@ -228,7 +228,7 @@ import { locale, pwdProps } from '@/mixins'
 import LayaPasswordInput from '@/components/password-input.vue'
 
 export default {
-  name: 'RegisterView',
+  username: 'RegisterView',
 
   components: {
     LayaPasswordInput // not lazily loaded b/c always visible
@@ -244,7 +244,7 @@ export default {
     return {
 
       /* form model */
-      name: '',
+      username: '',
       email: '',
       profileImg: null,
 
@@ -294,10 +294,10 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: May 15, 2021
+     * Last Updated: November 25, 2022 by nv
      */
     noInput () {
-      return (this.name === '' &&
+      return (this.username === '' &&
         this.email === '' &&
         this.passwordRepeat === '' &&
         this.passwordSet === '')
@@ -317,18 +317,18 @@ export default {
 
   watch: {
     /**
-     * watcher name: check for wrong characters in name, pushing them to
+     * watcher username: check for wrong characters in username, pushing them to
      *  wrongNameCharacters for display
      *
      * Author: cmc
      *
-     * Last Updated: March 21, 2022
+     * Last Updated: November 25, 2022 by nv
      */
-    name () {
+    username () {
       this.nameInputStarted = true
       this.wrongNameCharacters = []
       if (this.errName) {
-        for (const letter of this.name) {
+        for (const letter of this.username) {
           if (
             /\W/.test(letter) && // letter is non-word character
             !this.wrongNameCharacters.find(el => el === letter)
@@ -380,14 +380,14 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: April 12, 2022 by cmc
+     * Last Updated: November 26, 2022 by nv
      */
     isNameTaken () {
-      if (this.name.length === 0) {
+      if (this.username.length === 0) {
         this.nameTaken = false
         return
       }
-      this.$store.dispatch('checkNameTaken', this.name)
+      this.$store.dispatch('checkNameTaken', this.username)
         .then(resp => { this.nameTaken = resp })
         .catch(() => { this.nameTaken = false })
     },
@@ -431,7 +431,7 @@ export default {
       // let requests = [
       this.$store.dispatch('registerUser', {
         email: this.email,
-        username: this.name,
+        username: this.username,
         password: this.passwordSet,
         // avatar: avatarFileName,
         lang: this.profileLang

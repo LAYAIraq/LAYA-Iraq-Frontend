@@ -165,11 +165,11 @@ Dependencies:
                   {{ y18n('profile.change') }}
                 </h3>
                 <hr>
-                <div class="row">
-                  <!-- change email -->
-                  <div class="column">
+                <div class="row row-cols-3">
+                  <!-- change username -->
+                  <div class="col-3">
                     <b-button
-                      id="password-button"
+                      id="username-button"
                       block
                       variant="secondary"
                       @click="$bvModal.show('change-username-form')"
@@ -181,7 +181,7 @@ Dependencies:
                       :title="y18n('profile.changeUsername')"
                       header-bg-variant="info"
                       ok-variant="success"
-                      :ok-title="y18n('profile.username.save')"
+                      :ok-title="y18n('save')"
                       :cancel-title="y18n('cancel')"
                       centered
                       static
@@ -190,12 +190,12 @@ Dependencies:
                       <!-- Old username -->
                       <div class="form-group row">
                         <label
-                          for="oldPwd"
+                          for="oldUsername"
                           class="col-sm-3 col-form-label"
                         >{{ y18n('profile.oldUsername') }}</label>
                         <div class="col-sm-9">
                           <input
-                            id="oldPwd"
+                            id="oldUsername"
                             v-model="oldUsername"
                             type="username"
                             class="form-control"
@@ -205,11 +205,27 @@ Dependencies:
                         </div>
                       </div>
                       <!-- new username -->
+                      <div class="form-group row">
+                        <label
+                          for="newUsername"
+                          class="col-sm-3 col-form-label"
+                        >{{ y18n('profile.newUsername') }}</label>
+                        <div class="col-sm-9">
+                          <input
+                            id="newUsername"
+                            v-model="newUsername"
+                            type="username"
+                            class="form-control"
+                            :placeholder="y18n('profile.newUsername')"
+                            autocomplete="on"
+                          >
+                        </div>
+                      </div>
                     </b-modal>
                   </div>
 
                   <!-- change email -->
-                  <div class="column">
+                  <div class="col-3">
                     <b-button
                       id="password-button"
                       block
@@ -223,7 +239,7 @@ Dependencies:
                       :title="y18n('profile.changeEmail')"
                       header-bg-variant="info"
                       ok-variant="success"
-                      :ok-title="y18n('profile.email.save')"
+                      :ok-title="y18n('save')"
                       :cancel-title="y18n('cancel')"
                       centered
                       static
@@ -247,11 +263,27 @@ Dependencies:
                         </div>
                       </div>
                       <!-- new email -->
+                      <div class="form-group row">
+                        <label
+                          for="newEmail"
+                          class="col-sm-3 col-form-label"
+                        >{{ y18n('profile.newEmail') }}</label>
+                        <div class="col-sm-9">
+                          <input
+                            id="newEmail"
+                            v-model="newEmail"
+                            type="email"
+                            class="form-control"
+                            :placeholder="y18n('profile.newEmail')"
+                            autocomplete="on"
+                          >
+                        </div>
+                      </div>
                     </b-modal>
                   </div>
 
                   <!-- change password -->
-                  <div class="column">
+                  <div class="col-3">
                     <b-button
                       id="password-button"
                       block
@@ -265,7 +297,7 @@ Dependencies:
                       :title="y18n('profile.changePassword')"
                       header-bg-variant="info"
                       ok-variant="success"
-                      :ok-title="y18n('profile.password.save')"
+                      :ok-title="y18n('save')"
                       :cancel-title="y18n('cancel')"
                       centered
                       static
@@ -682,6 +714,10 @@ export default {
         applicationText: '',
         areaOfExpertise: ''
       },
+      oldEmail: '',
+      oldUsername: '',
+      newEmail: '',
+      newUsername: '',
       applicationEdited: -1, // increments once when data is loaded from store
       applicationNew: false
     }
@@ -764,6 +800,29 @@ export default {
 
     fontSizeOptions () {
       return fontSizeOptions
+    },
+
+    /**
+     * function newUsernameInput: returns something when username input is set
+     *
+     * Author: nv
+     *
+     * Last Updated: November 26, 2022
+     * @returns {string}
+     */
+    newUsernameInput () {
+      return this.usernameSet
+    },
+    /**
+     * function newEmailInput: returns something when email input is set
+     *
+     * Author: nv
+     *
+     * Last Updated: November 26, 2022
+     * @returns {string}
+     */
+    newEmailInput () {
+      return this.emailSet
     },
 
     /**
@@ -958,7 +1017,28 @@ export default {
             this.busy = false
           })
       }
-
+      /* change email request */
+      if (this.newEmailInput) {
+        this.$store.dispatch('changeEmail', this.oldEmail)
+          .then(() => this.$bvToast.show('submit-ok'))
+          .catch(err => {
+            console.error(err)
+            this.$bvToast.show('submit-failed')
+          })
+          .finally(() => { this.busy = false })
+      }
+      /* change username request */
+      if (this.newUsernameInput) {
+        this.$store.dispatch('changeUsername', this.oldUsername)
+          .then(() => this.$bvToast.show('submit-ok'))
+          .catch(err => {
+            console.error(err)
+            this.$bvToast.show('submit-failed')
+          })
+          .finally(() => { this.busy = false })
+      }
+      this.$store.commit('setInstitution', this.institution)
+      this.$store.commit('setOccupation', this.occupation)
       /* update state and save profile preferences */
       this.$store.commit('setPrefs', this.prefs)
       this.$store.dispatch('saveProfile')
