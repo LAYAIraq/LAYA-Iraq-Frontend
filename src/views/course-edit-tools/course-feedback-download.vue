@@ -67,6 +67,16 @@ export default {
     ])
   },
 
+  data () {
+    return {
+      feedback: null
+    }
+  },
+
+  created() {
+    this.feedback = this.getFeedback()
+  },
+
   methods: {
     /**
      * Function getFeedback: gets feedback from store
@@ -74,14 +84,24 @@ export default {
      * Last Updated: October 15, 2022 by nv
      */
     getFeedback () {
-      const feedback = []
-      this.$store.dispatch('fetchEnrollmentData', { courseId: this.courseId }).then((promise) => {
-        for (const i in promise) {
-          if (promise[i].feedback[promise[i].feedback.length - 1] !== undefined) {
-            feedback[i] = promise[i].feedback[promise[i].feedback.length - 1]
+      const feedback = {}
+      this.$store.dispatch('fetchEnrollmentData', { courseId: this.courseId } )
+        .then((resp) => {
+          console.log('all enrollments', resp)
+          for (const enrol of resp) {
+            console.log(enrol)
+            Object.keys(enrol.feedback).forEach((key) => {
+              console.log(key)
+              console.log(enrol.feedback[key])
+              if (!feedback[key]) {
+                feedback[key] = []
+              }
+              feedback[key].push(enrol.feedback[key])
+              console.log(feedback)
+            })
           }
-        }
-      }).catch(err => {
+        })
+        .catch(err => {
         console.log(err)
       })
       return feedback
@@ -94,9 +114,8 @@ export default {
      */
     printPDF () {
       if (typeof this.getFeedback() !== 'undefined') {
-        /* eslint-disable */
+        /* eslint-disable-next-line */
         const doc = new jsPDF('p','pt')
-        /* eslint-enable */
         const feedback = this.getFeedback()
 
         const name = this.course.name

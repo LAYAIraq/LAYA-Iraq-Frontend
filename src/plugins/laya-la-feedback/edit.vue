@@ -56,7 +56,7 @@ Last Updated: May 04, 2022
         <div class="col-10">
           <input
             id="feedback-title"
-            v-model="title"
+            v-model="title.text"
             type="text"
             class="form-control"
             :placeholder="y18n('titlePlaceholder')"
@@ -98,7 +98,7 @@ Last Updated: May 04, 2022
         <div class="col-10">
           <textarea
             id="feedback-task"
-            v-model="task"
+            v-model="task.text"
             class="w-100"
             :placeholder="y18n('taskPlaceholder')"
           >
@@ -140,7 +140,7 @@ Last Updated: May 04, 2022
             v-model="taskAudio.regular"
             type="text"
             class="form-control"
-            placeholder="y18n('taskAudioPlaceholder')"
+            :placeholder="y18n('taskAudioPlaceholder')"
           >
         </div>
       </div>
@@ -348,8 +348,8 @@ export default {
       task: '',
       taskAudio: '',
       items: [],
-      categories: []
-
+      categories: [],
+      id: ''
     }
   },
 
@@ -378,6 +378,7 @@ export default {
       this.taskAudio = preData.taskAudio
       this.items = preData.items
       this.categories = preData.categories
+      this.id = preData.id
     }
   }
 }
