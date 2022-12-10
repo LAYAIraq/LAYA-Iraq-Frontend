@@ -56,6 +56,12 @@ export default {
     locale
   ],
 
+  data () {
+    return {
+      feedback: null
+    }
+  },
+
   computed: {
     ...mapActions([
       'fetchEnrollmentData'
@@ -67,13 +73,7 @@ export default {
     ])
   },
 
-  data () {
-    return {
-      feedback: null
-    }
-  },
-
-  created() {
+  created () {
     this.feedback = this.getFeedback()
   },
 
@@ -81,57 +81,54 @@ export default {
     /**
      * Function getFeedback: gets feedback from store
      * Author: nv
-     * Last Updated: October 15, 2022 by nv
+     * Last Updated: December 10, 2022 by cmc
      */
     getFeedback () {
       const feedback = {}
-      this.$store.dispatch('fetchEnrollmentData', { courseId: this.courseId } )
+      this.$store.dispatch('fetchEnrollmentData', { courseId: this.courseId })
         .then((resp) => {
-          console.log('all enrollments', resp)
           for (const enrol of resp) {
-            console.log(enrol)
+            // create arrays of feedback per feedback block
             Object.keys(enrol.feedback).forEach((key) => {
-              console.log(key)
-              console.log(enrol.feedback[key])
-              if (!feedback[key]) {
+              if (!feedback[key]) { // create key if not there yet
                 feedback[key] = []
               }
               feedback[key].push(enrol.feedback[key])
-              console.log(feedback)
             })
           }
         })
         .catch(err => {
-        console.log(err)
-      })
+          console.log(err)
+        })
       return feedback
     },
 
     /**
      * Function printPDF: prints feedback in a PDF to download
      * Author: nv
-     * Last Updated: October 15, 2022 by nv
+     * Last Updated: December  10, 2022 by cmc
      */
     printPDF () {
       if (typeof this.getFeedback() !== 'undefined') {
         /* eslint-disable-next-line */
         const doc = new jsPDF('p','pt')
-        const feedback = this.getFeedback()
-
         const name = this.course.name
         const x = 30
         const y = 30
         const lineheight = doc.getTextDimensions('Sample Text').h + 5
         const blockheight = 0
 
-        const parameters = { doc, feedback, x, y, lineheight, blockheight }
-
-        parameters.doc.text(this.y18n('feedback.document.title') + name, parameters.x, parameters.y)
+        const parameters = { doc, x, y, lineheight, blockheight }
+        doc.setFontSize(20)
+        parameters.doc.text(this.y18n('feedback.document.title') + '"' + name + '"', parameters.x, parameters.y)
         parameters.y += parameters.lineheight + 20
 
-        this.printChoices(parameters)
-        this.printFreetext(parameters)
-        this.printRating(parameters)
+        for (const key of Object.keys(this.feedback)) {
+          this.printBlock(key, parameters)
+          this.printChoices(key, parameters)
+          this.printFreetext(key, parameters)
+          this.printRating(key, parameters)
+        }
 
         const date = parameters.doc.getCreationDate('jsDate')
         parameters.doc.save(date + ' - ' + this.y18n('feedback.document.file') + ' - ' + name + '.pdf')
@@ -141,63 +138,67 @@ export default {
     },
 
     /**
+     * Function printBlock: prints a headline for a block of feedback
+     * Author: cmc
+     * Last Updated: December 10, 2022 by cmc
+     */
+    printBlock (key, parameters) {
+      parameters.doc.setFontSize(14)
+      parameters.doc.text(this.y18n('feedback.document.block') + ' ' + key, parameters.x, parameters.y)
+      parameters.y += parameters.lineheight + 10
+    },
+
+    /**
      * Function printChoices: prints choices answers into PDF
      * Author: nv
-     * Last Updated: November 25, 2022 by nv
+     * Last Updated: December 10, 2022 by cmc
      */
-    printChoices (parameters) {
-      const temp = []
-      for (const feedback in parameters.feedback) {
-        temp.push(feedback.choice)
-      }
+    printChoices (key, parameters) {
+      parameters.doc.setFontSize(12)
       parameters.doc.text(this.y18n('feedback.document.choices'), parameters.x, parameters.y)
-      parameters.y += parameters.lineheight
-      const splitchoice = parameters.doc.splitTextToSize(JSON.stringify(temp), 180)
-      parameters.doc.text(splitchoice, 30, parameters.y)
-      parameters.blockheight = splitchoice.length * parameters.lineheight + 5
-      parameters.y += parameters.blockheight
-
-      return parameters
+      for (const feedback of this.feedback[key]) { // loop through feedback, print choices for each
+        parameters.y += parameters.lineheight
+        let choices = ''
+        feedback.choice.forEach((choice) => { // put choice array in string
+          choices += choice + ', '
+        })
+        const splitchoice = parameters.doc.splitTextToSize(choices.slice(0, -2), 180) // don't print last ', ' in choices
+        parameters.doc.text(splitchoice, 30, parameters.y)
+        parameters.blockheight = splitchoice.length * parameters.lineheight + 5
+        parameters.y += parameters.blockheight
+      }
     },
 
     /**
      * Function printFreetext: prints freetext answers into PDF
      * Author: nv
-     * Last Updated: November 25, 2022 by nv
+     * Last Updated: December 10, 2022 by cmc
      */
-    printFreetext (parameters) {
-      const temp = []
-      for (const feedback in parameters.feedback) {
-        temp.push(feedback.freetext)
-      }
+    printFreetext (key, parameters) {
       parameters.doc.text(this.y18n('feedback.document.freetext'), parameters.x, parameters.y)
-      parameters.y += parameters.lineheight
-      const splitfreetext = parameters.doc.splitTextToSize(JSON.stringify(temp), 180)
-      parameters.doc.text(splitfreetext, 30, parameters.y)
-      parameters.blockheight = splitfreetext.length * parameters.lineheight + 5
-      parameters.y += parameters.blockheight
-
-      return parameters
+      for (const feedback of this.feedback[key]) { // loop through feedback, print freetext for each
+        parameters.y += parameters.lineheight
+        const splitfreetext = parameters.doc.splitTextToSize(feedback.freetext, 180)
+        parameters.doc.text(splitfreetext, 30, parameters.y)
+        parameters.blockheight = splitfreetext.length * parameters.lineheight + 5
+        parameters.y += parameters.blockheight
+      }
     },
 
     /**
      * Function printRating: prints rating answers into PDF
      * Author: nv
-     * Last Updated: November 25, 2022 by nv
+     * Last Updated: December 10, 2022 by cmc
      */
-    printRating (parameters) {
-      const temp = []
-      for (const feedback in parameters.feedback) {
-        temp.push(feedback.rating)
-      }
+    printRating (key, parameters) {
       parameters.doc.text(this.y18n('feedback.document.rating'), parameters.x, parameters.y)
-      parameters.y += parameters.lineheight
-      const splitrating = parameters.doc.splitTextToSize(JSON.stringify(temp), 180)
-      parameters.doc.text(splitrating, 30, parameters.y)
-      parameters.blockheight = splitrating.length * parameters.lineheight + 5
-      parameters.y += parameters.blockheight
-
-      return parameters
+      for (const feedback of this.feedback[key]) { // loop through feedback, print rating for each
+        parameters.y += parameters.lineheight
+        const splitrating = parameters.doc.splitTextToSize(feedback.rating, 180)
+        parameters.doc.text(splitrating, 30, parameters.y)
+        parameters.blockheight = splitrating.length * parameters.lineheight + 5
+        parameters.y += parameters.blockheight
+      }
     }
   }
 }
