@@ -36,6 +36,7 @@ describe('Course changeCategory', () => {
       }
     }
     actions = {
+      fetchCourseList: jest.fn(),
       updateCourse: jest.fn(() => { return Promise.resolve() })
     }
     mutations = {
@@ -88,7 +89,7 @@ describe('Course changeCategory', () => {
     expect(actions.updateCourse).not.toHaveBeenCalled()
     expect(wrapper.find('#author-change-category-confirm').isVisible()).toBeTruthy()
     expect(wrapper.find('input').classes()).toContain('border-danger')
-    expect(wrapper.find('#no-input-error').isVisible()).toBeTruthy()
+    expect(wrapper.find('#input-warning').isVisible()).toBeTruthy()
   })
 
   it('does not close, highlights input field and shows a warning when input is same as current category', async () => {
@@ -99,14 +100,14 @@ describe('Course changeCategory', () => {
     expect(actions.updateCourse).not.toHaveBeenCalled()
     expect(wrapper.find('#author-change-category-confirm').isVisible()).toBeTruthy()
     expect(wrapper.find('input').classes()).toContain('border-danger')
-    expect(wrapper.find('#same-name-error').isVisible()).toBeTruthy()
+    expect(wrapper.find('#input-warning').isVisible()).toBeTruthy()
   })
 
   it('trims input when it has leading and/or trailing spaces', async () => {
     await button.trigger('click')
     await wrapper.find('input').setValue('  test  ')
     await saveButton.trigger('click')
-    expect(mutations.changeCourseCategory).toHaveBeenCalledWith('test')
+    expect(mutations.changeCourseCategory).toHaveBeenCalledWith(expect.any(Object), 'test')
     expect(actions.updateCourse).toHaveBeenCalled()
     expect(wrapper.find('#author-change-category-confirm').isVisible()).toBeFalsy()
   })

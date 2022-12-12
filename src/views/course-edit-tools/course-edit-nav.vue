@@ -49,7 +49,7 @@ export default {
   ],
 
   computed: {
-    ...mapGetters(['content'])
+    ...mapGetters(['courseContent'])
   },
 
   methods: {
@@ -61,7 +61,7 @@ export default {
      * Last Updated: October 27, 2020
      */
     courseNavIncomplete () { // TODO update with new courseContent structure
-      return this.content.reduce((all, c) => (!c.nextStep || all), false)
+      return false
     }
   }
 }
