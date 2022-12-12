@@ -18,14 +18,14 @@ describe('Course delete block', () => {
   beforeEach(() => {
     getters = {
       profileLang: () => 'en',
-      course: () => {
+      courseContent () {
         return {
-          courseId: 'test'
+          test: {
+            id: 'test'
+          }
         }
       },
-      content: () => [{
-        id: 'test'
-      }]
+      courseContentPathId: () => () => 'test'
     }
     actions = {
       storeCourse: jest.fn(() => {
@@ -33,7 +33,7 @@ describe('Course delete block', () => {
       })
     }
     mutations = {
-      delContent: jest.fn()
+      courseContentRemove: jest.fn()
     }
     const store = new Vuex.Store({
       getters,
@@ -46,10 +46,7 @@ describe('Course delete block', () => {
           $router: jest.fn()
         },
         store,
-        localVue,
-        propsData: {
-          step: '1'
-        }
+        localVue
       }
     )
     expect(wrapper.exists()).toBeTruthy()
@@ -73,12 +70,12 @@ describe('Course delete block', () => {
       }
     })
     await button.trigger('click')
-    expect(mutations.delContent).toHaveBeenCalled()
+    expect(mutations.courseContentRemove).toHaveBeenCalledWith(expect.any(Object), 'test')
     expect(actions.storeCourse).toHaveBeenCalled()
   })
 
   it('is not rendered when there is no content', async () => {
-    getters.content = () => []
+    getters.courseContentPathId = () => () => ''
     const store = new Vuex.Store({
       getters,
       mutations,
@@ -90,12 +87,11 @@ describe('Course delete block', () => {
           $router: jest.fn()
         },
         store,
-        localVue,
-        propsData: {
-          step: '1'
-        }
+        localVue
       }
     )
+    // console.log(wrapper.vm)
+    expect(wrapper.vm.$data.contentToDisplay).toBeFalsy()
     expect(wrapper.find('#delete-content').exists()).toBeFalsy()
   })
 })

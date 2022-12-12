@@ -83,7 +83,8 @@ export default {
       if (path === undefined) {
         path = ''
       }
-      return state.courseRoutes.find(([route, _]) => route === path)[1]
+      const contentPath = state.courseRoutes.find(([route, _]) => route === path)
+      return contentPath ? contentPath[1] : null
     }
   },
 
