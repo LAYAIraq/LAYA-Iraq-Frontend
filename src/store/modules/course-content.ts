@@ -143,6 +143,8 @@ export default {
       course: LegacyCourse
     ) {
       state.courseChapters = []
+      state.courseContent = {}
+      state.courseIds = {}
       for (const block of course.content) {
         const blockId = uuidv4().split('-')[0] // legacy content blocks have no id
         const i = course.content.indexOf(block)

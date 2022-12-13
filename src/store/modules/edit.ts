@@ -299,8 +299,9 @@ export default {
      */
     courseListUpdate (
       state: {
-        course: { name: string },
+        course: { category: string, name: string },
         courseList: Array<{
+          category: string,
           courseId: string,
           name: string,
           slug: string
@@ -312,6 +313,7 @@ export default {
       const listItem = state.courseList.find((item: { courseId: string, name: string }) => item.courseId === courseId)
       console.log(listItem)
       listItem.name = state.course.name
+      listItem.category = state.course.category
       listItem.slug = slugify(state.course.name)
       console.log(listItem)
       console.log(state.courseList)
@@ -474,9 +476,9 @@ export default {
      */
     setCourseList (
       state: {
-        courseList: Array<object>
+        courseList: object[]
       },
-      courseList: Array<object>
+      courseList: object[]
     ) {
       state.courseList = courseList
     },

@@ -174,17 +174,16 @@ export default {
       { commit, rootState },
       courseId: string
     ) {
-      const uid = rootState.auth.userId
-      const cid = courseId
-      if (uid && cid) {
+      const studentId = rootState.auth.userId
+      if (studentId && courseId) {
         commit('setBusy', true)
         return new Promise((resolve, reject) => {
           http.get('enrollments/findOne', {
             params: {
               filter: {
                 where: {
-                  studentId: uid,
-                  courseId: cid
+                  studentId,
+                  courseId
                 }
               }
             }

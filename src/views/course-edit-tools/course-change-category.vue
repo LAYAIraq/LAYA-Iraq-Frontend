@@ -50,8 +50,8 @@ Dependencies:
         >
       </p>
       <p
-        id="input-warning"
         v-if="badInput"
+        id="input-warning"
       >
         <i class="fas fa-exclamation-triangle"></i>
         {{ inputWarning }}
@@ -87,7 +87,7 @@ export default {
   computed: {
     ...mapGetters(['course']),
 
-    inputWarning() {
+    inputWarning () {
       return this.badInput ? this.y18n(`changeCategory.${this.badInput}`) : ''
     }
   },
