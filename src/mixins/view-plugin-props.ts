@@ -17,6 +17,10 @@ export default {
     viewData: {
       type: Object,
       default () { return null }
+    },
+    editPreview: {
+      type: Boolean,
+      default: false
     }
   }
 }

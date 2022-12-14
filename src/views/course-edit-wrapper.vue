@@ -17,11 +17,12 @@ Dependencies:
           <div
             :is="comps.view"
             v-if="preview"
-            :preview-data="stepData"
+            :view-data="stepData"
+            :edit-preview="true"
           ></div>
 
           <!-- editing view -->
-          <div v-else>
+          <div v-show="!preview">
             <component
               :is="comps.new"
               v-if="!editContent"
