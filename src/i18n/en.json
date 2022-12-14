@@ -128,6 +128,7 @@
 	"emailErr.missingChars": "Missing necessary characters",
 	"emailPH": "Email",
 	"emailTaken": "This email is already taken",
+	"feedback.document.block": "This is the feedback for block",
 	"feedback.document.choices": "Choice answers: ",
 	"feedback.document.file": "Feedback-",
 	"feedback.document.rating": "Ratings: ",

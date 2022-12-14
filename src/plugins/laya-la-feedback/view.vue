@@ -183,7 +183,6 @@ Last Updated: May 04, 2022
 <script>
 import { locale, viewPluginProps, watchContent } from '@/mixins'
 import { mapGetters } from 'vuex'
-import { v4 as uuidv4 } from 'uuid'
 import '@/styles/flaggables.css'
 import { StarRating } from 'vue-rate-it'
 
@@ -218,7 +217,7 @@ export default {
       freetext: '',
       answered: [],
       step: this.$route.params.step - 1,
-      id: uuidv4(),
+      id: '',
       items: [],
       prevFeedback: '',
       categories: '',
@@ -232,7 +231,8 @@ export default {
       'content',
       'courseId',
       'courseSimple',
-      'enrollmentFeedback'
+      'enrollmentFeedback',
+      'userEnrolled'
     ]),
 
     /**
@@ -258,7 +258,7 @@ export default {
       this.getPrevFeedback()
     }
 
-    if (!this.enrollmentFeedback) {
+    if (!this.userEnrolled) {
       this.$store.dispatch('fetchEnrollment', this.courseId)
     }
   },
