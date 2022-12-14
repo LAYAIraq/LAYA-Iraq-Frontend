@@ -14,7 +14,7 @@ export default {
         return () => {}
       }
     },
-    previewData: {
+    viewData: {
       type: Object,
       default () { return null }
     }

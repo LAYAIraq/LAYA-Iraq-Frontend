@@ -37,7 +37,7 @@ export default {
      * Last Updated: December 13, 2022 by cmc
      */
     fetchEnrollment () {
-      if (this.course.properties.enrollment) {
+      if (this.course.properties && this.course.properties.enrollment) {
         this.$store.dispatch('fetchEnrollment', this.course.courseId)
           .catch(err => console.error(err))
       }

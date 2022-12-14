@@ -37,7 +37,7 @@ Dependencies:
             :is="contentToDisplay.name"
             v-if="contentToDisplay && viewPermit"
             :key="contentToDisplay.title.text"
-            :preview-data="contentToDisplay"
+            :view-data="contentToDisplay"
             :on-finish="followContent(contentToDisplay)"
           >
           </component>
