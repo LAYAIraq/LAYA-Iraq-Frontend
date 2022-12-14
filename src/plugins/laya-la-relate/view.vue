@@ -32,7 +32,7 @@ Dependencies:
           </h4>
         </div>
         <laya-flag-icon
-          v-if="!previewData"
+          v-if="!viewData"
           :ref-data="title"
           @flagged="title.flagged = true"
         ></laya-flag-icon>
@@ -48,7 +48,7 @@ Dependencies:
           <p>{{ courseSimple? task.simple: task.text }}</p>
         </div>
         <laya-flag-icon
-          v-if="!previewData"
+          v-if="!viewData"
           :ref-data="task"
           @flagged="task.flagged = true"
         ></laya-flag-icon>
@@ -107,7 +107,7 @@ Dependencies:
                 </div>
               </div>
               <laya-flag-icon
-                v-if="!previewData"
+                v-if="!viewData"
                 :ref-data="pair"
                 :interactive="true"
                 @flagged="pair.flagged = true"
@@ -205,9 +205,9 @@ export default {
   ],
 
   data () {
-    if (this.previewData) { // preview
+    if (this.viewData) { // preview
       return {
-        ...this.previewData,
+        ...this.viewData,
         defaultOption: '',
         solution: [],
         eval: [],
@@ -274,7 +274,7 @@ export default {
 
   created () {
     this.defaultOption = this.y18n('layaLaRelate.defaultOption')
-    if (!this.previewData) { // no preview
+    if (!this.viewData) { // no preview
       this.fetchData()
     }
     // eslint-disable-next-line no-unused-vars

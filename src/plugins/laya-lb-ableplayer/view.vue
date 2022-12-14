@@ -18,7 +18,7 @@ Dependencies:
     >
       <h4> {{ title.text }}</h4>
       <laya-flag-icon
-        v-if="!previewData"
+        v-if="!viewData"
         :ref-data="title"
 
         @flagged="title.flagged = true"
@@ -75,9 +75,9 @@ export default {
   ],
 
   data () {
-    if (this.previewData) {
+    if (this.viewData) {
       return {
-        ...this.previewData,
+        ...this.viewData,
         ableplayer: null
       }
     }
@@ -105,7 +105,7 @@ export default {
     }
   },
   created () {
-    if (!this.previewData) this.fetchData()
+    if (!this.viewData) this.fetchData()
   },
 
   mounted () {

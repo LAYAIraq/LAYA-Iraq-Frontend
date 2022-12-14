@@ -18,7 +18,7 @@ Dependencies:
     >
       <h2>{{ courseSimple? title.simple : title.text }}</h2>
       <laya-flag-icon
-        v-if="!previewData"
+        v-if="!viewData"
         :ref-data="title"
         @flagged="title.flagged = true"
       ></laya-flag-icon>
@@ -49,7 +49,7 @@ Dependencies:
           :kind="track.kind"
         />
       </video>
-      <!--      <laya-flag-icon v-if="!previewData"-->
+      <!--      <laya-flag-icon v-if="!viewData"-->
       <!--          :refData="videoFlag"-->
       <!--          :interactive="true"-->
       <!--          @flagged="videoFlag.flagged = true"-->
@@ -93,8 +93,8 @@ export default {
   ],
 
   data () {
-    if (this.previewData) { // for 'preview' feature
-      return { ...this.previewData }
+    if (this.viewData) { // for 'preview' feature
+      return { ...this.viewData }
     }
     return {
       plyr: null,
@@ -179,7 +179,7 @@ export default {
   },
 
   created () {
-    if (!this.previewData) this.fetchData()
+    if (!this.viewData) this.fetchData()
   },
 
   mounted () {

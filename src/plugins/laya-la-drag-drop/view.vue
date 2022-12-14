@@ -26,7 +26,7 @@ Dependencies:
         </h2>
       </div>
       <laya-flag-icon
-        v-if="!previewData"
+        v-if="!viewData"
         :ref-data="title"
         @flagged="title.flagged = true"
       ></laya-flag-icon>
@@ -40,7 +40,7 @@ Dependencies:
         <p>{{ courseSimple? task.simple : task.text }}</p>
       </div>
       <laya-flag-icon
-        v-if="!previewData"
+        v-if="!viewData"
         :ref-data="task"
 
         @flagged="task.flagged = true"
@@ -89,7 +89,7 @@ Dependencies:
             :aria-label="y18n('layaLaDragDrop.label.slider')"
           >
           <laya-flag-icon
-            v-if="!previewData"
+            v-if="!viewData"
             :ref-data="item"
             :interactive="true"
             @flagged="item.flagged = true"
@@ -152,7 +152,7 @@ export default {
 
   data () {
     return {
-      ...this.previewData,
+      ...this.viewData,
       checked: false,
       solution: [], // users solution as index
       eval: [],
@@ -180,7 +180,7 @@ export default {
   },
 
   created () {
-    // if (!this.previewData) this.fetchData()
+    // if (!this.viewData) this.fetchData()
     this.mapSolutions()
   },
 

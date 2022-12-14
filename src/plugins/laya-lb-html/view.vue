@@ -18,7 +18,7 @@ Dependencies:
     >
       <h2>{{ courseSimple? title.simple : title.text }}</h2>
       <laya-flag-icon
-        v-if="!previewData"
+        v-if="!viewData"
         :ref-data="title"
         @flagged="title.flagged = true"
       ></laya-flag-icon>
@@ -59,8 +59,8 @@ export default {
   ],
 
   data () {
-    if (this.previewData) { // preview
-      return { ...this.previewData }
+    if (this.viewData) { // preview
+      return { ...this.viewData }
     }
     return {
       contents: null,
@@ -84,7 +84,7 @@ export default {
   },
 
   created () {
-    if (!this.previewData) this.fetchData()
+    if (!this.viewData) this.fetchData()
   },
 
   mounted () {

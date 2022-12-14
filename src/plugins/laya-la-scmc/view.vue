@@ -31,7 +31,7 @@ vuex,
         </h2>
       </div>
       <laya-flag-icon
-        v-if="!previewData"
+        v-if="!viewData"
         :ref-data="title"
         @flagged="title.flagged = true"
       ></laya-flag-icon>
@@ -44,7 +44,7 @@ vuex,
         {{ courseSimple? task.simple: task.text }}
       </div>
       <laya-flag-icon
-        v-if="!previewData"
+        v-if="!viewData"
         :ref-data="task"
         @flagged="task.flagged = true"
       ></laya-flag-icon>
@@ -98,7 +98,7 @@ vuex,
         <i class="ml-2" :class="{'far fa-times-circle text-danger': true}"></i>
         -->
         <laya-flag-icon
-          v-if="!previewData"
+          v-if="!viewData"
           :ref-data="option"
           :interactive="true"
           @flagged="option.flagged = true"
@@ -170,9 +170,9 @@ export default {
   ],
 
   data () {
-    if (this.previewData) {
+    if (this.viewData) {
       return {
-        ...this.previewData,
+        ...this.viewData,
         tries: 0,
         answers: [],
         checked: [],
@@ -235,7 +235,7 @@ export default {
   },
 
   created () {
-    if (!this.previewData) { // previewing newly created content
+    if (!this.viewData) { // previewing newly created content
       this.fetchData()
     }
     this.populateShowSolutions()
