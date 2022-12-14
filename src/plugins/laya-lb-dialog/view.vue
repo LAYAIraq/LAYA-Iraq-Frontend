@@ -33,6 +33,7 @@ Dependencies: @/mixins/locale.vue
       >
         {{ courseSimple? question.simple: question.text }}
         <laya-flag-icon
+          v-if="!editPreview"
           :ref-data="question"
           @flagged="question.flagged = true"
         ></laya-flag-icon>
@@ -51,6 +52,7 @@ Dependencies: @/mixins/locale.vue
             {{ courseSimple? answer.simple : answer.text }}
           </button>
           <laya-flag-icon
+            v-if="!editPreview"
             :ref-data="answer"
             :interactive="true"
             @flagged="answer.flagged = true"
@@ -77,7 +79,7 @@ export default {
 
   data () {
     return {
-      ...this.previewData
+      ...this.viewData
     }
   },
 
@@ -86,7 +88,7 @@ export default {
       'courseFlags',
       'courseSimple'
     ])
-  },
+  }
 
 }
 </script>
