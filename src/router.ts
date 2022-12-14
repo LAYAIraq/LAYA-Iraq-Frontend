@@ -110,7 +110,7 @@ export default new Router({
       ]
     },
     {
-      path: '/courses/:name/:step/flag/:id',
+      path: '/courses/:name/:coursePath?/flag/:id',
       name: 'flag-view',
       component: Flag,
       props: true
