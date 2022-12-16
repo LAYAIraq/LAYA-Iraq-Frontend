@@ -130,7 +130,7 @@
     <div class="container">
       <!-- head -->
       <div
-        id="user-list"
+        id="user-list-head"
         class="row font-weight-bold mb-3"
       >
         <div class="col-3">
@@ -150,11 +150,14 @@
         </div>
       </div>
       <!-- body -->
-      <div v-if="pagedList.length !== 0">
+      <div
+        v-if="pagedList.length !== 0"
+        id="user-list-body"
+      >
         <div
           v-for="user in pagedList[pageSelected]"
           :key="user.id"
-          class="row mb-2"
+          class="row mb-2 user-list-item"
         >
           <div class="col-3">
             {{ user.username }}
@@ -296,6 +299,7 @@
         :ok-title="y18n('adminPanel.promoteUser')"
         :cancel-title="y18n('cancel')"
         centered
+        static
         @ok="changeUserRole"
       >
         <p>
@@ -323,6 +327,7 @@
         :ok-title="y18n('adminPanel.editEmail')"
         :cancel-title="y18n('cancel')"
         centered
+        static
         @ok="editUserEmail"
       >
         <p>
@@ -350,6 +355,7 @@
         :ok-title="y18n('adminPanel.resetPassword')"
         :cancel-title="y18n('cancel')"
         centered
+        static
         @ok="resetUserPassword"
       >
         <p>
@@ -365,6 +371,7 @@
         :ok-title="y18n('adminPanel.deleteUser')"
         :cancel-title="y18n('cancel')"
         centered
+        static
         @ok="deleteUser"
       >
         <p>
@@ -380,6 +387,7 @@
         :ok-title="y18n('adminPanel.createUser')"
         :cancel-title="y18n('cancel')"
         centered
+        static
         @ok="handleCreateUser"
       >
         <p>
@@ -426,11 +434,13 @@
         <p>
           <label
             id="user-create-role"
+            for="user-create-role-input"
             :class="langIsAr? 'ml-auto': 'mr-auto'"
           >
             {{ y18n('adminPanel.role') }}
           </label>
           <b-select
+            id="user-create-role-input"
             v-model="createUserRole"
             aria-describedby="user-create-role"
           >
@@ -446,16 +456,28 @@
             </b-select-option>
           </b-select>
         </p>
-        <p v-if="emptyCreateInput">
+        <p
+          v-if="emptyCreateInput"
+          id="empty-input-error"
+        >
           {{ y18n('courseNavEdit.table.missingInfo') }}
         </p>
-        <p v-if="noEmailFormat">
+        <p
+          v-if="noEmailFormat"
+          id="email-error"
+        >
           {{ y18n('emailErr') }}
         </p>
-        <p v-if="duplicateProperty">
+        <p
+          v-if="duplicateProperty"
+          id="duplicate-property-error"
+        >
           {{ duplicateErrMsg }}
         </p>
-        <p v-if="noRoleChosen">
+        <p
+          v-if="noRoleChosen"
+          id="no-role-error"
+        >
           {{ y18n('adminPanel.modal.chooseRole') }}
         </p>
       </b-modal>
