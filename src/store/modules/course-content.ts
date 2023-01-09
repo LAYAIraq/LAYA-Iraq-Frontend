@@ -80,11 +80,13 @@ export default {
      */
     courseContentPathId: (state: { courseRoutes: [[route: string, id: string]] }) => (path: string): string => {
       console.log('finding id for path', path)
-      if (path === undefined) {
+      if (path === undefined || path === null) {
         path = ''
       }
       const contentPath = state.courseRoutes.find(([route, _]) => route === path)
-      return contentPath ? contentPath[1] : null
+      const res = contentPath ? contentPath[1] : null
+      console.log('found content path', res)
+      return res
     }
   },
 

@@ -27,11 +27,13 @@ Dependencies:
               :is="comps.new"
               v-if="!editContent"
               ref="new"
+              :course-path="coursePath"
             ></component>
             <component
               :is="comps.edit"
               v-else
               ref="edit"
+              :course-path="coursePath"
             ></component>
           </div>
           <hr>
