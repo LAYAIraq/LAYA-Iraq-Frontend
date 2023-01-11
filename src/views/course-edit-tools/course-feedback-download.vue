@@ -109,7 +109,7 @@ export default {
      * Last Updated: December  10, 2022 by cmc
      */
     printPDF () {
-      if (typeof this.getFeedback() !== 'undefined') {
+      if (Object.keys(this.feedback).length > 0) {
         /* eslint-disable-next-line */
         const doc = new jsPDF('p','pt')
         const name = this.course.name
