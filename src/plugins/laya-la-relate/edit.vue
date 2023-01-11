@@ -165,7 +165,7 @@ Dependencies:
           <div class="col">
             <input
               :id="'rel-text-'+i"
-              v-model="relations[i]"
+              v-model="rel"
               class="form-control"
               type="text"
             >
@@ -323,7 +323,7 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale, tooltipIcon } from '@/mixins'
+import { locale, routeProps, tooltipIcon } from '@/mixins'
 import commonMethods from '@/plugins/laya-la-relate/common-methods'
 
 export default {
@@ -332,6 +332,7 @@ export default {
   mixins: [
     commonMethods,
     locale,
+    routeProps,
     tooltipIcon
   ],
 
@@ -347,7 +348,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['content'])
+    ...mapGetters(['courseContent', 'courseSimple'])
   },
 
   created () {
@@ -363,8 +364,7 @@ export default {
      * Last Updated: March 19, 2021
      */
     fetchData () {
-      const idx = this.$route.params.step - 1
-      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
+      const preData = JSON.parse(JSON.stringify(this.courseContent[this.pathId]))
       this.title = preData.title
       this.task = preData.task
       this.taskAudio = preData.taskAudio
