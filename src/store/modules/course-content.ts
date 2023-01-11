@@ -122,7 +122,9 @@ export default {
     },
 
     courseContentSet (state: { courseContent: { [id: string]: ContentBlock } }, block: ContentBlock) {
+      console.log(block)
       state.courseContent[block.id] = block
+      console.log(state.courseContent)
     },
 
     courseContentRemove (state: { courseContent: any }, id: string) {
