@@ -111,10 +111,10 @@ export default {
     printPDF () {
       if (Object.keys(this.feedback).length > 0) {
         /* eslint-disable-next-line */
-        const doc = new jsPDF('p','pt')
+        const doc = new jsPDF('p','mm')
         const name = this.course.name
-        const x = 30
-        const y = 30
+        const x = 15
+        const y = 15
         const lineheight = doc.getTextDimensions('Sample Text').h + 5
         const blockheight = 0
 
@@ -163,7 +163,7 @@ export default {
           choices += choice + ', '
         })
         const splitchoice = parameters.doc.splitTextToSize(choices.slice(0, -2), 180) // don't print last ', ' in choices
-        parameters.doc.text(splitchoice, 30, parameters.y)
+        parameters.doc.text(splitchoice, 15, parameters.y)
         parameters.blockheight = splitchoice.length * parameters.lineheight + 5
         parameters.y += parameters.blockheight
       }
@@ -179,8 +179,9 @@ export default {
       for (const feedback of this.feedback[key]) { // loop through feedback, print freetext for each
         parameters.y += parameters.lineheight
         const splitfreetext = parameters.doc.splitTextToSize(feedback.freetext, 180)
-        parameters.doc.text(splitfreetext, 30, parameters.y)
-        parameters.blockheight = splitfreetext.length * parameters.lineheight + 5
+        console.log(splitfreetext)
+        parameters.doc.text(splitfreetext, 15, parameters.y)
+        parameters.blockheight = Math.ceil(splitfreetext.length / 2) * parameters.lineheight
         parameters.y += parameters.blockheight
       }
     },
@@ -195,7 +196,7 @@ export default {
       for (const feedback of this.feedback[key]) { // loop through feedback, print rating for each
         parameters.y += parameters.lineheight
         const splitrating = parameters.doc.splitTextToSize(feedback.rating, 180)
-        parameters.doc.text(splitrating, 30, parameters.y)
+        parameters.doc.text(splitrating, 15, parameters.y)
         parameters.blockheight = splitrating.length * parameters.lineheight + 5
         parameters.y += parameters.blockheight
       }
