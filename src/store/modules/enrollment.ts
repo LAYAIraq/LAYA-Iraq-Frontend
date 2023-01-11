@@ -11,7 +11,9 @@ import http from 'axios'
 
 export default {
   state: {
-    enrollment: {},
+    enrollment: {
+      feedback: {}
+    },
     userEnrolled: false
   },
 
@@ -78,7 +80,7 @@ export default {
       },
       feedbackData: {
         created: number,
-        choice: Array<number>,
+        choice: number[],
         freetext: string,
         rating: number,
         id: string
@@ -86,7 +88,10 @@ export default {
       }
     ) {
       const { id } = feedbackData
-      // @ts-ignore
+      // if enrollment has feedback as array, reset to object
+      if (Array.isArray(state.enrollment.feedback)) {
+        state.enrollment.feedback = {}
+      }
       state.enrollment.feedback[id] = (({ id, ...o }) => o)(feedbackData)
     },
 
@@ -243,6 +248,28 @@ export default {
             .catch(err => reject(err))
         })
         : Promise.reject(new Error('No enrollment found!'))
+    },
+    /**
+     * function fetchEnrollmentData: fetches enrollment data including feedback
+     *
+     * Author: nv
+     *
+     * Last Updated: October 12, 2022
+     *
+     * @param state state variables
+     * @param data courseId
+     */
+    fetchEnrollmentData (state, data: {
+      courseId: string
+    }) {
+      return new Promise((resolve, reject) => {
+        http
+          .get(`enrollments/getAllByCourseId?courseId=${data.courseId}`)
+          .then(resp => {
+            resolve(resp.data.subs)
+          })
+          .catch(error => reject(error))
+      })
     }
   }
 }

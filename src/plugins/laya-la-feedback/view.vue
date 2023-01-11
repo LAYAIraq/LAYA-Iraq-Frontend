@@ -183,7 +183,6 @@ Last Updated: May 04, 2022
 <script>
 import { locale, viewPluginProps, watchContent } from '@/mixins'
 import { mapGetters } from 'vuex'
-import { v4 as uuidv4 } from 'uuid'
 import '@/styles/flaggables.css'
 import { StarRating } from 'vue-rate-it'
 
@@ -217,9 +216,8 @@ export default {
       choice: [], // users choice as index
       freetext: '',
       answered: [],
-      // step: this.init.fno,
       step: this.$route.params.step - 1,
-      id: uuidv4(),
+      id: '',
       items: [],
       prevFeedback: '',
       categories: '',
@@ -233,7 +231,8 @@ export default {
       'content',
       'courseId',
       'courseSimple',
-      'enrollmentFeedback'
+      'enrollmentFeedback',
+      'userEnrolled'
     ]),
 
     /**
@@ -259,7 +258,7 @@ export default {
       this.getPrevFeedback()
     }
 
-    if (!this.enrollmentFeedback) {
+    if (!this.userEnrolled) {
       this.$store.dispatch('fetchEnrollment', this.courseId)
     }
   },
@@ -320,25 +319,6 @@ export default {
       }
     },
 
-    /* save() {
-      let step = this.step -1 // to comply to array indexing in store
-      const newInput = this.stepData
-      const updatedStep = {
-        name: this.cid,
-        nextStep: null,
-        input: newInput
-      }
-
-      // choose way depending on new or existing content
-      if(!this.editContent){
-        this.$store.commit('appendContent', updatedStep)
-      }
-      else{
-        this.$store.commit('updateStep', { step, updatedStep })
-      }
-      this.$emit('saved')
-    }, */
-
     /**
      * function storeFeedback: emit feedback to parent component, show toast
      *
@@ -364,11 +344,6 @@ export default {
      * Last Updated: May 04, 2022
      */
     fetchData () {
-      // for (let i = 0; i < this.step; i++) {
-      //   if (this.content[i].name === 'laya-course-feedback') {
-      //     this.numberOfFeedbacksEntries++
-      //   }
-      // }
       const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
       this.title = preData.title
