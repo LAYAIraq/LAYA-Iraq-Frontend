@@ -157,7 +157,7 @@ vuex,
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale, viewPluginProps, watchContent } from '@/mixins'
+import { locale, viewPluginProps } from '@/mixins'
 import '@/styles/flaggables.css'
 
 export default {
@@ -165,45 +165,25 @@ export default {
 
   mixins: [
     locale,
-    viewPluginProps,
-    watchContent
+    viewPluginProps
   ],
 
   data () {
-    if (this.viewData) {
-      return {
-        ...this.viewData,
-        tries: 0,
-        answers: [],
-        checked: [],
-        feedback: '',
-        freeze: false,
-        eval: [],
-        showSolutions: [],
-        showSolutionsBool: false
-      }
-    }
     return {
+      ...this.viewData,
       tries: 0,
       answers: [],
       checked: [],
       feedback: '',
       freeze: false,
       eval: [],
-      multiple: false,
-      title: {},
-      task: {},
-      taskAudio: '',
-      options: [],
-      solutions: [],
-      maxTries: 0,
       showSolutions: [],
       showSolutionsBool: false
     }
   },
 
   computed: {
-    ...mapGetters(['content', 'courseSimple']),
+    ...mapGetters(['courseSimple']),
 
     /**
      * feedbackId: creates an identifier string
@@ -235,9 +215,6 @@ export default {
   },
 
   created () {
-    if (!this.viewData) { // previewing newly created content
-      this.fetchData()
-    }
     this.populateShowSolutions()
   },
 
@@ -369,25 +346,6 @@ export default {
       this.feedback = 'Die Lösung wurde ergänzt!'
       document.getElementById(this.feedbackId).focus()
       this.freeze = true
-    },
-
-    /**
-     * Function fetchData: Fetch data from vuex and make data property
-     *
-     * Author: cmc
-     *
-     * Last Updated: March 19, 2021
-     */
-    fetchData () {
-      const idx = this.$route.params.step - 1
-      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
-      this.multiple = preData.multiple
-      this.title = preData.title
-      this.task = preData.task
-      this.taskAudio = preData.taskAudio
-      this.options = preData.options
-      this.solutions = preData.solutions
-      this.maxTries = preData.maxTries
     }
   }
 }

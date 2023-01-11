@@ -302,7 +302,7 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale, tooltipIcon } from '@/mixins'
+import { locale, routeProps, tooltipIcon } from '@/mixins'
 import commonMethods from './choices-common-methods'
 
 export default {
@@ -311,6 +311,7 @@ export default {
   mixins: [
     commonMethods,
     locale,
+    routeProps,
     tooltipIcon
   ],
 
@@ -327,7 +328,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['content', 'courseSimple'])
+    ...mapGetters(['courseContent', 'courseSimple'])
   },
 
   created () {
@@ -344,8 +345,7 @@ export default {
      * Last Updated: March 19, 2021
      */
     fetchData () {
-      const idx = this.$route.params.step - 1
-      const preData = JSON.parse(JSON.stringify(this.content[idx]['input']))
+      const preData = JSON.parse(JSON.stringify(this.courseContent[this.pathId]))
       this.multiple = preData.multiple
       this.title = preData.title
       this.task = preData.task
