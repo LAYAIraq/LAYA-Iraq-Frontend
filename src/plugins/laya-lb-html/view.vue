@@ -45,8 +45,7 @@ Dependencies:
 <script>
 import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
-import { locale, viewPluginProps, watchContent } from '@/mixins'
-import { mapGetters } from 'vuex'
+import { locale, viewPluginProps } from '@/mixins'
 import '@/styles/flaggables.css'
 
 export default {
@@ -54,22 +53,14 @@ export default {
 
   mixins: [
     locale,
-    viewPluginProps,
-    watchContent
+    viewPluginProps
   ],
 
   data () {
-    if (this.viewData) { // preview
       return { ...this.viewData }
-    }
-    return {
-      contents: null,
-      title: {}
-    }
   },
 
   computed: {
-    ...mapGetters(['content', 'courseSimple']),
 
     /**
      * editorId: return id for html element
@@ -83,29 +74,12 @@ export default {
     }
   },
 
-  created () {
-    if (!this.viewData) this.fetchData()
-  },
-
   mounted () {
     this.fetchContent()
   },
 
   methods: {
 
-    /**
-     * Function fetchData: fetch data from vuex and make data property
-     *
-     * Author: cmc
-     *
-     * Last Updated: March 20, 2021
-     */
-    fetchData () {
-      const idx = this.$route.params.step - 1
-      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
-      this.contents = preData.contents
-      this.title = preData.title
-    },
     /**
      * Function fetchContent: fetch contents from quill
      *

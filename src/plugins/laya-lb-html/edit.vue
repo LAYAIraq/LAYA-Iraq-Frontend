@@ -86,13 +86,14 @@ Dependencies:
 import { mapGetters } from 'vuex'
 import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
-import { locale } from '@/mixins'
+import { locale, routeProps } from '@/mixins'
 
 export default {
   name: 'LayaWysiwygEdit',
 
   mixins: [
-    locale
+    locale,
+    routeProps
   ],
 
   data () {
@@ -103,7 +104,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['content', 'courseSimple']),
+    ...mapGetters(['courseContent', 'courseSimple']),
 
     /**
      * editorId: return ID for html element
@@ -135,8 +136,7 @@ export default {
      * Last Updated: March 20, 2021
      */
     fetchData () {
-      const idx = this.$route.params.step - 1
-      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
+      const preData = JSON.parse(JSON.stringify(this.courseContent[this.pathId]))
       this.contents = preData.contents
       this.title = preData.title
     },
