@@ -150,7 +150,7 @@ Dependencies:
       <p><b>{{ y18n('layaLaRelate.edit.solutions') }}</b></p>
 
       <div
-        v-for="(rel, i) in relations"
+        v-for="i in relations.length"
         :key="'rel-'+i"
         class="form-group row"
       >
@@ -165,7 +165,7 @@ Dependencies:
           <div class="col">
             <input
               :id="'rel-text-'+i"
-              v-model="rel"
+              v-model="relations[i]"
               class="form-control"
               type="text"
             >

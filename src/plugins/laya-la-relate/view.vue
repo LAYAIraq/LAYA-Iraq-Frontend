@@ -185,7 +185,6 @@ Dependencies:
             {{ y18n('layaLaRelate.missingAnswerWarning') }}
           </b-modal>
         </div>
-
       </div>
     </div>
   </div>
