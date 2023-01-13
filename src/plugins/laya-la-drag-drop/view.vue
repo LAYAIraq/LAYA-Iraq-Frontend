@@ -138,7 +138,7 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale, viewPluginProps, watchContent } from '@/mixins'
+import { locale, viewPluginProps } from '@/mixins'
 import '@/styles/flaggables.css'
 
 export default {
@@ -146,8 +146,7 @@ export default {
 
   mixins: [
     locale,
-    viewPluginProps,
-    watchContent
+    viewPluginProps
   ],
 
   data () {
@@ -226,23 +225,6 @@ export default {
       const mid = Math.floor((this.categories.length) / 2)
       const s = this.items.map(() => mid)
       this.solution = [...s]
-    },
-
-    /**
-     * Function fetchData(): fetch data from vuex and make data property
-     *
-     * Author: cmc
-     *
-     * Last Updated: March 12, 2021
-     */
-    fetchData () {
-      const idx = this.$route.params.step - 1
-      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
-      this.title = preData.title
-      this.task = preData.task
-      this.taskAudio = preData.taskAudio
-      this.items = preData.items
-      this.categories = preData.categories
     }
   }
 }
