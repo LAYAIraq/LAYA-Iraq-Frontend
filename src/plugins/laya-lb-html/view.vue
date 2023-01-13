@@ -57,7 +57,7 @@ export default {
   ],
 
   data () {
-      return { ...this.viewData }
+    return { ...this.viewData }
   },
 
   computed: {

@@ -101,10 +101,10 @@ export default {
     ...mapGetters(['course', 'courseList']),
 
     renameOk () {
-      return this.rename !== ''
-        && !this.dupeName
-        && !this.noName
-        && this.rename !== this.course.name
+      return this.rename !== '' &&
+        !this.dupeName &&
+        !this.noName &&
+        this.rename !== this.course.name
     }
   },
 

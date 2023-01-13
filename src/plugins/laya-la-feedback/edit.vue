@@ -56,7 +56,7 @@ Last Updated: May 04, 2022
         <div class="col-10">
           <input
             id="feedback-title"
-            v-model="title"
+            v-model="title.text"
             type="text"
             class="form-control"
             :placeholder="y18n('titlePlaceholder')"
@@ -98,7 +98,7 @@ Last Updated: May 04, 2022
         <div class="col-10">
           <textarea
             id="feedback-task"
-            v-model="task"
+            v-model="task.text"
             class="w-100"
             :placeholder="y18n('taskPlaceholder')"
           >
@@ -140,7 +140,7 @@ Last Updated: May 04, 2022
             v-model="taskAudio.regular"
             type="text"
             class="form-control"
-            placeholder="y18n('taskAudioPlaceholder')"
+            :placeholder="y18n('taskAudioPlaceholder')"
           >
         </div>
       </div>
@@ -324,7 +324,7 @@ Last Updated: May 04, 2022
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale, tooltipIcon } from '@/mixins'
+import { locale, routeProps, tooltipIcon } from '@/mixins'
 import commonMethods from './common-methods'
 
 export default {
@@ -333,28 +333,23 @@ export default {
   mixins: [
     locale,
     commonMethods,
+    routeProps,
     tooltipIcon
   ],
 
   data () {
-    if (Object.entries(this.$attrs).length > 0) {
-      return {
-        ...this.$attrs,
-        tooltipOn: false
-      }
-    }
     return {
       title: '',
       task: '',
       taskAudio: '',
       items: [],
-      categories: []
-
+      categories: [],
+      id: ''
     }
   },
 
   computed: {
-    ...mapGetters(['content'])
+    ...mapGetters(['courseContent'])
   },
 
   created () {
@@ -370,22 +365,14 @@ export default {
      *
      * Last Updated: August 15, 2021
      */
-    /* fetchData() {
-      if (this.title === '') { //prefetch Data at creation
-        this.title = this.y18n('layaLaFeedback.name')
-        this.task = this.y18n('layaLaFeedback.prefetch.task')
-        this.items = this.y18n('layaLaFeedback.prefetch.items').split(',')
-        this.categories = this.y18n('layaLaFeedback.prefetch.categories').split(',')
-      }
-    } */
     fetchData () {
-      const idx = this.$route.params.step - 1
-      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
+      const preData = JSON.parse(JSON.stringify(this.courseContent[this.pathId]))
       this.title = preData.title
       this.task = preData.task
       this.taskAudio = preData.taskAudio
       this.items = preData.items
       this.categories = preData.categories
+      this.id = preData.id
     }
   }
 }
