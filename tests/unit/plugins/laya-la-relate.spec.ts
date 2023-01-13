@@ -102,13 +102,13 @@ describe('Relate edit component', () => {
     const getters = {
       profileLang: () => 'en',
       courseSimple: () => state.simple,
-      content: () => state.content
+      courseContent: () => state.courseContent,
+      courseContentPathId: () => () => 'test',
+      pathId: () => 'test'
     }
     const state = {
       simple: false,
-      content: [
-        { input: stepInput }
-      ]
+      courseContent: { test: stepInput }
     }
     const store = new Vuex.Store({
       state,
@@ -130,7 +130,7 @@ describe('Relate edit component', () => {
       // stubs: ['router-link'], // uncomment if component has router links
       localVue
     })
-    expect(wrapper.vm.$data).toStrictEqual(expect.objectContaining(state.content[0].input))
+    expect(wrapper.vm.$data).toStrictEqual(expect.objectContaining(state.courseContent.test))
   })
 })
 
@@ -139,6 +139,14 @@ describe('Relate View component', () => {
   let getters
   let state
   let store
+  let consoleError
+  beforeAll(() => {
+    consoleError = console.error
+    console.error = jest.fn()
+  })
+  afterAll(() => {
+    console.error = consoleError
+  })
   beforeEach(() => {
     state = {
       simple: false
@@ -147,9 +155,9 @@ describe('Relate View component', () => {
       profileLang: () => 'en',
       courseSimple: () => state.simple,
       courseUpdated: () => false,
-      content: () => [
-        { input: stepInput }
-      ],
+      courseContent: () => ({ test: stepInput }),
+      courseContentPathId: () => () => 'test',
+      pathId: () => 'test',
       storeBusy: () => false
     }
     store = new Vuex.Store({
@@ -161,36 +169,20 @@ describe('Relate View component', () => {
       mocks: {
         $route: {
           params: {
-            step: 1
-          }
-        }
-      },
-      store,
-      stubs: ['laya-audio-inline', 'laya-flag-icon'], // uncomment if component has router links
-      localVue
-    })
-  })
-
-  it('loads propData correctly', async () => {
-    wrapper = mount(RelateView, { // use mount if component uses bootstrap
-      mocks: {
-        $route: {
-          params: {
-            step: 1
+            coursePath: 'test'
           }
         }
       },
       propsData: {
-        previewData: stepInput
+        viewData: stepInput
       },
       store,
       stubs: ['laya-audio-inline', 'laya-flag-icon'], // uncomment if component has router links
       localVue
     })
-    expect(wrapper.vm.$data).toStrictEqual(expect.objectContaining(stepInput))
   })
 
-  it('loads data from store correctly', async () => {
+  it('shows viewData correctly', async () => {
     expect(wrapper.vm.$data).toStrictEqual(expect.objectContaining(stepInput))
   })
 
