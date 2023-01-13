@@ -2,6 +2,7 @@ import edit from '@/store/modules/edit'
 import axios from 'axios'
 import SampleCourse from '../../mocks/sample-course-short.json'
 import SampleCourseSimple from '../../mocks/sample-course-simple.json'
+import 'regenerator-runtime/runtime'
 
 // console.log(edit.actions)
 // jest.mock('axios')
@@ -26,7 +27,7 @@ describe('store module edit actions', () => {
     expect(spy).toHaveBeenCalled()
     expect(httpSpy).toHaveBeenCalled()
     expect(commit).toHaveBeenCalledWith('setBusy', true)
-    expect(commit).toHaveBeenCalledWith('appendToCourseList', expect.any(Object))
+    expect(commit).toHaveBeenCalledWith('courseListAppend', expect.any(Object))
     // expect(commit).toHaveBeenCalledWith('setBusy', false) cannot be tested b/c action doesn't return a promise
   })
 
@@ -34,7 +35,7 @@ describe('store module edit actions', () => {
     const data = [{ ...SampleCourse, properties: {} }]
     jest.spyOn(axios, 'get').mockResolvedValue({ data })
     await actions.fetchCourseList({ commit, state })
-    expect(commit).toHaveBeenCalledWith('appendToCourseList', expect.objectContaining({
+    expect(commit).toHaveBeenCalledWith('courseListAppend', expect.objectContaining({
       properties: {
         video: true,
         text: true
@@ -46,7 +47,7 @@ describe('store module edit actions', () => {
     const data = [{ ...SampleCourse, properties: { enrollment: true } }]
     jest.spyOn(axios, 'get').mockResolvedValue({ data })
     await actions.fetchCourseList({ commit, state })
-    expect(commit).toHaveBeenCalledWith('appendToCourseList', expect.objectContaining({
+    expect(commit).toHaveBeenCalledWith('courseListAppend', expect.objectContaining({
       properties: {
         video: true,
         text: true,
@@ -59,7 +60,7 @@ describe('store module edit actions', () => {
     const data = [SampleCourseSimple]
     jest.spyOn(axios, 'get').mockResolvedValue({ data })
     await actions.fetchCourseList({ commit, state })
-    expect(commit).toHaveBeenCalledWith('appendToCourseList', expect.objectContaining({
+    expect(commit).toHaveBeenCalledWith('courseListAppend', expect.objectContaining({
       properties: {
         video: true,
         text: true,
@@ -73,7 +74,7 @@ describe('store module edit actions', () => {
     const data = [{ ...SampleCourse, properties: { simpleLanguage: true } }]
     jest.spyOn(axios, 'get').mockResolvedValue({ data })
     await actions.fetchCourseList({ commit, state })
-    expect(commit).toHaveBeenCalledWith('appendToCourseList', expect.objectContaining({
+    expect(commit).toHaveBeenCalledWith('courseListAppend', expect.objectContaining({
       properties: {
         video: true,
         text: true,

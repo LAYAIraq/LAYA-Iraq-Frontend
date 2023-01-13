@@ -54,3 +54,13 @@ export default {
     }
   }
 }
+
+/**
+ * @description strips key from object, return new object w/o key
+ * @param key - the key to strip
+ * @param obj - object containing `key`
+ * @returns object without `key`
+ */
+export const stripKey = (key, obj) => {
+  return (({ [key]: any, ...o }) => o)(obj)
+}

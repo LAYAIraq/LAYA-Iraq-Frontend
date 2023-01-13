@@ -13,7 +13,7 @@ Dependencies:
   <div class="ly-bg-author py-4">
     <course-edit-header
       :name="name"
-      :step="step"
+      :course-path="coursePath"
       @save="changesToSave = true"
     >
     </course-edit-header>
@@ -31,18 +31,18 @@ Dependencies:
     >
       <course-edit-content
         :name="name"
-        :step="step"
+        :course-path="coursePath"
       ></course-edit-content>
 
       <course-edit-type
         :name="name"
-        :step="step"
+        :course-path="coursePath"
         @changedType="storeCourse"
       ></course-edit-type>
 
       <course-new-block
         :name="name"
-        :step="step"
+        :course-path="coursePath"
       >
       </course-new-block>
 
@@ -56,7 +56,7 @@ Dependencies:
 
       <course-delete-block
         :name="name"
-        :step="step"
+        :course-path="coursePath"
       ></course-delete-block>
 
       <course-delete :name="name"></course-delete>
@@ -81,7 +81,6 @@ Dependencies:
 
 <script>
 import { locale, routeProps } from '@/mixins'
-import { mapGetters } from 'vuex'
 import {
   courseChangeCategory,
   courseCopy,
@@ -124,10 +123,6 @@ export default {
     }
   },
 
-  computed: {
-    // ...mapState(['edit']),
-    ...mapGetters(['content', 'course'])
-  },
   methods: {
 
     /**

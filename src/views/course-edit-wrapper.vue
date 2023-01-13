@@ -17,20 +17,23 @@ Dependencies:
           <div
             :is="comps.view"
             v-if="preview"
-            :preview-data="stepData"
+            :view-data="stepData"
+            :edit-preview="true"
           ></div>
 
           <!-- editing view -->
-          <div v-else>
+          <div v-show="!preview">
             <component
               :is="comps.new"
               v-if="!editContent"
               ref="new"
+              :course-path="coursePath"
             ></component>
             <component
               :is="comps.edit"
               v-else
               ref="edit"
+              :course-path="coursePath"
             ></component>
           </div>
           <hr>
@@ -72,6 +75,7 @@ Dependencies:
 import { locale, routeProps } from '@/mixins'
 import { mapGetters } from 'vuex'
 import LayaUploadFileList from '@/plugins/misc/laya-upload-file-list/file-list'
+import { stripKey } from '@/misc/utils'
 
 export default {
   name: 'CourseEditWrapper',
@@ -107,7 +111,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['content']),
+    ...mapGetters(['courseContent']),
 
     /**
      * cid: returns the type of content
@@ -117,7 +121,7 @@ export default {
      * Last Updated: January 20, 2021
      */
     cid () {
-      return this.type || this.content[this.step - 1].name // why not always use $route.params.type?
+      return this.type || this.courseContent[this.pathId].name // why not always use $route.params.type?
     },
 
     /**
@@ -140,7 +144,7 @@ export default {
      * Last Updated: January 20, 2021
      */
     editContent () {
-      return this.step <= this.content.length
+      return (this.$route.path.slice(-4) === 'edit')
     },
 
     /**
@@ -158,8 +162,8 @@ export default {
           input[prop] = data[prop]
         }
       }
-      // eslint-disable-next-line
-      return (({tooltipOn, ...o}) => o) (input) //strip tooltipOn var from data
+      console.log('stepData', input)
+      return stripKey('tooltipOn', input)
     }
   },
 
@@ -192,22 +196,19 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: January 11, 2022
+     * Last Updated: November 22, 2022 by cmc
      */
     save () {
-      const step = this.step - 1 // to comply to array indexing in store
-      // deep copy to get rid of store references
-      const newInput = JSON.parse(JSON.stringify(this.stepData))
       const updatedStep = {
         name: this.cid,
-        input: newInput
+        ...JSON.parse(JSON.stringify(this.stepData)) // deep copy to get rid of store references
       }
 
       // choose way depending on new or existing content
       if (!this.editContent) {
-        this.$store.commit('appendContent', { ...updatedStep, nextStep: null })
+        this.$store.commit('courseContentAdd', updatedStep)
       } else {
-        this.$store.commit('updateStep', { step, updatedStep })
+        this.$store.commit('courseContentSet', { ...updatedStep, id: this.pathId })
       }
       // set courseUpdated to trigger watchers
       this.$store.commit('setCourseUpdated')

@@ -34,10 +34,10 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: October 27, 2020
+     * Last Updated: December 13, 2022 by cmc
      */
     fetchEnrollment () {
-      if (this.course.needsEnrollment) {
+      if (this.course.properties && this.course.properties.enrollment) {
         this.$store.dispatch('fetchEnrollment', this.course.courseId)
           .catch(err => console.error(err))
       }

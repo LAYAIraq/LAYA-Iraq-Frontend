@@ -84,13 +84,12 @@ export default new Router({
       component: Courses
     },
     {
-      path: '/courses/:name/:step',
+      path: '/courses/:name/:coursePath?',
       name: 'course-detail-view',
       component: CourseDetail,
       props: true,
 
       children: [
-
         {
           path: 'edit',
           name: 'edit-course-wrapper',
@@ -111,7 +110,7 @@ export default new Router({
       ]
     },
     {
-      path: '/courses/:name/:step/flag/:id',
+      path: '/courses/:name/:coursePath?/flag/:id',
       name: 'flag-view',
       component: Flag,
       props: true

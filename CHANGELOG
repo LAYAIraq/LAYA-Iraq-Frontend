@@ -1,5 +1,10 @@
 # Changes
 
+## v1.3.0
+- updated structure of course representation
+- introduced breadcrumb
+
+
 ## v1.2.4
 - fixed wrong display of solutions in assessments
 - changed display of choice of correct solution in SCMC component

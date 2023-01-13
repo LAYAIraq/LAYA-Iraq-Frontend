@@ -175,6 +175,7 @@ Dependencies:
 // import http from 'axios'
 import { mapGetters } from 'vuex'
 import { locale, storeHandler } from '@/mixins'
+import { slugify } from '@/misc/course-structure'
 
 export default {
   name: 'LayaCourseList',
@@ -330,8 +331,7 @@ export default {
             if (course.name !== this.course.name) {
               this.fetchCourse(course.name)
             }
-            this.$store.dispatch('fetchEnrollment', course.courseId)
-            this.$router.push('/courses/' + course.name + '/1')
+            this.$router.push({ name: 'course-detail-view', path: '/courses', params: { name: slugify(course.name) } })
           }
         : () => { this.subscribe(course) }
       if (this.complicitReady && !complicit) {
@@ -385,15 +385,15 @@ export default {
         })
     },
     /**
-     * Function isEnrolled: return true if course needs an enrollment
-     *  AND user is not enrolled, false if nono enrollment needed or user
+     * Function isEnrolled: return false if course needs an enrollment
+     *  AND user is not enrolled, true if nono enrollment needed or user
      *  is enrolled
      *
      * Author: cmc
      *
      * Last Updated: October 26, 2021
      * @param course the Course object for which it's checked
-     * @returns true if course needs enrollment and user is not enrolled
+     * @returns false if course needs enrollment and user is not enrolled
      */
     isEnrolled (course) {
       return course.properties.enrollment

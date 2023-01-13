@@ -18,7 +18,7 @@ Dependencies:
     >
       <h2>{{ courseSimple? title.simple : title.text }}</h2>
       <laya-flag-icon
-        v-if="!previewData"
+        v-if="!viewData"
         :ref-data="title"
         @flagged="title.flagged = true"
       ></laya-flag-icon>
@@ -49,7 +49,7 @@ Dependencies:
           :kind="track.kind"
         />
       </video>
-      <!--      <laya-flag-icon v-if="!previewData"-->
+      <!--      <laya-flag-icon v-if="!viewData"-->
       <!--          :refData="videoFlag"-->
       <!--          :interactive="true"-->
       <!--          @flagged="videoFlag.flagged = true"-->
@@ -80,7 +80,7 @@ Dependencies:
 import Plyr from 'plyr'
 import { mapGetters } from 'vuex'
 import 'plyr/dist/plyr.css'
-import { locale, viewPluginProps, watchContent } from '@/mixins'
+import { locale, viewPluginProps } from '@/mixins'
 import '@/styles/flaggables.css'
 
 export default {
@@ -88,36 +88,16 @@ export default {
 
   mixins: [
     locale,
-    viewPluginProps,
-    watchContent
+    viewPluginProps
   ],
 
   data () {
-    if (this.previewData) { // for 'preview' feature
-      return { ...this.previewData }
-    }
-    return {
-      plyr: null,
-      src: '',
-      title: {
-        show: false,
-        id: '',
-        simple: '',
-        text: '',
-        flagged: false
-      },
-      videoFlag: {},
-      captions: {
-        default: 0,
-        tracks: []
-      },
-      host: ''
-    }
+    return { ...this.viewData }
   },
 
   computed: {
     ...mapGetters([
-      'content',
+      'courseContent',
       'courseSimple'
     ]),
 
@@ -179,7 +159,7 @@ export default {
   },
 
   created () {
-    if (!this.previewData) this.fetchData()
+    if (!this.viewData) this.fetchData()
   },
 
   mounted () {
@@ -196,8 +176,7 @@ export default {
      * Last Updated: March 20, 2021
      */
     fetchData () {
-      const idx = this.$route.params.step - 1
-      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
+      const preData = JSON.parse(JSON.stringify(this.courseContent[this.pathId]))
       this.src = preData.src
       // this.showTitle = preData.showTitle
       this.title = preData.title

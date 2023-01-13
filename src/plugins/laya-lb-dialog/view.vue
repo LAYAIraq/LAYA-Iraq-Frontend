@@ -33,7 +33,7 @@ Dependencies: @/mixins/locale.vue
       >
         {{ courseSimple? question.simple: question.text }}
         <laya-flag-icon
-          v-if="!previewData"
+          v-if="!editPreview"
           :ref-data="question"
           @flagged="question.flagged = true"
         ></laya-flag-icon>
@@ -52,7 +52,7 @@ Dependencies: @/mixins/locale.vue
             {{ courseSimple? answer.simple : answer.text }}
           </button>
           <laya-flag-icon
-            v-if="!previewData"
+            v-if="!editPreview"
             :ref-data="answer"
             :interactive="true"
             @flagged="answer.flagged = true"
@@ -65,7 +65,7 @@ Dependencies: @/mixins/locale.vue
 
 <script>
 
-import { locale, viewPluginProps, watchContent } from '@/mixins'
+import { locale, viewPluginProps } from '@/mixins'
 import { mapGetters } from 'vuex'
 import '@/styles/flaggables.css'
 
@@ -74,87 +74,22 @@ export default {
 
   mixins: [
     locale,
-    viewPluginProps,
-    watchContent
+    viewPluginProps
   ],
 
   data () {
-    if (this.previewData) { // for 'preview' feature
-      return { ...this.previewData }
-    }
     return {
-      question: '',
-      answers: [],
-      bg: '',
-      title: '',
-      unwatch: null
+      ...this.viewData
     }
   },
 
   computed: {
     ...mapGetters([
-      'content',
       'courseFlags',
       'courseSimple'
-    ]),
-
-    /**
-     * idx: Return index of content block in course array
-     * Author: cmc
-     * Last Updated: January 16, 2021
-     */
-    idx () {
-      // comply with array indexing in store
-      return this.$route.params.step - 1
-    }
-  },
-
-  created () {
-    if (!this.previewData) this.fetchData()
-  },
-
-  methods: {
-    /**
-     * function checkFlags: check if flaggable props have a flag, set
-     *  flagged to true if yes, not used
-     *
-     * Author: cmc
-     *
-     * Last Updated: July 7, 2021
-     */
-    checkFlags () {
-      const flaggables = [this.title, this.question]
-      // console.log(flaggables)
-      for (const elem of flaggables) {
-        for (const flag of this.courseFlags) {
-          // console.log('checking ' + elem.id)
-          if (flag.referenceId === elem.id) {
-            // console.log('match!')
-            elem.flagged = true
-            break
-          }
-        }
-      }
-    },
-
-    /**
-     * Function fetchData: make vuex store data mutable
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 16, 2021
-     */
-    fetchData () {
-      // dereference store data
-      const preData = JSON.parse(JSON.stringify(this.content[this.idx].input))
-      // replace data stubs with stored data
-      this.question = preData.question
-      this.answers = preData.answers
-      this.bg = preData.bg
-      this.title = preData.title
-    }
-
+    ])
   }
+
 }
 </script>
 

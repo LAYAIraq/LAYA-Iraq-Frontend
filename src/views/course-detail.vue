@@ -21,7 +21,7 @@ Dependencies:
       <div class="row">
         <div class="col">
           <h1 class="text-center text-light py-5">
-            <b>{{ name }}</b>
+            <b>{{ course.name }}</b>
           </h1>
         </div>
       </div>
@@ -36,8 +36,9 @@ Dependencies:
           <component
             :is="contentToDisplay.name"
             v-if="contentToDisplay && viewPermit"
-            :key="name+'-'+step"
-            :on-finish="nextStep(contentToDisplay.nextStep)"
+            :key="contentToDisplay.title.text"
+            :view-data="contentToDisplay"
+            :on-finish="followContent(contentToDisplay)"
           >
           </component>
 
@@ -56,7 +57,7 @@ Dependencies:
     <courseEdit
       v-if="isCourseAuthor && content"
       :name="name"
-      :step="step"
+      :course-path="coursePath"
     ></courseEdit>
   </div>
 </template>
@@ -98,12 +99,20 @@ export default {
 
   computed: {
     ...mapGetters([
-      'isAdmin',
-      'isAuthor',
       'content',
       'course',
+      'courseContent',
+      'courseContentIdRouteMap',
+      'courseContentIndexIdMap',
+      'courseContentRouteIdMap',
+      'courseContentSlugIdMap',
       'courseFlags',
+      'courseNav',
+      'courseRoutes',
+      'courseSlug',
       'enrollment',
+      'isAdmin',
+      'isAuthor',
       'storeBusy',
       'userEnrolled',
       'userId'
@@ -141,10 +150,14 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: March 24, 2021
+     * Last Updated: November 14, 2022 by cmc
      */
     contentToDisplay () {
-      return this.content ? this.content[this.step - 1] : false
+      if (!this.coursePath) { // course path is not set --> first content in course
+        return this.courseContent[this.courseNav.start]
+      } else { // course path is set --> content with slug
+        return this.courseContent[this.courseContentRouteIdMap[this.coursePath]] // path is no number -> route
+      }
     },
 
     /**
@@ -200,6 +213,12 @@ export default {
     // this.fetchCourseStats()
   },
 
+  mounted () {
+    // if (!this.contentToDisplay && !this.$router.params.type) {
+    //   this.$forceUpdate()
+    // }
+  },
+
   beforeDestroy () {
     /* if (this.enrollment.length > 0) this.updateEnrollment()
     this.saveFlags() */
@@ -219,36 +238,40 @@ export default {
       const ctx = this
 
       window.scrollTo(0, 0)
-      document.title = `Laya - ${ctx.name}`
+      document.title = `Laya - ${ctx.course.name}`
       if (
-        !this.course || // course is undefined in store
-        this.course.name !== this.$route.params.name || // course in store doesn't match the route params
+        !this.course.name || // course is undefined in store
+        this.courseSlug !== this.name || // course in store doesn't match the route params
         Object.keys(this.course).length === 0 // course in store has no properties
       ) {
-        // console.log('Fetching Course...')
-        this.fetchCourse()
+        console.log('Fetching Course...')
+        this.fetchCourse(this.name)
       }
     },
 
     /**
-     * Function nextStep: map 'steps' string to components
+     * Function followContent: returns follow set for content block
      *
      * Author: core
      *
-     * Last Updated: October 27, 2020
+     * Last Updated: November 14, 2022 by cmc
      *
-     * @param {string} steps next steps
+     * @param contentBlock content block object
      */
-    nextStep (steps) { // string e.g. '1,2'
-      if (!steps) return []
-
-      const { name, $router } = this
-      return steps.split(',').map(step => {
-        return () => {
-          // if(this.enrollment.length >0) this.enrollment.progress = Number(step)
-          $router.push({ name: 'course-detail-view', params: { name, step } })
-        }
-      })
+    followContent (contentBlock) {
+      if (!this.contentToDisplay) return () => {}
+      const follow = this.courseNav.structure
+        .find((block) => block.id === contentBlock.id).follow // follow array in course nav structure
+      if (!follow) return () => {} // no follow set
+      return typeof follow === 'object' // TODO: update for id lookup in new course structure
+        ? follow.map(el => // create a router.push call for each element in follow array
+          () => this.$router.push(
+            { params: { name: this.name, coursePath: `${el}` } }
+          )
+        )
+        : () => this.$router.push( // follow is single element
+            { params: { name: this.name, coursePath: `${follow}` } }
+          )
     }
   }
 }

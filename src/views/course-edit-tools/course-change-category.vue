@@ -33,6 +33,7 @@ Dependencies:
       :ok-title="y18n('save')"
       :cancel-title="y18n('cancel')"
       centered
+      static
       :aria-label="y18n('popupwarning')"
       @ok="changeCourseCategory"
     >
@@ -42,9 +43,18 @@ Dependencies:
           v-model="newCategory"
           type="text"
           class="form-control"
+          :class="badInput ? 'border border-danger': ''"
           :placeholder="y18n('changeCategory.new')"
           :aria-label="y18n('changeCategory.new')"
+          @blur="newCategory = newCategory.trim()"
         >
+      </p>
+      <p
+        v-if="badInput"
+        id="input-warning"
+      >
+        <i class="fas fa-exclamation-triangle"></i>
+        {{ inputWarning }}
       </p>
     </b-modal>
     <div
@@ -69,13 +79,17 @@ export default {
 
   data () {
     return {
-      newCategory: '',
-      oldCategory: ''
+      badInput: null,
+      newCategory: ''
     }
   },
 
   computed: {
-    ...mapGetters(['course'])
+    ...mapGetters(['course']),
+
+    inputWarning () {
+      return this.badInput ? this.y18n(`changeCategory.${this.badInput}`) : ''
+    }
   },
 
   methods: {
@@ -87,15 +101,25 @@ export default {
      *
      * Last Updated: August 9, 2022
      */
-    changeCourseCategory () {
-      if (!this.newCategory) return
-      this.$store.commit('changeCourseCategory', this.newCategory)
-      this.$store.dispatch('updateCourse')
-        .then(() => {
-          this.$store.dispatch('fetchCourseList')
-          this.$emit('changedCategory')
+    changeCourseCategory (e) {
+      e.preventDefault()
+      if (!this.newCategory) {
+        this.badInput = 'empty'
+      } else if (this.newCategory === this.course.category) {
+        this.badInput = 'same'
+      } else {
+        this.$nextTick(() => {
+          this.$bvModal.hide('author-change-category-confirm')
         })
-        .catch(err => console.error(err))
+        this.badInput = null
+        this.$store.commit('changeCourseCategory', this.newCategory.trim())
+        this.$store.dispatch('updateCourse')
+          .then(() => {
+            this.$store.dispatch('fetchCourseList')
+            this.$emit('changedCategory')
+          })
+          .catch(err => console.error(err))
+      }
     }
   }
 }

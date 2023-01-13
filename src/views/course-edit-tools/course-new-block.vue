@@ -12,28 +12,32 @@ Dependencies:
   <div class="row mb-2">
     <div class="col">
       <b-dropdown
-        v-if="!langIsAr"
         id="new-content-dd"
         variant="primary"
         class="w-100"
+        :class="langIsAr? 'text-right' : ''"
         menu-class="drop-wrap"
-        dropright
+        :dropright="!langIsAr"
+        :dropleft="langIsAr"
       >
-        <template slot="button-content">
+        <template #button-content>
           <i class="fas fa-plus"></i>
           {{ y18n('newBlock.newContent') }}
         </template>
 
-        <b-dropdown-header>
+        <b-dropdown-header :class="langIsAr? 'text-right' : ''">
           {{ y18n('newBlock.newContentBlock') }}
         </b-dropdown-header>
 
         <b-dropdown-item
           v-for="block in $laya.lb"
           :key="block.id"
-          :to="'/courses/'+name+'/'+nextId+'/new/'+block.id"
+          :to="`/courses/${name}/new/${block.id}`"
         >
-          <div class="dropitem">
+          <div
+            class="dropitem"
+            :class="langIsAr? 'text-right' : ''"
+          >
             <i
               id="icon-drop"
               :class="block.icon"
@@ -50,79 +54,19 @@ Dependencies:
 
         <b-dropdown-divider></b-dropdown-divider>
 
-        <b-dropdown-header>
+        <b-dropdown-header :class="langIsAr? 'text-right': ''">
           {{ y18n('newBlock.newContentAssmnt') }}
         </b-dropdown-header>
 
         <b-dropdown-item
           v-for="ass in applicableAssessments"
           :key="ass.id"
-          :to="'/courses/'+name+'/'+nextId+'/new/'+ass.id"
+          :to="`/courses/${name}/new/${ass.id}`"
         >
-          <div class="dropitem">
-            <i :class="ass.icon"></i>
-            {{ getName(ass) }}
-
-            <i
-              v-b-tooltip.right
-              class="far fa-question-circle"
-              :title="getCaption(ass)"
-            >
-            </i>
-          </div>
-        </b-dropdown-item>
-      </b-dropdown>
-
-      <b-dropdown
-        v-else
-        id="new-content-dd"
-        variant="primary"
-        class="w-100"
-        :class="langIsAr? 'text-right' : ''"
-        menu-class="drop-wrap"
-        dropleft
-      >
-        <template slot="button-content">
-          <i class="fas fa-plus"></i>
-          {{ y18n('newBlock.newContent') }}
-        </template>
-
-        <b-dropdown-header class="text-right">
-          {{ y18n('newBlock.newContentBlock') }}
-        </b-dropdown-header>
-
-        <b-dropdown-item
-          v-for="block in $laya.lb"
-          :key="block.id"
-          :to="'/courses/'+name+'/'+nextId+'/new/'+block.id"
-        >
-          <div class="dropitem text-right">
-            <i
-              id="icon"
-              :class="block.icon"
-            ></i>
-            {{ getName(block) }}
-            <i
-              id="questionmark"
-              v-b-tooltip.right
-              class="far fa-question-circle"
-              :title="getCaption(block)"
-            ></i>
-          </div>
-        </b-dropdown-item>
-
-        <b-dropdown-divider></b-dropdown-divider>
-
-        <b-dropdown-header class="text-right">
-          {{ y18n('newBlock.newContentAssmnt') }}
-        </b-dropdown-header>
-
-        <b-dropdown-item
-          v-for="ass in $laya.la"
-          :key="ass.id"
-          :to="'/courses/'+name+'/'+nextId+'/new/'+ass.id"
-        >
-          <div class="dropitem text-right">
+          <div
+            class="dropitem"
+            :class="langIsAr? 'text-right' : ''"
+          >
             <i :class="ass.icon"></i>
             {{ getName(ass) }}
 
@@ -139,7 +83,6 @@ Dependencies:
 
     <div class="col text-dark">
       {{ y18n('newBlock.newContentTip') }}
-      <b>{{ nextId }}</b>.
     </div>
   </div>
 </template>
@@ -147,6 +90,7 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import { locale, routeProps } from '@/mixins'
+import { stripKey } from '@/misc/utils'
 
 export default {
   name: 'CourseNewBlock',
@@ -157,7 +101,7 @@ export default {
   ],
 
   computed: {
-    ...mapGetters(['content', 'course']),
+    ...mapGetters(['course']),
 
     /**
      * function applicableAssessments(): strip feedback from course blocks
@@ -171,21 +115,8 @@ export default {
       if (this.course.properties.enrollment) {
         return this.$laya.la
       } else {
-        // eslint-disable-next-line
-        const {['laya-course-feedback']: _, ...newData} = this.$laya.la // strip laya-course-feedback from la
-        return newData
+        return stripKey('laya-course-feedback', this.$laya.la)
       }
-    },
-
-    /**
-     * nextId: return step # for next content
-     *
-     * Author: cmc
-     *
-     * Last Updated: October 27, 2020
-     */
-    nextId () {
-      return this.content.length + 1
     }
   },
 

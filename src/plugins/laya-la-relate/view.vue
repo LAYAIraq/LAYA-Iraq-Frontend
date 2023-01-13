@@ -32,7 +32,7 @@ Dependencies:
           </h4>
         </div>
         <laya-flag-icon
-          v-if="!previewData"
+          v-if="!viewData"
           :ref-data="title"
           @flagged="title.flagged = true"
         ></laya-flag-icon>
@@ -48,7 +48,7 @@ Dependencies:
           <p>{{ courseSimple? task.simple: task.text }}</p>
         </div>
         <laya-flag-icon
-          v-if="!previewData"
+          v-if="!viewData"
           :ref-data="task"
           @flagged="task.flagged = true"
         ></laya-flag-icon>
@@ -107,7 +107,7 @@ Dependencies:
                 </div>
               </div>
               <laya-flag-icon
-                v-if="!previewData"
+                v-if="!viewData"
                 :ref-data="pair"
                 :interactive="true"
                 @flagged="pair.flagged = true"
@@ -136,9 +136,24 @@ Dependencies:
         >
           {{ y18n('check') }}
         </button>
+        <button
+          type="button"
+          class="btn btn-primary mt-3 btn-lg"
+          :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
+          @click="done"
+        >
+          <span>
+            {{ y18n('nextContent') }}
+            <i
+              :class="langIsAr?
+                'fas fa-arrow-left' :
+                'fas fa-arrow-right'"
+            ></i>
+          </span>
+        </button>
       </div>
 
-      <div>
+      <div class="mt-3">
         <div class="row">
           <div
             v-if="showSolutionsBool"
@@ -170,21 +185,6 @@ Dependencies:
             {{ y18n('layaLaRelate.missingAnswerWarning') }}
           </b-modal>
         </div>
-        <button
-          type="button"
-          class="btn btn-primary btn-lg mt-3 d-block"
-          :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-          @click="done"
-        >
-          <span>
-            {{ y18n('nextContent') }}
-            <i
-              :class="langIsAr?
-                'fas fa-arrow-left' :
-                'fas fa-arrow-right'"
-            ></i>
-          </span>
-        </button>
       </div>
     </div>
   </div>
@@ -192,7 +192,7 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale, viewPluginProps, watchContent } from '@/mixins'
+import { locale, viewPluginProps } from '@/mixins'
 import '@/styles/flaggables.css'
 
 export default {
@@ -200,39 +200,23 @@ export default {
 
   mixins: [
     locale,
-    viewPluginProps,
-    watchContent
+    viewPluginProps
   ],
 
   data () {
-    if (this.previewData) { // preview
-      return {
-        ...this.previewData,
-        defaultOption: '',
-        solution: [],
-        eval: [],
-        freeze: false
-      }
-    }
     return {
+      ...this.viewData,
       allAnswersChosen: false,
       defaultOption: '',
+      solution: [],
       eval: [],
       freeze: false,
-      pairs: [],
-      relations: [],
-      relationsSimple: [],
-      showSolutionsBool: false,
-      solution: [],
-      task: {},
-      taskAudio: '',
-      title: {}
+      showSolutionsBool: false
     }
   },
 
   computed: {
-    ...mapGetters(['content',
-      'courseSimple']),
+    ...mapGetters(['courseSimple']),
 
     /**
      * options: map pairs to their relation
@@ -274,9 +258,6 @@ export default {
 
   created () {
     this.defaultOption = this.y18n('layaLaRelate.defaultOption')
-    if (!this.previewData) { // no preview
-      this.fetchData()
-    }
     // eslint-disable-next-line no-unused-vars
     for (const i in this.pairs) {
       this.solution.push(-1)
@@ -339,24 +320,6 @@ export default {
         this.allAnswersChosen = true
         this.$bvModal.show('relate-missing-warning')
       }
-    },
-
-    /**
-     * Function fetchData: fetch data from vuex and create data property
-     *
-     * Author: cmc
-     *
-     * Last Updated: March 03, 2022
-     */
-    fetchData () {
-      const idx = this.$route.params.step - 1
-      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
-      this.relations = preData.relations
-      this.relationsSimple = preData.relationsSimple
-      this.title = preData.title
-      this.task = preData.task
-      this.taskAudio = preData.taskAudio
-      this.pairs = preData.pairs
     }
   }
 }

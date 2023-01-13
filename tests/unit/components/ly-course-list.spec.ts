@@ -95,7 +95,7 @@ describe('laya course list', () => {
   it('sets button action correctly (complicit course)', async () => {
     const button = wrapper.find('a')
     await button.trigger('click')
-    expect(wrapper.vm.$router.push).toHaveBeenCalledWith('/courses/testtest/1')
+    expect(wrapper.vm.$router.push).toHaveBeenCalledWith({ name: 'course-detail-view', params: { name: 'testtest' }, path: '/courses' })
   })
 
   it('loads new course when button is clicked', async () => {

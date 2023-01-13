@@ -13,6 +13,7 @@ import Vuex from 'vuex'
 
 /* modules */
 import auth from './modules/auth'
+import courseContent from './modules/course-content'
 import edit from './modules/edit'
 import editor from './modules/editor'
 import enrollment from './modules/enrollment'
@@ -31,6 +32,8 @@ if (debug) console.log('vuex in debug mode')
 export default new Vuex.Store({
   modules: {
     auth,
+    // @ts-ignore
+    courseContent,
     edit,
     editor,
     enrollment,

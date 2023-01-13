@@ -18,7 +18,13 @@ Dependencies:
           size="sm"
           :class="langIsAr? 'float-right' : 'float-left'"
           active-class="active"
-          :to="{name: 'course-detail-view', params: {name, step}}"
+          :to="{
+            name: 'course-detail-view',
+            params: {
+              name,
+              coursePath: coursePath === '' ? undefined : coursePath
+            }
+          }"
           exact
           @click.prevent="$emit('save')"
         >
@@ -31,66 +37,40 @@ Dependencies:
           {{ y18n('header.overview') }}
         </b-button>
 
-        <!-- jump to content number -->
+        <!-- jump to content -->
         <span
           class="content-nav"
           :class="langIsAr? 'float-left' : 'float-right'"
           style="font-size: 120%"
         >
-          <!-- dropdown for ltr locales -->
           <b-dropdown
-            v-if="!langIsAr"
             id="cid-dd"
             :text="y18n('header.jumpTo')"
             size="sm"
             variant="secondary"
             no-flip
-            right
+            :right="!langIsAr"
             :disabled="checkEmpty === true"
           >
 
             <b-dropdown-item
-              v-for="(c,id) in content"
+              v-for="id in Object.keys(courseContentIdRouteMap)"
               :key="id"
               :to="{
                 name: 'course-detail-view',
-                params: { name, step: id+1+'' }
+                params: {
+                  name,
+                  coursePath: courseContentIdRouteMap[id] !== ''
+                    ? courseContentIdRouteMap[id]
+                    : null
+                }
               }"
+              :class="langIsAr? 'text-right': 'text-left'"
             >
-              {{ y18n('header.listContent') }}
-              <b>
-                {{ id+1 }}
-              </b>:
-              {{ c.input.title.text }}
-              ({{ typeName(c.name) }})
-            </b-dropdown-item>
-
-          </b-dropdown>
-
-          <b-dropdown
-            v-else
-            id="cid-dd"
-            :text="y18n('header.jumpTo')"
-            size="sm"
-            variant="secondary"
-            no-flip
-          >
-
-            <b-dropdown-item
-              v-for="(c,id) in content"
-              :key="id"
-              :to="{
-                name: 'course-detail-view',
-                params: { name, step: id+1+'' }
-              }"
-              class="text-right"
-            >
-              {{ y18n('header.listContent') }}
-              <b>
-                {{ id+1 }}
-              </b>:
-              {{ c.input.title.text }}
-              ({{ typeName(c.name) }})
+              <b>{{ y18n('type') }}:</b>
+              {{ typeName(courseContent[id].name) }}
+              <b>{{ y18n('title') }}:</b>
+              {{ courseContent[id].title.text }}
             </b-dropdown-item>
 
           </b-dropdown>
@@ -114,7 +94,7 @@ export default {
   ],
 
   computed: {
-    ...mapGetters(['content']),
+    ...mapGetters(['courseContent', 'courseContentIdRouteMap']),
 
     /**
      * function checkEmpty(): returns true if no content in course
@@ -125,7 +105,7 @@ export default {
      * @returns {boolean} true if no content in course
      */
     checkEmpty () {
-      return this.content.length === 0
+      return Object.keys(this.courseContent).length === 0
     }
   },
 

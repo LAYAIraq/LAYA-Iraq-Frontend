@@ -26,7 +26,7 @@ Dependencies:
         </h2>
       </div>
       <laya-flag-icon
-        v-if="!previewData"
+        v-if="!viewData"
         :ref-data="title"
         @flagged="title.flagged = true"
       ></laya-flag-icon>
@@ -40,7 +40,7 @@ Dependencies:
         <p>{{ courseSimple? task.simple : task.text }}</p>
       </div>
       <laya-flag-icon
-        v-if="!previewData"
+        v-if="!viewData"
         :ref-data="task"
 
         @flagged="task.flagged = true"
@@ -89,7 +89,7 @@ Dependencies:
             :aria-label="y18n('layaLaDragDrop.label.slider')"
           >
           <laya-flag-icon
-            v-if="!previewData"
+            v-if="!viewData"
             :ref-data="item"
             :interactive="true"
             @flagged="item.flagged = true"
@@ -138,7 +138,7 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale, viewPluginProps, watchContent } from '@/mixins'
+import { locale, viewPluginProps } from '@/mixins'
 import '@/styles/flaggables.css'
 
 export default {
@@ -146,28 +146,15 @@ export default {
 
   mixins: [
     locale,
-    viewPluginProps,
-    watchContent
+    viewPluginProps
   ],
 
   data () {
-    if (this.previewData) { // show preview
-      return {
-        ...this.previewData,
-        checked: false,
-        solution: [], // users solution as index
-        eval: []
-      }
-    }
     return {
+      ...this.viewData,
       checked: false,
       solution: [], // users solution as index
-      eval: [], // list of booleans
-      title: {},
-      task: {},
-      taskAudio: '',
-      items: [],
-      categories: [],
+      eval: [],
       showSolutionsBool: false
     }
   },
@@ -192,7 +179,7 @@ export default {
   },
 
   created () {
-    if (!this.previewData) this.fetchData()
+    // if (!this.viewData) this.fetchData()
     this.mapSolutions()
   },
 
@@ -238,23 +225,6 @@ export default {
       const mid = Math.floor((this.categories.length) / 2)
       const s = this.items.map(() => mid)
       this.solution = [...s]
-    },
-
-    /**
-     * Function fetchData(): fetch data from vuex and make data property
-     *
-     * Author: cmc
-     *
-     * Last Updated: March 12, 2021
-     */
-    fetchData () {
-      const idx = this.$route.params.step - 1
-      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
-      this.title = preData.title
-      this.task = preData.task
-      this.taskAudio = preData.taskAudio
-      this.items = preData.items
-      this.categories = preData.categories
     }
   }
 }

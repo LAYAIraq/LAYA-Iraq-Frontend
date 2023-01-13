@@ -49,26 +49,27 @@ We write:
 For inline functions, we use the arrow syntax: instead of
 
 ```javascript
-someFunction = function(name, space) { ... }
+var someFunction = function(name, space) { ... }
 ```
 
 we write
 
 ```javascript
-someFunction = (name, space) => { ... }
+const someFunction = (name, space) => { ... }
 ```
 
 ### Type type annotations
 
 In our TypeScript files (such as store modules), we use extensive type
 annotation. As a general rule, the type should be declared as
-meticulously as possible. Unless we are actually accepting different
-argument types, the type annotation should never be `any`.
+meticulously as possible. This also applies to return values Unless we are
+actually accepting differentargument types, the type annotation should never
+be `any`.
 
 Good:
 
 ``` typescript
-someFunction (argument: object)
+someFunction (argument: object): string …
 ```
 
 Bad:

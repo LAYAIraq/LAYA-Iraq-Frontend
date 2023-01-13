@@ -54,7 +54,7 @@ Last Updated: May 04, 2022
           </h2>
         </div>
         <laya-flag-icon
-          v-if="!previewData"
+          v-if="!viewData"
           :ref-data="title"
           @flagged="title.flagged = true"
         ></laya-flag-icon>
@@ -68,7 +68,7 @@ Last Updated: May 04, 2022
           <p>{{ courseSimple? task.simple : task.text }}</p>
         </div>
         <laya-flag-icon
-          v-if="!previewData"
+          v-if="!viewData"
           :ref-data="task"
           @flagged="task.flagged = true"
         ></laya-flag-icon>
@@ -107,7 +107,7 @@ Last Updated: May 04, 2022
               :aria-label="y18n('layaLaFeedback.label.slider')"
             >
             <laya-flag-icon
-              v-if="!previewData"
+              v-if="!viewData"
               :ref-data="item"
               :interactive="true"
               @flagged="item.flagged = true"
@@ -202,9 +202,9 @@ export default {
   ],
 
   data () {
-    if (this.previewData) { // show preview
+    if (this.viewData) { // show preview
       return {
-        ...this.previewData,
+        ...this.viewData,
         choice: [], // users solution as index
         answered: []
       }
@@ -253,7 +253,7 @@ export default {
   },
 
   created () {
-    if (!this.previewData) {
+    if (!this.viewData) {
       this.fetchData()
       this.mapSolutions()
       this.getPrevFeedback()

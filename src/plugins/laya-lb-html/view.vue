@@ -18,7 +18,7 @@ Dependencies:
     >
       <h2>{{ courseSimple? title.simple : title.text }}</h2>
       <laya-flag-icon
-        v-if="!previewData"
+        v-if="!viewData"
         :ref-data="title"
         @flagged="title.flagged = true"
       ></laya-flag-icon>
@@ -29,7 +29,7 @@ Dependencies:
         type="button"
         class="btn btn-primary mt-3 d-block"
         :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-        @click="onFinish[0]() || {}"
+        @click="onFinish() || {}"
       >
         {{ y18n('nextContent') }}
         <i
@@ -45,8 +45,7 @@ Dependencies:
 <script>
 import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
-import { locale, viewPluginProps, watchContent } from '@/mixins'
-import { mapGetters } from 'vuex'
+import { locale, viewPluginProps } from '@/mixins'
 import '@/styles/flaggables.css'
 
 export default {
@@ -54,22 +53,14 @@ export default {
 
   mixins: [
     locale,
-    viewPluginProps,
-    watchContent
+    viewPluginProps
   ],
 
   data () {
-    if (this.previewData) { // preview
-      return { ...this.previewData }
-    }
-    return {
-      contents: null,
-      title: {}
-    }
+      return { ...this.viewData }
   },
 
   computed: {
-    ...mapGetters(['content', 'courseSimple']),
 
     /**
      * editorId: return id for html element
@@ -83,29 +74,12 @@ export default {
     }
   },
 
-  created () {
-    if (!this.previewData) this.fetchData()
-  },
-
   mounted () {
     this.fetchContent()
   },
 
   methods: {
 
-    /**
-     * Function fetchData: fetch data from vuex and make data property
-     *
-     * Author: cmc
-     *
-     * Last Updated: March 20, 2021
-     */
-    fetchData () {
-      const idx = this.$route.params.step - 1
-      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
-      this.contents = preData.contents
-      this.title = preData.title
-    },
     /**
      * Function fetchContent: fetch contents from quill
      *

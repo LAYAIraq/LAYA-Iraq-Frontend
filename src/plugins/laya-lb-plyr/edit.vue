@@ -356,16 +356,29 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import editMethods from './common-methods'
+import { routeProps } from '@/mixins'
 
 export default {
   name: 'LayaPlyrEdit',
 
   mixins: [
-    editMethods
+    editMethods,
+    routeProps
   ],
 
+  data () {
+    return {
+      host: 'upload',
+      url: '',
+      captions: {
+        default: 0,
+        tracks: []
+      }
+    }
+  },
+
   computed: {
-    ...mapGetters(['content'])
+    ...mapGetters(['courseContent'])
   },
 
   created () {
@@ -381,9 +394,8 @@ export default {
      * Last Updated: March 20, 2021
      */
     fetchData () {
-      const idx = this.$route.params.step - 1 // comply with array indexing in store
       // create deep copy of store object to manipulate in vue instance
-      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
+      const preData = JSON.parse(JSON.stringify(this.courseContent[this.pathId]))
       this.src = preData.src
       this.host = preData.host
       this.title = preData.title

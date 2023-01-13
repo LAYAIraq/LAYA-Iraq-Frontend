@@ -9,14 +9,18 @@
 export default {
   props: {
     onFinish: {
-      type: Array,
+      type: [Function, Array],
       default () {
-        return [() => {}]
+        return () => {}
       }
     },
-    previewData: {
+    viewData: {
       type: Object,
       default () { return null }
+    },
+    editPreview: {
+      type: Boolean,
+      default: false
     }
   }
 }

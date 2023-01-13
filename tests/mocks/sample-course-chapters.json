@@ -1,0 +1,42 @@
+{
+  "abstract": null,
+  "authorId": 1,
+  "category": "Kurs",
+  "start": "e1ns",
+  "chapters": {
+    "start": {
+      "follow": [
+        "zw31",
+        "dr31"
+      ],
+      "id": "e1ns",
+      "slug": "dialog-sample"
+    },
+    "video": {
+      "id": "zw31",
+      "follow": "dr31",
+      "slug": "video"
+    },
+    "editor": {
+      "follow": "v13r",
+      "id": "dr31",
+      "slug": "wysiwyg"
+    },
+    "quiz": [
+      {
+        "id": "v13r",
+        "slug": "sc-quiz"
+      },
+      {
+        "id": "fu3nf",
+        "slug": "drag-drop"
+      }
+    ]
+  },
+  "feedback": [],
+  "files": [],
+  "locked": false,
+  "name": "Testkurs",
+  "courseId": "t3stkur5",
+  "storageId": "st0r31d"
+}

@@ -217,6 +217,9 @@ describe('Drag & Drop View Component', () => {
           }
         }
       },
+      propsData: {
+        previewData: contentInput
+      },
       store,
       stubs: ['laya-audio-inline', 'laya-flag-icon'],
       localVue
@@ -251,6 +254,9 @@ describe('Drag & Drop View Component', () => {
           }
         }
       },
+      propsData: {
+        previewData: contentInput
+      },
       store,
       stubs: ['laya-audio-inline', 'laya-flag-icon'],
       localVue
@@ -281,6 +287,9 @@ describe('Drag & Drop View Component', () => {
           }
         }
       },
+      propsData: {
+        previewData: contentInput
+      },
       store,
       stubs: ['laya-audio-inline', 'laya-flag-icon'],
       localVue
@@ -309,6 +318,9 @@ describe('Drag & Drop View Component', () => {
             step: 1
           }
         }
+      },
+      propsData: {
+        previewData: contentInput
       },
       store,
       stubs: ['laya-audio-inline', 'laya-flag-icon'],
@@ -339,9 +351,8 @@ describe('Drag & Drop View Component', () => {
         }
       },
       propsData: {
-        onFinish: [
-          jest.fn()
-        ]
+        previewData: contentInput,
+        onFinish: [jest.fn()]
       },
       store,
       stubs: ['laya-audio-inline', 'laya-flag-icon'],
