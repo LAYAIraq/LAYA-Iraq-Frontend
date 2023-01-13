@@ -38,7 +38,7 @@ Dependencies:
             v-if="contentToDisplay && viewPermit"
             :key="contentToDisplay.title.text"
             :view-data="contentToDisplay"
-            :on-finish="followContent(contentToDisplay)"
+            :on-finish="followContent"
           >
           </component>
 
@@ -160,6 +160,10 @@ export default {
       }
     },
 
+    followContent () {
+      return this.followingContent(this.contentToDisplay)
+    },
+
     /**
      * viewPermit: returns true if user is allowed to see selected course
      *
@@ -258,20 +262,29 @@ export default {
      *
      * @param contentBlock content block object
      */
-    followContent (contentBlock) {
+    followingContent (contentBlock) {
       if (!this.contentToDisplay) return () => {}
       const follow = this.courseNav.structure
         .find((block) => block.id === contentBlock.id).follow // follow array in course nav structure
       if (!follow) return () => {} // no follow set
-      return typeof follow === 'object' // TODO: update for id lookup in new course structure
+      // el is the content block to follow, return router push function
+      // if el is number, use courseContentIndexIdMap to get id
+      const routePushLookup = (el) => {
+        return () => this.$router.push({
+          params: {
+            name: this.name,
+            coursePath: typeof el === 'number' ? // if element is a number, it's an index
+              this.courseContentIdRouteMap[this.courseContentIndexIdMap[el]] : // get id from index, then route from id
+              `${el}`
+          }
+        })
+      }
+
+      return typeof follow === 'object'
         ? follow.map(el => // create a router.push call for each element in follow array
-          () => this.$router.push(
-            { params: { name: this.name, coursePath: `${el}` } }
-          )
+          routePushLookup(el)
         )
-        : () => this.$router.push( // follow is single element
-            { params: { name: this.name, coursePath: `${follow}` } }
-          )
+        : [routePushLookup(follow)] // has to be array
     }
   }
 }
