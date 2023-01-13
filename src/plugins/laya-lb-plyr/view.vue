@@ -158,32 +158,11 @@ export default {
 
   },
 
-  created () {
-    if (!this.viewData) this.fetchData()
-  },
-
   mounted () {
     this.initPlyr()
   },
 
   methods: {
-
-    /**
-     * Function fetchData: fetch data from vuex and make data property
-     *
-     * Author: cmc
-     *
-     * Last Updated: March 20, 2021
-     */
-    fetchData () {
-      const preData = JSON.parse(JSON.stringify(this.courseContent[this.pathId]))
-      this.src = preData.src
-      // this.showTitle = preData.showTitle
-      this.title = preData.title
-      this.videoFlag = preData.videoFlag
-      this.host = preData.host
-      this.captions = preData.captions
-    },
 
     /**
      * function initPlyr: initialize Plyr instance

@@ -198,29 +198,29 @@ describe('Plyr edit component', () => {
   let getters
   beforeEach(() => {
     getters = {
-      content: () => [
-        {
-          input: {
-            host: 'upload',
-            src: 'youtu.be/1hcSloy35hj',
-            title: {
-              text: 'some vid',
-              simple: 'Video',
-              id: 'video-title'
-            },
-            captions: {
-              tracks: [{
-                kind: 'captions',
-                label: 'English',
-                srclang: 'en',
-                src: 'someURL',
-                default: true
-              }],
-              default: 0
-            }
+      courseContent: () => ({
+        test: {
+          host: 'upload',
+          src: 'youtu.be/1hcSloy35hj',
+          title: {
+            text: 'some vid',
+            simple: 'Video',
+            id: 'video-title'
+          },
+          captions: {
+            tracks: [{
+              kind: 'captions',
+              label: 'English',
+              srclang: 'en',
+              src: 'someURL',
+              default: true
+            }],
+            default: 0
           }
         }
-      ],
+      }),
+      pathId: () => 'test',
+      courseContentPathId: () => () => 'test',
       courseSimple: () => true,
       profileLang: () => 'en'
     }
@@ -235,7 +235,7 @@ describe('Plyr edit component', () => {
       mocks: {
         $route: {
           params: {
-            step: 1
+            coursePath: 'test'
           }
         }
       },
@@ -275,29 +275,31 @@ describe('Plyr view component', () => {
   // jest.mock('plyr', () => {
   //   console.log('kekw')
   // })
+  const input = {
+    host: 'upload',
+    src: 'youtu.be/1hcSloy35hj',
+    title: {
+      text: 'some vid',
+      simple: 'Video',
+      id: 'video-title',
+      show: false
+    },
+    captions: {
+      tracks: [{
+        kind: 'captions',
+        label: 'English',
+        srclang: 'en',
+        src: 'someURL',
+        default: true
+      }],
+      default: 0
+    }
+  }
   beforeEach(() => {
     getters = {
-      courseUpdated: () => false,
       profileLang: () => 'en',
-      storeBusy: () => false
+      courseSimple: () => false
     }
-  })
-
-  it('shows a video container', () => {
-    getters.content = () => [
-      {
-        input: {
-          src: 'youtu.be/1hcSloy35hj',
-          title: {
-            text: 'some vid',
-            id: 'video-title',
-            show: false
-          },
-          host: 'youtube'
-        }
-      }
-    ]
-    getters.courseSimple = () => false
     const store = new Vuex.Store({
       getters
     })
@@ -305,50 +307,29 @@ describe('Plyr view component', () => {
       mocks: {
         $route: {
           params: {
-            step: 1
+            coursePath: 'test'
           }
         }
+      },
+      propsData: {
+        viewData: input
       },
       store,
       stubs: ['laya-flag-icon'],
       localVue
     })
+  })
+
+  it('shows a video container', () => {
     // expect(wrapper.vm.playerId).toBe('video-div')
     const videoContainer = wrapper.find(`#${wrapper.vm.playerId}`)
     expect(videoContainer.exists()).toBeTruthy()
   })
 
   it('shows title when title.show boolean is set', async () => {
-    getters.content = () => [
-      {
-        input: {
-          title: {
-            text: 'some vid',
-            id: 'video-title',
-            show: false
-          }
-        }
-      }
-    ]
-    getters.courseSimple = () => false
-    const store = new Vuex.Store({
-      getters
-    })
-    wrapper = shallowMount(PlyrView, {
-      mocks: {
-        $route: {
-          params: {
-            step: 1
-          }
-        }
-      },
-      store,
-      stubs: ['laya-flag-icon'],
-      localVue
-    })
     let videoTitle = wrapper.find('#video-title')
     expect(videoTitle.exists()).toBeFalsy()
-    wrapper.vm.title.show = true
+    input.title.show = true
     // wrapper.setData({ title: { show: true } } ) // this is equivalent
     await localVue.nextTick()
     videoTitle = wrapper.find('#video-title')
@@ -357,36 +338,20 @@ describe('Plyr view component', () => {
   })
 
   it('displays the simple title correctly', () => {
-    getters.content = () => [
-      {
-        input: {
-          src: 'youtu.be/1hcSloy35hj',
-          title: {
-            text: 'some vid',
-            id: 'video-title',
-            show: true,
-            simple: 'Video'
-          },
-          host: 'youtube'
-        }
-      }
-    ]
     getters.courseSimple = () => true
     const store = new Vuex.Store({
       getters
     })
     wrapper = shallowMount(PlyrView, {
-      computed: {
-        playerId () {
-          return 'video-div'
-        }
-      },
       mocks: {
         $route: {
           params: {
-            step: 1
+            coursePath: 'test'
           }
         }
+      },
+      propsData: {
+        viewData: input
       },
       store,
       stubs: ['laya-flag-icon'],
@@ -395,33 +360,5 @@ describe('Plyr view component', () => {
     const videoTitle = wrapper.find('#video-title')
     expect(videoTitle.exists()).toBeTruthy()
     expect(videoTitle.text()).toBe('Video')
-  })
-
-  it('shows previewData correctly', async () => {
-    const store = new Vuex.Store({
-      getters
-    })
-    wrapper = shallowMount(PlyrView, {
-      propsData: {
-        previewData: {
-          src: 'youtu.be/1hcSloy35hj',
-          title: {
-            text: 'some vid',
-            id: 'video-title',
-            show: false
-          },
-          host: 'youtube'
-        }
-      },
-      store,
-      stubs: ['laya-flag-icon'],
-      localVue
-    })
-    // await localVue.nextTick()
-    // const videoTitle = wrapper.find('#video-title')
-    // expect(videoTitle.exists()).toBeTruthy()
-    // expect(videoTitle.text()).toBe('some vid')
-    // const videoContainer = wrapper.find(`#${wrapper.vm.playerId}`)
-    // expect(videoContainer.exists()).toBeTruthy()
   })
 })
