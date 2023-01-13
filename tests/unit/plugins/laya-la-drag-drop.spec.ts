@@ -115,10 +115,10 @@ describe('Drag & Drop edit component', () => {
   beforeEach(() => {
     getters = {
       courseSimple: () => true,
-      content: () => [
-        { input: contentInput }
-      ],
-      profileLang: () => 'en'
+      courseContent: () => ({ test: contentInput }),
+      profileLang: () => 'en',
+      courseContentPathId: () => () => 'test',
+      pathId: () => 'test'
     }
     const store = new Vuex.Store({
       state,
@@ -131,7 +131,7 @@ describe('Drag & Drop edit component', () => {
       mocks: {
         $route: {
           params: {
-            step: 1
+            coursePath: 'test'
           }
         }
       },
@@ -161,11 +161,6 @@ describe('Drag & Drop View Component', () => {
       profileLang: () => 'en',
       storeBusy: () => false
     }
-  })
-
-  it('loads and renders prop data correctly', async () => {
-    state.courseSimple = false
-    getters.content = () => [{}]
     store = new Vuex.Store({
       state,
       getters
@@ -179,12 +174,17 @@ describe('Drag & Drop View Component', () => {
         }
       },
       propsData: {
-        previewData: contentInput
+        viewData: contentInput,
+        onFinish: [jest.fn()]
       },
       store,
       stubs: ['laya-audio-inline', 'laya-flag-icon'],
       localVue
     })
+  })
+
+  it('loads and renders prop data correctly', async () => {
+    state.courseSimple = false
     expect(wrapper.vm.$data).toStrictEqual(expect.objectContaining(contentInput))
     const item = wrapper.findAll('.item')
     expect(item.length).toBe(1)
@@ -200,68 +200,7 @@ describe('Drag & Drop View Component', () => {
     expect(wrapper.find('p').text()).toBe('Task')
   })
 
-  it('loads and renders store data correctly', async () => {
-    state.courseSimple = true
-    getters.content = () => [{
-      input: contentInput
-    }]
-    store = new Vuex.Store({
-      state,
-      getters
-    })
-    wrapper = shallowMount(DragDropView, {
-      mocks: {
-        $route: {
-          params: {
-            step: 1
-          }
-        }
-      },
-      propsData: {
-        previewData: contentInput
-      },
-      store,
-      stubs: ['laya-audio-inline', 'laya-flag-icon'],
-      localVue
-    })
-    expect(wrapper.vm.$data).toStrictEqual(expect.objectContaining(contentInput))
-    const item = wrapper.findAll('.item')
-    const rangeInput = item.at(0).findAll('input')
-    expect(rangeInput.length).toBe(1)
-    expect(rangeInput.at(0).attributes('min')).toBe('0')
-    expect(rangeInput.at(0).attributes('max')).toBe('1')
-    const labels = item.at(0).findAll('b')
-    expect(labels.at(0).text()).toBe('Simple Cat 1')
-    expect(labels.at(1).text()).toBe('Simple Cat 2')
-    expect(item.at(0).find('h3').text()).toBe('Simple Item')
-    expect(wrapper.find('h2').text()).toBe('Simple Title')
-    expect(wrapper.find('p').text()).toBe('Simple Task')
-  })
-
   it('marks the correct check (wrong answer)', async () => {
-    getters.content = () => [{
-      input: contentInput
-    }]
-    store = new Vuex.Store({
-      state,
-      getters
-    })
-    wrapper = shallowMount(DragDropView, {
-      mocks: {
-        $route: {
-          params: {
-            step: 1
-          }
-        }
-      },
-      propsData: {
-        previewData: contentInput
-      },
-      store,
-      stubs: ['laya-audio-inline', 'laya-flag-icon'],
-      localVue
-    })
-    await localVue.nextTick()
     const rangeInput = wrapper.find('input')
     expect(rangeInput.exists()).toBeTruthy()
     expect(rangeInput.attributes('aria-valuenow')).toBe('1')
@@ -272,28 +211,6 @@ describe('Drag & Drop View Component', () => {
   })
 
   it('marks the correct check (correct answer)', async () => {
-    getters.content = () => [{
-      input: contentInput
-    }]
-    store = new Vuex.Store({
-      state,
-      getters
-    })
-    wrapper = shallowMount(DragDropView, {
-      mocks: {
-        $route: {
-          params: {
-            step: 1
-          }
-        }
-      },
-      propsData: {
-        previewData: contentInput
-      },
-      store,
-      stubs: ['laya-audio-inline', 'laya-flag-icon'],
-      localVue
-    })
     const rangeInput = wrapper.find('input')
     // console.log(rangeInput.element.value)
     await rangeInput.setValue(0)
@@ -304,28 +221,6 @@ describe('Drag & Drop View Component', () => {
   })
 
   it('shows the list of correct answers after clicking check', async () => {
-    getters.content = () => [{
-      input: contentInput
-    }]
-    store = new Vuex.Store({
-      state,
-      getters
-    })
-    wrapper = shallowMount(DragDropView, {
-      mocks: {
-        $route: {
-          params: {
-            step: 1
-          }
-        }
-      },
-      propsData: {
-        previewData: contentInput
-      },
-      store,
-      stubs: ['laya-audio-inline', 'laya-flag-icon'],
-      localVue
-    })
     const button = wrapper.find('button')
     expect(button.text()).toBe('Check Solution')
     await button.trigger('click')
@@ -335,29 +230,6 @@ describe('Drag & Drop View Component', () => {
   })
 
   it('calls next content button function', async () => {
-    getters.content = () => [{
-      input: contentInput
-    }]
-    store = new Vuex.Store({
-      state,
-      getters
-    })
-    wrapper = shallowMount(DragDropView, {
-      mocks: {
-        $route: {
-          params: {
-            step: 1
-          }
-        }
-      },
-      propsData: {
-        previewData: contentInput,
-        onFinish: [jest.fn()]
-      },
-      store,
-      stubs: ['laya-audio-inline', 'laya-flag-icon'],
-      localVue
-    })
     const button = wrapper.find('.btn-primary')
     await button.trigger('click')
     expect(wrapper.vm.onFinish[0]).toHaveBeenCalled()
