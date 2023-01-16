@@ -252,14 +252,14 @@ Dependencies:
             >
           </div>
 
-          <!-- correct -->
-          <div class="form-check form-check-inline">
+          <!-- correct for sc -->
+          <div class="form-check form-check-inline ">
             <input
               :id="'option-corr-'+i"
               v-model="solutions[i]"
               class="form-check-input"
-              type="checkbox"
-              :true-value="i"
+              type="radio"
+              :value="i"
             >
             <label
               class="form-check-label"

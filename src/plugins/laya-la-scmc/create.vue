@@ -260,8 +260,8 @@ Dependencies: @/mixins/locale.vue
               :id="'option-corr-'+i"
               v-model="solutions[i]"
               class="form-check-input"
-              type="checkbox"
-              :true-value="i"
+              type="radio"
+              :value="i"
             >
             <label
               class="form-check-label"
