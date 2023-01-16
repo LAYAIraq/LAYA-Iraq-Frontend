@@ -50,7 +50,7 @@ Dependencies:
           <div class="form-check form-check-inline align-text-top">
             <input
               id="scmc-sc"
-              v-model="multiple"
+              v-model="variation"
               class="form-check-input"
               type="radio"
               :value="single"
@@ -65,11 +65,11 @@ Dependencies:
           <div class="form-check form-check-inline align-text-top">
             <input
               id="scmc-mc"
-              v-model="multiple"
+              v-model="variation"
               class="form-check-input"
               type="radio"
               name="multiple"
-              :value="multi"
+              :value="multiple"
             >
             <label
               for="scmc-mc"
@@ -81,7 +81,7 @@ Dependencies:
           <div class="form-check form-check-inline align-text-top">
             <input
               id="scmc-tf"
-              v-model="multiple"
+              v-model="variation"
               class="form-check-input"
               type="radio"
               name="tf"
@@ -245,10 +245,19 @@ Dependencies:
           </label>
           <div class="col-7">
             <input
+              v-if="variation == single || variation == multiple"
               :id="'option-text-'+i"
               v-model="option.text"
               class="form-control"
               type="text"
+            >
+            <input
+              v-if="variation == tf"
+              :id="'option-text-'+i"
+              v-model="option.text"
+              class="form-control"
+              type="text"
+              readonly
             >
           </div>
 
@@ -272,6 +281,7 @@ Dependencies:
           <!-- delete -->
           <div class="col-auto align-self-center">
             <button
+              v-if="variation == single || variation == multiple"
               type="button"
               class="btn btn-danger btn-sm"
               :aria-label="y18n('deleteField')"
@@ -305,6 +315,7 @@ Dependencies:
       </div>
 
       <button
+        v-if="variation == single || variation == multiple"
         type="button"
         class="btn btn-primary btn-sm"
         @click="_addItem"
@@ -337,9 +348,9 @@ export default {
       solutions: [],
       maxTries: 1,
       single: 0,
-      multi: 1,
+      multiple: 1,
       tf: 2,
-      multiple: 0
+      variation: 0
     }
   },
 
