@@ -194,7 +194,8 @@ export default {
       solutions: [],
       maxTries: 0,
       showSolutions: [],
-      showSolutionsBool: false
+      showSolutionsBool: false,
+      multiple: 1
     }
   },
 
@@ -376,7 +377,7 @@ export default {
     fetchData () {
       const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
-      this.multiple = preData.multiple
+      this.variation = preData.variation
       this.title = preData.title
       this.task = preData.task
       this.taskAudio = preData.taskAudio
