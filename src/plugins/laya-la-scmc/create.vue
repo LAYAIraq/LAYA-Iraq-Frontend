@@ -247,14 +247,14 @@ Dependencies: @/mixins/locale.vue
           </label>
           <div class="col-7">
             <input
-              v-if="variation == single || variation == multiple"
+              v-if="variation === single || variation === multiple"
               :id="'option-text-'+i"
               v-model="option.text"
               class="form-control"
               type="text"
             >
             <input
-              v-if="variation == tf"
+              v-else
               :id="'option-text-'+i"
               v-model="option.text"
               class="form-control"
@@ -266,10 +266,20 @@ Dependencies: @/mixins/locale.vue
           <!-- correct -->
           <div class="form-check form-check-inline">
             <input
+              v-if="variation === single || variation === tf"
               :id="'option-corr-'+i"
               v-model="solutions[i]"
               class="form-check-input"
               type="radio"
+              :value="i"
+            >
+
+            <input
+              v-else
+              :id="'option-corr-'+i"
+              v-model="solutions[i]"
+              class="form-check-input"
+              type="checkbox"
               :value="i"
             >
             <label
@@ -283,7 +293,7 @@ Dependencies: @/mixins/locale.vue
           <!-- delete -->
           <div class="col-auto align-self-center">
             <button
-              v-if="variation == single || variation == multiple"
+              v-if="variation === single || variation === multiple"
               type="button"
               class="btn btn-danger btn-sm"
               :aria-label="y18n('deleteField')"
@@ -307,17 +317,26 @@ Dependencies: @/mixins/locale.vue
           </label>
           <div class="col-7">
             <input
+              v-if="variation === single || variation === multiple"
               :id="'option-text-'+i"
               v-model="options[i].simple"
               class="form-control"
               type="text"
+            >
+            <input
+              v-else
+              :id="'option-text-'+i"
+              v-model="option.simple"
+              class="form-control"
+              type="text"
+              readonly
             >
           </div>
         </div>
       </div>
 
       <button
-        v-if="variation == single || variation == multiple"
+        v-if="variation === single || variation === multiple"
         type="button"
         class="btn btn-primary btn-sm"
         @click="_addItem"

@@ -60,7 +60,7 @@ vuex,
       >
         <div>
           <input
-            v-if="multi"
+            v-if="variation === multiple"
             :id="'mchoice-in-'+i"
             v-model="answers"
             class="position-absolute mt-2"
@@ -186,7 +186,7 @@ export default {
       feedback: '',
       freeze: false,
       eval: [],
-      multiple: false,
+      variation: 0,
       title: {},
       task: {},
       taskAudio: '',
