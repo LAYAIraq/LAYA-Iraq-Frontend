@@ -266,7 +266,7 @@ Dependencies:
             <input
               v-if="variation === single || variation === tf"
               :id="'option-corr-'+i"
-              v-model="solutions[i]"
+              v-model="solution"
               class="form-check-input"
               type="radio"
               :value="i"
@@ -363,6 +363,7 @@ export default {
       task: '',
       taskAudio: '',
       options: [],
+      solution: 0,
       solutions: [],
       maxTries: 1,
       single: 0,
