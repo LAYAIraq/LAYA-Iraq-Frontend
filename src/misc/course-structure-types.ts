@@ -31,7 +31,7 @@ export interface LegacyCourse {
   properties: object,
   readonly authorId: number,
   readonly courseId: string,
-  readonly lastChanged: number | string,
+  readonly lastChanged?: number | string,
   readonly locked: boolean,
   storageId: string
 }

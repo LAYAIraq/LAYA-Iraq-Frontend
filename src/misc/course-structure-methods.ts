@@ -79,7 +79,7 @@ const traverseNavStructure = (
   if (structure instanceof Array) { // stucture is CourseNavigationItem[]
     structure.forEach((item) => {
       addStartRoute(item, start, routes, structure.indexOf(item))
-      routes.push([currentPath + '/' + item.slug, item.id]) // can have alternative path
+      routes.push([currentPath + '/' + item.slug ? item.slug : item.id, item.id]) // can have alternative path
     })
   } else if (Object.prototype.hasOwnProperty.call(structure, 'id')) { // structure is CourseNavigationItem
     // @ts-ignore
@@ -139,13 +139,16 @@ const traverseCourseStructure = (structure: CourseNavigationStructure, ids: any)
 /**
  * @description find chapters with only one item and remove slug
  * @param routes list of routes
+ * @param courseNav the course navigation object the routes were generated from
  */
-const subChapterSlugTrim = (routes:
-  Array<[route: string, id: string]>
+const subChapterSlugTrim = (
+  routes: Array<[route: string, id: string]>,
+  courseNav: CourseNavigationStructure
 ): void => {
   routes.forEach((route) => {
     const pathList = route[0].split('/') // split path into list
     if (pathList.length >= 2) { // more than one member => subchapters
+      //  TODO: refactor to check if chapter has only one item in courseNav
       console.log('subchapter', pathList.slice(-1).join('/'))
       const subChapter = routes.find(
         e => e[0].includes(pathList.slice(-1).join('/'))
@@ -181,7 +184,7 @@ export const descentCourseChapters = (
   traverseCourseStructure(courseChapters, ids)
   const routes = getPaths(courseChapters, start)
   if (subChapterSlug) {
-    subChapterSlugTrim(routes)
+    subChapterSlugTrim(routes, courseChapters)
   }
   return [ids, routes]
 }

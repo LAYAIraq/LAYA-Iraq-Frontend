@@ -13,9 +13,10 @@ import {
 } from '@/misc/course-structure-methods'
 import { validateSlug } from '../../helpers/validations'
 
+// prerequisites to make sure sample data is valid
 describe('content-structure types', () => {
   describe('legacy course structure', () => {
-    const isLegacyCourseStructure = (course: any): course is LegacyCourse => {
+    const isLegacyCourseStructure = (course: LegacyCourse) => {
       return ('content' in course && 'properties' in course)
     }
     it('old courses fulfill the `LegacyCourse` interface', () => {
@@ -23,7 +24,7 @@ describe('content-structure types', () => {
     })
   })
   describe('new course structure', () => {
-    const isCourseStructure = (course: any): course is Course => {
+    const isCourseStructure = (course: Course) => {
       return ('start' in course && 'chapters' in course)
     }
     it('new courses fulfill the `CourseNavigation` interface', () => {
@@ -55,6 +56,7 @@ describe('content-structure methods', () => {
       for (let i = 1; i < content.length; i++) {
         const contentBlock = content[i]
         const chapters: any = breakSteps(contentBlock)
+        console.log(chapters)
         expect(typeof chapters === 'number').toBeTruthy()
       }
     })
@@ -70,7 +72,7 @@ describe('content-structure methods', () => {
       const follow = []
       for (let i = 0; i < noOfItems; i++) { // create random string of numbers
         const number = getNumberBetween1and10()
-        steps += i === noOfItems - 1 ? `${number}` : `${number},`
+        steps += i === noOfItems - 1 ? `${number}` : `${number},` // add comma if not last number
         follow.push(number - 1) // -1 because of 0-indexing
       }
       mockContentBlock.nextStep = steps // set random string as nextStep
@@ -86,11 +88,11 @@ describe('content-structure methods', () => {
   describe('slugify', () => {
     it('converts strings to slugs', () => {
       const strings = ['Hello World', 'Hello World!', 'Hello World!!', 'Hello World!!!']
-      const slugs = ['hello-world', 'hello-world', 'hello-world', 'hello-world']
-      strings.forEach((string, i) => {
+      const expectedSlug = 'hello-world'
+      strings.forEach((string) => {
         const slug = slugify(string)
         expect(validateSlug(slug)).toBeTruthy()
-        expect(slug).toBe(slugs[i])
+        expect(slug).toBe(expectedSlug)
       })
     })
 
@@ -124,9 +126,9 @@ describe('content-structure methods', () => {
         sentence += word + space
         // console.log(sentence)
       }
-      console.log(sentence)
+      // console.log(sentence)
       const slug = slugify(sentence)
-      console.log(slug)
+      // console.log(slug)
       expect(validateSlug(slug)).toBeTruthy()
     })
   })
@@ -155,6 +157,15 @@ describe('content-structure methods', () => {
       expect(paths).toHaveLength(6)
       expect(paths).toContainEqual(['', 'e1ns'])
       expect(paths).toContainEqual(['video/video', 'zw31'])
+    })
+
+    it('returns correct paths for new courses (with trimming)', () => {
+      const courseChapters = SampleCourseChapters.chapters
+      const [ids, paths] = descentCourseChapters(courseChapters, 'e1ns', true)
+      expect(Object.keys(ids).length).toBe(3)
+      expect(paths).toHaveLength(4)
+      expect(paths).toContainEqual(['', 'e1ns'])
+      expect(paths).toContainEqual(['video', 'zw31'])
     })
   })
 })
