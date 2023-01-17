@@ -1,131 +1,15 @@
 /**
- * @fileOverview course-structure.ts - outline of the content structure as TypeScript interface
+ * @fileOverview course-structure-methods.ts - methods for course structure
  * @author cmc
  * @since 1.3.0
+ * @dependencies course-structure-types.ts
  */
-/***********************************************************
- ***********************************************************
- ********************* Old Course Structure ****************
- ***********************************************************
- ***********************************************************/
 
-// course content block in old back end
-export type LegacyContentBlock = {
-  name: string,
-  input: {
-    title: {
-      flagged?: boolean,
-      id: string,
-      simple?: string,
-      text: string
-    },
-    [key: string]: any
-  },
-  nextStep: string | null
-}
-
-// course content array in old back end
-export type LegacyContentInput = LegacyContentBlock[]
-
-/**
- * @description Course structure (old back end) as TypeScript interface
- */
-export interface LegacyCourse {
-  abstract: string,
-  category: string,
-  content: LegacyContentInput
-  files: string[],
-  name: string,
-  properties: object,
-  readonly authorId: number,
-  readonly courseId: string,
-  readonly lastChanged: number | string,
-  readonly locked: boolean,
-  storageId: string
-}
-
-/***************************************************
- ***************************************************
- ********** types for new course navigation ********
- ***************************************************
- ***************************************************/
-
-/**
- * @description following content is marked by string (id) or array of strings (ids)
- */
-type FollowingContent = string | string[] | number | number[]
-
-/**
- * @description Course navigation item has id and slug with optional follow
- *  property
- * @property id unique id for course content block
- * @property slug slug for course content block (can be used for route)
- * @property follow following content (can be marked with number (step) or
- *  string (id/slug), also as array)
- */
-export type CourseNavigationItem = {
-  id: string,
-  slug: string,
-  follow?: FollowingContent
-}
-
-/**
- * @description Course navigation can be either a nested object or an array
- *  (like old course structure)
- */
-export type CourseNavigationStructure =
-  { [chapterName: string]: CourseNavigationStructure } |
-  CourseNavigationItem[] |
-  CourseNavigationItem
-
-/**
- * @description Course navigation as TypeScript interface
- * @property start start of course navigation (index of array, first chapter
- *  name or content id / slug)
- * @property structure course navigation structure (nested object or array)
- */
-export type CourseNavigation = {
-  start: string,
-  structure: CourseNavigationStructure
-}
-
-/**
- * @description new course structure
- * @property id - unique id for course
- * @property name - name of course
- * @property abstract - abstract of course
- * @property category - category of course
- * @property chapters - content of course structured as nested object
- * @property start - id of first content block
- */
-export type Course = {
-  courseId: string,
-  name: string,
-  start: string,
-  abstract: string,
-  category: string,
-  chapters: CourseNavigationStructure,
-  [key: string]: any
-}
-
-/**
- * @description Course content block (new back end)
- * @property id - unique id for course content block
- * @property name - name of content plugin type (e.g. 'laya-dialog')
- * @property title - title of content block
- */
-export type ContentBlock = {
-  id: string,
-  name: string,
-  title: { text: string },
-  [prop: string]: any
-}
-
-/**************************************************************
- **************************************************************
- ***************** functions for course structure *************
- **************************************************************
- **************************************************************/
+import {
+  CourseNavigationStructure,
+  CourseNavigationItem,
+  LegacyContentBlock
+} from './course-structure-types'
 
 /**
  * @description breaks nextStep property into array of numbers,
@@ -184,7 +68,7 @@ const addStartRoute = (
  * @param structure - course navigation structure
  * @param start - start of course navigation
  * @param currentPath - current path in course navigation structure
- * @param routes - array of routes
+ * @param routes - array of routes, will be modified
  */
 const traverseNavStructure = (
   structure: CourseNavigationStructure,
@@ -217,9 +101,10 @@ const traverseNavStructure = (
  * @returns list of tuples with route and id
  */
 export const getPaths =
-  (courseNav: CourseNavigationStructure, start: number | string): [[route: string, id: string]] => {
+  (courseNav: CourseNavigationStructure, start: number | string):
+  [[route: string, id: string]] => {
   // @ts-ignore
-    const routes: [[route: string, id: string]] = []
+    const routes: [[route: string, id: string]] = [] // instantiate here because of recursion
     traverseNavStructure(courseNav, start, '', routes)
     for (const route of routes) {
       if (route[0][0] === '/') {
@@ -230,11 +115,13 @@ export const getPaths =
   }
 
 /**
- * @description traverse course structure object, add content ids to object
+ * @description traverse course structure object, extracting all content ids and
+ *  writing them to `ids` object
  * @param structure course structure object
- * @param ids object containing ids of content blocks
+ * @param ids object containing ids of content blocks, will be modified consisting
+ *  all ids of content blocks in course structure
  */
-const traverseCourseStructure = (structure: CourseNavigationStructure, ids: any) => {
+const traverseCourseStructure = (structure: CourseNavigationStructure, ids: any): void => {
   if (structure instanceof Array) { // stucture is CourseNavigationItem[]
     structure.forEach((item) => {
       ids[item.id] = {}

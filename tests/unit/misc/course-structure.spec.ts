@@ -1,14 +1,16 @@
 import SampleCourse from '../../mocks/sample-course-short.json'
 import SampleCourseChapters from '../../mocks/sample-course-chapters.json'
 import {
-  LegacyCourse,
   Course,
-  breakSteps,
   LegacyContentBlock,
-  slugify,
+  LegacyCourse
+} from '@/misc/course-structure-types'
+import {
+  breakSteps,
+  descentCourseChapters,
   getPaths,
-  descentCourseChapters
-} from '@/misc/course-structure'
+  slugify
+} from '@/misc/course-structure-methods'
 import { validateSlug } from '../../helpers/validations'
 
 describe('content-structure types', () => {

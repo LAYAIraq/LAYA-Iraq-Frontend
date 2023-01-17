@@ -105,7 +105,6 @@ export default {
       'courseContentIdRouteMap',
       'courseContentIndexIdMap',
       'courseContentRouteIdMap',
-      'courseContentSlugIdMap',
       'courseFlags',
       'courseNav',
       'courseRoutes',

@@ -13,12 +13,14 @@ import {
   CourseNavigationStructure,
   LegacyContentBlock,
   LegacyContentInput,
-  LegacyCourse,
+  LegacyCourse
+} from '@/misc/course-structure-types'
+import {
   breakSteps,
   descentCourseChapters,
   getPaths,
   slugify
-} from '@/misc/course-structure'
+} from '@/misc/course-structure-methods'
 import { stripKey } from '@/misc/utils.js'
 import { v4 as uuidv4 } from 'uuid'
 import http, { AxiosResponse } from 'axios'
@@ -62,13 +64,6 @@ export default {
         } else {
           map[route] = id
         }
-      }
-      return map
-    },
-    courseContentSlugIdMap: (state: { courseRoutes: [[route: string, id: string]] }) => {
-      const map = {}
-      for (const [route, id] of state.courseRoutes) {
-        map[route.split('/').pop()] = id
       }
       return map
     },
