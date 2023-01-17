@@ -162,7 +162,6 @@ export default {
           input[prop] = data[prop]
         }
       }
-      console.log('stepData', input)
       return stripKey('tooltipOn', input)
     }
   },

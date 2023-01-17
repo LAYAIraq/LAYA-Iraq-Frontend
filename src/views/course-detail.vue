@@ -273,9 +273,9 @@ export default {
         return () => this.$router.push({
           params: {
             name: this.name,
-            coursePath: typeof el === 'number' ? // if element is a number, it's an index
-              this.courseContentIdRouteMap[this.courseContentIndexIdMap[el]] : // get id from index, then route from id
-              `${el}`
+            coursePath: typeof el === 'number' // if element is a number, it's an index
+              ? this.courseContentIdRouteMap[this.courseContentIndexIdMap[el]] // get id from index, then route from id
+              : `${el}`
           }
         })
       }

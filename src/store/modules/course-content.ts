@@ -79,14 +79,14 @@ export default {
      * @returns the id of the course block
      */
     courseContentPathId: (state: { courseRoutes: [[route: string, id: string]] }) => (path: string): string => {
-      console.log('finding id for path', path)
+      // console.log('finding id for path', path)
       if (path === undefined || path === null) {
         path = ''
       }
       const contentPath = state.courseRoutes.find(([route, _]) => route === path)
-      const res = contentPath ? contentPath[1] : null
-      console.log('found content path', res)
-      return res
+      // const res = contentPath ? contentPath[1] : null
+      // console.log('found content path', res)
+      return contentPath ? contentPath[1] : null
     }
   },
 
@@ -122,9 +122,9 @@ export default {
     },
 
     courseContentSet (state: { courseContent: { [id: string]: ContentBlock } }, block: ContentBlock) {
-      console.log(block)
+      // console.log(block)
       state.courseContent[block.id] = block
-      console.log(state.courseContent)
+      // console.log(state.courseContent)
     },
 
     courseContentRemove (state: { courseContent: any }, id: string) {
