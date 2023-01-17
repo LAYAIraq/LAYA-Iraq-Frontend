@@ -41,6 +41,7 @@
 	"changeCategory": "Change Category",
 	"changeCategory.new": "New Category",
 	"changeCategory.tip": "Change the category of this course.",
+	"changeToTrueFalse.modal.text": "Attention! If you click 'Ok', your previous answer options will be deleted and replaced by the options 'True' and 'False'.",
 	"check": "Check Solution",
 	"content": "Content",
 	"content.editContent": "Edit Content",
@@ -381,6 +382,7 @@
 	"notifications.studentNewFlagAnswer.cta": "Click to see the Answer!",
 	"notifications.studentNewFlagAnswer.text": "You have a new answer to your question in Course <CID>.",
 	"notifications.studentNewFlagAnswer.title": "New clarification",
+	"ok": "Ok",
 	"password.error": "Error",
 	"password.errorMsg": "Something went wrong!",
 	"password.errors": "Errors",
@@ -533,5 +535,6 @@
 	"type.modal.ok": "Change Type",
 	"type.modal.text": "New Type*",
 	"type.modal.title": "Change content type",
-	"verify.success": "Verification successful! Please wait to be redirected to the login page..."
+	"verify.success": "Verification successful! Please wait to be redirected to the login page...",
+	"warning": "Warning!"
 }

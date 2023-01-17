@@ -86,6 +86,7 @@ Dependencies:
               type="radio"
               name="tf"
               :value="tf"
+              @click="$bvModal.show('confirm-change-tf')"
             >
             <label
               for="scmc-tf"
@@ -341,6 +342,21 @@ Dependencies:
         <i class="fas fa-plus"></i>{{ y18n('itemAdd') }}
       </button>
     </form>
+    <b-modal
+      id="confirm-change-tf"
+      :title="y18n('warning')"
+      header-bg-variant="danger"
+      ok-variant="danger"
+      :ok-title="y18n('ok')"
+      :cancel-title="y18n('cancel')"
+      centered
+      static-change-tf
+      @ok="populateTrueFalse()"
+    >
+      <p>
+        {{ y18n('changeToTrueFalse.modal.text') }}
+      </p>
+    </b-modal>
   </div>
 </template>
 
@@ -405,6 +421,24 @@ export default {
         flagged: false,
         id: uuidv4()
       })
+    },
+
+    populateTrueFalse () {
+      if (this.variation === this.tf) {
+        this.options = []
+        this.options.push({
+          text: this.y18n('layaLaScmc.edit.true'),
+          simple: this.y18n('layaLaScmc.edit.true'),
+          flagged: false,
+          id: uuidv4()
+        })
+        this.options.push({
+          text: this.y18n('layaLaScmc.edit.false'),
+          simple: this.y18n('layaLaScmc.edit.false'),
+          flagged: false,
+          id: uuidv4()
+        })
+      }
     },
 
     /**

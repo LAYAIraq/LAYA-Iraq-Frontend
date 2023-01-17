@@ -268,7 +268,7 @@ Dependencies: @/mixins/locale.vue
             <input
               v-if="variation === single || variation === tf"
               :id="'option-corr-'+i"
-              v-model="solutions[i]"
+              v-model="solution"
               class="form-check-input"
               type="radio"
               :value="i"
@@ -365,6 +365,8 @@ export default {
       task: {},
       taskAudio: {},
       options: [],
+      optionsSimple: [],
+      solution: 0,
       solutions: [],
       maxTries: 1,
       single: 0,
@@ -397,11 +399,13 @@ export default {
         this.options = []
         this.options.push({
           text: this.y18n('layaLaScmc.edit.true'),
+          simple: this.y18n('layaLaScmc.edit.true'),
           flagged: false,
           id: uuidv4()
         })
         this.options.push({
           text: this.y18n('layaLaScmc.edit.false'),
+          simple: this.y18n('layaLaScmc.edit.false'),
           flagged: false,
           id: uuidv4()
         })
@@ -409,6 +413,7 @@ export default {
         this.options = []
         this.options.push({
           text: this.y18n('layaLaScmc.edit.sampleOption'),
+          simple: this.y18n('simpleAlt'),
           flagged: false,
           id: uuidv4()
         })
