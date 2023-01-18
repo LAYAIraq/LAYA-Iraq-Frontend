@@ -1,0 +1,64 @@
+{
+  "abstract": null,
+  "authorId": 1,
+  "category": "Kurs",
+  "start": "e1ns",
+  "chapters": {
+    "main": {
+      "start": {
+        "follow": [
+          "zw31",
+          "dr31"
+        ],
+        "id": "e1ns",
+        "slug": "dialog-sample"
+      },
+      "video": {
+        "id": "zw31",
+        "follow": "dr31",
+        "slug": "video"
+      },
+      "editor": {
+        "follow": "v13r",
+        "id": "dr31",
+        "slug": "wysiwyg"
+      },
+      "quiz": {
+        "scmc": [
+          {
+            "id": "v13r",
+            "slug": "sc-quiz"
+          },
+          {
+            "id": "fu3nf",
+            "slug": "mc-quiz"
+          },
+          {
+            "id": "53ch5",
+            "slug": "tf-quiz"
+          }
+        ],
+        "other": {
+          "drag-drop": {
+            "id": "513b3n",
+            "slug": "drag-drop"
+          },
+          "relate": {
+            "id": "4cht",
+            "slug": "relate"
+          }
+        }
+      }
+    },
+    "feedback": {
+      "id": "f33db4ck",
+      "slug": "feedback"
+    }
+  },
+  "feedback": [],
+  "files": [],
+  "locked": false,
+  "name": "Testkurs",
+  "courseId": "t3stkur5",
+  "storageId": "st0r31d"
+}

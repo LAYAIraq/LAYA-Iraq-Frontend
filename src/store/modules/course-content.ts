@@ -16,9 +16,9 @@ import {
   LegacyCourse
 } from '@/misc/course-structure-types'
 import {
-  breakSteps,
-  descentCourseChapters,
-  getPaths,
+  legacyContentStepsTransform,
+  courseStructureDescent,
+  coursePathsGet,
   slugify
 } from '@/misc/course-structure-methods'
 import { stripKey } from '@/misc/utils.js'
@@ -102,7 +102,7 @@ export default {
       },
       course: Course
     ) {
-      [state.courseContent, state.courseRoutes] = descentCourseChapters(
+      [state.courseContent, state.courseRoutes] = courseStructureDescent(
         course.chapters,
         course.start,
         course.properties ? course.properties.showSingleSubChapterTitleSlug : null
@@ -152,14 +152,14 @@ export default {
         state.courseChapters.push({
           id: blockId,
           slug: slugify(block.input.title.text),
-          follow: breakSteps(block)
+          follow: legacyContentStepsTransform(block)
         })
         if (i === 0) {
           state.courseStart = blockId
         }
       }
       // traverse course content and create routes
-      state.courseRoutes = getPaths(state.courseChapters, state.courseStart)
+      state.courseRoutes = coursePathsGet(state.courseChapters, state.courseStart)
     }
   },
 
