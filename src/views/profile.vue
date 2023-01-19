@@ -672,6 +672,17 @@ Dependencies:
         {{ y18n('profile.application.withdrawConfirm') }}
       </p>
     </b-modal>
+
+    <b-toast
+      id="profile-save-toast"
+      :title="y18n('profile.submitOk')"
+      static
+      variant="success"
+      auto-hide-delay="1500"
+      class="profile-toast"
+    >
+      {{ y18n('successfulSave') }}
+    </b-toast>
   </div>
 </template>
 
@@ -1042,6 +1053,7 @@ export default {
       /* update state and save profile preferences */
       this.$store.commit('setPrefs', this.prefs)
       this.$store.dispatch('saveProfile')
+      this.$bvToast.show('profile-save-toast')
     },
 
     /**
