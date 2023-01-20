@@ -244,4 +244,8 @@ describe('content-structure methods', () => {
       expect(paths).toContainEqual(['feedback', 'f33db4ck'])
     })
   })
+
+  describe.skip('courseNavFilledOut', () => {
+
+  })
 })

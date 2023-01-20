@@ -90,7 +90,7 @@ const courseStructureRoutesCollect = (
     // @ts-ignore ditto
     routes.push([currentPath + '/' + structure.slug, structure.id])
   } else { // structure is CourseNavigationChapter
-    for (const chapter in structure) {
+    for (const chapter of Object.keys(structure)) {
       courseStructureRoutesCollect(structure[chapter], start, currentPath + '/' + chapter, routes)
     }
   }
