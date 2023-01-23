@@ -86,7 +86,7 @@ Dependencies:
               type="radio"
               name="tf"
               :value="tf"
-              @click="$bvModal.show('confirm-change-tf')"
+              @click="switchToTF"
             >
             <label
               for="scmc-tf"
@@ -424,21 +424,30 @@ export default {
     },
 
     populateTrueFalse () {
-      if (this.variation === this.tf) {
-        this.options = []
-        this.options.push({
+      this.options = [
+        {
           text: this.y18n('layaLaScmc.edit.true'),
           simple: this.y18n('layaLaScmc.edit.true'),
           flagged: false,
           id: uuidv4()
-        })
-        this.options.push({
+        },
+        {
           text: this.y18n('layaLaScmc.edit.false'),
           simple: this.y18n('layaLaScmc.edit.false'),
           flagged: false,
           id: uuidv4()
-        })
-      }
+        }
+      ]
+      this.variation = this.tf
+    },
+
+    /**
+     * @description prevent change to true/false before modal 'ok' is clicked
+     * @param e 'click' event from radio button
+     */
+    switchToTF (e) {
+      e.preventDefault()
+      this.$bvModal.show('confirm-change-tf')
     },
 
     /**
