@@ -201,8 +201,10 @@ const courseContentFollowExists = (item: CourseNavigationItem): boolean => {
   return item.follow !== undefined && item.follow !== null
 }
 
-export const courseNavFilledOut = (courseNav: CourseNavigationStructure): boolean => { // TODO finish
-  if (courseNav instanceof Array) {
+export const courseNavFilledOut = (courseNav: CourseNavigationStructure): boolean => {
+  // if courseNav is array, make sure dialog has the follow property
+  // if coursenav object has
+  if (courseNav instanceof Array) { // stucture is CourseNavigationItem[], assume linear order of content
     let filledOut = true
     courseNav.forEach((item) => {
       if (courseNav.indexOf(item) === courseNav.length - 1) {
