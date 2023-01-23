@@ -409,7 +409,8 @@ export default {
           flagged: false,
           id: uuidv4()
         })
-      } if (this.variation === this.single || this.variation === this.multiple) {
+      }
+      if (this.variation === this.single || this.variation === this.multiple) {
         this.options = []
         this.options.push({
           text: this.y18n('layaLaScmc.edit.sampleOption'),

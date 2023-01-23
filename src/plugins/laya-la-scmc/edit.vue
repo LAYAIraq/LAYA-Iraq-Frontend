@@ -347,10 +347,10 @@ Dependencies:
       :title="y18n('warning')"
       header-bg-variant="danger"
       ok-variant="danger"
-      :ok-title="y18n('ok')"
+      :ok-title="y18n('courseCreate.modal.ok')"
       :cancel-title="y18n('cancel')"
       centered
-      static-change-tf
+      static
       @ok="populateTrueFalse()"
     >
       <p>
@@ -422,7 +422,9 @@ export default {
         id: uuidv4()
       })
     },
-
+    /**
+     * @description add the correct answer options if true and false is selected
+     */
     populateTrueFalse () {
       this.options = [
         {
@@ -455,7 +457,7 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: March 19, 2021
+     * Last Updated: January 23, 2023 by nv
      */
     fetchData () {
       const idx = this.$route.params.step - 1
