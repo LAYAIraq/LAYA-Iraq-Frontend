@@ -41,6 +41,7 @@
 	"changeCategory": "Change Category",
 	"changeCategory.new": "New Category",
 	"changeCategory.tip": "Change the category of this course.",
+	"changeToTrueFalse.modal.text": "Attention! If you click 'Ok', your previous answer options will be deleted and replaced by the options 'True' and 'False'.",
 	"check": "Check Solution",
 	"content": "Content",
 	"content.editContent": "Edit Content",
@@ -229,10 +230,13 @@
     "layaLaScmc.caption": "Multiple Choice or Multiple Response Questions.",
     "layaLaScmc.showCorrect": "Correct solutions are:",
 	"layaLaScmc.edit.correct": "correct?",
+	"layaLaScmc.edit.false": "False",
 	"layaLaScmc.edit.mc": "Multiple Response",
 	"layaLaScmc.edit.preview": "Preview (TODO)",
 	"layaLaScmc.edit.sampleOption": "Answer #1",
 	"layaLaScmc.edit.sc": "Multiple Choice",
+	"layaLaScmc.edit.tf": "True/False",
+	"layaLaScmc.edit.true": "True",
 	"layaLaScmc.name": "Multiple Choice / Multiple Response",
 	"layaLaScmc.tooltip": "<p>With this component you can create a quiz. You have the choice between multiple choice and multiple response. A multiple choice question has only one possible answer, a multiple response question, on the other hand, several.</p><p>In the line 'Type' you choose which questions you ask would like:A question with one possible answer (Single Choice), or one with several correct answers (Multiple Choice).</p><p>The 'Title' line allows you to select a heading. You can also leave this line blank.</p><p>In the line 'Question/Task' you must enter the work order or the question. </p><p>In 'Voiceover' you store the address of the audio file that reads out the work order.</p><p>The 'Items' now include the answer options. You can select add as many answers as you like. Use the red button on the on the left side you can remove single answers. The blue button at the end adds one more answer possibility each time.</p><p> Don't forget to mark the correct answers with the check mark! The respective answer is then considered correct scores when the participants evaluate your quiz.</p>",
 	"layaLaScmc.triesLeft": "Tries left:",
@@ -378,6 +382,7 @@
 	"notifications.studentNewFlagAnswer.cta": "Click to see the Answer!",
 	"notifications.studentNewFlagAnswer.text": "You have a new answer to your question in Course <CID>.",
 	"notifications.studentNewFlagAnswer.title": "New clarification",
+	"ok": "Ok",
 	"password.error": "Error",
 	"password.errorMsg": "Something went wrong!",
 	"password.errors": "Errors",
@@ -532,5 +537,6 @@
 	"type.modal.ok": "Change Type",
 	"type.modal.text": "New Type*",
 	"type.modal.title": "Change content type",
-	"verify.success": "Verification successful! Please wait to be redirected to the login page..."
+	"verify.success": "Verification successful! Please wait to be redirected to the login page...",
+	"warning": "Warning!"
 }

@@ -60,7 +60,7 @@ vuex,
       >
         <div>
           <input
-            v-if="multiple"
+            v-if="variation === multiple"
             :id="'mchoice-in-'+i"
             v-model="answers"
             class="position-absolute mt-2"
@@ -93,10 +93,6 @@ vuex,
           ></i>
         </div>
 
-        <!--
-        <i class="ml-2" :class="{'far fa-check-circle text-success': true}"></i>
-        <i class="ml-2" :class="{'far fa-times-circle text-danger': true}"></i>
-        -->
         <laya-flag-icon
           v-if="!previewData"
           :ref-data="option"
@@ -190,7 +186,7 @@ export default {
       feedback: '',
       freeze: false,
       eval: [],
-      multiple: false,
+      variation: 0,
       title: {},
       task: {},
       taskAudio: '',
@@ -198,7 +194,8 @@ export default {
       solutions: [],
       maxTries: 0,
       showSolutions: [],
-      showSolutionsBool: false
+      showSolutionsBool: false,
+      multiple: 1
     }
   },
 
@@ -381,7 +378,7 @@ export default {
     fetchData () {
       const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
-      this.multiple = preData.multiple
+      this.variation = preData.variation
       this.title = preData.title
       this.task = preData.task
       this.taskAudio = preData.taskAudio

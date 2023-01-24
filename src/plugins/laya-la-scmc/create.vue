@@ -48,10 +48,12 @@ Dependencies: @/mixins/locale.vue
           <div class="form-check form-check-inline align-text-top">
             <input
               id="scmc-sc"
-              v-model="multiple"
+              v-model="variation"
               class="form-check-input"
+              name="single"
               type="radio"
-              :value="false"
+              :value="single"
+              @click="populateData"
             >
             <label
               for="scmc-sc"
@@ -63,17 +65,35 @@ Dependencies: @/mixins/locale.vue
           <div class="form-check form-check-inline align-text-top">
             <input
               id="scmc-mc"
-              v-model="multiple"
+              v-model="variation"
               class="form-check-input"
               type="radio"
               name="multiple"
-              :value="true"
+              :value="multiple"
+              @click="populateData"
             >
             <label
               for="scmc-mc"
               class="form-check-label"
             >
               {{ y18n('layaLaScmc.edit.mc') }}
+            </label>
+          </div>
+          <div class="form-check form-check-inline align-text-top">
+            <input
+              id="scmc-tf"
+              v-model="variation"
+              class="form-check-input"
+              type="radio"
+              name="tf"
+              :value="tf"
+              @click="populateData"
+            >
+            <label
+              for="scmc-tf"
+              class="form-check-label"
+            >
+              {{ y18n('layaLaScmc.edit.tf') }}
             </label>
           </div>
         </div>
@@ -210,7 +230,7 @@ Dependencies: @/mixins/locale.vue
           </div>
         </div>
       </div>
-
+      <!-- items -->
       <p><b>{{ y18n('items') }}</b></p>
       <div
         v-for="(option, i) in options"
@@ -227,22 +247,41 @@ Dependencies: @/mixins/locale.vue
           </label>
           <div class="col-7">
             <input
+              v-if="variation === single || variation === multiple"
               :id="'option-text-'+i"
               v-model="option.text"
               class="form-control"
               type="text"
+            >
+            <input
+              v-else
+              :id="'option-text-'+i"
+              v-model="option.text"
+              class="form-control"
+              type="text"
+              readonly
             >
           </div>
 
           <!-- correct -->
           <div class="form-check form-check-inline ">
             <input
+              v-if="variation === single || variation === tf"
               :id="'option-corr-'+i"
-              v-model="solutions[i]"
+              v-model="solution"
               class="form-check-input"
               :type="multiple ? 'checkbox' : 'radio'"
               :value="true"
               @click="() => { if (!multiple) {for (const ix in solutions) { ix === i ? solutions[ix] = true : solutions[ix] = false } } }"
+            >
+
+            <input
+              v-else
+              :id="'option-corr-'+i"
+              v-model="solutions[i]"
+              class="form-check-input"
+              type="checkbox"
+              :value="i"
             >
             <label
               class="form-check-label"
@@ -255,6 +294,7 @@ Dependencies: @/mixins/locale.vue
           <!-- delete -->
           <div class="col-auto align-self-center">
             <button
+              v-if="variation === single || variation === multiple"
               type="button"
               class="btn btn-danger btn-sm"
               :aria-label="y18n('deleteField')"
@@ -278,16 +318,26 @@ Dependencies: @/mixins/locale.vue
           </label>
           <div class="col-7">
             <input
+              v-if="variation === single || variation === multiple"
               :id="'option-text-'+i"
               v-model="options[i].simple"
               class="form-control"
               type="text"
+            >
+            <input
+              v-else
+              :id="'option-text-'+i"
+              v-model="option.simple"
+              class="form-control"
+              type="text"
+              readonly
             >
           </div>
         </div>
       </div>
 
       <button
+        v-if="variation === single || variation === multiple"
         type="button"
         class="btn btn-primary btn-sm"
         @click="_addItem"
@@ -318,9 +368,20 @@ export default {
       task: {},
       taskAudio: {},
       options: [],
+      optionsSimple: [],
+      solution: 0,
       solutions: [],
       maxTries: 1,
-      multiple: false
+      single: 0,
+      multiple: 1,
+      tf: 2,
+      variation: 0
+    }
+  },
+
+  watch: {
+    variation: function (val) {
+      this.populateData()
     }
   },
 
@@ -334,14 +395,33 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: June 28, 2021
+     * Last Updated: November 25, 2022 by nv
      */
     populateData () {
-      this.options.push({
-        text: this.y18n('layaLaScmc.edit.sampleOption'),
-        flagged: false,
-        id: uuidv4()
-      })
+      if (this.variation === this.tf) {
+        this.options = []
+        this.options.push({
+          text: this.y18n('layaLaScmc.edit.true'),
+          simple: this.y18n('layaLaScmc.edit.true'),
+          flagged: false,
+          id: uuidv4()
+        })
+        this.options.push({
+          text: this.y18n('layaLaScmc.edit.false'),
+          simple: this.y18n('layaLaScmc.edit.false'),
+          flagged: false,
+          id: uuidv4()
+        })
+      }
+      if (this.variation === this.single || this.variation === this.multiple) {
+        this.options = []
+        this.options.push({
+          text: this.y18n('layaLaScmc.edit.sampleOption'),
+          simple: this.y18n('simpleAlt'),
+          flagged: false,
+          id: uuidv4()
+        })
+      }
       this.task = {
         text: '',
         flagged: false,
