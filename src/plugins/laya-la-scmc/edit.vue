@@ -262,15 +262,16 @@ Dependencies:
             >
           </div>
 
-          <!-- correct  -->
+          <!-- correct -->
           <div class="form-check form-check-inline ">
             <input
               v-if="variation === single || variation === tf"
               :id="'option-corr-'+i"
               v-model="solution"
               class="form-check-input"
-              type="radio"
-              :value="i"
+              :type="multiple ? 'checkbox' : 'radio'"
+              :value="true"
+              @click="() => { if (!multiple) {for (const ix in solutions) { ix === i ? solutions[ix] = true : solutions[ix] = false } } }"
             >
             <input
               v-else
@@ -363,12 +364,13 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import { locale, tooltipIcon } from '@/mixins'
-import { v4 as uuidv4 } from 'uuid'
+import commonMethods from './choices-common-methods'
 
 export default {
   name: 'LayaLaScmcEdit',
 
   mixins: [
+    commonMethods,
     locale,
     tooltipIcon
   ],
@@ -398,30 +400,6 @@ export default {
   },
 
   methods: {
-
-    /**
-     * Function _delItem(idx): Delete item at given index
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     */
-    _delItem (idx) {
-      this.options.splice(idx, 1)
-    },
-
-    /**
-     * Function _addItem: Add item to options
-     * Author: core
-     * Last Updated: June 28, 2021
-     */
-    _addItem () {
-      this.options.push({
-        text: this.y18n('layaLaScmc.edit.sampleOption'),
-        flagged: false,
-        id: uuidv4()
-      })
-    },
     /**
      * @description add the correct answer options if true and false is selected
      */
