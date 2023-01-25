@@ -20,7 +20,9 @@ Dependencies:
           active-class="active"
           :to="{name: 'course-detail-view', params: {name, step}}"
           exact
+          @click.prevent="$emit('save')"
         >
+          <!-- TODO: move click event to method -->
           <i
             :class="langIsAr?
               'fas fa-chevron-right':

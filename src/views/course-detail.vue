@@ -33,10 +33,9 @@ Dependencies:
         <div class="col">
           <div id="main-content-anchor"></div>
 
-          <!-- v-if="viewPermit()" removed, readd when enrollment is reactivated -->
           <component
             :is="contentToDisplay.name"
-            v-if="contentToDisplay"
+            v-if="contentToDisplay && viewPermit"
             :key="name+'-'+step"
             :on-finish="nextStep(contentToDisplay.nextStep)"
           >
@@ -55,7 +54,7 @@ Dependencies:
     </div>
 
     <courseEdit
-      v-if="isAuthor && content"
+      v-if="isCourseAuthor && content"
       :name="name"
       :step="step"
     ></courseEdit>
@@ -89,7 +88,6 @@ export default {
 
   data () {
     return {
-      // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
       // enrollment: {},
       rename: '',
       copy: '',
@@ -100,12 +98,28 @@ export default {
 
   computed: {
     ...mapGetters([
+      'isAdmin',
       'isAuthor',
       'content',
       'course',
       'courseFlags',
-      'storeBusy'
+      'enrollment',
+      'storeBusy',
+      'userEnrolled',
+      'userId'
     ]),
+
+    /**
+     * isCourseAuthor: return true if logged user is admin or author of the course
+     *
+     * Author: cmc
+     *
+     * Last Updated: August 5, 2022
+     * @returns {boolean} true if logged user is admin or author of the course
+     */
+    isCourseAuthor () {
+      return (this.isAuthor && this.course.authorId === this.userId) || this.isAdmin
+    },
 
     /**
      *  onFinishDummy: returns empty function on every [] invocation
@@ -122,18 +136,6 @@ export default {
       })
     },
 
-    // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
-    // /**
-    //  * userEnrolled: returns enrollment status
-    //  *
-    //  * Author: cmc
-    //  *
-    //  * Last Updated: October 27, 2020
-    //  */
-    // userEnrolled() {
-    //   return this.$store.state.edit.userEnrolled
-    // },
-
     /**
      * contentToDisplay: return current content object
      *
@@ -143,24 +145,23 @@ export default {
      */
     contentToDisplay () {
       return this.content ? this.content[this.step - 1] : false
+    },
+
+    /**
+     * viewPermit: returns true if user is allowed to see selected course
+     *
+     * Author: core
+     *
+     * Last Updated: October 27, 2020
+     */
+    viewPermit () {
+      if (this.contentToDisplay) {
+        return this.course.properties.enrollment
+          ? (!!(this.isAuthor || this.userEnrolled))
+          : true
+      }
+      return false
     }
-
-    // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
-    // /**
-    //  * viewPermit: returns true if user is allowed to see selected course
-    //  *
-    //  * Author: core
-    //  *
-    //  * Last Updated: October 27, 2020
-    //  */
-    // viewPermit() {
-    //   if( this.contentToDisplay ) {
-    //     return this.course.properties.enrollment ?
-    //       (!!(this.isAuthor || this.userEnrolled)) : true
-    //   }
-    //   return false
-    // },
-
   },
 
   watch: {
@@ -194,15 +195,14 @@ export default {
 
   created () {
     this.getCourse()
-    // this.fetchEnrollment()
+    this.fetchEnrollment()
     // this.fetchFlags()
     // this.fetchCourseStats()
   },
 
   beforeDestroy () {
-    // COMMENTED OUT B/C ENROLLMENT DISABLED (cmc 2021-11-09)
-    // if(this.enrollment.length > 0) this.updateEnrollment()
-    // this.saveFlags()
+    /* if (this.enrollment.length > 0) this.updateEnrollment()
+    this.saveFlags() */
   },
 
   methods: {

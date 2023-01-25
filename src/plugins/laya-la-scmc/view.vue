@@ -60,7 +60,7 @@ vuex,
       >
         <div>
           <input
-            v-if="multiple"
+            v-if="variation === multiple"
             :id="'mchoice-in-'+i"
             v-model="answers"
             class="position-absolute mt-2"
@@ -93,10 +93,6 @@ vuex,
           ></i>
         </div>
 
-        <!--
-        <i class="ml-2" :class="{'far fa-check-circle text-success': true}"></i>
-        <i class="ml-2" :class="{'far fa-times-circle text-danger': true}"></i>
-        -->
         <laya-flag-icon
           v-if="!previewData"
           :ref-data="option"
@@ -178,7 +174,9 @@ export default {
         checked: [],
         feedback: '',
         freeze: false,
-        eval: []
+        eval: [],
+        showSolutions: [],
+        showSolutionsBool: false
       }
     }
     return {
@@ -188,7 +186,7 @@ export default {
       feedback: '',
       freeze: false,
       eval: [],
-      multiple: false,
+      variation: 0,
       title: {},
       task: {},
       taskAudio: '',
@@ -196,7 +194,8 @@ export default {
       solutions: [],
       maxTries: 0,
       showSolutions: [],
-      showSolutionsBool: false
+      showSolutionsBool: false,
+      multiple: 1
     }
   },
 
@@ -245,12 +244,12 @@ export default {
      *
      * Author: pj
      *
-     * Last Updated: October 22, 2021
+     * Last Updated: October 12, 2022 by cmc
      */
     populateShowSolutions () {
-      for (let i = 0; i < this.options.length; i++) {
-        if (this.solutions[i] === null || this.solutions[i] === false) {
-          this.showSolutions.push(this.options[i].text)
+      for (let i = 0; i <= this.options.length; i++) {
+        if (this.solutions[i]) {
+          this.showSolutions.push(this.courseSimple ? this.options[i].simple : this.options[i].text)
         }
       }
     },
@@ -303,30 +302,22 @@ export default {
      *
      * Author: core
      *
-     * Last Updated: March 19, 2021
+     * Last Updated: October 12, 2022 by cmc
      */
     diffSolution () {
       for (let i = 0; i < this.options.length; ++i) {
-        // is solution ?
-        if (this.solutions.includes(i)) {
-          // is also answer ?
-          if (this.answers.includes(i)) {
-            this.eval[i] = { 'far fa-check-circle text-success': true }
-          } else {
-            this.eval[i] = { 'far fa-times-circle text-danger': true }
-          }
-        } else {
-          // but is answer ?
-          if (this.answers.includes(i)) {
-            this.eval[i] = { 'far fa-times-circle text-danger': true }
-          } else {
-            this.eval[i] = { 'far fa-check-circle text-success': true }
-          }
+        if (this.solutions[i] && this.answers.includes(i)) {
+          // is correct answer ?
+          this.eval[i] = { 'far fa-check-circle text-success': true }
+        } else if (this.answers.includes(i) ||
+          (this.solutions[i] && this.answers.length === 0) // no answer is chosen
+        ) {
+          // is wrong answer ?
+          this.eval[i] = { 'far fa-times-circle text-danger': true }
         }
       }
       this.freeze = true
       this.showSolutionsBool = true
-      this.$forceUpdate()
     },
 
     /**
@@ -387,7 +378,7 @@ export default {
     fetchData () {
       const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx].input))
-      this.multiple = preData.multiple
+      this.variation = preData.variation
       this.title = preData.title
       this.task = preData.task
       this.taskAudio = preData.taskAudio

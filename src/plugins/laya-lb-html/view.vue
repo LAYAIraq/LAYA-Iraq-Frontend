@@ -125,10 +125,14 @@ export default {
 </script>
 
 <style>
+.laya-wysiwyg-view {
+  font-size: 18px;
+}
 .laya-wysiwyg-view .ql-toolbar {
   display: none;
 }
 .laya-wysiwyg-view .ql-container {
   border: none;
 }
+
 </style>

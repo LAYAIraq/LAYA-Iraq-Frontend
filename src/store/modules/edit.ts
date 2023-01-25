@@ -1,5 +1,6 @@
 import http from 'axios'
 import { v4 as uuidv4 } from 'uuid'
+// import auth from '@/store/modules/auth'
 
 export default {
   state: {
@@ -8,43 +9,10 @@ export default {
     },
     courseList: [],
     courseUpdated: false,
-    enrollment: {},
-    userEnrolled: false
+    studentId: []
   },
 
   getters: {
-
-    /**
-     * Function getEnrollmentFeedback: returns the current feedback
-     *
-     * Author: pj
-     *
-     * Last Updated: January 27, 2022
-     * @param state contains feedback array
-     * @returns feedback array
-     */
-    getEnrollmentFeedback (
-      state: {
-        enrollment: {
-          feedback: Array<object>
-        }
-      }) {
-      return state.enrollment.feedback
-    },
-
-    /**
-     * Function isUserEnrolled: returns if user is enrolled
-     *
-     * Author: cmc
-     *
-     * Last Updated: unknown
-     *
-     * @param state contains userEnrolled boolean
-     * @returns true if user is enrolled
-     */
-    isUserEnrolled (state: { userEnrolled: boolean }) {
-      return state.userEnrolled
-    },
 
     /**
      * Function content: returns content of given course
@@ -58,7 +26,8 @@ export default {
      */
     content (state: {
       course: {
-        content: Array<object>
+        content: Array<object>,
+        name: string
       }
     }) {
       return state.course.content
@@ -74,7 +43,10 @@ export default {
      * @param state contains course object
      * @returns course object
      */
-    course (state: { course: object }) {
+    course (state: { course: {
+      properties: object
+      }
+    }) {
       return state.course
     },
 
@@ -197,48 +169,6 @@ export default {
   mutations: {
 
     /**
-     * appendFeedback: Append new Feedback to feedback-array or update existing feedback
-     *
-     * Author: pj
-     *
-     * Last Updated: January 27, 2022
-     *
-     * @param state contains feedback
-     * @param feedbackData contains feedbackData to be stored in feedback
-     */
-    appendFeedback (
-      state: {
-        enrollment: {
-          feedback: Array<object>
-        }
-      },
-      feedbackData: {
-        step: any,
-        created: number,
-        choice: String,
-        freetext: String,
-        id: number,
-        numberOfFeedbacksEntries: number,
-        // options: object
-        options: {
-          questions: String,
-          answers: String
-        }
-      }
-    ) {
-      if (feedbackData.numberOfFeedbacksEntries + 1 > state.enrollment.feedback.length) {
-        for (let i = state.enrollment.feedback.length; i < feedbackData.numberOfFeedbacksEntries + 1; i++) {
-          state.enrollment.feedback.push(null)
-        }
-      }
-      if (state.enrollment.feedback.length !== 0) {
-        state.enrollment.feedback[feedbackData.numberOfFeedbacksEntries] = feedbackData
-      } else {
-        state.enrollment.feedback.push(feedbackData)
-      }
-    },
-
-    /**
      * Function appendContent: add a content block to content array
      *
      * Author: core
@@ -263,21 +193,23 @@ export default {
     },
 
     /**
-     * Function appendToCourseList: add course object
-     *  to courseList array
+     * function changeCourseCategory: update course category
      *
      * Author: cmc
      *
-     * Last Updated: January 27, 2022
-     *
-     * @param state contains courseList array
-     * @param courseListItem course object to be added to list
+     * Last Updated: August 8, 2022
+     * @param state contains course object
+     * @param newCategory new category
      */
-    appendToCourseList (
-      state: { courseList: Array<object> },
-      courseListItem: object
+    changeCourseCategory (
+      state: {
+        course: {
+          category: string
+        }
+      },
+      newCategory: string
     ) {
-      state.courseList.push(courseListItem)
+      state.course.category = newCategory
     },
 
     /**
@@ -301,6 +233,78 @@ export default {
         ...state.course.properties,
         ...properties
       }
+    },
+
+    /**
+     * Function courseListAppend: add course object
+     *  to courseList array
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 7, 2022 by cmc
+     *
+     * @param state contains courseList array
+     * @param courseListItem course object to be added to list
+     */
+    courseListAppend (
+      state: { courseList: Array<object> },
+      courseListItem: {
+        author: number,
+        category: string,
+        courseId: string,
+        name: string,
+        properties: object
+      }
+    ) {
+      state.courseList.push(courseListItem)
+    },
+
+    /**
+     * function courseListRemove: remove an item from the course list
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 7, 2022
+     * @param state contains courseList
+     * @param {string} courseId of course item to delete
+     */
+    courseListRemove (
+      state: {
+        courseList: Array<{
+          courseId: string
+        }>
+      },
+      courseId: string
+    ) {
+      const idx = state.courseList.findIndex(elem => elem.courseId === courseId)
+      state.courseList.splice(idx, 1)
+    },
+
+    /**
+     * Function courseListUpdate: update courseList after name change of course
+     *
+     * Author: cmc
+     *
+     * Last Updated: November 7, 2022
+     * @param state contains courseList
+     * @param courseId id of updated course
+     */
+    courseListUpdate (
+      state: {
+        course: { name: string },
+        courseList: Array<{
+          courseId: string,
+          name: string
+        }>
+      },
+      courseId: string
+    ) {
+      console.log('courseListUpdate')
+      const listItem = state.courseList.find((item: { courseId: string, name: string }) => item.courseId === courseId)
+      console.log(listItem)
+      listItem.name = state.course.name
+      console.log(listItem)
+      console.log(state.courseList)
     },
 
     /**
@@ -410,28 +414,6 @@ export default {
     },
 
     /**
-     * function removeFromCourseList: remove a deleted course from
-     *  the course list
-     *
-     * Author: cmc
-     *
-     * Last Updated: March 14, 2022
-     * @param state contains courseList
-     * @param {string} courseId of course to delete
-     */
-    removeFromCourseList (
-      state: {
-        courseList: Array<{
-          courseId: string
-        }>
-      },
-      courseId: string
-    ) {
-      const idx = state.courseList.findIndex(elem => elem.courseId === courseId)
-      state.courseList.splice(idx, 1)
-    },
-
-    /**
      * Function renameCourse: rename a Course
      *
      * Author: core
@@ -450,27 +432,6 @@ export default {
       newName: string
     ) {
       state.course.name = newName
-    },
-
-    /**
-     * Function setEnrollment: set an enrollment for current user
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 27, 2022
-     *
-     * @param state contains enrollment, userEnrolled
-     * @param enrollmentData enrollment object
-     */
-    setEnrollment (
-      state: {
-        enrollment: object,
-        userEnrolled: boolean
-      },
-      enrollmentData: object
-    ) {
-      state.enrollment = enrollmentData
-      state.userEnrolled = true
     },
 
     /**
@@ -533,13 +494,19 @@ export default {
         prefs: object
       }
     ) {
+      console.log('course list before: ', state.courseList)
       const listEntry = state.courseList.find(x => x.courseId === data.course.courseId)
       if (listEntry) { // update properties of listEntry if present
+        console.log('updating properties of course in course list')
+        console.log('entry: ', listEntry)
+        console.log('data: ', data)
         listEntry.properties = {
           ...listEntry.properties,
           ...data.prefs
         }
+        console.log('updated entry: ', listEntry)
       }
+      console.log('course list after: ', state.courseList)
     },
 
     /**
@@ -643,6 +610,49 @@ export default {
   },
 
   actions: {
+    /**
+     * function createCourse: create storage and course in backend
+     *
+     * Author: cmc
+     *
+     * Last Updated: April 14, 2022
+     * @param state state variables
+     * @param data course properties
+     */
+    createCourse (state, data: {
+      name: string,
+      category: string,
+      userId: number,
+      enrollment?: boolean
+    }) {
+      const storageId = uuidv4()
+      return new Promise((resolve, reject) => {
+        /* create storage */
+        http.post('storage', {
+          name: storageId
+        })
+          .then(() => {
+            /* storage created, create course */
+            http.post('courses', {
+              name: data.name,
+              category: data.category,
+              authorId: data.userId,
+              storageId: storageId,
+              properties: { enrollment: data.enrollment }
+            })
+              .then(() => {
+                resolve('Course successfully created')
+              })
+              .catch((err) => {
+                reject(new Error(err)) // error creating course
+              })
+          })
+          .catch((err) => {
+            reject(new Error(err)) // error creating storage
+          })
+      })
+    },
+
     /**
      * Function copyCourse: copy course and all the files
      *  FIXME: Files are not copied
@@ -893,7 +903,7 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: January 27, 2022
+     * Last Updated: October 19, 2022
      *
      * @param param0 state variables
      */
@@ -901,46 +911,46 @@ export default {
       { commit, state }
     ) {
       commit('setBusy', true)
-      http.get('courses?filter[include]=author')
+      http.get('courses')
         .then(({ data }) => {
           for (const courseObject of data) {
             const listData = {
               category: courseObject.category,
               name: courseObject.name,
               properties: courseObject.properties,
-              courseId: courseObject.courseId
+              courseId: courseObject.courseId,
+              author: courseObject.authorId
             }
             courseObject.content.forEach(block => {
-              if (courseObject.properties.simpleLanguage) {
+              if (courseObject.properties.simpleLanguage) { // check if course is completely available in simple language
                 // TODO:
                 // following is duplicate of checkForSimpleLanguage() in
                 // @/views/course-edit-tools/course-preferences.vue
                 // might be refactored to reduce redundancy
-                const hasSimple = (elem) => {
+                courseObject.properties.simple = true // set properties.simple true first
+
+                const hasSimple = (elem) => { // check if all keys have a simple language version
                   return Object.prototype.hasOwnProperty.call(elem, 'simple')
-                    ? elem.simple !== ''
-                    : false
+                    ? elem.simple !== '' // if simple language version exists, check if it is not empty
+                    : Object.prototype.hasOwnProperty.call(elem, 'ops') // if simple language version does not exist, check if it is a quill object
                 }
-                const iterInput = Object.values(block)
-                for (const elem of iterInput) {
-                  if (typeof (elem) === 'object') {
-                    if (Array.isArray(elem)) {
-                      for (const iter of elem) {
+                const iterInput = Object.values(block.input) // values of content input array
+
+                for (const elem of iterInput) { // for each element in input array
+                  if (typeof (elem) === 'object') { // if element is an object
+                    if (Array.isArray(elem)) { // if it's an array, descent into array
+                      for (const iter of elem) { // for each element in array
                         if (iter) {
-                          if (!hasSimple(iter)) {
-                            // console.log(iter)
-                            // console.log(' doesnt have simple')
+                          if (!hasSimple(iter)) { // element does not have a simple language version
                             courseObject.properties.simple = false
-                            break
+                            break // we can stop looking further
                           }
                         }
                       }
-                    } else if (elem) {
-                      if (!hasSimple(elem)) {
-                        // console.log(elem)
-                        // console.log(' doesnt have simple')
+                    } else if (elem) { // element is an object
+                      if (!hasSimple(elem)) { // element does not have a simple language version
                         courseObject.properties.simple = false
-                        break
+                        break // we can stop looking further
                       }
                     }
                   }
@@ -954,9 +964,10 @@ export default {
                 case 'laya-wysiwyg':
                   listData.properties.text = true
                   break
-                case 'laya-ableplayer':
-                  listData.properties.video = true
-                  break
+                // commented out b/c ableplayer is disabled, 2022-10-19
+                // case 'laya-ableplayer':
+                //   listData.properties.video = true
+                //   break
                 case 'laya-dialog':
                   listData.properties.text = true
                   break
@@ -965,49 +976,11 @@ export default {
             if (!state.courseList.some( // add to course list if not present
               (e: { courseId: String }) => e.courseId === listData.courseId)
             ) {
-              commit('appendToCourseList', listData)
+              commit('courseListAppend', listData)
             }
           }
         })
         .catch(err => console.error(err))
-        .finally(() => { commit('setBusy', false) })
-    },
-
-    /**
-     * Function fetchEnrollment: fetch user's enrollment associated with courseId
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 27, 2022
-     *
-     * @param param0 state variables
-     * @param courseId identifier for enrollment
-     */
-    fetchEnrollment (
-      { commit, rootState },
-      courseId: String
-    ) {
-      const uid = rootState.auth.userId
-      const cid = courseId
-      commit('setBusy', true)
-      http.get('enrollments/findOne', {
-        params: {
-          filter: {
-            where: {
-              studentId: uid,
-              courseId: cid
-            }
-          }
-        }
-      })
-        .then(({ data }) => {
-          // console.log('Enrollment exists!')
-          commit('setEnrollment', data)
-        })
-        .catch(err => {
-          // console.log('No enrollment found!')
-          console.error(err)
-        })
         .finally(() => { commit('setBusy', false) })
     },
 
@@ -1074,28 +1047,31 @@ export default {
     },
 
     /**
-     * function updateEnrollment: update enrollment object
+     * function updateCourse: update course in database
      *
-     * Author: cmc
+     * Auhtor: cmc
      *
-     * Last Updated: January 27, 2022
-     *
-     * @param param0 state variables
+     * Last Updated: August 9, 2022
+     * @param state state variables
      */
-    updateEnrollment ({ state }) {
-      const enrol = state.enrollment
-
-      // TODO: why is this not returning a Promise?
-      http.patch(
-        `enrollments/${enrol.id}`,
-        enrol
-      )
-        .then(() => {
-          console.log('Enrollment updated!')
-        })
-        .catch(err => {
-          console.error(err)
-        })
+    updateCourse ({ state }) {
+      return new Promise((resolve, reject) => {
+        http.patch(
+          `courses/${state.course.courseId}`,
+          {
+            ...state.course,
+            lastChanged: Date.now()
+          }
+        )
+          .then((resp) => {
+            // console.log(resp)
+            resolve(resp)
+          })
+          .catch(err => {
+            // console.error(err)
+            reject(err)
+          })
+      })
     },
 
     /**
@@ -1109,13 +1085,14 @@ export default {
      * @returns Promise to update renamed course
      */
     updateRenamedCourse (
-      { state }: {
+      { state, commit }: {
         state: {
           course: {
             courseId: string,
             name: string
           }
-        }
+        },
+        commit: Function
       }
     ) {
       const newNameData = {
@@ -1129,6 +1106,7 @@ export default {
       newNameData
         )
           .then(() => {
+            commit('courseListUpdate', state.course.courseId)
             resolve('Updated Course name!')
           })
           .catch((err) => {

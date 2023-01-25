@@ -15,6 +15,7 @@ import Vuex from 'vuex'
 import auth from './modules/auth'
 import edit from './modules/edit'
 import editor from './modules/editor'
+import enrollment from './modules/enrollment'
 import flags from './modules/flags'
 import message from './modules/message'
 import note from './modules/note'
@@ -32,6 +33,7 @@ export default new Vuex.Store({
     auth,
     edit,
     editor,
+    enrollment,
     flags,
     message,
     note,

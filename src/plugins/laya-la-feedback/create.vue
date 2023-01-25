@@ -1,14 +1,20 @@
 <!--
-Filename: edit.vue
+Filename: create.vue
 Use: Edit a Course Feedback content block
-Creator: cmc
-Date: unknown
+Creator: pj
+Date: 17.08.2021
 Dependencies: @/mixins/locale.vue
+-->
+
+<!--
+Reorganisation
+Author: nv
+Last Updated: May 04, 2022
 -->
 
 <template>
   <div
-    class="laya-la-feedback-edit"
+    class="laya-la-feedback-create"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <label>
@@ -21,10 +27,13 @@ Dependencies: @/mixins/locale.vue
       v-b-tooltip.left
       class="fas fa-question-circle"
       :title="y18n('showTip')"
+      aria-labelledby="tooltipText"
+      aria-live="polite"
       @click="toggleTip"
     ></i>
     <b-jumbotron
       v-if="tooltipOn"
+      id="tooltipText"
       :header="y18n('layaLaFeedback.name')"
       :lead="y18n('tipHeadline')"
     >
@@ -47,47 +56,193 @@ Dependencies: @/mixins/locale.vue
         <div class="col-10">
           <input
             id="feedback-title"
-            v-model="title"
+            v-model="title.text"
             type="text"
             class="form-control"
+            :placeholder="y18n('titlePlaceholder')"
+          >
+        </div>
+      </div>
+
+      <!-- simple language alt -->
+      <div
+        v-if="courseSimple"
+        class="form-group row"
+      >
+        <label
+          for="feedback-title-simple"
+          class="col-2 col-form-label"
+        >
+          <span class="sr-only">
+            {{ y18n('simpleAlt') }}
+          </span>
+        </label>
+        <div class="col-10">
+          <input
+            id="feedback-title-simple"
+            v-model="title.simple"
+            type="text"
+            class="form-control"
+            :placeholder="y18n('simpleAlt')"
           >
         </div>
       </div>
 
       <!-- task -->
       <div class="form-group row">
-        <label
-          for="feedback-task"
+        <span
           class="col-2 col-form-label"
         >
-          {{ y18n('layaLaFeedback.edit.desc') }}
-        </label>
+          {{ y18n('task') }}
+        </span>
         <div class="col-10">
           <textarea
             id="feedback-task"
-            v-model="task"
+            v-model="task.text"
             class="w-100"
+            :placeholder="y18n('taskPlaceholder')"
           >
           </textarea>
         </div>
       </div>
 
-      <!-- task audio -->
-      <!--
-      <div class="form-group row">
-        <label for="feedback-task-audio" class="col-2 col-form-label">
-          Offstimme
-        </label>
+      <!-- task simple -->
+      <div
+        v-if="courseSimple"
+        class="form-group row"
+      >
+        <span
+          class="col-2 col-form-labelsr-only"
+        >
+          {{ y18n('simpleAlt') }}
+        </span>
         <div class="col-10">
-          <input id="feedback-task-audio"
-                 type="text"
-                 v-model="taskAudio"
-                 class="form-control"
-                 placeholder="z.B. https://www.laya.de/offstimme.mp3">
+          <textarea
+            id="feedback-task-simple"
+            v-model="task.simple"
+            class="w-100"
+            :placeholder="y18n('simpleAlt')"
+          ></textarea>
         </div>
       </div>
-      -->
 
+      <!-- task audio -->
+      <div class="form-group row">
+        <label
+          for="feedback-task-audio"
+          class="col-2 col-form-label"
+        >
+          {{ y18n('taskAudio') }}
+        </label>
+        <div class="col-10">
+          <input
+            id="feedback-task-audio"
+            v-model="taskAudio"
+            type="text"
+            class="form-control"
+            :placeholder="y18n('taskAudioPlaceholder')"
+          >
+        </div>
+      </div>
+
+      <!-- task audio simple -->
+      <div
+        v-if="courseSimple"
+        class="form-group row"
+      >
+        <label
+          for="feedback-task-audio-simple"
+          class="col-2 col-form-label"
+        >
+          <span class="sr-only">
+            {{ y18n('simpleAlt') }}
+          </span>
+        </label>
+        <div class="col-10">
+          <input
+            id="feedback-task-audio-simple"
+            v-model="taskAudio.simple"
+            type="text"
+            class="form-control"
+            :placeholder="y18n('simpleAlt')"
+          >
+        </div>
+      </div>
+
+      <!-- Questions -->
+      <p><b>{{ y18n('layaLaFeedback.edit.questions') }}</b></p>
+      <div
+        v-for="(item, i) in items"
+        :key="'item-'+i"
+        class="form-group"
+      >
+        <!-- text -->
+        <div class="row">
+          <label
+            class="col-form-label col-2"
+            :for="'item-text-'+i"
+          >
+            {{ y18n('text') }}
+          </label>
+          <div class="col-5">
+            <input
+              :id="'item-text-'+i"
+              v-model="items[i].label"
+              class="form-control"
+              type="text"
+            >
+          </div>
+
+          <div
+            v-if="courseSimple"
+            class="row"
+          >
+            <!-- simple item -->
+            <label
+              class="col-form-label col-2"
+              :for="'item-simple-'+i"
+            >
+              <span class="sr-only">
+                {{ y18n('simpleAlt') }}
+              </span>
+            </label>
+            <div class="col-5">
+              <input
+                :id="'item-simple-'+i"
+                v-model="item.simple"
+                class="form-control"
+                type="text"
+              >
+            </div>
+          </div>
+
+          <!-- delete -->
+          <div class="col-auto align-self-center">
+            <button
+              type="button"
+              class="btn btn-danger btn-sm"
+              :aria-label="y18n('deleteField')"
+              @click="_delItem(i)"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-10 offset-2">
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            @click="_addItem('')"
+          >
+            <i class="fas fa-plus"></i>{{ y18n('layaLaFeedback.edit.addQuestion') }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Answers -->
       <p>
         <b>
           {{ y18n('layaLaFeedback.edit.answers') }}
@@ -96,86 +251,70 @@ Dependencies: @/mixins/locale.vue
       <div
         v-for="(cat, i) in categories"
         :key="'cat-'+i"
-        class="form-group row"
+        class="form-group"
       >
         <!-- text -->
-        <label
-          class="col-form-label col-2"
-          :for="'cat-text-'+i"
-        >
-          {{ y18n('text') }}
-        </label>
-        <div class="col-7">
-          <input
-            :id="'cat-text-'+i"
-            v-model="categories[i]"
-            class="form-control"
-            type="text"
+        <div class="row">
+          <label
+            class="col-form-label col-2"
+            :for="'cat-text-'+i"
           >
-        </div>
+            {{ y18n('text') }}
+          </label>
+          <div class="col-7">
+            <input
+              :id="'cat-text-'+i"
+              v-model="cat.text"
+              class="form-control"
+              type="text"
+            >
+          </div>
 
-        <!-- delete -->
-        <div class="col-auto align-self-center">
-          <button
-            type="button"
-            class="btn btn-danger btn-sm"
-            @click="_delCategory(i)"
+          <!-- simple alt -->
+          <div
+            v-if="courseSimple"
+            class="row"
           >
-            <i class="fas fa-times"></i>
-          </button>
+            <label
+              class="col-form-label col-2"
+              :for="'cat-simple-'+i"
+            >
+              <span class="sr-only">
+                {{ y18n('simpleAlt') }}
+              </span>
+            </label>
+            <div class="col-7">
+              <input
+                :id="'cat-simple-'+i"
+                v-model="cat.simple"
+                class="form-control"
+                type="text"
+              >
+            </div>
+          </div>
+
+          <!-- delete -->
+          <div class="col-auto align-self-center">
+            <button
+              type="button"
+              class="btn btn-danger btn-sm"
+              :aria-label="y18n('deleteField')"
+              @click="_delCategory(i)"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
         </div>
       </div>
+
       <div class="form-group row">
         <div class="col-10 offset-2">
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            @click="_addCategory"
+            @click="_addCategory('')"
           >
             <i class="fas fa-plus"></i>{{ y18n('layaLaFeedback.edit.addAnswer') }}
-          </button>
-        </div>
-      </div>
-
-      <p><b>{{ y18n('layaLaFeedback.edit.questions') }}</b></p>
-      <div
-        v-for="(item, i) in items"
-        :key="'item-'+i"
-        class="form-group row"
-      >
-        <!-- text -->
-        <label
-          class="col-form-label col-2"
-          :for="item"
-        >{{ y18n('text') }}</label>
-        <div class="col-5">
-          <input
-            :id="item"
-            v-model="items[i]"
-            class="form-control"
-            type="text"
-          >
-        </div>
-
-        <!-- delete -->
-        <div class="col-auto align-self-center">
-          <button
-            type="button"
-            class="btn btn-danger btn-sm"
-            @click="_delItem(i)"
-          >
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-10 offset-2">
-          <button
-            type="button"
-            class="btn btn-primary btn-sm"
-            @click="_addItem"
-          >
-            <i class="fas fa-plus"></i>{{ y18n('layaLaFeedback.edit.addQuestion') }}
           </button>
         </div>
       </div>
@@ -186,115 +325,78 @@ Dependencies: @/mixins/locale.vue
 <script>
 import { mapGetters } from 'vuex'
 import { locale, tooltipIcon } from '@/mixins'
+import { v4 as uuidv4 } from 'uuid'
+import commonMethods from './common-methods'
 
 export default {
-  name: 'LayaLaFeedbackNew',
+  name: 'LayaLaFeedbackCreate',
 
   mixins: [
     locale,
+    commonMethods,
     tooltipIcon
   ],
 
   data () {
-    if (Object.entries(this.$attrs).length > 0) {
-      return {
-        ...this.$attrs,
-        tooltipOn: false
-      }
-    }
     return {
       title: '',
       task: '',
       taskAudio: '',
       items: [],
-      categories: []
-
+      categories: [],
+      id: uuidv4()
     }
   },
 
   computed: {
-    ...mapGetters(['content'])
+    ...mapGetters(['courseSimple'])
   },
 
   created () {
-    this.fetchData()
+    this.fillFormSamples()
+    this.populateVars()
   },
 
   methods: {
     /**
-     * Function _delItem: remove item at position idx
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     *
-     * @param {*} idx index at which to remove
-     */
-    _delItem (idx) {
-      this.items.splice(idx, 1)
-    },
-
-    /**
-     * Function _addItem: Add new item to items
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     *
-     */
-    _addItem () {
-      this.items.push('')
-    },
-
-    /**
-     * Function _delCategory: delete category at position idx
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     *
-     * @param {*} idx index at which to remove the category
-     */
-    _delCategory (idx) {
-      this.categories.splice(idx, 1)
-    },
-
-    /**
-     * Function _addCategory: Add new category to categories
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     *
-     */
-    _addCategory () {
-      this.categories.push('')
-    },
-
-    /**
-     * Function fetchData: Fill in localized sample input
+     * Function fillFormSamples: Fill in sample input
      *
      * Author: cmc
      *
-     * Last Updated: August 15, 2021
+     * Last Updated: October 15, 2022 by nv
      */
-    fetchData () {
-      if (this.title === '') { // prefetch Data at creation
-        this.title = this.y18n('layaLaFeedback.name')
-        this.task = this.y18n('layaLaFeedback.prefetch.task')
-        this.items = this.y18n('layaLaFeedback.prefetch.items').split(',')
-        this.categories = this.y18n('layaLaFeedback.prefetch.categories').split(',')
+    fillFormSamples () {
+      if (this.categories.length === 0) {
+        const tmpItem = {
+          label: this.y18n('layaLaFeedback.edit.questions') + ' 1',
+          simple: this.y18n('simpleAlt') + ' 1',
+          category: -1,
+          flagged: false,
+          id: uuidv4()
+        }
+        this.items.push(tmpItem)
+
+        for (let i = 1; i < 3; i++) {
+          this.categories.push({
+            text: this.y18n('layaLaFeedback.edit.answers') + ' ' + i,
+            simple: this.y18n('simpleAlt') + ' ' + i
+          })
+        }
+      }
+    },
+
+    populateVars () {
+      this.title = {
+        text: '',
+        flagged: false,
+        id: uuidv4()
+      }
+      this.task = {
+        text: '',
+        flagged: false,
+        id: uuidv4()
       }
     }
-
-    /* fetchData() {
-      let idx = this.$route.params.step - 1
-      const preData = JSON.parse(JSON.stringify(this.content[idx].input))
-      this.title = preData.title
-      this.task = preData.task
-      this.items = preData.items
-      this.categories = preData.categories
-    } */
   }
 }
 </script>

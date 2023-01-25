@@ -31,7 +31,6 @@
           :placeholder="newInput? y18n('profile.newPwd'): y18n('pwdPH')"
           :toggle="!langIsAr"
           :badge="!langIsAr"
-          aria-describedby="pwd-label"
           @feedback="pwdHints"
           @score="setPwdStrength"
         ></password>
@@ -70,7 +69,6 @@
           type="password"
           class="form-control"
           :placeholder="y18n('pwd2PH')"
-          aria-describedby="repeat-label"
         >
       </div>
     </div>

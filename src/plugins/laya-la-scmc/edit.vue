@@ -22,12 +22,15 @@ Dependencies:
         v-b-tooltip.left
         class="fas fa-question-circle"
         :title="y18n('showTip')"
+        aria-labelledby="tooltipText"
+        aria-live="polite"
         @click="toggleTip"
       ></i>
     </div>
 
     <b-jumbotron
       v-if="tooltipOn"
+      id="tooltipText"
       :header="y18n('layaLaScmc.name')"
       :lead="y18n('tipHeadline')"
     >
@@ -47,10 +50,10 @@ Dependencies:
           <div class="form-check form-check-inline align-text-top">
             <input
               id="scmc-sc"
-              v-model="multiple"
+              v-model="variation"
               class="form-check-input"
               type="radio"
-              :value="false"
+              :value="single"
             >
             <label
               for="scmc-sc"
@@ -62,17 +65,34 @@ Dependencies:
           <div class="form-check form-check-inline align-text-top">
             <input
               id="scmc-mc"
-              v-model="multiple"
+              v-model="variation"
               class="form-check-input"
               type="radio"
               name="multiple"
-              :value="true"
+              :value="multiple"
             >
             <label
               for="scmc-mc"
               class="form-check-label"
             >
               {{ y18n('layaLaScmc.edit.mc') }}
+            </label>
+          </div>
+          <div class="form-check form-check-inline align-text-top">
+            <input
+              id="scmc-tf"
+              v-model="variation"
+              class="form-check-input"
+              type="radio"
+              name="tf"
+              :value="tf"
+              @click="switchToTF"
+            >
+            <label
+              for="scmc-tf"
+              class="form-check-label"
+            >
+              {{ y18n('layaLaScmc.edit.tf') }}
             </label>
           </div>
         </div>
@@ -226,21 +246,40 @@ Dependencies:
           </label>
           <div class="col-7">
             <input
+              v-if="variation === single || variation === multiple"
               :id="'option-text-'+i"
               v-model="option.text"
               class="form-control"
               type="text"
             >
+            <input
+              v-else
+              :id="'option-text-'+i"
+              v-model="option.text"
+              class="form-control"
+              type="text"
+              readonly
+            >
           </div>
 
           <!-- correct -->
-          <div class="form-check form-check-inline">
+          <div class="form-check form-check-inline ">
             <input
+              v-if="variation === single || variation === tf"
+              :id="'option-corr-'+i"
+              v-model="solution"
+              class="form-check-input"
+              :type="multiple ? 'checkbox' : 'radio'"
+              :value="true"
+              @click="() => { if (!multiple) {for (const ix in solutions) { ix === i ? solutions[ix] = true : solutions[ix] = false } } }"
+            >
+            <input
+              v-else
               :id="'option-corr-'+i"
               v-model="solutions[i]"
               class="form-check-input"
               type="checkbox"
-              :true-value="i"
+              :value="i"
             >
             <label
               class="form-check-label"
@@ -253,6 +292,7 @@ Dependencies:
           <!-- delete -->
           <div class="col-auto align-self-center">
             <button
+              v-if="variation === single || variation === multiple"
               type="button"
               class="btn btn-danger btn-sm"
               :aria-label="y18n('deleteField')"
@@ -276,16 +316,26 @@ Dependencies:
           </label>
           <div class="col-7">
             <input
+              v-if="variation === single || variation === multiple"
               :id="'option-text-'+i"
               v-model="options[i].simple"
               class="form-control"
               type="text"
+            >
+            <input
+              v-else
+              :id="'option-text-'+i"
+              v-model="option.simple"
+              class="form-control"
+              type="text"
+              readonly
             >
           </div>
         </div>
       </div>
 
       <button
+        v-if="variation === single || variation === multiple"
         type="button"
         class="btn btn-primary btn-sm"
         @click="_addItem"
@@ -293,18 +343,35 @@ Dependencies:
         <i class="fas fa-plus"></i>{{ y18n('itemAdd') }}
       </button>
     </form>
+    <b-modal
+      id="confirm-change-tf"
+      :title="y18n('warning')"
+      header-bg-variant="danger"
+      ok-variant="danger"
+      :ok-title="y18n('courseCreate.modal.ok')"
+      :cancel-title="y18n('cancel')"
+      centered
+      static
+      @ok="populateTrueFalse()"
+    >
+      <p>
+        {{ y18n('changeToTrueFalse.modal.text') }}
+      </p>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import { locale, tooltipIcon } from '@/mixins'
+import commonMethods from './choices-common-methods'
 import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'LayaLaScmcEdit',
 
   mixins: [
+    commonMethods,
     locale,
     tooltipIcon
   ],
@@ -315,9 +382,13 @@ export default {
       task: '',
       taskAudio: '',
       options: [],
+      solution: 0,
       solutions: [],
       maxTries: 1,
-      multiple: false
+      single: 0,
+      multiple: 1,
+      tf: 2,
+      variation: 0
     }
   },
 
@@ -330,29 +401,34 @@ export default {
   },
 
   methods: {
-
     /**
-     * Function _delItem(idx): Delete item at given index
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
+     * @description add the correct answer options if true and false is selected
      */
-    _delItem (idx) {
-      this.options.splice(idx, 1)
+    populateTrueFalse () {
+      this.options = [
+        {
+          text: this.y18n('layaLaScmc.edit.true'),
+          simple: this.y18n('layaLaScmc.edit.true'),
+          flagged: false,
+          id: uuidv4()
+        },
+        {
+          text: this.y18n('layaLaScmc.edit.false'),
+          simple: this.y18n('layaLaScmc.edit.false'),
+          flagged: false,
+          id: uuidv4()
+        }
+      ]
+      this.variation = this.tf
     },
 
     /**
-     * Function _addItem: Add item to options
-     * Author: core
-     * Last Updated: June 28, 2021
+     * @description prevent change to true/false before modal 'ok' is clicked
+     * @param e 'click' event from radio button
      */
-    _addItem () {
-      this.options.push({
-        text: this.y18n('layaLaScmc.edit.sampleOption'),
-        flagged: false,
-        id: uuidv4()
-      })
+    switchToTF (e) {
+      e.preventDefault()
+      this.$bvModal.show('confirm-change-tf')
     },
 
     /**
@@ -360,12 +436,12 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: March 19, 2021
+     * Last Updated: January 23, 2023 by nv
      */
     fetchData () {
       const idx = this.$route.params.step - 1
       const preData = JSON.parse(JSON.stringify(this.content[idx]['input']))
-      this.multiple = preData.multiple
+      this.variation = preData.variation
       this.title = preData.title
       this.task = preData.task
       this.taskAudio = preData.taskAudio
