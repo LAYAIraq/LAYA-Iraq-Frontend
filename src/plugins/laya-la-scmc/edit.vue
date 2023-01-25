@@ -365,6 +365,7 @@ Dependencies:
 import { mapGetters } from 'vuex'
 import { locale, tooltipIcon } from '@/mixins'
 import commonMethods from './choices-common-methods'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'LayaLaScmcEdit',
