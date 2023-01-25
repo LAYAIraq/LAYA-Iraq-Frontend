@@ -1,5 +1,11 @@
 # Changes
 
+## v1.2.5
+- small fixes in course creation / editing
+- added feedback block for users to give feedback on courses
+- added True/False option in SCMC quiz component
+- improved screen reader support
+
 ## v1.2.4
 - fixed wrong display of solutions in assessments
 - changed display of choice of correct solution in SCMC component
