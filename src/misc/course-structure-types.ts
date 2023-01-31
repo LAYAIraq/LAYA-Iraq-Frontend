@@ -94,6 +94,7 @@ export type Course = {
   abstract: string,
   category: string,
   chapters: CourseNavigationStructure,
+  chapterNames?:{ [chapterName: string]: string }, // chapter names for breadcrumb
   [key: string]: any
 }
 

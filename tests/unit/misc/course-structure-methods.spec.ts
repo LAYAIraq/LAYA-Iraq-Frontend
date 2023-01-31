@@ -67,6 +67,12 @@ describe('content-structure methods', () => {
       expect(chapters).toBeNull()
     })
 
+    it('returns -1 for next step 0 (i.e. designated last block)', () => {
+      const testBlock = { ...mockContentBlock, nextStep: '0' }
+      const chapters: any = legacyContentStepsTransform(testBlock)
+      expect(chapters).toBe(-1)
+    })
+
     it('return correct output for random input', () => {
       const noOfItems = getNumberBetween1and10() // random number between 1 and 10
       let steps = ''

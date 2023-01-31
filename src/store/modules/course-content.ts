@@ -32,18 +32,13 @@ export default {
     courseIds: {},
     courseStart: '',
     courseChapters: {},
+    courseChapterNames: {},
     courseRoutes: []
   },
 
   getters: {
+    courseChapterNames: (state: { courseChapterNames: { [id: string]: string } }) => state.courseChapterNames,
     courseContent: (state: { courseContent: { [id: string]: CourseNavigationItem } }) => state.courseContent,
-    courseNav: (state) => {
-      return {
-        start: state.courseStart,
-        structure: state.courseChapters
-      }
-    },
-    courseRoutes: (state: { courseRoutes: any }) => state.courseRoutes,
     courseContentIdRouteMap: (state: { courseRoutes: any }) => {
       const map = {}
       for (const [route, id] of state.courseRoutes) {
@@ -82,7 +77,14 @@ export default {
       // const res = contentPath ? contentPath[1] : null
       // console.log('found content path', res)
       return contentPath ? contentPath[1] : null
-    }
+    },
+    courseNav: (state) => {
+      return {
+        start: state.courseStart,
+        structure: state.courseChapters
+      }
+    },
+    courseRoutes: (state: { courseRoutes: any }) => state.courseRoutes
   },
 
   mutations: {
@@ -98,6 +100,7 @@ export default {
         courseIds: { [id: string]: number },
         courseStart: string,
         courseChapters: CourseNavigationStructure,
+        courseChapterNames: { [id: string]: string },
         courseRoutes: any
       },
       course: Course
@@ -109,6 +112,7 @@ export default {
       )
       state.courseChapters = course.chapters
       state.courseStart = course.start
+      state.courseChapterNames = course.chapterNames
     },
 
     courseContentAdd (state: { courseContent: { [id: string]: ContentBlock } }, content: any) {

@@ -17,12 +17,40 @@ Dependencies:
     class="course-detail-view"
   >
     <!-- course header -->
-    <div class="container-fluid bg-dark">
-      <div class="row">
+    <div class="container-fluid">
+      <div class="row bg-dark">
         <div class="col">
           <h1 class="text-center text-light py-5">
             <b>{{ course.name }}</b>
           </h1>
+        </div>
+      </div>
+      <div class="row" id="course-breadcrumb">
+        <div class="col">
+          <ol class="breadcrumb bg-light">
+            <li class="breadcrumb-item">
+              <router-link :to="{ name: 'courses-view' }">
+                {{ y18n('courseDetail.courses') }}
+              </router-link>
+            </li>
+            <li class="breadcrumb-item">
+              <router-link :to="{ name: 'course-detail-view', params: { name: slugify(course.name) } }">
+                {{ course.name }}
+              </router-link>
+            </li>
+            <li
+              class="breadcrumb-item"
+              v-for="(subchapter, i) in subchapters"
+              :key="i"
+            >
+              <router-link :to="{ name: 'course-detail-view', params: { name: course.name, path: subchapter.route } }">
+                {{ courseChapterNames[subchapter] }}
+              </router-link>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+              {{ contentToDisplay.title.text }}
+            </li>
+          </ol>
         </div>
       </div>
     </div>
@@ -66,6 +94,7 @@ Dependencies:
 import { mapGetters } from 'vuex'
 import utils from '@/misc/utils.js'
 import { locale, routeProps, storeHandler } from '@/mixins'
+import { slugify } from '@/misc/course-structure-methods'
 
 export default {
   name: 'CourseDetailView',
@@ -87,20 +116,11 @@ export default {
     // new commit
   },
 
-  data () {
-    return {
-      // enrollment: {},
-      rename: '',
-      copy: '',
-      changetype: null
-      // courseStats: {}
-    }
-  },
-
   computed: {
     ...mapGetters([
       'content',
       'course',
+      'courseChapterNames',
       'courseContent',
       'courseContentIdRouteMap',
       'courseContentIndexIdMap',
@@ -163,6 +183,10 @@ export default {
       return this.followingContent(this.contentToDisplay)
     },
 
+    subchapters () {
+      return this.coursePath.split('/').slice(0, -1)
+    },
+
     /**
      * viewPermit: returns true if user is allowed to see selected course
      *
@@ -222,12 +246,19 @@ export default {
     // }
   },
 
+  updated () {
+    console.log(this.pathId)
+    console.log(this.courseContentIdRouteMap)
+    console.log(this.coursePath)
+  },
+
   beforeDestroy () {
     /* if (this.enrollment.length > 0) this.updateEnrollment()
     this.saveFlags() */
   },
 
   methods: {
+    slugify,
     ...utils,
 
     /**
