@@ -133,10 +133,10 @@ export const coursePathsGet =
  * @param ids object containing ids of content blocks, will be modified consisting
  *  all ids of content blocks in course structure
  */
-const courseStructureContentIdsExtract = (structure: CourseNavigationStructure, ids: any): void => {
+export const courseStructureContentIdsExtract = (structure: CourseNavigationStructure, ids: any): void => {
   if (structure instanceof Array) { // stucture is CourseNavigationItem[]
     structure.forEach((item) => {
-      ids[item.id] = {}
+      ids[item.id] = { partOfArray: true }
     })
   } else if (Object.prototype.hasOwnProperty.call(structure, 'id')) { // structure is CourseNavigationItem
     // @ts-ignore
@@ -195,30 +195,4 @@ export const courseStructureDescent = (
     courseSubChapterSlugTrim(routes)
   }
   return [ids, routes]
-}
-
-const courseContentFollowExists = (item: CourseNavigationItem): boolean => {
-  return item.follow !== undefined && item.follow !== null
-}
-
-export const courseNavFilledOut = (courseNav: CourseNavigationStructure): boolean => {
-  // if courseNav is array, make sure dialog has the follow property
-  // if coursenav object has
-  if (courseNav instanceof Array) { // stucture is CourseNavigationItem[], assume linear order of content
-    let filledOut = true
-    courseNav.forEach((item) => {
-      if (courseNav.indexOf(item) === courseNav.length - 1) {
-        filledOut = courseContentFollowExists(item)
-      }
-    })
-  } else if (Object.prototype.hasOwnProperty.call(courseNav, 'id')) {
-    return courseNav.follow !== undefined && courseNav.follow !== null
-  } else {
-    for (const chapter in courseNav) {
-      if (courseNavFilledOut(courseNav[chapter])) {
-        return true
-      }
-    }
-  }
-  return false
 }

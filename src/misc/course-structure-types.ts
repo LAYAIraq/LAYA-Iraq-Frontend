@@ -54,6 +54,7 @@ type FollowingContent = string | string[] | number | number[]
 export type CourseNavigationItem = {
   id: string,
   slug: string,
+  type?: string,
   follow?: FollowingContent
 }
 

@@ -7,9 +7,10 @@ import {
   LegacyCourse
 } from '@/misc/course-structure-types'
 import {
-  legacyContentStepsTransform,
-  courseStructureDescent,
   coursePathsGet,
+  courseStructureContentIdsExtract,
+  courseStructureDescent,
+  legacyContentStepsTransform,
   slugify
 } from '@/misc/course-structure-methods'
 import { validateSlug } from '../../helpers/validations'
@@ -57,7 +58,6 @@ describe('content-structure methods', () => {
       for (let i = 1; i < content.length; i++) {
         const contentBlock = content[i]
         const chapters: any = legacyContentStepsTransform(contentBlock)
-        console.log(chapters)
         expect(typeof chapters === 'number').toBeTruthy()
       }
     })
@@ -245,7 +245,33 @@ describe('content-structure methods', () => {
     })
   })
 
-  describe.skip('courseNavFilledOut', () => {
+  describe('courseStructureContentIdsExtract', () => {
+    it('returns correct ids for new courses', () => {
+      const courseChapters = SampleCourseChapters.chapters
+      const ids = {}
+      courseStructureContentIdsExtract(courseChapters, ids)
+      expect(Object.keys(ids).length).toBe(5)
+      expect(ids).toHaveProperty('e1ns')
+      expect(ids).toHaveProperty('zw31')
+      expect(ids).toHaveProperty('dr31')
+      expect(ids).toHaveProperty('v13r')
+      expect(ids).toHaveProperty('fu3nf')
+    })
 
+    it('returns correct ids for deeply nested courses', () => {
+      const courseChaptersNested = SampleCourseChaptersNested.chapters
+      const ids = {}
+      courseStructureContentIdsExtract(courseChaptersNested, ids)
+      expect(Object.keys(ids).length).toBe(9)
+      expect(ids).toHaveProperty('e1ns')
+      expect(ids).toHaveProperty('zw31')
+      expect(ids).toHaveProperty('dr31')
+      expect(ids).toHaveProperty('v13r')
+      expect(ids).toHaveProperty('fu3nf')
+      expect(ids).toHaveProperty('53ch5')
+      expect(ids).toHaveProperty('513b3n')
+      expect(ids).toHaveProperty('4cht')
+      expect(ids).toHaveProperty('f33db4ck')
+    })
   })
 })
