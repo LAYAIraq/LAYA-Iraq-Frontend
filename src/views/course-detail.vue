@@ -18,19 +18,25 @@ Dependencies:
   >
     <!-- course header -->
     <div class="container-fluid">
-      <div class="row bg-dark">
+      <div
+        id="course-header"
+        class="row bg-dark"
+      >
         <div class="col">
-          <h1 class="text-center text-light py-5">
+          <h1 class="text-center text-light py-3">
             <b>{{ course.name }}</b>
           </h1>
         </div>
       </div>
-      <div class="row" id="course-breadcrumb">
+      <div
+        id="course-breadcrumb"
+        class="row"
+      >
         <div class="col">
-          <ol class="breadcrumb bg-light">
+          <ol class="breadcrumb bg-light justify-content-center">
             <li class="breadcrumb-item">
               <router-link :to="{ name: 'courses-view' }">
-                {{ y18n('courseDetail.courses') }}
+                <i class="fas fa-house-user"></i> {{ y18n('courses.title') }}
               </router-link>
             </li>
             <li class="breadcrumb-item">
@@ -39,15 +45,18 @@ Dependencies:
               </router-link>
             </li>
             <li
-              class="breadcrumb-item"
               v-for="(subchapter, i) in subchapters"
               :key="i"
+              class="breadcrumb-item"
             >
               <router-link :to="{ name: 'course-detail-view', params: { name: course.name, path: subchapter.route } }">
-                {{ courseChapterNames[subchapter] }}
+                {{ chapterName(subchapter) }}
               </router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
+            <li
+              class="breadcrumb-item active"
+              aria-current="page"
+            >
               {{ contentToDisplay.title.text }}
             </li>
           </ol>
@@ -59,8 +68,6 @@ Dependencies:
     <div class="container content">
       <div class="row">
         <div class="col">
-          <div id="main-content-anchor"></div>
-
           <component
             :is="contentToDisplay.name"
             v-if="contentToDisplay && viewPermit"
@@ -94,7 +101,7 @@ Dependencies:
 import { mapGetters } from 'vuex'
 import utils from '@/misc/utils.js'
 import { locale, routeProps, storeHandler } from '@/mixins'
-import { slugify } from '@/misc/course-structure-methods'
+import { slugify, unslugify } from '@/misc/course-structure-methods'
 
 export default {
   name: 'CourseDetailView',
@@ -111,7 +118,7 @@ export default {
   ],
 
   beforeRouteUpdate (to, from, next) {
-    document.getElementById('main-content-anchor').scrollIntoView()
+    document.getElementById('course-header').scrollIntoView()
     next()
     // new commit
   },
@@ -212,13 +219,13 @@ export default {
      *
      * Last Updated: October 22, 2021
      */
-    content: {
-      deep: true,
-      handler () {
-        // console.log('updating...')
-        this.$nextTick(() => this.$forceUpdate)
-      }
-    },
+    // content: {
+    //   deep: true,
+    //   handler () {
+    //     // console.log('updating...')
+    //     this.$nextTick(() => this.$forceUpdate)
+    //   }
+    // },
 
     /**
      * watcher courseFlags: update when courseFlags change
@@ -259,6 +266,7 @@ export default {
 
   methods: {
     slugify,
+    unslugify,
     ...utils,
 
     /**
@@ -315,6 +323,10 @@ export default {
           routePushLookup(el)
         )
         : [routePushLookup(follow)] // has to be array
+    },
+
+    chapterName (chapter) {
+      return this.courseChapterNames[chapter] ?? this.unslugify(chapter)
     }
   }
 }
@@ -350,7 +362,4 @@ export default {
   margin-bottom: 4rem;
 }
 
-#main-content-anchor {
-  height: 7rem;
-}
 </style>

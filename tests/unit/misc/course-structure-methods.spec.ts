@@ -11,7 +11,7 @@ import {
   courseStructureContentIdsExtract,
   courseStructureDescent,
   legacyContentStepsTransform,
-  slugify
+  slugify, unslugify
 } from '@/misc/course-structure-methods'
 import { validateSlug } from '../../helpers/validations'
 
@@ -137,6 +137,17 @@ describe('content-structure methods', () => {
       const slug = slugify(sentence)
       // console.log(slug)
       expect(validateSlug(slug)).toBeTruthy()
+    })
+  })
+
+  describe('unslugify', () => {
+    it('converts slugs to space separated uppercase words', () => {
+      const slugs = ['hello-world', 'hello-world!', 'hello-world!!', 'hello-world!!!', 'very-complicated-slug-lacking-brevity']
+      const expectedStrings = ['Hello World', 'Hello World!', 'Hello World!!', 'Hello World!!!', 'Very Complicated Slug Lacking Brevity']
+      slugs.forEach((slug, index) => {
+        const string = unslugify(slug)
+        expect(string).toBe(expectedStrings[index])
+      })
     })
   })
 

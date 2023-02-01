@@ -15,13 +15,15 @@ Dependencies:
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div class="container-fluid">
-      <div class="row">
+      <div
+        v-if="filtered.length === 0"
+        class="row"
+      >
         <div
           class="col"
           aria-live="polite"
         >
           <h2
-            v-show="filtered.length === 0"
             class="text-center text-muted"
           >
             {{ y18n('noCourses') }}

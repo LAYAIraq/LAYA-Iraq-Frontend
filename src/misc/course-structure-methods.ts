@@ -42,6 +42,15 @@ export const slugify = (text: string): string => {
     .replace(/-+$/, '') // Trim - from end of text
 }
 
+export const unslugify = (text: string): string => {
+  const words = text.split('-')
+  const newWords = []
+  for (const word of words) {
+    newWords.push(word.charAt(0).toUpperCase() + word.slice(1))
+  }
+  return newWords.join(' ')
+}
+
 /**
  * @description add start route to array of routes
  * @param item course navigation item
