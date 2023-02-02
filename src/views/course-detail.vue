@@ -16,53 +16,9 @@ Dependencies:
     v-if="!storeBusy"
     class="course-detail-view"
   >
-    <!-- course header -->
-    <div class="container-fluid">
-      <div
-        id="course-header"
-        class="row bg-dark"
-      >
-        <div class="col">
-          <h1 class="text-center text-light py-3">
-            <b>{{ course.name }}</b>
-          </h1>
-        </div>
-      </div>
-      <div
-        id="course-breadcrumb"
-        class="row"
-      >
-        <div class="col">
-          <ol class="breadcrumb bg-light justify-content-center">
-            <li class="breadcrumb-item">
-              <router-link :to="{ name: 'courses-view' }">
-                <i class="fas fa-house-user"></i> {{ y18n('courses.title') }}
-              </router-link>
-            </li>
-            <li class="breadcrumb-item">
-              <router-link :to="{ name: 'course-detail-view', params: { name: slugify(course.name) } }">
-                {{ course.name }}
-              </router-link>
-            </li>
-            <li
-              v-for="(subchapter, i) in subchapters"
-              :key="i"
-              class="breadcrumb-item"
-            >
-              <router-link :to="{ name: 'course-detail-view', params: { name: course.name, path: subchapter.route } }">
-                {{ chapterName(subchapter) }}
-              </router-link>
-            </li>
-            <li
-              class="breadcrumb-item active"
-              aria-current="page"
-            >
-              {{ contentToDisplay.title.text }}
-            </li>
-          </ol>
-        </div>
-      </div>
-    </div>
+    <CourseHeader
+      :content-to-display="contentToDisplay"
+    ></CourseHeader>
 
     <!-- content -->
     <div class="container content">
@@ -89,11 +45,11 @@ Dependencies:
       </div>
     </div>
 
-    <courseEdit
+    <CourseEdit
       v-if="isCourseAuthor && content"
       :name="name"
       :course-path="coursePath"
-    ></courseEdit>
+    ></CourseEdit>
   </div>
 </template>
 
@@ -102,13 +58,15 @@ import { mapGetters } from 'vuex'
 import utils from '@/misc/utils.js'
 import { locale, routeProps, storeHandler } from '@/mixins'
 import { slugify, unslugify } from '@/misc/course-structure-methods'
+import CourseHeader from '@/views/course-detail-header.vue'
 
 export default {
   name: 'CourseDetailView',
 
   components: {
     lyScrollToTop: () => import('@/components/scroll-to-top'),
-    courseEdit: () => import('@/views/course-edit')
+    CourseEdit: () => import('@/views/course-edit'),
+    CourseHeader
   },
 
   mixins: [
@@ -188,10 +146,6 @@ export default {
 
     followContent () {
       return this.followingContent(this.contentToDisplay)
-    },
-
-    subchapters () {
-      return this.coursePath.split('/').slice(0, -1)
     },
 
     /**
@@ -277,10 +231,6 @@ export default {
      * Last Updated: October 21, 2021
      */
     getCourse () {
-      const ctx = this
-
-      window.scrollTo(0, 0)
-      document.title = `Laya - ${ctx.course.name}`
       if (
         !this.course.name || // course is undefined in store
         this.courseSlug !== this.name || // course in store doesn't match the route params
@@ -289,6 +239,8 @@ export default {
         console.log('Fetching Course...')
         this.fetchCourse(this.name)
       }
+      document.title = `Laya - ${this.course.name}`
+      window.scrollTo(0, 0)
     },
 
     /**
@@ -323,10 +275,6 @@ export default {
           routePushLookup(el)
         )
         : [routePushLookup(follow)] // has to be array
-    },
-
-    chapterName (chapter) {
-      return this.courseChapterNames[chapter] ?? this.unslugify(chapter)
     }
   }
 }
