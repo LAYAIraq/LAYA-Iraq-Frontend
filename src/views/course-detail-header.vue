@@ -16,15 +16,15 @@
     >
       <div class="col">
         <h1 class="text-center text-light py-3">
-          <b>{{ course.name }}</b>
+          <b>{{ courseName }}</b>
         </h1>
       </div>
     </div>
     <div
       id="course-breadcrumb"
-      class="container"
+      class="row bg-light"
     >
-      <div class="col">
+      <div class="container">
         <ol class="breadcrumb bg-light">
           <li :class="langIsAr? 'bci-ar': 'breadcrumb-item'">
             <router-link
@@ -36,10 +36,10 @@
           </li>
           <li :class="langIsAr? 'bci-ar': 'breadcrumb-item'">
             <router-link
-              :to="{ name: 'course-detail-view', params: { name: slugify(course.name) } }"
+              :to="{ name: 'course-detail-view', params: { name: slugify(courseName) } }"
               class="text-dark"
             >
-              {{ course.name }}
+              {{ courseName }}
             </router-link>
           </li>
           <li
@@ -47,7 +47,15 @@
             :key="i"
             :class="langIsAr? 'bci-ar': 'breadcrumb-item'"
           >
-            <router-link :to="{ name: 'course-detail-view', params: { name: course.name, path: subchapter } }">
+            <router-link
+              :to="{
+                name: 'course-detail-view',
+                params: {
+                  name: slugify(courseName),
+                  coursePath: subchapters.slice(0, i + 1).join('/')
+                }
+              }"
+            >
               {{ chapterName(subchapter) }}
             </router-link>
           </li>
@@ -55,7 +63,7 @@
             class="breadcrumb-item active"
             aria-current="page"
           >
-            {{ contentToDisplay.title.text }}
+            {{ courseSimple? contentTitle.simple: contentTitle.text }}
           </li>
         </ol>
       </div>
@@ -65,20 +73,37 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale, routeProps } from '@/mixins'
+import { locale } from '@/mixins'
 import { slugify, unslugify } from '@/misc/course-structure-methods'
 
 export default {
   name: 'CourseDetailHeader',
-  mixins: [locale, routeProps],
+  mixins: [locale],
   props: {
-    contentToDisplay: {
+    contentTitle: {
       type: Object,
+      required: true
+    },
+    courseName: {
+      type: String,
+      required: true
+    },
+    coursePath: {
+      type: String,
       required: true
     }
   },
   computed: {
-    ...mapGetters(['course'])
+    ...mapGetters(['courseChapterNames', 'courseSimple']),
+    /**
+     * @function returns subchapter slugs of the current coursePath
+     * @author cmc
+     * @since v1.3.0
+     * @returns {string[]} The subchapter slugs of the current coursePath
+     */
+    subchapters () {
+      return this.coursePath.split('/').slice(0, -1)
+    }
   },
   methods: {
     /**
@@ -91,16 +116,7 @@ export default {
     chapterName (chapter) {
       return this.courseChapterNames[chapter] ?? unslugify(chapter)
     },
-    slugify,
-    /**
-     * @function returns subchapter slugs of the current coursePath
-     * @author cmc
-     * @since v1.3.0
-     * @returns {string[]} The subchapter slugs of the current coursePath
-     */
-    subchapters () {
-      return this.coursePath.split('/').slice(0, -1)
-    }
+    slugify
   }
 }
 </script>

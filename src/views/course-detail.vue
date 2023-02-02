@@ -17,7 +17,9 @@ Dependencies:
     class="course-detail-view"
   >
     <CourseHeader
-      :content-to-display="contentToDisplay"
+      :content-title="contentToDisplay.title"
+      :course-name="course.name"
+      :course-path="coursePath"
     ></CourseHeader>
 
     <!-- content -->
