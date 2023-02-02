@@ -184,7 +184,6 @@ export default {
   },
 
   mounted () {
-    document.title = 'Laya'
     this.checkCourse()
     this.$forceUpdate()
     this.getLocale()

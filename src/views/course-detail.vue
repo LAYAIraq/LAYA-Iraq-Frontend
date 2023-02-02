@@ -239,7 +239,6 @@ export default {
         console.log('Fetching Course...')
         this.fetchCourse(this.name)
       }
-      document.title = `Laya - ${this.course.name}`
       window.scrollTo(0, 0)
     },
 

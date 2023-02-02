@@ -55,6 +55,7 @@ export default {
   },
 
   created () {
+    document.title = 'LAYA - Learn As You Are'
     this.restoreAuth()
     this.relocateUnauthorized()
   },
