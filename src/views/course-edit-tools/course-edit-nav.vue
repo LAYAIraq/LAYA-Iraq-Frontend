@@ -18,7 +18,7 @@ Dependencies:
         block
         variant="primary"
         append
-        :to="{path: 'editNav'}"
+        :to="{path: 'edit-nav'}"
       >
         <i class="fas fa-project-diagram"></i> {{ y18n('nav.editNav') }}
       </b-button>

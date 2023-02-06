@@ -16,7 +16,7 @@ import Router from 'vue-router'
 const AdminPanel = () => import('./views/admin-panel.vue')
 const CourseDetail = () => import('./views/course-detail.vue')
 const CourseEditWrapper = () => import('./views/course-edit-wrapper.vue')
-const CourseNavEdit = () => import('./views/edit-course-nav.vue')
+const CourseNavEdit = () => import('./views/course-nav-edit.vue')
 const Courses = () => import('./views/courses.vue')
 const EditorPanel = () => import('./views/editor-panel.vue')
 const Flag = () => import('./views/flag.vue')
@@ -103,8 +103,8 @@ export default new Router({
           props: true
         },
         {
-          path: 'editNav',
-          name: 'edit-course-nav-view',
+          path: 'edit-nav',
+          name: 'course-nav-edit-view',
           component: CourseNavEdit
         }
       ]
