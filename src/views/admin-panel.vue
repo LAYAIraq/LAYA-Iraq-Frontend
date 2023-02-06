@@ -51,7 +51,7 @@
           </div>
         </div>
         <div class="col">
-          {{ y18n('namePH') }}
+          {{ y18n('usernamePH') }}
           <label
             id="name-filter-label"
             for="name-filter-input"
@@ -391,7 +391,7 @@
             for="create-user-name"
             :class="langIsAr? 'ml-auto': 'mr-auto'"
           >
-            {{ y18n('namePH') }}
+            {{ y18n('usernamePH') }}
           </label>
           <input
             id="create-user-name"
@@ -401,7 +401,7 @@
               'ml-2': !langIsAr,
               'highlight-border': emptyCreateInput
             }"
-            :placeholder="y18n('namePH')"
+            :placeholder="y18n('usernamePH')"
           >
         </p>
         <p>

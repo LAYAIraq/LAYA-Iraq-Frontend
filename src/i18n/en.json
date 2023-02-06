@@ -345,6 +345,7 @@
 	"mycourses.sortByDate": "Created on",
 	"mycourses.sortByName": "Course name",
 	"mycourses.title": "My Courses",
+	"name": "Name",
 	"nameErr": "Your name may only contain letters and digits!",
 	"nameErrEmpty": "Your name cannot be empty!",
 	"namePH": "Full Name",

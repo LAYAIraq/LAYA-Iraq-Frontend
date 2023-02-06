@@ -25,10 +25,7 @@ export default {
         text: true,
         video: true
       }
-    },
-    username: '',
-    usernameSet: '',
-    emailSet: ''
+    }
   },
   getters: {
 
@@ -89,32 +86,6 @@ export default {
      */
     profileLang (state: { lang: string }) {
       return state.lang
-    },
-    /**
-     * Function usernameSet: return usernameSet
-     *
-     * Author: nv
-     *
-     * Last Updated: November 26, 2022
-     *
-     * @param0 contains usernameSet string
-     * @returns username to set
-     */
-    usernameSet (state: { usernameSet: string }) {
-      return state.usernameSet
-    },
-    /**
-     * Function emailSet: return emailSet
-     *
-     * Author: nv
-     *
-     * Last Updated: November 26, 2022
-     *
-     * @param0 contains emailSet string
-     * @returns email to set
-     */
-    emailSet (state: { emailSet: string }) {
-      return state.emailSet
     }
   },
   mutations: {
@@ -186,36 +157,66 @@ export default {
      *
      * Author: nv
      *
-     * Last Updated: November 26, 2022
+     * Last Updated: February 06, 2023
      *
      * @param state contains institution
      * @param institution: string containing institution
      */
     setInstitution (
-      state: { institution: object },
+      state: { institution: string },
       institution: string
     ) {
-      state.institution = {
-        institution
-      }
+      state.institution = institution
     },
     /**
      * Function setOccupation: set occupation
      *
      * Author: nv
      *
-     * Last Updated: November 26, 2022
+     * Last Updated: February 06, 2023
      *
      * @param state contains occupation
      * @param occupation: string containing occuptation
      */
     setOccupation (
-      state: { occupation: object },
+      state: { occupation: string },
       occupation: string
     ) {
-      state.occupation = {
-        occupation
-      }
+      state.occupation = occupation
+    },
+
+    /**
+     * Function setFullName: set full name
+     *
+     * Author: nv
+     *
+     * Last Updated: February 06, 2023
+     *
+     * @param state contains occupation
+     * @param fullName: string containing occuptation
+     */
+    setFullName (
+      state: { fullName: string },
+      fullName: string
+    ) {
+      state.fullName = fullName
+    },
+
+    /**
+     * Function setUsername: set username
+     *
+     * Author: nv
+     *
+     * Last Updated: February 06, 2023
+     *
+     * @param state contains occupation
+     * @param username: string containing occuptation
+     */
+    setUsername (
+      state: { username: string },
+      username: string
+    ) {
+      state.username = username
     },
 
     /**
@@ -231,6 +232,7 @@ export default {
     setProfile (
       state: {
         username: string,
+        fullName: string,
         email: string,
         institution: string,
         occupation: string,
@@ -240,6 +242,7 @@ export default {
       },
       settings: {
         username: string,
+        fullName: string,
         email: string,
         institution: string,
         occupation: string,
@@ -338,56 +341,6 @@ export default {
           commit('setLang', langData.lang)
         })
         .catch((err) => console.error(err))
-    },
-
-    /**
-     * function changeEmail: fire change-email request
-     *
-     * Author: nv
-     *
-     * Last Updated: November 26, 2022
-     * @param state contains emailSet
-     * @param {string} oldEmail old email for user
-     */
-    changeEmail ({ state }, oldEmail: string) {
-      return new Promise((resolve, reject) => {
-        http
-          .post('accounts/change-email', {
-            oldEmail: oldEmail,
-            newEmail: state.EmailSet
-          })
-          .then(() => {
-            resolve(null)
-          })
-          .catch(err => {
-            reject(err)
-          })
-      })
-    },
-
-    /**
-     * function changeUsername: fire change-username request
-     *
-     * Author: nv
-     *
-     * Last Updated: November 26, 2022
-     * @param state contains usernameSet
-     * @param {string} oldUsername old username for user
-     */
-    changeUsername ({ state }, oldUsername: string) {
-      return new Promise((resolve, reject) => {
-        http
-          .post('accounts/change-username', {
-            oldUsername: oldUsername,
-            newUsername: state.usernameSet
-          })
-          .then(() => {
-            resolve(null)
-          })
-          .catch(err => {
-            reject(err)
-          })
-      })
     }
   }
 }

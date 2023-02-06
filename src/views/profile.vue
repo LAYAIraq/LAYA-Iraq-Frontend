@@ -133,7 +133,7 @@ Dependencies:
           <!-- Occupation -->
           <div class="form-group row">
             <label
-              for="statusgroup"
+              for="occupation"
               class="col-sm-3 col-form-label"
             >{{ y18n('occupationPH') }}</label>
             <div class="col-sm-9">
@@ -227,7 +227,7 @@ Dependencies:
                   <!-- change email -->
                   <div class="col-3">
                     <b-button
-                      id="password-button"
+                      id="email-button"
                       block
                       variant="secondary"
                       @click="$bvModal.show('change-email-form')"
@@ -814,29 +814,6 @@ export default {
     },
 
     /**
-     * function newUsernameInput: returns something when username input is set
-     *
-     * Author: nv
-     *
-     * Last Updated: November 26, 2022
-     * @returns {string}
-     */
-    newUsernameInput () {
-      return this.usernameSet
-    },
-    /**
-     * function newEmailInput: returns something when email input is set
-     *
-     * Author: nv
-     *
-     * Last Updated: November 26, 2022
-     * @returns {string}
-     */
-    newEmailInput () {
-      return this.emailSet
-    },
-
-    /**
      * function newPasswordInput: returns something when password input is set
      *
      * Author: cmc
@@ -1028,26 +1005,17 @@ export default {
             this.busy = false
           })
       }
-      /* change email request */
-      if (this.newEmailInput) {
-        this.$store.dispatch('changeEmail', this.oldEmail)
-          .then(() => this.$bvToast.show('submit-ok'))
-          .catch(err => {
-            console.error(err)
-            this.$bvToast.show('submit-failed')
-          })
-          .finally(() => { this.busy = false })
+      /* change email */
+      if (this.oldEmail) {
+        this.$store.commit('setEmailAddress', this.newEmail)
+        this.$bvToast.show('submit-ok')
       }
-      /* change username request */
-      if (this.newUsernameInput) {
-        this.$store.dispatch('changeUsername', this.oldUsername)
-          .then(() => this.$bvToast.show('submit-ok'))
-          .catch(err => {
-            console.error(err)
-            this.$bvToast.show('submit-failed')
-          })
-          .finally(() => { this.busy = false })
+      /* change username */
+      if (this.oldUsername) {
+        this.$store.commit('setUsername', this.newUsername)
+        this.$bvToast.show('submit-ok')
       }
+      this.$store.commit('setFullName', this.fullName)
       this.$store.commit('setInstitution', this.institution)
       this.$store.commit('setOccupation', this.occupation)
       /* update state and save profile preferences */
