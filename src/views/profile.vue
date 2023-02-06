@@ -98,7 +98,7 @@ Dependencies:
             <div class="col-sm-9">
               <input
                 id="fullname"
-                v-model="fullName"
+                v-model="profile.fullName"
                 type="text"
                 class="form-control"
                 :placeholder="y18n('namePH')"
@@ -115,7 +115,7 @@ Dependencies:
             >{{ y18n('institutionPH') }}</label>
             <div class="col-sm-9">
               <b-form-select
-                v-model="institution"
+                v-model="profile.institution"
               >
                 <b-form-select-option
                   v-for="(opt, i) in chooseInstitution"
@@ -138,7 +138,7 @@ Dependencies:
             >{{ y18n('occupationPH') }}</label>
             <div class="col-sm-9">
               <b-form-select
-                v-model="occupation"
+                v-model="profile.occupation"
               >
                 <b-form-select-option
                   v-for="(opt, i) in chooseOccupation"
@@ -603,7 +603,7 @@ Dependencies:
           </label>
           <input
             id="applicant-name"
-            v-model="formInput.fullName"
+            v-model="profile.fullName"
             class="form-control"
             type="text"
           >
@@ -617,7 +617,7 @@ Dependencies:
           </label>
           <input
             id="applicant-institution"
-            v-model="formInput.institution"
+            v-model="profile.institution"
             class="form-control"
             type="text"
           >
@@ -856,9 +856,7 @@ export default {
     },
     userApplication (val) { // mirror changes in store for render (e.g. when new application is set)
       this.formInput.applicationText = val.applicationText
-      this.formInput.institution = val.institution
       this.formInput.areaOfExpertise = val.areaOfExpertise
-      this.formInput.fullName = val.fullName
     }
   },
 
