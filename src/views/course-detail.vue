@@ -78,9 +78,10 @@ export default {
   ],
 
   beforeRouteUpdate (to, from, next) {
-    document.getElementById('course-header').scrollIntoView()
+    if (to.name === "course-detail-view" && from.name !== "edit-course-wrapper") {
+      document.getElementById('course-header').scrollIntoView()
+    }
     next()
-    // new commit
   },
 
   computed: {
