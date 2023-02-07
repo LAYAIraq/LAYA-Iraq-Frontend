@@ -1,12 +1,18 @@
 <template>
-  <div id="course-nav-edit">
-    <div id="chapter-editor">
+  <div
+    id="course-nav-edit"
+    class="container"
+  >
+    <div class="row">
       <course-nav-chapter
-        v-for="chapter in courseNavEdit.children"
-        :key="chapter.id"
-        :chapter="chapter"
-        :chapter-name="chapter.id"
-      ></course-nav-chapter>
+        :chapter="courseNavEdit"
+        :chapter-name="courseNavEdit.chapterName"
+        class="col"
+      />
+      <div class="col">
+        <h3>Data</h3>
+        <pre>{{ valueString }}</pre>
+      </div>
     </div>
   </div>
 </template>
@@ -25,7 +31,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['courseNav'])
+    ...mapGetters(['courseNav']),
+    valueString () {
+      return JSON.stringify(this.courseNavEdit.children, null, 2)
+    }
   },
   created () {
     this.courseNavEdit = courseChapterTransformToDraggable(this.courseNav.structure)

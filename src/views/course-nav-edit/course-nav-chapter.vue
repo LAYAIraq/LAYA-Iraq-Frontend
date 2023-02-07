@@ -1,21 +1,18 @@
 <template>
   <draggable
-    :list="arrayizedChapter"
-    :group="{ name: chapterName }"
+    :list="chapter.children"
+    class="drag-area"
   >
-    <div v-if="chapter.children">
-      IT IS A CHAPTER
+    <div
+      v-for="(item, i) in chapter.children"
+      :key="i"
+    >
+      <course-nav-item :value="item">
+      </course-nav-item>
       <course-nav-chapter
-        v-for="item in chapter.children"
-        :key="item.chapterName"
         :chapter="item"
         :chapter-name="item.chapterName"
       />
-    </div>
-    <div v-else>
-      IT IS AN ITEM: {{ chapter.id }}
-      <course-nav-item>
-      </course-nav-item>
     </div>
   </draggable>
 </template>
@@ -33,12 +30,17 @@ export default {
   },
   props: {
     chapter: {
-      type: Object,
+      type: {
+        children: Array,
+        chapterName: String,
+        id: String
+      },
       required: true
     },
     chapterName: {
       type: String,
-      required: true
+      // required: true
+      default: () => 'chapterName'
     }
   },
   computed: {
@@ -49,3 +51,12 @@ export default {
   }
 }
 </script>
+<style scoped>
+.drag-area {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 8px;
+  min-height: 40px;
+}
+</style>

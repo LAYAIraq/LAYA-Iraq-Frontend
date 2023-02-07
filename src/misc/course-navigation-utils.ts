@@ -12,6 +12,7 @@ export const courseChapterTransformToDraggable = (courseChapter: CourseNavigatio
     return res
   } else if (Object.prototype.hasOwnProperty.call(courseChapter, 'id')) { // courseChapter is CourseNavigationItem
     const res = {
+      children: [],
       isChapter: false,
       ...courseChapter
     }
