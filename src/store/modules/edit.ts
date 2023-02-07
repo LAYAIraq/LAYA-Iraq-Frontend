@@ -949,7 +949,7 @@ export default {
             const listData = {
               category: courseObject.category,
               name: courseObject.name,
-              slug: slugify(courseObject.name),
+              slug: slugify(courseObject.name), // TODO: handle arabic & kurdish
               properties: courseObject.properties,
               courseId: courseObject.courseId,
               author: courseObject.authorId

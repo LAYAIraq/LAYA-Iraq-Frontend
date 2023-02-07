@@ -138,6 +138,14 @@ describe('content-structure methods', () => {
       // console.log(slug)
       expect(validateSlug(slug)).toBeTruthy()
     })
+
+    it('does useful things when given an arabic string', () => {
+      const arabicString = 'مرحبا بالعالم'
+      const slug = slugify(arabicString)
+      expect(slug).toBeTruthy()
+      expect(validateSlug(slug)).toBeTruthy()
+      expect(slug).toBe('mrhba-b-l3lm')
+    })
   })
 
   describe('unslugify', () => {

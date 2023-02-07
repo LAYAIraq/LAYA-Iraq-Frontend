@@ -32,7 +32,7 @@ export const legacyContentStepsTransform = (block: LegacyContentBlock): number[]
   * @see https://gist.github.com/mathewbyrne/1280286
  *  @param text string to convert
  */
-export const slugify = (text: string): string => {
+export const slugify = (text: string): string => { // TODO: convert arabic & kurdish letters to latin
   return text.toString().toLowerCase()
     .replace(/\s+/g, '-') // Replace spaces with -
     .replace(/[^\w-]+/g, '') // Remove all non-word chars
