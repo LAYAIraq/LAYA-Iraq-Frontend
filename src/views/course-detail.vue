@@ -59,7 +59,6 @@ Dependencies:
 import { mapGetters } from 'vuex'
 import utils from '@/misc/utils.js'
 import { locale, routeProps, storeHandler } from '@/mixins'
-import { slugify, unslugify } from '@/misc/course-structure-methods'
 import CourseHeader from '@/views/course-detail-header.vue'
 
 export default {
@@ -222,8 +221,6 @@ export default {
   },
 
   methods: {
-    slugify,
-    unslugify,
     ...utils,
 
     /**
