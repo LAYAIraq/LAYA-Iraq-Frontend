@@ -1,20 +1,27 @@
 <template>
-  <draggable
-    :list="chapter.children"
-    class="drag-area"
-  >
-    <div
-      v-for="(item, i) in chapter.children"
-      :key="i"
+  <div class="position-relative">
+    <draggable
+      :list="chapter.children"
+      :group="{ name: 'chapters' }"
+      class="drag-area"
     >
-      <course-nav-item :value="item">
-      </course-nav-item>
-      <course-nav-chapter
-        :chapter="item"
-        :chapter-name="item.chapterName"
-      />
-    </div>
-  </draggable>
+      <div
+        v-for="(item, i) in chapter.children"
+        :key="i"
+        class="bg-white border rounded p-2 mb-2 chapter-info"
+      >
+        <course-nav-chapter
+          :chapter="item"
+          :chapter-name="item.chapterName"
+        />
+        <course-nav-item
+          :value="item"
+        >
+        </course-nav-item>
+      </div>
+    </draggable>
+  </div>
+
 </template>
 <script>
 import { mapGetters } from 'vuex'
@@ -30,11 +37,7 @@ export default {
   },
   props: {
     chapter: {
-      type: {
-        children: Array,
-        chapterName: String,
-        id: String
-      },
+      type: Object,
       required: true
     },
     chapterName: {
@@ -48,15 +51,28 @@ export default {
     arrayizedChapter () {
       return this.chapter.children ?? [this.chapter]
     }
+  },
+  methods: {
+    logEvent (event) {
+      console.log(event)
+    }
   }
 }
 </script>
-<style scoped>
+<style>
 .drag-area {
   border: 1px solid #ccc;
   border-radius: 4px;
   padding: 8px;
   margin-bottom: 8px;
-  min-height: 40px;
+  min-height: 50px;
+  float: end;
+  width: 100%;
 }
+.chapter-info {
+  margin-bottom: 8px;
+  position: absolute;
+  right: 0;
+}
+
 </style>

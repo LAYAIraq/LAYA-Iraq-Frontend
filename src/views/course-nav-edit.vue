@@ -4,16 +4,21 @@
     class="container"
   >
     <div class="row">
+      <div class="col">
+        <h3>Course Navigation</h3>
+      </div>
+    </div>
+    <div class="row nav-editor-main container bg-light">
       <course-nav-chapter
         :chapter="courseNavEdit"
         :chapter-name="courseNavEdit.chapterName"
-        class="col"
+        class="w-100"
       />
+    </div>
       <div class="col">
         <h3>Data</h3>
         <pre>{{ valueString }}</pre>
       </div>
-    </div>
   </div>
 </template>
 <script>
@@ -33,7 +38,7 @@ export default {
   computed: {
     ...mapGetters(['courseNav']),
     valueString () {
-      return JSON.stringify(this.courseNavEdit.children, null, 2)
+      return JSON.stringify(this.courseNavEdit.children, null, 1)
     }
   },
   created () {
@@ -42,4 +47,7 @@ export default {
 }
 </script>
 <style scoped>
+.nav-editor-main {
+  min-height: 300px;
+}
 </style>

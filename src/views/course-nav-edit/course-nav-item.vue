@@ -1,5 +1,16 @@
 <template>
-  <div>IT IS AN ITEM</div>
+  <div>
+    <div>{{ value.slug }}</div>
+  </div>
 </template>
 <script>
+export default {
+  name: 'CourseNavItem',
+  props: {
+    value: {
+      type: Object,
+      required: true
+    }
+  }
+}
 </script>
