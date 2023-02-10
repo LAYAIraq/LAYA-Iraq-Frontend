@@ -205,3 +205,43 @@ export const courseStructureDescent = (
   }
   return [ids, routes]
 }
+
+// lookup table for mapping arabic to latin letters
+const arabicToLatin = {
+  ء: 'A',
+  آ: 'A',
+  أ: 'A',
+  ؤ: 'A',
+  إ: 'A',
+  ئ: 'A',
+  ا: 'A',
+  ب: 'B',
+  ة: 'H',
+  ت: 'T',
+  ث: 'T',
+  ج: 'J',
+  ح: 'H',
+  خ: 'H',
+  د: 'D',
+  ذ: 'D',
+  ر: 'R',
+  ز: 'Z',
+  س: 'S',
+  ش: 'S',
+  ص: 'S',
+  ض: 'D',
+  ط: 'T',
+  ظ: 'Z',
+  ع: 'A',
+  غ: 'G',
+  ف: 'F',
+  ق: 'Q',
+  ك: 'K',
+  ل: 'L',
+  م: 'M',
+  ن: 'N',
+  ه: 'H',
+  و: 'W',
+  ى: 'A',
+  ي: 'Y'
+}
