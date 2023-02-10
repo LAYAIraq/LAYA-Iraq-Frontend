@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="m-auto">
     <div>{{ value.slug }}</div>
   </div>
 </template>

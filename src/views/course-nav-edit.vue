@@ -8,16 +8,17 @@
         <h3>Course Navigation</h3>
       </div>
     </div>
-    <div class="row nav-editor-main container bg-light">
+    <div class="row nav-editor-main bg-light">
       <course-nav-chapter
         :chapter="courseNavEdit"
         :chapter-name="courseNavEdit.chapterName"
+        class="w-100"
       />
     </div>
-      <div class="col">
-        <h3>Data</h3>
-        <pre>{{ valueString }}</pre>
-      </div>
+    <div v-if="showRawData" class="col">
+      <h3>Data</h3>
+      <pre>{{ valueString }}</pre>
+    </div>
   </div>
 </template>
 <script>
@@ -31,7 +32,8 @@ export default {
   },
   data () {
     return {
-      courseNavEdit: []
+      courseNavEdit: [],
+      showRawData: false
     }
   },
   computed: {

@@ -1,5 +1,11 @@
 <template>
-  <div class="w-100">
+  <div class="chapter-item">
+    <div
+      v-if="chapter.isChapter"
+      class="m-1 m-auto"
+    >
+      {{ chapterName }}
+    </div>
     <draggable
       :list="chapter.children"
       :group="{ name: 'chapters' }"
@@ -8,16 +14,19 @@
       <div
         v-for="(item, i) in chapter.children"
         :key="i"
+        class="chapter-children"
       >
         <course-nav-chapter
           :chapter="item"
           :chapter-name="item.chapterName"
         />
         <course-nav-item
+          v-if="!item.isChapter"
           :value="item"
         />
       </div>
     </draggable>
+
   </div>
 
 </template>
@@ -64,13 +73,15 @@ export default {
   padding: 8px;
   margin-bottom: 8px;
   min-height: 50px;
+  min-width: 50px;
   float: end;
   width: 100%;
 }
-.chapter-info {
-  margin-bottom: 8px;
-  position: absolute;
-  right: 0;
+.chapter-item {
+  display: flex;
+}
+.chapter-children {
+  display: flex;
 }
 
 </style>
