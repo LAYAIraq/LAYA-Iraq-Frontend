@@ -12,7 +12,6 @@
       <course-nav-chapter
         :chapter="courseNavEdit"
         :chapter-name="courseNavEdit.chapterName"
-        class="w-100"
       />
     </div>
       <div class="col">

@@ -1,14 +1,13 @@
 <template>
-  <div class="position-relative">
+  <div class="w-100">
     <draggable
       :list="chapter.children"
       :group="{ name: 'chapters' }"
-      class="drag-area"
+      class="bg-white border rounded mb-2 drag-area"
     >
       <div
         v-for="(item, i) in chapter.children"
         :key="i"
-        class="bg-white border rounded p-2 mb-2 chapter-info"
       >
         <course-nav-chapter
           :chapter="item"
@@ -16,8 +15,7 @@
         />
         <course-nav-item
           :value="item"
-        >
-        </course-nav-item>
+        />
       </div>
     </draggable>
   </div>
