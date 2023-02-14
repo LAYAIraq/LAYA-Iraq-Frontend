@@ -12,10 +12,19 @@
       <course-nav-chapter
         :chapter="courseNavEdit"
         :chapter-name="courseNavEdit.chapterName"
+        :main="true"
         class="w-100"
       />
     </div>
-    <div v-if="showRawData" class="col">
+    <div class="row">
+      <button @click="addChapter">
+        Add chapter
+      </button>
+    </div>
+    <div
+      v-if="showRawData"
+      class="col"
+    >
       <h3>Data</h3>
       <pre>{{ valueString }}</pre>
     </div>
@@ -44,6 +53,15 @@ export default {
   },
   created () {
     this.courseNavEdit = courseChapterTransformToDraggable(this.courseNav.structure)
+  },
+  methods: {
+    addChapter () {
+      this.courseNavEdit.children.push({
+        chapterName: 'New Chapter',
+        isChapter: true,
+        children: []
+      })
+    }
   }
 }
 </script>
