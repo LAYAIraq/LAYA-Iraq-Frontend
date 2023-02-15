@@ -1,28 +1,26 @@
 <template>
   <div class="chapter-item">
-    <div
+    <course-nav-chapter-name
       v-if="chapter.isChapter && !main"
-      class="m-1"
-    >
-      {{ chapterName }}
-    </div>
+      :name="chapterName"
+      @changeChapterName="changeChapterName"
+    />
     <draggable
       :list="chapter.children"
       :group="{ name: 'chapters' }"
       class="bg-white border rounded drag-area"
       :class="{'border-danger': !coherentItem}"
-      @start="shrinkChapter"
-      @end="unShrinkChapter"
     >
       <div
         v-for="(item, i) in chapter.children"
         :key="`${id}-${i}`"
-        class="chapter-children"
+        class="chapter-child"
       >
         <course-nav-chapter
           v-if="item.isChapter"
           :chapter="item"
           :chapter-name="item.chapterName"
+          @propagateChapterName="propagateChapterName"
         />
         <course-nav-item
           v-else-if="!collapsed"
@@ -38,11 +36,13 @@ import Draggable from 'vuedraggable'
 import CourseNavChapter from '@/views/course-nav-edit/course-nav-chapter.vue'
 import CourseNavItem from '@/views/course-nav-edit/course-nav-item.vue'
 import { v4 as uuidv4 } from 'uuid'
+import CourseNavChapterName from '@/views/course-nav-edit/course-nav-chapter-name.vue'
 export default {
   name: 'CourseNavChapter',
   components: {
     Draggable,
     CourseNavChapter,
+    CourseNavChapterName,
     CourseNavItem
   },
   props: {
@@ -87,11 +87,22 @@ export default {
     this.id = uuidv4()
   },
   methods: {
-    shrinkChapter (event) {
-      // TODO: shrink so bigger chapters fit into smaller ones
+    /**
+     * @function propagate name change from `CourseNavChapterName` to parent
+     * @author cmc
+     * @param newName new name for `chapter` prop to propagate to parent
+     */
+    changeChapterName (newName) {
+      this.$emit('propagateChapterName', this.chapter, newName)
     },
-    unShrinkChapter (event) {
-      // TODO: unshrink
+    /**
+     * @function propagate name change from child CourseNavChapter to parent
+     * @author cmc
+     * @param chapter reference to `chapter` object
+     * @param newName new name for `chapter` prop to propagate to parent
+     */
+    propagateChapterName (chapter, newName) {
+      this.$emit('propagateChapterName', chapter, newName)
     }
   }
 }
@@ -100,8 +111,8 @@ export default {
 .drag-area {
   border: 1px solid #ccc;
   border-radius: 4px;
-  padding: .5em;
-  margin: .5em;
+  /*margin: .5em;*/
+  padding: 0 0 0 .5em;
   min-height: 50px;
   min-width: 50px;
   float: end;
@@ -109,9 +120,16 @@ export default {
 }
 .chapter-item {
   display: flex;
+  justify-content: center;
 }
-.chapter-children {
-  display: flex;
+.chapter-item > .chapter-name {
+  max-width: 33%;
+}
+.chapter-item > div + div {
+  margin-left: 1em;
+}
+.chapter-child {
+  margin: .25em 0 .25em 0;
 }
 
 </style>

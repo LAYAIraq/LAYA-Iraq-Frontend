@@ -3,26 +3,36 @@
     id="course-nav-edit"
     class="container"
   >
-    <div class="row">
+    <div
+      id="nav-editor-header"
+      class="row"
+    >
       <div class="col">
         <h3>Course Navigation</h3>
       </div>
     </div>
-    <div class="row nav-editor-main bg-light">
+    <div
+      id="nav-editor-main"
+      class="row bg-light"
+    >
       <course-nav-chapter
         :chapter="courseNavEdit"
         :chapter-name="courseNavEdit.chapterName"
         :main="true"
-        class="w-100"
+        @propagateChapterName="changeChapterName"
       />
     </div>
-    <div class="row">
+    <div
+      id="nav-editor-footer"
+      class="row"
+    >
       <button @click="addChapter">
         Add chapter
       </button>
     </div>
     <div
       v-if="showRawData"
+      id="nav-editor-data"
       class="col"
     >
       <h3>Data</h3>
@@ -55,18 +65,30 @@ export default {
     this.courseNavEdit = courseChapterTransformToDraggable(this.courseNav.structure)
   },
   methods: {
+    /**
+     * @function Add chapter object to `courseNavEdit` data prop
+     * @author cmc
+     */
     addChapter () {
       this.courseNavEdit.children.push({
         chapterName: 'New Chapter',
         isChapter: true,
         children: []
       })
+    },
+
+    /**
+     * @function change chapter name of referenced chapter object
+     * @author cmc
+     * @param chapter reference to object in `courseNavEdit`
+     * @param newName name to set for chapter
+     */
+    changeChapterName (chapter, newName) {
+      chapter.chapterName = newName
     }
   }
 }
 </script>
 <style scoped>
-.nav-editor-main {
-  min-height: 300px;
-}
+
 </style>
