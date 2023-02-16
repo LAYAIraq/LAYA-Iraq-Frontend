@@ -1,4 +1,4 @@
-import { courseChapterTransformToDraggable } from '@/misc/course-navigation-utils'
+import { courseChapterTransformToDraggable, courseChapterNameConvertToId } from '@/misc/course-navigation-utils'
 import SampleCourseChapters from '../../mocks/sample-course-chapters.json'
 
 describe('course navigation utils', () => {
@@ -23,6 +23,25 @@ describe('course navigation utils', () => {
           expect(child.children.length).toBe(2)
         }
       })
+    })
+  })
+
+  describe('courseChapterNameConvertToId', () => {
+    it('converts single word chapter name to lowercase id', () => {
+      const result = courseChapterNameConvertToId('Introduction')
+      expect(result).toBe('introduction')
+    })
+    it('converts multi word chapter name to camelCase id', () => {
+      const result = courseChapterNameConvertToId('Introduction to LAYA')
+      expect(result).toBe('introductionToLAYA')
+    })
+    it('converts multi word chapter name with spaces to camelCase id', () => {
+      const result = courseChapterNameConvertToId('Introduction to LAYA   ')
+      expect(result).toBe('introductionToLAYA')
+    })
+    it('converts multi word chapter name with spaces and special characters to camelCase id', () => {
+      const result = courseChapterNameConvertToId('Introduction to LAYA   !@#$%^&*()_+')
+      expect(result).toBe('introductionToLAYA')
     })
   })
 })

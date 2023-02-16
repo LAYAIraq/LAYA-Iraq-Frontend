@@ -3,7 +3,7 @@
     <span
       v-if="!edit"
       @click="edit = true"
-    >{{ name }}</span>
+    >{{ courseChapterIdConvertToName(name) }}</span>
     <form
       v-else
       @submit.prevent="changeChapterName"
@@ -19,6 +19,7 @@
   </div>
 </template>
 <script>
+import { courseChapterIdConvertToName, courseChapterNameConvertToId } from '@/misc/course-navigation-utils'
 export default {
   name: 'CourseNavChapterName',
   props: {
@@ -42,13 +43,14 @@ export default {
     this.newName = this.name
   },
   methods: {
+    courseChapterIdConvertToName,
     /**
      * @function switch edit prop for render, emit new name
      * @author cmc
      */
     changeChapterName () {
       this.edit = false
-      this.$emit('changeChapterName', this.newName)
+      this.$emit('changeChapterName', courseChapterNameConvertToId(this.newName))
     }
   }
 }

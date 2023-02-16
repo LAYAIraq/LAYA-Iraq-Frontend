@@ -3,6 +3,7 @@
     <course-nav-chapter-name
       v-if="chapter.isChapter && !main"
       :name="chapterName"
+      :class="{ 'border rounded border-danger': coherentItem && chapterNameDuplicate }"
       @changeChapterName="changeChapterName"
     />
     <draggable
@@ -20,6 +21,7 @@
           v-if="item.isChapter"
           :chapter="item"
           :chapter-name="item.chapterName"
+          :chapter-name-duplicate="duplicateChapterNames.includes(i)"
           @propagateChapterName="propagateChapterName"
         />
         <course-nav-item
@@ -55,6 +57,10 @@ export default {
       // required: true
       default: () => 'chapterName'
     },
+    chapterNameDuplicate: {
+      type: Boolean,
+      default: () => false
+    },
     main: {
       type: Boolean,
       default: () => false
@@ -81,6 +87,26 @@ export default {
       return subChapters === this.chapter.children.length
         ? (subChapters > 0 || !this.chapter.isChapter) // all children are chapters or it is an item
         : subChapters === 0 // all children are items
+    },
+
+    /**
+     * @description return a list of indexes of children with duplicate chapter names
+     * @author cmc
+     * @return {number[]} list of duplicate chapterNames indexes
+     */
+    duplicateChapterNames () {
+      const chapterNames = this.chapter.children.map(chapter => chapter.chapterName)
+      const duplicates = []
+      chapterNames.forEach((name, i) => { // check if name is in chapterNames, if yes, add to duplicates
+        if (name) {
+          chapterNames.forEach((name2, j) => {
+            if (name === name2 && i !== j && !duplicates.includes(i)) {
+              duplicates.push(i)
+            }
+          })
+        }
+      })
+      return duplicates
     }
   },
   created () {
