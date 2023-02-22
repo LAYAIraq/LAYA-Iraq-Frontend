@@ -508,6 +508,7 @@
 	"searchPH": "Search by course name",
     "searchPH.label": "Search by course name. Found courses will be shown below the search bar",
     "selected.rating": "Currently selected rating",
+	"showDetails": "Show details",
 	"showTip": "Show help text.",
 	"showTitle": "Show Title",
 	"simpleAlt": "Alternative in simple language",

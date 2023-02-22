@@ -77,7 +77,7 @@ export default {
   ],
 
   beforeRouteUpdate (to, from, next) {
-    if (to.name === "course-detail-view" && from.name !== "edit-course-wrapper") {
+    if (to.name === 'course-detail-view' && from.name !== 'edit-course-wrapper') {
       document.getElementById('course-header').scrollIntoView()
     }
     next()

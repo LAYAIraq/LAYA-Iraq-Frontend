@@ -1,5 +1,9 @@
 <template>
   <div class="chapter-item">
+    <i
+      v-if="chapter.isChapter && !main"
+      class="fa fa-bars drag-handle"
+    ></i>
     <course-nav-chapter-name
       v-if="chapter.isChapter && !main"
       :name="chapterName"
@@ -11,6 +15,7 @@
       :group="{ name: 'chapters' }"
       class="bg-white border rounded drag-area"
       :class="{'border-danger': !coherentItem}"
+      handle=".drag-handle"
     >
       <div
         v-for="(item, i) in chapter.children"
@@ -147,15 +152,22 @@ export default {
 .chapter-item {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 .chapter-item > .chapter-name {
-  max-width: 33%;
+  min-width: 150px;
+
 }
 .chapter-item > div + div {
   margin-left: 1em;
 }
 .chapter-child {
-  margin: .25em 0 .25em 0;
+  margin: .25em 0;
+}
+.drag-handle {
+  cursor: grab;
+  margin-right: .5em;
+  display: inline-flex;
 }
 
 </style>

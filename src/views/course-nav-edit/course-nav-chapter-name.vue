@@ -1,27 +1,39 @@
 <template>
   <div class="chapter-name">
-    <span
+    <div
       v-if="!edit"
+      class="d-flex justify-content-between"
       @click="edit = true"
-    >{{ courseChapterIdConvertToName(name) }}</span>
+    >
+      {{ courseChapterIdConvertToName(name) }}
+      <i
+        v-b-tooltip.top.ds500
+        class="fas fa-edit"
+        :class="langIsAr ? 'mr-auto' : 'ml-auto'"
+        :title="y18n('courseWrapper.edit')"
+      ></i>
+    </div>
     <form
       v-else
       @submit.prevent="changeChapterName"
     >
       <b-form-input
         v-model="newName"
+        class="p-1"
         placeholder="Chapter name"
         required
         autofocus
-        @blur="edit = false"
+        @submit="edit = false"
       />
     </form>
   </div>
 </template>
 <script>
 import { courseChapterIdConvertToName, courseChapterNameConvertToId } from '@/misc/course-navigation-utils'
+import { locale } from '@/mixins'
 export default {
   name: 'CourseNavChapterName',
+  mixins: [locale],
   props: {
     name: {
       type: String,
@@ -58,7 +70,12 @@ export default {
 <style scoped>
 .chapter-name {
   display: inline-block;
-  width: 100%;
+}
+.chapter-name>div>i {
+  display: none;
+}
+.chapter-name:hover>div>i {
+  display: inline-flex;
 }
 form {
   display: block;
