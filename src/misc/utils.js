@@ -64,3 +64,13 @@ export default {
 export const stripKey = (key, obj) => {
   return (({ [key]: any, ...o }) => o)(obj)
 }
+
+/**
+ * @description deep copy an object, intended for use with vuex references
+ * @author cmc
+ * @param obj - object to copy
+ * @return {any} - deep copy of obj
+ */
+export const deepCopy = (obj) => {
+  return JSON.parse(JSON.stringify(obj))
+}

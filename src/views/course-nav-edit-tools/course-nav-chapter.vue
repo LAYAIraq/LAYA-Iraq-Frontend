@@ -43,7 +43,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import Draggable from 'vuedraggable'
-import { CourseNavChapter, CourseNavItem, CourseNavPropertyEdit } from '@/views/course-nav-edit-tools'
+import CourseNavChapter from '@/views/course-nav-edit-tools/course-nav-chapter.vue'
+import CourseNavItem from '@/views/course-nav-edit-tools/course-nav-item.vue'
+import CourseNavPropertyEdit from '@/views/course-nav-edit-tools/course-nav-property-edit.vue'
 import { locale } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 import { courseChapterIdConvertToName, courseChapterNameConvertToId } from '@/misc/course-navigation-utils'

@@ -83,6 +83,7 @@ export default {
 <style scoped>
 .property-edit {
   display: inline-block;
+  cursor: auto;
 }
 .property-edit>div>i {
   display: none;

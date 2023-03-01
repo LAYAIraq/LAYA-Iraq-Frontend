@@ -24,6 +24,7 @@ import {
 import { stripKey } from '@/misc/utils.js'
 import { v4 as uuidv4 } from 'uuid'
 import http, { AxiosResponse } from 'axios'
+import Vue from 'vue'
 
 export default {
 
@@ -121,9 +122,20 @@ export default {
     },
 
     courseContentSet (state: { courseContent: { [id: string]: ContentBlock } }, block: ContentBlock) {
-      // console.log(block)
       state.courseContent[block.id] = block
-      // console.log(state.courseContent)
+    },
+
+    /**
+     * @description update property of courseContent item - used for reactivity in frontend
+     * @author cmc
+     * @param state holds courseContent object
+     * @param id identifier of content block to change
+     * @param property identifier of property to change
+     * @param value new value for property
+     */
+    courseContentSetProperty (
+      state: { courseContent: { [id: string]: ContentBlock } }, { id, property, value }: { id: string, property: string, value: any }) {
+      Vue.set(state.courseContent[id], property, value)
     },
 
     courseContentRemove (state: { courseContent: any }, id: string) {
