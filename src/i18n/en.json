@@ -74,6 +74,8 @@
 	"courseList.properties.video": "This course contains video content",
 	"courseList.start": "Start",
 	"courseList.subscribe": "Subscribe",
+	"courseNavEdit.chapterAdd": "Add Chapter",
+	"courseNavEdit.chapterPlaceholder": "Chapter Name",
 	"courseNavEdit.graph": "Graphical Preview:",
 	"courseNavEdit.graphTip": "(You can reload the graphic any number of times)",
 	"courseNavEdit.table.contentNo": "Content No.",

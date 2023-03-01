@@ -4,11 +4,14 @@
       v-if="chapter.isChapter && !main"
       class="fa fa-bars drag-handle"
     ></i>
-    <course-nav-chapter-name
+    <course-nav-property-edit
       v-if="chapter.isChapter && !main"
-      :name="chapterName"
-      :class="{ 'border rounded border-danger': coherentItem && chapterNameDuplicate }"
-      @changeChapterName="changeChapterName"
+      :callback="courseChapterNameConvertToId"
+      :display="courseChapterIdConvertToName"
+      :form-placeholder="y18n('courseNavEdit.chapterPlaceholder')"
+      :property="chapterName"
+      :class="{ 'border rounded border-danger': chapterNameDuplicate }"
+      @changed="changeChapterName"
     />
     <draggable
       :list="chapter.children"
@@ -40,18 +43,20 @@
 <script>
 import { mapGetters } from 'vuex'
 import Draggable from 'vuedraggable'
-import CourseNavChapter from '@/views/course-nav-edit/course-nav-chapter.vue'
-import CourseNavItem from '@/views/course-nav-edit/course-nav-item.vue'
+import { CourseNavChapter, CourseNavItem, CourseNavPropertyEdit } from '@/views/course-nav-edit-tools'
+import { locale } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
-import CourseNavChapterName from '@/views/course-nav-edit/course-nav-chapter-name.vue'
+import { courseChapterIdConvertToName, courseChapterNameConvertToId } from '@/misc/course-navigation-utils'
+
 export default {
   name: 'CourseNavChapter',
   components: {
     Draggable,
     CourseNavChapter,
-    CourseNavChapterName,
+    CourseNavPropertyEdit,
     CourseNavItem
   },
+  mixins: [locale],
   props: {
     chapter: {
       type: Object,
@@ -118,6 +123,8 @@ export default {
     this.id = uuidv4()
   },
   methods: {
+    courseChapterNameConvertToId,
+    courseChapterIdConvertToName,
     /**
      * @function propagate name change from `CourseNavChapterName` to parent
      * @author cmc
@@ -154,7 +161,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.chapter-item > .chapter-name {
+.chapter-item > .property-edit {
   min-width: 150px;
 
 }

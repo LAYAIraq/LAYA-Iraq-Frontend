@@ -1,11 +1,11 @@
 <template>
-  <div class="chapter-name">
+  <div class="property-edit">
     <div
       v-if="!edit"
       class="d-flex justify-content-between"
       @click="edit = true"
     >
-      {{ courseChapterIdConvertToName(name) }}
+      {{ propertyDisplay }}
       <i
         v-b-tooltip.top.ds500
         class="fas fa-edit"
@@ -15,12 +15,12 @@
     </div>
     <form
       v-else
-      @submit.prevent="changeChapterName"
+      @submit.prevent="changeProperty"
     >
       <b-form-input
-        v-model="newName"
+        v-model="newProperty"
         class="p-1"
-        placeholder="Chapter name"
+        :placeholder="formPlaceholder"
         required
         autofocus
         @submit="edit = false"
@@ -29,13 +29,24 @@
   </div>
 </template>
 <script>
-import { courseChapterIdConvertToName, courseChapterNameConvertToId } from '@/misc/course-navigation-utils'
 import { locale } from '@/mixins'
 export default {
-  name: 'CourseNavChapterName',
+  name: 'CourseNavPropertyEdit',
   mixins: [locale],
   props: {
-    name: {
+    callback: {
+      type: Function,
+      default: prop => prop
+    },
+    display: {
+      type: Function,
+      default: prop => prop
+    },
+    formPlaceholder: {
+      type: String,
+      default: () => 'Placeholder'
+    },
+    property: {
       type: String,
       required: true
     }
@@ -43,38 +54,40 @@ export default {
   data () {
     return {
       edit: false,
-      newName: ''
+      newProperty: ''
     }
   },
   computed: {
     id () {
       return this.$parent.id
+    },
+    propertyDisplay () {
+      return this.display(this.property)
     }
   },
   created () {
-    this.newName = this.name
+    this.newProperty = this.property
   },
   methods: {
-    courseChapterIdConvertToName,
     /**
-     * @function switch edit prop for render, emit new name
+     * @function switch edit, emit changed event with provided callback function
      * @author cmc
      */
-    changeChapterName () {
+    changeProperty () {
       this.edit = false
-      this.$emit('changeChapterName', courseChapterNameConvertToId(this.newName))
+      this.$emit('changed', this.callback(this.newProperty))
     }
   }
 }
 </script>
 <style scoped>
-.chapter-name {
+.property-edit {
   display: inline-block;
 }
-.chapter-name>div>i {
+.property-edit>div>i {
   display: none;
 }
-.chapter-name:hover>div>i {
+.property-edit:hover>div>i {
   display: inline-flex;
 }
 form {
