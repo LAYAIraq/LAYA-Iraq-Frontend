@@ -1,10 +1,14 @@
 <template>
-  <div class="w-100">
-    <div class="d-flex">
+  <div class="w-100 border rounded p-1">
+    <!-- Item header -->
+    <div
+      :id="`item-header-${item.id}`"
+      class="d-flex"
+    >
       <div class="drag-handle">
         <i
           v-b-toggle="`item-body-${item.id}`"
-          v-b-tooltip.top.ds500
+          v-b-tooltip.top.ds500.hover
           class="fa drop-down-icon p-1"
           :class="{
             'fa-chevron-right': !langIsAr && collapsed,
@@ -24,15 +28,16 @@
         @changed="updateTitle"
       ></course-nav-property-edit>
     </div>
-
+    <!-- Item body -->
     <b-collapse
       :id="`item-body-${item.id}`"
-      class="pl-3 ml-3 v-collapse"
+      class="px-3"
+      :class="langIsAr? 'mr-3': 'ml-3'"
     >
       <div>
         <div class="d-flex">
           <span
-            class="text-muted"
+            class="text-muted small"
             :class="langIsAr? 'ml-2': 'mr-2'"
           >
             {{ y18n('courseNavEdit.id') }}
@@ -43,7 +48,7 @@
       <div>
         <div class="d-flex">
           <span
-            class="text-muted"
+            class="text-muted small"
             :class="langIsAr? 'ml-2': 'mr-2'"
           >
             {{ y18n('courseNavEdit.slug') }}
@@ -53,6 +58,26 @@
             :property="value.slug"
             @changed="propagateSlugChange"
           ></course-nav-property-edit>
+        </div>
+      </div>
+      <div class="d-flex">
+        <span
+          class="text-muted small"
+          :class="langIsAr? 'ml-2': 'mr-2'"
+        >
+          {{ y18n('courseNavEdit.fullPath') }}
+        </span>
+        {{ item.path }}
+      </div>
+      <div>
+        <div class="d-flex">
+          <span
+            class="text-muted small"
+            :class="langIsAr? 'ml-2': 'mr-2'"
+          >
+            {{ y18n('type') }}
+          </span>
+          {{ getName(item.name) }}
         </div>
       </div>
     </b-collapse>
@@ -87,6 +112,9 @@ export default {
     }
   },
   methods: {
+    getName() {
+      return this.y18n(this.$laya.li[this.item.name].name + '.name')
+    },
     /**
      * @description emit event to propagate slug change to parent
      * @author cmc

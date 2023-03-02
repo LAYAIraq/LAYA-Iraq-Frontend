@@ -76,6 +76,7 @@
 	"courseList.subscribe": "Subscribe",
 	"courseNavEdit.chapterAdd": "Add Chapter",
 	"courseNavEdit.chapterPlaceholder": "Chapter Name",
+	"courseNavEdit.fullPath": "Full Path",
 	"courseNavEdit.graph": "Graphical Preview:",
 	"courseNavEdit.graphTip": "(You can reload the graphic any number of times)",
 	"courseNavEdit.id": "ID",

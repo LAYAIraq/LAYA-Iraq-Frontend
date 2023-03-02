@@ -34,7 +34,6 @@ export class Laya {
   private _vue: typeof _Vue;
   private _lb: object;
   private _la: object;
-  private _li: object; /* lookup for learn interactions to block/assessment */
 
   public get lb () {
     return this._lb
@@ -45,18 +44,13 @@ export class Laya {
   }
 
   public get li () {
-    return this._li
+    return { ...this._la, ...this._lb }
   }
 
   constructor (v: typeof _Vue) {
     this._vue = v
     this._lb = {}
     this._la = {}
-    this._li = {}
-  }
-
-  public lookupType (type: string): object {
-    return this._li[type]
   }
 
   public registerLB<VC1, VC2, VC3 extends VueConstructor> (
@@ -67,7 +61,6 @@ export class Laya {
     components: { new?: VC1; edit?: VC2; view: VC3 }
   ): void {
     this._lb[id] = { id, type, name, components, icon }
-    this._li[type] = { type: 'block', id }
 
     if ('new' in components) {
       this._vue.component(id, components.new)
@@ -88,7 +81,6 @@ export class Laya {
     components: { new?: VC1; edit?: VC2; view: VC3 }
   ): void {
     this._la[id] = { id, type, name, components, icon }
-    this._li[type] = { type: 'assessment', id }
 
     if ('new' in components) {
       this._vue.component(id, components.new)
