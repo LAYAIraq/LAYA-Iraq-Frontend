@@ -19,7 +19,7 @@
         :chapter="courseNavEdit"
         :chapter-name="courseNavEdit.chapterName"
         :main="true"
-        @propagateChapterName="changeChapterName"
+        @propagatePropertyChange="changeProperty"
       />
     </div>
     <div
@@ -81,10 +81,11 @@ export default {
      * @function change chapter name of referenced chapter object
      * @author cmc
      * @param chapter reference to object in `courseNavEdit`
-     * @param newName name to set for chapter
+     * @param property property to change
+     * @param value new value for property
      */
-    changeChapterName (chapter, newName) {
-      chapter.chapterName = newName
+    changeProperty (chapter, property, value) {
+      chapter[property] = value
     }
   }
 }

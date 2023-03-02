@@ -30,11 +30,12 @@
           :chapter="item"
           :chapter-name="item.chapterName"
           :chapter-name-duplicate="duplicateChapterNames.includes(i)"
-          @propagateChapterName="propagateChapterName"
+          @propagatePropertyChange="propagatePropertyChange"
         />
         <course-nav-item
           v-else-if="!collapsed"
           :value="item"
+          @propagatePropertyChange="propagatePropertyChange"
         />
       </div>
     </draggable>
@@ -133,16 +134,17 @@ export default {
      * @param newName new name for `chapter` prop to propagate to parent
      */
     changeChapterName (newName) {
-      this.$emit('propagateChapterName', this.chapter, newName)
+      this.$emit('propagatePropertyChange', this.chapter, 'chapterName', newName)
     },
     /**
-     * @function propagate name change from child CourseNavChapter to parent
+     * @function propagate name change from child Component to parent
      * @author cmc
      * @param chapter reference to `chapter` object
-     * @param newName new name for `chapter` prop to propagate to parent
+     * @param property name of property to change
+     * @param value new value for property to propagate to parent
      */
-    propagateChapterName (chapter, newName) {
-      this.$emit('propagateChapterName', chapter, newName)
+    propagatePropertyChange (chapter, property, value) {
+      this.$emit('propagatePropertyChange', chapter, property, value)
     }
   }
 }

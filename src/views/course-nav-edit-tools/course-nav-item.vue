@@ -27,22 +27,32 @@
 
     <b-collapse
       :id="`item-body-${item.id}`"
-      class="pl-4 v-collapse"
+      class="pl-3 ml-3 v-collapse"
     >
       <div>
         <div class="d-flex">
+          <span
+            class="text-muted"
+            :class="langIsAr? 'ml-2': 'mr-2'"
+          >
+            {{ y18n('courseNavEdit.id') }}
+          </span>
           {{ item.id }}
         </div>
       </div>
       <div>
-        <div class="d-flex edit">
-          <div
-            class="mr-2"
-            @click="editProperty('slug')"
+        <div class="d-flex">
+          <span
+            class="text-muted"
+            :class="langIsAr? 'ml-2': 'mr-2'"
           >
-            {{ value.slug }}
-          </div>
-          <i class="fa fa-edit"></i>
+            {{ y18n('courseNavEdit.slug') }}
+          </span>
+          <course-nav-property-edit
+            :form-placeholder="y18n('courseNavEdit.slug')"
+            :property="value.slug"
+            @changed="propagateSlugChange"
+          ></course-nav-property-edit>
         </div>
       </div>
     </b-collapse>
@@ -77,6 +87,21 @@ export default {
     }
   },
   methods: {
+    /**
+     * @description emit event to propagate slug change to parent
+     * @author cmc
+     * @since v1.3.0
+     * @param value change value for slug
+     */
+    propagateSlugChange (value) {
+      this.$emit('propagatePropertyChange', this.value, 'slug', value)
+    },
+    /**
+     * @description commit title update to store
+     * @author cmc
+     * @since v1.3.0
+     * @param newTitle change value for title
+     */
     updateTitle (newTitle) {
       const newBlock = deepCopy(this.item)
       newBlock.title.text = newTitle
