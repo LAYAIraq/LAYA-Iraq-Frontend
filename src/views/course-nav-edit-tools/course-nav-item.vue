@@ -6,6 +6,9 @@
       class="d-flex"
     >
       <div class="drag-handle">
+        <i class="fas fa-bars"></i>
+      </div>
+      <div class="show-item-details">
         <i
           v-b-toggle="`item-body-${item.id}`"
           v-b-tooltip.top.ds500.hover
@@ -77,7 +80,7 @@
           >
             {{ y18n('type') }}
           </span>
-          {{ getName(item.name) }}
+          {{ getName() }}
         </div>
       </div>
     </b-collapse>
@@ -112,7 +115,13 @@ export default {
     }
   },
   methods: {
-    getName() {
+    /**
+     * @description return localized Description of Block type
+     * @since v1.3.0
+     * @author cmc
+     * @return {string} Localized name of block
+     */
+    getName () {
       return this.y18n(this.$laya.li[this.item.name].name + '.name')
     },
     /**
