@@ -220,6 +220,23 @@ export default {
     },
 
     /**
+     * Function setEmail: set email address
+     *
+     * Author: nv
+     *
+     * Last Updated: February 13, 2023
+     *
+     * @param state contains occupation
+     * @param email: string containing occuptation
+     */
+    setEmail (
+      state: { email: string },
+      email: string
+    ) {
+      state.email = email
+    },
+
+    /**
      * Function setProfile: set state with given input values
      *
      * Author: core

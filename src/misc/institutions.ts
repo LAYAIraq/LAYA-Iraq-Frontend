@@ -5,6 +5,7 @@
  * Date: November 07, 2022
  * Dependencies: none
  */
+
 export default [
   { value: 'mosul', text: 'University of Mosul' },
   { value: 'zakho', text: 'University of Zakho' },

@@ -149,6 +149,7 @@ export default {
      * @param name name to check
      */
     checkNameTaken ({ state }, name: string) {
+      console.log(name)
       return new Promise((resolve, reject) => {
         http.get(`accounts/name/${name}`)
           .then(({ data }) => { resolve(data) })
