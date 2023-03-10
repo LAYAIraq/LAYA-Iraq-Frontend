@@ -19,6 +19,8 @@
       class="bg-white border rounded drag-area"
       :class="{'border-danger': !coherentItem}"
       handle=".drag-handle"
+      @start="dragStart"
+      @end="dragEnd"
     >
       <div
         v-for="(item, i) in chapter.children"
@@ -34,6 +36,9 @@
         />
         <course-nav-item
           v-else-if="!collapsed"
+          :drag-bubble="!dragging && dragStartIndex === i"
+          :drag-end="!dragging && dragEndIndex === i"
+          :drag-start="dragging && dragStartIndex === i"
           :value="item"
           @propagatePropertyChange="propagatePropertyChange"
         />
@@ -82,7 +87,10 @@ export default {
   data () {
     return {
       collapsed: false,
-      id: '' // exists to make v-for keys unique
+      id: '', // exists to make v-for keys unique,
+      dragging: false,
+      dragStartIndex: null,
+      dragEndIndex: null
     }
   },
   computed: {
@@ -135,6 +143,14 @@ export default {
      */
     changeChapterName (newName) {
       this.$emit('propagatePropertyChange', this.chapter, 'chapterName', newName)
+    },
+    dragStart (event) {
+      this.dragging = true
+      this.dragStartIndex = event.oldIndex
+    },
+    dragEnd (event) {
+      this.dragging = false
+      this.dragEndIndex = event.newIndex
     },
     /**
      * @function propagate name change from child Component to parent

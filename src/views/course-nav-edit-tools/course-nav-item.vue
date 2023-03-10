@@ -98,6 +98,18 @@ export default {
   },
   mixins: [locale],
   props: {
+    dragBubble: {
+      type: Boolean,
+      default: () => false
+    },
+    dragEnd: {
+      type: Boolean,
+      default: () => false
+    },
+    dragStart: {
+      type: Boolean,
+      default: () => false
+    },
     value: {
       type: Object,
       required: true
@@ -105,13 +117,32 @@ export default {
   },
   data () {
     return {
-      collapsed: true
+      collapsed: true,
+      moved: false
     }
   },
   computed: {
     ...mapGetters(['courseContent']),
     item () {
       return this.courseContent[this.value.id]
+    }
+  },
+  watch: {
+    dragStart (newVal) {
+      if (newVal) {
+        console.log('being dragged', this.value.id)
+        this.moved = true
+      }
+    },
+    dragBubble (newVal) {
+      if (newVal) {
+        console.log('moved index', this.value.id)
+      }
+    },
+    dragEnd (newVal) {
+      if (newVal && this.moved) {
+        console.log('stopped being dragged', this.value.id)
+      }
     }
   },
   methods: {
