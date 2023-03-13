@@ -38,7 +38,6 @@
           v-else-if="!collapsed"
           :drag-bubble="[!dragging && dragStartIndex === i, childrenVisibility[item.id]]"
           :drag-end="[!dragging && dragEndIndex === i, childrenVisibility[item.id]]"
-          :drag-start="dragging && dragStartIndex === i"
           :value="item"
           @visibilityChange="changeChildVisibility"
           @propagatePropertyChange="propagatePropertyChange"

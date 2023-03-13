@@ -35,7 +35,7 @@
     <div
       v-if="!collapsed"
       :id="`item-body-${item.id}`"
-      class="px-3"
+      class="collapsible px-3"
       :class="langIsAr? 'mr-3': 'ml-3'"
     >
       <div>
@@ -119,7 +119,6 @@ export default {
   data () {
     return {
       collapsed: true,
-      collapsedFallback: true,
       moving: false
     }
   },
@@ -130,30 +129,13 @@ export default {
     }
   },
   watch: {
-    collapsed (newVal) {
-      console.log('collapsed', this.value.id, newVal)
-    },
-    // dragStart (newVal) {
-    //   if (newVal) {
-    //     console.log('being dragged', this.value.id)
-    //     // console.log('collapsed', this.value.id, this.collapsed)
-    //     console.log('collapsed should be', this.collapsedFallback)
-    //   }
-    // },
     dragBubble ([bubbled, visible]) {
       if (bubbled) {
-        console.log('moved index', this.value.id)
-        // console.log('collapsed', this.value.id, this.collapsed)
-        console.log('collapsed', this.value.id, this.collapsed)
-        console.log('collapsed should be', !visible)
         this.collapsed = !visible
       }
     },
     dragEnd ([moved, visible]) {
       if (moved) {
-        console.log('stopped being dragged', this.value.id)
-        console.log('collapsed', this.value.id, this.collapsed)
-        console.log('collapsed should be', !visible)
         this.collapsed = !visible
       }
     }
@@ -177,10 +159,14 @@ export default {
     propagateSlugChange (value) {
       this.$emit('propagatePropertyChange', this.value, 'slug', value)
     },
+    /**
+     * @description toggle collapsed state of item, emit event to parent
+     * @author cmc
+     * @since v1.3.0
+     */
     toggleCollapsed () {
       this.collapsed = !this.collapsed
-      this.$emit('visibilityChange', this.value.id, !this.collapsed)
-      this.collapsedFallback = this.collapsed
+      this.$emit('visibilityChange', this.value.id, !this.collapsed) // negate because we want to know if it is visible
     },
     /**
      * @description commit title update to store
