@@ -21,7 +21,7 @@
             'mr-1': !langIsAr
           }"
           :title="y18n('showDetails')"
-          @click="collapsed = !collapsed"
+          @click="toggleCollapsed"
         ></i>
       </div>
       <course-nav-property-edit
@@ -32,7 +32,8 @@
       ></course-nav-property-edit>
     </div>
     <!-- Item body -->
-    <b-collapse
+    <div
+      v-if="!collapsed"
       :id="`item-body-${item.id}`"
       class="px-3"
       :class="langIsAr? 'mr-3': 'ml-3'"
@@ -83,7 +84,7 @@
           {{ getName() }}
         </div>
       </div>
-    </b-collapse>
+    </div>
   </div>
 </template>
 <script>
@@ -99,12 +100,12 @@ export default {
   mixins: [locale],
   props: {
     dragBubble: {
-      type: Boolean,
-      default: () => false
+      type: Array,
+      default: () => [false, false]
     },
     dragEnd: {
-      type: Boolean,
-      default: () => false
+      type: Array,
+      default: () => [false, false]
     },
     dragStart: {
       type: Boolean,
@@ -118,7 +119,8 @@ export default {
   data () {
     return {
       collapsed: true,
-      moved: false
+      collapsedFallback: true,
+      moving: false
     }
   },
   computed: {
@@ -128,20 +130,31 @@ export default {
     }
   },
   watch: {
-    dragStart (newVal) {
-      if (newVal) {
-        console.log('being dragged', this.value.id)
-        this.moved = true
-      }
+    collapsed (newVal) {
+      console.log('collapsed', this.value.id, newVal)
     },
-    dragBubble (newVal) {
-      if (newVal) {
+    // dragStart (newVal) {
+    //   if (newVal) {
+    //     console.log('being dragged', this.value.id)
+    //     // console.log('collapsed', this.value.id, this.collapsed)
+    //     console.log('collapsed should be', this.collapsedFallback)
+    //   }
+    // },
+    dragBubble ([bubbled, visible]) {
+      if (bubbled) {
         console.log('moved index', this.value.id)
+        // console.log('collapsed', this.value.id, this.collapsed)
+        console.log('collapsed', this.value.id, this.collapsed)
+        console.log('collapsed should be', !visible)
+        this.collapsed = !visible
       }
     },
-    dragEnd (newVal) {
-      if (newVal && this.moved) {
+    dragEnd ([moved, visible]) {
+      if (moved) {
         console.log('stopped being dragged', this.value.id)
+        console.log('collapsed', this.value.id, this.collapsed)
+        console.log('collapsed should be', !visible)
+        this.collapsed = !visible
       }
     }
   },
@@ -163,6 +176,11 @@ export default {
      */
     propagateSlugChange (value) {
       this.$emit('propagatePropertyChange', this.value, 'slug', value)
+    },
+    toggleCollapsed () {
+      this.collapsed = !this.collapsed
+      this.$emit('visibilityChange', this.value.id, !this.collapsed)
+      this.collapsedFallback = this.collapsed
     },
     /**
      * @description commit title update to store

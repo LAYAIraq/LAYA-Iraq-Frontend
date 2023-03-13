@@ -36,10 +36,11 @@
         />
         <course-nav-item
           v-else-if="!collapsed"
-          :drag-bubble="!dragging && dragStartIndex === i"
-          :drag-end="!dragging && dragEndIndex === i"
+          :drag-bubble="[!dragging && dragStartIndex === i, childrenVisibility[item.id]]"
+          :drag-end="[!dragging && dragEndIndex === i, childrenVisibility[item.id]]"
           :drag-start="dragging && dragStartIndex === i"
           :value="item"
+          @visibilityChange="changeChildVisibility"
           @propagatePropertyChange="propagatePropertyChange"
         />
       </div>
@@ -86,6 +87,7 @@ export default {
   },
   data () {
     return {
+      childrenVisibility: {},
       collapsed: false,
       id: '', // exists to make v-for keys unique,
       dragging: false,
@@ -132,8 +134,13 @@ export default {
   },
   created () {
     this.id = uuidv4()
+    this.chapter.children.forEach(child => this.childrenVisibility[child.id] = false)
   },
   methods: {
+    changeChildVisibility (id, visibility) {
+      console.log('changeChildVisibility', id, visibility)
+      this.childrenVisibility[id] = visibility
+    },
     courseChapterNameConvertToId,
     courseChapterIdConvertToName,
     /**
