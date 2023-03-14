@@ -17,8 +17,8 @@
             'fa-chevron-right': !langIsAr && collapsed,
             'fa-chevron-left': langIsAr && collapsed,
             'fa-chevron-down': !collapsed,
-            'ml-1': langIsAr,
-            'mr-1': !langIsAr
+            'ml-1': !langIsAr,
+            'mr-1': langIsAr
           }"
           :title="y18n('showDetails')"
           @click="toggleCollapsed"
@@ -38,31 +38,27 @@
       class="collapsible px-3"
       :class="langIsAr? 'mr-3': 'ml-3'"
     >
-      <div>
-        <div class="d-flex">
-          <span
-            class="text-muted small"
-            :class="langIsAr? 'ml-2': 'mr-2'"
-          >
-            {{ y18n('courseNavEdit.id') }}
-          </span>
-          {{ item.id }}
-        </div>
+      <div class="d-flex">
+        <span
+          class="text-muted small"
+          :class="langIsAr? 'ml-2': 'mr-2'"
+        >
+          {{ y18n('courseNavEdit.id') }}
+        </span>
+        {{ item.id }}
       </div>
-      <div>
-        <div class="d-flex">
-          <span
-            class="text-muted small"
-            :class="langIsAr? 'ml-2': 'mr-2'"
-          >
-            {{ y18n('courseNavEdit.slug') }}
-          </span>
-          <course-nav-property-edit
-            :form-placeholder="y18n('courseNavEdit.slug')"
-            :property="value.slug"
-            @changed="propagateSlugChange"
-          ></course-nav-property-edit>
-        </div>
+      <div class="d-flex">
+        <span
+          class="text-muted small"
+          :class="langIsAr? 'ml-2': 'mr-2'"
+        >
+          {{ y18n('courseNavEdit.slug') }}
+        </span>
+        <course-nav-property-edit
+          :form-placeholder="y18n('courseNavEdit.slug')"
+          :property="value.slug"
+          @changed="v => propagateChange('slug', v)"
+        ></course-nav-property-edit>
       </div>
       <div class="d-flex">
         <span
@@ -73,28 +69,39 @@
         </span>
         {{ item.path }}
       </div>
-      <div>
-        <div class="d-flex">
-          <span
-            class="text-muted small"
-            :class="langIsAr? 'ml-2': 'mr-2'"
-          >
-            {{ y18n('type') }}
-          </span>
-          {{ getName() }}
+      <div class="d-flex">
+        <span
+          class="text-muted small"
+          :class="langIsAr? 'ml-2': 'mr-2'"
+        >
+          {{ y18n('type') }}
+        </span>
+        {{ getName() }}
+      </div>
+      <div class="d-flex">
+        <div class="d-block text-muted">
+          Follow
         </div>
+        <course-nav-follow-set
+          :follow="value.follow"
+          :item="item"
+          @follow-changed="v => propagateChange('follow', v)"
+        ></course-nav-follow-set>
       </div>
     </div>
   </div>
 </template>
 <script>
 import { locale } from '@/mixins'
+import CourseNavFollowSet from '@/views/course-nav-edit-tools/course-nav-follow-set.vue'
 import CourseNavPropertyEdit from '@/views/course-nav-edit-tools/course-nav-property-edit.vue'
 import { mapGetters } from 'vuex'
 import { deepCopy } from '@/misc/utils'
+
 export default {
   name: 'CourseNavItem',
   components: {
+    CourseNavFollowSet,
     CourseNavPropertyEdit
   },
   mixins: [locale],
@@ -151,13 +158,14 @@ export default {
       return this.y18n(this.$laya.li[this.item.name].name + '.name')
     },
     /**
-     * @description emit event to propagate slug change to parent
+     * @description emit event to propagate change to parent
      * @author cmc
      * @since v1.3.0
+     * @param property the property to change
      * @param value change value for slug
      */
-    propagateSlugChange (value) {
-      this.$emit('propagatePropertyChange', this.value, 'slug', value)
+    propagateChange (property, value) {
+      this.$emit('propagatePropertyChange', this.value, property, value)
     },
     /**
      * @description toggle collapsed state of item, emit event to parent
