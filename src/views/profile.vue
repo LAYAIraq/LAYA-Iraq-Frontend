@@ -202,7 +202,6 @@ Dependencies:
                               class="form-control"
                               :placeholder="y18n('profile.newUsername')"
                               autocomplete="on"
-                              @blur="checkUsernameTaken"
                             >
                           </div>
                         </div>
@@ -1027,16 +1026,6 @@ export default {
         .catch(() => { return false })
     },
 
-    checkUsernameTaken (username) {
-      this.$store.dispatch('checkNameTaken', username)
-        .then(resp => {
-          console.log(resp)
-          console.log(resp === false)
-          this.nameTaken = resp
-        })
-        .catch(() => { this.nameTaken = false })
-    },
-
     changeEmailAddress () {
       if (this.oldEmail === this.profile.email) {
         if (this.checkEmail(this.newEmail) === true) {
@@ -1051,17 +1040,19 @@ export default {
     },
 
     changeUsername () {
-      this.checkUsernameTaken(this.newUsername)
-      console.log(this.nameTaken)
-      if (this.newUsername &&
-        this.newUsername !== '' &&
-        this.nameTaken === false
-      ) {
-        this.$store.commit('setUsername', this.newUsername)
-        this.$store.dispatch('saveProfile')
-          .then(() => { this.$bvToast.show('profile-save-toast') })
+      if (this.newUsername !== '') {
+        this.$store.dispatch('checkNameTaken', this.newUsername)
+          .then(() => {
+            this.$bvToast.show('username-error')
+          })
+          .catch(() => {
+            this.$store.commit('setUsername', this.newUsername)
+            this.$store.dispatch('saveProfile')
+              .then(() => { this.$bvToast.show('profile-save-toast') })
+              .catch(() => { this.$bvToast.show('submit-failed') })
+          })
       } else {
-        this.$bvToast.show('username-error')
+        this.$bvToast.show('submit-failed')
       }
     },
 
