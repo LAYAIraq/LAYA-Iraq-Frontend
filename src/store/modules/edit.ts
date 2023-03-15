@@ -256,6 +256,7 @@ export default {
         properties: object
       }
     ) {
+      console.log('courseListAppend: ', courseListItem.courseId, courseListItem.name)
       state.courseList.push(courseListItem)
     },
 
@@ -913,7 +914,11 @@ export default {
       commit('setBusy', true)
       http.get('courses')
         .then(({ data }) => {
-          for (const courseObject of data) {
+          let i = 0
+          console.log(data.length)
+          console.log(data)
+          data.forEach(courseObject => {
+            console.log(courseObject)
             const listData = {
               category: courseObject.category,
               name: courseObject.name,
@@ -922,7 +927,8 @@ export default {
               author: courseObject.authorId
             }
             courseObject.content.forEach(block => {
-              if (courseObject.properties.simpleLanguage) { // check if course is completely available in simple language
+              console.log(block)
+              if (courseObject.properties.simpleLanguage && block.input) { // check if course is completely available in simple language
                 // TODO:
                 // following is duplicate of checkForSimpleLanguage() in
                 // @/views/course-edit-tools/course-preferences.vue
@@ -935,7 +941,6 @@ export default {
                     : Object.prototype.hasOwnProperty.call(elem, 'ops') // if simple language version does not exist, check if it is a quill object
                 }
                 const iterInput = Object.values(block.input) // values of content input array
-
                 for (const elem of iterInput) { // for each element in input array
                   if (typeof (elem) === 'object') { // if element is an object
                     if (Array.isArray(elem)) { // if it's an array, descent into array
@@ -977,8 +982,10 @@ export default {
               (e: { courseId: String }) => e.courseId === listData.courseId)
             ) {
               commit('courseListAppend', listData)
+              i++
             }
-          }
+          })
+          console.log('Added ' + i + ' courses to list')
         })
         .catch(err => console.error(err))
         .finally(() => { commit('setBusy', false) })
