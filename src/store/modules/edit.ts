@@ -914,11 +914,7 @@ export default {
       commit('setBusy', true)
       http.get('courses')
         .then(({ data }) => {
-          let i = 0
-          console.log(data.length)
-          console.log(data)
           data.forEach(courseObject => {
-            console.log(courseObject)
             const listData = {
               category: courseObject.category,
               name: courseObject.name,
@@ -927,14 +923,12 @@ export default {
               author: courseObject.authorId
             }
             courseObject.content.forEach(block => {
-              console.log(block)
               if (courseObject.properties.simpleLanguage && block.input) { // check if course is completely available in simple language
                 // TODO:
                 // following is duplicate of checkForSimpleLanguage() in
                 // @/views/course-edit-tools/course-preferences.vue
                 // might be refactored to reduce redundancy
                 courseObject.properties.simple = true // set properties.simple true first
-
                 const hasSimple = (elem) => { // check if all keys have a simple language version
                   return Object.prototype.hasOwnProperty.call(elem, 'simple')
                     ? elem.simple !== '' // if simple language version exists, check if it is not empty
@@ -982,10 +976,8 @@ export default {
               (e: { courseId: String }) => e.courseId === listData.courseId)
             ) {
               commit('courseListAppend', listData)
-              i++
             }
           })
-          console.log('Added ' + i + ' courses to list')
         })
         .catch(err => console.error(err))
         .finally(() => { commit('setBusy', false) })
