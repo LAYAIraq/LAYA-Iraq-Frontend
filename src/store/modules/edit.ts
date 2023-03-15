@@ -256,7 +256,6 @@ export default {
         properties: object
       }
     ) {
-      console.log('courseListAppend: ', courseListItem.courseId, courseListItem.name)
       state.courseList.push(courseListItem)
     },
 
