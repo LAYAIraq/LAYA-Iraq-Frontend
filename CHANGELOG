@@ -1,5 +1,8 @@
 # Changes
 
+## v1.2.6
+- fixed a bug where the course list wasn't loaded fully when a course had an incomplete block
+
 ## v1.2.5
 - small fixes in course creation / editing
 - added feedback block for users to give feedback on courses
