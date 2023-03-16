@@ -1,14 +1,29 @@
 <template>
-  <div>
+  <div class="d-block">
     <div v-if="item.name === 'laya-dialog'">
+      <div
+        v-if="followSet.length !== item.answers.length"
+        id="incomplete-follow"
+      >
+        Add following content
+        <suggesting-input></suggesting-input>
+      </div>
       <ul id="follow-list">
         <draggable
-          list="follow"
-          tag="li"
-        ></draggable>
+          :list="followSet"
+        >
+          <li
+            v-for="e in followSet"
+            :key="e"
+          ></li>
+        </draggable>
       </ul>
     </div>
-    <div v-else>
+    <div
+      v-else
+      class="d-block"
+    >
+      {{ follow }}
     </div>
   </div>
 </template>
@@ -28,6 +43,24 @@ export default {
       type: Object,
       required: true
     }
+  },
+  data () {
+    return {
+    }
+  },
+  computed: {
+    followSet: {
+      get () {
+        return (!this.follow || Array.isArray(this.follow))
+          ? this.follow
+          : [this.follow]
+      },
+      set (val) {
+        console.log(val)
+      }
+    }
+  },
+  methods: {
   }
 }
 </script>

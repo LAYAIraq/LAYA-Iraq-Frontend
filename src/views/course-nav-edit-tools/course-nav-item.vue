@@ -78,8 +78,8 @@
         </span>
         {{ getName() }}
       </div>
-      <div class="d-flex">
-        <div class="d-block text-muted">
+      <div class="d-block">
+        <div class="d-flex text-muted small">
           Follow
         </div>
         <course-nav-follow-set
