@@ -48,6 +48,7 @@ type FollowingContent = string | string[] | number | number[]
  *  property
  * @property id unique id for course content block
  * @property slug slug for course content block (can be used for route)
+ * @property type type of content block (e.g. 'laya-dialog')
  * @property follow following content (can be marked with number (step) or
  *  string (id/slug), also as array)
  */

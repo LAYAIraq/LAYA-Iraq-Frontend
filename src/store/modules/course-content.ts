@@ -168,6 +168,7 @@ export default {
         state.courseChapters.push({
           id: blockId,
           slug: slugify(block.input.title.text),
+          type: block.name,
           follow: legacyContentStepsTransform(block)
         })
         if (i === 0) {
