@@ -19,7 +19,7 @@ import {
   legacyContentStepsTransform,
   courseStructureDescent,
   coursePathsGet,
-  slugify
+  slugify, legacyContentFollowTransform
 } from '@/misc/course-structure-methods'
 import { stripKey } from '@/misc/utils.js'
 import { v4 as uuidv4 } from 'uuid'
@@ -174,6 +174,7 @@ export default {
           state.courseStart = blockId
         }
       }
+      legacyContentFollowTransform(state.courseChapters)
       // traverse course content and create routes
       state.courseRoutes = coursePathsGet(state.courseChapters, state.courseStart)
     }

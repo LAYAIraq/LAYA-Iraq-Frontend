@@ -118,6 +118,10 @@ export default {
       type: Boolean,
       default: () => false
     },
+    followingContent: {
+      type: String,
+      default: () => null
+    },
     value: {
       type: Object,
       required: true
@@ -139,15 +143,26 @@ export default {
     dragBubble ([bubbled, visible]) {
       if (bubbled) {
         this.collapsed = !visible
+        this.$nextTick( () => this.checkFollowingContent())
       }
     },
     dragEnd ([moved, visible]) {
       if (moved) {
         this.collapsed = !visible
+        this.$nextTick( () => this.checkFollowingContent())
       }
+    },
+    followingContent () {
+      this.$nextTick(() => this.checkFollowingContent())
     }
   },
   methods: {
+    checkFollowingContent () {
+      if (this.followingContent === this.value.follow) {
+        console.log('changing follow from', this.value.follow, 'to', this.followingContent)
+        this.propagateChange('follow', this.followingContent)
+      }
+    },
     /**
      * @description return localized Description of Block type
      * @since v1.3.0

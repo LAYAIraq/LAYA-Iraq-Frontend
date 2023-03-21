@@ -11,7 +11,7 @@
       :form-placeholder="y18n('courseNavEdit.chapterPlaceholder')"
       :property="chapterName"
       :class="{ 'border rounded border-danger': chapterNameDuplicate }"
-      @changed="changeChapterName"
+      @changed="e => propagatePropertyChange(chapter, 'chapterName', e)"
     />
     <draggable
       :list="chapter.children"
@@ -32,12 +32,14 @@
           :chapter="item"
           :chapter-name="item.chapterName"
           :chapter-name-duplicate="duplicateChapterNames.includes(i)"
+          :following-content="getFirstContentId(chapter.children,i + 1)"
           @propagatePropertyChange="propagatePropertyChange"
         />
         <course-nav-item
           v-else-if="!collapsed"
           :drag-bubble="[!dragging && dragStartIndex === i, childrenVisibility[item.id]]"
           :drag-end="[!dragging && dragEndIndex === i, childrenVisibility[item.id]]"
+          :following-content="chapter.children[i + 1] ? chapter.children[i + 1].id : followingContent"
           :value="item"
           @visibilityChange="changeChildVisibility"
           @propagatePropertyChange="propagatePropertyChange"
@@ -78,6 +80,10 @@ export default {
     chapterNameDuplicate: {
       type: Boolean,
       default: () => false
+    },
+    followingContent: {
+      type: String,
+      default: () => null
     },
     main: {
       type: Boolean,
@@ -133,7 +139,7 @@ export default {
   },
   created () {
     this.id = uuidv4()
-    this.chapter.children.forEach(child => this.childrenVisibility[child.id] = false)
+    this.chapter.children.forEach(child => { this.childrenVisibility[child.id] = false })
   },
   methods: {
     changeChildVisibility (id, visibility) {
@@ -142,14 +148,6 @@ export default {
     },
     courseChapterNameConvertToId,
     courseChapterIdConvertToName,
-    /**
-     * @function propagate name change from `CourseNavChapterName` to parent
-     * @author cmc
-     * @param newName new name for `chapter` prop to propagate to parent
-     */
-    changeChapterName (newName) {
-      this.$emit('propagatePropertyChange', this.chapter, 'chapterName', newName)
-    },
     dragStart (event) {
       this.dragging = true
       this.dragStartIndex = event.oldIndex
@@ -157,9 +155,22 @@ export default {
     dragEnd (event) {
       this.dragging = false
       this.dragEndIndex = event.newIndex
+      if (this.main) {
+        this.setFollowingContent()
+      }
+    },
+    getFirstContentId (chapter, index) {
+      if (chapter[index]) {
+        if (chapter[index].isChapter) {
+          return this.getFirstContentId(chapter[index].children, 0)
+        } else {
+          return chapter[index].id
+        }
+      }
+      return null
     },
     /**
-     * @function propagate name change from child Component to parent
+     * @function propagate property change from child Component to parent
      * @author cmc
      * @param chapter reference to `chapter` object
      * @param property name of property to change
@@ -167,6 +178,18 @@ export default {
      */
     propagatePropertyChange (chapter, property, value) {
       this.$emit('propagatePropertyChange', chapter, property, value)
+    },
+    setFollowingContent () {
+      const setFollowingContent = (chapter) => { //TODO: new name, finish
+          if (chapter.isChapter) {
+            setFollowingContent(chapter.children)
+          } else {
+            this.$set(child, 'followingContent', this.getFirstContentId(chapter.children, i + 1))
+          }
+      }
+      this.chapter.children.forEach((child, i) => {
+        this.$set(child, 'followingContent', this.getFirstContentId(this.chapter.children, i + 1))
+      })
     }
   }
 }

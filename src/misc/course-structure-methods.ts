@@ -27,6 +27,29 @@ export const legacyContentStepsTransform = (block: LegacyContentBlock): number[]
 }
 
 /**
+ * @description transforms follow property from number to id
+ * @param courseChapters array of course chapters, result of setCourseContentAndNav mutation
+ */
+export const legacyContentFollowTransform = (courseChapters: CourseNavigationItem[]): void => {
+  courseChapters.forEach(chapter => {
+    const transformNumberToId = (follow: number): string => {
+      const followChapter = courseChapters[follow] ? courseChapters[follow].id : null
+      console.log('followChapter', followChapter)
+      return followChapter
+    }
+    console.log('chapter', chapter.id)
+    if (Array.isArray(chapter.follow)) {
+      chapter.follow.forEach((follow, i) => {
+        chapter.follow[i] = transformNumberToId(follow)
+      })
+    } else {
+      // @ts-ignore
+      chapter.follow = transformNumberToId(chapter.follow)
+    }
+  })
+}
+
+/**
   * @description converts string to slug
   * @author mathewbyrne, edited by cmc
   * @see https://gist.github.com/mathewbyrne/1280286
