@@ -143,7 +143,7 @@ export default {
   },
   methods: {
     changeChildVisibility (id, visibility) {
-      console.log('changeChildVisibility', id, visibility)
+      // console.log('changeChildVisibility', id, visibility)
       this.childrenVisibility[id] = visibility
     },
     courseChapterNameConvertToId,
@@ -155,8 +155,10 @@ export default {
     dragEnd (event) {
       this.dragging = false
       this.dragEndIndex = event.newIndex
-      if (this.main) {
+      if (this.main && this.coherentItem) {
         this.setFollowingContent()
+      } else {
+        this.$emit('propagatePropertyChange', null, 'followingContent', null)
       }
     },
     getFirstContentId (chapter, index) {
@@ -177,18 +179,42 @@ export default {
      * @param value new value for property to propagate to parent
      */
     propagatePropertyChange (chapter, property, value) {
-      this.$emit('propagatePropertyChange', chapter, property, value)
+      if (this.main && property === 'followingContent') {
+        this.setFollowingContent()
+      } else {
+        this.$emit('propagatePropertyChange', chapter, property, value)
+      }
     },
     setFollowingContent () {
-      const setFollowingContent = (chapter) => { //TODO: new name, finish
-          if (chapter.isChapter) {
-            setFollowingContent(chapter.children)
-          } else {
-            this.$set(child, 'followingContent', this.getFirstContentId(chapter.children, i + 1))
-          }
+      console.log('setFollowingContent', this.chapter.children)
+      /**
+       * @function automaticFollow recursively sets the followingContent property of all items in the chapter
+       * @param item reference to item to set followingContent for
+       * @param {string} followingContent id of following content
+       * @return {boolean} true if followingContent is not null
+       */
+      const automaticFollow = (item, followingContent) => {
+        if (item.isChapter) {
+          item.children.forEach((child, i) => { // TODO: fix recursion - if last child returns false, get first content of next chapter
+            const k = automaticFollow(child, this.getFirstContentId(item.children, i + 1))
+            if (typeof k === 'boolean') { // child is item
+              return k ? item : child
+            } else {
+              if (k !== item) {
+                followingContent = k.id
+              }
+            }
+          })
+        } else if (item.type !== 'laya-dialog') {
+          console.log('setFollowingContent', item.id, followingContent)
+          item.follow = followingContent
+          return !!followingContent // return true if followingContent is not null
+        } else {
+          return true
+        }
       }
       this.chapter.children.forEach((child, i) => {
-        this.$set(child, 'followingContent', this.getFirstContentId(this.chapter.children, i + 1))
+        automaticFollow(child, this.getFirstContentId(this.chapter.children, i + 1))
       })
     }
   }

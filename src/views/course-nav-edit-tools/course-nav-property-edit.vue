@@ -65,6 +65,11 @@ export default {
       return this.display(this.property)
     }
   },
+  watch: {
+    property (val) {
+      this.newProperty = val
+    }
+  },
   created () {
     this.newProperty = this.property
   },
