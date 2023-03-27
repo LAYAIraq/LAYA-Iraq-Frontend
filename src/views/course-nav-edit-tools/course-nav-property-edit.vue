@@ -22,8 +22,9 @@
         class="p-1"
         :placeholder="formPlaceholder"
         required
+        trim
         autofocus
-        @submit="edit = false"
+        @blur="edit = false"
       />
     </form>
   </div>

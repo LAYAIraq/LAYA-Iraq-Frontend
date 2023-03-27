@@ -8,7 +8,7 @@
       class="row"
     >
       <div class="col">
-        <h3>Course Navigation</h3>
+        <h3>{{ y18n('courseNavEdit.title') }}</h3>
       </div>
     </div>
     <div
@@ -27,7 +27,7 @@
       class="row"
     >
       <button @click="addChapter">
-        Add chapter
+        {{ y18n('courseNavEdit.chapterAdd') }}
       </button>
     </div>
     <div
@@ -43,12 +43,14 @@
 <script>
 import { mapGetters } from 'vuex'
 import { courseChapterTransformToDraggable } from '@/misc/course-navigation-utils'
+import { locale } from '@/mixins'
 import { CourseNavChapter } from '@/views/course-nav-edit-tools'
 export default {
   name: 'CourseNavigationEditor',
   components: {
     CourseNavChapter
   },
+  mixins: [locale],
   data () {
     return {
       courseNavEdit: [],
@@ -71,7 +73,7 @@ export default {
      */
     addChapter () {
       this.courseNavEdit.children.push({
-        chapterName: 'New Chapter',
+        chapterName: this.y18n('courseNavEdit.chapterNew'),
         isChapter: true,
         children: []
       })
