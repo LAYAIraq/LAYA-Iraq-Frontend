@@ -142,25 +142,45 @@ export default {
     this.chapter.children.forEach(child => { this.childrenVisibility[child.id] = false })
   },
   methods: {
+    /**
+     * @function set visibility of child in childrenVisibility object
+     * @author cmc
+     * @param id id of child
+     * @param visibility visibility of child
+     */
     changeChildVisibility (id, visibility) {
-      // console.log('changeChildVisibility', id, visibility)
       this.childrenVisibility[id] = visibility
     },
     courseChapterNameConvertToId,
     courseChapterIdConvertToName,
+    /**
+     * @function handle event when drag starts, setting dragStartIndex and dragging to true
+     * @author cmc
+     * @param event emitted event from draggable component
+     */
     dragStart (event) {
       this.dragging = true
       this.dragStartIndex = event.oldIndex
     },
+    /**
+     * @function handle event when drag ends, setting dragEndIndex and calling setFollowingContent if main element
+     * @author cmc
+     * @param event emitted event from draggable component
+     */
     dragEnd (event) {
       this.dragging = false
       this.dragEndIndex = event.newIndex
-      if (this.main && this.coherentItem) {
+      if (this.main && this.coherentItem) { // if main element, set following content
         this.setFollowingContent()
-      } else {
-        this.$emit('propagatePropertyChange', null, 'followingContent', null)
       }
     },
+    /**
+     * @function get the id of the first content of the chapter, recursively
+     * @author cmc
+     * @param chapter reference to `chapter` object
+     * @param index index of the chapter to check
+     * @return {string|null} id of the first content of the chapter, or null the index is out of bounds
+     */
     getFirstContentId (chapter, index) {
       if (chapter[index]) {
         if (chapter[index].isChapter) {
@@ -185,36 +205,40 @@ export default {
         this.$emit('propagatePropertyChange', chapter, property, value)
       }
     },
+    /**
+     * @function set followingContent property of all items in the chapter
+     * @author cmc
+     */
     setFollowingContent () {
-      console.log('setFollowingContent', this.chapter.children)
       /**
-       * @function automaticFollow recursively sets the followingContent property of all items in the chapter
+       * @function automaticFollow recursively sets the followingContent property of all but dialog items in the chapter
        * @param item reference to item to set followingContent for
-       * @param {string} followingContent id of following content
-       * @return {boolean} true if followingContent is not null
+       * @param followingItem reference to following item if exists
        */
-      const automaticFollow = (item, followingContent) => {
+      const automaticFollow = (item, followingItem) => {
         if (item.isChapter) {
-          item.children.forEach((child, i) => { // TODO: fix recursion - if last child returns false, get first content of next chapter
-            const k = automaticFollow(child, this.getFirstContentId(item.children, i + 1))
-            if (typeof k === 'boolean') { // child is item
-              return k ? item : child
-            } else {
-              if (k !== item) {
-                followingContent = k.id
+          item.children.forEach((child, i) => {
+            if (child.isChapter) { // recursive call if child is a chapter
+              automaticFollow(child, item.children[i + 1])
+            } else { // set followingContent if child is an item
+              const hasFollow = this.getFirstContentId(item.children, i + 1)
+              if (!hasFollow) { // no following content
+                if (!followingItem && item.type !== 'laya-dialog') { // set follow to null if item is not a dialog
+                  child.follow = null
+                } else { // set follow to first content of followingItem
+                  child.follow = this.getFirstContentId(followingItem.children, 0)
+                }
+              } else { // set follow to first following content
+                child.follow = hasFollow
               }
             }
           })
-        } else if (item.type !== 'laya-dialog') {
-          console.log('setFollowingContent', item.id, followingContent)
-          item.follow = followingContent
-          return !!followingContent // return true if followingContent is not null
-        } else {
-          return true
+        } else if (item.type !== 'laya-dialog') { // set followingContent if item is not a dialog
+          item.follow = followingItem?.id ?? null
         }
       }
-      this.chapter.children.forEach((child, i) => {
-        automaticFollow(child, this.getFirstContentId(this.chapter.children, i + 1))
+      this.chapter.children.forEach((child, i) => { // call automaticFollow for each child
+        automaticFollow(child, this.chapter.children[i + 1] ?? null)
       })
     }
   }

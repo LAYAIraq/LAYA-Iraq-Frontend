@@ -85,7 +85,9 @@ export default {
      * @param value new value for property
      */
     changeProperty (chapter, property, value) {
-      chapter[property] = value
+      if (property !== 'followingContent') { // followingContent emit has no data
+        chapter[property] = value
+      }
     }
   }
 }
