@@ -395,6 +395,17 @@ export default {
     ...mapGetters(['content', 'courseSimple'])
   },
 
+  watch: {
+    /**
+     * @function watch solution for change, reset solutions array to accept solution at index val
+     * @param val integer value for solution
+     */
+    solution (val) {
+      this.solutions = this.options.map(() => false)
+      this.solutions[val] = true
+    }
+  },
+
   created () {
     this.fetchData()
   },

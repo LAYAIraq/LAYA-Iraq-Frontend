@@ -248,7 +248,7 @@ export default {
      */
     populateShowSolutions () {
       for (let i = 0; i < this.options.length; i++) {
-        if (this.solutions.includes(i)) {
+        if (this.solutions[i]) {
           this.showSolutions.push(this.courseSimple ? this.options[i].simple : this.options[i].text)
         }
       }
