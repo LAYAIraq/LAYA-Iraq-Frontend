@@ -1,10 +1,24 @@
 # Changes
 
+## v1.2.6
+- fixed a bug where the course list wasn't loaded fully when a course had an incomplete block
+- fixed bug in multiple choice plugin
+
+## v1.2.5
+- small fixes in course creation / editing
+- added feedback block for users to give feedback on courses
+- added True/False option in SCMC quiz component
+- improved screen reader support
+
+## v1.2.4
+- fixed wrong display of solutions in assessments
+- changed display of choice of correct solution in SCMC component
+
 ## v1.2
 - moved http calls to vuex
 - added more unit tests
 - added editor panel
-- adde option to apply for authorship
+- added option to apply for authorship
 
 ## v1.1
 - fixed change role method in admin panel

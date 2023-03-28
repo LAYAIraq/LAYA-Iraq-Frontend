@@ -350,11 +350,13 @@ Dependencies: @/mixins/locale.vue
 <script>
 import { locale, tooltipIcon } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
+import commonMethods from './choices-common-methods'
 
 export default {
   name: 'LayaLaScmcCreate',
 
   mixins: [
+    commonMethods,
     locale,
     tooltipIcon
   ],
@@ -377,7 +379,7 @@ export default {
   },
 
   watch: {
-    variation: function (val) {
+    variation () {
       this.populateData()
     }
   },
@@ -429,32 +431,6 @@ export default {
         flagged: false,
         id: uuidv4()
       }
-    },
-
-    /**
-     * Function _delItem(idx): Remove an item at given index
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     *
-     * @param {*} idx index at which the item is to be removed
-     */
-    _delItem (idx) {
-      this.options.splice(idx, 1)
-    },
-
-    /**
-     * Function _addItem: add a new item to options
-     * Author: core
-     * Last Update: June 28, 2021
-     */
-    _addItem () {
-      this.options.push({
-        text: this.y18n('layaLaScmc.edit.sampleOption'),
-        flagged: false,
-        id: uuidv4()
-      })
     }
   }
 }

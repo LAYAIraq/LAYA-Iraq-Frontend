@@ -54,6 +54,8 @@ Dependencies:
 
       <course-change-category @changedCategory="storeCourse"></course-change-category>
 
+      <course-copy @success="$bvToast.show('author-toast')"></course-copy>
+
       <course-delete-block
         :name="name"
         :step="step"
@@ -64,6 +66,7 @@ Dependencies:
       <!--<course-stats></course-stats>-->
 
       <course-preferences @settingsChanged="storeCourse"></course-preferences>
+      <course-feedback-download @success="$bvToast.show('author-toast')"></course-feedback-download>
     </div>
 
     <b-toast
@@ -93,7 +96,8 @@ import {
   courseEditType,
   courseNewBlock,
   coursePreferences,
-  courseRename
+  courseRename,
+  courseFeedbackDownload
   // courseStats
 } from './course-edit-tools/'
 
@@ -110,7 +114,8 @@ export default {
     courseEditType,
     courseNewBlock,
     coursePreferences,
-    courseRename
+    courseRename,
+    courseFeedbackDownload
     // courseStats
   },
   mixins: [

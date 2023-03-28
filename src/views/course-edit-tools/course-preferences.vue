@@ -205,12 +205,7 @@ export default {
                   }
                 }
               } else if (elem) {
-                if (!hasSimple(elem)) {
-                  if (Object.prototype.hasOwnProperty.call(elem, 'ops')) { // object is squill input
-                    return null
-                  }
-                  // console.log(elem)
-                  // console.log(' doesnt have simple')
+                if (!hasSimple(elem) && !Object.prototype.hasOwnProperty.call(elem, 'ops')) { // has no simple prop and is not a quill object
                   this.simple = false
                   return null
                 }

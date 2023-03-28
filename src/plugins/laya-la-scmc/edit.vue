@@ -262,7 +262,7 @@ Dependencies:
             >
           </div>
 
-          <!-- correct  -->
+          <!-- correct -->
           <div class="form-check form-check-inline ">
             <input
               v-if="variation === single || variation === tf"
@@ -363,12 +363,14 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import { locale, tooltipIcon } from '@/mixins'
+import commonMethods from './choices-common-methods'
 import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'LayaLaScmcEdit',
 
   mixins: [
+    commonMethods,
     locale,
     tooltipIcon
   ],
@@ -398,30 +400,6 @@ export default {
   },
 
   methods: {
-
-    /**
-     * Function _delItem(idx): Delete item at given index
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     */
-    _delItem (idx) {
-      this.options.splice(idx, 1)
-    },
-
-    /**
-     * Function _addItem: Add item to options
-     * Author: core
-     * Last Updated: June 28, 2021
-     */
-    _addItem () {
-      this.options.push({
-        text: this.y18n('layaLaScmc.edit.sampleOption'),
-        flagged: false,
-        id: uuidv4()
-      })
-    },
     /**
      * @description add the correct answer options if true and false is selected
      */
