@@ -137,6 +137,18 @@ export default {
       return duplicates
     }
   },
+  watch: {
+    chapter: {
+      handler () {
+        console.log('chapter changed')
+        if (this.main && this.coherentItem) {
+          console.log('changing following content....')
+          this.setFollowingContent()
+        }
+      },
+      deep: true
+    }
+  },
   created () {
     this.id = uuidv4()
     this.chapter.children.forEach(child => { this.childrenVisibility[child.id] = false })
@@ -170,9 +182,6 @@ export default {
     dragEnd (event) {
       this.dragging = false
       this.dragEndIndex = event.newIndex
-      if (this.main && this.coherentItem) { // if main element, set following content
-        this.setFollowingContent()
-      }
     },
     /**
      * @function get the id of the first content of the chapter, recursively
@@ -182,7 +191,7 @@ export default {
      * @return {string|null} id of the first content of the chapter, or null the index is out of bounds
      */
     getFirstContentId (chapter, index) {
-      if (chapter[index]) {
+      if (chapter && chapter[index]) {
         if (chapter[index].isChapter) {
           return this.getFirstContentId(chapter[index].children, 0)
         } else {
@@ -199,47 +208,62 @@ export default {
      * @param value new value for property to propagate to parent
      */
     propagatePropertyChange (chapter, property, value) {
-      if (this.main && property === 'followingContent') {
-        this.setFollowingContent()
-      } else {
-        this.$emit('propagatePropertyChange', chapter, property, value)
-      }
+      this.$emit('propagatePropertyChange', chapter, property, value)
     },
     /**
      * @function set followingContent property of all items in the chapter
      * @author cmc
      */
     setFollowingContent () {
+      const setFollow = (item, follow) => {
+        if (item.type !== 'laya-dialog') {
+          item.follow = follow
+        }
+      }
       /**
        * @function automaticFollow recursively sets the followingContent property of all but dialog items in the chapter
        * @param item reference to item to set followingContent for
        * @param followingItem reference to following item if exists
+       * @param depth recursion depth
        */
-      const automaticFollow = (item, followingItem) => {
+      const automaticFollow = (item, followingItem, depth) => {
         if (item.isChapter) {
           item.children.forEach((child, i) => {
-            if (child.isChapter) { // recursive call if child is a chapter
-              automaticFollow(child, item.children[i + 1])
-            } else { // set followingContent if child is an item
-              const hasFollow = this.getFirstContentId(item.children, i + 1)
-              if (!hasFollow) { // no following content
-                if (!followingItem && item.type !== 'laya-dialog') { // set follow to null if item is not a dialog
-                  child.follow = null
-                } else { // set follow to first content of followingItem
-                  child.follow = this.getFirstContentId(followingItem.children, 0)
+            const res = automaticFollow(child, item.children[i + 1]?? null, depth + 1)
+            if (res) { // if automaticFollow returns something, set followingContent to next block
+              console.log('reach last element')
+              console.log('recursion depth: ', depth)
+              const nextInput = this.getFirstContentId(item.children[i + 1], 0)
+              console.log('nextInput: ', nextInput)
+
+              if (!nextInput) {
+                if (depth !== 0) {
+                  return item
+                } else {
+                  setFollow(item, null)
+                  return null
                 }
-              } else { // set follow to first following content
-                child.follow = hasFollow
+              } else {
+                setFollow(item, nextInput)
+                return null
               }
             }
           })
-        } else if (item.type !== 'laya-dialog') { // set followingContent if item is not a dialog
-          item.follow = followingItem?.id ?? null
+        } else { // set followingContent if exists
+          if (followingItem) {
+            setFollow(item, followingItem.id)
+            return null
+          } else {
+            return item
+          }
         }
       }
-      this.chapter.children.forEach((child, i) => { // call automaticFollow for each child
-        automaticFollow(child, this.chapter.children[i + 1] ?? null)
-      })
+      const k = automaticFollow(this.chapter, null, 0) // TODO: nested follow of last elements still broken
+      if (!k) {
+        console.log('no return, all gucci')
+      } else {
+        console.log('something went wrong')
+      }
     }
   }
 }
