@@ -913,7 +913,7 @@ export default {
       commit('setBusy', true)
       http.get('courses')
         .then(({ data }) => {
-          for (const courseObject of data) {
+          data.forEach(courseObject => {
             const listData = {
               category: courseObject.category,
               name: courseObject.name,
@@ -922,20 +922,18 @@ export default {
               author: courseObject.authorId
             }
             courseObject.content.forEach(block => {
-              if (courseObject.properties.simpleLanguage) { // check if course is completely available in simple language
+              if (courseObject.properties.simpleLanguage && block.input) { // check if course is completely available in simple language
                 // TODO:
                 // following is duplicate of checkForSimpleLanguage() in
                 // @/views/course-edit-tools/course-preferences.vue
                 // might be refactored to reduce redundancy
                 courseObject.properties.simple = true // set properties.simple true first
-
                 const hasSimple = (elem) => { // check if all keys have a simple language version
                   return Object.prototype.hasOwnProperty.call(elem, 'simple')
                     ? elem.simple !== '' // if simple language version exists, check if it is not empty
                     : Object.prototype.hasOwnProperty.call(elem, 'ops') // if simple language version does not exist, check if it is a quill object
                 }
                 const iterInput = Object.values(block.input) // values of content input array
-
                 for (const elem of iterInput) { // for each element in input array
                   if (typeof (elem) === 'object') { // if element is an object
                     if (Array.isArray(elem)) { // if it's an array, descent into array
@@ -978,7 +976,7 @@ export default {
             ) {
               commit('courseListAppend', listData)
             }
-          }
+          })
         })
         .catch(err => console.error(err))
         .finally(() => { commit('setBusy', false) })
