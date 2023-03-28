@@ -264,15 +264,14 @@ Dependencies: @/mixins/locale.vue
           </div>
 
           <!-- correct -->
-          <div class="form-check form-check-inline ">
+          <div class="form-check form-check-inline">
             <input
               v-if="variation === single || variation === tf"
               :id="'option-corr-'+i"
               v-model="solution"
               class="form-check-input"
-              :type="multiple ? 'checkbox' : 'radio'"
-              :value="true"
-              @click="() => { if (!multiple) {for (const ix in solutions) { ix === i ? solutions[ix] = true : solutions[ix] = false } } }"
+              type="radio"
+              :value="i"
             >
 
             <input
@@ -380,7 +379,7 @@ export default {
   },
 
   watch: {
-    variation: function (val) {
+    variation () {
       this.populateData()
     }
   },

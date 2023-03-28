@@ -244,10 +244,10 @@ export default {
      *
      * Author: pj
      *
-     * Last Updated: October 12, 2022 by cmc
+     * Last Updated: September 28, 2022 by nv
      */
     populateShowSolutions () {
-      for (let i = 0; i <= this.options.length; i++) {
+      for (let i = 0; i < this.options.length; i++) {
         if (this.solutions[i]) {
           this.showSolutions.push(this.courseSimple ? this.options[i].simple : this.options[i].text)
         }
