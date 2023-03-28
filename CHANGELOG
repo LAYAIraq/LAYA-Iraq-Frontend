@@ -2,6 +2,7 @@
 
 ## v1.2.6
 - fixed a bug where the course list wasn't loaded fully when a course had an incomplete block
+- fixed bug in multiple choice plugin
 
 ## v1.2.5
 - small fixes in course creation / editing
