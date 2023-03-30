@@ -8,7 +8,7 @@
 */
 
 import { mapGetters } from 'vuex'
-import * as locale from '@/i18n'
+import * as locale from 'src/assets/i18n'
 export default {
   computed: {
     ...mapGetters(['profileLang']),

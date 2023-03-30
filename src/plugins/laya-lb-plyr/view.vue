@@ -81,7 +81,7 @@ import Plyr from 'plyr'
 import { mapGetters } from 'vuex'
 import 'plyr/dist/plyr.css'
 import { locale, viewPluginProps } from '@/mixins'
-import '@/styles/flaggables.css'
+import '@/assets/styles/flaggables.css'
 
 export default {
   name: 'LayaPlyr',

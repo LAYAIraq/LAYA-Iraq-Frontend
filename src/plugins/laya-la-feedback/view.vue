@@ -183,7 +183,7 @@ Last Updated: May 04, 2022
 <script>
 import { locale, viewPluginProps, watchContent } from '@/mixins'
 import { mapGetters } from 'vuex'
-import '@/styles/flaggables.css'
+import '@/assets/styles/flaggables.css'
 import { StarRating } from 'vue-rate-it'
 
 // import layaWsyisyg from '../misc/laya-html'

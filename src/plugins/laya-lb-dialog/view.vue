@@ -67,7 +67,7 @@ Dependencies: @/mixins/locale.vue
 
 import { locale, viewPluginProps } from '@/mixins'
 import { mapGetters } from 'vuex'
-import '@/styles/flaggables.css'
+import '@/assets/styles/flaggables.css'
 
 export default {
   name: 'LayaDialog',

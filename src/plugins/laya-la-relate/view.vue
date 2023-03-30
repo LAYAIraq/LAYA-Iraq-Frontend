@@ -193,7 +193,7 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import { locale, viewPluginProps } from '@/mixins'
-import '@/styles/flaggables.css'
+import '@/assets/styles/flaggables.css'
 
 export default {
   name: 'LayaQuizRelate',

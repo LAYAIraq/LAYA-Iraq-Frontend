@@ -25,8 +25,8 @@ import lyHeader from '@/components/header'
 import lyFooter from '@/components/footer'
 import { mapGetters } from 'vuex'
 import 'open-dyslexic/open-dyslexic-regular.css'
-import '@/styles/fonts.css'
-import '@/styles/color-correction.css'
+import '@/assets/styles/fonts.css'
+import '@/assets/styles/color-correction.css'
 import { publicRoutes } from '@/router'
 
 export default {

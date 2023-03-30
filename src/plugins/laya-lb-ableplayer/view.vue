@@ -62,7 +62,7 @@ Dependencies:
 import { mapGetters } from 'vuex'
 import 'ableplayer/build/ableplayer.min.css' // neccessary, otherwise ableplayer is butchered
 import { locale, viewPluginProps, watchContent } from '@/mixins'
-import '@/styles/flaggables.css'
+import '@/assets/styles/flaggables.css'
 
 export default {
 
