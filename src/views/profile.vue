@@ -28,7 +28,7 @@ Dependencies:
           >
           <img
             v-else
-            src="../assets/anmelden.svg"
+            src="../assets/images/anmelden.svg"
             alt="Avatar"
             class="d-block rounded-circle mx-auto avatar"
           >

@@ -15,7 +15,7 @@ Dependencies:
         <form class="d-flex flex-column align-items-center">
           <div style="height: 2rem"></div>
           <img
-            src="../assets/anmelden.svg"
+            src="../assets/images/anmelden.svg"
             alt="Login"
             class="w-50"
           >
@@ -206,7 +206,7 @@ Dependencies:
               <div>
                 <u>{{ y18n('register.success') }}</u>
                 <img
-                  src="../assets/fertig.svg"
+                  src="../assets/images/fertig.svg"
                   :alt="y18n('layaUploadFileList.success')"
                   style="width: 3rem"
                 >

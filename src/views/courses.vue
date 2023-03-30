@@ -20,7 +20,7 @@ Dependencies:
       <div class="row">
         <img
           class="mx-auto"
-          src="../assets/kurse.svg"
+          src="../assets/images/kurse.svg"
           :alt="y18n('courses.brain')"
         >
       </div>

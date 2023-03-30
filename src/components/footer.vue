@@ -49,7 +49,7 @@ Dependencies: @/mixins/locale.vue
         <!-- partner logo -->
         <div class="col-3 col-lg-3">
           <img
-            src="../assets/logo-iraq-m.png"
+            src="../assets/images/logo-iraq-m.png"
             alt="Laya - Learn as you are"
             class="w-100"
           >
