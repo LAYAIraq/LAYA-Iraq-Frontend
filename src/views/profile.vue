@@ -446,7 +446,7 @@ Dependencies:
 <script>
 import { locale, pwdProps } from '@/mixins'
 import api from '@/backend-url'
-import PasswordInput from '@/components/password-input.vue'
+import PasswordInput from '@/components/helpers/password-input.vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import fontOptions from '@/misc/font-options'
 import fontSizeOptions from '@/misc/font-size-options'

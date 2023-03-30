@@ -1,5 +1,5 @@
 import { createLocalVue, mount } from '@vue/test-utils'
-import ScrollToTop from '@/components/scroll-to-top.vue'
+import ScrollToTop from '@/components/helpers/scroll-to-top.vue'
 import Vuex from 'vuex'
 import 'regenerator-runtime/runtime'
 

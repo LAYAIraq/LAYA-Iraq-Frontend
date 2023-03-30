@@ -1,17 +1,17 @@
 <template>
   <div class="onoffswitch">
     <input
-      id="laya-on-off-switch"
+      id="on-off-switch"
       v-model="check"
       type="checkbox"
       name="onoffswitch"
       class="onoffswitch-checkbox"
       tabindex="0"
-      @click.prevent="toggleCheck"
+      @click="toggleCheck"
     >
     <label
       class="onoffswitch-label"
-      for="laya-on-off-switch"
+      for="on-off-switch"
     >
       <span class="onoffswitch-inner"></span>
       <span class="onoffswitch-switch"></span>
@@ -21,7 +21,7 @@
 
 <script>
 export default {
-  name: 'LyOnOff',
+  name: 'OnOffSwitch',
   data () {
     return {
       check: false

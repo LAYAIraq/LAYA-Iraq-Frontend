@@ -10,7 +10,7 @@ Dependencies:
 -->
 <template>
   <!-- author view -->
-  <div class="ly-bg-author py-4">
+  <div class="bg-author py-4">
     <course-edit-header
       :name="name"
       :course-path="coursePath"
@@ -29,35 +29,35 @@ Dependencies:
       class="container"
       :class="langIsAr ? 'text-right' : ''"
     >
-      <course-edit-content
+      <course-block-edit
         :name="name"
         :course-path="coursePath"
-      ></course-edit-content>
+      ></course-block-edit>
 
-      <course-edit-type
+      <course-type-edit
         :name="name"
         :course-path="coursePath"
         @changedType="storeCourse"
-      ></course-edit-type>
+      ></course-type-edit>
 
-      <course-new-block
+      <course-block-new
         :name="name"
         :course-path="coursePath"
       >
-      </course-new-block>
+      </course-block-new>
 
-      <course-edit-nav></course-edit-nav>
+      <course-nav-edit></course-nav-edit>
 
       <course-rename @renamed="storeCourse"></course-rename>
 
       <course-copy @success="storeCourse"></course-copy>
 
-      <course-change-category @changedCategory="storeCourse"></course-change-category>
+      <course-category-change @changedCategory="storeCourse"></course-category-change>
 
-      <course-delete-block
+      <course-block-delete
         :name="name"
         :course-path="coursePath"
-      ></course-delete-block>
+      ></course-block-delete>
 
       <course-delete :name="name"></course-delete>
 
@@ -83,36 +83,36 @@ Dependencies:
 <script>
 import { locale, routeProps } from '@/mixins'
 import {
-  courseChangeCategory,
-  courseCopy,
-  courseDelete,
-  courseDeleteBlock,
-  courseEditContent,
-  courseEditHeader,
-  courseEditNav,
-  courseEditType,
-  courseNewBlock,
-  coursePreferences,
-  courseRename,
-  courseFeedbackDownload
+  CourseCategoryChange,
+  CourseCopy,
+  CourseDelete,
+  CourseBlockDelete,
+  CourseBlockEdit,
+  CourseEditHeader,
+  CourseNavEdit,
+  CourseTypeEdit,
+  CourseBlockNew,
+  CoursePreferences,
+  CourseRename,
+  CourseFeedbackDownload
   // courseStats
-} from './course-edit-tools/'
+} from '../../../views/course-edit-tools'
 
 export default {
   name: 'CourseEdit',
   components: { // not lazily loaded b/c visible first
-    courseChangeCategory,
-    courseCopy,
-    courseDelete,
-    courseDeleteBlock,
-    courseEditContent,
-    courseEditHeader,
-    courseEditNav,
-    courseEditType,
-    courseNewBlock,
-    coursePreferences,
-    courseRename,
-    courseFeedbackDownload
+    CourseCategoryChange,
+    CourseCopy,
+    CourseDelete,
+    CourseBlockDelete,
+    CourseBlockEdit,
+    CourseEditHeader,
+    CourseNavEdit,
+    CourseTypeEdit,
+    CourseBlockNew,
+    CoursePreferences,
+    CourseRename,
+    CourseFeedbackDownload
     // courseStats
   },
   mixins: [

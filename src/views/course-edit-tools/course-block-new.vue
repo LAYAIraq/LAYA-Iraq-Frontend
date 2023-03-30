@@ -93,7 +93,7 @@ import { locale, routeProps } from '@/mixins'
 import { stripKey } from '@/misc/utils'
 
 export default {
-  name: 'CourseNewBlock',
+  name: 'CourseBlockNew',
 
   mixins: [
     locale,

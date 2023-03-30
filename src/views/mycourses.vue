@@ -77,7 +77,7 @@ Dependencies:
 
     <div style="height: 2rem"></div>
 
-    <div class="ly-bg-grey">
+    <div class="bg-grey">
       <div class="container">
         <div class="row">
           <div class="col">
@@ -164,7 +164,7 @@ Dependencies:
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-import lyAccordion from '@/components/accordion'
+import lyAccordion from '@/components/helpers/accordion.vue'
 
 import http from 'axios'
 import { locale } from '@/mixins'

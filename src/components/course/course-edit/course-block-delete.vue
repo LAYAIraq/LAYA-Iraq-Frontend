@@ -1,5 +1,5 @@
 <!--
-Filename: course-delete-block.vue
+Filename: course-block-delete.vue
 Use: Provides tool to delete content block
 Creator: cmc
 Date: October 27, 2020
@@ -54,7 +54,7 @@ import { mapGetters } from 'vuex'
 import { locale, routeProps } from '@/mixins'
 
 export default {
-  name: 'CourseDeleteBlock',
+  name: 'CourseBlockDelete',
 
   mixins: [
     locale,

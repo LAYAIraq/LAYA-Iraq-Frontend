@@ -1,6 +1,6 @@
 <!--
-Filename: course-rename.vue
-Use: Rename whole course
+Filename: course-category-change.vue
+Use: Change course category
 Author: cmc
 Date: October 27, 2020
 Dependencies:
@@ -71,7 +71,7 @@ import { locale } from '@/mixins'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'CourseChangeCategory',
+  name: 'CourseCategoryChange',
 
   mixins: [
     locale

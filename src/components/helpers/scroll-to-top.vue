@@ -9,7 +9,7 @@ Dependencies: none
 <template>
   <div
     v-show="show"
-    class="ly-scroll-to-top"
+    class="scroll-to-top"
   >
     <button
       :aria-label="y18n('scrollUp')"
@@ -26,11 +26,9 @@ Dependencies: none
 import { locale } from '@/mixins'
 
 export default {
-  name: 'LyScrollToTop',
+  name: 'ScrollToTop',
 
-  mixins: [
-    locale
-  ],
+  mixins: [locale],
 
   data () {
     return {
@@ -71,7 +69,7 @@ export default {
 </script>
 
 <style scoped>
-.ly-scroll-to-top {
+.scroll-to-top {
   position: fixed;
   bottom: 1rem;
   right: 1rem;

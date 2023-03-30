@@ -7,7 +7,7 @@ Dependencies: none
 -->
 
 <template>
-  <div class="ly-accordion">
+  <div class="accordion">
     <div v-show="data.length > 0">
       <slot name="header"></slot>
       <div class="list">
@@ -37,7 +37,7 @@ Dependencies: none
 <script>
 import { locale } from '@/mixins'
 export default {
-  name: 'LyAccordion',
+  name: 'Accordion',
 
   mixins: [
     locale
@@ -59,7 +59,7 @@ export default {
   color: grey !important;
 }
 
-.ly-accordion * {
+.accordion * {
   color: black;
 }
 

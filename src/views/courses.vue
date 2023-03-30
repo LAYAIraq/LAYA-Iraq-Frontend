@@ -55,7 +55,7 @@ Dependencies:
 
     <div style="height: 2rem"></div>
 
-    <div class="ly-bg-grey py-5">
+    <div class="bg-grey py-5">
       <div class="container">
         <div class="row">
           <div class="col">
@@ -86,7 +86,7 @@ Dependencies:
 import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 // import http from 'axios'
-import lyCourseList from '@/components/ly-course-list'
+import lyCourseList from '@/components/course/course-list/course-list.vue'
 
 import utils from '../misc/utils.js'
 
@@ -94,7 +94,7 @@ export default {
   name: 'CoursesView',
 
   components: {
-    lyCourseEdit: () => import('@/components/authoring/course-create'),
+    lyCourseEdit: () => import('@/components/course/course-list/course-create.vue'),
     lyCourseList // not lazily loaded b/c always visible
   },
 

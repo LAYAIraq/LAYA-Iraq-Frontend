@@ -8,7 +8,7 @@ Dependencies: @/mixins/locale.vue
 
 <template>
   <footer
-    id="ly-footer"
+    id="footer"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div
@@ -49,13 +49,13 @@ Dependencies: @/mixins/locale.vue
         <!-- partner logo -->
         <div class="col-3 col-lg-3">
           <img
-            src="../assets/images/logo-iraq-m.png"
+            src="../../assets/images/logo-iraq-m.png"
             alt="Laya - Learn as you are"
             class="w-100"
           >
         </div>
       </div>
-      <ly-scroll-to-top tabindex="0"></ly-scroll-to-top>
+      <scroll-to-top tabindex="0"></scroll-to-top>
     </div>
   </footer>
 </template>
@@ -64,10 +64,10 @@ Dependencies: @/mixins/locale.vue
 import { locale } from '@/mixins'
 
 export default {
-  name: 'LyFooter',
+  name: 'Footer',
 
   components: {
-    lyScrollToTop: () => import('@/components/scroll-to-top')
+    ScrollToTop: () => import('@/components/helpers/scroll-to-top.vue')
   },
 
   mixins: [

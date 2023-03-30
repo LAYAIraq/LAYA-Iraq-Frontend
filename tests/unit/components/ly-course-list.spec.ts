@@ -2,7 +2,7 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue'
 import 'regenerator-runtime/runtime'
-import CourseList from '@/components/ly-course-list.vue'
+import CourseList from '@/components/course/course-list/course-list.vue'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)

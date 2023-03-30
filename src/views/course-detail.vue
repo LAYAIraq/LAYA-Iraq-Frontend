@@ -65,8 +65,8 @@ export default {
   name: 'CourseDetailView',
 
   components: {
-    lyScrollToTop: () => import('@/components/scroll-to-top'),
-    CourseEdit: () => import('@/views/course-edit'),
+    lyScrollToTop: () => import('@/components/helpers/scroll-to-top.vue'),
+    CourseEdit: () => import('@/components/course/course-edit/course-edit.vue'),
     CourseHeader
   },
 

@@ -70,7 +70,7 @@
     </b-dropdown-item>
 
     <!-- <b-dropdown-item>
-      <ly-on-off :check="doNotDisturb"></ly-on-off>
+      <on-off :check="doNotDisturb"></on-off>
     </b-dropdown-item> -->
   </b-dropdown>
 </template>
@@ -78,13 +78,13 @@
 <script>
 import { storeHandler, locale, time } from '@/mixins'
 import { mapGetters } from 'vuex'
-// import lyOnOff from '@/components/on-off-switch.vue'
+// import OnOff from '@/components/on-off-switch.vue'
 
 export default {
-  name: 'LyHeaderNotifications',
+  name: 'HeaderNotifications',
 
   // components: {
-  //   lyOnOff
+  //   OnOff
   // },
 
   mixins: [

@@ -225,7 +225,7 @@ Dependencies:
 
 <script>
 import { locale, pwdProps } from '@/mixins'
-import LayaPasswordInput from '@/components/password-input.vue'
+import LayaPasswordInput from '@/components/helpers/password-input.vue'
 
 export default {
   name: 'RegisterView',

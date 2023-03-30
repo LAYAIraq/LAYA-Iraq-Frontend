@@ -44,7 +44,7 @@
 
 <script>
 import { locale, pwdProps } from '@/mixins'
-import PasswordInput from '@/components/password-input'
+import PasswordInput from '@/components/helpers/password-input.vue'
 
 export default {
   name: 'PasswordReset',

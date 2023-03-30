@@ -180,7 +180,7 @@ import { locale, storeHandler } from '@/mixins'
 import { slugify } from '@/misc/course-structure-methods'
 
 export default {
-  name: 'LayaCourseList',
+  name: 'CourseList',
 
   mixins: [
     locale,

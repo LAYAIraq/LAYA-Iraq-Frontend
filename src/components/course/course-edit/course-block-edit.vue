@@ -35,7 +35,7 @@ import { locale, routeProps } from '@/mixins'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'CourseEditContent',
+  name: 'CourseBlockEdit',
 
   mixins: [
     locale,

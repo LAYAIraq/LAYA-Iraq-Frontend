@@ -1,6 +1,6 @@
 import 'regenerator-runtime/runtime'
 import { createLocalVue, mount } from '@vue/test-utils'
-import CourseDeleteBlock from '@/views/course-edit-tools/course-delete-block.vue'
+import CourseDeleteBlock from '@/components/course/course-edit/course-block-delete.vue'
 import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue'
 

@@ -1,5 +1,5 @@
 import { createLocalVue, mount } from '@vue/test-utils'
-import Header from '@/components/header.vue'
+import Header from '@/components/general/header.vue'
 import BootstrapVue from 'bootstrap-vue'
 import Vuex from 'vuex'
 import 'regenerator-runtime/runtime'

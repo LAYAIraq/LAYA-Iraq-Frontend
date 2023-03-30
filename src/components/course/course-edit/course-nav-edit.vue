@@ -42,7 +42,7 @@ import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 
 export default {
-  name: 'CourseEditNav',
+  name: 'CourseNavEditButton',
 
   mixins: [
     locale

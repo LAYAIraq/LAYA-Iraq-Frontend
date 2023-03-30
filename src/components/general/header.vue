@@ -13,7 +13,7 @@ Dependencies:
 
 <template>
   <div
-    id="ly-header"
+    id="header"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <b-navbar
@@ -33,7 +33,7 @@ Dependencies:
         >
           <img
             style="height: inherit"
-            src="../assets/images/logo-iraq-xs.png"
+            src="../../assets/images/logo-iraq-xs.png"
             alt="Laya - Learn as you are"
           >
         </b-navbar-brand>
@@ -82,7 +82,7 @@ Dependencies:
           >
             Editor Panel
           </b-nav-item>
-          <ly-header-notifications></ly-header-notifications>
+          <header-notifications></header-notifications>
           <b-nav-item to="/profile">
             <i class="fas fa-user-alt"></i>
             {{ y18n('header.profile') }}
@@ -152,10 +152,10 @@ import { icons } from '@/misc/langs.js'
 import { locale } from '@/mixins'
 
 export default {
-  name: 'LyHeader',
+  name: 'Header',
 
   components: {
-    lyHeaderNotifications: () => import('@/components/header-notifications')
+    HeaderNotifications: () => import('@/components/notifications/header-notifications.vue')
   },
 
   mixins: [
@@ -294,7 +294,7 @@ export default {
   margin-left: auto;
 }
 
-#ly-header {
+#header {
   position: sticky;
   top: 0;
 

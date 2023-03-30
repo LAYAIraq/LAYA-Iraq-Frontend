@@ -1,5 +1,5 @@
 <template>
-  <div class="laya-pwd-input">
+  <div class="pwd-input">
     <!-- Password -->
     <div class="form-group row">
       <span
@@ -153,7 +153,7 @@ import { locale } from '@/mixins'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'LayaPasswordInput',
+  name: 'PasswordInput',
   components: {
     Password
   },
