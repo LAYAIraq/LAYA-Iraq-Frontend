@@ -1,9 +1,8 @@
 <!--
-Filename: privacy.vue
-Use: Show privacy and legal notices
-Creator: core
-Date: unknown
-Dependencies: @/mixins/locale.vue
+  Filename: privacy.vue
+  Use: Show privacy and legal notices
+  Creator: core
+  Since: v1.0.0
 -->
 
 <template>
@@ -75,7 +74,7 @@ Dependencies: @/mixins/locale.vue
 
           <p>
             If you have any questions or suggestions about our Privacy Policy, do not hesitate to
-            <a href="mailto:laya-support@informatik.hu-berlin.de">
+            <a href="mailto:laya-iraq@outlook.com">
               contact us
             </a>
             .
@@ -90,7 +89,7 @@ Dependencies: @/mixins/locale.vue
 import { locale } from '@/mixins'
 
 export default {
-  name: 'PrivacyView',
+  name: 'Privacy',
 
   mixins: [
     locale

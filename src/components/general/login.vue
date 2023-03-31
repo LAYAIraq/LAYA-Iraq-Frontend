@@ -1,15 +1,12 @@
 <!--
-Filename: login.vue
-Use: Organize Login for Users
-Creator: core
-Date: unknown
-Dependencies:
-  axios,
-  @/mixins/locale.vue
+  Filename: login.vue
+  Use: Organize Login for Users
+  Creator: core
+  Since: v1.0.0
 -->
 
 <template>
-  <div class="login-view ly-nav-margin">
+  <div class="login">
     <div class="container">
       <div
         v-if="$route.params.verified"
@@ -21,7 +18,7 @@ Dependencies:
         <form class="d-flex flex-column align-items-center">
           <div class="h-2rem"></div>
           <img
-            src="../assets/images/anmelden.svg"
+            src="../../assets/images/anmelden.svg"
             alt="Login"
             class="d-block m-auto w-50"
           >
@@ -30,7 +27,6 @@ Dependencies:
           </h1>
 
           <div
-            class="ly-input"
             :class="{error: errEmail}"
           >
             <input
@@ -44,7 +40,6 @@ Dependencies:
           </div>
 
           <div
-            class="ly-input"
             :class="{error: errPwd}"
           >
             <input
@@ -130,7 +125,7 @@ Dependencies:
 import { locale } from '@/mixins'
 
 export default {
-  name: 'LoginView',
+  name: 'Login',
 
   mixins: [
     locale

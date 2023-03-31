@@ -1,5 +1,5 @@
 import { createLocalVue, mount } from '@vue/test-utils'
-import Login from '@/views/login.vue'
+import Login from '@/components/general/login.vue'
 import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue'
 import 'regenerator-runtime/runtime'

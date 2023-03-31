@@ -1,3 +1,9 @@
+<!--
+  Filename: verify.vue
+  Use: Verify user email
+  Creator: cmc
+  Since: v1.1.0
+-->
 <template>
   <div class="container text-center">
     <div v-if="success">
@@ -27,7 +33,7 @@ export default {
     this.verify()
   },
   methods: {
-    verify () {
+    verify () { // TODO: move to store
       this.busy = true
       http.get(`/accounts/confirm?uid=${this.$route.query.uid}&token=${this.$route.query.token}`)
         .then(() => {

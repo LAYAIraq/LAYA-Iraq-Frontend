@@ -1,3 +1,9 @@
+<!--
+  Filename: password-reset.vue
+  Use: password reset view
+  Author: cmc
+  Since: v1.1.0
+-->
 <template>
   <div class="container text-center pt-5">
     <!-- password change input -->

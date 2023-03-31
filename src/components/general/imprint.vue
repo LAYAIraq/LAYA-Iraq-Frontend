@@ -1,14 +1,13 @@
 <!--
-Filename: imprint.vue
-Use: display imprint
-Creator: core
-Date: unknown
-Dependencies: @/mixins/locale.vue
+  Filename: imprint.vue
+  Use: display imprint
+  Creator: core
+  Since: v1.0.0
 -->
 
 <template>
   <div
-    class="imprint-view"
+    class="imprint"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div class="container">
@@ -46,8 +45,8 @@ Dependencies: @/mixins/locale.vue
 
           <p>
             or at:
-            <a href="mailto:laya-support.hu-berlin.de">
-              laya-support@informatik.hu-berlin.de
+            <a href="mailto:laya-iraq@outlook.com">
+              laya-iraq@outlook.com
             </a>
           </p>
 
@@ -86,7 +85,7 @@ Dependencies: @/mixins/locale.vue
 import { locale } from '@/mixins'
 
 export default {
-  name: 'ImprintView',
+  name: 'Imprint',
 
   mixins: [
     locale

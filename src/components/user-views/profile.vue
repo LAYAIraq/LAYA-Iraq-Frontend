@@ -1,15 +1,8 @@
 <!--
-Filename: profile.vue
-Use: User Profile Settings, such as password and avatar
-Creator: core
-Date: unknown
-Dependencies:
-  axios,
-  vuex,
-  vue-password-strength-meter,
-  @/mixins/locale.vue
-  @/backend-url.ts,
-  @/plugins/misc/laya-upload-avatar/avatar.vue
+  Filename: profile.vue
+  Use: User Profile Settings, such as password and avatar
+  Creator: core
+  Since: v1.0.0
 -->
 
 <!--suppress JSAnnotator -->
@@ -28,7 +21,7 @@ Dependencies:
           >
           <img
             v-else
-            src="../assets/images/anmelden.svg"
+            src="../../assets/images/anmelden.svg"
             alt="Avatar"
             class="d-block rounded-circle mx-auto avatar"
           >
@@ -454,7 +447,7 @@ import fontSizeOptions from '@/misc/font-size-options'
 // import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
 
 export default {
-  name: 'ProfileView',
+  name: 'Profile',
 
   components: {
     PasswordInput // not lazily loaded b/c always visible

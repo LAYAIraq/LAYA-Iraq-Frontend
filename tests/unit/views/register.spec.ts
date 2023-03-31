@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
-import RegisterView from '@/views/register.vue'
+import RegisterView from '@/components/general/register.vue'
 import 'regenerator-runtime/runtime'
 
 const localVue = createLocalVue()

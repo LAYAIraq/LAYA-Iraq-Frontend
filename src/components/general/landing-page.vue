@@ -1,14 +1,13 @@
 <!--
-Filename: root.vue
-Use: Show Landing Page
-Creator: core
-Date: unknown
-Dependencies: @/mixins/locale.vue
+  Filename: landing-page.vue
+  Use: Show Landing Page
+  Creator: core
+  Since: v1.0.0
 -->
 
 <template>
   <div
-    class="root-view"
+    class="landing-page"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div class="container">
@@ -35,7 +34,7 @@ Dependencies: @/mixins/locale.vue
 import { locale } from '@/mixins'
 
 export default {
-  name: 'RootView',
+  name: 'LandingPage',
 
   mixins: [
     locale

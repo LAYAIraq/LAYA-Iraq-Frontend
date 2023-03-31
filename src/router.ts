@@ -13,24 +13,23 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 /* dynamic imports for lazy loading */
-const AdminPanel = () => import('./components/role-panels/admin-panel.vue')
+const AdminPanel = () => import('@/components/user-views/admin-panel.vue')
 const Course = () => import('./components/course/course.vue')
-const CourseEditTools = () => import('./components/course/course-edit/course-edit-tools.vue')
 const CourseEditWrapper = () => import('./components/course/course-edit/course-content.vue')
 const CourseNavEdit = () => import('./components/course/course-nav/course-nav.vue')
-const Courses = () => import('./components/course/course-list/course-list.vue')
-const EditorPanel = () => import('./components/role-panels/editor-panel.vue')
+const CourseList = () => import('./components/course/course-list/course-list.vue')
+const EditorPanel = () => import('@/components/user-views/editor-panel.vue')
 const Flag = () => import('./components/course/flag/flag.vue')
-const Imprint = () => import('./views/imprint.vue')
-const Login = () => import('./views/login.vue')
-const NotFound = () => import('./views/not-found.vue')
-const Notifications = () => import('./views/notifications.vue')
-const PasswordReset = () => import('./views/pwd-reset.vue')
-const Privacy = () => import('./views/privacy.vue')
-const Profile = () => import('./views/profile.vue')
-const Register = () => import('./views/register.vue')
-const Root = () => import('./views/root.vue')
-const Verify = () => import('./views/verify.vue')
+const Imprint = () => import('./components/general/imprint.vue')
+const Login = () => import('./components/general/login.vue')
+const NotFound = () => import('./components/general/not-found.vue')
+const Notifications = () => import('./components/notifications/notifications.vue')
+const PasswordReset = () => import('./components/helpers/password-reset.vue')
+const Privacy = () => import('./components/general/privacy.vue')
+const Profile = () => import('./components/user-views/profile.vue')
+const Register = () => import('./components/general/register.vue')
+const LandingPage = () => import('./components/general/landing-page.vue')
+const Verify = () => import('./components/helpers/verify.vue')
 
 Vue.use(Router)
 export default new Router({
@@ -45,8 +44,8 @@ export default new Router({
     {
       path: '/',
       // redirect: '/login', experimental starting page
-      name: 'root-view',
-      component: Root
+      name: 'landing-page',
+      component: LandingPage
     },
     {
       path: '/admin',
@@ -60,29 +59,29 @@ export default new Router({
     },
     {
       path: '/register',
-      name: 'register-view',
+      name: 'register',
       component: Register
     },
     {
       path: '/login',
-      name: 'login-view',
+      name: 'login',
       component: Login
     },
     {
       path: '/notifications',
-      name: 'notification-view',
+      name: 'notifications',
       component: Notifications,
       props: true
     },
     {
       path: '/profile',
-      name: 'profile-view',
+      name: 'profile',
       component: Profile
     },
     {
       path: '/courses',
-      name: 'courses-view',
-      component: Courses
+      name: 'course-list',
+      component: CourseList
     },
     {
       path: '/courses/:name/:coursePath?',
@@ -112,7 +111,7 @@ export default new Router({
     },
     {
       path: '/courses/:name/:coursePath?/flag/:id',
-      name: 'flag-view',
+      name: 'flag',
       component: Flag,
       props: true
     },
@@ -123,17 +122,17 @@ export default new Router({
     // },
     {
       path: '/imprint',
-      name: 'imprint-view',
+      name: 'imprint',
       component: Imprint
     },
     {
       path: '/privacy',
-      name: 'privacy-view',
+      name: 'privacy',
       component: Privacy
     },
     {
       path: '/verify',
-      name: 'verify-view',
+      name: 'verify',
       component: Verify
     },
     {

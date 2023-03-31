@@ -1,21 +1,18 @@
 <!--
-Filename: register.vue
-Use: Allow users to register
-Creator: core
-Date: unknown
-Dependencies:
-  axios,
-  @/mixins/locale.vue
+  Filename: register.vue
+  Use: Allow users to register
+  Creator: core
+  Since: v1.0.0
 -->
 
 <template>
-  <div class="register-view ly-nav-margin">
+  <div class="register">
     <div class="container">
       <div class="row">
         <form class="d-flex flex-column align-items-center">
           <div style="height: 2rem"></div>
           <img
-            src="../assets/images/anmelden.svg"
+            src="../../assets/images/anmelden.svg"
             alt="Login"
             class="w-50"
           >
@@ -148,12 +145,12 @@ Dependencies:
           </div>
 
           <!--- pwd input component test -->
-          <laya-password-input
+          <password-input
             class="pwd-input"
             :label-icons-only="true"
             :label-width="1"
             @compliantLength="newPwdOk"
-          ></laya-password-input>
+          ></password-input>
 
           <!-- profile pic -->
 
@@ -206,7 +203,7 @@ Dependencies:
               <div>
                 <u>{{ y18n('register.success') }}</u>
                 <img
-                  src="../assets/images/fertig.svg"
+                  src="../../assets/images/fertig.svg"
                   :alt="y18n('layaUploadFileList.success')"
                   style="width: 3rem"
                 >
@@ -225,13 +222,13 @@ Dependencies:
 
 <script>
 import { locale, pwdProps } from '@/mixins'
-import LayaPasswordInput from '@/components/helpers/password-input.vue'
+import PasswordInput from '@/components/helpers/password-input.vue'
 
 export default {
-  name: 'RegisterView',
+  name: 'Register',
 
   components: {
-    LayaPasswordInput // not lazily loaded b/c always visible
+    PasswordInput // not lazily loaded b/c always visible
     // LayaUploadAvatar
   },
 

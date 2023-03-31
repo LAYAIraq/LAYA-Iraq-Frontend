@@ -1,18 +1,12 @@
 <!--
-Filename: mycourses.vue
-Use: show courses for certain user
-Creator: core
-Date: unknown
-Dependencies:
-  vuex,
-  axios,
-  @/mixins/locale.vue
-  @/misc/utils.js,
-  @/backend-url.ts
+  Filename: mycourses.vue
+  Use: show courses for certain user
+  Creator: core
+  Since: v1.0.0
 -->
 
 <template>
-  <div class="mycourses-view">
+  <div class="mycourses">
     <!-- avatar -->
     <div class="bg-dark pt-5 pb-3 mb-5">
       <img
@@ -23,7 +17,7 @@ Dependencies:
       >
       <img
         v-else
-        src="../assets/images/anmelden.svg"
+        src="../../../assets/images/anmelden.svg"
         alt="Avatar"
         class="d-block rounded-circle mx-auto avatar"
       >
@@ -62,7 +56,7 @@ Dependencies:
           </div>
           <div class="sep"></div>
 
-          <div class="ly-search-bar">
+          <div class="search-bar">
             <input
               id="search-bar"
               v-model="searchStr"
@@ -81,7 +75,7 @@ Dependencies:
       <div class="container">
         <div class="row">
           <div class="col">
-            <ly-accordion :data="search(sort(filter(courses)))">
+            <accordion :data="search(sort(filter(courses)))">
               <div slot="header">
                 <div class="d-flex">
                   <div style="flex-basis: 25%;"></div>
@@ -154,7 +148,7 @@ Dependencies:
                   </div>
                 </div>
               </div>
-            </ly-accordion>
+            </accordion>
           </div>
         </div>
       </div>
@@ -164,18 +158,18 @@ Dependencies:
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-import lyAccordion from '@/components/helpers/accordion.vue'
+import Accordion from '@/components/helpers/accordion.vue'
 
 import http from 'axios'
 import { locale } from '@/mixins'
-import utils from '../misc/utils.js'
+import utils from '../../../misc/utils.js'
 import be from '@/backend-url'
 
 export default {
-  name: 'MycoursesView',
+  name: 'Mycourses',
 
   components: {
-    lyAccordion
+    Accordion
   },
 
   mixins: [
@@ -434,7 +428,7 @@ export default {
   display: none;
 }
 
-.ly-search-bar input {
+.search-bar input {
   outline-offset: 1rem !important;
 }
 

@@ -1,6 +1,12 @@
+<!--
+  File Name: notifications.vue
+  Use: Organize Notifications for Users
+  Creator: cmc
+  Since: v1.1.0
+-->
 <template>
   <div
-    class="ly-notifications"
+    class="notifications"
     :class="langIsAr? 'text-right': 'text-left'"
   >
     <div class="container mt-5 mb-5">
@@ -166,7 +172,7 @@ import { storeHandler, locale, time } from '@/mixins'
 // import randomNotifications from '@/misc/fillnotifications.js'
 
 export default {
-  name: 'LayaNotifications',
+  name: 'Notifications',
 
   mixins: [
     storeHandler,
@@ -418,7 +424,7 @@ export default {
 
 <style scoped>
 
-.ly-notifications {
+.notifications {
   overflow-y: scroll;
 }
 
