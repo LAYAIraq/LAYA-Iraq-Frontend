@@ -1,3 +1,9 @@
+<!--
+  Filename: editor-panel.vue
+  Use: Editor panel view
+  Author: cmc
+  Since: 1.2.0
+-->
 <template>
   <div class="container">
     <div class="row">

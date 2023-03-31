@@ -3,11 +3,7 @@
   Use: manage users, assign roles, change email addresses, fire pw
      change request
   Creator: cmc
-  Date: November 1, 2021
-  Dependencies:
-    @/mixins,
-    @/misc/roles,
-    vuex
+  Since: v1.1.0
 -->
 <template>
   <div :class="langIsAr? 'text-right': 'text-left'">
@@ -469,7 +465,7 @@ import { locale } from '@/mixins'
 import roles from '@/misc/roles'
 
 export default {
-  name: 'AdminDashboard',
+  name: 'AdminPanel',
 
   mixins: [
     locale

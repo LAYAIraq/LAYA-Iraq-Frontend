@@ -13,12 +13,12 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 /* dynamic imports for lazy loading */
-const AdminPanel = () => import('./views/admin-panel.vue')
+const AdminPanel = () => import('./components/role-panels/admin-panel.vue')
 const CourseDetail = () => import('./views/course-detail.vue')
 const CourseEditWrapper = () => import('./views/course-edit-wrapper.vue')
 const CourseNavEdit = () => import('./components/course/course-nav/course-nav.vue')
 const Courses = () => import('./views/courses.vue')
-const EditorPanel = () => import('./views/editor-panel.vue')
+const EditorPanel = () => import('./components/role-panels/editor-panel.vue')
 const Flag = () => import('./components/course/flag/flag.vue')
 const Imprint = () => import('./views/imprint.vue')
 const Login = () => import('./views/login.vue')
