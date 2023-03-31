@@ -56,7 +56,7 @@ Dependencies: @/i18n/plugins/misc/laya-course-table
 
           <!-- course link -->
           <router-link
-            :to="{name: 'course-detail-view', params: {name: course.name, step: '1'}}"
+            :to="{name: 'course', params: {name: course.name, step: '1'}}"
             class="w-50 pl-xs-1 pl-md-0 course-link"
           >
             <h5><u><b>{{ course.name }}</b></u></h5>

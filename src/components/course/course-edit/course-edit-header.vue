@@ -13,13 +13,13 @@ Dependencies:
     <div class="row">
       <div class="col">
         <b-button
-          v-if="$route.name !== 'course-detail-view'"
+          v-if="$route.name !== 'course'"
           variant="outline-secondary"
           size="sm"
           :class="langIsAr? 'float-right' : 'float-left'"
           active-class="active"
           :to="{
-            name: 'course-detail-view',
+            name: 'course',
             params: {
               name,
               coursePath: coursePath === '' ? undefined : coursePath
@@ -57,7 +57,7 @@ Dependencies:
               v-for="id in Object.keys(courseContentIdRouteMap)"
               :key="id"
               :to="{
-                name: 'course-detail-view',
+                name: 'course',
                 params: {
                   name,
                   coursePath: courseContentIdRouteMap[id] !== ''

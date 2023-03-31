@@ -132,6 +132,6 @@ describe('Course rename', () => {
     expect(mutations.renameCourse).toHaveBeenCalledWith(expect.any(Object), 'newName')
     expect(await actions.updateRenamedCourse).toHaveBeenCalled()
     expect(wrapper.find('#author-rename-course-confirm').isVisible()).toBeFalsy()
-    expect(wrapper.vm.$router.replace).toHaveBeenCalledWith(expect.objectContaining({ name: 'course-detail-view', params: { name: 'newName' } }))
+    expect(wrapper.vm.$router.replace).toHaveBeenCalledWith(expect.objectContaining({ name: 'course', params: { name: 'newName' } }))
   })
 })

@@ -14,10 +14,11 @@ import Router from 'vue-router'
 
 /* dynamic imports for lazy loading */
 const AdminPanel = () => import('./components/role-panels/admin-panel.vue')
-const CourseDetail = () => import('./views/course-detail.vue')
-const CourseEditWrapper = () => import('./views/course-edit-wrapper.vue')
+const Course = () => import('./components/course/course.vue')
+const CourseEditTools = () => import('./components/course/course-edit/course-edit-tools.vue')
+const CourseEditWrapper = () => import('./components/course/course-edit/course-content.vue')
 const CourseNavEdit = () => import('./components/course/course-nav/course-nav.vue')
-const Courses = () => import('./views/courses.vue')
+const Courses = () => import('./components/course/course-list/course-list.vue')
 const EditorPanel = () => import('./components/role-panels/editor-panel.vue')
 const Flag = () => import('./components/course/flag/flag.vue')
 const Imprint = () => import('./views/imprint.vue')
@@ -85,8 +86,8 @@ export default new Router({
     },
     {
       path: '/courses/:name/:coursePath?',
-      name: 'course-detail-view',
-      component: CourseDetail,
+      name: 'course',
+      component: Course,
       props: true,
 
       children: [

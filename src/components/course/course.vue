@@ -59,10 +59,10 @@ Dependencies:
 import { mapGetters } from 'vuex'
 import utils from '@/misc/utils.js'
 import { locale, routeProps, storeHandler } from '@/mixins'
-import CourseHeader from '@/views/course-detail-header.vue'
+import CourseHeader from '@/components/course/course-header.vue'
 
 export default {
-  name: 'CourseDetailView',
+  name: 'Course',
 
   components: {
     lyScrollToTop: () => import('@/components/helpers/scroll-to-top.vue'),
@@ -77,7 +77,7 @@ export default {
   ],
 
   beforeRouteUpdate (to, from, next) {
-    if (to.name === 'course-detail-view' && from.name !== 'edit-course-wrapper') {
+    if (to.name === 'course' && from.name !== 'edit-course-wrapper') {
       document.getElementById('course-header').scrollIntoView()
     }
     next()

@@ -21,51 +21,15 @@ Dependencies:
     <!-- mounts course-edit-wrapper & edit-course-nav -->
     <router-view
       :save-changes="changesToSave"
+      :show-toast="() => $bvToast.show('author-toast')"
       @saved="storeCourse"
     ></router-view>
 
-    <div
-      v-if="$route.name === 'course-detail-view'"
-      class="container"
-      :class="langIsAr ? 'text-right' : ''"
-    >
-      <course-block-edit
-        :name="name"
-        :course-path="coursePath"
-      ></course-block-edit>
-
-      <course-type-edit
-        :name="name"
-        :course-path="coursePath"
-        @changedType="storeCourse"
-      ></course-type-edit>
-
-      <course-block-new
-        :name="name"
-        :course-path="coursePath"
-      >
-      </course-block-new>
-
-      <course-nav-edit></course-nav-edit>
-
-      <course-rename @renamed="storeCourse"></course-rename>
-
-      <course-copy @success="storeCourse"></course-copy>
-
-      <course-category-change @changedCategory="storeCourse"></course-category-change>
-
-      <course-block-delete
-        :name="name"
-        :course-path="coursePath"
-      ></course-block-delete>
-
-      <course-delete :name="name"></course-delete>
-
-      <!--<course-stats></course-stats>-->
-
-      <course-preferences @settingsChanged="storeCourse"></course-preferences>
-      <course-feedback-download @success="$bvToast.show('author-toast')"></course-feedback-download>
-    </div>
+    <course-edit-tools
+      :name="name"
+      :course-path="coursePath"
+      @save="changesToSave = true"
+    ></course-edit-tools>
 
     <b-toast
       id="author-toast"
@@ -97,10 +61,12 @@ import {
   CourseFeedbackDownload
   // courseStats
 } from './'
+import CourseEditTools from '@/components/course/course-edit/course-edit-tools.vue'
 
 export default {
   name: 'CourseEdit',
-  components: { // not lazily loaded b/c visible first
+  components: {
+    CourseEditTools, // not lazily loaded b/c visible first
     CourseCategoryChange,
     CourseCopy,
     CourseDelete,

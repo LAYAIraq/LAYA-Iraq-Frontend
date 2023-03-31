@@ -1,15 +1,12 @@
 <!--
-Filename: course-edit-wrapper.vue
-Use: wrap components needed for course editing
-Creator: core
-Date: unknown
-Dependencies:
-  vuex,
-  @/mixins/locale.vue
+  Filename: course-content.vue
+  Use: wrap components needed for content editing
+  Creator: core
+  Since 1.0.0
 -->
 
 <template>
-  <div class="laya-la-lb-wrapper">
+  <div class="course-content">
     <div class="container">
       <div class="row">
         <div class="col">
@@ -74,11 +71,11 @@ Dependencies:
 <script>
 import { locale, routeProps } from '@/mixins'
 import { mapGetters } from 'vuex'
-import LayaUploadFileList from '@/plugins/misc/laya-upload-file-list/file-list'
+import LayaUploadFileList from '@/plugins/misc/laya-upload-file-list/file-list.vue'
 import { stripKey } from '@/misc/utils'
 
 export default {
-  name: 'CourseEditWrapper',
+  name: 'CourseContent',
 
   components: {
     LayaUploadFileList

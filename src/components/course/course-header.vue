@@ -1,4 +1,5 @@
 <!--
+  Filename: course-header.vue
   This component is used to display the header of the course detail page.
   It displays the course title, the breadcrumb and the title of the content
   to display.
@@ -36,7 +37,7 @@
           </li>
           <li :class="langIsAr? 'bci-ar': 'breadcrumb-item'">
             <router-link
-              :to="{ name: 'course-detail-view', params: { name: slugify(courseName) } }"
+              :to="{ name: 'course', params: { name: slugify(courseName) } }"
               class="text-dark"
             >
               {{ courseName }}
@@ -49,7 +50,7 @@
           >
             <router-link
               :to="{
-                name: 'course-detail-view',
+                name: 'course',
                 params: {
                   name: slugify(courseName),
                   coursePath: subchapters.slice(0, i + 1).join('/')
@@ -77,7 +78,7 @@ import { locale } from '@/mixins'
 import { slugify, unslugify } from '@/misc/course-structure-methods'
 
 export default {
-  name: 'CourseDetailHeader',
+  name: 'CourseHeader',
   mixins: [locale],
   props: {
     contentTitle: {

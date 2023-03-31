@@ -1,0 +1,85 @@
+<!--
+  Filename: course-edit-tools.vue
+  Use: wrap all course edit tools
+  Creator: cmc
+  Since: v1.3.0
+-->
+<template>
+  <div
+    class="container"
+    :class="langIsAr ? 'text-right' : ''"
+  >
+    <course-block-edit
+      :name="name"
+      :course-path="coursePath"
+    ></course-block-edit>
+
+    <course-type-edit
+      :name="name"
+      :course-path="coursePath"
+      @changedType="$emit('saveChanges')"
+    ></course-type-edit>
+
+    <course-block-new
+      :name="name"
+      :course-path="coursePath"
+    >
+    </course-block-new>
+
+    <course-nav-edit></course-nav-edit>
+
+    <course-rename @renamed="$emit('saveChanges')"></course-rename>
+
+    <course-copy @success="$emit('saveChanges')"></course-copy>
+
+    <course-category-change @changedCategory="$emit('saveChanges')"></course-category-change>
+
+    <course-block-delete
+      :name="name"
+      :course-path="coursePath"
+    ></course-block-delete>
+
+    <course-delete :name="name"></course-delete>
+
+    <!--<course-stats></course-stats>-->
+
+    <course-preferences @settingsChanged="$emit('saveChanges')"></course-preferences>
+
+    <course-feedback-download @success="$emit('showToast')"></course-feedback-download>
+
+  </div>
+</template>
+<script>
+import {
+  CourseFeedbackDownload,
+  CourseBlockNew,
+  CoursePreferences,
+  CourseBlockEdit,
+  CourseCategoryChange,
+  CourseNavEdit,
+  CourseBlockDelete,
+  CourseCopy,
+  CourseDelete,
+  CourseTypeEdit,
+  CourseRename,
+} from '@/components/course/course-edit'
+import { locale, routeProps } from '@/mixins'
+
+export default {
+  name: 'CourseEditTools',
+  components: {
+    CourseFeedbackDownload,
+    CourseBlockNew,
+    CoursePreferences,
+    CourseBlockEdit,
+    CourseCategoryChange,
+    CourseNavEdit,
+    CourseBlockDelete,
+    CourseCopy,
+    CourseDelete,
+    CourseTypeEdit,
+    CourseRename
+  },
+  mixins: [locale, routeProps]
+}
+</script>

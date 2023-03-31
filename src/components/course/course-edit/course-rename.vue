@@ -177,7 +177,7 @@ export default {
 
       renamed.then(() => {
         this.$router.replace({
-          name: 'course-detail-view',
+          name: 'course',
           params: { name: newName }
         })
         this.$emit('renamed')

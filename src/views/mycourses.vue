@@ -133,7 +133,7 @@ Dependencies:
 
                   <!-- course link -->
                   <router-link
-                    :to="{ name: 'course-detail-view', params: { id: data.item.name}}"
+                    :to="{ name: 'course', params: { id: data.item.name}}"
                     class="w-50"
                   >
                     <h4 class="m-0">
