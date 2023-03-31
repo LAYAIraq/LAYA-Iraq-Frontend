@@ -1,3 +1,9 @@
+<!--
+  Filename: course-nav-item.vue
+  Use: render a single item in the course navigation editor
+  Author: cmc
+  Since: v1.3.0
+-->
 <template>
   <div class="w-100 border rounded p-1">
     <!-- Item header -->
@@ -93,8 +99,8 @@
 </template>
 <script>
 import { locale } from '@/mixins'
-import CourseNavFollowSet from '@/views/course-nav-edit-tools/course-nav-follow-set.vue'
-import CourseNavPropertyEdit from '@/views/course-nav-edit-tools/course-nav-property-edit.vue'
+import CourseNavFollowSet from '@/components/course/course-nav/course-nav-follow-set.vue'
+import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
 import { mapGetters } from 'vuex'
 import { deepCopy } from '@/misc/utils'
 

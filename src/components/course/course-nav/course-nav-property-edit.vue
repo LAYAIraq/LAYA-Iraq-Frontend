@@ -1,3 +1,9 @@
+<!--
+  Filename: course-nav-property-edit.vue
+  Use: Editable property for course nav item
+  Author: cmc
+  Since: v1.3.0
+-->
 <template>
   <div class="property-edit">
     <div

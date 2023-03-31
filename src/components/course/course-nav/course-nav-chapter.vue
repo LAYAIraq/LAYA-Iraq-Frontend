@@ -1,3 +1,9 @@
+<!--
+  Filename: course-nav-chapter.vue
+  Use: This component is used to display a chapter in the course navigation editor
+  Author: cmc
+  Since: v1.3.0
+-->
 <template>
   <div class="chapter-item">
     <i
@@ -51,9 +57,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import Draggable from 'vuedraggable'
-import CourseNavChapter from '@/views/course-nav-edit-tools/course-nav-chapter.vue'
-import CourseNavItem from '@/views/course-nav-edit-tools/course-nav-item.vue'
-import CourseNavPropertyEdit from '@/views/course-nav-edit-tools/course-nav-property-edit.vue'
+import CourseNavItem from '@/components/course/course-nav/course-nav-item.vue'
+import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
 import { locale } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 import { courseChapterIdConvertToName, courseChapterNameConvertToId } from '@/misc/course-navigation-utils'
@@ -62,7 +67,6 @@ export default {
   name: 'CourseNavChapter',
   components: {
     Draggable,
-    CourseNavChapter,
     CourseNavPropertyEdit,
     CourseNavItem
   },
@@ -276,7 +280,7 @@ export default {
   padding: 0 0 0 .5em;
   min-height: 50px;
   min-width: 50px;
-  float: end;
+  float: inline-end;
   width: 100%;
 }
 .chapter-item {

@@ -44,7 +44,7 @@
 import { mapGetters } from 'vuex'
 import { courseChapterTransformToDraggable } from '@/misc/course-navigation-utils'
 import { locale } from '@/mixins'
-import { CourseNavChapter } from '@/views/course-nav-edit-tools'
+import CourseNavChapter from './course-nav-chapter.vue'
 export default {
   name: 'CourseNavigationEditor',
   components: {

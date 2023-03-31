@@ -1,3 +1,9 @@
+<!--
+  Filename: course-nav-follow-set.vue
+  Use: This component is used to display the follow set of a course nav item.
+  Author: cmc
+  Since: v1.3.0
+-->
 <template>
   <div class="d-block">
     <div v-if="item.name === 'laya-dialog'">
