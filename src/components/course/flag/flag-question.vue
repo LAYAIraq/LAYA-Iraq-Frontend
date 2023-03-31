@@ -1,3 +1,9 @@
+<!--
+  Filename: flag-question.vue
+  Use: Display flag question view
+  Author: cmc
+  Since: v1.1.0
+-->
 <template>
   <div class="set-flag">
     <div class="flag-title">
@@ -66,7 +72,7 @@
 <script>
 import { locale, tooltipIcon } from '@/mixins'
 import { mapGetters } from 'vuex'
-import './flag-styles.css'
+import '@/assets/styles/flag-styles.css'
 export default {
   name: 'FlagQuestion',
 

@@ -1,3 +1,9 @@
+<!--
+  Filename: flag.vue
+  Use: Display flag view
+  Author: cmc
+  Since: v1.1.0
+-->
 <template>
   <div class="flag-view">
     <div class="container">
@@ -21,11 +27,11 @@
 import { locale, storeHandler } from '@/mixins'
 import { mapGetters } from 'vuex'
 export default {
-  name: 'FlagView',
+  name: 'Flag',
 
   components: {
-    FlagQuestion: () => import('@/views/flag-views/flag-question'),
-    FlagAnswer: () => import('@/views/flag-views/flag-answer')
+    FlagQuestion: () => import('@/components/course/flag/flag-question.vue'),
+    FlagAnswer: () => import('@/components/course/flag/flag-answer.vue')
   },
 
   mixins: [

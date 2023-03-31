@@ -1,3 +1,9 @@
+<!--
+  Filename: flag-answer.vue
+  Use: Display flag answer view
+  Author: cmc
+  Since: v1.1.0
+-->
 <template>
   <div
     class="pick-up-flag"
