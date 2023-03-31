@@ -1,5 +1,5 @@
 <!--
-Filename: course-edit-content.vue
+Filename: course-block-edit.vue
 Use: Reroute to edit content block
 Creator: cmc
 Date: October 27, 2020

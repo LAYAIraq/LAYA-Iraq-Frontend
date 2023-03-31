@@ -1,6 +1,6 @@
 import 'regenerator-runtime/runtime'
 import { createLocalVue, mount } from '@vue/test-utils'
-import CourseRename from '@/views/course-edit-tools/course-rename.vue'
+import CourseRename from '@/components/course/course-edit/course-rename.vue'
 import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue'
 

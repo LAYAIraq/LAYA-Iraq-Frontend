@@ -6,7 +6,7 @@
   Dependencies: vuex
 -->
 <template>
-  <div id="laya-course-settings">
+  <div id="course-settings">
     <div class="row mt-5">
       <!-- booleans -->
       <div class="col-4 text-dark">
@@ -112,6 +112,7 @@ import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 
 export default {
+  name: 'CoursePreferences',
   mixins: [
     locale
   ],

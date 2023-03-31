@@ -96,7 +96,7 @@ import {
   CourseRename,
   CourseFeedbackDownload
   // courseStats
-} from '../../../views/course-edit-tools'
+} from './'
 
 export default {
   name: 'CourseEdit',

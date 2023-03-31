@@ -1,5 +1,5 @@
 <!--
-Filename: course-edit-type.vue
+Filename: course-type-edit.vue
 Use: edit type of current content block
 Author: cmc
 Date: October 27, 2020

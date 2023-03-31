@@ -1,5 +1,5 @@
 <!--
-Filename: course-new-block.vue
+Filename: course-block-new.vue
 Use: Create a new content block
 Author: cmc
 Date: October 27, 2020
@@ -129,7 +129,7 @@ export default {
      *
      * Last Updated: May 6, 2021
      *
-     * @param {obj} layaBlock $laya block object
+     * @param {object} layaBlock $laya block object
      */
     getCaption (layaBlock) {
       return this.i18n[layaBlock.name + '.caption']
@@ -142,7 +142,7 @@ export default {
      *
      * Last Updated: May 6, 2021
      *
-     * @param {obj} layaBlock $laya block object
+     * @param {object} layaBlock $laya block object
      */
     getName (layaBlock) {
       return this.i18n[layaBlock.name + '.name']
@@ -163,7 +163,7 @@ export default {
 }
 
 .far {
-  float: end;
+  float: inline-end;
 }
 
 </style>

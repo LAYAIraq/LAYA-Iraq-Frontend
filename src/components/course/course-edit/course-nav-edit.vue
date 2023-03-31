@@ -1,5 +1,5 @@
 <!--
-Filename: course-edit-nav.vue
+Filename: course-nav-edit.vue
 Use: Redirect to editing the course navigation
 Author: cmc
 Date: October 27, 2020
