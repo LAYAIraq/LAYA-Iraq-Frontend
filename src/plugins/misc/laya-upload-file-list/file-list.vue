@@ -303,9 +303,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { listSort, locale, mimeTypes, tooltipIcon } from '@/mixins'
+import { listSort, locale, files, tooltipIcon } from '@/mixins'
 import api from '@/backend-url'
-import fileSize from '@/misc/utils.js'
 
 export default {
   name: 'LayaUploadFileList',
@@ -317,7 +316,7 @@ export default {
   mixins: [
     listSort,
     locale,
-    mimeTypes,
+    files,
     tooltipIcon
   ],
 
@@ -433,7 +432,6 @@ export default {
   },
 
   methods: {
-    ...fileSize,
     /**
      * function upLoadFile: proceed a duplicate check,
      *  then upload the file to uploadUrl()

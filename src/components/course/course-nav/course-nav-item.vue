@@ -102,7 +102,7 @@ import { locale } from '@/mixins'
 import CourseNavFollowSet from '@/components/course/course-nav/course-nav-follow-set.vue'
 import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
 import { mapGetters } from 'vuex'
-import { deepCopy } from '@/misc/utils'
+import { deepCopy } from '@/mixins/general/helpers'
 
 export default {
   name: 'CourseNavItem',

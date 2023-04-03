@@ -2,8 +2,7 @@
  * Filename: font-options.ts
  * Use: Define selectable fonts and font sizes
  * Creator: cmc
- * Date: September 21, 2021
- * Dependencies: none
+ * Since: v1.1.0
  */
 export default [
   { value: 'arial', text: 'Arial' },

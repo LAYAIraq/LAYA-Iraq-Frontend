@@ -81,7 +81,7 @@ import { locale } from '@/mixins'
 // import http from 'axios'
 import CourseListDetails from '@/components/course/course-list/course-list-details.vue'
 
-import utils from '../../../misc/utils.js'
+import utils from '../../../mixins/general/helpers.ts'
 
 export default {
   name: 'CourseList',

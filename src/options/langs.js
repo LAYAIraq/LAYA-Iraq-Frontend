@@ -2,8 +2,7 @@
  * FIlename: langs.js
  * Use: Give language icons
  * Author: core
- * Date: unknown
- * Dependencies: none
+ * Since: v1.0.0
  */
 
 import de from 'language-icons/icons/de.svg'

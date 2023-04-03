@@ -462,7 +462,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
-import roles from '@/misc/roles'
+import roles from '@/options/roles'
 
 export default {
   name: 'AdminPanel',

@@ -90,7 +90,7 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import { locale, routeProps } from '@/mixins'
-import { stripKey } from '@/misc/utils'
+import { stripKey } from '@/mixins/general/helpers'
 
 export default {
   name: 'CourseBlockNew',

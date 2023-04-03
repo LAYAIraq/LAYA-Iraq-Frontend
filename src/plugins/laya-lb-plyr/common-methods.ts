@@ -6,7 +6,6 @@
  * Dependencies:
  */
 import { locale, tooltipIcon } from '@/mixins'
-import captionTypes from '@/misc/caption-types'
 
 export default {
   mixins: [
@@ -84,7 +83,12 @@ export default {
      * @returns {[string, string, string, string]}
      */
     captionTypes () {
-      return captionTypes
+      return [
+        'subtitles',
+        'captions',
+        'descriptions',
+        'chapters'
+      ]
     },
 
     /**

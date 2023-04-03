@@ -6,14 +6,14 @@
  */
 
 export default [
-  'authorNewSub',
+  'authorInquiry',
   'authorNewFeedback',
   'authorNewFlag',
-  'studentFlagInteraction',
-  'studentNewCourseMaterial',
+  'authorNewSub',
+  'editorAprovalRequired',
+  'editorAprovalVoteInitiated',
   'studentNewCourseByAuthor',
   'studentNewCourseByCategory',
-  'authorInquiry',
-  'editorAprovalRequired',
-  'editorAprovalVoteInitiated'
+  'studentNewCourseMaterial',
+  'studentNewFlagAnswer'
 ]

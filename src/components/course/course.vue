@@ -51,7 +51,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import utils from '@/misc/utils.js'
+import utils from '@/mixins/general/helpers.ts'
 import { locale, routeProps, storeHandler } from '@/mixins'
 import CourseHeader from '@/components/course/course-header.vue'
 

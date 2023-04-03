@@ -72,7 +72,7 @@
 import { locale, routeProps } from '@/mixins'
 import { mapGetters } from 'vuex'
 import LayaUploadFileList from '@/plugins/misc/laya-upload-file-list/file-list.vue'
-import { stripKey } from '@/misc/utils'
+import { stripKey } from '@/mixins/general/helpers'
 
 export default {
   name: 'CourseContent',

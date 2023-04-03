@@ -7,7 +7,7 @@
  */
 
 import http from 'axios'
-import { ids as supportedLangs } from '../../misc/langs.js'
+import { ids as supportedLangs } from '@/options/langs.js'
 
 export default {
   state: {

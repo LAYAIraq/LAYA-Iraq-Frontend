@@ -1,5 +1,5 @@
 /**
- * Filename: mime-types.ts
+ * Filename: files.ts
  * Use: Return Strings and Icon for MIME Types
  * Creator: cmc
  * Date: April 28, 2021
@@ -23,11 +23,11 @@ export default {
     types () {
       const types = {}
 
-      // filter i18n file for key containing 'mimeTypes'
+      // filter i18n file for key containing 'files'
       for (const key in locale[this.profileLang]) {
         if (Object.prototype.hasOwnProperty
           .call(locale[this.profileLang], key)) {
-          if (/mimeTypes/.test(key) === true) {
+          if (/files/.test(key) === true) {
             // add to types in scope
             types[key] = locale[this.profileLang][key]
           }
@@ -87,6 +87,27 @@ export default {
     },
 
     /**
+     * Function fileSize: verbalize file size
+     *
+     * Author: cmc
+     *
+     * Last Updated: April 1, 2021
+     * @param {number} size size of a file
+     * @returns a string making the size human-readable
+     */
+    fileSize (size) {
+      if (size > 1024 * 1024) {
+        const mbsize = Math.round(size / 1024 / 1024 * 10) / 10
+        return `${mbsize} MBytes`
+      } else if (size > 1024) {
+        const kbsize = Math.round(size / 1024 * 10) / 10
+        return `${kbsize} kBytes`
+      } else {
+        return `${size} Bytes`
+      }
+    },
+
+    /**
      * Function fileTypeString: return textual description of file type
      *
      * Author: cmc
@@ -128,11 +149,11 @@ export default {
         if (Object.prototype.hasOwnProperty.call(fileClasses, key)) {
           if (type.search(key) === 0) {
             // Found it
-            return this.types['mimeTypes.' + key]
+            return this.types['files.' + key]
           }
         }
       }
-      return this.types['mimeTypes.file']
+      return this.types['files.file']
     }
   }
 }

@@ -162,7 +162,7 @@ import Accordion from '@/components/helpers/accordion.vue'
 
 import http from 'axios'
 import { locale } from '@/mixins'
-import utils from '../../../misc/utils.js'
+import utils from '../../../mixins/general/helpers.ts'
 import be from '@/backend-url'
 
 export default {
