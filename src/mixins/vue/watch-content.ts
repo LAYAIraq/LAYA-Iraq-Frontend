@@ -2,8 +2,7 @@
  * Filename: watch-content.ts
  * Use: Add watcher for content to every view, thus updating when data changes
  * Creator: cmc
- * Last Updated: August 23, 2021
- * Dependencies: none
+ * Since: v1.1.0
  */
 
 import { mapGetters } from 'vuex'

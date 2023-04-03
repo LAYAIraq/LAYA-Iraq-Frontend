@@ -48,8 +48,8 @@ Dependencies: @/i18n/plugins/misc/laya-course-table
               <i v-show="course.endDate" class="fas fa-stopwatch"></i>
               </h4>
               <span v-show="course.endDate">
-              {{ shortDate(data.item.startDate) }} &mdash;
-              {{ shortDate(data.item.endDate) }}
+              {{ dateShort(data.item.startDate) }} &mdash;
+              {{ dateShort(data.item.endDate) }}
               </span>
             -->
           </div>

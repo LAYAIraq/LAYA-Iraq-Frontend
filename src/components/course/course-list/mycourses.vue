@@ -120,8 +120,8 @@
                       </span>
                     </h3>
                     <span v-if="data.item.endDate">
-                      {{ shortDate(data.item.startDate) }} &mdash;
-                      {{ shortDate(data.item.endDate) }}
+                      {{ dateShort(data.item.startDate) }} &mdash;
+                      {{ dateShort(data.item.endDate) }}
                     </span>
                   </div>
 
@@ -144,7 +144,7 @@
 
                   <!-- right meta infos -->
                   <div class="w-25 text-right">
-                    <span>{{ locDate(data.item.courseId) }}</span>
+                    <span>{{ dateLocalized(data.item.courseId) }}</span>
                   </div>
                 </div>
               </div>

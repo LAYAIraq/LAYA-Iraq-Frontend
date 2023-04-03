@@ -418,7 +418,7 @@ export default {
      */
     timeAndDate (timestamp) {
       const time = new Date(timestamp)
-      return `${this.locDate(time)}, ${this.locTime(time)}`
+      return `${this.dateLocalized(time)}, ${this.timeLocalized(time)}`
     },
 
     /**

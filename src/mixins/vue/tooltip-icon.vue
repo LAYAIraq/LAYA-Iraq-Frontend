@@ -2,8 +2,7 @@
   Filename: tooltip-icon.vue
   Use: define helper variables for component tooltips
   Creator: cmc
-  Date: April 28, 2021
-  Dependencies: None
+  Since: v1.1.0
 -->
 
 <script>
@@ -38,7 +37,7 @@ export default {
 <style scoped>
 
 #questionmark {
-  float: end;
+  float: inline-end;
   cursor: pointer;
 }
 

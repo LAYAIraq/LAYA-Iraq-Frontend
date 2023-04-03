@@ -394,7 +394,7 @@ export default {
      * @param time timestamp
      */
     noteTime (time) {
-      return `${this.locDate(time)}, ${this.locTime(time)}`
+      return `${this.dateLocalized(time)}, ${this.timeLocalized(time)}`
     },
 
     /**

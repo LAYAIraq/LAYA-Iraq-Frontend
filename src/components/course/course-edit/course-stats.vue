@@ -133,7 +133,7 @@ export default {
       }
 
       console.log(`time spent: ${timeSpent} by ${finished} users who finished`)
-      const avgTime = (finished !== 0) ? this.verbalizeTime(timeSpent / finished) : this.verbalizeTime(0)
+      const avgTime = (finished !== 0) ? this.timeVerbalized(timeSpent / finished) : this.timeVerbalized(0)
 
       console.log(`${notFinished} users didn't finish`)
       const lossCnt = Array(ctx.course.content.length).fill(0)
