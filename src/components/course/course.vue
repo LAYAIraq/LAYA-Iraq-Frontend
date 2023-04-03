@@ -1,20 +1,14 @@
 <!--
-Filename: course-detail.vue
-Use: Show Course Content
-Creator: core
-Date: unknown
-Dependencies:
-  vuex,
-  @/mixins/locale.vue,
-  @/misc/utils.js,
-  @/components/scroll-to-top.vue
-  @/views/course-edit.vue
+  Filename: course.vue
+  Use: Show Course Content
+  Creator: core
+  Since: v1.0.0
 -->
 
 <template>
   <div
     v-if="!storeBusy"
-    class="course-detail-view"
+    class="course"
   >
     <CourseHeader
       :content-title="contentToDisplay.title"
@@ -75,13 +69,6 @@ export default {
     routeProps,
     storeHandler
   ],
-
-  beforeRouteUpdate (to, from, next) {
-    if (to.name === 'course' && from.name !== 'edit-course-wrapper') {
-      document.getElementById('course-header').scrollIntoView()
-    }
-    next()
-  },
 
   computed: {
     ...mapGetters([
@@ -218,6 +205,17 @@ export default {
   beforeDestroy () {
     /* if (this.enrollment.length > 0) this.updateEnrollment()
     this.saveFlags() */
+  },
+
+  beforeRouteUpdate (to, from, next) {
+    if (
+      to.name === 'course' &&
+      (from.name !== 'course-content' &&
+        from.name !== 'course-nav')
+    ) {
+      document.getElementById('course-header').scrollIntoView()
+    }
+    next()
   },
 
   methods: {

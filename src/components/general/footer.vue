@@ -35,11 +35,11 @@ Dependencies: @/mixins/locale.vue
 
           <div class="row">
             <div class="col">
-              <router-link :to="{ name: 'imprint-view' }">
+              <router-link :to="{ name: 'imprint' }">
                 <u class="text-dark">{{ y18n('imprint') }}</u>
               </router-link>
               <span>/</span>
-              <router-link :to="{ name: 'privacy-view' }">
+              <router-link :to="{ name: 'privacy' }">
                 <u class="text-dark">{{ y18n('footer.privacy') }}</u>
               </router-link>
             </div>

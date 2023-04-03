@@ -29,7 +29,7 @@
         <ol class="breadcrumb bg-light">
           <li :class="langIsAr? 'bci-ar': 'breadcrumb-item'">
             <router-link
-              :to="{ name: 'courses-view' }"
+              :to="{ name: 'course-list' }"
               class="text-dark"
             >
               <i class="fas fa-house-user"></i> {{ y18n('courses.title') }}

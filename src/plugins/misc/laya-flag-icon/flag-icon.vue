@@ -14,7 +14,7 @@
         tabindex="0"
       >
         <router-link
-          :to="{ name: 'flag-view', params: { id: refData.id } }"
+          :to="{ name: 'flag', params: { id: refData.id } }"
           class="flag-link"
         >
           <i class="fas fa-flag"></i>

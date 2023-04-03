@@ -5,7 +5,7 @@
   Since: v1.1.0
 -->
 <template>
-  <div class="flag-view">
+  <div class="flag">
     <div class="container">
       <flag-question v-if="!flag"></flag-question>
       <flag-answer v-else></flag-answer>

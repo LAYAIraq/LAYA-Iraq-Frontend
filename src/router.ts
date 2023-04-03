@@ -15,8 +15,8 @@ import Router from 'vue-router'
 /* dynamic imports for lazy loading */
 const AdminPanel = () => import('@/components/user-views/admin-panel.vue')
 const Course = () => import('./components/course/course.vue')
-const CourseEditWrapper = () => import('./components/course/course-edit/course-content.vue')
-const CourseNavEdit = () => import('./components/course/course-nav/course-nav.vue')
+const CourseContent = () => import('./components/course/course-edit/course-content.vue')
+const CourseNav = () => import('./components/course/course-nav/course-nav.vue')
 const CourseList = () => import('./components/course/course-list/course-list.vue')
 const EditorPanel = () => import('@/components/user-views/editor-panel.vue')
 const Flag = () => import('./components/course/flag/flag.vue')
@@ -92,20 +92,20 @@ export default new Router({
       children: [
         {
           path: 'edit',
-          name: 'edit-course-wrapper',
-          component: CourseEditWrapper,
+          name: 'course-content',
+          component: CourseContent,
           props: true
         },
         {
           path: 'new/:type',
-          name: 'new-course-content-view',
-          component: CourseEditWrapper,
+          name: 'course-content',
+          component: CourseContent,
           props: true
         },
         {
           path: 'edit-nav',
-          name: 'course-nav-edit-view',
-          component: CourseNavEdit
+          name: 'course-nav',
+          component: CourseNav
         }
       ]
     },

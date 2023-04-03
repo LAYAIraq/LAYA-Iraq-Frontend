@@ -26,6 +26,7 @@ Dependencies:
     ></router-view>
 
     <course-edit-tools
+      v-if="$route.name==='course'"
       :name="name"
       :course-path="coursePath"
       @save="changesToSave = true"

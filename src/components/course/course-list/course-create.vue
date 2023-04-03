@@ -1,16 +1,12 @@
 <!--
-Filename: course-create.vue
-Use: This file implements the form to add a new course
-Creator: core
-Date: unknown
-Dependencies:
-  axios,
-  vuex,
-  @/i18n/course-update
+  Filename: course-create.vue
+  Use: This file implements the form to add a new course
+  Creator: core
+  Since: v1.0.0
 -->
 
 <template>
-  <div class="laya-course-new-view">
+  <div class="course-create">
     <h3 :class="langIsAr? 'text-right' : 'text-left'">
       {{ y18n('courseCreate.createCourse') }}
     </h3>

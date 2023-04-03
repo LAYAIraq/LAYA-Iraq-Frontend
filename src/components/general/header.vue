@@ -148,7 +148,7 @@ Dependencies:
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-import { icons } from '@/misc/langs.js'
+import { icons } from '@/options/langs.js'
 import { locale } from '@/mixins'
 
 export default {
