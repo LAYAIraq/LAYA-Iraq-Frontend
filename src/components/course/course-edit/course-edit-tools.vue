@@ -46,7 +46,6 @@
     <course-preferences @settingsChanged="$emit('saveChanges')"></course-preferences>
 
     <course-feedback-download @success="$emit('showToast')"></course-feedback-download>
-
   </div>
 </template>
 <script>
@@ -61,9 +60,9 @@ import {
   CourseCopy,
   CourseDelete,
   CourseTypeEdit,
-  CourseRename,
+  CourseRename
 } from '@/components/course/course-edit'
-import { locale, routeProps } from '@/mixins'
+import { locale, routes } from '@/mixins'
 
 export default {
   name: 'CourseEditTools',
@@ -80,6 +79,6 @@ export default {
     CourseTypeEdit,
     CourseRename
   },
-  mixins: [locale, routeProps]
+  mixins: [locale, routes]
 }
 </script>

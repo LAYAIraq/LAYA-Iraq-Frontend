@@ -21,7 +21,7 @@
             type="button"
             class="btn btn-info"
             :class="langIsAr? 'float-left' : 'float-right'"
-            @click="getNewNotifications"
+            @click="notificationsFetch"
           >
             <i class="fas fa-download"></i>
             {{ y18n('notifications.getNew') }}
@@ -49,7 +49,7 @@
             class="btn btn-info ml-1"
             :class="langIsAr? 'float-left' : 'float-right'"
             :disabled="!unreadMessages"
-            @click="markAllAsRead"
+            @click="notificationsMarkRead"
           >
             <i class="fas fa-eye"></i>
             {{ y18n('markAllAsRead') }}

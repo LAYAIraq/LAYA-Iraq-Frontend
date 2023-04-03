@@ -52,14 +52,14 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale, routeProps } from '@/mixins'
+import { locale, routes } from '@/mixins'
 
 export default {
   name: 'CourseTypeEdit',
 
   mixins: [
     locale,
-    routeProps
+    routes
   ],
 
   data () {

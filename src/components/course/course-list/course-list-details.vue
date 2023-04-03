@@ -327,7 +327,7 @@ export default {
       this.buttonAction = this.isEnrolled(course)
         ? () => {
             if (course.name !== this.course.name) {
-              this.fetchCourse(course.name)
+              this.courseFetch(course.name)
             }
             this.$router.push({ name: 'course', path: '/courses', params: { name: slugify(course.name) } })
           }

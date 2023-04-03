@@ -1,17 +1,12 @@
-// noinspection HtmlUnknownTarget
-
 /**
   Filename: locale.ts
   Use: Expose i18n local to components
   Creator: cmc
-  Date: May 3, 2021
-  Dependencies:
-    vuex,
-    @/i18n
+  Since: v1.1.0
 */
 
 import { mapGetters } from 'vuex'
-import * as i18n from '../assets/i18n'
+import * as i18n from '../../assets/i18n'
 export default {
   computed: {
     ...mapGetters(['profileLang']),

@@ -60,14 +60,14 @@ export default {
     courseFlags: {
       deep: true,
       handler () {
-        // this.$store.dispatch('updateFlags')
+        // this.$store.dispatch('flagsUpdate')
         this.flag = this.$store.getters.singleFlag(this.$attrs.id)
       }
     }
   },
 
   created () {
-    if (!this.courseId) this.fetchCourse()
+    if (!this.courseId) this.courseFetch()
     this.flag = this.$store.getters.singleFlag(this.$attrs.id)
   }
 }

@@ -1,3 +1,9 @@
+/**
+ * Filename: password.ts
+ * Use: Set passwordOk boolean and return passwordSet and passwordRepeat
+ * Creator: cmc
+ * Since: v1.1.0
+ */
 import { mapGetters } from 'vuex'
 export default {
   data () {

@@ -46,45 +46,17 @@ Dependencies:
 </template>
 
 <script>
-import { locale, routeProps } from '@/mixins'
-import {
-  CourseCategoryChange,
-  CourseCopy,
-  CourseDelete,
-  CourseBlockDelete,
-  CourseBlockEdit,
-  CourseEditHeader,
-  CourseNavEdit,
-  CourseTypeEdit,
-  CourseBlockNew,
-  CoursePreferences,
-  CourseRename,
-  CourseFeedbackDownload
-  // courseStats
-} from './'
+import { locale, routes } from '@/mixins'
 import CourseEditTools from '@/components/course/course-edit/course-edit-tools.vue'
 
 export default {
   name: 'CourseEdit',
   components: {
-    CourseEditTools, // not lazily loaded b/c visible first
-    CourseCategoryChange,
-    CourseCopy,
-    CourseDelete,
-    CourseBlockDelete,
-    CourseBlockEdit,
-    CourseEditHeader,
-    CourseNavEdit,
-    CourseTypeEdit,
-    CourseBlockNew,
-    CoursePreferences,
-    CourseRename,
-    CourseFeedbackDownload
-    // courseStats
+    CourseEditTools
   },
   mixins: [
     locale,
-    routeProps
+    routes
   ],
 
   data () {

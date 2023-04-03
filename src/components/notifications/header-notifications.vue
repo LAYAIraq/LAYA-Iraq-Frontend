@@ -54,7 +54,7 @@
       <b-button
         class="w-100"
         variant="info"
-        @click="markAllAsRead"
+        @click="notificationsMarkRead"
       >
         {{ y18n('markAllAsRead') }}
       </b-button>
@@ -63,7 +63,7 @@
     <b-dropdown-item>
       <b-button
         class="w-100"
-        @click="getNewNotifications"
+        @click="notificationsFetch"
       >
         {{ y18n('notifications.getNew') }}
       </b-button>

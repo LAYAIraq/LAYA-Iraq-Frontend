@@ -302,7 +302,7 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale, routeProps, tooltipIcon } from '@/mixins'
+import { locale, routes, tooltipIcon } from '@/mixins'
 import commonMethods from './choices-common-methods'
 
 export default {
@@ -311,7 +311,7 @@ export default {
   mixins: [
     commonMethods,
     locale,
-    routeProps,
+    routes,
     tooltipIcon
   ],
 

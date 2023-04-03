@@ -324,7 +324,7 @@ Last Updated: May 04, 2022
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale, routeProps, tooltipIcon } from '@/mixins'
+import { locale, routes, tooltipIcon } from '@/mixins'
 import commonMethods from './common-methods'
 
 export default {
@@ -333,7 +333,7 @@ export default {
   mixins: [
     locale,
     commonMethods,
-    routeProps,
+    routes,
     tooltipIcon
   ],
 

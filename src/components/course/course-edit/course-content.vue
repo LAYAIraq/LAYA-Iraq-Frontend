@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { locale, routeProps } from '@/mixins'
+import { locale, routes } from '@/mixins'
 import { mapGetters } from 'vuex'
 import LayaUploadFileList from '@/plugins/misc/laya-upload-file-list/file-list.vue'
 import { stripKey } from '@/mixins/general/helpers'
@@ -83,7 +83,7 @@ export default {
 
   mixins: [
     locale,
-    routeProps
+    routes
   ],
 
   props: {

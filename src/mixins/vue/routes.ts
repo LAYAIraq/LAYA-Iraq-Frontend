@@ -1,9 +1,8 @@
 /**
- * Filename: route-props.ts
+ * Filename: routes.ts
  * Use: inject properties for route dependent props
  * Creator: cmc
- * Date: February 8, 2022
- * Dependencies: none
+ * Since: v1.1.0
  */
 import { mapGetters } from 'vuex'
 

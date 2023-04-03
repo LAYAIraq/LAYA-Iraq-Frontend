@@ -89,7 +89,7 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale, routeProps } from '@/mixins'
+import { locale, routes } from '@/mixins'
 import { stripKey } from '@/mixins/general/helpers'
 
 export default {
@@ -97,7 +97,7 @@ export default {
 
   mixins: [
     locale,
-    routeProps
+    routes
   ],
 
   computed: {

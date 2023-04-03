@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { locale, pwdProps } from '@/mixins'
+import { locale, password } from '@/mixins'
 import PasswordInput from '@/components/helpers/password-input.vue'
 
 export default {
@@ -59,7 +59,7 @@ export default {
   },
   mixins: [
     locale,
-    pwdProps
+    password
   ],
   data () {
     return {

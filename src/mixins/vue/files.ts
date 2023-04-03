@@ -2,13 +2,11 @@
  * Filename: files.ts
  * Use: Return Strings and Icon for MIME Types
  * Creator: cmc
- * Date: April 28, 2021
- * Dependencies:
- *  vuex
+ * Since: v1.1.0
  */
 
 import { mapGetters } from 'vuex'
-import * as locale from '../assets/i18n'
+import * as locale from '@/assets/i18n'
 export default {
   computed: {
     ...mapGetters(['profileLang']),

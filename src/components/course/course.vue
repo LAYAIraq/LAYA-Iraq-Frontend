@@ -52,7 +52,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import utils from '@/mixins/general/helpers.ts'
-import { locale, routeProps, storeHandler } from '@/mixins'
+import { locale, routes, storeHandler } from '@/mixins'
 import CourseHeader from '@/components/course/course-header.vue'
 
 export default {
@@ -66,9 +66,20 @@ export default {
 
   mixins: [
     locale,
-    routeProps,
+    routes,
     storeHandler
   ],
+
+  beforeRouteUpdate (to, from, next) {
+    if (
+      to.name === 'course' &&
+      (from.name !== 'course-content' &&
+        from.name !== 'course-nav')
+    ) {
+      document.getElementById('course-header').scrollIntoView()
+    }
+    next()
+  },
 
   computed: {
     ...mapGetters([
@@ -185,8 +196,8 @@ export default {
 
   created () {
     this.getCourse()
-    this.fetchEnrollment()
-    // this.fetchFlags()
+    this.enrollmentFetch()
+    // this.flagsFetch()
     // this.fetchCourseStats()
   },
 
@@ -203,19 +214,8 @@ export default {
   },
 
   beforeDestroy () {
-    /* if (this.enrollment.length > 0) this.updateEnrollment()
+    /* if (this.enrollment.length > 0) this.enrollmentUpdate()
     this.saveFlags() */
-  },
-
-  beforeRouteUpdate (to, from, next) {
-    if (
-      to.name === 'course' &&
-      (from.name !== 'course-content' &&
-        from.name !== 'course-nav')
-    ) {
-      document.getElementById('course-header').scrollIntoView()
-    }
-    next()
   },
 
   methods: {
@@ -235,7 +235,7 @@ export default {
         Object.keys(this.course).length === 0 // course in store has no properties
       ) {
         console.log('Fetching Course...')
-        this.fetchCourse(this.name)
+        this.courseFetch(this.name)
       }
       window.scrollTo(0, 0)
     },

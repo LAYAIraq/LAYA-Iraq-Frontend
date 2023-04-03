@@ -31,7 +31,7 @@ Dependencies:
 </template>
 
 <script>
-import { locale, routeProps } from '@/mixins'
+import { locale, routes } from '@/mixins'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -39,7 +39,7 @@ export default {
 
   mixins: [
     locale,
-    routeProps
+    routes
   ],
 
   computed: {

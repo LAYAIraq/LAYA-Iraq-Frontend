@@ -237,7 +237,7 @@ Dependencies:
 </template>
 
 <script>
-import { locale, routeProps, tooltipIcon } from '@/mixins'
+import { locale, routes, tooltipIcon } from '@/mixins'
 import { mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -247,7 +247,7 @@ export default {
   mixins: [
     locale,
     tooltipIcon,
-    routeProps
+    routes
   ],
 
   data () {

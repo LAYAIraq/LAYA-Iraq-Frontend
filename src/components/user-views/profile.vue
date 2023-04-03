@@ -437,7 +437,7 @@
 </template>
 
 <script>
-import { locale, pwdProps } from '@/mixins'
+import { locale, password } from '@/mixins'
 import api from '@/backend-url'
 import PasswordInput from '@/components/helpers/password-input.vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
@@ -455,7 +455,7 @@ export default {
 
   mixins: [
     locale,
-    pwdProps
+    password
   ],
 
   data () {
