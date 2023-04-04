@@ -21,15 +21,9 @@
           <!-- editing view -->
           <div v-show="!preview">
             <component
-              :is="comps.new"
-              v-if="!editContent"
-              ref="new"
-              :course-path="coursePath"
-            ></component>
-            <component
               :is="comps.edit"
-              v-else
               ref="edit"
+              :edit="editContent"
               :course-path="coursePath"
             ></component>
           </div>
@@ -153,10 +147,9 @@ export default {
      */
     stepData () {
       const input = {}
-      const data = this.editContent ? this.$refs.edit.$data : this.$refs.new.$data
-      for (const prop in data) {
+      for (const prop in this.$refs.edit.$data) {
         if (!/^[$_]/.test(prop)) {
-          input[prop] = data[prop]
+          input[prop] = this.$refs.edit.$data[prop]
         }
       }
       return stripKey('tooltipOn', input)

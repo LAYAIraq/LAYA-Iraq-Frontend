@@ -190,7 +190,7 @@ Dependencies:
               type="button"
               class="btn btn-danger btn-sm"
               :aria-label="y18n('deleteField')"
-              @click="_delCategory(i)"
+              @click="_itemDelete(categories, i)"
             >
               <i class="fas fa-times"></i>
             </button>
@@ -227,7 +227,7 @@ Dependencies:
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            @click="_addCategory"
+            @click="_itemAdd(categories)"
           >
             <i class="fas fa-plus"></i>
             {{ y18n('layaLaDragDrop.catAdd') }}
@@ -289,7 +289,7 @@ Dependencies:
               type="button"
               class="btn btn-danger btn-sm"
               :aria-label="y18n('deleteField')"
-              @click="_delItem(i)"
+              @click="_itemDelete(items, i)"
             >
               <i class="fas fa-times"></i>
             </button>
@@ -324,7 +324,7 @@ Dependencies:
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            @click="_addItem(y18n('layaLaScmc.edit.sampleOption'))"
+            @click="_itemAdd(items, newItem())"
           >
             <i class="fas fa-plus"></i>
             {{ y18n('itemAdd') }}
@@ -336,25 +336,34 @@ Dependencies:
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid'
 import { mapGetters } from 'vuex'
+import { deepCopy } from '@/mixins/general/helpers'
 import { locale, routes, tooltipIcon } from '@/mixins'
-import commonMethods from './common-methods'
+import { array } from '@/mixins'
 
 export default {
-  name: 'LayaLaDragDropEdit',
+  name: 'DragDropEdit',
 
   mixins: [
-    commonMethods,
+    array,
     locale,
     routes,
     tooltipIcon
   ],
 
+  props: {
+    edit: {
+      type: Boolean,
+      required: true
+    }
+  },
+
   data () {
     return {
       title: {},
       task: {},
-      taskAudio: '',
+      taskAudio: {},
       items: [],
       categories: []
     }
@@ -365,10 +374,51 @@ export default {
   },
 
   created () {
-    this.fetchData()
+    if (this.edit) {
+      this.fetchData()
+    } else {
+      this.fillForm()
+    }
   },
 
   methods: {
+    /**
+     * Function fillForm: fill form with example names in locale
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 12, 2021
+     */
+    fillForm () {
+      // fill item and category props with localized tokens
+      if (this.categories.length === 0) {
+        const tmpItem = {
+          label: this.y18n('layaLaDragDrop.answer') + ' 1',
+          simple: 'simple lang alternative',
+          category: -1,
+          flagged: false,
+          id: uuidv4()
+        }
+        this.items.push(tmpItem)
+
+        for (let i = 1; i < 3; i++) {
+          this.categories.push({
+            text: this.y18n('cat') + ' ' + i,
+            simple: 'simple language alternative'
+          })
+        }
+      }
+      this.title = {
+        text: '',
+        flagged: false,
+        id: uuidv4()
+      }
+      this.task = {
+        text: '',
+        flagged: false,
+        id: uuidv4()
+      }
+    },
     /**
      * Function fetchData(): fetch data from vuex and make data property
      *
@@ -377,12 +427,27 @@ export default {
      * Last Updated: March 12, 2021
      */
     fetchData () {
-      const preData = JSON.parse(JSON.stringify(this.courseContent[this.pathId]))
+      const preData = deepCopy(this.courseContent[this.pathId])
       this.title = preData.title
       this.task = preData.task
       this.taskAudio = preData.taskAudio
       this.items = preData.items
       this.categories = preData.categories
+    },
+    /**
+     * @function create a new object for items
+     * @author cmc
+     * @since v1.3.0
+     * @return {*} new item object
+     */
+    newItem () {
+      return {
+        label: this.y18n('layaLaScmc.edit.sampleOption'),
+        simple: 'simple lang alternative',
+        category: -1,
+        flagged: false,
+        id: uuidv4()
+      }
     }
   }
 }

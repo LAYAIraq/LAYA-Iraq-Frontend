@@ -1,6 +1,7 @@
+export { default as array } from './vue/array'
+export { default as files } from './vue/files'
 export { default as listSort } from './vue/list-sort'
 export { default as locale } from './vue/locale'
-export { default as files } from './vue/files'
 export { default as password } from './vue/password'
 export { default as routes } from './vue/routes'
 export { default as storeHandler } from './vue/store-handler'
