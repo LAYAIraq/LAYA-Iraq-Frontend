@@ -1,3 +1,9 @@
+<!--
+  Filename: upload-avatar.vue
+  Use: Upload and crop avatar
+  Author: cmc
+  Since: v1.1.0
+-->
 <template>
   <div>
     <div v-if="type === 'avatar'">
@@ -104,11 +110,11 @@
 import FileUpload from 'vue-upload-component'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.min.css'
-import api from '../../../backend-url.ts'
+import api from '@/backend-url.ts'
 import { locale } from '@/mixins'
 
 export default {
-  name: 'LayaUploadAvatar',
+  name: 'UploadAvatar',
 
   components: {
     FileUpload

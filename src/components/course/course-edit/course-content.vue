@@ -61,7 +61,7 @@
           </div>
 
           <hr>
-          <laya-upload-file-list v-if="!preview"></laya-upload-file-list>
+          <course-files v-if="!preview"></course-files>
         </div>
       </div>
     </div>
@@ -71,14 +71,14 @@
 <script>
 import { locale, routes } from '@/mixins'
 import { mapGetters } from 'vuex'
-import LayaUploadFileList from '@/plugins/misc/laya-upload-file-list/file-list.vue'
+import CourseFiles from '@/components/course/course-edit/course-files.vue'
 import { stripKey } from '@/mixins/general/helpers'
 
 export default {
   name: 'CourseContent',
 
   components: {
-    LayaUploadFileList
+    CourseFiles
   },
 
   mixins: [
