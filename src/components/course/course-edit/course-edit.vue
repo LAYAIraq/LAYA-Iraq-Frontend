@@ -47,11 +47,13 @@ Dependencies:
 
 <script>
 import { locale, routes } from '@/mixins'
+import CourseEditHeader from '@/components/course/course-edit/course-edit-header.vue'
 import CourseEditTools from '@/components/course/course-edit/course-edit-tools.vue'
 
 export default {
   name: 'CourseEdit',
   components: {
+    CourseEditHeader,
     CourseEditTools
   },
   mixins: [

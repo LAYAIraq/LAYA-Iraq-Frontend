@@ -20,7 +20,7 @@ export default {
       const courseName = name || this.$route.params.name // use argument if given, otherwise use router params
       this.$store.dispatch('fetchCourse', courseName)
         .then(() => {
-          this.fetchEnrollment()
+          this.enrollmentFetch()
           this.$store.commit('unsetCourseUpdated')
           document.title = `LAYA | ${this.$store.state.edit.course.name}`
         })
