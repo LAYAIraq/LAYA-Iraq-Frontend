@@ -17,12 +17,12 @@ Dependencies:
       class="flaggable row"
     >
       <h4> {{ title.text }}</h4>
-      <laya-flag-icon
+      <flag-icon
         v-if="!viewData"
         :ref-data="title"
 
         @flagged="title.flagged = true"
-      ></laya-flag-icon>
+      ></flag-icon>
     </div>
 
     <video
@@ -63,10 +63,12 @@ import { mapGetters } from 'vuex'
 import 'ableplayer/build/ableplayer.min.css' // neccessary, otherwise ableplayer is butchered
 import { locale, viewPluginProps, watchContent } from '@/mixins'
 import '@/assets/styles/flaggables.css'
+import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
 export default {
 
   name: 'LayaAbleplayer',
+  components: { FlagIcon },
 
   mixins: [
     locale,

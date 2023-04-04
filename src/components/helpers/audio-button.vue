@@ -1,13 +1,12 @@
 <!--
-Filename: view.vue
-Use: Show button to play audio
-Creator: core
-Date: unknown
-Dependencies: none
+  Filename: audio-button.vue
+  Use: Show button to play audio
+  Creator: core
+  Since: v1.0.0
 -->
 
 <template>
-  <span class="laya-audio-inline">
+  <span class="audio-button">
     <button
       type="button"
       class="btn btn-outline-info btn-sm"
@@ -28,7 +27,7 @@ Dependencies: none
 
 <script>
 export default {
-  name: 'LayaAudioInline',
+  name: 'AudioButton',
   props: {
     src: {
       type: String,
@@ -60,6 +59,7 @@ export default {
     }
   }
 }
+
 </script>
 
 <style>

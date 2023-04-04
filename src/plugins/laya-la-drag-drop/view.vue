@@ -17,19 +17,19 @@ Dependencies:
       <div class="col">
         <h2>
           {{ courseSimple? title.simple : title.text }}
-          <laya-audio-inline
+          <audio-button
             v-if="taskAudioExists"
             :src="courseSimple?
               taskAudio.simple :
               taskAudio.text"
-          ></laya-audio-inline>
+          ></audio-button>
         </h2>
       </div>
-      <laya-flag-icon
+      <flag-icon
         v-if="!viewData"
         :ref-data="title"
         @flagged="title.flagged = true"
-      ></laya-flag-icon>
+      ></flag-icon>
     </div>
 
     <div
@@ -39,12 +39,12 @@ Dependencies:
       <div class="col">
         <p>{{ courseSimple? task.simple : task.text }}</p>
       </div>
-      <laya-flag-icon
+      <flag-icon
         v-if="!viewData"
         :ref-data="task"
 
         @flagged="task.flagged = true"
-      ></laya-flag-icon>
+      ></flag-icon>
     </div>
     <hr>
 
@@ -88,12 +88,12 @@ Dependencies:
             :aria-valuetext="courseSimple? categories[solution[i]].simple: categories[solution[i]].text"
             :aria-label="y18n('layaLaDragDrop.label.slider')"
           >
-          <laya-flag-icon
+          <flag-icon
             v-if="!viewData"
             :ref-data="item"
             :interactive="true"
             @flagged="item.flagged = true"
-          ></laya-flag-icon>
+          ></flag-icon>
         </div>
       </div>
     </div>
@@ -140,9 +140,12 @@ Dependencies:
 import { mapGetters } from 'vuex'
 import { locale, viewPluginProps } from '@/mixins'
 import '@/assets/styles/flaggables.css'
+import AudioButton from '@/components/helpers/audio-button.vue'
+import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
 export default {
   name: 'LayaQuizDragDrop',
+  components: { AudioButton, FlagIcon },
 
   mixins: [
     locale,

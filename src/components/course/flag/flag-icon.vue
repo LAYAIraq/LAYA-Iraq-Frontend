@@ -1,6 +1,12 @@
+<!--
+  File: flag-icon.vue
+  Use: Render Flag Icon
+  Author: cmc
+  Since: v1.1.0
+-->
 <template>
   <div
-    class="laya-flag-icon"
+    class="flag-container"
     :class="interactive ? 'interactive' : ''"
   >
     <div class="flag-interface">
@@ -25,16 +31,13 @@
 </template>
 
 <script>
-// import http from 'axios'
-// import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 
 export default {
-  name: 'LayaFlagIcon',
+  name: 'FlagIcon',
 
   mixins: [
     locale
-    // time
   ],
 
   props: {
@@ -51,7 +54,7 @@ export default {
 </script>
 
 <style scoped>
-  .laya-flag-icon {
+  .flag-container {
     position: absolute;
     box-sizing: border-box;
     top:0;
@@ -68,14 +71,14 @@ export default {
     z-index: -1;
   }
 
-  .laya-flag-icon:hover {
+  .flag-container:hover {
     background-color: rgba(108, 117, 125, 0.25);
     border-radius: 5px;
     width: 100%;
     height: 100%;
   }
 
-  .laya-flag-icon:hover .flag-icon {
+  .flag-container:hover .flag-icon {
     margin-left: calc(100% - 25px);
     display: block !important;
   }

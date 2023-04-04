@@ -17,11 +17,11 @@ Dependencies:
       class="flaggable row"
     >
       <h2>{{ courseSimple? title.simple : title.text }}</h2>
-      <laya-flag-icon
+      <flag-icon
         v-if="!viewData"
         :ref-data="title"
         @flagged="title.flagged = true"
-      ></laya-flag-icon>
+      ></flag-icon>
     </div>
     <div :id="editorId"></div>
     <div class="row">
@@ -47,9 +47,11 @@ import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
 import { locale, viewPluginProps } from '@/mixins'
 import '@/assets/styles/flaggables.css'
+import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
 export default {
   name: 'LayaWysiwyg',
+  components: { FlagIcon },
 
   mixins: [
     locale,

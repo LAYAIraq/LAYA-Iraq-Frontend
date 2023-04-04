@@ -17,11 +17,11 @@ Dependencies:
       class="flaggable row"
     >
       <h2>{{ courseSimple? title.simple : title.text }}</h2>
-      <laya-flag-icon
+      <flag-icon
         v-if="!viewData"
         :ref-data="title"
         @flagged="title.flagged = true"
-      ></laya-flag-icon>
+      ></flag-icon>
     </div>
 
     <div>
@@ -49,11 +49,11 @@ Dependencies:
           :kind="track.kind"
         />
       </video>
-      <!--      <laya-flag-icon v-if="!viewData"-->
+      <!--      <flag-icon v-if="!viewData"-->
       <!--          :refData="videoFlag"-->
       <!--          :interactive="true"-->
       <!--          @flagged="videoFlag.flagged = true"-->
-      <!--      ></laya-flag-icon>-->
+      <!--      ></flag-icon>-->
     </div>
 
     <div class="row">
@@ -82,9 +82,11 @@ import { mapGetters } from 'vuex'
 import 'plyr/dist/plyr.css'
 import { locale, viewPluginProps } from '@/mixins'
 import '@/assets/styles/flaggables.css'
+import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
 export default {
   name: 'LayaPlyr',
+  components: { FlagIcon },
 
   mixins: [
     locale,

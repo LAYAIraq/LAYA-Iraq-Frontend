@@ -233,7 +233,7 @@ export default {
       const automaticFollow = (item, followingItem, depth) => {
         if (item.isChapter) {
           item.children.forEach((child, i) => {
-            const res = automaticFollow(child, item.children[i + 1]?? null, depth + 1)
+            const res = automaticFollow(child, item.children[i + 1] ?? null, depth + 1)
             if (res) { // if automaticFollow returns something, set followingContent to next block
               console.log('reach last element')
               console.log('recursion depth: ', depth)

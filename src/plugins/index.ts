@@ -18,8 +18,3 @@ export { default as LayaDialog } from './laya-lb-dialog'
 export { default as LayaPlyr } from './laya-lb-plyr'
 // export { default as LayaStepper } from './misc/laya-stepper'
 export { default as LayaHtml } from './laya-lb-html'
-// export { default as LayaCourseTable } from './misc/laya-course-table'
-
-// Elements for Course Display and Editing
-export { default as LayaAudioInline } from './misc/laya-audio-inline'
-export { default as LayaFlagIcon } from './misc/laya-flag-icon'

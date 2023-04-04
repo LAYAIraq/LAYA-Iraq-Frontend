@@ -45,19 +45,19 @@ Last Updated: May 04, 2022
         <div class="col">
           <h2>
             {{ courseSimple? title.simple : title.text }}
-            <laya-audio-inline
+            <audio-button
               v-if="taskAudioExists"
               :src="courseSimple?
                 taskAudio.simple :
                 taskAudio.regular"
-            ></laya-audio-inline>
+            ></audio-button>
           </h2>
         </div>
-        <laya-flag-icon
+        <flag-icon
           v-if="!viewData"
           :ref-data="title"
           @flagged="title.flagged = true"
-        ></laya-flag-icon>
+        ></flag-icon>
       </div>
 
       <div
@@ -67,11 +67,11 @@ Last Updated: May 04, 2022
         <div class="col">
           <p>{{ courseSimple? task.simple : task.text }}</p>
         </div>
-        <laya-flag-icon
+        <flag-icon
           v-if="!viewData"
           :ref-data="task"
           @flagged="task.flagged = true"
-        ></laya-flag-icon>
+        ></flag-icon>
       </div>
       <hr>
 
@@ -106,12 +106,12 @@ Last Updated: May 04, 2022
               :aria-valuetext="categories[choice[i]]"
               :aria-label="y18n('layaLaFeedback.label.slider')"
             >
-            <laya-flag-icon
+            <flag-icon
               v-if="!viewData"
               :ref-data="item"
               :interactive="true"
               @flagged="item.flagged = true"
-            ></laya-flag-icon>
+            ></flag-icon>
           </div>
         </div>
       </div>
@@ -185,12 +185,16 @@ import { locale, viewPluginProps, watchContent } from '@/mixins'
 import { mapGetters } from 'vuex'
 import '@/assets/styles/flaggables.css'
 import { StarRating } from 'vue-rate-it'
+import AudioButton from '@/components/helpers/audio-button.vue'
+import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
 // import layaWsyisyg from '../misc/laya-html'
 export default {
   name: 'LayaFeedback',
 
   components: {
+    FlagIcon,
+    AudioButton,
     StarRating
   },
 

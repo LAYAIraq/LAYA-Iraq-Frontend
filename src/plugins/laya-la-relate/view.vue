@@ -24,18 +24,18 @@ Dependencies:
         >
           <h4>
             {{ courseSimple? title.simple: title.text }}
-            <laya-audio-inline
+            <audio-button
               v-if="taskAudio"
               :src="taskAudio"
             >
-            </laya-audio-inline>
+            </audio-button>
           </h4>
         </div>
-        <laya-flag-icon
+        <flag-icon
           v-if="!viewData"
           :ref-data="title"
           @flagged="title.flagged = true"
-        ></laya-flag-icon>
+        ></flag-icon>
       </div>
       <div
         :id="task.id"
@@ -47,11 +47,11 @@ Dependencies:
         >
           <p>{{ courseSimple? task.simple: task.text }}</p>
         </div>
-        <laya-flag-icon
+        <flag-icon
           v-if="!viewData"
           :ref-data="task"
           @flagged="task.flagged = true"
-        ></laya-flag-icon>
+        ></flag-icon>
       </div>
 
       <hr>
@@ -73,12 +73,12 @@ Dependencies:
                   v-auth-image="pair.img"
                   :alt="courseSimple? pair.labelSimple: pair.label"
                 >
-                <laya-audio-inline
+                <audio-button
                   v-if="pair.audio"
                   :class="langIsAr? 'mr-2' : 'ml-2'"
                   :src="pair.audio"
                 >
-                </laya-audio-inline>
+                </audio-button>
                 {{ courseSimple? pair.labelSimple: pair.label }}
               </label>
               <div class="col-sm-6">
@@ -106,12 +106,12 @@ Dependencies:
                   <i :class="eval[i]"></i>
                 </div>
               </div>
-              <laya-flag-icon
+              <flag-icon
                 v-if="!viewData"
                 :ref-data="pair"
                 :interactive="true"
                 @flagged="pair.flagged = true"
-              ></laya-flag-icon>
+              ></flag-icon>
             </div>
           </form>
         </div>
@@ -194,9 +194,12 @@ Dependencies:
 import { mapGetters } from 'vuex'
 import { locale, viewPluginProps } from '@/mixins'
 import '@/assets/styles/flaggables.css'
+import AudioButton from '@/components/helpers/audio-button.vue'
+import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
 export default {
   name: 'LayaQuizRelate',
+  components: { FlagIcon, AudioButton },
 
   mixins: [
     locale,
