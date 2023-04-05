@@ -226,7 +226,7 @@ Dependencies:
           type="button"
           class="btn btn-primary btn-sm"
           :class="langIsAr? 'float-right': 'float-left'"
-          @click="_addItem(y18n('layaLaScmc.edit.sampleOption'))"
+          @click="_addItem(y18n('plugin.sampleOption'))"
         >
           <i class="fas fa-plus"></i>
           {{ y18n('layaLbDialog.addAnswer') }}

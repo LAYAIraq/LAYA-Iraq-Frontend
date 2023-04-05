@@ -2,25 +2,22 @@
  * Filename: index.ts
  * Use: expose Course Feedback to $laya
  * Creator: core
- * Date: unknown
- * Dependencies: vue
+ * Since: v1.0.0
  */
 
 import _Vue from 'vue'
-import _view from './view.vue'
+import _view from './feedback-view.vue'
 
 export default {
   install (Vue: typeof _Vue): void {
-    Vue.$laya.registerLA(
-      'laya-course-feedback',
-      'CourseFeedback',
-      'layaLaFeedback',
+    Vue.$laya.registerPlugin(
+      'feedback',
+      'organization',
       'fas fa-comment-dots',
       {
-        new: () => import('./create.vue'),
         // @ts-ignore
         view: _view, // not lazily loaded b/c always visible
-        edit: () => import('./edit.vue')
+        edit: () => import('./feedback-edit.vue')
       }
     )
   }

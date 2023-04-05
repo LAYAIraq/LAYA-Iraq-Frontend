@@ -34,7 +34,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
 #questionmark {
   float: inline-end;

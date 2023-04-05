@@ -1,22 +1,16 @@
 <!--
-Filename: view.vue
-Use: Display Course Feedback content block
-Creator: cmc
-Date: unknown
-Dependencies: @/mixins/locale.vue
--->
-
-<!--
-Reorganisation
-Author: nv
-Last Updated: May 04, 2022
+  Filename: feedback-view.vue
+  Use: Display Course Feedback content block
+  Creator: cmc
+  Date: unknown
+  Dependencies: @/mixins/locale.vue
 -->
 
 <template>
-  <div class="laya-feedback">
+  <div class="feedback-view">
     <b-toast
       id="feedback-new"
-      :title="y18n('layaLaFeedback.name')"
+      :title="y18n('feedback.name')"
       static
       variant="success"
       auto-hide-delay="1500"
@@ -27,13 +21,13 @@ Last Updated: May 04, 2022
 
     <b-toast
       id="feedback-updated"
-      :title="y18n('layaLaFeedback.title')"
+      :title="y18n('feedback.title')"
       static
       variant="success"
       auto-hide-delay="1500"
       class="feedback-toast"
     >
-      {{ y18n('layaLaFeedback.bToast.feedbackUpdated') }}
+      {{ y18n('feedback.bToast.feedbackUpdated') }}
     </b-toast>
 
     <div class="container">
@@ -104,7 +98,7 @@ Last Updated: May 04, 2022
               :max="categories.length-1"
               :aria-valuenow="choice[i]"
               :aria-valuetext="categories[choice[i]]"
-              :aria-label="y18n('layaLaFeedback.label.slider')"
+              :aria-label="y18n('feedback.label.slider')"
             >
             <flag-icon
               v-if="!viewData"
@@ -118,12 +112,12 @@ Last Updated: May 04, 2022
 
       <div class="row mt-5">
         <div class="col">
-          <h4>{{ y18n('layaLaFeedback.addFreetext') }}</h4>
+          <h4>{{ y18n('feedback.addFreetext') }}</h4>
           <textarea
             v-model="freetext"
             class="w-100 mt-1"
             rows="5"
-            :aria-label="y18n('layaLaFeedback.label.freetext')"
+            :aria-label="y18n('feedback.label.freetext')"
           ></textarea>
         </div>
       </div>
@@ -190,7 +184,7 @@ import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
 // import layaWsyisyg from '../misc/laya-html'
 export default {
-  name: 'LayaFeedback',
+  name: 'FeedbackView',
 
   components: {
     FlagIcon,
@@ -241,7 +235,7 @@ export default {
   },
 
   created () {
-    if (!this.viewData) {
+    if (!this.viewData) { // TODO: fix when existing feedback can be tested see #TLI-204
       this.fetchData()
       this.mapSolutions()
       this.getPrevFeedback()

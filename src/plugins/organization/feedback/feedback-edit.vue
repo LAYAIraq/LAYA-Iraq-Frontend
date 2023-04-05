@@ -1,45 +1,42 @@
 <!--
-Filename: create.vue
-Use: Edit a Course Feedback content block
-Creator: pj
-Date: 17.08.2021
-Dependencies: @/mixins/locale.vue
--->
-
-<!--
-Reorganisation
-Author: nv
-Last Updated: May 04, 2022
+  Filename: feedback-edit.vue
+  Use: Edit or create Course Feedback content block
+  Creator: pj
+  Since: v1.1.0
 -->
 
 <template>
   <div
-    class="laya-la-feedback-create"
+    class="feedback-edit"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
-    <label>
-      <h4>
-        {{ y18n('layaLaFeedback.name') }}
-      </h4>
-    </label>
-    <i
-      id="questionmark"
-      v-b-tooltip.left
-      class="fas fa-question-circle"
-      :title="y18n('showTip')"
-      aria-labelledby="tooltipText"
-      aria-live="polite"
-      @click="toggleTip"
-    ></i>
+    <div class="d-flex">
+      <h2
+        class="d-inline-block"
+        :class="langIsAr? 'ml-auto' : 'mr-auto'"
+      >
+        {{ y18n('feedback.name') }}
+      </h2>
+      <i
+        id="questionmark"
+        v-b-tooltip.left
+        class="fas fa-question-circle"
+        :title="y18n('showTip')"
+        aria-labelledby="tooltipText"
+        aria-live="polite"
+        @click="toggleTip"
+      ></i>
+    </div>
+
     <b-jumbotron
       v-if="tooltipOn"
       id="tooltipText"
-      :header="y18n('layaLaFeedback.name')"
+      :header="y18n('feedback.name')"
       :lead="y18n('tipHeadline')"
     >
       <hr class="my-4">
       <span>
-        {{ y18n('layaLaFeedback.tooltip') }}
+        {{ y18n('feedback.tooltip') }}
       </span>
     </b-jumbotron>
     <hr>
@@ -93,7 +90,7 @@ Last Updated: May 04, 2022
         <span
           class="col-2 col-form-label"
         >
-          {{ y18n('task') }}
+          {{ y18n('feedback.edit.desc') }}
         </span>
         <div class="col-10">
           <textarea
@@ -137,7 +134,7 @@ Last Updated: May 04, 2022
         <div class="col-10">
           <input
             id="feedback-task-audio"
-            v-model="taskAudio"
+            v-model="taskAudio.regular"
             type="text"
             class="form-control"
             :placeholder="y18n('taskAudioPlaceholder')"
@@ -169,8 +166,8 @@ Last Updated: May 04, 2022
         </div>
       </div>
 
-      <!-- Questions -->
-      <p><b>{{ y18n('layaLaFeedback.edit.questions') }}</b></p>
+      <!-- Answers -->
+      <p><b>{{ y18n('feedback.edit.questions') }}</b></p>
       <div
         v-for="(item, i) in items"
         :key="'item-'+i"
@@ -180,40 +177,17 @@ Last Updated: May 04, 2022
         <div class="row">
           <label
             class="col-form-label col-2"
-            :for="'item-text-'+i"
+            :for="`item-text-${item.id}`"
           >
             {{ y18n('text') }}
           </label>
           <div class="col-5">
             <input
-              :id="'item-text-'+i"
-              v-model="items[i].label"
+              :id="`item-text-${item.id}`"
+              v-model="item.label"
               class="form-control"
               type="text"
             >
-          </div>
-
-          <div
-            v-if="courseSimple"
-            class="row"
-          >
-            <!-- simple item -->
-            <label
-              class="col-form-label col-2"
-              :for="'item-simple-'+i"
-            >
-              <span class="sr-only">
-                {{ y18n('simpleAlt') }}
-              </span>
-            </label>
-            <div class="col-5">
-              <input
-                :id="'item-simple-'+i"
-                v-model="item.simple"
-                class="form-control"
-                type="text"
-              >
-            </div>
           </div>
 
           <!-- delete -->
@@ -222,10 +196,32 @@ Last Updated: May 04, 2022
               type="button"
               class="btn btn-danger btn-sm"
               :aria-label="y18n('deleteField')"
-              @click="_delItem(i)"
+              @click="_itemDelete(items, i)"
             >
               <i class="fas fa-times"></i>
             </button>
+          </div>
+        </div>
+        <div
+          v-if="courseSimple"
+          class="row"
+        >
+          <!-- simple item -->
+          <label
+            class="col-form-label col-2"
+            :for="'item-simple-'+i"
+          >
+            <span class="sr-only">
+              {{ y18n('simpleAlt') }}
+            </span>
+          </label>
+          <div class="col-5">
+            <input
+              :id="'item-simple-'+i"
+              v-model="item.simple"
+              class="form-control"
+              type="text"
+            >
           </div>
         </div>
       </div>
@@ -235,17 +231,17 @@ Last Updated: May 04, 2022
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            @click="_addItem('')"
+            @click="_itemAdd(items, newItem())"
           >
-            <i class="fas fa-plus"></i>{{ y18n('layaLaFeedback.edit.addQuestion') }}
+            <i class="fas fa-plus"></i>{{ y18n('feedback.edit.addQuestion') }}
           </button>
         </div>
       </div>
 
-      <!-- Answers -->
+      <!-- Categories -->
       <p>
         <b>
-          {{ y18n('layaLaFeedback.edit.answers') }}
+          {{ y18n('feedback.edit.answers') }}
         </b>
       </p>
       <div
@@ -270,39 +266,38 @@ Last Updated: May 04, 2022
             >
           </div>
 
-          <!-- simple alt -->
-          <div
-            v-if="courseSimple"
-            class="row"
-          >
-            <label
-              class="col-form-label col-2"
-              :for="'cat-simple-'+i"
-            >
-              <span class="sr-only">
-                {{ y18n('simpleAlt') }}
-              </span>
-            </label>
-            <div class="col-7">
-              <input
-                :id="'cat-simple-'+i"
-                v-model="cat.simple"
-                class="form-control"
-                type="text"
-              >
-            </div>
-          </div>
-
           <!-- delete -->
           <div class="col-auto align-self-center">
             <button
               type="button"
               class="btn btn-danger btn-sm"
               :aria-label="y18n('deleteField')"
-              @click="_delCategory(i)"
+              @click="_itemDelete(categories, i)"
             >
               <i class="fas fa-times"></i>
             </button>
+          </div>
+        </div>
+        <!-- simple alt -->
+        <div
+          v-if="courseSimple"
+          class="row"
+        >
+          <label
+            class="col-form-label col-2"
+            :for="'cat-simple-'+i"
+          >
+            <span class="sr-only">
+              {{ y18n('simpleAlt') }}
+            </span>
+          </label>
+          <div class="col-7">
+            <input
+              :id="'cat-simple-'+i"
+              v-model="cat.simple"
+              class="form-control"
+              type="text"
+            >
           </div>
         </div>
       </div>
@@ -312,9 +307,9 @@ Last Updated: May 04, 2022
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            @click="_addCategory('')"
+            @click="_itemAdd(categories)"
           >
-            <i class="fas fa-plus"></i>{{ y18n('layaLaFeedback.edit.addAnswer') }}
+            <i class="fas fa-plus"></i>{{ y18n('feedback.edit.addAnswer') }}
           </button>
         </div>
       </div>
@@ -324,18 +319,27 @@ Last Updated: May 04, 2022
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale, tooltipIcon } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
-import commonMethods from './common-methods'
+import { deepCopy } from '@/mixins/general/helpers'
+import { array, locale, routes, pluginDataPopulate, tooltipIcon } from '@/mixins'
 
 export default {
-  name: 'LayaLaFeedbackCreate',
+  name: 'FeedbackEdit',
 
   mixins: [
+    array,
     locale,
-    commonMethods,
+    pluginDataPopulate,
+    routes,
     tooltipIcon
   ],
+
+  props: {
+    edit: {
+      type: Boolean,
+      required: true
+    }
+  },
 
   data () {
     return {
@@ -344,31 +348,51 @@ export default {
       taskAudio: '',
       items: [],
       categories: [],
-      id: uuidv4()
+      id: ''
     }
   },
 
   computed: {
-    ...mapGetters(['courseSimple'])
+    ...mapGetters(['courseContent', 'courseSimple'])
   },
 
   created () {
-    this.fillFormSamples()
-    this.populateVars()
+    if (this.edit) {
+      this.fetchData()
+    } else {
+      this.fillForm()
+      this.taskTitlePopulate()
+    }
   },
 
   methods: {
     /**
-     * Function fillFormSamples: Fill in sample input
+     * Function fetchData: Fill in localized sample input
+     *
+     * Author: cmc
+     *
+     * Last Updated: August 15, 2021
+     */
+    fetchData () {
+      const preData = deepCopy(this.courseContent[this.pathId])
+      this.title = preData.title
+      this.task = preData.task
+      this.taskAudio = preData.taskAudio
+      this.items = preData.items
+      this.categories = preData.categories
+      this.id = preData.id
+    },
+    /**
+     * Function fillForm: Fill in sample input
      *
      * Author: cmc
      *
      * Last Updated: October 15, 2022 by nv
      */
-    fillFormSamples () {
+    fillForm () {
       if (this.categories.length === 0) {
         const tmpItem = {
-          label: this.y18n('layaLaFeedback.edit.questions') + ' 1',
+          label: this.y18n('feedback.edit.questions') + ' 1',
           simple: this.y18n('simpleAlt') + ' 1',
           category: -1,
           flagged: false,
@@ -378,24 +402,18 @@ export default {
 
         for (let i = 1; i < 3; i++) {
           this.categories.push({
-            text: this.y18n('layaLaFeedback.edit.answers') + ' ' + i,
+            text: this.y18n('feedback.edit.answers') + ' ' + i,
             simple: this.y18n('simpleAlt') + ' ' + i
           })
         }
       }
     },
-
-    populateVars () {
-      this.title = {
-        text: '',
-        flagged: false,
-        id: uuidv4()
-      }
-      this.task = {
-        text: '',
-        flagged: false,
-        id: uuidv4()
-      }
+    /**
+     * @function return new item with empty text
+     * @return {{flagged: boolean, label: string, id, category: number}}
+     */
+    newItem () {
+      return { label: '', category: -1, flagged: false, id: uuidv4() }
     }
   }
 }
@@ -411,8 +429,4 @@ legend {
   font-size: 1rem;
 }
 
-#questionmark {
-  float: end;
-  cursor: pointer;
-}
 </style>

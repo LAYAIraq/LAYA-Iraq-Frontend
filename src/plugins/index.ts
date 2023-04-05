@@ -10,7 +10,7 @@ export { default as LayaScMc } from './laya-la-scmc'
 // export { default as LayaQuizSort } from './laya-la-sort'
 export { default as CategoryMatching } from './learning-assessment/category-matching'
 export { default as LayaQuizRelate } from './laya-la-relate'
-export { default as LayaFeedback } from './laya-la-feedback'
+export { default as Feedback } from './organization/feedback'
 
 // Course Content Blocks
 export { default as LayaDialog } from './laya-lb-dialog'

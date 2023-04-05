@@ -11,9 +11,12 @@
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div class="d-flex">
-      <h4 class="d-inline-block mr-auto">
+      <h2
+        class="d-inline-block"
+        :class="langIsAr? 'ml-auto' : 'mr-auto'"
+      >
         {{ y18n('categoryMatching.name') }}
-      </h4>
+      </h2>
       <i
         id="questionmark"
         v-b-tooltip.left
@@ -160,7 +163,7 @@
           >
         </div>
       </div>
-
+      <!-- Categories -->
       <p><b>{{ y18n('categoryMatching.cats') }}</b></p>
       <div
         v-for="(cat, i) in categories"
@@ -336,7 +339,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import { mapGetters } from 'vuex'
 import { deepCopy } from '@/mixins/general/helpers'
-import { array, locale, routes, tooltipIcon } from '@/mixins'
+import { array, locale, routes, pluginDataPopulate, tooltipIcon } from '@/mixins'
 
 export default {
   name: 'CategoryMatchingEdit',
@@ -345,6 +348,7 @@ export default {
     array,
     locale,
     routes,
+    pluginDataPopulate,
     tooltipIcon
   ],
 
@@ -357,6 +361,7 @@ export default {
 
   data () {
     return {
+      id: '',
       title: {},
       task: {},
       taskAudio: {},
@@ -374,6 +379,7 @@ export default {
       this.fetchData()
     } else {
       this.fillForm()
+      this.taskTitlePopulate()
     }
   },
 
@@ -404,16 +410,6 @@ export default {
           })
         }
       }
-      this.title = {
-        text: '',
-        flagged: false,
-        id: uuidv4()
-      }
-      this.task = {
-        text: '',
-        flagged: false,
-        id: uuidv4()
-      }
     },
     /**
      * Function fetchData(): fetch data from vuex and make data property
@@ -429,6 +425,7 @@ export default {
       this.taskAudio = preData.taskAudio
       this.items = preData.items
       this.categories = preData.categories
+      this.id = preData.id
     },
     /**
      * @function create a new object for items
@@ -438,7 +435,7 @@ export default {
      */
     newItem () {
       return {
-        label: this.y18n('layaLaScmc.edit.sampleOption'),
+        label: this.y18n('plugin.sampleOption'),
         simple: 'simple lang alternative',
         category: -1,
         flagged: false,

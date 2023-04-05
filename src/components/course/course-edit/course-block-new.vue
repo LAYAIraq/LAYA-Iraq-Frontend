@@ -24,7 +24,7 @@ Dependencies:
           <i class="fas fa-plus"></i>
           {{ y18n('newBlock.newContent') }}
         </template>
-
+        <!-- Learning Blocks -->
         <b-dropdown-header :class="langIsAr? 'text-right' : ''">
           {{ y18n('newBlock.newContentBlock') }}
         </b-dropdown-header>
@@ -53,13 +53,13 @@ Dependencies:
         </b-dropdown-item>
 
         <b-dropdown-divider></b-dropdown-divider>
-
+        <!-- Learning Assessments -->
         <b-dropdown-header :class="langIsAr? 'text-right': ''">
           {{ y18n('newBlock.newContentAssmnt') }}
         </b-dropdown-header>
 
         <b-dropdown-item
-          v-for="ass in applicableAssessments"
+          v-for="ass in assessments"
           :key="ass.id"
           :to="`/courses/${name}/new/${ass.id}`"
         >
@@ -74,6 +74,32 @@ Dependencies:
               v-b-tooltip.right
               class="far fa-question-circle"
               :title="getCaption(ass)"
+            >
+            </i>
+          </div>
+        </b-dropdown-item>
+        <b-dropdown-divider></b-dropdown-divider>
+        <!-- Course Organization Blocks -->
+        <b-dropdown-header :class="langIsAr? 'text-right': ''">
+          {{ y18n('newBlock.newCourseOrganizationBlock') }}
+        </b-dropdown-header>
+
+        <b-dropdown-item
+          v-for="block in organization"
+          :key="block.id"
+          :to="`/courses/${name}/new/${block.id}`"
+        >
+          <div
+            class="dropitem"
+            :class="langIsAr? 'text-right' : ''"
+          >
+            <i :class="block.icon"></i>
+            {{ getName(block) }}
+
+            <i
+              v-b-tooltip.right
+              class="far fa-question-circle"
+              :title="getCaption(block)"
             >
             </i>
           </div>
@@ -104,20 +130,24 @@ export default {
     ...mapGetters(['course']),
 
     /**
-     * function applicableAssessments(): strip feedback from course blocks
+     * function assessments(): strip feedback from course blocks
      *  if no enrollment in course
      *
      *  Author: cmc
      *
      *  Last Updated: September 21, 2021
      */
-    applicableAssessments () {
-      const ass = { ...this.$laya.la, ...this.$laya.assessments }
-      if (this.course.properties.enrollment) {
-        return ass
-      } else {
-        return stripKey('laya-course-feedback', ass)
-      }
+    assessments () {
+      return { ...this.$laya.la, ...this.$laya.assessments }
+    },
+    /**
+     * @function return course organization blocks, without feedback if course has no enrollment
+     * @return {object|any}
+     */
+    organization () {
+      return this.course.properties.enrollment
+        ? this.$laya.organization
+        : stripKey('feedback', this.$laya.organization)
     }
   },
 
