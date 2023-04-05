@@ -7,20 +7,18 @@
  */
 
 import _Vue from 'vue'
-import _view from './view.vue'
+import _view from './image-matching-view.vue'
 
 export default {
   install (Vue: typeof _Vue): void {
-    Vue.$laya.registerLA(
-      'laya-quiz-relate',
-      'AssessmentRelate',
-      'layaLaRelate',
+    Vue.$laya.registerPlugin(
+      'image-matching',
+      'assessment',
       'fas fa-paperclip',
       {
-        new: () => import('./create.vue'),
         // @ts-ignore
         view: _view, // not lazily loaded b/c always visible
-        edit: () => import('./edit.vue')
+        edit: () => import('./image-matching-edit.vue')
       }
     )
   }

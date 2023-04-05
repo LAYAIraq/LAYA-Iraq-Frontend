@@ -9,7 +9,7 @@
 export { default as LayaScMc } from './laya-la-scmc'
 // export { default as LayaQuizSort } from './laya-la-sort'
 export { default as CategoryMatching } from './learning-assessment/category-matching'
-export { default as LayaQuizRelate } from './laya-la-relate'
+export { default as ImageMatching } from './learning-assessment/image-matching'
 export { default as Feedback } from './organization/feedback'
 
 // Course Content Blocks

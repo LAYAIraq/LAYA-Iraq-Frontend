@@ -2,9 +2,9 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue' // uncomment if component uses Bootstrap
 import 'regenerator-runtime/runtime' // for async behavior in tests
-import RelateCreate from '@/plugins/laya-la-relate/create.vue'
-import RelateEdit from '@/plugins/laya-la-relate/edit.vue'
-import RelateView from '@/plugins/laya-la-relate/view.vue'
+import RelateCreate from '@/plugins/learning-assessment/image-matching/create.vue'
+import RelateEdit from '@/plugins/learning-assessment/image-matching/edit.vue'
+import RelateView from '@/plugins/learning-assessment/image-matching/view.vue'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)

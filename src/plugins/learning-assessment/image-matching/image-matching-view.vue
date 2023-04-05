@@ -1,16 +1,13 @@
 <!--
-Filename: view.vue
-Use: View a Relate content block
-Creator: core
-Date: unknown
-Dependencies:
-  vuex,
-  @/mixins/locale.vue
+  Filename: image-matching-view.vue
+  Use: View a Image Matching assessment block
+  Creator: core
+  Since: v1.0.0
 -->
 
 <template>
   <div
-    class="laya-quiz-relate"
+    class="image-matching-view"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div class="container">
@@ -99,7 +96,7 @@ Dependencies:
                     :key="'option-' + j"
                     :value="j"
                   >
-                    {{ opt }}
+                    {{ courseSimple? opt.simple: opt.text }}
                   </option>
                 </select>
                 <div class="d-inline-block pt-3 w-100 text-center">
@@ -124,7 +121,7 @@ Dependencies:
           :disabled="freeze"
           @click="reset"
         >
-          {{ y18n('layaLaRelate.removeInput') }}
+          {{ y18n('imageMatching.removeInput') }}
         </button>
 
         <button
@@ -165,16 +162,16 @@ Dependencies:
               :key="index"
             >
               {{ courseSimple? pair.labelSimple: pair.label }}:
-              {{ courseSimple? relationsSimple[pair.relation] : relations[pair.relation] }},
+              {{ courseSimple? relations[pair.relation].simple : relations[pair.relation].text }},
             </div>
           </div>
         </div>
         <div>
           <div v-if="allAnswersChosen">
-            {{ y18n('layaLaRelate.missingAnswerWarning') }}
+            {{ y18n('imageMatching.missingAnswerWarning') }}
           </div>
           <b-modal
-            id="relate-missing-warning"
+            id="missing-answer-warning"
             :title="y18n('password.error')"
             ok-variant="warning"
             header-bg-variant="warning"
@@ -182,7 +179,7 @@ Dependencies:
             centered
             static
           >
-            {{ y18n('layaLaRelate.missingAnswerWarning') }}
+            {{ y18n('imageMatching.missingAnswerWarning') }}
           </b-modal>
         </div>
       </div>
@@ -196,9 +193,10 @@ import { locale, viewPluginProps } from '@/mixins'
 import '@/assets/styles/flaggables.css'
 import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
+import { stripKey } from '@/mixins/general/helpers'
 
 export default {
-  name: 'LayaQuizRelate',
+  name: 'ImageMatchingView',
   components: { FlagIcon, AudioButton },
 
   mixins: [
@@ -229,24 +227,9 @@ export default {
      * Last Updated: 03.03.2022
      */
     options () {
-      let shuffled = []
-      if (this.courseSimple) {
-        for (let i = 0; i < this.relations.length; i++) {
-          if (!shuffled.includes(this.relationsSimple[i])) {
-            shuffled.push(this.relationsSimple[i])
-          }
-        }
-      } else {
-        for (let i = 0; i < this.relations.length; i++) {
-          if (!shuffled.includes(this.relations[i])) {
-            shuffled.push(this.relations[i])
-          }
-        }
-      }
-      shuffled = shuffled.map(value => ({ value, sort: Math.random() }))
+      return this.relations.map(value => ({ ...value, sort: Math.random() }))
         .sort((a, b) => a.sort - b.sort)
-        .map(({ value }) => value)
-      return shuffled
+        .map(val => stripKey('sort', val))
     }
   },
 
@@ -260,7 +243,7 @@ export default {
   },
 
   created () {
-    this.defaultOption = this.y18n('layaLaRelate.defaultOption')
+    this.defaultOption = this.y18n('imageMatching.defaultOption')
     // eslint-disable-next-line no-unused-vars
     for (const i in this.pairs) {
       this.solution.push(-1)
@@ -299,13 +282,9 @@ export default {
      * Last Updated: March 19, 2021
      */
     check () {
-      // map shuffeled answers to their actual equivalents
-      const realAnswer = this.solution.map(idx =>
-        this.courseSimple
-          ? this.relationsSimple.indexOf(this.options[idx])
-          : this.relations.indexOf(this.options[idx])
-      )
-      // console.log(realAnswer)
+      // map shuffeled answers to their actual equivalents by comparing the text of the options
+      const realAnswer = this.solution.map(idx => this.relations.findIndex(val => val.text === this.options[idx]?.text))
+
       if (!this.solution.includes(-1)) {
         this.allAnswersChosen = false
         for (let i = 0; i < this.pairs.length; ++i) {
@@ -321,7 +300,7 @@ export default {
         this.$forceUpdate()
       } else {
         this.allAnswersChosen = true
-        this.$bvModal.show('relate-missing-warning')
+        this.$bvModal.show('missing-answer-warning')
       }
     }
   }

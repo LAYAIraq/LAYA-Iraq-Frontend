@@ -1,20 +1,22 @@
 <!--
-Filename: create.vue
-Use: Create a Relate content block
-Creator: core
-Date: unknown
-Dependencies: @/mixins/locale.vue
+  Filename: image-matching-edit.vue
+  Use: Create or Edit an Image Matching Assessment block
+  Creator: core
+  Since: v1.0.0
 -->
 
 <template>
   <div
-    class="laya-la-relate-create"
+    class="image-matching-edit"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div class="d-flex">
-      <h4 class="d-inline-block mr-auto">
-        {{ y18n('layaLaRelate.name') }}
-      </h4>
+      <h2
+        class="d-inline-block"
+        :class="langIsAr? 'ml-auto' : 'mr-auto'"
+      >
+        {{ y18n('imageMatching.name') }}
+      </h2>
       <i
         id="questionmark"
         v-b-tooltip.left
@@ -28,12 +30,12 @@ Dependencies: @/mixins/locale.vue
     <b-jumbotron
       v-if="tooltipOn"
       id="tooltipText"
-      :header="y18n('layaLaRelate.name')"
+      :header="y18n('imageMatching.name')"
       :lead="y18n('tipHeadline')"
     >
       <hr class="my-4">
       <span>
-        {{ y18n('layaLaRelate.tooltip') }}
+        {{ y18n('imageMatching.tooltip') }}
       </span>
     </b-jumbotron>
     <hr>
@@ -145,7 +147,7 @@ Dependencies: @/mixins/locale.vue
         </div>
       </div>
 
-      <p><b>{{ y18n('layaLaRelate.edit.solutions') }}</b></p>
+      <p><b>{{ y18n('imageMatching.edit.solutions') }}</b></p>
 
       <div
         v-for="(rel, i) in relations"
@@ -163,7 +165,7 @@ Dependencies: @/mixins/locale.vue
           <div class="col">
             <input
               :id="'rel-text-'+i"
-              v-model="relations[i]"
+              v-model="rel.text"
               class="form-control"
               type="text"
             >
@@ -175,7 +177,7 @@ Dependencies: @/mixins/locale.vue
             <div class="col">
               <input
                 :id="'rel-text-simple-'+i"
-                v-model="relationsSimple[i]"
+                v-model="rel.simple"
                 class="form-control"
                 type="text"
                 :placeholder="y18n('simpleAlt')"
@@ -189,7 +191,7 @@ Dependencies: @/mixins/locale.vue
           <button
             type="button"
             class="btn btn-danger btn-sm"
-            @click="_delRelation(i)"
+            @click="_itemDelete(relations, i)"
           >
             <i class="fas fa-times"></i>
           </button>
@@ -201,10 +203,10 @@ Dependencies: @/mixins/locale.vue
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            @click="_addRelation"
+            @click="_itemAdd(relations, { text: '', simple: '' })"
           >
             <i class="fas fa-plus"></i>
-            {{ y18n('layaLaRelate.edit.solutionAdd') }}
+            {{ y18n('imageMatching.edit.solutionAdd') }}
           </button>
         </div>
       </div>
@@ -230,7 +232,7 @@ Dependencies: @/mixins/locale.vue
             v-model="pair.img"
             class="form-control"
             type="text"
-            :placeholder="y18n('layaLaRelate.edit.imgPlaceholder')"
+            :placeholder="y18n('imageMatching.edit.imgPlaceholder')"
           >
         </div>
 
@@ -241,7 +243,7 @@ Dependencies: @/mixins/locale.vue
             v-model="pair.label"
             class="form-control"
             type="text"
-            :placeholder="y18n('layaLaRelate.edit.labelPlaceholder')"
+            :placeholder="y18n('imageMatching.edit.labelPlaceholder')"
           >
 
           <!-- alt text simple -->
@@ -265,7 +267,7 @@ Dependencies: @/mixins/locale.vue
             v-model="pair.audio"
             class="form-control"
             type="text"
-            :placeholder="y18n('layaLaRelate.edit.audioPlaceholder')"
+            :placeholder="y18n('imageMatching.edit.audioPlaceholder')"
           >
         </div>
 
@@ -280,14 +282,14 @@ Dependencies: @/mixins/locale.vue
               disabled
               :value="-1"
             >
-              {{ y18n('layaLaRelate.edit.solution') }}
+              {{ y18n('imageMatching.edit.solution') }}
             </option>
             <option
-              v-for="(rel,j) in courseSimple? relationsSimple: relations"
+              v-for="(rel,j) in relations"
               :key="rel+'-'+i+'-'+j"
               :value="j"
             >
-              {{ rel }}
+              {{ courseSimple? rel.simple : rel.text }}
             </option>
           </select>
         </div>
@@ -297,7 +299,7 @@ Dependencies: @/mixins/locale.vue
           <button
             type="button"
             class="btn btn-danger btn-sm"
-            @click="_delPair(i)"
+            @click="_itemDelete(pairs, i)"
           >
             <i class="fas fa-times"></i>
           </button>
@@ -308,7 +310,7 @@ Dependencies: @/mixins/locale.vue
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            @click="_addPair"
+            @click="_itemAdd(pairs, newPair())"
           >
             <i class="fas fa-plus"></i>
             {{ y18n('itemAdd') }}
@@ -320,18 +322,26 @@ Dependencies: @/mixins/locale.vue
 </template>
 
 <script>
-import { locale, tooltipIcon } from '@/mixins'
-import commonMethods from './common-methods'
+import { array, locale, pluginDataPopulate, tooltipIcon } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
+import { deepCopy } from '@/mixins/general/helpers'
 
 export default {
-  name: 'LayaLaRelateCreate',
+  name: 'ImageMatchingEdit',
 
   mixins: [
-    commonMethods,
+    array,
     locale,
+    pluginDataPopulate,
     tooltipIcon
   ],
+
+  props: {
+    edit: {
+      type: Boolean,
+      required: true
+    }
+  },
 
   data () {
     return {
@@ -344,33 +354,55 @@ export default {
       task: {},
       taskAudio: '',
       pairs: [],
-      relations: [],
-      relationsSimple: []
+      relations: []
     }
   },
 
   created () {
-    this.populateData()
+    if (this.edit) {
+      this.fetchData()
+    } else {
+      this.fillForm()
+      this.taskTitlePopulate()
+    }
   },
 
   methods: {
-    populateData () {
+    /**
+     * Function fetchData: fetch data from vuex and make data property
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 19, 2021
+     */
+    fetchData () {
+      const preData = deepCopy(this.courseContent[this.pathId])
+      this.title = preData.title
+      this.task = preData.task
+      this.taskAudio = preData.taskAudio
+      this.pairs = preData.pairs
+      this.relations = preData.relations
+      this.id = preData.id
+    },
+    /**
+     * @function fill form with default values
+     */
+    fillForm () {
       for (let i = 1; i < 3; i++) {
-        const tmp = this.y18n('layaLaRelate.edit.solution') + ' ' + i
+        const tmp = {
+          text: this.y18n('imageMatching.edit.solution') + ' ' + i,
+          simple: this.y18n('simpleAlt')
+        }
         this.relations.push(tmp)
-        this.relationsSimple.push(tmp)
       }
-      this._addPair()
-      this.title = {
-        text: '',
-        id: uuidv4(),
-        flagged: false
-      }
-      this.task = {
-        text: '',
-        id: uuidv4(),
-        flagged: false
-      }
+      this._itemAdd(this.pairs, this.newPair())
+    },
+    /**
+     * @function return pair with new id
+     * @return {{labelSimple: string, img: string, flagged: boolean, audio: string, label: string, id, relation: number}}
+     */
+    newPair () {
+      return { img: '', audio: '', relation: -1, label: '', labelSimple: '', flagged: false, id: uuidv4() }
     }
   }
 }
