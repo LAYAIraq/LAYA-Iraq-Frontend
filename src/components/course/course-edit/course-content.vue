@@ -126,8 +126,8 @@ export default {
       const la = this.$laya.la[this.cid]
       return la
         ? la.components
-        : this.$laya.lb[this.cid]?.components
-          ?? this.$laya.assessments[this.cid].components
+        : this.$laya.lb[this.cid]?.components ??
+          this.$laya.assessments[this.cid].components
     },
 
     /**

@@ -165,7 +165,7 @@ import { files, locale } from '@/mixins'
 export default {
   name: 'UploadFile',
   components: {
-    FileUpload: () => import('vue-upload-component'),
+    FileUpload: () => import('vue-upload-component')
   },
   mixins: [
     files,
@@ -348,7 +348,7 @@ export default {
      */
     _removeFile (idx) {
       this.files.splice(idx, 1)
-    },
+    }
   }
 }
 </script>
