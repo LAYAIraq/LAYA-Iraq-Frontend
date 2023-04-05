@@ -8,21 +8,21 @@
  */
 
 import _Vue from 'vue'
-import _view from './view.vue'
+import view from './category-matching-view.vue'
+import edit from './category-matching-edit.vue'
 
 export default {
   install (Vue: typeof _Vue): void {
-    Vue.$laya.registerLA(
-      'laya-quiz-drag-drop',
-      'AssessmentDragDrop',
-      'layaLaDragDrop',
+    Vue.$laya.registerPlugin(
+      'category-matching',
+      'assessment',
       'fas fa-ellipsis-h',
       {
-        new: () => import('./create.vue'),
         // @ts-ignore
-        view: _view, // not lazily loaded b/c always needed
-        edit: () => import('./edit.vue')
+        view, // not lazily loaded b/c always needed
+        edit
       }
+
     )
   }
 }

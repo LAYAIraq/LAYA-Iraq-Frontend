@@ -8,7 +8,7 @@
 
 export { default as LayaScMc } from './laya-la-scmc'
 // export { default as LayaQuizSort } from './laya-la-sort'
-export { default as LayaQuizDragDrop } from './laya-la-drag-drop'
+export { default as CategoryMatching } from './learning-assessment/category-matching'
 export { default as LayaQuizRelate } from './laya-la-relate'
 export { default as LayaFeedback } from './laya-la-feedback'
 

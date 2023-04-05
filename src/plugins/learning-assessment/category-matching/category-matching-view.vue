@@ -1,11 +1,8 @@
 <!--
-Filename: view.vue
-Use: Display Drag & Drop content block
-Creator: core
-Date: unknown
-Dependencies:
-  vuex,
-  @/mixins/locale.vue
+  Filename: category-matching-view.vue
+  Use: Display Category Matching Assessment block
+  Creator: cmc
+  Since: v1.3.0
 -->
 
 <template>
@@ -86,7 +83,7 @@ Dependencies:
             :disabled="checked"
             :aria-valuenow="solution[i]"
             :aria-valuetext="courseSimple? categories[solution[i]].simple: categories[solution[i]].text"
-            :aria-label="y18n('layaLaDragDrop.label.slider')"
+            :aria-label="y18n('categoryMatching.label.slider')"
           >
           <flag-icon
             v-if="!viewData"
@@ -144,7 +141,7 @@ import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
 export default {
-  name: 'LayaQuizDragDrop',
+  name: 'CategoryMatchingView',
   components: { AudioButton, FlagIcon },
 
   mixins: [

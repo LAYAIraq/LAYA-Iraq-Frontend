@@ -1,19 +1,18 @@
 <!--
-Filename: create.vue
-Use: Creating a new Drag & Drop content block
-Creator: core
-Date: unknown
-Dependencies: @/mixins/locale.vue
+  Filename: category-matching-edit.vue
+  Use: Edit or create Category Matching assessment block
+  Creator: cmc
+  Since: v1.3.0
 -->
 
 <template>
   <div
-    class="laya-la-drag-drop-new"
+    class="category-matching-edit"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div class="d-flex">
       <h4 class="d-inline-block mr-auto">
-        {{ y18n('layaLaDragDrop.name') }}
+        {{ y18n('categoryMatching.name') }}
       </h4>
       <i
         id="questionmark"
@@ -29,12 +28,12 @@ Dependencies: @/mixins/locale.vue
     <b-jumbotron
       v-if="tooltipOn"
       id="tooltipText"
-      :header="y18n('layaLaDragDrop.name')"
+      :header="y18n('categoryMatching.name')"
       :lead="y18n('tipHeadline')"
     >
       <hr class="my-4">
       <span>
-        {{ y18n('layaLaDragDrop.tooltip') }}
+        {{ y18n('categoryMatching.tooltip') }}
       </span>
     </b-jumbotron>
     <hr>
@@ -162,7 +161,7 @@ Dependencies: @/mixins/locale.vue
         </div>
       </div>
 
-      <p><b>{{ y18n('layaLaDragDrop.cats') }}</b></p>
+      <p><b>{{ y18n('categoryMatching.cats') }}</b></p>
       <div
         v-for="(cat, i) in categories"
         :key="'cat-'+i"
@@ -187,7 +186,8 @@ Dependencies: @/mixins/locale.vue
             <button
               type="button"
               class="btn btn-danger btn-sm"
-              @click="_delCategory(i)"
+              :aria-label="y18n('deleteField')"
+              @click="_itemDelete(categories, i)"
             >
               <i class="fas fa-times"></i>
             </button>
@@ -200,8 +200,8 @@ Dependencies: @/mixins/locale.vue
           class="row"
         >
           <label
-            :for="'cat-simple-'+i"
             class="col-form-label col-2"
+            :for="'cat-simple-'+i"
           >
             <span class="sr-only">
               {{ y18n('simpleAlt') }}
@@ -224,10 +224,10 @@ Dependencies: @/mixins/locale.vue
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            @click="_addCategory"
+            @click="_itemAdd(categories)"
           >
             <i class="fas fa-plus"></i>
-            {{ y18n('layaLaDragDrop.catAdd') }}
+            {{ y18n('categoryMatching.catAdd') }}
           </button>
         </div>
       </div>
@@ -237,7 +237,7 @@ Dependencies: @/mixins/locale.vue
         <b>{{ y18n('items') }}</b>
       </p>
       <div
-        v-for="(it, i) in items"
+        v-for="(item, i) in items"
         :key="'item-'+i"
         class="form-group"
       >
@@ -245,14 +245,14 @@ Dependencies: @/mixins/locale.vue
           <!-- text -->
           <label
             class="col-form-label col-2"
-            :for="'item-text-'+i"
+            :for="`item-text-${item.id}`"
           >
             {{ y18n('text') }}
           </label>
           <div class="col-5">
             <input
-              :id="'item-text-'+i"
-              v-model="items[i].label"
+              :id="`item-text-${item.id}`"
+              v-model="item.label"
               class="form-control"
               type="text"
             >
@@ -285,7 +285,8 @@ Dependencies: @/mixins/locale.vue
             <button
               type="button"
               class="btn btn-danger btn-sm"
-              @click="_delItem(i)"
+              :aria-label="y18n('deleteField')"
+              @click="_itemDelete(items, i)"
             >
               <i class="fas fa-times"></i>
             </button>
@@ -298,8 +299,8 @@ Dependencies: @/mixins/locale.vue
         >
           <!-- simple item -->
           <label
-            :for="'item-simple-'+i"
             class="col-form-label col-2"
+            :for="'item-simple-'+i"
           >
             <span class="sr-only">
               {{ y18n('simpleAlt') }}
@@ -308,7 +309,7 @@ Dependencies: @/mixins/locale.vue
           <div class="col-5">
             <input
               :id="'item-simple-'+i"
-              v-model="it.simple"
+              v-model="item.simple"
               class="form-control"
               type="text"
             >
@@ -320,7 +321,7 @@ Dependencies: @/mixins/locale.vue
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            @click="_addItem(y18n('layaLaScmc.edit.sampleOption'))"
+            @click="_itemAdd(items, newItem())"
           >
             <i class="fas fa-plus"></i>
             {{ y18n('itemAdd') }}
@@ -332,19 +333,27 @@ Dependencies: @/mixins/locale.vue
 </template>
 
 <script>
-import { locale, tooltipIcon } from '@/mixins'
-import commonMethods from '@/plugins/laya-la-drag-drop/common-methods'
-import { mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
+import { mapGetters } from 'vuex'
+import { deepCopy } from '@/mixins/general/helpers'
+import { array, locale, routes, tooltipIcon } from '@/mixins'
 
 export default {
-  name: 'LayaLaDragDropNew',
+  name: 'CategoryMatchingEdit',
 
   mixins: [
-    commonMethods,
+    array,
     locale,
+    routes,
     tooltipIcon
   ],
+
+  props: {
+    edit: {
+      type: Boolean,
+      required: true
+    }
+  },
 
   data () {
     return {
@@ -357,28 +366,30 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['courseSimple'])
+    ...mapGetters(['courseContent', 'courseSimple'])
   },
 
   created () {
-    this.fillFormSamples()
-    this.populateVars()
+    if (this.edit) {
+      this.fetchData()
+    } else {
+      this.fillForm()
+    }
   },
 
   methods: {
     /**
-     * Function fillFormSamples: fill form with example names in locale
+     * Function fillForm: fill form with example names in locale
      *
      * Author: cmc
      *
      * Last Updated: March 12, 2021
      */
-    fillFormSamples () {
+    fillForm () {
       // fill item and category props with localized tokens
       if (this.categories.length === 0) {
-        const temp = this.y18n('layaLaDragDrop.answer') + ' 1'
         const tmpItem = {
-          label: temp,
+          label: this.y18n('categoryMatching.answer') + ' 1',
           simple: 'simple lang alternative',
           category: -1,
           flagged: false,
@@ -387,16 +398,12 @@ export default {
         this.items.push(tmpItem)
 
         for (let i = 1; i < 3; i++) {
-          const tmp = this.y18n('cat') + ' ' + i
           this.categories.push({
-            text: tmp,
+            text: this.y18n('cat') + ' ' + i,
             simple: 'simple language alternative'
           })
         }
       }
-    },
-
-    populateVars () {
       this.title = {
         text: '',
         flagged: false,
@@ -404,6 +411,36 @@ export default {
       }
       this.task = {
         text: '',
+        flagged: false,
+        id: uuidv4()
+      }
+    },
+    /**
+     * Function fetchData(): fetch data from vuex and make data property
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 12, 2021
+     */
+    fetchData () {
+      const preData = deepCopy(this.courseContent[this.pathId])
+      this.title = preData.title
+      this.task = preData.task
+      this.taskAudio = preData.taskAudio
+      this.items = preData.items
+      this.categories = preData.categories
+    },
+    /**
+     * @function create a new object for items
+     * @author cmc
+     * @since v1.3.0
+     * @return {*} new item object
+     */
+    newItem () {
+      return {
+        label: this.y18n('layaLaScmc.edit.sampleOption'),
+        simple: 'simple lang alternative',
+        category: -1,
         flagged: false,
         id: uuidv4()
       }
@@ -422,4 +459,8 @@ legend {
   font-size: 1rem;
 }
 
+#questionmark {
+  float: end;
+  cursor: pointer;
+}
 </style>

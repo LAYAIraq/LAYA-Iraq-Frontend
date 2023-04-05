@@ -90,7 +90,7 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import { locale, routes } from '@/mixins'
-import { stripKey } from '@/mixins/general/helpers'
+import { kebabToCamel, stripKey } from '@/mixins/general/helpers'
 
 export default {
   name: 'CourseBlockNew',
@@ -112,10 +112,11 @@ export default {
      *  Last Updated: September 21, 2021
      */
     applicableAssessments () {
+      const ass = { ...this.$laya.la, ...this.$laya.assessments }
       if (this.course.properties.enrollment) {
-        return this.$laya.la
+        return ass
       } else {
-        return stripKey('laya-course-feedback', this.$laya.la)
+        return stripKey('laya-course-feedback', ass)
       }
     }
   },
@@ -132,7 +133,7 @@ export default {
      * @param {object} layaBlock $laya block object
      */
     getCaption (layaBlock) {
-      return this.i18n[layaBlock.name + '.caption']
+      return this.i18n[(layaBlock.name ?? kebabToCamel(layaBlock.id)) + '.caption']
     },
 
     /**
@@ -145,7 +146,7 @@ export default {
      * @param {object} layaBlock $laya block object
      */
     getName (layaBlock) {
-      return this.i18n[layaBlock.name + '.name']
+      return this.i18n[(layaBlock.name ?? kebabToCamel(layaBlock.id)) + '.name']
     }
   }
 }

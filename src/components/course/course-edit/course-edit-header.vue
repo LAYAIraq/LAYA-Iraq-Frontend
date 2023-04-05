@@ -84,6 +84,7 @@ Dependencies:
 
 import { mapGetters } from 'vuex'
 import { locale, routes } from '@/mixins'
+import { kebabToCamel } from '@/mixins/general/helpers'
 
 export default {
   name: 'CourseEditHeader',
@@ -119,13 +120,7 @@ export default {
      * @param {string} compName name of content block
      */
     typeName (compName) {
-      const comps = { ...this.$laya.la, ...this.$laya.lb }
-      for (const comp in comps) {
-        if (comps[comp].id === compName) {
-          return this.i18n[comps[comp].name + '.name']
-        }
-      }
-      return 'FAIL'
+      return this.i18n[kebabToCamel(compName) + '.name']
     }
   }
 

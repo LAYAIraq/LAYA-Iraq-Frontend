@@ -51,3 +51,12 @@ export const stripKey = (key, obj) => {
 export const deepCopy = (obj) => {
   return JSON.parse(JSON.stringify(obj))
 }
+
+/**
+ * @function convert kebab case string to camel case
+ * @author cmc
+ * @param str - string to convert
+ */
+export const kebabToCamel = (str) => {
+  return str.replace(/-([a-z])/g, (g) => g[1].toUpperCase())
+}
