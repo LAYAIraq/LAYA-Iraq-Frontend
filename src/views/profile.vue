@@ -2,14 +2,7 @@
 Filename: profile.vue
 Use: User Profile Settings, such as password and avatar
 Creator: core
-Date: unknown
-Dependencies:
-  axios,
-  vuex,
-  vue-password-strength-meter,
-  @/mixins/locale.vue
-  @/backend-url.ts,
-  @/plugins/misc/laya-upload-avatar/avatar.vue
+Since: v1.0.0
 -->
 
 <!--suppress JSAnnotator -->
@@ -186,6 +179,7 @@ Dependencies:
                         :cancel-title="y18n('cancel')"
                         centered
                         static
+                        :ok-disabled="newUsername === profile.username"
                         @ok="changeUsername"
                       >
                         <!-- new username -->
@@ -195,14 +189,34 @@ Dependencies:
                             class="col-sm-3 col-form-label"
                           >{{ y18n('profile.newUsername') }}</label>
                           <div class="col-sm-9">
-                            <input
-                              id="newUsername"
-                              v-model="newUsername"
-                              type="username"
-                              class="form-control"
-                              :placeholder="y18n('profile.newUsername')"
-                              autocomplete="on"
+                            <p>
+                              <input
+                                id="newUsername"
+                                v-model="newUsername"
+                                type="text"
+                                class="form-control"
+                                :placeholder="y18n('profile.newUsername')"
+                                autocomplete="on"
+                              >
+                            </p>
+                            <p
+                              v-if="usernameTaken"
+                              id="username-taken"
                             >
+                              {{ y18n('profile.usernameTaken') }}
+                            </p>
+                            <p
+                              v-if="usernameEmpty"
+                              id="username-empty"
+                            >
+                              {{ y18n('profile.usernameEmpty') }}
+                            </p>
+                            <p
+                              v-if="newUsername === profile.name"
+                              id="username-same"
+                            >
+                              {{ y18n('profile.usernameSame') }}
+                            </p>
                           </div>
                         </div>
                       </b-modal>
@@ -355,61 +369,82 @@ Dependencies:
 
           <hr>
           -->
+
       <accessibility-settings></accessibility-settings>
+
       <author-application></author-application>
+
+      <div class="container">
+        <div class="row">
+          <!-- Save Button -->
+          <div class="form-group">
+            <button
+              id="save-profile"
+              type="submit"
+              :disabled="busy || !passwordInputOk"
+              class="btn btn-block btn-lg btn-outline-dark"
+              style="border-width: 2px"
+              @click.prevent="submit"
+            >
+              <i class="fas fa-check"></i>
+              {{ y18n('save') }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <b-toast
+        id="submit-failed"
+        variant="danger"
+        :title="y18n('savingFailed')"
+        class="author-toast"
+        auto-hide-delay="1500"
+        static
+      >
+        {{ y18n('profile.submitFail') }}
+      </b-toast>
+      <b-toast
+        id="submit-ok"
+        variant="success"
+        :title="y18n('layaUploadFileList.success')"
+        class="author-toast"
+        auto-hide-delay="1500"
+        static
+      >
+        {{ y18n('profile.submitOk') }}
+      </b-toast>
+
+      <b-toast
+        id="profile-save-toast"
+        :title="y18n('profile.submitOk')"
+        static
+        variant="success"
+        auto-hide-delay="1500"
+        class="profile-toast"
+      >
+        {{ y18n('successfulSave') }}
+      </b-toast>
+      <b-toast
+        id="email-error"
+        :title="y18n('profile.error')"
+        static
+        variant="danger"
+        auto-hide-delay="1500"
+        class="profile-toast"
+      >
+        {{ y18n('profile.emailError') }}
+      </b-toast>
+      <b-toast
+        id="username-error"
+        :title="y18n('profile.error')"
+        static
+        variant="danger"
+        auto-hide-delay="1500"
+        class="profile-toast"
+      >
+        {{ y18n('profile.usernameError') }}
+      </b-toast>
     </div>
-
-    <b-toast
-      id="submit-failed"
-      variant="danger"
-      :title="y18n('savingFailed')"
-      class="author-toast"
-      auto-hide-delay="1500"
-      static
-    >
-      {{ y18n('profile.submitFail') }}
-    </b-toast>
-    <b-toast
-      id="submit-ok"
-      variant="success"
-      :title="y18n('layaUploadFileList.success')"
-      class="author-toast"
-      auto-hide-delay="1500"
-      static
-    >
-      {{ y18n('profile.submitOk') }}
-    </b-toast>
-
-    <b-toast
-      id="profile-save-toast"
-      :title="y18n('profile.submitOk')"
-      static
-      variant="success"
-      auto-hide-delay="1500"
-      class="profile-toast"
-    >
-      {{ y18n('successfulSave') }}
-    </b-toast>
-    <b-toast
-      id="email-error"
-      :title="y18n('profile.error')"
-      static
-      variant="danger"
-      auto-hide-delay="1500"
-      class="profile-toast"
-    >
-      {{ y18n('profile.emailError') }}
-    </b-toast>
-    <b-toast
-      id="username-error"
-      :title="y18n('profile.error')"
-      static
-      variant="danger"
-      auto-hide-delay="1500"
-      class="profile-toast"
-    >
-      {{ y18n('profile.usernameError') }}
-    </b-toast>
   </div>
 </template>
 
@@ -454,7 +489,9 @@ export default {
       newEmail: '',
       nameTaken: '',
       email: '',
-      newUsername: ''
+      newUsername: '',
+      usernameTaken: false,
+      usernameEmpty: false
     }
   },
 
@@ -544,10 +581,7 @@ export default {
 
   beforeDestroy () {
     // save changes in profile
-    this.setPrefs(this.prefs)
     this.saveProfile()
-    this.submitApplication()
-    this.$store.commit('clearApplicationList')
   },
 
   created () {
@@ -572,7 +606,7 @@ export default {
     setProfileForRender () {
       // make profile settings mutable and render
       this.avatar = this.profile.avatar
-      this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
+      /* this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
       if (!this.prefs.media) { // avoid render error when no prefs set
         this.prefs.media = {}
       }
@@ -581,7 +615,7 @@ export default {
           chosen: 'standard',
           size: 18
         }
-      }
+      } */
     },
 
     checkEmail (email) {
@@ -616,20 +650,21 @@ export default {
       }
     },
 
-    changeUsername () {
-      if (this.newUsername !== '') {
-        this.$store.dispatch('checkNameTaken', this.newUsername)
-          .then(() => {
-            this.$bvToast.show('username-error')
-          })
-          .catch(() => {
-            this.$store.commit('setUsername', this.newUsername)
-            this.$store.dispatch('saveProfile')
-              .then(() => { this.$bvToast.show('profile-save-toast') })
-              .catch(() => { this.$bvToast.show('submit-failed') })
-          })
+    changeUsername (e) {
+      e.preventDefault()
+      if (this.newUsername === '') {
+        this.usernameEmpty = true
       } else {
-        this.$bvToast.show('submit-failed')
+        this.$store.dispatch('checkNameTaken', this.newUsername)
+          .then(resp => {
+            if (resp === true) {
+              this.usernameTaken = true
+            } else {
+              this.$store.commit('setUsername', this.newUsername)
+              this.submit()
+            }
+          })
+          .catch(err => { console.log(err) })
       }
     },
 
@@ -675,7 +710,7 @@ export default {
       this.$store.commit('setInstitution', this.profile.institution)
       this.$store.commit('setOccupation', this.profile.occupation)
       /* update state and save profile preferences */
-      this.$store.commit('setPrefs', this.prefs)
+      // this.$store.commit('setPrefs', this.prefs)
       this.$store.dispatch('saveProfile')
         .then(() => { this.$bvToast.show('profile-save-toast') })
         .catch(err => {
