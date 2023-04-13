@@ -2,7 +2,7 @@
   Filename: accessibility-settings.vue
   Use: Accessibility Settings, such as content preferences and text size
   Creator: nv
-  Since: version 1.3.0
+  Since: v1.3.0
 -->
 <template>
   <div>
@@ -116,20 +116,6 @@
             </div>
           </div>
 
-          <!-- Save Button -->
-          <div class="form-group">
-            <button
-              id="save-profile"
-              type="submit"
-              :disabled="busy || !passwordInputOk"
-              class="btn btn-block btn-lg btn-outline-dark"
-              style="border-width: 2px"
-              @click.prevent="submit"
-            >
-              <i class="fas fa-check"></i>
-              {{ y18n('save') }}
-            </button>
-          </div>
           <strong class="form-text text-center">{{ formMsg }}</strong>
         </form>
       </div>

@@ -2,7 +2,7 @@
   Filename: author-application.vue
   Use: Author application modal for profile
   Creator: nv
-  Since: version 1.3.0
+  Since: v1.3.0
 -->
 <template>
   <div>
