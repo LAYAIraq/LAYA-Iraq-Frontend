@@ -338,7 +338,6 @@ Dependencies:
         </div>
       </div>
       <hr>
-
       <!-- avatar upload TODO: FIX Cropper Problems
 
           <div class="form-group row">
@@ -356,215 +355,10 @@ Dependencies:
 
           <hr>
           -->
-
-      <div class="container">
-        <div class="row">
-          <form
-            class="w-100"
-            style="margin-top: 1rem"
-          >
-            <h3 :class="langIsAr? 'text-right' : 'text-left'">
-              {{ y18n('profile.accessibility') }}
-            </h3>
-            <hr>
-            <!-- Default Media Forms -->
-            <div class="form-group row">
-              <label class="col-sm-3 col-form-label">{{ y18n('profile.defmedia.label') }}</label>
-              <div class="col-sm-9 d-inline-flex justify-content-between align-items-center">
-                <!-- Text -->
-                <div class="checkbox-inline">
-                  <label>
-                    <input
-                      v-model="prefs.media.text"
-                      type="checkbox"
-                    >
-                    {{ y18n('profile.defmedia.text') }}
-                  </label>
-                </div>
-
-                <!-- Simple -->
-                <div class="checkbox-inline">
-                  <label>
-                    <input
-                      v-model="prefs.media.simple"
-                      type="checkbox"
-                    >
-                    {{ y18n('profile.defmedia.simple') }}
-                  </label>
-                </div>
-
-                <!-- Video -->
-                <div class="checkbox-inline">
-                  <label>
-                    <input
-                      v-model="prefs.media.video"
-                      type="checkbox"
-                    >
-                    {{ y18n('profile.defmedia.video') }}
-                  </label>
-                </div>
-
-                <!-- Audio -->
-                <div class="checkbox-inline">
-                  <label>
-                    <input
-                      v-model="prefs.media.audio"
-                      type="checkbox"
-                    >
-                    {{ y18n('profile.defmedia.audio') }}
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <!-- Font Options -->
-            <div class="form-group row">
-              <label class="col-sm-3 col-form-label">
-                {{ y18n('profile.fontOptions') }}
-              </label>
-              <div
-                class="col-sm-9 d-inline-flex justify-content-between align-items-center"
-              >
-                <div class="input-inline">
-                  <label>
-                    {{ y18n('profile.font') }}
-                    <b-form-select
-                      v-model="prefs.font.chosen"
-                    >
-                      <b-form-select-option
-                        v-for="(opt, i) in introFontOptions"
-                        :key="i"
-                        :value="opt.value"
-                        :class="`laya-font-${opt.value}`"
-                      >
-                        <span :class="opt.value? `laya-font-${opt.value}`:''">
-                          {{ opt.text }}
-                        </span>
-                      </b-form-select-option>
-                    </b-form-select>
-                  </label>
-                </div>
-                <!-- Font Size -->
-                <div>
-                  <label>
-                    {{ y18n('profile.fontSize') }}
-                    <b-form-input
-                      v-model="chosenSize"
-                      type="range"
-                      min="0"
-                      :max="fontSizeOptions.length-1"
-                    ></b-form-input>
-                  </label>
-                  <div class="d-flex justify-content-between w-100">
-                    <div
-                      v-for="(opt, i) in fontSizeOptions"
-                      :key="`text-option-${i}`"
-                    >
-                      {{ opt }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Save Button -->
-            <div class="form-group">
-              <button
-                id="save-profile"
-                type="submit"
-                :disabled="busy || !passwordInputOk"
-                class="btn btn-block btn-lg btn-outline-dark"
-                style="border-width: 2px"
-                @click.prevent="submit"
-              >
-                <i class="fas fa-check"></i>
-                {{ y18n('save') }}
-              </button>
-            </div>
-            <strong class="form-text text-center">{{ formMsg }}</strong>
-          </form>
-        </div>
-      </div>
+      <accessibility-settings></accessibility-settings>
+      <author-application></author-application>
     </div>
-    <div>
-      <hr>
-      <!-- author application -->
-      <div
-        v-if="!isAuthor"
-        id="author-application"
-        class="row"
-      >
-        <div class="col-3">
-          {{ y18n('profile.application') }}
-          <i
-            v-b-tooltip.auto
-            class="fas fa-question-circle"
-            :title="y18n('profile.application.tooltip')"
-          ></i>
-        </div>
-        <div
-          v-if="applicationNew && applicationEdited === -1"
-          class="col"
-        >
-          <b-button
-            id="application-button"
-            block
-            variant="secondary"
-            @click="$bvModal.show('author-application-form')"
-          >
-            {{ y18n('profile.application.fillOut') }}
-          </b-button>
-        </div>
-        <div
-          v-else-if="userApplication &&
-            userApplication.decidedOn"
-          class="col"
-        >
-          <span
-            v-if="userApplication.status === 'withdrawn'"
-            id="application-withdrawn"
-          >
-            {{ y18n('profile.application.withdrawn')
-              .replace('{DATE}', Date(userApplication.decidedOn)
-                .toLocaleString()) }}
-          </span>
-          <span
-            v-else
-            id="application-decided"
-          >
-            {{ y18n('profile.application.decided')
-              .replace('{date}', Date(userApplication.decidedOn)
-                .toLocaleString()
-              ).replace('{status}', userApplication.status)
-            }}
-          </span>
-          <span v-if="userApplication.status === 'accepted'">
-            {{ y18n('profile.application.congrats') }}
-          </span>
-        </div>
-        <div
-          v-else
-          class="col"
-        >
-          <b-button
-            id="edit-application-button"
-            block
-            variant="secondary"
-            @click="$bvModal.show('author-application-form')"
-          >
-            {{ y18n('profile.application.edit') }}
-          </b-button>
-          <b-button
-            id="withdraw-application-button"
-            block
-            variant="warning"
-            @click="$bvModal.show('application-withdraw-modal')"
-          >
-            {{ y18n('profile.application.withdraw') }}
-          </b-button>
-        </div>
-      </div>
-    </div>
+
     <b-toast
       id="submit-failed"
       variant="danger"
@@ -585,97 +379,6 @@ Dependencies:
     >
       {{ y18n('profile.submitOk') }}
     </b-toast>
-    <b-modal
-      id="author-application-form"
-      :title="y18n('profile.application')"
-      header-bg-variant="info"
-      ok-variant="success"
-      :ok-title="y18n('profile.application.save')"
-      :cancel-title="y18n('cancel')"
-      centered
-      static
-      @ok="saveApplication"
-    >
-      <div class="form-group p-2">
-        <div class="form-group row">
-          <label
-            for="applicant-name"
-            class="col-form-label"
-          >
-            {{ y18n('profile.application.fullName') }}
-          </label>
-          <input
-            v-model="profile.fullName"
-            class="form-control"
-            type="text"
-            readonly
-          >
-        </div>
-        <div class="form-group row">
-          <label
-            for="applicant-institution"
-            class="col-form-label"
-          >
-            {{ y18n('profile.application.institution') }}
-          </label>
-          <input
-            id="applicant-institution"
-            v-model="profile.institution"
-            class="form-control"
-            type="text"
-            readonly
-          >
-        </div>
-        <div class="form-group row">
-          <label
-            for="applicant-expertise"
-            class="col-form-label"
-          >
-            {{ y18n('profile.application.areaOfExpertise') }}
-          </label>
-          <input
-            id="applicant-expertise"
-            v-model="formInput.areaOfExpertise"
-            class="form-control"
-            type="text"
-          >
-        </div>
-        <div class="form-group row">
-          <label
-            for="applicant-text"
-            class="col-form-label"
-          >
-            {{ y18n('profile.application.text') }}
-            <i
-              v-b-tooltip.auto
-              class="fas fa-question-circle"
-              :title="y18n('profile.application.textTooltip')"
-            ></i>
-          </label>
-          <textarea
-            id="applicant-text"
-            v-model="formInput.applicationText"
-            class="form-control"
-            rows="5"
-          ></textarea>
-        </div>
-      </div>
-    </b-modal>
-    <b-modal
-      id="application-withdraw-modal"
-      :title="y18n('profile.application.withdraw')"
-      header-bg-variant="warning"
-      ok-variant="warning"
-      :ok-title="y18n('profile.application.withdraw')"
-      :cancel-title="y18n('cancel')"
-      centered
-      static
-      @ok="withdrawApplication"
-    >
-      <p>
-        {{ y18n('profile.application.withdrawConfirm') }}
-      </p>
-    </b-modal>
 
     <b-toast
       id="profile-save-toast"
@@ -714,11 +417,11 @@ Dependencies:
 import { locale, pwdProps } from '@/mixins'
 import api from '@/backend-url'
 import PasswordInput from '@/components/password-input.vue'
-import { mapActions, mapGetters, mapMutations } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import institutions from '@/misc/institutions'
 import occupations from '@/misc/occupations'
-import fontOptions from '@/misc/font-options'
-import fontSizeOptions from '@/misc/font-size-options'
+import AuthorApplication from '@/components/author-application'
+import AccessibilitySettings from '@/components/accessibility-settings'
 // import '@/styles/fonts.css'
 // import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
 
@@ -726,7 +429,9 @@ export default {
   name: 'ProfileView',
 
   components: {
-    PasswordInput // not lazily loaded b/c always visible
+    PasswordInput, // not lazily loaded b/c always visible
+    AuthorApplication,
+    AccessibilitySettings
   },
 
   mixins: [
@@ -743,28 +448,19 @@ export default {
       busy: false,
       institution: '',
       occupation: '',
-      prefs: {},
       fullName: '',
-      formInput: {
-        applicationText: '',
-        areaOfExpertise: ''
-      },
       oldEmail: '',
       repeatEmail: '',
       newEmail: '',
       nameTaken: '',
       email: '',
-      newUsername: '',
-      applicationEdited: -1, // increments once when data is loaded from store
-      applicationNew: false
+      newUsername: ''
     }
   },
 
   computed: {
     ...mapGetters([
-      'isAuthor',
       'profile',
-      'userApplication',
       'userId'
     ]),
 
@@ -779,24 +475,6 @@ export default {
       return (!this.avatar || this.avatar === '')
         ? null
         : `${api}/storage/img/download/${this.avatar}`
-    },
-
-    /**
-     * chosenSize: returns index of chosen size in fontSizeOptions,
-     *  sets pref.font.size when changed
-     *
-     * Author: cmc
-     *
-     * Last Updated: September 22, 2021
-     * @returns {number} index in fontSizeOptions array
-     */
-    chosenSize: {
-      get () {
-        return this.fontSizeOptions.indexOf(this.prefs.font.size)
-      },
-      set (newVal) {
-        this.prefs.font.size = this.fontSizeOptions[newVal]
-      }
     },
 
     /**
@@ -828,24 +506,6 @@ export default {
     },
 
     /**
-     * introFontOptions(): add placeholder in locale to fontOptions
-     *
-     * Author: cmc
-     *
-     * Last Updated: September 22, 2021
-     */
-    introFontOptions () {
-      return [
-        { value: null, text: this.y18n('profile.fontChoose') },
-        ...fontOptions
-      ]
-    },
-
-    fontSizeOptions () {
-      return fontSizeOptions
-    },
-
-    /**
      * function newPasswordInput: returns something when password input is set
      *
      * Author: cmc
@@ -874,21 +534,11 @@ export default {
   },
 
   watch: {
-    formInput: { // watch for changed on form input
-      handler () {
-        this.applicationEdited++
-      },
-      deep: true
-    },
     profile: {
       deep: true,
       handler () {
         this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
       }
-    },
-    userApplication (val) { // mirror changes in store for render (e.g. when new application is set)
-      this.formInput.applicationText = val.applicationText
-      this.formInput.areaOfExpertise = val.areaOfExpertise
     }
   },
 
@@ -902,7 +552,6 @@ export default {
 
   created () {
     this.setProfileForRender()
-    this.setUserApplication()
     window.addEventListener('beforeunload', () => {
       this.$destroy()
     })
@@ -910,55 +559,8 @@ export default {
 
   methods: {
     ...mapActions([
-      'getApplicationUser',
-      'saveProfile',
-      'sendApplication',
-      'sendApplicationDecision',
-      'updateApplication'
+      'saveProfile'
     ]),
-    ...mapMutations([
-      'addApplication',
-      'decideOnApplication',
-      'editApplication',
-      'setPrefs'
-    ]),
-
-    /**
-     * functionSaveApplication: save edits to application in store
-     *
-     * Author: cmc
-     *
-     * Last Updated: May 4, 2022
-     */
-    saveApplication () {
-      const {
-        applicationText,
-        areaOfExpertise
-      } = this.formInput
-      // noinspection JSCheckFunctionSignatures
-      if (this.applicationNew) {
-        this.addApplication({
-          applicationText: applicationText,
-          areaOfExpertise: areaOfExpertise,
-          fullName: this.profile.fullName,
-          institution: this.profile.institution,
-          applicantId: this.userId
-        })
-      } else if (this.applicationEdited > 0) {
-        this.editApplication({
-          id: this.userApplication.id,
-          applicationText: applicationText,
-          areaOfExpertise: areaOfExpertise,
-          fullName: this.profile.fullName,
-          institution: this.profile.institution
-        })
-      }
-      this.$bvToast.toast(this.y18n('profile.application.saved'), {
-        title: this.y18n('profile.success'),
-        toaster: 'b-toaster-bottom-center',
-        variant: 'success'
-      })
-    },
 
     /**
      * function setProfileForRender: deep copy prefs for mutation, render
@@ -979,31 +581,6 @@ export default {
           chosen: 'standard',
           size: 18
         }
-      }
-    },
-
-    /**
-     * function setUserApplication: set mutable application parts, fetch
-     *  application if none present
-     *
-     *  Author: cmc
-     *
-     *  Last Updated: May 6, 2022
-     */
-    setUserApplication () {
-      if (!this.userApplication) {
-        this.getApplicationUser(this.userId)
-          .then(resp => {
-            if (!resp) { // application doesn't exist
-              this.applicationNew = true
-            }
-          })
-          .catch(err => console.error(err))
-      } else { // userApplication already in store, set values for render
-        this.formInput.applicationText = this.userApplication.applicationText
-        this.formInput.institution = this.userApplication.institution
-        this.formInput.areaOfExpertise = this.userApplication.areaOfExpertise
-        this.formInput.fullName = this.userApplication.fullName
       }
     },
 
@@ -1105,35 +682,8 @@ export default {
           console.error(err)
           this.$bvToast.show('submit-failed')
         })
-    },
-
-    /**
-     * function submitApplication: depending on if application existed before,
-     *  update existing or send new application, to be called onDestoy
-     *
-     *  Author: cmc
-     *
-     *  Last Updated: May 4, 2022
-     */
-    submitApplication () {
-      if (this.applicationNew) {
-        this.sendApplication(this.userApplication)
-      } else {
-        this.updateApplication(this.userApplication)
-      }
-    },
-
-    /**
-     * function withdrawApplication: withdraw application, save in store
-     *
-     * Author: cmc
-     *
-     * Last Updated: May 6, 2022
-     */
-    withdrawApplication () {
-      this.decideOnApplication({ applicationId: this.userApplication.id, decision: 'withdrawn' })
-      this.sendApplicationDecision()
     }
+
   }
 }
 </script>
