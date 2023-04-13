@@ -112,7 +112,7 @@ Since: v1.0.0
                   v-model="profile.institution"
                 >
                   <b-form-select-option
-                    v-for="(opt, i) in chooseInstitution"
+                    v-for="(opt, i) in institutionChoose"
                     :key="i"
                     :value="opt.value"
                   >
@@ -135,7 +135,7 @@ Since: v1.0.0
                   v-model="profile.occupation"
                 >
                   <b-form-select-option
-                    v-for="(opt, i) in chooseOccupation"
+                    v-for="(opt, i) in occupationChoose"
                     :key="i"
                     :value="opt.value"
                   >
@@ -168,34 +168,34 @@ Since: v1.0.0
                         variant="secondary"
                         @click="$bvModal.show('change-username-form')"
                       >
-                        {{ y18n('profile.changeUsername') }}
+                        {{ y18n('profile.usernameChange') }}
                       </b-button>
                       <b-modal
                         id="change-username-form"
-                        :title="y18n('profile.changeUsername')"
+                        :title="y18n('profile.usernameChange')"
                         header-bg-variant="info"
                         ok-variant="success"
                         :ok-title="y18n('save')"
                         :cancel-title="y18n('cancel')"
                         centered
                         static
-                        :ok-disabled="newUsername === profile.username"
-                        @ok="changeUsername"
+                        :ok-disabled="usernameNew === profile.username"
+                        @ok="usernameChange"
                       >
                         <!-- new username -->
                         <div class="form-group row">
                           <label
                             for="newUsername"
                             class="col-sm-3 col-form-label"
-                          >{{ y18n('profile.newUsername') }}</label>
+                          >{{ y18n('profile.usernameNew') }}</label>
                           <div class="col-sm-9">
                             <p>
                               <input
                                 id="newUsername"
-                                v-model="newUsername"
+                                v-model="usernameNew"
                                 type="text"
                                 class="form-control"
-                                :placeholder="y18n('profile.newUsername')"
+                                :placeholder="y18n('profile.usernameNew')"
                                 autocomplete="on"
                               >
                             </p>
@@ -212,7 +212,7 @@ Since: v1.0.0
                               {{ y18n('profile.usernameEmpty') }}
                             </p>
                             <p
-                              v-if="newUsername === profile.name"
+                              v-if="usernameNew === profile.name"
                               id="username-same"
                             >
                               {{ y18n('profile.usernameSame') }}
@@ -230,34 +230,47 @@ Since: v1.0.0
                         variant="secondary"
                         @click="$bvModal.show('change-email-form')"
                       >
-                        {{ y18n('profile.changeEmail') }}
+                        {{ y18n('profile.emailChange') }}
                       </b-button>
                       <b-modal
                         id="change-email-form"
-                        :title="y18n('profile.changeEmail')"
+                        :title="y18n('profile.emailChange')"
                         header-bg-variant="info"
                         ok-variant="success"
                         :ok-title="y18n('save')"
                         :cancel-title="y18n('cancel')"
                         centered
                         static
-                        @ok="changeEmailAddress"
+                        :ok-disabled="emailRepeat !== emailNew"
+                        @ok="emailChange"
                       >
                         <!-- Old email -->
                         <div class="form-group row">
                           <label
                             for="oldEmail"
                             class="col-sm-3 col-form-label"
-                          >{{ y18n('profile.oldEmail') }}</label>
+                          >{{ y18n('profile.emailOld') }}</label>
                           <div class="col-sm-9">
                             <input
                               id="oldEmail"
-                              v-model="oldEmail"
-                              type="email"
+                              v-model="emailOld"
+                              type="text"
                               class="form-control"
-                              :placeholder="y18n('profile.oldEmail')"
+                              :placeholder="y18n('profile.emailOld')"
                               autocomplete="on"
                             >
+                            <p
+                              v-if="emailOld !== profile.email"
+                              id="email-old-incorrect"
+                            >
+                              {{ y18n('profile.emailOldIncorrect') }}
+                            </p>
+                            <p
+                              v-if="emailOld === ''"
+                              id="email-old-empty"
+                            >
+                              {{ y18n('profile.emailEmpty') }}
+                            </p>
                           </div>
                         </div>
                         <!-- new email -->
@@ -265,16 +278,34 @@ Since: v1.0.0
                           <label
                             for="newEmail"
                             class="col-sm-3 col-form-label"
-                          >{{ y18n('profile.newEmail') }}</label>
+                          >{{ y18n('profile.emailNew') }}</label>
                           <div class="col-sm-9">
                             <input
                               id="newEmail"
-                              v-model="newEmail"
-                              type="email"
+                              v-model="emailNew"
+                              type="text"
                               class="form-control"
-                              :placeholder="y18n('profile.newEmail')"
+                              :placeholder="y18n('profile.emailNew')"
                               autocomplete="on"
                             >
+                            <p
+                              v-if="emailTakenCheck"
+                              id="email-new-taken"
+                            >
+                              {{ y18n('profile.emailNewTaken') }}
+                            </p>
+                            <p
+                              v-if="emailConformityCheck"
+                              id="email-new-not-conform"
+                            >
+                              {{ y18n('profile.emailNewNotConform') }}
+                            </p>
+                            <p
+                              v-if="emailNew === ''"
+                              id="email-new-empty"
+                            >
+                              {{ y18n('profile.emailEmpty') }}
+                            </p>
                           </div>
                         </div>
                         <!-- repeat email -->
@@ -282,16 +313,22 @@ Since: v1.0.0
                           <label
                             for="repeatEmail"
                             class="col-sm-3 col-form-label"
-                          >{{ y18n('profile.repeatEmail') }}</label>
+                          >{{ y18n('profile.emailRepeat') }}</label>
                           <div class="col-sm-9">
                             <input
                               id="repeatEmail"
-                              v-model="repeatEmail"
-                              type="email"
+                              v-model="emailRepeat"
+                              type="text"
                               class="form-control"
-                              :placeholder="y18n('profile.repeatEmail')"
+                              :placeholder="y18n('profile.emailRepeat')"
                               autocomplete="on"
                             >
+                            <p
+                              v-if="emailRepeat !== emailNew"
+                              id="email-compare-incorrect"
+                            >
+                              {{ y18n('profile.emailCompareIncorrect') }}
+                            </p>
                           </div>
                         </div>
                       </b-modal>
@@ -323,14 +360,14 @@ Since: v1.0.0
                           <label
                             for="oldPwd"
                             class="col-sm-3 col-form-label"
-                          >{{ y18n('profile.oldPwd') }}</label>
+                          >{{ y18n('profile.passwordOld') }}</label>
                           <div class="col-sm-9">
                             <input
                               id="oldPwd"
-                              v-model="oldPwd"
+                              v-model="passwordOld"
                               type="password"
                               class="form-control"
-                              :placeholder="y18n('profile.oldPwd')"
+                              :placeholder="y18n('profile.passwordOld')"
                               autocomplete="on"
                             >
                           </div>
@@ -434,16 +471,6 @@ Since: v1.0.0
       >
         {{ y18n('profile.emailError') }}
       </b-toast>
-      <b-toast
-        id="username-error"
-        :title="y18n('profile.error')"
-        static
-        variant="danger"
-        auto-hide-delay="1500"
-        class="profile-toast"
-      >
-        {{ y18n('profile.usernameError') }}
-      </b-toast>
     </div>
   </div>
 </template>
@@ -477,21 +504,24 @@ export default {
   data () {
     return {
       avatar: null,
-      oldPwd: '',
-      pwdMsg: '',
-      formMsg: '',
       busy: false,
-      institution: '',
-      occupation: '',
-      fullName: '',
-      oldEmail: '',
-      repeatEmail: '',
-      newEmail: '',
-      nameTaken: '',
       email: '',
-      newUsername: '',
+      emailEmpty: false,
+      emailNew: '',
+      emailNewConform: false,
+      emailNewTaken: false,
+      emailOld: '',
+      emailRepeat: '',
+      formMsg: '',
+      fullName: '',
+      institution: '',
+      nameTaken: '',
+      passwordMessage: '',
+      passwordOld: '',
+      usernameEmpty: false,
+      usernameNew: '',
       usernameTaken: false,
-      usernameEmpty: false
+      occupation: ''
     }
   },
 
@@ -515,13 +545,13 @@ export default {
     },
 
     /**
-     * chooseInstitution(): add institutions
+     * institutionChoose(): add institutions
      *
      * Author: nv
      *
-     * Last Updated: Feburary 13, 2023
+     * Last Updated: April 13, 2023
      */
-    chooseInstitution () {
+    institutionChoose () {
       return [
         { value: '', text: this.y18n('institutionPH') },
         ...institutions
@@ -529,13 +559,11 @@ export default {
     },
 
     /**
-     * chooseOccupation(): add occupation
-     *
+     * occupationChoose(): add occupation
      * Author: nv
-     *
-     * Last Updated: Feburary 13, 2023
+     * Last Updated: April 13, 2023
      */
-    chooseOccupation () {
+    occupationChoose () {
       return [
         { value: '', text: this.y18n('occupationPH') },
         ...occupations
@@ -618,49 +646,48 @@ export default {
       } */
     },
 
-    checkEmail (email) {
-      if (this.email === this.repeatEmail && this.checkFormat(this.email) === false && this.checkEmailTaken(email) === false && this.email !== '') {
+    emailConformityCheck () {
+      if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.emailNew))) {
+        this.emailNewConform = true
         return true
-      } else {
-        return false
       }
     },
 
-    checkFormat (email) {
-      if (this.email === '') return false
-      return !(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email))
-    },
-
-    checkEmailTaken (email) {
+    emailTakenCheck () {
       this.$store.dispatch('checkEmailTaken', this.email)
-        .then(() => { return true })
-        .catch(() => { return false })
+        .then(resp => {
+          if (resp === true) {
+            this.emailNewTaken = true
+            console.log(this.emailNewTaken)
+            return true
+          }
+        })
+        .catch(err => { console.log(err) })
     },
 
-    changeEmailAddress () {
-      if (this.oldEmail === this.profile.email) {
-        if (this.checkEmail(this.newEmail) === true) {
-          this.$store.commit('setEmail', this.newEmail)
-          this.$bvToast.show('submit-ok')
-          this.$store.dispatch('saveProfile')
-            .then(() => { this.$bvToast.show('profile-save-toast') })
-        } else {
-          this.$bvToast.show('email-error')
+    emailChange (e) {
+      e.preventDefault()
+      if (this.emailOld === this.profile.email) {
+        if (this.emailNewConform === false &&
+          this.emailNewTaken === false &&
+          this.emailNew === this.emailRepeat) {
+          this.$store.commit('setEmail', this.emailNew)
+          this.submit()
         }
       }
     },
 
-    changeUsername (e) {
+    usernameChange (e) {
       e.preventDefault()
-      if (this.newUsername === '') {
+      if (this.usernameNew === '') {
         this.usernameEmpty = true
       } else {
-        this.$store.dispatch('checkNameTaken', this.newUsername)
+        this.$store.dispatch('checkNameTaken', this.usernameNew)
           .then(resp => {
             if (resp === true) {
               this.usernameTaken = true
             } else {
-              this.$store.commit('setUsername', this.newUsername)
+              this.$store.commit('setUsername', this.usernameNew)
               this.submit()
             }
           })
@@ -671,14 +698,14 @@ export default {
     changePassword () {
       if (this.newPasswordInput) {
         this.busy = true
-        this.$store.dispatch('changePassword', this.oldPwd)
+        this.$store.dispatch('changePassword', this.passwordOld)
           .then(() => {
             this.$bvToast.show('submit-ok')
             this.$store.dispatch('saveProfile')
               .then(() => { this.$bvToast.show('profile-save-toast') })
               .catch(err => {
                 console.error(err)
-                this.pwdMsg = this.y18n('profile.pwdFail')
+                this.passwordMessage = this.y18n('profile.pwdFail')
                 this.$bvToast.show('submit-failed')
               })
               .finally(() => {
@@ -687,7 +714,7 @@ export default {
           })
           .catch(err => {
             console.error(err)
-            this.pwdMsg = this.y18n('profile.pwdFail')
+            this.passwordMessage = this.y18n('profile.pwdFail')
             this.$bvToast.show('submit-failed')
           })
           .finally(() => {
