@@ -11,11 +11,11 @@
           <i
             v-b-tooltip.auto
             class="fas fa-key"
-            :title="newInput? y18n('profile.newPwd'): y18n('pwdPH')"
+            :title="newInput? y18n('profile.passwordNew'): y18n('pwdPH')"
           ></i>
         </span>
         <span v-else>
-          {{ newInput? y18n('profile.newPwd'): y18n('pwdPH') }}
+          {{ newInput? y18n('profile.passwordNew'): y18n('pwdPH') }}
         </span>
 
       </span>
@@ -28,7 +28,7 @@
           :label-hide="y18n('password.hide')"
           :label-show="y18n('password.show')"
           :secure-length="Number(secureLength)"
-          :placeholder="newInput? y18n('profile.newPwd'): y18n('pwdPH')"
+          :placeholder="newInput? y18n('profile.passwordNew'): y18n('pwdPH')"
           :toggle="!langIsAr"
           :badge="!langIsAr"
           @feedback="pwdHints"
@@ -86,11 +86,11 @@
           <i
             v-b-tooltip.auto
             class="fas fa-lightbulb"
-            :title="y18n('profile.pwdSuggestion')"
+            :title="y18n('profile.passwordSuggestion')"
           ></i>
         </span>
         <span v-else>
-          {{ y18n('profile.pwdSuggestion') }}
+          {{ y18n('profile.passwordSuggestion') }}
         </span>
       </div>
       <div
@@ -270,7 +270,7 @@ export default {
      * Last Updated: March 24, 2021
      */
     pwdDiffMsg () {
-      return !this.pwdMatch ? this.y18n('profile.pwdDiffer') : ''
+      return !this.pwdMatch ? this.y18n('profile.passwordDiffer') : ''
     },
 
     /**

@@ -200,19 +200,19 @@ Since: v1.0.0
                               >
                             </p>
                             <p
-                              v-if="usernameTaken"
+                              v-if="usernameTakenCheck"
                               id="username-taken"
                             >
                               {{ y18n('profile.usernameTaken') }}
                             </p>
                             <p
-                              v-if="usernameEmpty"
+                              v-if="usernameNew === ''"
                               id="username-empty"
                             >
                               {{ y18n('profile.usernameEmpty') }}
                             </p>
                             <p
-                              v-if="usernameNew === profile.name"
+                              v-if="usernameNew === profile.username"
                               id="username-same"
                             >
                               {{ y18n('profile.usernameSame') }}
@@ -342,11 +342,11 @@ Since: v1.0.0
                         variant="secondary"
                         @click="$bvModal.show('change-password-form')"
                       >
-                        {{ y18n('profile.changePassword') }}
+                        {{ y18n('profile.passwordChange') }}
                       </b-button>
                       <b-modal
                         id="change-password-form"
-                        :title="y18n('profile.changePassword')"
+                        :title="y18n('profile.passwordChange')"
                         header-bg-variant="info"
                         ok-variant="success"
                         :ok-title="y18n('save')"
@@ -363,7 +363,7 @@ Since: v1.0.0
                           >{{ y18n('profile.passwordOld') }}</label>
                           <div class="col-sm-9">
                             <input
-                              id="oldPwd"
+                              id="passwordOld"
                               v-model="passwordOld"
                               type="password"
                               class="form-control"
@@ -460,16 +460,6 @@ Since: v1.0.0
         class="profile-toast"
       >
         {{ y18n('successfulSave') }}
-      </b-toast>
-      <b-toast
-        id="email-error"
-        :title="y18n('profile.error')"
-        static
-        variant="danger"
-        auto-hide-delay="1500"
-        class="profile-toast"
-      >
-        {{ y18n('profile.emailError') }}
       </b-toast>
     </div>
   </div>
@@ -645,14 +635,22 @@ export default {
         }
       } */
     },
-
+    /**
+     * @function check if email conformity is met
+     * @author nv
+     * @since v1.3.0
+     */
     emailConformityCheck () {
       if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.emailNew))) {
         this.emailNewConform = true
         return true
       }
     },
-
+    /**
+     * @function check if email is taken
+     * @author nv
+     * @since v1.3.0
+     */
     emailTakenCheck () {
       this.$store.dispatch('checkEmailTaken', this.email)
         .then(resp => {
@@ -664,7 +662,11 @@ export default {
         })
         .catch(err => { console.log(err) })
     },
-
+    /**
+     * @function change email if requirements are fulfilled
+     * @author nv
+     * @since v1.3.0
+     */
     emailChange (e) {
       e.preventDefault()
       if (this.emailOld === this.profile.email) {
@@ -676,45 +678,47 @@ export default {
         }
       }
     },
-
+    /**
+     * @function check if username is taken
+     * @author nv
+     * @since v1.3.0
+     */
+    usernameTakenCheck () {
+      this.$store.dispatch('checkNameTaken', this.usernameNew)
+        .then(resp => {
+          if (resp === true) {
+            this.usernameTaken = true
+            return true
+          }
+        })
+        .catch(err => { console.log(err) })
+    },
+    /**
+     * @function change username if requirements are fulfilled
+     * @author nv
+     * @since v1.3.0
+     */
     usernameChange (e) {
       e.preventDefault()
-      if (this.usernameNew === '') {
-        this.usernameEmpty = true
-      } else {
-        this.$store.dispatch('checkNameTaken', this.usernameNew)
-          .then(resp => {
-            if (resp === true) {
-              this.usernameTaken = true
-            } else {
-              this.$store.commit('setUsername', this.usernameNew)
-              this.submit()
-            }
-          })
-          .catch(err => { console.log(err) })
-      }
+      this.$store.commit('setUsername', this.usernameNew)
+      this.submit()
     },
-
+    /**
+     * @function change password if requirements are fulfilled
+     * @author cmc
+     * @since v1.1.0
+     */
     changePassword () {
       if (this.newPasswordInput) {
         this.busy = true
         this.$store.dispatch('changePassword', this.passwordOld)
           .then(() => {
             this.$bvToast.show('submit-ok')
-            this.$store.dispatch('saveProfile')
-              .then(() => { this.$bvToast.show('profile-save-toast') })
-              .catch(err => {
-                console.error(err)
-                this.passwordMessage = this.y18n('profile.pwdFail')
-                this.$bvToast.show('submit-failed')
-              })
-              .finally(() => {
-                this.busy = false
-              })
+            this.submit()
           })
           .catch(err => {
             console.error(err)
-            this.passwordMessage = this.y18n('profile.pwdFail')
+            this.passwordMessage = this.y18n('profile.passwordFail')
             this.$bvToast.show('submit-failed')
           })
           .finally(() => {
@@ -722,13 +726,10 @@ export default {
           })
       }
     },
-
     /**
      * Function submit: get password change request and fire it
-     *
      * Author: core
-     *
-     * Last Updated: February 06, by nv
+     * Last Updated: April 13, by nv
      */
     submit () {
       this.formMsg = ''
