@@ -95,7 +95,7 @@
       :cancel-title="y18n('cancel')"
       centered
       static
-      @ok="withdrawApplication"
+      @ok="applicationWithdraw"
     >
       <p>
         {{ y18n('profile.application.withdrawConfirm') }}
@@ -110,7 +110,7 @@
       :cancel-title="y18n('cancel')"
       centered
       static
-      @ok="saveApplication"
+      @ok="applicationSave"
     >
       <div class="form-group p-2">
         <div class="form-group row">
@@ -193,14 +193,14 @@ export default {
 
   data () {
     return {
+      applicationEdited: -1, // increments once when data is loaded from store
+      applicationNew: false,
       fullName: '',
       institution: '',
       formInput: {
         applicationText: '',
         areaOfExpertise: ''
-      },
-      applicationEdited: -1, // increments once when data is loaded from store
-      applicationNew: false
+      }
     }
   },
 
@@ -224,12 +224,12 @@ export default {
   },
 
   beforeDestroy () {
-    this.submitApplication()
+    this.applicationSubmit()
     this.$store.commit('clearApplicationList')
   },
 
   created () {
-    this.setUserApplication()
+    this.applicationUserSet()
   },
 
   methods: {
@@ -251,7 +251,7 @@ export default {
      *
      * Last Updated: May 4, 2022
      */
-    saveApplication () {
+    applicationSave () {
       const {
         applicationText,
         areaOfExpertise
@@ -281,14 +281,29 @@ export default {
       })
     },
     /**
-     * function setUserApplication: set mutable application parts, fetch
+     * function applicationSubmit: depending on if application existed before,
+     *  update existing or send new application, to be called onDestoy
+     *
+     *  Author: cmc
+     *
+     *  Last Updated: May 4, 2022
+     */
+    applicationSubmit () {
+      if (this.applicationNew) {
+        this.sendApplication(this.userApplication)
+      } else {
+        this.updateApplication(this.userApplication)
+      }
+    },
+    /**
+     * function applicationUserSet: set mutable application parts, fetch
      *  application if none present
      *
      *  Author: cmc
      *
      *  Last Updated: May 6, 2022
      */
-    setUserApplication () {
+    applicationUserSet () {
       if (!this.userApplication) {
         this.getApplicationUser(this.userId)
           .then(resp => {
@@ -305,28 +320,13 @@ export default {
       }
     },
     /**
-     * function submitApplication: depending on if application existed before,
-     *  update existing or send new application, to be called onDestoy
-     *
-     *  Author: cmc
-     *
-     *  Last Updated: May 4, 2022
-     */
-    submitApplication () {
-      if (this.applicationNew) {
-        this.sendApplication(this.userApplication)
-      } else {
-        this.updateApplication(this.userApplication)
-      }
-    },
-    /**
-     * function withdrawApplication: withdraw application, save in store
+     * function applicationWithdraw: withdraw application, save in store
      *
      * Author: cmc
      *
      * Last Updated: May 6, 2022
      */
-    withdrawApplication () {
+    applicationWithdraw () {
       this.decideOnApplication({ applicationId: this.userApplication.id, decision: 'withdrawn' })
       this.sendApplicationDecision()
     }

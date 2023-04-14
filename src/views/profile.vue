@@ -407,9 +407,9 @@ Since: v1.0.0
           <hr>
           -->
 
-      <accessibility-settings></accessibility-settings>
+      <accessibility-settings> </accessibility-settings>
 
-      <author-application></author-application>
+      <author-application> </author-application>
 
       <div class="container">
         <div class="row">

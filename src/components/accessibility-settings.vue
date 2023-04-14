@@ -81,7 +81,7 @@
                     v-model="prefs.font.chosen"
                   >
                     <b-form-select-option
-                      v-for="(opt, i) in introFontOptions"
+                      v-for="(opt, i) in fontOptionsIntro"
                       :key="i"
                       :value="opt.value"
                       :class="`laya-font-${opt.value}`"
@@ -98,7 +98,7 @@
                 <label>
                   {{ y18n('profile.fontSize') }}
                   <b-form-input
-                    v-model="chosenSize"
+                    v-model="sizeChosen"
                     type="range"
                     min="0"
                     :max="fontSizeOptions.length-1"
@@ -150,7 +150,30 @@ export default {
     ]),
 
     /**
-     * chosenSize: returns index of chosen size in fontSizeOptions,
+     * fontOptionsIntro(): add placeholder in locale to fontOptions
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 22, 2021
+     */
+    fontOptionsIntro () {
+      return [
+        { value: null, text: this.y18n('profile.fontChoose') },
+        ...fontOptions
+      ]
+    },
+    /**
+     * fontSizeOptions(): add font size options
+     *
+     * Author: cmc
+     *
+     * Last Updated: September 22, 2021
+     */
+    fontSizeOptions () {
+      return fontSizeOptions
+    },
+    /**
+     * sizeChosen: returns index of chosen size in fontSizeOptions,
      *  sets pref.font.size when changed
      *
      * Author: cmc
@@ -158,30 +181,13 @@ export default {
      * Last Updated: September 22, 2021
      * @returns {number} index in fontSizeOptions array
      */
-    chosenSize: {
+    sizeChosen: {
       get () {
         return this.fontSizeOptions.indexOf(this.prefs.font.size)
       },
       set (newVal) {
         this.prefs.font.size = this.fontSizeOptions[newVal]
       }
-    },
-    /**
-     * introFontOptions(): add placeholder in locale to fontOptions
-     *
-     * Author: cmc
-     *
-     * Last Updated: September 22, 2021
-     */
-    introFontOptions () {
-      return [
-        { value: null, text: this.y18n('profile.fontChoose') },
-        ...fontOptions
-      ]
-    },
-
-    fontSizeOptions () {
-      return fontSizeOptions
     }
   },
 
