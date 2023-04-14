@@ -353,7 +353,7 @@ Since: v1.0.0
                         :cancel-title="y18n('cancel')"
                         centered
                         static
-                        @ok="changePassword"
+                        @ok="passwordChange"
                       >
                         <!-- Old Password -->
                         <div class="form-group row">
@@ -496,19 +496,16 @@ export default {
       avatar: null,
       busy: false,
       email: '',
-      emailEmpty: false,
       emailNew: '',
       emailNewConform: false,
       emailNewTaken: false,
       emailOld: '',
       emailRepeat: '',
-      formMsg: '',
       fullName: '',
       institution: '',
-      nameTaken: '',
       passwordMessage: '',
       passwordOld: '',
-      usernameEmpty: false,
+      prefs: {},
       usernameNew: '',
       usernameTaken: false,
       occupation: ''
@@ -520,7 +517,6 @@ export default {
       'profile',
       'userId'
     ]),
-
     /**
      * avatarURL: return URL of user avatar
      *
@@ -533,7 +529,6 @@ export default {
         ? null
         : `${api}/storage/img/download/${this.avatar}`
     },
-
     /**
      * institutionChoose(): add institutions
      *
@@ -547,7 +542,6 @@ export default {
         ...institutions
       ]
     },
-
     /**
      * occupationChoose(): add occupation
      * Author: nv
@@ -559,20 +553,18 @@ export default {
         ...occupations
       ]
     },
-
     /**
-     * function newPasswordInput: returns something when password input is set
+     * function passwordInputNew: returns something when password input is set
      *
      * Author: cmc
      *
      * Last Updated: February 21, 2022
      * @returns {string}
      */
-    newPasswordInput () {
+    passwordInputNew () {
       return this.passwordRepeat ||
         this.passwordSet
     },
-
     /**
      * passwordsInputOk: returns true if no new password set or
      *  new password is secure
@@ -582,7 +574,7 @@ export default {
      * Last Updated: February 21, 2022
      */
     passwordInputOk () {
-      return this.newPasswordInput
+      return this.passwordInputNew
         ? this.passwordOk
         : true
     }
@@ -598,7 +590,6 @@ export default {
   },
 
   beforeDestroy () {
-    // save changes in profile
     this.saveProfile()
   },
 
@@ -613,27 +604,21 @@ export default {
     ...mapActions([
       'saveProfile'
     ]),
-
     /**
-     * function setProfileForRender: deep copy prefs for mutation, render
-     *
-     * Author: cmc
-     *
-     * Last Updated: May 6, 2022
+     * @function change email if requirements are fulfilled
+     * @author nv
+     * @since v1.3.0
      */
-    setProfileForRender () {
-      // make profile settings mutable and render
-      this.avatar = this.profile.avatar
-      /* this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
-      if (!this.prefs.media) { // avoid render error when no prefs set
-        this.prefs.media = {}
-      }
-      if (!this.prefs.font) {
-        this.prefs.font = {
-          chosen: 'standard',
-          size: 18
+    emailChange (e) {
+      e.preventDefault()
+      if (this.emailOld === this.profile.email) {
+        if (this.emailNewConform === false &&
+          this.emailNewTaken === false &&
+          this.emailNew === this.emailRepeat) {
+          this.$store.commit('setEmail', this.emailNew)
+          this.submit()
         }
-      } */
+      }
     },
     /**
      * @function check if email conformity is met
@@ -663,53 +648,12 @@ export default {
         .catch(err => { console.log(err) })
     },
     /**
-     * @function change email if requirements are fulfilled
-     * @author nv
-     * @since v1.3.0
-     */
-    emailChange (e) {
-      e.preventDefault()
-      if (this.emailOld === this.profile.email) {
-        if (this.emailNewConform === false &&
-          this.emailNewTaken === false &&
-          this.emailNew === this.emailRepeat) {
-          this.$store.commit('setEmail', this.emailNew)
-          this.submit()
-        }
-      }
-    },
-    /**
-     * @function check if username is taken
-     * @author nv
-     * @since v1.3.0
-     */
-    usernameTakenCheck () {
-      this.$store.dispatch('checkNameTaken', this.usernameNew)
-        .then(resp => {
-          if (resp === true) {
-            this.usernameTaken = true
-            return true
-          }
-        })
-        .catch(err => { console.log(err) })
-    },
-    /**
-     * @function change username if requirements are fulfilled
-     * @author nv
-     * @since v1.3.0
-     */
-    usernameChange (e) {
-      e.preventDefault()
-      this.$store.commit('setUsername', this.usernameNew)
-      this.submit()
-    },
-    /**
      * @function change password if requirements are fulfilled
      * @author cmc
      * @since v1.1.0
      */
-    changePassword () {
-      if (this.newPasswordInput) {
+    passwordChange () {
+      if (this.passwordInputNew) {
         this.busy = true
         this.$store.dispatch('changePassword', this.passwordOld)
           .then(() => {
@@ -727,26 +671,70 @@ export default {
       }
     },
     /**
+     * function setProfileForRender: deep copy prefs for mutation, render
+     *
+     * Author: cmc
+     *
+     * Last Updated: May 6, 2022
+     */
+    setProfileForRender () {
+      // make profile settings mutable and render
+      this.avatar = this.profile.avatar
+      this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
+      if (!this.prefs.media) { // avoid render error when no prefs set
+        this.prefs.media = {}
+      }
+      if (!this.prefs.font) {
+        this.prefs.font = {
+          chosen: 'standard',
+          size: 18
+        }
+      }
+    },
+    /**
      * Function submit: get password change request and fire it
      * Author: core
-     * Last Updated: April 13, by nv
+     * Since: v1.0.0
      */
     submit () {
       this.formMsg = ''
-
       this.$store.commit('setFullName', this.profile.fullName)
       this.$store.commit('setInstitution', this.profile.institution)
       this.$store.commit('setOccupation', this.profile.occupation)
       /* update state and save profile preferences */
-      // this.$store.commit('setPrefs', this.prefs)
+      this.$store.commit('setPrefs', this.profile.prefs)
       this.$store.dispatch('saveProfile')
         .then(() => { this.$bvToast.show('profile-save-toast') })
         .catch(err => {
           console.error(err)
           this.$bvToast.show('submit-failed')
         })
+    },
+    /**
+     * @function change username if requirements are fulfilled
+     * @author nv
+     * @since v1.3.0
+     */
+    usernameChange (e) {
+      e.preventDefault()
+      this.$store.commit('setUsername', this.usernameNew)
+      this.submit()
+    },
+    /**
+     * @function check if username is taken
+     * @author nv
+     * @since v1.3.0
+     */
+    usernameTakenCheck () {
+      this.$store.dispatch('checkNameTaken', this.usernameNew)
+        .then(resp => {
+          if (resp === true) {
+            this.usernameTaken = true
+            return true
+          }
+        })
+        .catch(err => { console.log(err) })
     }
-
   }
 }
 </script>
