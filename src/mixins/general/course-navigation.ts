@@ -1,6 +1,15 @@
-import { CourseNavigationStructure } from '@/misc/course-structure-types'
-import { DraggableCourseChapter } from '@/misc/course-navigation-types'
+/**
+ * @fileOverview utility functions for course navigation
+ * @author cmc
+ * @since 1.3.0
+ */
+import { CourseNavigationStructure } from '@/mixins/types/course-structure'
+import { DraggableCourseChapter } from '@/mixins/types/course-navigation'
 
+/**
+ * @description transform course navigation structure object to draggable array
+ * @param courseChapter course navigation structure object
+ */
 export const courseChapterTransformToDraggable = (courseChapter: CourseNavigationStructure): DraggableCourseChapter => {
   console.log('receiving', courseChapter)
   if (courseChapter instanceof Array) { // courseChapter is CourseNavigationItem[]

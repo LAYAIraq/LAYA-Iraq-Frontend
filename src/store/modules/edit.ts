@@ -1,6 +1,6 @@
 import http from 'axios'
 import { v4 as uuidv4 } from 'uuid'
-import { slugify } from '@/misc/course-structure-methods'
+import { slugify } from '@/mixins/general/course-structure'
 // import auth from '@/store/modules/auth'
 
 export default {

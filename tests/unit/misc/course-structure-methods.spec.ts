@@ -5,14 +5,14 @@ import {
   Course,
   LegacyContentBlock,
   LegacyCourse
-} from '@/misc/course-structure-types'
+} from '@/mixins/types/course-structure'
 import {
   coursePathsGet,
   courseStructureContentIdsExtract,
   courseStructureDescent,
   legacyContentStepsTransform,
   slugify, unslugify
-} from '@/misc/course-structure-methods'
+} from '@/mixins/general/course-structure'
 import { validateSlug } from '../../helpers/validations'
 
 // prerequisites to make sure sample data is valid

@@ -42,7 +42,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { courseChapterTransformToDraggable } from '@/misc/course-navigation-utils'
+import { courseChapterTransformToDraggable } from '@/mixins/general/course-navigation'
 import { locale } from '@/mixins'
 import { CourseNavChapter } from '@/views/course-nav-edit-tools'
 export default {

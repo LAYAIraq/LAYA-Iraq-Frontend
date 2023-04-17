@@ -2,7 +2,6 @@
  * @fileOverview types for course structure, old and new
  * @author cmc
  * @since 1.3.0
- * @dependencies none
  */
 
 // Old course structure
