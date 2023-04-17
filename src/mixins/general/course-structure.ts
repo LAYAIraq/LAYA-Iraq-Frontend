@@ -1,15 +1,14 @@
 /**
- * @fileOverview course-structure-methods.ts - methods for course structure
+ * @fileOverview course-structure.ts - methods for course structure
  * @author cmc
  * @since 1.3.0
- * @dependencies course-structure-types.ts
  */
 
 import {
   CourseNavigationStructure,
   CourseNavigationItem,
   LegacyContentBlock
-} from './course-structure-types'
+} from '@/mixins/types/course-structure'
 
 /**
  * @description breaks nextStep property into array of numbers,

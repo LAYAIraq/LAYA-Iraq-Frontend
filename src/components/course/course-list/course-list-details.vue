@@ -173,7 +173,7 @@
 // import http from 'axios'
 import { mapGetters } from 'vuex'
 import { locale, storeHandler } from '@/mixins'
-import { slugify } from '@/misc/course-structure-methods'
+import { slugify } from '@/mixins/general/course-structure'
 
 export default {
   name: 'CourseListDetails',

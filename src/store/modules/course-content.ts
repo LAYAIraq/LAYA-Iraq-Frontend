@@ -14,13 +14,13 @@ import {
   LegacyContentBlock,
   LegacyContentInput,
   LegacyCourse
-} from '@/misc/course-structure-types'
+} from '@/mixins/types/course-structure'
 import {
   legacyContentStepsTransform,
   courseStructureDescent,
   coursePathsGet,
   slugify, legacyContentFollowTransform
-} from '@/misc/course-structure-methods'
+} from '@/mixins/general/course-structure'
 import { stripKey } from '@/mixins/general/helpers'
 import { v4 as uuidv4 } from 'uuid'
 import http, { AxiosResponse } from 'axios'

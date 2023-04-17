@@ -61,7 +61,7 @@ import CourseNavItem from '@/components/course/course-nav/course-nav-item.vue'
 import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
 import { locale } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
-import { courseChapterIdConvertToName, courseChapterNameConvertToId } from '@/misc/course-navigation-utils'
+import { courseChapterIdConvertToName, courseChapterNameConvertToId } from '@/mixins/general/course-navigation'
 
 export default {
   name: 'CourseNavChapter',
