@@ -338,7 +338,7 @@ export default {
      */
     populateData () {
       this.options.push({
-        text: this.y18n('layaLaScmc.edit.sampleOption'),
+        text: this.y18n('plugin.sampleOption'),
         flagged: false,
         id: uuidv4()
       })

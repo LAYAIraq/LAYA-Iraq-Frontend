@@ -1,6 +1,6 @@
 import 'regenerator-runtime/runtime'
 import { createLocalVue, mount } from '@vue/test-utils'
-import CourseChangeCategory from '@/views/course-edit-tools/course-change-category.vue'
+import CourseChangeCategory from '@/components/course/course-edit/course-category-change.vue'
 import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue'
 

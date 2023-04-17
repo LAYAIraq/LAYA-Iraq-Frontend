@@ -2,7 +2,7 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue'
 import 'regenerator-runtime/runtime'
-import CourseList from '@/components/ly-course-list.vue'
+import CourseList from '@/components/course/course-list/course-list-details.vue'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -95,7 +95,7 @@ describe('laya course list', () => {
   it('sets button action correctly (complicit course)', async () => {
     const button = wrapper.find('a')
     await button.trigger('click')
-    expect(wrapper.vm.$router.push).toHaveBeenCalledWith({ name: 'course-detail-view', params: { name: 'testtest' }, path: '/courses' })
+    expect(wrapper.vm.$router.push).toHaveBeenCalledWith({ name: 'course', params: { name: 'testtest' }, path: '/courses' })
   })
 
   it('loads new course when button is clicked', async () => {

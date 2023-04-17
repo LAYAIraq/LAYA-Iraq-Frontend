@@ -21,20 +21,20 @@ vuex,
       <div class="col">
         <h2 class="pb-3">
           {{ courseSimple? title.simple : title.text }}
-          <laya-audio-inline
+          <audio-button
             v-if="taskAudioExists"
             :src="courseSimple?
               taskAudio.regular:
               taskAudio.simple"
           >
-          </laya-audio-inline>
+          </audio-button>
         </h2>
       </div>
-      <laya-flag-icon
+      <flag-icon
         v-if="!viewData"
         :ref-data="title"
         @flagged="title.flagged = true"
-      ></laya-flag-icon>
+      ></flag-icon>
     </div>
     <div
       :id="task.id"
@@ -43,11 +43,11 @@ vuex,
       <div class="col">
         {{ courseSimple? task.simple: task.text }}
       </div>
-      <laya-flag-icon
+      <flag-icon
         v-if="!viewData"
         :ref-data="task"
         @flagged="task.flagged = true"
-      ></laya-flag-icon>
+      ></flag-icon>
     </div>
 
     <!-- render options -->
@@ -97,12 +97,12 @@ vuex,
         <i class="ml-2" :class="{'far fa-check-circle text-success': true}"></i>
         <i class="ml-2" :class="{'far fa-times-circle text-danger': true}"></i>
         -->
-        <laya-flag-icon
+        <flag-icon
           v-if="!viewData"
           :ref-data="option"
           :interactive="true"
           @flagged="option.flagged = true"
-        ></laya-flag-icon>
+        ></flag-icon>
       </div>
     </div>
 
@@ -158,10 +158,13 @@ vuex,
 <script>
 import { mapGetters } from 'vuex'
 import { locale, viewPluginProps } from '@/mixins'
-import '@/styles/flaggables.css'
+import '@/assets/styles/flaggables.css'
+import AudioButton from '@/components/helpers/audio-button.vue'
+import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
 export default {
   name: 'LayaMultipleChoice',
+  components: { FlagIcon, AudioButton },
 
   mixins: [
     locale,

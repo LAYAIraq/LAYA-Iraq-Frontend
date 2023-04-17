@@ -398,7 +398,7 @@ export default {
     },
 
     /**
-     * function updateFlags(): persist changes to courseFlags
+     * function flagsUpdate(): persist changes to courseFlags
      *
      * Author: cmc
      *

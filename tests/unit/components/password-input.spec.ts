@@ -1,6 +1,6 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 import Vuex from 'vuex'
-import PasswordInput from '@/components/password-input.vue'
+import PasswordInput from '@/components/helpers/password-input.vue'
 import 'regenerator-runtime/runtime'
 
 const localVue = createLocalVue()

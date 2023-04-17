@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
-import CourseCreate from '@/components/authoring/course-create.vue'
+import CourseCreate from '@/components/course/course-list/course-create.vue'
 import 'regenerator-runtime/runtime'
 
 const localVue = createLocalVue()

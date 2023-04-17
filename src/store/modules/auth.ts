@@ -9,7 +9,7 @@
  */
 
 import http from 'axios'
-import roles from '../../misc/roles'
+import roles from '@/options/roles'
 
 export default {
   state: {

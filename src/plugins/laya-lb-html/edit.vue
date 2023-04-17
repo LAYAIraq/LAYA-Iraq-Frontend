@@ -86,14 +86,14 @@ Dependencies:
 import { mapGetters } from 'vuex'
 import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
-import { locale, routeProps } from '@/mixins'
+import { locale, routes } from '@/mixins'
 
 export default {
   name: 'LayaWysiwygEdit',
 
   mixins: [
     locale,
-    routeProps
+    routes
   ],
 
   data () {

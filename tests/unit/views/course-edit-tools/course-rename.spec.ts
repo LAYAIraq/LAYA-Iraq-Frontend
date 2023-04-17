@@ -1,6 +1,6 @@
 import 'regenerator-runtime/runtime'
 import { createLocalVue, mount } from '@vue/test-utils'
-import CourseRename from '@/views/course-edit-tools/course-rename.vue'
+import CourseRename from '@/components/course/course-edit/course-rename.vue'
 import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue'
 
@@ -132,6 +132,6 @@ describe('Course rename', () => {
     expect(mutations.renameCourse).toHaveBeenCalledWith(expect.any(Object), 'newName')
     expect(await actions.updateRenamedCourse).toHaveBeenCalled()
     expect(wrapper.find('#author-rename-course-confirm').isVisible()).toBeFalsy()
-    expect(wrapper.vm.$router.replace).toHaveBeenCalledWith(expect.objectContaining({ name: 'course-detail-view', params: { name: 'newName' } }))
+    expect(wrapper.vm.$router.replace).toHaveBeenCalledWith(expect.objectContaining({ name: 'course', params: { name: 'newName' } }))
   })
 })

@@ -32,11 +32,11 @@ Dependencies: @/mixins/locale.vue
         class="flaggable question"
       >
         {{ courseSimple? question.simple: question.text }}
-        <laya-flag-icon
+        <flag-icon
           v-if="!editPreview"
           :ref-data="question"
           @flagged="question.flagged = true"
-        ></laya-flag-icon>
+        ></flag-icon>
       </div>
       <div class="answers d-flex flex-wrap justify-content-around">
         <div
@@ -51,12 +51,12 @@ Dependencies: @/mixins/locale.vue
           >
             {{ courseSimple? answer.simple : answer.text }}
           </button>
-          <laya-flag-icon
+          <flag-icon
             v-if="!editPreview"
             :ref-data="answer"
             :interactive="true"
             @flagged="answer.flagged = true"
-          ></laya-flag-icon>
+          ></flag-icon>
         </div>
       </div>
     </div>
@@ -67,10 +67,12 @@ Dependencies: @/mixins/locale.vue
 
 import { locale, viewPluginProps } from '@/mixins'
 import { mapGetters } from 'vuex'
-import '@/styles/flaggables.css'
+import '@/assets/styles/flaggables.css'
+import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
 export default {
   name: 'LayaDialog',
+  components: { FlagIcon },
 
   mixins: [
     locale,

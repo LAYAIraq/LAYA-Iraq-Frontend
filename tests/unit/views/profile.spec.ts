@@ -1,6 +1,6 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import cloneDeep from 'lodash.clonedeep'
-import ProfileView from '@/views/profile.vue'
+import ProfileView from '@/components/user-views/profile.vue'
 import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue'
 import 'regenerator-runtime/runtime'

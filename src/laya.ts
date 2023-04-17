@@ -33,7 +33,10 @@ declare module 'vue/types/vue' {
 export class Laya {
   private _vue: typeof _Vue;
   private _lb: object;
-  private _la: object;
+  private readonly _la: object;
+  private _assessments: object;
+  private _blocks: object;
+  private _organization: object;
 
   public get lb () {
     return this._lb
@@ -47,10 +50,25 @@ export class Laya {
     return { ...this._la, ...this._lb }
   }
 
+  public get assessments () {
+    return this._assessments
+  }
+
+  public get blocks () {
+    return this._blocks
+  }
+
+  public get organization () {
+    return this._organization
+  }
+
   constructor (v: typeof _Vue) {
     this._vue = v
     this._lb = {}
     this._la = {}
+    this._assessments = {}
+    this._blocks = {}
+    this._organization = {}
   }
 
   public registerLB<VC1, VC2, VC3 extends VueConstructor> (
@@ -92,6 +110,30 @@ export class Laya {
 
     this._vue.component(id, components.view)
   }
+
+  public registerPlugin<EditComponent, ViewComponent extends VueConstructor> (
+    id: string,
+    type: string,
+    icon: string,
+    components: { edit?: EditComponent; view: ViewComponent }
+  ): void {
+    const plugin = { id, type, components, icon }
+    if (type === 'assessment') {
+      this._assessments[id] = plugin
+    } else if (type === 'block') {
+      this._blocks[id] = plugin
+    } else if (type === 'organization') {
+      this._organization[id] = plugin
+    } else {
+      throw new Error(`Unknown plugin type: ${type}`)
+    }
+
+    if (components.edit) {
+      this._vue.component(id, components.edit)
+    }
+
+    this._vue.component(id, components.view)
+  }
 }
 
 export default {
@@ -107,7 +149,10 @@ export default {
           $laya: {
             lb: $laya.lb,
             la: $laya.la,
-            li: $laya.li
+            li: $laya.li,
+            assessments: $laya.assessments,
+            blocks: $laya.blocks,
+            organization: $laya.organization
           }
         }
       }

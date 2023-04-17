@@ -166,7 +166,7 @@ export default {
     },
 
     /**
-     * Function fetchEnrollment: fetch user's enrollment associated with courseId
+     * Function enrollmentFetch: fetch user's enrollment associated with courseId
      *
      * Author: cmc
      *
@@ -227,7 +227,7 @@ export default {
     },
 
     /**
-     * function updateEnrollment: update enrollment object
+     * function enrollmentUpdate: update enrollment object
      *
      * Author: cmc
      *

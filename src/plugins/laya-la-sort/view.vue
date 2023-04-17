@@ -15,7 +15,7 @@ Dependencies: @/mixins/locale.vue
           <p>{{ task }}</p>
         </div>
       </div>
-      <div class="row py-2 ly-bg-grey">
+      <div class="row py-2 bg-grey">
         <div class="col-5">
           <h4>{{ y18n('layaLaSort.unsorted') }}</h4>
           <div class="d-flex flex-column">

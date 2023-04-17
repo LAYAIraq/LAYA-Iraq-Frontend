@@ -356,14 +356,14 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import editMethods from './common-methods'
-import { routeProps } from '@/mixins'
+import { routes } from '@/mixins'
 
 export default {
   name: 'LayaPlyrEdit',
 
   mixins: [
     editMethods,
-    routeProps
+    routes
   ],
 
   data () {

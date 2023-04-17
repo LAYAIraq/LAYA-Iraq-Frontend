@@ -4,7 +4,7 @@
  * @since v1.3.0
  */
 import { createLocalVue, mount } from '@vue/test-utils'
-import CourseDetailHeader from '@/views/course-detail-header.vue'
+import CourseDetailHeader from '@/components/course/course-header.vue'
 import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 
@@ -14,7 +14,7 @@ localVue.use(VueRouter)
 const router = new VueRouter({
   routes: [
     { name: 'courses-view', path: '/courses' },
-    { name: 'course-detail-view', path: '/courses/:name/:coursePath?' }
+    { name: 'course', path: '/courses/:name/:coursePath?' }
   ]
 })
 

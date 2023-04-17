@@ -21,7 +21,7 @@ import {
   coursePathsGet,
   slugify, legacyContentFollowTransform
 } from '@/mixins/general/course-structure'
-import { stripKey } from '@/misc/utils.js'
+import { stripKey } from '@/mixins/general/helpers'
 import { v4 as uuidv4 } from 'uuid'
 import http, { AxiosResponse } from 'axios'
 import Vue from 'vue'

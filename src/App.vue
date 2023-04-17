@@ -21,20 +21,20 @@ Dependencies:
 </template>
 
 <script>
-import lyHeader from '@/components/header'
-import lyFooter from '@/components/footer'
+import LyHeader from '@/components/general/header.vue'
+import LyFooter from '@/components/general/footer.vue'
 import { mapGetters } from 'vuex'
 import 'open-dyslexic/open-dyslexic-regular.css'
-import '@/styles/fonts.css'
-import '@/styles/color-correction.css'
+import '@/assets/styles/fonts.css'
+import '@/assets/styles/color-correction.css'
 import { publicRoutes } from '@/router'
 
 export default {
   name: 'App',
 
   components: {
-    lyHeader,
-    lyFooter
+    LyHeader,
+    LyFooter
   },
 
   beforeRouteUpdate () {
@@ -128,11 +128,11 @@ body {
   line-height: 1.5;
 }
 
-.ly-bg-grey {
+.bg-grey {
   background-color: #ebece7;
 }
 
-.ly-bg-author {
+.bg-author {
   background-color: #abd3ff;
 }
 

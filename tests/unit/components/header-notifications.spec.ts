@@ -1,7 +1,7 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue'
-import HeaderNotifications from '@/components/header-notifications.vue'
+import HeaderNotifications from '@/components/notifications/header-notifications.vue'
 import 'regenerator-runtime/runtime'
 
 const localVue = createLocalVue()

@@ -868,7 +868,7 @@ export default {
     },
 
     /**
-     * Function fetchCourse: load course into store
+     * Function courseFetch: load course into store
      *
      * Author: core
      *

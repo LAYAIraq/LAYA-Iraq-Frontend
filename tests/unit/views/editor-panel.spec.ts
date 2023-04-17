@@ -1,6 +1,6 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 import cloneDeep from 'lodash.clonedeep'
-import EditorPanel from '@/views/editor-panel.vue'
+import EditorPanel from '@/components/user-views/editor-panel.vue'
 import Vuex from 'vuex'
 import Storage from 'vue-ls'
 import { BootstrapVue } from 'bootstrap-vue'
