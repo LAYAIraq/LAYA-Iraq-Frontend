@@ -179,7 +179,7 @@ Since: v1.0.0
                         :cancel-title="y18n('cancel')"
                         centered
                         static
-                        :ok-disabled="usernameNew === profile.username"
+                        :ok-disabled="usernameNew === profile.username || usernameNew === ''"
                         @ok="usernameChange"
                       >
                         <!-- new username -->
@@ -241,7 +241,7 @@ Since: v1.0.0
                         :cancel-title="y18n('cancel')"
                         centered
                         static
-                        :ok-disabled="emailRepeat !== emailNew"
+                        :ok-disabled="emailRepeat !== emailNew || emailOld !== profile.email"
                         @ok="emailChange"
                       >
                         <!-- Old email -->
@@ -717,8 +717,10 @@ export default {
      */
     usernameChange (e) {
       e.preventDefault()
-      this.$store.commit('setUsername', this.usernameNew)
-      this.submit()
+      if (this.usernameTakenCheck() === false) {
+        this.$store.commit('setUsername', this.usernameNew)
+        this.submit()
+      }
     },
     /**
      * @function check if username is taken
@@ -731,6 +733,9 @@ export default {
           if (resp === true) {
             this.usernameTaken = true
             return true
+          } else {
+            this.usernameTaken = false
+            return false
           }
         })
         .catch(err => { console.log(err) })
