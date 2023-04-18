@@ -7,7 +7,8 @@
  */
 
 import _Vue from 'vue'
-import _view from './image-matching-view.vue'
+import edit from './image-matching-edit.vue'
+import view from './image-matching-view.vue'
 
 export default {
   install (Vue: typeof _Vue): void {
@@ -17,8 +18,8 @@ export default {
       'fas fa-paperclip',
       {
         // @ts-ignore
-        view: _view, // not lazily loaded b/c always visible
-        edit: () => import('./image-matching-edit.vue')
+        view, // not lazily loaded b/c always visible
+        edit
       }
     )
   }

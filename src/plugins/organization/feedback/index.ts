@@ -6,7 +6,8 @@
  */
 
 import _Vue from 'vue'
-import _view from './feedback-view.vue'
+import edit from './feedback-edit.vue'
+import view from './feedback-view.vue'
 
 export default {
   install (Vue: typeof _Vue): void {
@@ -16,8 +17,8 @@ export default {
       'fas fa-comment-dots',
       {
         // @ts-ignore
-        view: _view, // not lazily loaded b/c always visible
-        edit: () => import('./feedback-edit.vue')
+        view, // not lazily loaded b/c always visible
+        edit
       }
     )
   }
