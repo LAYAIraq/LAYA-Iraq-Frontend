@@ -1,21 +1,18 @@
 <!--
-Filename: edit.vue
-Use: Edit a Multiple Choice/Response content block
+Filename: choice-question-edit.vue
+Use: Edit a Choice Question content block
 Creator: core
-Date: unknown
-Dependencies:
-  vuex,
-  @/mixins/locale.vue
+Since: v1.0.0
 -->
 
 <template>
   <div
-    class="ly-bg-author p-3"
+    class="bg-author p-3"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div class="d-flex">
       <h3 class="d-inline-block mr-auto">
-        {{ y18n('layaLaScmc.name') }}
+        {{ y18n('choiceQuestion.name') }}
       </h3>
       <i
         id="questionmark"
@@ -31,12 +28,12 @@ Dependencies:
     <b-jumbotron
       v-if="tooltipOn"
       id="tooltipText"
-      :header="y18n('layaLaScmc.name')"
+      :header="y18n('choiceQuestion.name')"
       :lead="y18n('tipHeadline')"
     >
       <hr class="my-4">
       <span>
-        {{ y18n('layaLaScmc.tooltip') }}
+        {{ y18n('choiceQuestion.tooltip') }}
       </span>
     </b-jumbotron>
     <hr>
@@ -49,33 +46,50 @@ Dependencies:
         <div class="col-10">
           <div class="form-check form-check-inline align-text-top">
             <input
-              id="scmc-sc"
-              v-model="multiple"
+              id="choices-sc"
+              v-model="variation"
               class="form-check-input"
               type="radio"
-              :value="false"
+              :value="single"
             >
             <label
-              for="scmc-sc"
+              for="choices-sc"
               class="form-check-label"
             >
-              {{ y18n('layaLaScmc.edit.sc') }}
+              {{ y18n('choiceQuestion.edit.sc') }}
             </label>
           </div>
           <div class="form-check form-check-inline align-text-top">
             <input
-              id="scmc-mc"
-              v-model="multiple"
+              id="choices-mc"
+              v-model="variation"
               class="form-check-input"
               type="radio"
               name="multiple"
-              :value="true"
+              :value="multiple"
             >
             <label
-              for="scmc-mc"
+              for="choices-mc"
               class="form-check-label"
             >
-              {{ y18n('layaLaScmc.edit.mc') }}
+              {{ y18n('choiceQuestion.edit.mc') }}
+            </label>
+          </div>
+          <div class="form-check form-check-inline align-text-top">
+            <input
+              id="choices-tf"
+              v-model="variation"
+              class="form-check-input"
+              type="radio"
+              name="tf"
+              :value="tf"
+              @click="switchToTF"
+            >
+            <label
+              for="choices-tf"
+              class="form-check-label"
+            >
+              {{ y18n('choiceQuestion.edit.tf') }}
             </label>
           </div>
         </div>
@@ -85,14 +99,14 @@ Dependencies:
       <div class="form-group">
         <div class="row">
           <label
-            for="scmc-title"
+            for="choices-title"
             class="col-2 col-form-label"
           >
             {{ y18n('title') }}
           </label>
           <div class="col-10">
             <input
-              id="scmc-title"
+              id="choices-title"
               v-model="title.text"
               type="text"
               class="form-control"
@@ -106,7 +120,7 @@ Dependencies:
           class="row"
         >
           <label
-            for="scmc-title-simple"
+            for="choices-title-simple"
             class="col-2 col-form-label"
           >
             <span class="sr-only">
@@ -115,7 +129,7 @@ Dependencies:
           </label>
           <div class="col-10">
             <input
-              id="scmc-title-simple"
+              id="choices-title-simple"
               v-model="title.simple"
               type="text"
               class="form-control"
@@ -129,14 +143,14 @@ Dependencies:
       <div class="form-group">
         <div class="row">
           <label
-            for="scmc-task"
+            for="choices-task"
             class="col-2 col-form-label"
           >
             {{ y18n('task') }}
           </label>
           <div class="col-10">
             <textarea
-              id="scmc-task"
+              id="choices-task"
               v-model="task.text"
               class="w-100"
               :placeholder="y18n('taskPlaceholder')"
@@ -150,7 +164,7 @@ Dependencies:
           class="row"
         >
           <label
-            for="scmc-task-simple"
+            for="choices-task-simple"
             class="col-2 col-form-label"
           >
             <span class="sr-only">
@@ -159,7 +173,7 @@ Dependencies:
           </label>
           <div class="col-10">
             <textarea
-              id="scmc-task-simple"
+              id="choices-task-simple"
               v-model="task.simple"
               class="w-100"
               :placeholder="y18n('simpleAlt')"
@@ -173,14 +187,14 @@ Dependencies:
       <div class="form-group">
         <div class="row">
           <label
-            for="scmc-task-audio"
+            for="choices-task-audio"
             class="col-2 col-form-label"
           >
             {{ y18n('taskAudio') }}
           </label>
           <div class="col-10">
             <input
-              id="scmc-task-audio"
+              id="choices-task-audio"
               v-model="taskAudio.regular"
               type="text"
               class="form-control"
@@ -194,7 +208,7 @@ Dependencies:
           class="row"
         >
           <label
-            for="scmc-task-audio-simple"
+            for="choices-task-audio-simple"
             class="col-2 col-form-label"
           >
             <span class="sr-only">
@@ -203,7 +217,7 @@ Dependencies:
           </label>
           <div class="col-10">
             <input
-              id="scmc-task-audio-simple"
+              id="choices-task-audio-simple"
               v-model="taskAudio.simple"
               type="text"
               class="form-control"
@@ -229,38 +243,56 @@ Dependencies:
           </label>
           <div class="col-7">
             <input
+              v-if="variation === single || variation === multiple"
               :id="'option-text-'+i"
               v-model="option.text"
               class="form-control"
               type="text"
+            >
+            <input
+              v-else
+              :id="'option-text-'+i"
+              v-model="option.text"
+              class="form-control"
+              type="text"
+              readonly
             >
           </div>
 
           <!-- correct -->
           <div class="form-check form-check-inline ">
             <input
+              v-if="variation === single || variation === tf"
+              :id="'option-corr-'+i"
+              v-model="solution"
+              class="form-check-input"
+              type="radio"
+              :value="i"
+            >
+            <input
+              v-else
               :id="'option-corr-'+i"
               v-model="solutions[i]"
               class="form-check-input"
-              :type="multiple ? 'checkbox' : 'radio'"
-              :value="true"
-              @click="() => { if (!multiple) {for (const ix in solutions) { ix === i ? solutions[ix] = true : solutions[ix] = false } } }"
+              type="checkbox"
+              :value="i"
             >
             <label
               class="form-check-label"
               :for="'option-corr-'+i"
             >
-              {{ y18n('layaLaScmc.edit.correct') }}
+              {{ y18n('choiceQuestion.edit.correct') }}
             </label>
           </div>
 
           <!-- delete -->
           <div class="col-auto align-self-center">
             <button
+              v-if="variation === single || variation === multiple"
               type="button"
               class="btn btn-danger btn-sm"
               :aria-label="y18n('deleteField')"
-              @click="_delItem(i)"
+              @click="_itemDelete(options, i)"
             >
               <i class="fas fa-times"></i>
             </button>
@@ -280,34 +312,62 @@ Dependencies:
           </label>
           <div class="col-7">
             <input
+              v-if="variation === single || variation === multiple"
               :id="'option-text-'+i"
               v-model="options[i].simple"
               class="form-control"
               type="text"
+            >
+            <input
+              v-else
+              :id="'option-text-'+i"
+              v-model="option.simple"
+              class="form-control"
+              type="text"
+              readonly
             >
           </div>
         </div>
       </div>
 
       <button
+        v-if="variation === single || variation === multiple"
         type="button"
         class="btn btn-primary btn-sm"
-        @click="_addItem"
+        @click="_itemAdd(options, newItem())"
       >
         <i class="fas fa-plus"></i>{{ y18n('itemAdd') }}
       </button>
     </form>
+    <b-modal
+      id="confirm-change-tf"
+      :title="y18n('warning')"
+      header-bg-variant="danger"
+      ok-variant="danger"
+      :ok-title="y18n('courseCreate.modal.ok')"
+      :cancel-title="y18n('cancel')"
+      centered
+      static
+      @ok="populateTrueFalse()"
+    >
+      <p>
+        {{ y18n('changeToTrueFalse.modal.text') }}
+      </p>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale, pluginEdit, routes, tooltipIcon } from '@/mixins'
+import { array, locale, pluginEdit, routes, tooltipIcon } from '@/mixins'
+import { v4 as uuidv4 } from 'uuid'
+import { deepCopy } from '@/mixins/general/helpers'
 
 export default {
-  name: 'LayaLaScmcEdit',
+  name: 'ChoiceQuestionEdit',
 
   mixins: [
+    array,
     locale,
     pluginEdit,
     routes,
@@ -320,9 +380,13 @@ export default {
       task: '',
       taskAudio: '',
       options: [],
-      solutions: [],
+      solution: 0,
+      solutions: [true],
       maxTries: 1,
-      multiple: false
+      single: 0,
+      multiple: 1,
+      tf: 2,
+      variation: 0
     }
   },
 
@@ -345,6 +409,14 @@ export default {
         // eslint-disable-next-line no-return-assign
         this.solutions = this.solutions.map((s, i) => s = false)
       }
+    },
+    /**
+     * @function watch solution for change, reset solutions array to accept solution at index val
+     * @param val integer value for solution
+     */
+    solution (val) {
+      this.solutions = this.options.map(() => false)
+      this.solutions[val] = true
     }
   },
 
@@ -358,8 +430,8 @@ export default {
      * Last Updated: March 19, 2021
      */
     fetchData () {
-      const preData = JSON.parse(JSON.stringify(this.courseContent[this.pathId]))
-      this.multiple = preData.multiple
+      const preData = deepCopy(this.courseContent[this.pathId])
+      this.variation = preData.variation
       this.title = preData.title
       this.task = preData.task
       this.taskAudio = preData.taskAudio
@@ -374,35 +446,41 @@ export default {
      */
     newItem () {
       return {
+        simple: this.y18n('simpleAlt'),
         text: this.y18n('plugin.sampleOption'),
         flagged: false,
         id: uuidv4()
       }
     },
     /**
-     * function populateDate: create objects with ids
-     *
-     * Author: cmc
-     *
-     * Last Updated: June 28, 2021
+     * @description add the correct answer options if true and false is selected
      */
-    populateData () {
-      this.options.push({
-        text: this.y18n('plugin.sampleOption'),
-        flagged: false,
-        id: uuidv4()
-      })
-      this.task = {
-        text: '',
-        flagged: false,
-        id: uuidv4()
-      }
-      this.title = {
-        text: '',
-        flagged: false,
-        id: uuidv4()
-      }
-    }
+    populateTrueFalse () {
+      this.options = [
+        {
+          text: this.y18n('choiceQuestion.edit.true'),
+          simple: this.y18n('choiceQuestion.edit.true'),
+          flagged: false,
+          id: uuidv4()
+        },
+        {
+          text: this.y18n('choiceQuestion.edit.false'),
+          simple: this.y18n('choiceQuestion.edit.false'),
+          flagged: false,
+          id: uuidv4()
+        }
+      ]
+      this.variation = this.tf
+    },
+
+    /**
+     * @description prevent change to true/false before modal 'ok' is clicked
+     * @param e 'click' event from radio button
+     */
+    switchToTF (e) {
+      e.preventDefault()
+      this.$bvModal.show('confirm-change-tf')
+    },
   }
 }
 </script>
@@ -415,10 +493,5 @@ export default {
 
 legend {
   font-size: 1rem;
-}
-
-#questionmark {
-  float: end;
-  cursor: pointer;
 }
 </style>

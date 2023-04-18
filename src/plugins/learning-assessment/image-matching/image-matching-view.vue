@@ -156,7 +156,7 @@
             v-if="showSolutionsBool"
             id="solutions"
           >
-            {{ i18n["layaLaScmc.showCorrect"] }}
+            {{ i18n["choiceQuestion.showCorrect"] }}
             <div
               v-for="(pair, index) in pairs"
               :key="index"

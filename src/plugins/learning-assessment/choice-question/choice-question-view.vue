@@ -1,16 +1,13 @@
 <!--
-Filename: view.vue
-Use: View a Multiple Choice/Response content block
+Filename: choice-question-view.vue
+Use: View a Choice Question content block
 Creator: core
-Date: unknown
-Dependencies:
-vuex,
-@/mixins/locale.vue
+Since: v1.0.0
 -->
 
 <template>
   <fieldset
-    class="laya-la-scmc"
+    class="choice-question"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <!-- render task -->
@@ -60,7 +57,7 @@ vuex,
       >
         <div>
           <input
-            v-if="multiple"
+            v-if="variation === multiple"
             :id="'mchoice-in-'+i"
             v-model="answers"
             class="position-absolute mt-2"
@@ -109,7 +106,7 @@ vuex,
     <!-- check -->
     <!--
     <div v-if="maxTries > 0" class="text-secondary my-2" tabindex="0">
-      <span>{{ y18n('layaLaScmc.triesLeft') }}</span>
+      <span>{{ y18n('choiceQuestion.triesLeft') }}</span>
       {{maxTries-tries}}
     </div>
     -->
@@ -124,7 +121,7 @@ vuex,
       </button>
       <div aria-live="polite">
         <div v-if="showSolutionsBool">
-          {{ i18n["layaLaScmc.showCorrect"] }}
+          {{ i18n["choiceQuestion.showCorrect"] }}
           <div
             v-for="(showSolution, index) in showSolutions"
             :key="index"
@@ -163,7 +160,7 @@ import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
 export default {
-  name: 'LayaMultipleChoice',
+  name: 'ChoiceQuestionView',
   components: { FlagIcon, AudioButton },
 
   mixins: [
@@ -173,15 +170,15 @@ export default {
 
   data () {
     return {
-      ...this.viewData,
-      tries: 0,
       answers: [],
       checked: [],
+      eval: [],
       feedback: '',
       freeze: false,
-      eval: [],
       showSolutions: [],
-      showSolutionsBool: false
+      showSolutionsBool: false,
+      tries: 0,
+      ...this.viewData
     }
   },
 
