@@ -65,7 +65,7 @@ Dependencies: @/mixins/locale.vue
 
 <script>
 
-import { locale, viewPluginProps } from '@/mixins'
+import { locale, pluginView } from '@/mixins'
 import { mapGetters } from 'vuex'
 import '@/assets/styles/flaggables.css'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
@@ -76,7 +76,7 @@ export default {
 
   mixins: [
     locale,
-    viewPluginProps
+    pluginView
   ],
 
   data () {

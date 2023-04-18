@@ -80,7 +80,7 @@ Dependencies:
 import Plyr from 'plyr'
 import { mapGetters } from 'vuex'
 import 'plyr/dist/plyr.css'
-import { locale, viewPluginProps } from '@/mixins'
+import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
@@ -90,7 +90,7 @@ export default {
 
   mixins: [
     locale,
-    viewPluginProps
+    pluginView
   ],
 
   data () {

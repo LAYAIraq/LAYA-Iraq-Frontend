@@ -61,7 +61,7 @@ Dependencies:
 // import 'ableplayer' FIXME: still broken
 import { mapGetters } from 'vuex'
 import 'ableplayer/build/ableplayer.min.css' // neccessary, otherwise ableplayer is butchered
-import { locale, viewPluginProps, watchContent } from '@/mixins'
+import { locale, pluginView, watchContent } from '@/mixins'
 import '@/assets/styles/flaggables.css'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
@@ -72,7 +72,7 @@ export default {
 
   mixins: [
     locale,
-    viewPluginProps,
+    pluginView,
     watchContent
   ],
 

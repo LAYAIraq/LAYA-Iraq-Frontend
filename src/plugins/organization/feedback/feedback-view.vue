@@ -175,7 +175,7 @@
 </template>
 
 <script>
-import { locale, viewPluginProps, watchContent } from '@/mixins'
+import { locale, pluginView, watchContent } from '@/mixins'
 import { mapGetters } from 'vuex'
 import '@/assets/styles/flaggables.css'
 import { StarRating } from 'vue-rate-it'
@@ -194,7 +194,7 @@ export default {
 
   mixins: [
     locale,
-    viewPluginProps,
+    pluginView,
     watchContent
   ],
 

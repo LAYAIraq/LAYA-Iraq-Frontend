@@ -322,7 +322,7 @@
 </template>
 
 <script>
-import { array, locale, pluginDataPopulate, tooltipIcon } from '@/mixins'
+import { array, locale, pluginEdit, tooltipIcon } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 import { deepCopy } from '@/mixins/general/helpers'
 
@@ -332,16 +332,9 @@ export default {
   mixins: [
     array,
     locale,
-    pluginDataPopulate,
+    pluginEdit,
     tooltipIcon
   ],
-
-  props: {
-    edit: {
-      type: Boolean,
-      required: true
-    }
-  },
 
   data () {
     return {

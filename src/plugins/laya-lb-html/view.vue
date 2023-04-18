@@ -45,7 +45,7 @@ Dependencies:
 <script>
 import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
-import { locale, viewPluginProps } from '@/mixins'
+import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
@@ -55,7 +55,7 @@ export default {
 
   mixins: [
     locale,
-    viewPluginProps
+    pluginView
   ],
 
   data () {

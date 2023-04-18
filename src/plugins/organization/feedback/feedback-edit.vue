@@ -321,7 +321,7 @@
 import { mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 import { deepCopy } from '@/mixins/general/helpers'
-import { array, locale, routes, pluginDataPopulate, tooltipIcon } from '@/mixins'
+import { array, locale, routes, pluginEdit, tooltipIcon } from '@/mixins'
 
 export default {
   name: 'FeedbackEdit',
@@ -329,17 +329,10 @@ export default {
   mixins: [
     array,
     locale,
-    pluginDataPopulate,
+    pluginEdit,
     routes,
     tooltipIcon
   ],
-
-  props: {
-    edit: {
-      type: Boolean,
-      required: true
-    }
-  },
 
   data () {
     return {

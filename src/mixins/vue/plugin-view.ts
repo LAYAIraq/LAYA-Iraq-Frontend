@@ -1,5 +1,5 @@
 /**
- * Filename: view-plugin-props.ts
+ * Filename: plugin-view.ts
  * Use: inject properties for plugin view component
  * Creator: cmc
  * Since: v1.1.0
