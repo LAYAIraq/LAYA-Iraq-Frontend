@@ -7,20 +7,18 @@
  */
 
 import _Vue from 'vue'
-import _view from './view.vue'
+import view from './view.vue'
 
 export default {
   install (Vue: typeof _Vue): void {
-    Vue.$laya.registerLA(
+    Vue.$laya.registerPlugin(
       'laya-quiz-sort',
-      'AssessmentSort',
-      'layaLaSort',
+      'assessment',
       'fas fa-sort-amount-up',
       {
-        new: _view,
+        edit: view,
         // @ts-ignore
-        view: _view,
-        edit: _view
+        view
       }
     )
   }
