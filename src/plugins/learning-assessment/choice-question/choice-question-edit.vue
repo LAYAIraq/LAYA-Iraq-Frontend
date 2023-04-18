@@ -394,15 +394,6 @@ export default {
     ...mapGetters(['courseContent', 'courseSimple'])
   },
 
-  created () {
-    if (this.edit) {
-      this.fetchData()
-    } else {
-      this.taskTitlePopulate()
-      this.options.push(this.newItem())
-    }
-  },
-
   watch: {
     multiple (val) { // reset solutions when changed to single choice
       if (!val) {
@@ -417,6 +408,15 @@ export default {
     solution (val) {
       this.solutions = this.options.map(() => false)
       this.solutions[val] = true
+    }
+  },
+
+  created () {
+    if (this.edit) {
+      this.fetchData()
+    } else {
+      this.taskTitlePopulate()
+      this.options.push(this.newItem())
     }
   },
 
@@ -480,7 +480,7 @@ export default {
     switchToTF (e) {
       e.preventDefault()
       this.$bvModal.show('confirm-change-tf')
-    },
+    }
   }
 }
 </script>

@@ -1,11 +1,8 @@
 <!--
-Filename: create.vue
-Use: Create a Dialog content block
+Filename: button-navigation-edit.vue
+Use: Edit Button Navigation content block
 Creator: core
-Date: unknown
-Dependencies:
-  @/mixins/locale.vue,
-  @/mixins/tooltipIcon.vue
+Since: v1.0.0
 -->
 
 <template>
@@ -13,9 +10,9 @@ Dependencies:
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div class="row">
-      <h4 class="d-inline-block mr-auto">
-        {{ y18n('layaLbDialog.name') }}
-      </h4>
+      <h2 class="d-inline-block mr-auto">
+        {{ y18n('buttonNavigation.name') }}
+      </h2>
 
       <i
         id="questionmark"
@@ -33,12 +30,12 @@ Dependencies:
     <b-jumbotron
       v-if="tooltipOn"
       id="tooltipText"
-      :header="y18n('layaLbDialog.name')"
+      :header="y18n('buttonNavigation.name')"
       :lead="y18n('tipHeadline')"
     >
       <hr class="my-4">
       <span>
-        {{ y18n('layaLbDialog.tooltip') }}
+        {{ y18n('buttonNavigation.tooltip') }}
       </span>
     </b-jumbotron>
 
@@ -59,6 +56,7 @@ Dependencies:
               type="text"
               class="form-control"
               :placeholder="y18n('titlePlaceholder')"
+              :aria-label="y18n('titlePlaceholder')"
             >
           </div>
           <div class="col">
@@ -111,9 +109,9 @@ Dependencies:
           <div class="col-10">
             <textarea
               id="dialog-question"
-              v-model="question.text"
+              v-model="task.text"
               class="w-100"
-              :placeholder="y18n('layaLbDialog.optional')"
+              :placeholder="y18n('buttonNavigation.optional')"
             ></textarea>
           </div>
         </div>
@@ -133,21 +131,21 @@ Dependencies:
           <div class="col-10">
             <textarea
               id="dialog-question-simple"
-              v-model="question.simple"
+              v-model="task.simple"
               class="w-100"
               :placeholder="y18n('simpleAlt')"
             ></textarea>
           </div>
         </div>
       </div>
-
+      <!-- TODO: TLI-303
       <div class="form-group row">
         <label
           for="dialog-bg"
           class="col-2 col-form-label"
           style="word-wrap: anywhere"
         >
-          {{ y18n('layaLbDialog.bgURL') }}
+          {{ y18n('buttonNavigation.bgURL') }}
         </label>
         <div class="col-10">
           <input
@@ -155,12 +153,13 @@ Dependencies:
             v-model="bg"
             type="text"
             class="form-control"
-            :placeholder="y18n('layaLbDialog.bgPlaceholder')"
+            :placeholder="y18n('buttonNavigation.bgPlaceholder')"
           >
         </div>
       </div>
+      -->
 
-      <p><b>{{ y18n('layaLbDialog.answers') }}</b></p>
+      <p><b>{{ y18n('buttonNavigation.answers') }}</b></p>
       <div
         v-for="(answer, i) in answers"
         :key="'answer-'+i"
@@ -187,7 +186,8 @@ Dependencies:
             <button
               type="button"
               class="btn btn-danger btn-sm"
-              @click="_delItem(i)"
+              :aria-label="y18n('deleteField')"
+              @click="_itemDelete(answers, i)"
             >
               <i class="fas fa-times"></i>
             </button>
@@ -223,10 +223,10 @@ Dependencies:
           type="button"
           class="btn btn-primary btn-sm"
           :class="langIsAr? 'float-right': 'float-left'"
-          @click="_addItem(y18n('plugin.sampleOption'))"
+          @click="_itemAdd(answers, newItem())"
         >
           <i class="fas fa-plus"></i>
-          {{ y18n('layaLbDialog.addAnswer') }}
+          {{ y18n('buttonNavigation.addAnswer') }}
         </button>
       </div>
     </form>
@@ -234,126 +234,78 @@ Dependencies:
 </template>
 
 <script>
-import { locale, tooltipIcon } from '@/mixins'
+import { array, locale, pluginEdit, routes, tooltipIcon } from '@/mixins'
+import { mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
+import { deepCopy } from '@/mixins/general/helpers'
 
 export default {
-  name: 'LayaLbDialogNew',
+  name: 'ButtonNavigationEdit',
 
   mixins: [
+    array,
     locale,
+    pluginEdit,
+    routes,
     tooltipIcon
   ],
 
   data () {
     return {
       bg: '',
-      question: {
-        text: '',
-        flagged: false,
-        id: ''
-      },
+      task: {},
       answers: [],
-      title: {
-        text: '',
-        flagged: false,
-        show: false,
-        id: ''
-      }
+      title: {}
     }
   },
 
-  created () {
-    this.title.id = uuidv4()
-    this.question.id = uuidv4()
+  computed: {
+    ...mapGetters(['courseContent', 'courseSimple'])
   },
 
-  beforeMount () {
-    this._addItem(this.y18n('plugin.sampleOption'))
+  created () {
+    if (this.edit) {
+      this.fetchData()
+    } else {
+      this.taskTitlePopulate()
+      this._itemAdd(this.answers, this.newItem())
+    }
   },
 
   methods: {
     /**
-     * Function _delItem: remove item at given index
+     * Function fetchData: Fetch data from vuex and make data property
      *
-     * Author: core
+     * Author: cmc
      *
-     * Last Updated: unknown
-     *
-     * @param {*} idx index of item
+     * Last Updated: March 19, 2021
      */
-    _delItem (idx) {
-      this.answers.splice(idx, 1)
+    fetchData () {
+      // create deep copy of store object to manipulate in vue instance
+      const preData = deepCopy(this.courseContent[this.pathId])
+      // this.bg = preData.bg // reinstate when TLI-303 is tackled
+      this.task = preData.task
+      this.answers = preData.answers
+      this.title = preData.title
     },
 
     /**
-     * Function _addItem: Add item
-     * Author: core
-     * Last Updated: June 6, 2021
+     * @function return new item
+     * @author cmc
+     * @returns {object} new item
      */
-    _addItem (str) {
-      const newItem = {
-        text: str,
+    newItem () {
+      return {
+        simple: this.y18n('simpleAlt'),
+        text: this.y18n('plugin.sampleOption'),
         flagged: false,
         id: uuidv4()
       }
-      this.answers.push(newItem)
     }
   }
-
 }
 </script>
 
 <style scoped>
-.laya-dialog {
-  position: relative;
-}
-
-.bg {
-  width: 100%;
-}
-
-.dialog-text {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-
-  /* height: 50%; */
-  width: fit-content;
-
-  /* background-color: #ffffffd9; */
-  margin: 1rem;
-}
-
-.question {
-  font-size: 2rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  padding: 5px;
-  text-align: center;
-}
-
-.answers > button {
-  border: 1px solid #222;
-  margin-right: 1rem;
-  font-size: 90%;
-  /* background-color: white; */
-}
-.answers > button:last-child {
-  margin-right: 0;
-}
-
-#questionmark {
-  float: end;
-}
-
-.helptext {
-  border: 1px green;
-  padding: 5px;
-}
-.helptext i {
-  float: start;
-  margin-right: 10px;
-}
 
 </style>

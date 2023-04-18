@@ -1,41 +1,35 @@
 <!--
-Filename: view.vue
-Use: View Dialog content block
+Filename: button-navigation-view.vue
+Use: View Button Navigation content block
 Author: core
-Date: unknown
-Dependencies: @/mixins/locale.vue
+Since v1.0.0
 -->
 
 <template>
-  <div class="laya-dialog">
-    <!--    <div-->
-    <!--      class="row"-->
-    <!--      :id="title.id"-->
-    <!--      v-if="title.show"-->
-    <!--    >-->
-    <!--      {{ title.text }}-->
-    <!--    </div>-->
-    <img
-      v-if="bg"
-      v-auth-image="bg"
-      class="bg"
-      alt=""
-    >
+  <div class="button-navigation">
     <div
-      v-else
-      class="bg-fallback"
-    ></div>
-    <div class="dialog-text">
+      v-if="title.show"
+      :id="title.id"
+      class="row flaggable "
+    >
+      <div class="col">
+        <h2>
+          {{ courseSimple? title.simple: title.text }}
+        </h2>
+      </div>
+    </div>
+    <!-- TODO: dynamic CSS for background image -->
+    <div class="button-navigation-text">
       <div
-        v-if="question"
-        :id="question.id"
+        v-if="task"
+        :id="task.id"
         class="flaggable question"
       >
-        {{ courseSimple? question.simple: question.text }}
+        {{ courseSimple? task.simple: task.text }}
         <flag-icon
           v-if="!editPreview"
-          :ref-data="question"
-          @flagged="question.flagged = true"
+          :ref-data="task"
+          @flagged="task.flagged = true"
         ></flag-icon>
       </div>
       <div class="answers d-flex flex-wrap justify-content-around">
@@ -71,7 +65,7 @@ import '@/assets/styles/flaggables.css'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
 export default {
-  name: 'LayaDialog',
+  name: 'ButtonNavigationView',
   components: { FlagIcon },
 
   mixins: [
@@ -96,10 +90,10 @@ export default {
 </script>
 
 <style scoped>
-.laya-dialog {
-  /*position: relative;*/
-  /* min-height: 20rem; */
-  border: 1px solid grey;
+.button-navigation {
+  position: relative;
+   /*min-height: 20rem;*/
+
 }
 
 .bg {
@@ -112,14 +106,16 @@ export default {
   /* background: linear-gradient(#e66465, #9198e5); */
 }
 
-.dialog-text {
+.button-navigation-text {
   width: auto;
 /*   height: max-content; */
   /* background-color: #ffffffd9; */
   margin: 1rem;
+  border: 1px solid grey;
+  padding: 1rem;
 }
 
-.dialog-text.absolute {
+.button-navigation-text.absolute {
   position: absolute;
   bottom: 0;
   left: 0;
