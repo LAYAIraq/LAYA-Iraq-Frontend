@@ -302,15 +302,14 @@ Dependencies:
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale, routes, tooltipIcon } from '@/mixins'
-import commonMethods from './choices-common-methods'
+import { locale, pluginEdit, routes, tooltipIcon } from '@/mixins'
 
 export default {
   name: 'LayaLaScmcEdit',
 
   mixins: [
-    commonMethods,
     locale,
+    pluginEdit,
     routes,
     tooltipIcon
   ],
@@ -332,7 +331,21 @@ export default {
   },
 
   created () {
-    this.fetchData()
+    if (this.edit) {
+      this.fetchData()
+    } else {
+      this.taskTitlePopulate()
+      this.options.push(this.newItem())
+    }
+  },
+
+  watch: {
+    multiple (val) { // reset solutions when changed to single choice
+      if (!val) {
+        // eslint-disable-next-line no-return-assign
+        this.solutions = this.solutions.map((s, i) => s = false)
+      }
+    }
   },
 
   methods: {
@@ -353,6 +366,42 @@ export default {
       this.options = preData.options
       this.solutions = preData.solutions
       this.maxTries = preData.maxTries
+    },
+    /**
+     * @function newItem: create new item
+     * @author cmc
+     * @return {{flagged: boolean, text: any, id: *}}
+     */
+    newItem () {
+      return {
+        text: this.y18n('plugin.sampleOption'),
+        flagged: false,
+        id: uuidv4()
+      }
+    },
+    /**
+     * function populateDate: create objects with ids
+     *
+     * Author: cmc
+     *
+     * Last Updated: June 28, 2021
+     */
+    populateData () {
+      this.options.push({
+        text: this.y18n('plugin.sampleOption'),
+        flagged: false,
+        id: uuidv4()
+      })
+      this.task = {
+        text: '',
+        flagged: false,
+        id: uuidv4()
+      }
+      this.title = {
+        text: '',
+        flagged: false,
+        id: uuidv4()
+      }
     }
   }
 }

@@ -157,7 +157,7 @@ vuex,
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale, viewPluginProps } from '@/mixins'
+import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
 import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
@@ -168,7 +168,7 @@ export default {
 
   mixins: [
     locale,
-    viewPluginProps
+    pluginView
   ],
 
   data () {
