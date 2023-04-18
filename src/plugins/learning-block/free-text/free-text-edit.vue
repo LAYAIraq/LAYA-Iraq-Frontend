@@ -1,12 +1,8 @@
 <!--
-Filename: edit.vue
-Use: Edit WYSIWYG content block
+Filename: free-text-edit.vue
+Use: Edit free text content block
 Creator: core
-Date: unknown
-Dependencies:
-  vuex,
-  quill,
-  @/mixins/locale.vue
+Since: v1.0.0
 -->
 
 <template>
@@ -18,14 +14,14 @@ Dependencies:
         <div class="row">
           <!-- title -->
           <label
-            for="laya-wysiwyg-title"
+            for="free-text-title"
             class="col-2 col-form-label"
           >
             {{ y18n('title') }}
           </label>
           <div class="col-8">
             <input
-              id="laya-wysiwyg-title"
+              id="free-text-title"
               v-model="title.text"
               type="text"
               class="form-control"
@@ -53,7 +49,7 @@ Dependencies:
         >
           <!-- simple title -->
           <label
-            for="laya-wysiwyg-title-simple"
+            for="free-text-title-simple"
             class="col-2 col-form-label"
           >
             <span class="sr-only">
@@ -62,7 +58,7 @@ Dependencies:
           </label>
           <div class="col-8">
             <input
-              id="laya-wysiwyg-title-simple"
+              id="free-text-title-simple"
               v-model="title.simple"
               type="text"
               class="form-control"
@@ -73,26 +69,28 @@ Dependencies:
       </div>
     </form>
     <div
-      class="laya-wysiwyg-edit bg-light"
+      class="free-text-edit bg-light"
       :class="langIsAr? 'text-right' : 'text-left'"
     >
-      <label :for="editorId"> {{ y18n('content') }} </label>
-      <div :id="editorId"></div>
+      <span
+        class="p-3"
+      > {{ y18n('content') }} </span>
+      <div id="free-text-editor"></div>
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
-import { locale, routes } from '@/mixins'
+import { locale, pluginEdit, routes } from '@/mixins'
 
 export default {
-  name: 'LayaWysiwygEdit',
+  name: 'FreeTextEdit',
 
   mixins: [
     locale,
+    pluginEdit,
     routes
   ],
 
@@ -104,22 +102,15 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['courseContent', 'courseSimple']),
-
-    /**
-     * editorId: return ID for html element
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     */
-    editorId () {
-      return `laya-wysiwyg-${Date.now()}`
-    }
+    ...mapGetters(['courseContent', 'courseSimple'])
   },
 
   created () {
-    this.fetchData()
+    if (this.edit) {
+      this.fetchData()
+    } else {
+      this.taskTitlePopulate()
+    }
   },
 
   mounted () {
@@ -149,10 +140,9 @@ export default {
      * Last Updated: March 20, 2021
      */
     initQuill () {
-      const self = this
-      const quill = new Quill(`#${self.editorId}`, {
+      const quill = new Quill('#free-text-editor', {
         theme: 'snow',
-        placeholder: self.y18n('layaHtml.placeholder'),
+        placeholder: this.y18n('freeText.placeholder'),
         modules: {
           toolbar: [
             ['bold', 'italic', 'underline'],
@@ -166,10 +156,10 @@ export default {
         }
       })
       quill.on('text-change', (delta, oldDelta, source) => {
-        if (source === 'user') { self.contents = quill.getContents() }
-        self.$forceUpdate()
+        if (source === 'user') { this.contents = quill.getContents() }
+        this.$forceUpdate()
       })
-      quill.setContents(self.contents)
+      quill.setContents(this.contents)
     }
 
   }
@@ -177,32 +167,30 @@ export default {
 </script>
 
 <style>
-.laya-wysiwyg-edit {
+.free-text-edit {
   margin-top: 1rem;
   font-size: 1.2rem;
 }
-.laya-wysiwyg-edit .ql-active {
+.free-text-edit .ql-active {
   color: whitesmoke !important;
   border-radius: 2px;
   background-color: #06c !important;
 }
-.laya-wysiwyg-edit .ql-active .ql-stroke {
+.free-text-edit .ql-active .ql-stroke {
   stroke: whitesmoke !important;
 }
-.laya-wysiwyg-edit .ql-active .ql-fill {
+.free-text-edit .ql-active .ql-fill {
   fill: whitesmoke !important;
 }
 
-.laya-wysiwyg-edit .ql-formats button {
+.free-text-edit .ql-formats button {
   margin-right: 2px;
 }
-.laya-wysiwyg-edit .ql-formats button:last-child {
+.free-text-edit .ql-formats button:last-child {
   margin-right: 0;
 }
 .ql-container.ql-snow {
- min-height: 200px;
-}
-.ql-container {
+  min-height: 200px;
   font-size: 18px;
 }
 

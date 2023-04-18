@@ -1,16 +1,12 @@
 <!--
-Filename: view.vue
+Filename: free-text-view.vue
 Use: View Freetext content block
 Creator: core
-Date: unknown
-Dependencies:
-  vuex,
-  quill,
-  @/mixins/locale.vue
+Since: v1.0.0
 -->
 
 <template>
-  <div class="laya-wysiwyg-view">
+  <div class="free-text-view">
     <div
       v-if="title.show"
       :id="title.id"
@@ -18,12 +14,12 @@ Dependencies:
     >
       <h2>{{ courseSimple? title.simple : title.text }}</h2>
       <flag-icon
-        v-if="!viewData"
+        v-if="!editPreview"
         :ref-data="title"
         @flagged="title.flagged = true"
       ></flag-icon>
     </div>
-    <div :id="editorId"></div>
+    <div id="free-text-viewer"></div>
     <div class="row">
       <button
         type="button"
@@ -50,7 +46,7 @@ import '@/assets/styles/flaggables.css'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
 export default {
-  name: 'LayaWysiwyg',
+  name: 'FreeTextView',
   components: { FlagIcon },
 
   mixins: [
@@ -60,20 +56,6 @@ export default {
 
   data () {
     return { ...this.viewData }
-  },
-
-  computed: {
-
-    /**
-     * editorId: return id for html element
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     */
-    editorId () {
-      return `laya-wysiwyg-readonly-${Date.now()}`
-    }
   },
 
   mounted () {
@@ -90,7 +72,7 @@ export default {
      * Last Updated: March 20, 2021
      */
     fetchContent () {
-      const quill = new Quill(`#${this.editorId}`, {
+      const quill = new Quill('#free-text-viewer', {
         theme: 'snow',
         readOnly: true
       })
@@ -101,13 +83,13 @@ export default {
 </script>
 
 <style>
-.laya-wysiwyg-view {
+.free-text-view {
   font-size: 18px;
 }
-.laya-wysiwyg-view .ql-toolbar {
+.free-text-view .ql-toolbar {
   display: none;
 }
-.laya-wysiwyg-view .ql-container {
+.free-text-view .ql-container {
   border: none;
 }
 

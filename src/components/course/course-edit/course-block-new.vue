@@ -30,7 +30,7 @@ Dependencies:
         </b-dropdown-header>
 
         <b-dropdown-item
-          v-for="block in $laya.lb"
+          v-for="block in $laya.blocks"
           :key="block.id"
           :to="`/courses/${name}/new/${block.id}`"
         >
