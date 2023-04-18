@@ -28,7 +28,7 @@ Since: v1.0.0
         </h2>
       </div>
       <flag-icon
-        v-if="!viewData"
+        v-if="!editPreview"
         :ref-data="title"
         @flagged="title.flagged = true"
       ></flag-icon>
@@ -41,7 +41,7 @@ Since: v1.0.0
         {{ courseSimple? task.simple: task.text }}
       </div>
       <flag-icon
-        v-if="!viewData"
+        v-if="!editPreview"
         :ref-data="task"
         @flagged="task.flagged = true"
       ></flag-icon>
@@ -95,7 +95,7 @@ Since: v1.0.0
         <i class="ml-2" :class="{'far fa-times-circle text-danger': true}"></i>
         -->
         <flag-icon
-          v-if="!viewData"
+          v-if="!editPreview"
           :ref-data="option"
           :interactive="true"
           @flagged="option.flagged = true"

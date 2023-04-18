@@ -18,7 +18,7 @@ Dependencies:
     >
       <h2>{{ courseSimple? title.simple : title.text }}</h2>
       <flag-icon
-        v-if="!viewData"
+        v-if="!editPreview"
         :ref-data="title"
         @flagged="title.flagged = true"
       ></flag-icon>
@@ -49,7 +49,7 @@ Dependencies:
           :kind="track.kind"
         />
       </video>
-      <!--      <flag-icon v-if="!viewData"-->
+      <!--      <flag-icon v-if="!editPreview"-->
       <!--          :refData="videoFlag"-->
       <!--          :interactive="true"-->
       <!--          @flagged="videoFlag.flagged = true"-->

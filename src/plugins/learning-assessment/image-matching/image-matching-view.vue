@@ -29,7 +29,7 @@
           </h4>
         </div>
         <flag-icon
-          v-if="!viewData"
+          v-if="!editPreview"
           :ref-data="title"
           @flagged="title.flagged = true"
         ></flag-icon>
@@ -45,7 +45,7 @@
           <p>{{ courseSimple? task.simple: task.text }}</p>
         </div>
         <flag-icon
-          v-if="!viewData"
+          v-if="!editPreview"
           :ref-data="task"
           @flagged="task.flagged = true"
         ></flag-icon>
@@ -104,7 +104,7 @@
                 </div>
               </div>
               <flag-icon
-                v-if="!viewData"
+                v-if="!editPreview"
                 :ref-data="pair"
                 :interactive="true"
                 @flagged="pair.flagged = true"

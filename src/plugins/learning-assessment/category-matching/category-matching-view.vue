@@ -23,7 +23,7 @@
         </h2>
       </div>
       <flag-icon
-        v-if="!viewData"
+        v-if="!editPreview"
         :ref-data="title"
         @flagged="title.flagged = true"
       ></flag-icon>
@@ -37,7 +37,7 @@
         <p>{{ courseSimple? task.simple : task.text }}</p>
       </div>
       <flag-icon
-        v-if="!viewData"
+        v-if="!editPreview"
         :ref-data="task"
 
         @flagged="task.flagged = true"
@@ -86,7 +86,7 @@
             :aria-label="y18n('categoryMatching.label.slider')"
           >
           <flag-icon
-            v-if="!viewData"
+            v-if="!editPreview"
             :ref-data="item"
             :interactive="true"
             @flagged="item.flagged = true"

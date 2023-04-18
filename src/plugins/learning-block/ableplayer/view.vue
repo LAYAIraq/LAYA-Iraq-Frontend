@@ -18,7 +18,7 @@ Dependencies:
     >
       <h4> {{ title.text }}</h4>
       <flag-icon
-        v-if="!viewData"
+        v-if="!editPreview"
         :ref-data="title"
 
         @flagged="title.flagged = true"
