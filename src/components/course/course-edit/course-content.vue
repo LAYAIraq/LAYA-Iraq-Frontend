@@ -123,7 +123,7 @@ export default {
      * Last Updated: January 20, 2021
      */
     comps () {
-      const plugins = { ...this.$laya.la, ...this.$laya.lb, ...this.$laya.organization, ...this.$laya.assessments, ...this.$laya.blocks }
+      const plugins = { ...this.$laya.organization, ...this.$laya.assessments, ...this.$laya.blocks }
       return plugins[this.cid].components
     },
 

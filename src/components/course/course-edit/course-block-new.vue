@@ -59,7 +59,7 @@ Dependencies:
         </b-dropdown-header>
 
         <b-dropdown-item
-          v-for="ass in assessments"
+          v-for="ass in $laya.assessments"
           :key="ass.id"
           :to="`/courses/${name}/new/${ass.id}`"
         >
@@ -129,17 +129,6 @@ export default {
   computed: {
     ...mapGetters(['course']),
 
-    /**
-     * function assessments(): strip feedback from course blocks
-     *  if no enrollment in course
-     *
-     *  Author: cmc
-     *
-     *  Last Updated: September 21, 2021
-     */
-    assessments () {
-      return { ...this.$laya.la, ...this.$laya.assessments }
-    },
     /**
      * @function return course organization blocks, without feedback if course has no enrollment
      * @return {object|any}

@@ -53,6 +53,7 @@ Dependencies:
 <script>
 import { mapGetters } from 'vuex'
 import { locale, routes } from '@/mixins'
+import { kebabToCamel } from '@/mixins/general/helpers'
 
 export default {
   name: 'CourseTypeEdit',
@@ -91,31 +92,33 @@ export default {
      * Last Updated: October 27, 2020
      */
     plugins () {
-      const la = this.$laya.la
-      const lb = this.$laya.lb
-      const lalb = []
-      lalb.push({
+      const { blocks, assessments, organization } = this.$laya
+      const blockTypes = []
+      blockTypes.push({
         value: null,
         text: this.y18n('type.changeTypeText'),
         disabled: true
       })
-
-      // add lb elements by name and id
-      for (const id in lb) {
-        lalb.push({
+      const addBlock = (id) => {
+        blockTypes.push({
           value: id,
-          text: this.i18n[lb[id].name + '.name']
+          text: this.y18n(kebabToCamel(id) + '.name')
         })
       }
-      // add la elements by name and id
-      for (const id in la) {
-        lalb.push({
-          value: id,
-          text: this.i18n[la[id].name + '.name']
-        })
+      // add content block elements by name and id
+      for (const id in blocks) {
+        addBlock(id)
+      }
+      // add assessment block elements by name and id
+      for (const id in assessments) {
+        addBlock(id)
+      }
+      // add organization block elements by name and id
+      for (const id in organization) {
+        addBlock(id)
       }
 
-      return lalb
+      return blockTypes
     }
   },
   methods: {

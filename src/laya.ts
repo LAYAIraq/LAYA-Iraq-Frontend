@@ -2,8 +2,7 @@
  * Filename: laya.ts
  * Use: make all content blocks available as global mixin
  * Creator: core
- * Date: unknown
- * Dependencies: vue
+ * Since: v1.0.0
  */
 
 import _Vue, { VueConstructor } from 'vue'
@@ -32,23 +31,9 @@ declare module 'vue/types/vue' {
 
 export class Laya {
   private _vue: typeof _Vue;
-  private _lb: object;
-  private readonly _la: object;
-  private _assessments: object;
-  private _blocks: object;
-  private _organization: object;
-
-  public get lb () {
-    return this._lb
-  }
-
-  public get la () {
-    return this._la
-  }
-
-  public get li () {
-    return { ...this._la, ...this._lb }
-  }
+  private readonly _assessments: object;
+  private readonly _blocks: object;
+  private readonly _organization: object;
 
   public get assessments () {
     return this._assessments
@@ -64,51 +49,9 @@ export class Laya {
 
   constructor (v: typeof _Vue) {
     this._vue = v
-    this._lb = {}
-    this._la = {}
     this._assessments = {}
     this._blocks = {}
     this._organization = {}
-  }
-
-  public registerLB<VC1, VC2, VC3 extends VueConstructor> (
-    id: string,
-    type: string,
-    name: string,
-    icon: string,
-    components: { new?: VC1; edit?: VC2; view: VC3 }
-  ): void {
-    this._lb[id] = { id, type, name, components, icon }
-
-    if ('new' in components) {
-      this._vue.component(id, components.new)
-    }
-
-    if ('edit' in components) {
-      this._vue.component(id, components.edit)
-    }
-
-    this._vue.component(id, components.view)
-  }
-
-  public registerLA<VC1, VC2, VC3 extends VueConstructor> (
-    id: string,
-    type: string,
-    name: string,
-    icon: string,
-    components: { new?: VC1; edit?: VC2; view: VC3 }
-  ): void {
-    this._la[id] = { id, type, name, components, icon }
-
-    if ('new' in components) {
-      this._vue.component(id, components.new)
-    }
-
-    if ('edit' in components) {
-      this._vue.component(id, components.edit)
-    }
-
-    this._vue.component(id, components.view)
   }
 
   public registerPlugin<EditComponent, ViewComponent extends VueConstructor> (
@@ -137,7 +80,7 @@ export class Laya {
 }
 
 export default {
-  install (Vue: typeof _Vue, options?: any): void {
+  install (Vue: typeof _Vue): void {
     const $laya = new Laya(Vue)
     // @ts-ignore
     Vue.$laya = $laya // important to make $laya available to other plugins.
@@ -147,9 +90,6 @@ export default {
       data (): object {
         return {
           $laya: {
-            lb: $laya.lb,
-            la: $laya.la,
-            li: $laya.li,
             assessments: $laya.assessments,
             blocks: $laya.blocks,
             organization: $laya.organization
