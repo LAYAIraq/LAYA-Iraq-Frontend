@@ -11,16 +11,15 @@ import _view from './view.vue'
 
 export default {
   install (Vue: typeof _Vue): void {
-    Vue.$laya.registerLB(
+    Vue.$laya.registerPlugin(
       'laya-ableplayer',
-      'BlockAbleplayer',
-      'layaAbleplayer',
+      'block',
       'fas fa-film',
       {
-        new: () => import('./create.vue'),
+        // new: () => import('./create.vue'),
         // @ts-ignore
         view: _view, // not lazily loaded b/c always visible
-        edit: () => import('./edit.vue')
+        edit: () => import('./edit.vue') // TODO: decide if we want to use create.vue or edit.vue as the default
       })
   }
 }
