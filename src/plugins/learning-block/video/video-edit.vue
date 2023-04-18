@@ -1,9 +1,11 @@
 <!--
-Filename: create.vue
-Use: Create new Plyr content block
-Creator: cmc
-Date: January 17, 2021
-Dependencies: @/mixins/locale.vue
+Filename: video-edit.vue
+Use: View Plyr content block
+Creator: core
+Date: unknown
+Dependencies:
+  vuex,
+  @/mixins/locale.vue
 -->
 
 <template>
@@ -13,7 +15,7 @@ Dependencies: @/mixins/locale.vue
     <form>
       <div class="form-group row">
         <h4 class="d-inline-block mr-auto">
-          {{ y18n('layaPlyr.name') }}
+          {{ y18n('videoPlayer.name') }}
         </h4>
         <i
           id="questionmark"
@@ -29,12 +31,12 @@ Dependencies: @/mixins/locale.vue
       <b-jumbotron
         v-if="tooltipOn"
         id="tooltipText"
-        :header="y18n('layaPlyr.name')"
+        :header="y18n('videoPlayer.name')"
         :lead="y18n('tipHeadline')"
       >
         <hr class="my-4">
         <p
-          v-for="str in y18n('layaPlyr.tooltip').split(';')"
+          v-for="str in y18n('videoPlayer.tooltip').split(';')"
           :key="str.length"
         >
           <!-- eslint-disable-next-line vue/no-v-html --> <!-- TODO: find a way to avoid v-html -->
@@ -48,14 +50,14 @@ Dependencies: @/mixins/locale.vue
         <div class="row">
           <!-- title -->
           <label
-            for="laya-plyr-title"
+            for="video-title"
             class="col col-form-label"
           >
             {{ y18n('title') }}
           </label>
           <div class="form-group col-8">
             <input
-              id="laya-plyr-title"
+              id="video-title"
               v-model="title.text"
               type="text"
               class="form-control"
@@ -85,7 +87,7 @@ Dependencies: @/mixins/locale.vue
         >
           <!-- simple title -->
           <label
-            for="laya-plyr-title-simple"
+            for="video-title-simple"
             class="col-2 col-form-label"
           >
             <span class="sr-only">
@@ -94,7 +96,7 @@ Dependencies: @/mixins/locale.vue
           </label>
           <div class="form-group col-8">
             <input
-              id="laya-plyr-title-simple"
+              id="video-title-simple"
               v-model="title.simple"
               type="text"
               class="form-control"
@@ -110,7 +112,7 @@ Dependencies: @/mixins/locale.vue
           for="vid-id"
           class="col-2 col-form-label"
         >
-          {{ y18n('layaPlyr.url') }}
+          {{ y18n('videoPlayer.url') }}
         </label>
         <div class="col">
           <input
@@ -118,7 +120,7 @@ Dependencies: @/mixins/locale.vue
             v-model="src"
             type="text"
             class="form-control"
-            :placeholder="y18n('layaPlyr.placeholder')"
+            :placeholder="y18n('videoPlayer.placeholder')"
           >
         </div>
       </div>
@@ -126,7 +128,7 @@ Dependencies: @/mixins/locale.vue
       <!-- video props -->
       <div class="form-group row">
         <span class="col-2 col-form-label">
-          {{ y18n('layaPlyr.platform') }}
+          {{ y18n('videoPlayer.platform') }}
         </span>
         <div class="col-5 form-check form-check-inline align-text-top">
           <input
@@ -143,7 +145,7 @@ Dependencies: @/mixins/locale.vue
             class="form-check-label"
             :class="langIsAr ? 'ml-3' : 'mr-3'"
           >
-            {{ y18n('layaPlyr.upload') }}
+            {{ y18n('videoPlayer.upload') }}
           </label>
           <input
             id="platform-vimeo"
@@ -158,7 +160,7 @@ Dependencies: @/mixins/locale.vue
             class="form-check-label"
             :class="langIsAr ? 'ml-3' : 'mr-3'"
           >
-            {{ y18n('layaPlyr.vimeo') }}
+            {{ y18n('videoPlayer.vimeo') }}
           </label>
           <input
             id="platform-yt"
@@ -173,7 +175,7 @@ Dependencies: @/mixins/locale.vue
             class="form-check-label"
             :class="langIsAr ? 'ml-3' : 'mr-3'"
           >
-            {{ y18n('layaPlyr.youtube') }}
+            {{ y18n('videoPlayer.youtube') }}
           </label>
         </div>
 
@@ -207,16 +209,16 @@ Dependencies: @/mixins/locale.vue
             {{ y18n('type') }}
           </div>
           <div class="col">
-            {{ y18n('layaPlyr.captions.label') }}
+            {{ y18n('videoPlayer.captions.label') }}
           </div>
           <div class="col-1">
-            {{ y18n('layaPlyr.captions.lang') }}
+            {{ y18n('videoPlayer.captions.lang') }}
           </div>
           <div class="col">
-            {{ y18n('layaPlyr.captions.src') }}
+            {{ y18n('videoPlayer.captions.src') }}
           </div>
           <div class="col-1">
-            {{ y18n('layaPlyr.captions.default') }}
+            {{ y18n('videoPlayer.captions.default') }}
           </div>
           <div class="col-1"></div> <!-- placeholder for alignment -->
         </div>
@@ -239,7 +241,7 @@ Dependencies: @/mixins/locale.vue
               v-model="track.kind"
             >
               <b-select-option value="null">
-                {{ y18n('layaPlyr.captions.chooseType') }}
+                {{ y18n('videoPlayer.captions.chooseType') }}
               </b-select-option>
               <b-select-option
                 v-for="type in captionTypes"
@@ -256,14 +258,14 @@ Dependencies: @/mixins/locale.vue
               :for="`label-input-${i}`"
               class="form-check-label sr-only"
             >
-              {{ y18n('layaPlyr.captions.label') }}
+              {{ y18n('videoPlayer.captions.label') }}
             </label>
             <input
               :id="`label-input-${i}`"
               v-model="track.label"
               class="form-control"
               type="text"
-              :placeholder="y18n('layaPlyr.captions.label')"
+              :placeholder="y18n('videoPlayer.captions.label')"
             >
           </div>
           <!-- caption language -->
@@ -272,14 +274,14 @@ Dependencies: @/mixins/locale.vue
               :for="`srclang-input-${i}`"
               class="form-check-label sr-only"
             >
-              {{ y18n('layaPlyr.captions.lang') }}
+              {{ y18n('videoPlayer.captions.lang') }}
             </label>
             <input
               :id="`srclang-input-${i}`"
               v-model="track.srclang"
               class="form-control"
               type="text"
-              :placeholder="y18n('layaPlyr.captions.lang')"
+              :placeholder="y18n('videoPlayer.captions.lang')"
             >
           </div>
           <!-- caption source -->
@@ -288,14 +290,14 @@ Dependencies: @/mixins/locale.vue
               :for="`src-input-${i}`"
               class="form-check-label sr-only"
             >
-              {{ y18n('layaPlyr.captions.src') }}
+              {{ y18n('videoPlayer.captions.src') }}
             </label>
             <input
               :id="`src-input-${i}`"
               v-model="track.src"
               class="form-control"
               type="text"
-              :placeholder="y18n('layaPlyr.captions.src')"
+              :placeholder="y18n('videoPlayer.captions.src')"
             >
           </div>
           <!-- caption default -->
@@ -304,7 +306,7 @@ Dependencies: @/mixins/locale.vue
               :for="`default-check-${i}`"
               class="col-form-label sr-only"
             >
-              {{ y18n('layaPlyr.captions.default') }}
+              {{ y18n('videoPlayer.captions.default') }}
             </label>
             <input
               :id="`default-check-${i}`"
@@ -343,7 +345,7 @@ Dependencies: @/mixins/locale.vue
             @click.prevent="addCaption"
           >
             <i class="fas fa-plus-circle"></i>
-            {{ y18n('layaPlyr.captions.add') }}
+            {{ y18n('videoPlayer.captions.add') }}
           </b-button>
         </div>
       </div>
@@ -352,19 +354,219 @@ Dependencies: @/mixins/locale.vue
 </template>
 
 <script>
-import { v4 as uuidv4 } from 'uuid'
-import plyrEditMethods from './common-methods'
+import { mapGetters } from 'vuex'
+import { locale, pluginEdit, routes, tooltipIcon } from '@/mixins'
+import { deepCopy } from '@/mixins/general/helpers'
 
 export default {
-  name: 'LayaPlyrNew',
+  name: 'VideoEdit',
 
   mixins: [
-    plyrEditMethods
+    routes,
+    pluginEdit,
+    locale,
+    tooltipIcon
   ],
 
+  data () {
+    return {
+      src: '',
+      host: '',
+      title: {
+        text: '',
+        flagged: false,
+        show: false,
+        id: ''
+      },
+      videoFlag: {
+        flagged: false,
+        id: ''
+      },
+      captions: {
+        default: null,
+        tracks: []
+      }
+    }
+  },
+
+  computed: {
+    ...mapGetters(['courseContent']),
+    /**
+     * urlMsg: return warning if URL is not supported
+     *
+     * Author: cmc
+     *
+     * Last Updated: April 1, 2022
+     */
+    urlMsg () {
+      if (!this.correctURL && this.validUrl) {
+        return this.y18n('videoPlayer.wrongPlatform')
+      } else if (!this.correctURL) {
+        const choices = {
+          upload: this.y18n('videoPlayer.wrongURL'),
+          vimeo: this.y18n('videoPlayer.wrongVimeoId'),
+          youtube: this.y18n('videoPlayer.wrongYoutubeId')
+        }
+        return choices[this.host]
+      } else if (this.host === 'upload' && (this.validYtUrl || this.validVimeoUrl)) {
+        return this.y18n('videoPlayer.wrongPlatform')
+      } else {
+        return null
+      }
+    },
+
+    /**
+     * correctURL: checks if video is on yt or vimeo
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 31, 2022
+     */
+    correctURL () {
+      if (this.host === 'upload') {
+        return this.validUrl
+      } else if (this.host === 'vimeo') {
+        return this.validVimeoUrl
+      } else if (this.host === 'youtube') {
+        return this.validYtUrl
+      } else { // no input set yet
+        return true
+      }
+    },
+
+    /**
+     * captionTypes: returns the W3C caption types excluding metadata
+     * @returns {[string, string, string, string]}
+     */
+    captionTypes () {
+      return [
+        'subtitles',
+        'captions',
+        'descriptions',
+        'chapters'
+      ]
+    },
+
+    /**
+     * function validUrl: check if string is a valid URL according to RFC 3886
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 31, 2022
+     */
+    validUrl () {
+      if (this.src === '') return false
+      let url
+      try {
+        // eslint-disable-next-line prefer-const
+        url = new URL(this.src)
+      } catch (_) {
+        return false
+      }
+      return url.protocol === 'http:' || url.protocol === 'https:'
+    },
+
+    /**
+     * function validVimeoUrl: check if URL contains vimeo or consists of Numbers
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 31, 2022
+     */
+    validVimeoUrl () {
+      return (this.validUrl)
+        ? this.src.includes('vimeo')
+        : /^\d+$/.test(this.src) // matcher for vimeo IDs
+    },
+
+    /**
+     * function validYtUrl: check if URL contains vimeo or consists of Numbers
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 31, 2022
+     */
+    validYtUrl () {
+      return (this.validUrl)
+        ? this.src.includes('youtu')
+        : (/^([0-9a-zA-Z]|-)+$/.test(this.src) && this.src.length === 11) // matcher for yt IDs
+    }
+  },
+
   created () {
-    this.title.id = uuidv4()
-    this.videoFlag.id = uuidv4()
+    if (this.edit) {
+      this.fetchData()
+    }
+  },
+
+  methods: {
+    /**
+     * Function fetchData: fetch data from vuex and make data property
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 20, 2021
+     */
+    fetchData () {
+      // create deep copy of store object to manipulate in vue instance
+      const preData = deepCopy(this.courseContent[this.pathId])
+      this.src = preData.src
+      this.host = preData.host
+      this.title = preData.title
+      this.showTitle = preData.showTitle
+      this.captions = preData.captions
+    },
+    /**
+     * function addCaption: add caption object to caption tracks array
+     *
+     * Author: cmc
+     *
+     * Last Updated: April 1, 2022
+     */
+    addCaption () {
+      this.captions.tracks.push({
+        kind: null,
+        label: '',
+        srclang: '',
+        src: ''
+      })
+    },
+
+    /**
+     * function makeDefault: make element at index i the default track
+     *
+     * Author: cmc
+     *
+     * Last Updated: April 1, 2022
+     * @param {number} i index for new default element
+     */
+    makeDefault (i) {
+      this.captions.default = i
+    },
+
+    /**
+     * function removeCaption: remove caption at given index
+     *
+     * Author: cmc
+     *
+     * Last Updated: April 1, 2022
+     * @param {number} idx index at which to delete
+     */
+    removeCaption (idx) {
+      this.captions.tracks.splice(idx, 1)
+    },
+
+    /**
+     * function setHost: set host variable to val
+     *
+     * Author: cmc
+     *
+     * Last Updated: March 31, 2022
+     * @param {string} str one of 'youtube', 'vimeo' or 'upload'
+     */
+    setHost (str) {
+      this.host = str
+    }
   }
 }
 </script>

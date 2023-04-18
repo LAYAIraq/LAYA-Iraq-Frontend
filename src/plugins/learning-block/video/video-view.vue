@@ -1,5 +1,5 @@
 <!--
-Filename: view.vue
+Filename: video-view.vue
 Use: View Plyr content block
 Creator: core
 Date: unknown
@@ -10,7 +10,7 @@ Dependencies:
 -->
 
 <template>
-  <div class="ly-plyr-view">
+  <div class="video-view">
     <div
       v-if="title.show"
       :id="title.id"
@@ -27,14 +27,14 @@ Dependencies:
     <div>
       <div
         v-if="host !== 'upload'"
-        :id="playerId"
+        id="video-player"
         :data-plyr-provider="host"
         :data-plyr-embed-id="src"
         class="plyr__video-embed"
       ></div>
       <video
         v-else
-        :id="playerId"
+        id="video-player"
       >
         <source
           :src="src"
@@ -85,7 +85,7 @@ import '@/assets/styles/flaggables.css'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
 export default {
-  name: 'LayaPlyr',
+  name: 'VideoView',
   components: { FlagIcon },
 
   mixins: [
@@ -101,31 +101,7 @@ export default {
     ...mapGetters([
       'courseContent',
       'courseSimple'
-    ]),
-
-    /**
-     * playerId: returns id for html element
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     */
-    playerId () {
-      return `ly-plyr-${Date.now()}`
-    }
-
-    // /**
-    //  * platform: returns 'youtube' or 'vimeo' depending in src
-    //  *
-    //  * Author: cmc
-    //  *
-    //  * Last Updated: January 17, 2021
-    //  */
-    // platform () {
-    //   if (this.src.includes('youtube')) return 'youtube'
-    //   else if (this.src.includes('vimeo')) return 'vimeo'
-    //   else return 'upload'
-    // },
+    ])
 
     // tracks () {
     //   return [
@@ -174,7 +150,7 @@ export default {
      * Updated: March 20, 2021
      */
     initPlyr () {
-      this.plyr = new Plyr(`#${this.playerId}`, {
+      this.plyr = new Plyr('#video-player', {
         // captions: {active: true}
       })
       // const source = this.host === 'upload'
@@ -205,11 +181,22 @@ export default {
             src: this.src,
             provider: this.platform
           }
-        ]
-      }
-      this.plyr.on('ended', e => {
-        console.log('finished playing')
-      }) */
+        ]  // /**
+    //  * platform: returns 'youtube' or 'vimeo' depending in src
+    //  *
+    //  * Author: cmc
+    //  *
+    //  * Last Updated: January 17, 2021
+    //  */
+    // platform () {
+    //   if (this.src.includes('youtube')) return 'youtube'
+    //   else if (this.src.includes('vimeo')) return 'vimeo'
+    //   else return 'upload'
+    // },
+    //   }
+    //   this.plyr.on('ended', e => {
+    //     console.log('finished playing')
+    //   }) */
       // this.plyr.source = options
     }
   }
