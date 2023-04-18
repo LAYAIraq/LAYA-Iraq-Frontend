@@ -1,9 +1,8 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue'
-// import DragDropCreate from '@/plugins/laya-la-drag-drop/create.vue'
-import DragDropEdit from '@/plugins/learning-assessment/category-matching/category-matching-edit.vue'
-import DragDropView from '@/plugins/learning-assessment/category-matching/category-matching-view.vue'
+import CategoryMatchingEdit from '@/plugins/learning-assessment/category-matching/category-matching-edit.vue'
+import CategoryMatchingView from '@/plugins/learning-assessment/category-matching/category-matching-view.vue'
 import 'regenerator-runtime/runtime'
 
 const localVue = createLocalVue()
@@ -38,77 +37,81 @@ const contentInput = {
       text: 'Cat 2',
       simple: 'Simple Cat 2'
     }
-  ]
+  ],
+  id: 't3st1npu7'
 }
 
-// describe.skip('Drag & drop create component', () => {
-//   let wrapper
-//   let getters
-//   let state
-//   beforeEach(() => {
-//     state = {
-//       courseSimple: true
-//     }
-//     getters = {
-//       courseSimple: () => state.courseSimple,
-//       profileLang: () => 'en'
-//     }
-//     const store = new Vuex.Store({
-//       state,
-//       getters
-//     })
-//     wrapper = mount(DragDropCreate, {
-//       directives: {
-//         'b-tooltip': () => {}
-//       },
-//       // stubs: ['b-jumbotron'],
-//       store,
-//       localVue
-//     })
-//   })
-//
-//   it('shows a helper box when clicking the questionmark', async () => {
-//     const questionmark = wrapper.find('#questionmark')
-//     await questionmark.trigger('click')
-//     const helpText = wrapper.find('#tooltipText')
-//     expect(helpText.exists()).toBeTruthy()
-//   })
-//
-//   it('allows simple alternatives for all input', async () => {
-//     await localVue.nextTick()
-//     const inputFields = wrapper.findAll('input')
-//     const textareas = wrapper.findAll('textarea')
-//     expect(inputFields.wrappers.filter(wrap => wrap.attributes('id').includes('simple')).length).toBe(5)
-//     expect(textareas.wrappers.filter(wrap => wrap.attributes('id').includes('simple')).length).toBe(1)
-//   })
-//
-//   it('allows adding categories and answers', async () => {
-//     state.courseSimple = false
-//     await localVue.nextTick()
-//     const buttons = wrapper.findAll('.btn-primary')
-//     expect(buttons.length).toBe(2)
-//     let cats = wrapper.findAll('label').filter(label => label.attributes('for').includes('cat'))
-//     expect(cats.length).toBe(2)
-//     await buttons.wrappers[0].trigger('click')
-//     cats = wrapper.findAll('label').filter(label => label.attributes('for').includes('cat'))
-//     expect(cats.length).toBe(3)
-//     let items = wrapper.findAll('label').filter(label => label.attributes('for').includes('item'))
-//     expect(items.length).toBe(1)
-//     await buttons.wrappers[1].trigger('click')
-//     items = wrapper.findAll('label').filter(label => label.attributes('for').includes('item'))
-//     expect(items.length).toBe(2)
-//   })
-//
-//   it('allows deleting categories and items', async () => {
-//     const deleteButtons = wrapper.findAll('.btn-danger').length
-//     for (let i = 0; i < deleteButtons; i++) {
-//       await wrapper.find('.btn-danger').trigger('click')
-//     }
-//     expect(wrapper.find('.btn-danger').exists()).toBeFalsy()
-//   })
-// })
+describe('Category Matching create component', () => {
+  let wrapper
+  let getters
+  let state
+  beforeEach(() => {
+    state = {
+      courseSimple: true
+    }
+    getters = {
+      courseSimple: () => state.courseSimple,
+      profileLang: () => 'en'
+    }
+    const store = new Vuex.Store({
+      state,
+      getters
+    })
+    wrapper = mount(CategoryMatchingEdit, {
+      propsData: {
+        edit: false
+      },
+      directives: {
+        'b-tooltip': () => {}
+      },
+      // stubs: ['b-jumbotron'],
+      store,
+      localVue
+    })
+  })
 
-describe('Drag & Drop edit component', () => {
+  it('shows a helper box when clicking the questionmark', async () => {
+    const questionmark = wrapper.find('#questionmark')
+    await questionmark.trigger('click')
+    const helpText = wrapper.find('#tooltipText')
+    expect(helpText.exists()).toBeTruthy()
+  })
+
+  it('allows simple alternatives for all input', async () => {
+    await localVue.nextTick()
+    const inputFields = wrapper.findAll('input')
+    const textareas = wrapper.findAll('textarea')
+    expect(inputFields.wrappers.filter(wrap => wrap.attributes('id').includes('simple')).length).toBe(5)
+    expect(textareas.wrappers.filter(wrap => wrap.attributes('id').includes('simple')).length).toBe(1)
+  })
+
+  it('allows adding categories and answers', async () => {
+    state.courseSimple = false
+    await localVue.nextTick()
+    const buttons = wrapper.findAll('.btn-primary')
+    expect(buttons.length).toBe(2)
+    let cats = wrapper.findAll('label').filter(label => label.attributes('for').includes('cat'))
+    expect(cats.length).toBe(2)
+    await buttons.wrappers[0].trigger('click')
+    cats = wrapper.findAll('label').filter(label => label.attributes('for').includes('cat'))
+    expect(cats.length).toBe(3)
+    let items = wrapper.findAll('label').filter(label => label.attributes('for').includes('item'))
+    expect(items.length).toBe(1)
+    await buttons.wrappers[1].trigger('click')
+    items = wrapper.findAll('label').filter(label => label.attributes('for').includes('item'))
+    expect(items.length).toBe(2)
+  })
+
+  it('allows deleting categories and items', async () => {
+    const deleteButtons = wrapper.findAll('.btn-danger').length
+    for (let i = 0; i < deleteButtons; i++) {
+      await wrapper.find('.btn-danger').trigger('click')
+    }
+    expect(wrapper.find('.btn-danger').exists()).toBeFalsy()
+  })
+})
+
+describe('Category Matching edit component', () => {
   let wrapper
   let getters
   let state
@@ -124,7 +127,10 @@ describe('Drag & Drop edit component', () => {
       state,
       getters
     })
-    wrapper = mount(DragDropEdit, {
+    wrapper = mount(CategoryMatchingEdit, {
+      propsData: {
+        edit: true
+      },
       directives: {
         'b-tooltip': () => {}
       },
@@ -146,7 +152,7 @@ describe('Drag & Drop edit component', () => {
   })
 })
 
-describe('Drag & Drop View Component', () => {
+describe('Category Matching View Component', () => {
   let wrapper
   let getters
   let state
@@ -165,7 +171,7 @@ describe('Drag & Drop View Component', () => {
       state,
       getters
     })
-    wrapper = shallowMount(DragDropView, {
+    wrapper = shallowMount(CategoryMatchingView, {
       mocks: {
         $route: {
           params: {

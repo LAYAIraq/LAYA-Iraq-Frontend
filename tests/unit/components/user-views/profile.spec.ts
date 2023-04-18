@@ -4,7 +4,7 @@ import ProfileView from '@/components/user-views/profile.vue'
 import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue'
 import 'regenerator-runtime/runtime'
-import sampleApplication from '../../mocks/sample-application.json'
+import sampleApplication from '../../../mocks/sample-application.json'
 import editor from '@/store/modules/editor'
 
 const localVue = createLocalVue()

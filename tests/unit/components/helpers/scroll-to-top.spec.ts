@@ -30,7 +30,7 @@ describe('Scroll to top button', () => {
     // expect(scrollButtonLayer.attributes('style')).toBe('display: none;')
     // const scrollButton = scrollButtonLayer.find('button')
     // window.scroll(null, 201)
-    const scrollButtonLayer = wrapper.find('.ly-scroll-to-top')
+    const scrollButtonLayer = wrapper.find('.scroll-to-top')
     expect(scrollButtonLayer.attributes('style')).toBe('display: none;')
   })
 
@@ -44,7 +44,7 @@ describe('Scroll to top button', () => {
     const vm = wrapper.vm as any
     vm.show = true
     await localVue.nextTick()
-    const scrollButtonLayer = wrapper.find('.ly-scroll-to-top')
+    const scrollButtonLayer = wrapper.find('.scroll-to-top')
     expect(scrollButtonLayer.attributes('style')).toBeFalsy()
     const button = wrapper.find('button')
     await button.trigger('click')

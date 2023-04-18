@@ -1,5 +1,5 @@
 import { courseChapterTransformToDraggable, courseChapterNameConvertToId } from '@/mixins/general/course-navigation'
-import SampleCourseChapters from '../../mocks/sample-course-chapters.json'
+import SampleCourseChapters from '../../../mocks/sample-course-chapters.json'
 
 describe('course navigation utils', () => {
   describe('courseChapterTransformToDraggable', () => {

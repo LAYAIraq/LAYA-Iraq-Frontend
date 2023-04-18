@@ -2,9 +2,8 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue' // uncomment if component uses Bootstrap
 import 'regenerator-runtime/runtime' // for async behavior in tests
-import RelateCreate from '@/plugins/learning-assessment/image-matching/create.vue'
-import RelateEdit from '@/plugins/learning-assessment/image-matching/edit.vue'
-import RelateView from '@/plugins/learning-assessment/image-matching/view.vue'
+import ImageMatchingEdit from '@/plugins/learning-assessment/image-matching/image-matching-edit.vue'
+import ImageMatchingView from '@/plugins/learning-assessment/image-matching/image-matching-view.vue'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -25,7 +24,7 @@ const stepInput = {
   relationsSimple: ['Easy Solution 1', 'Easy Solution 2']
 }
 
-describe('Relate Create component', () => {
+describe('Image Matching Create component', () => {
   let wrapper
   let getters
   let state
@@ -42,7 +41,10 @@ describe('Relate Create component', () => {
       getters
     })
     // @ts-ignore
-    wrapper = mount(RelateCreate, { // use mount if component uses bootstrap
+    wrapper = mount(ImageMatchingEdit, { // use mount if component uses bootstrap
+      propsData: {
+        edit: false
+      },
       directives: {
         'b-tooltip': () => {}
       },
@@ -97,7 +99,7 @@ describe('Relate Create component', () => {
   })
 })
 
-describe('Relate edit component', () => {
+describe('Image Matching edit component', () => {
   it('loads data from store', () => {
     const getters = {
       profileLang: () => 'en',
@@ -115,7 +117,10 @@ describe('Relate edit component', () => {
       getters
     })
     // @ts-ignore
-    const wrapper = mount(RelateEdit, { // use mount if component uses bootstrap
+    const wrapper = mount(ImageMatchingEdit, { // use mount if component uses bootstrap
+      propsData: {
+        edit: false
+      },
       directives: {
         'b-tooltip': () => {}
       },
@@ -134,7 +139,7 @@ describe('Relate edit component', () => {
   })
 })
 
-describe('Relate View component', () => {
+describe('Image Matching View component', () => {
   let wrapper
   let getters
   let state
@@ -165,7 +170,7 @@ describe('Relate View component', () => {
       getters
     })
     // @ts-ignore
-    wrapper = mount(RelateView, { // use mount if component uses bootstrap
+    wrapper = mount(ImageMatchingView, { // use mount if component uses bootstrap
       mocks: {
         $route: {
           params: {

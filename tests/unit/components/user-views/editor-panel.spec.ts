@@ -5,8 +5,8 @@ import Vuex from 'vuex'
 import Storage from 'vue-ls'
 import { BootstrapVue } from 'bootstrap-vue'
 import 'regenerator-runtime/runtime'
-import sampleApplication from '../../mocks/sample-application.json'
-import sampleVote from '../../mocks/sample-vote.json'
+import sampleApplication from '../../../mocks/sample-application.json'
+import sampleVote from '../../../mocks/sample-vote.json'
 import editor from '@/store/modules/editor'
 
 const localVue = createLocalVue()
