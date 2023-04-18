@@ -336,7 +336,7 @@
     <b-toast
       id="submit-ok"
       variant="success"
-      :title="y18n('layaUploadFileList.success')"
+      :title="y18n('uploadFile.success')"
       class="author-toast"
       auto-hide-delay="1500"
       static

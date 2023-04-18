@@ -204,7 +204,7 @@
                 <u>{{ y18n('register.success') }}</u>
                 <img
                   src="../../assets/images/fertig.svg"
-                  :alt="y18n('layaUploadFileList.success')"
+                  :alt="y18n('uploadFile.success')"
                   style="width: 3rem"
                 >
               </div>

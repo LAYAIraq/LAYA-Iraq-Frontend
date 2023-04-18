@@ -13,7 +13,7 @@
     <div class="file-explorer">
       <div class="d-flex">
         <h2>
-          {{ y18n('layaUploadFileList.filesInCourse') }}
+          {{ y18n('uploadFile.filesInCourse') }}
         </h2>
         <i
           id="questionmark"
@@ -26,12 +26,12 @@
         </i>
         <b-jumbotron
           v-if="tooltipOn"
-          :header="y18n('layaUploadFileList.addUpload')"
+          :header="y18n('uploadFile.addUpload')"
           :lead="y18n('tipHeadline')"
         >
           <hr>
           <span>
-            {{ y18n('layaUploadFileList.tooltip') }}
+            {{ y18n('uploadFile.tooltip') }}
           </span>
         </b-jumbotron>
       </div>
@@ -46,7 +46,7 @@
             @click="sortByProp('type')"
           >
             <i :class="sortIcon('type')"></i>
-            {{ y18n('layaUploadFileList.fileType') }}
+            {{ y18n('uploadFile.fileType') }}
           </span>
         </div>
         <div class="col-5">
@@ -57,7 +57,7 @@
             @click="sortByProp('originalFilename')"
           >
             <i :class="sortIcon('originalFilename')"></i>
-            {{ y18n('layaUploadFileList.fileName') }}
+            {{ y18n('uploadFile.fileName') }}
           </span>
         </div>
         <div class="col-2">
@@ -68,14 +68,14 @@
             @click="sortByProp('size')"
           >
             <i :class="sortIcon('size')"></i>
-            {{ y18n('layaUploadFileList.fileSize') }}
+            {{ y18n('uploadFile.fileSize') }}
           </span>
         </div>
         <div class="col-1">
-          {{ y18n('layaUploadFileList.url') }}
+          {{ y18n('uploadFile.url') }}
         </div>
         <div class="col">
-          {{ y18n('layaUploadFileList.deleteFile') }}
+          {{ y18n('uploadFile.deleteFile') }}
         </div>
       </div>
       <hr>
@@ -94,7 +94,7 @@
               <i
                 v-b-tooltip.left
                 :class="fileIcon(file.type)"
-                :title="y18n('layaUploadFileList.fileType')"
+                :title="y18n('uploadFile.fileType')"
               ></i>
               {{ fileTypeString(file.type) }}
             </div>
@@ -111,7 +111,7 @@
               <i
                 v-b-tooltip.right
                 class="fas fa-copy copy"
-                :title="y18n('layaUploadFileList.urlCopy')"
+                :title="y18n('uploadFile.urlCopy')"
                 @click="urlCopy(urlGet(file.name))"
               ></i>
             </div>
@@ -121,7 +121,7 @@
                 v-b-tooltip.top
                 type="button"
                 class="btn btn-danger btn-sm"
-                :title="y18n('layaUploadFileList.deleteFile')"
+                :title="y18n('uploadFile.deleteFile')"
                 @click="fileDeleteConfirm(file)"
               >
                 <i
@@ -136,21 +136,21 @@
         v-else
         class="row"
       >
-        {{ y18n('layaUploadFileList.noFiles') }}
+        {{ y18n('uploadFile.noFiles') }}
       </div>
     </div>
     <hr>
     <upload-file></upload-file>
     <b-modal
       id="file-delete-confirm"
-      :title="y18n('layaUploadFileList.deleteFile')"
+      :title="y18n('uploadFile.deleteFile')"
       centered
       header-bg-variant="danger"
       ok-variant="danger"
       @ok="fileDelete"
       @cancel="fileToDelete = null"
     >
-      {{ y18n('layaUploadFileList.deleteFileConfirm') }}
+      {{ y18n('uploadFile.deleteFileConfirm') }}
     </b-modal>
   </div>
 </template>
@@ -250,7 +250,7 @@ export default {
      */
     urlCopy (url) {
       if (!url) {
-        alert(this.y18n('layaUploadFileList.fileNameError'))
+        alert(this.y18n('uploadFile.fileNameError'))
       }
       const dummy = document.createElement('textarea')
       dummy.value = url

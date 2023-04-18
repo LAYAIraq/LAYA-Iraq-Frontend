@@ -47,13 +47,13 @@
                 v-else-if="file.success"
                 class="col-auto"
               >
-                {{ y18n('layaUploadFileList.success') }}
+                {{ y18n('uploadFile.success') }}
               </div>
               <div
                 v-else-if="file.active"
                 class="col-auto"
               >
-                {{ y18n('layaUploadFileList.active') }}
+                {{ y18n('uploadFile.active') }}
               </div>
               <div
                 v-else
@@ -67,7 +67,7 @@
                   v-b-tooltip.right
                   type="button"
                   class="btn btn-danger btn-sm"
-                  :title="y18n('layaUploadFileList.removeUpload')"
+                  :title="y18n('uploadFile.removeUpload')"
                   @click="_removeFile(i)"
                 >
                   <i
@@ -84,14 +84,14 @@
           <li>
             <div class="text-center p-5">
               <h4>
-                {{ y18n('layaUploadFileList.dropOr') }}
+                {{ y18n('uploadFile.dropOr') }}
               </h4>
               <label
                 class="btn btn-lg btn-primary"
                 for="file"
               >
                 <i class="fas fa-plus"></i>
-                {{ y18n('layaUploadFileList.selectFiles') }}
+                {{ y18n('uploadFile.selectFiles') }}
               </label>
             </div>
           </li>
@@ -101,7 +101,7 @@
           v-show="$refs.upload && $refs.upload.dropActive"
           class="drop-active"
         >
-          <h3>{{ y18n('layaUploadFileList.dropToUpload') }}</h3>
+          <h3>{{ y18n('uploadFile.dropToUpload') }}</h3>
         </div>
 
         <div class="button-group">
@@ -118,7 +118,7 @@
               :drop-directory="true"
             >
               <i class="fas fa-plus"></i>
-              {{ y18n('layaUploadFileList.selectFiles') }}
+              {{ y18n('uploadFile.selectFiles') }}
             </file-upload>
             <button
               v-if="!$refs.upload || !$refs.upload.active"
@@ -150,7 +150,7 @@
               @click="addUpload = false"
             >
               <i class="fas fa-minus"></i>
-              {{ y18n('layaUploadFileList.hideUploader') }}
+              {{ y18n('uploadFile.hideUploader') }}
             </button>
           </b-button-group>
         </div>
@@ -254,7 +254,7 @@ export default {
     checkDuplicate (file) {
       if (file.success) {
         // console.log('This file has already been uploaded!')
-        file.error = this.y18n('layaUploadFileList.duplicateFile')
+        file.error = this.y18n('uploadFile.duplicateFile')
         return true
       }
 
@@ -270,7 +270,7 @@ export default {
           entry.size === attrs.size &&
           entry.type === attrs.type) {
           // console.log('This file already exists in this course!')
-          file.error = this.y18n('layaUploadFileList.duplicateFile')
+          file.error = this.y18n('uploadFile.duplicateFile')
           return true
         }
       }
@@ -290,7 +290,7 @@ export default {
       const maxFileSize = process.env.VUE_APP_MAX_FILE_SIZE || 500000000
       if (file.size > maxFileSize) {
         // console.log('File too large!')
-        file.error = this.y18n('layaUploadFileList.fileTooLarge')
+        file.error = this.y18n('uploadFile.fileTooLarge')
         return true
       }
       return false
