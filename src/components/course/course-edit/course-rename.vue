@@ -133,7 +133,7 @@ export default {
      */
 
     duplicateCheck () {
-      if (this.courseList.length === 0) this.$store.dispatch('fetchCourseList')
+      if (this.courseList.length === 0) this.$store.dispatch('courseListFetch')
       if (this.courseList.some(e => e.name === this.rename)) {
         this.dupeName = true
       } else {
@@ -172,8 +172,8 @@ export default {
       })
       const newName = this.rename.trim()
       this.oldName = this.course.name
-      this.$store.commit('renameCourse', newName)
-      const renamed = this.$store.dispatch('updateRenamedCourse')
+      this.$store.commit('courseRename', newName)
+      const renamed = this.$store.dispatch('courseUpdateRename')
 
       renamed.then(() => {
         this.$router.replace({

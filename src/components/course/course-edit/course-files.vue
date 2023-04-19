@@ -209,7 +209,7 @@ export default {
 
   beforeDestroy () {
     // persist course files in database
-    this.$store.dispatch('storeCourseFiles')
+    this.$store.dispatch('courseFilesStore')
   },
 
   methods: {
@@ -223,8 +223,12 @@ export default {
      */
     fileDelete () {
       const file = this.fileToDelete
-      this.$store.commit('delFile', file)
-      this.fileToDelete = null
+      this.$store.dispatch('courseFilesDeleteSingle', file)
+        .then(() => { this.fileToDelete = null })
+        .catch(err => {
+          console.log(err)
+          // TODO: create error toast
+        })
     },
     /**
      * Function fileDeleteConfirm: mark file as to delete, show prompt

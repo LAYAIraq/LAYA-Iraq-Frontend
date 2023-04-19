@@ -163,8 +163,8 @@ export default {
       const { course } = this
       // eslint-disable-next-line
       const prefs = (({$laya, ...o}) => o) (this.$data) // strip $laya from data property
-      this.$store.commit('changeCourseProperties', prefs)
-      this.$store.commit('setCourseListProperties', { course, prefs })
+      this.$store.commit('coursePropertiesChange', prefs)
+      this.$store.commit('courseListPropertiesUpdate', { course, prefs })
       this.$emit('settingsChanged')
     },
 

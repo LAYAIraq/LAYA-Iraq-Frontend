@@ -303,7 +303,7 @@ export default {
      * Last Updated: March 29, 2021
      */
     courseFilesUpdate () {
-      this.$store.commit('updateCourseFiles', this.uploadedFiles)
+      this.$store.commit('courseFilesUpdate', this.uploadedFiles)
     },
     /**
      * function fileListUpdate: update list of files

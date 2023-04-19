@@ -123,7 +123,7 @@ export default {
         })
         .catch(() => {
           // course name does not exist
-          this.$store.dispatch('copyCourse', this.copy)
+          this.$store.dispatch('courseCopy', this.copy)
             .then(() => this.$bvToast.show('copy-success'))
             .catch(err => alert(err))
         })

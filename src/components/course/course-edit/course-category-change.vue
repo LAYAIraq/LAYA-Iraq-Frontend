@@ -112,10 +112,10 @@ export default {
           this.$bvModal.hide('author-change-category-confirm')
         })
         this.badInput = null
-        this.$store.commit('changeCourseCategory', this.newCategory.trim())
-        this.$store.dispatch('updateCourse')
+        this.$store.commit('courseCategoryChange', this.newCategory.trim())
+        this.$store.dispatch('courseUpdate')
           .then(() => {
-            this.$store.dispatch('fetchCourseList')
+            this.$store.dispatch('courseListFetch')
             this.$emit('changedCategory')
           })
           .catch(err => console.error(err))

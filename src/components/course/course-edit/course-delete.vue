@@ -71,9 +71,9 @@ export default {
      * Last Updated: April 9, 2021
      */
     delCourse () {
-      this.$store.dispatch('deleteCourse')
+      this.$store.dispatch('courseDelete')
         .then(() => {
-          this.$store.commit('removeFromCourseList', this.course.courseId)
+          this.$store.commit('courseListRemove', this.course.courseId)
           this.$router.push('/courses')
         })
         .catch(err => console.error('ERROR:', err))

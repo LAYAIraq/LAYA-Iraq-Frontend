@@ -18,10 +18,10 @@ export default {
      */
     courseFetch (name) {
       const courseName = name || this.$route.params.name // use argument if given, otherwise use router params
-      this.$store.dispatch('fetchCourse', courseName)
+      this.$store.dispatch('courseFetch', courseName)
         .then(() => {
           this.enrollmentFetch()
-          this.$store.commit('unsetCourseUpdated')
+          this.$store.commit('courseUpdatedSet', false)
           document.title = `LAYA | ${this.$store.state.edit.course.name}`
         })
         .catch(err => {

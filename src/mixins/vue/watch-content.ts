@@ -24,7 +24,7 @@ export default {
     courseUpdated (val) {
       if (val) { // set to true
         this.fetchData()
-        this.$store.commit('unsetCourseUpdated')
+        this.$store.commit('courseUpdatedSet', false)
       }
     },
     storeBusy (val) {
@@ -34,6 +34,6 @@ export default {
     }
   }
   // created() {
-  //   this.$store.commit('unsetCourseUpdated')
+  //   this.$store.commit('courseUpdatedSet', false)
   // }
 }

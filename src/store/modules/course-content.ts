@@ -224,25 +224,6 @@ export default {
             reject(error)
           })
       })
-    },
-
-    /**
-     * @description gets a course from new back end and calls
-     *   courseStructureDestructure mutation
-     *  @param commit - commit function
-     *  @param courseIdentifier - identifier for course, can be id or slug
-     */
-    courseFetch ({ commit }, courseIdentifier: string) { // TODO: move to course module
-      return new Promise((resolve, reject) => {
-        http.get(`courses/${courseIdentifier}`)
-          .then((response: AxiosResponse<Course>) => {
-            commit('courseStructureDestructure', response.data)
-            resolve(response)
-          })
-          .catch((error) => {
-            reject(error)
-          })
-      })
     }
   }
 }

@@ -275,6 +275,24 @@ export default {
         answer.votes[uid] = val
         answer.score += val
       }
+    },
+
+    /**
+     * function flagFlaggableElement(): mutate flagged boolean of element
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 27, 2022
+     * @param _ state variables
+     * @param elem the flaggable element to be mutated
+     */
+    flagFlaggableElement (
+      _,
+      elem: {
+        id: string,
+        flagged: boolean
+      }) {
+      elem.flagged = true
     }
   },
 

@@ -168,7 +168,7 @@ export default {
     // persist changes in database
     if (this.editContent) {
       this.save()
-      this.$store.dispatch('storeCourse')
+      this.$store.dispatch('courseUpdate')
     }
   },
 
@@ -200,7 +200,7 @@ export default {
         this.$store.commit('courseContentSet', { ...updatedStep, id: this.pathId })
       }
       // set courseUpdated to trigger watchers
-      this.$store.commit('setCourseUpdated')
+      this.$store.commit('courseUpdatedSet', true)
       this.$emit('saved')
     }
   }

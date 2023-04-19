@@ -191,7 +191,7 @@ export default {
         this.msg = this.y18n('courseList.needsEncoding')
       } else {
         this.msg = ''
-        this.$store.dispatch('createCourse', {
+        this.$store.dispatch('courseCreate', {
           ...newCourse,
           userId: userId,
           enrollment: this.needsEnrollment

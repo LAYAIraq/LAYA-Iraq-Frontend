@@ -77,7 +77,7 @@ export default {
      * Last Updated: January 11, 2021
      *  */
     storeCourse () {
-      this.$store.dispatch('storeCourse')
+      this.$store.dispatch('courseUpdate')
         .then(() => this.$bvToast.show('author-toast'))
         .catch((err) => console.error(err))
     }

@@ -124,7 +124,7 @@ export default {
      * Last Updated: January 20, 2021
      */
     fetchCourses () {
-      this.$store.dispatch('fetchCourseList')
+      this.$store.dispatch('courseListFetch')
     }
 
   }
