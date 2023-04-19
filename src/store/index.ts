@@ -12,7 +12,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 /* modules */
-import auth from './modules/auth'
+import authentication from './modules/authentication'
 import courseContent from './modules/course-content'
 import edit from './modules/edit'
 import editor from './modules/editor'
@@ -22,6 +22,8 @@ import message from './modules/message'
 import note from './modules/note'
 import password from './modules/password'
 import profile from './modules/profile'
+import register from './modules/register'
+import role from './modules/role'
 import users from './modules/users'
 
 Vue.use(Vuex)
@@ -31,7 +33,7 @@ if (debug) console.log('vuex in debug mode')
 
 export default new Vuex.Store({
   modules: {
-    auth,
+    authentication,
     // @ts-ignore
     courseContent,
     edit,
@@ -42,6 +44,8 @@ export default new Vuex.Store({
     note,
     password,
     profile,
+    register,
+    role,
     users
   },
   strict: debug

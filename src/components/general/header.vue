@@ -39,7 +39,7 @@ Dependencies:
         </b-navbar-brand>
 
         <!-- left links -->
-        <b-navbar-nav v-if="auth.online">
+        <b-navbar-nav v-if="userOnline">
           <b-nav-item to="/courses">
             <i
               class="fas fa-chalkboard-teacher"
@@ -52,7 +52,7 @@ Dependencies:
 
         <!-- right links unauthorized -->
         <b-navbar-nav
-          v-if="!auth.online"
+          v-if="!userOnline"
           :class="marginClass()"
         >
           <b-nav-item to="/register">
@@ -147,7 +147,7 @@ Dependencies:
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import { icons } from '@/options/langs.js'
 import { locale } from '@/mixins'
 
@@ -171,11 +171,11 @@ export default {
   },
 
   computed: {
-    ...mapState(['auth']),
     ...mapGetters([
       'isAdmin',
       'isEditor',
-      'profileLang'
+      'profileLang',
+      'userOnline'
     ])
   },
 
@@ -232,7 +232,7 @@ export default {
     */
     setLang (newlang) {
       this.$store.commit('setLang', newlang)
-      if (this.$store.state.auth.online) {
+      if (this.userOnline) {
         const data = {
           lang: this.profileLang,
           uid: this.$store.state.auth.userId
