@@ -12,12 +12,13 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 /* modules */
+import applications from './modules/applications'
 import authentication from './modules/authentication'
+import course from './modules/course'
 import courseContent from './modules/course-content'
 import courseEdit from './modules/course-edit'
 import courseFiles from './modules/course-files'
 import courseList from './modules/course-list'
-import editor from './modules/editor'
 import enrollment from './modules/enrollment'
 import flags from './modules/flags'
 import message from './modules/message'
@@ -35,13 +36,14 @@ if (debug) console.log('vuex in debug mode')
 
 export default new Vuex.Store({
   modules: {
+    applications,
     authentication,
+    course,
     // @ts-ignore
     courseContent,
     courseEdit,
     courseFiles,
     courseList,
-    editor,
     enrollment,
     flags,
     message,

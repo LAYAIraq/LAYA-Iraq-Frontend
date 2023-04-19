@@ -588,7 +588,7 @@ export default {
     this.setPrefs(this.prefs)
     this.saveProfile()
     this.submitApplication()
-    this.$store.commit('clearApplicationList')
+    this.$store.commit('applicationListClear')
   },
 
   created () {
@@ -601,16 +601,16 @@ export default {
 
   methods: {
     ...mapActions([
-      'getApplicationUser',
       'saveProfile',
-      'sendApplication',
-      'sendApplicationDecision',
-      'updateApplication'
+      'userApplicationCreate',
+      'userApplicationDecide',
+      'userApplicationFetch',
+      'userApplicationUpdate'
     ]),
     ...mapMutations([
-      'addApplication',
-      'decideOnApplication',
-      'editApplication',
+      'applicationAdd',
+      'applicationDecide',
+      'applicationEdit',
       'setPrefs'
     ]),
 
@@ -630,7 +630,7 @@ export default {
       } = this.formInput
       // noinspection JSCheckFunctionSignatures
       if (this.applicationNew) {
-        this.addApplication({
+        this.applicationAdd({
           applicationText: applicationText,
           areaOfExpertise: areaOfExpertise,
           fullName: fullName,
@@ -638,7 +638,7 @@ export default {
           applicantId: this.userId
         })
       } else if (this.applicationEdited > 0) {
-        this.editApplication({
+        this.applicationEdit({
           id: this.userApplication.id,
           applicationText: applicationText,
           areaOfExpertise: areaOfExpertise,
@@ -685,7 +685,7 @@ export default {
      */
     setUserApplication () {
       if (!this.userApplication) {
-        this.getApplicationUser(this.userId)
+        this.userApplicationFetch(this.userId)
           .then(resp => {
             if (!resp) { // application doesn't exist
               this.applicationNew = true
@@ -742,9 +742,9 @@ export default {
      */
     submitApplication () {
       if (this.applicationNew) {
-        this.sendApplication(this.userApplication)
+        this.userApplicationCreate(this.userApplication)
       } else {
-        this.updateApplication(this.userApplication)
+        this.userApplicationUpdate(this.userApplication)
       }
     },
 
@@ -756,8 +756,8 @@ export default {
      * Last Updated: May 6, 2022
      */
     withdrawApplication () {
-      this.decideOnApplication({ applicationId: this.userApplication.id, decision: 'withdrawn' })
-      this.sendApplicationDecision()
+      this.applicationDecide({ applicationId: this.userApplication.id, decision: 'withdrawn' })
+      this.userApplicationDecide()
     }
   }
 }
