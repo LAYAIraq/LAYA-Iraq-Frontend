@@ -5,7 +5,7 @@ import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue'
 import 'regenerator-runtime/runtime'
 import sampleApplication from '../../../mocks/sample-application.json'
-import editor from '@/store/modules/editor'
+import editor from '@/store/modules/applications'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -295,12 +295,12 @@ describe('profile view', () => {
   })
 
   it('tries to dispatch an application onCreated', () => {
-    expect(dispatchSpy).toHaveBeenCalledWith('getApplicationUser', 1)
+    expect(dispatchSpy).toHaveBeenCalledWith('userApplicationFetch', 1)
   })
 
   // it('pre-fills the application should it exist', async () => { // tested watcher that is removed
   //   // const watchSpy = jest.spyOn(vm.watch, 'userApplication')
-  //   store.commit('addApplication', sampleApplication)
+  //   store.commit('applicationAdd', sampleApplication)
   //   expect(store.getters.userApplication).toStrictEqual(sampleApplication)
   //   // expect(watchSpy).toHaveBeenCalled()
   //   await localVue.nextTick()
@@ -312,7 +312,7 @@ describe('profile view', () => {
   // })
 
   it('updates data in store if application changed', async () => {
-    store.commit('addApplication', sampleApplication)
+    store.commit('applicationAdd', sampleApplication)
     await wrapper.setData({ applicationNew: false })
     await wrapper.find('#edit-application-button').trigger('click')
     await wrapper.find('#applicant-expertise').setValue('Bovine Defecation')
@@ -320,7 +320,7 @@ describe('profile view', () => {
     const applicationSaveButton = wrapper.find('.btn.btn-success')
     expect(applicationSaveButton.text()).toBe('Save application')
     await applicationSaveButton.trigger('click') // click ok button on modal, saving the application
-    expect(commitSpy).toHaveBeenLastCalledWith('editApplication', expect.objectContaining({
+    expect(commitSpy).toHaveBeenLastCalledWith('applicationEdit', expect.objectContaining({
       areaOfExpertise: 'Bovine Defecation'
     }))
     expect(store.getters.applicationList[0]).toStrictEqual(
@@ -332,7 +332,7 @@ describe('profile view', () => {
   })
 
   it('gives option to edit and withdraw when applications exists', () => {
-    store.commit('addApplication', sampleApplication)
+    store.commit('applicationAdd', sampleApplication)
     const applicationButtons = wrapper.find('#author-application').findAll('button')
     expect(applicationButtons.length).toBe(2)
     expect(applicationButtons.at(0).attributes('id')).toBe('edit-application-button')
@@ -340,54 +340,54 @@ describe('profile view', () => {
   })
 
   it('shows application modal when clicking edit application button', async () => {
-    store.commit('addApplication', sampleApplication)
+    store.commit('applicationAdd', sampleApplication)
     await wrapper.find('#edit-application-button').trigger('click')
     // expect(button.exists()).toBeTruthy()
     expect(wrapper.find('#author-application-form').exists()).toBeTruthy()
   })
 
   it('shows withdrawal modal when clicking withdraw application button', async () => {
-    store.commit('addApplication', sampleApplication)
+    store.commit('applicationAdd', sampleApplication)
     await wrapper.find('#withdraw-application-button').trigger('click')
     const withdrawModal = wrapper.find('#application-withdraw-modal')
     expect(withdrawModal.exists()).toBeTruthy()
   })
 
   it('calls decideOn when withdrawal is confirmed', async () => {
-    store.commit('addApplication', sampleApplication)
+    store.commit('applicationAdd', sampleApplication)
     await wrapper.find('#withdraw-application-button').trigger('click')
     const withdrawModal = wrapper.find('#application-withdraw-modal')
     await withdrawModal.find('.btn.btn-warning').trigger('click')
     await localVue.nextTick()
-    expect(commitSpy).toHaveBeenLastCalledWith('decideOnApplication', {
+    expect(commitSpy).toHaveBeenLastCalledWith('applicationDecide', {
       applicationId: 1,
       decision: 'withdrawn'
     })
     wrapper.destroy()
-    expect(dispatchSpy).toHaveBeenCalledWith('sendApplicationDecision')
+    expect(dispatchSpy).toHaveBeenCalledWith('userApplicationDecide')
   })
 
   it('shows hint that user withdrew if they did', async () => {
-    store.commit('addApplication', sampleApplication)
+    store.commit('applicationAdd', sampleApplication)
     await wrapper.find('#withdraw-application-button').trigger('click')
     const withdrawModal = wrapper.find('#application-withdraw-modal')
     await withdrawModal.find('.btn.btn-warning').trigger('click')
     expect(wrapper.find('#application-withdrawn').exists()).toBeTruthy()
   })
 
-  it('dispatches updateApplication onDestroy if one exisited', async () => {
+  it('dispatches userApplicationUpdate onDestroy if one exisited', async () => {
     wrapper.setData({ applicationNew: false })
-    store.commit('addApplication', sampleApplication)
+    store.commit('applicationAdd', sampleApplication)
     expect(store.getters.applicationList.length).toBe(1)
     await localVue.nextTick()
     // expect(wrapper.vm.applicationNew).toBeFalsy()
     wrapper.destroy()
-    expect(dispatchSpy).toHaveBeenLastCalledWith('updateApplication',
+    expect(dispatchSpy).toHaveBeenLastCalledWith('userApplicationUpdate',
       sampleApplication
     )
   })
 
-  it('dispatches sendApplication onDestroy if application is new', async () => {
+  it('dispatches userApplicationCreate onDestroy if application is new', async () => {
     expect(store.getters.applicationList.length).toBe(0)
     await wrapper.setData({ applicationNew: true })
     // dispatchSpy = jest.spyOn(store, 'dispatch').mockImplementation(() => Promise.reject(new Error('fail')))
@@ -399,11 +399,11 @@ describe('profile view', () => {
     await wrapper.find('.btn.btn-success').trigger('click') // click ok button on modal, sending the application
     // expect(wrapper.vm.applicationNew).toBeTruthy()
     // expect(methodSpy).toHaveBeenCalled()
-    // expect(commitSpy).toHaveBeenCalledWith('addApplication', expect.any(Object))
+    // expect(commitSpy).toHaveBeenCalledWith('applicationAdd', expect.any(Object))
     // expect(store.getters.userApplication).toBeTruthy()
     await localVue.nextTick()
     wrapper.destroy()
-    expect(dispatchSpy).toHaveBeenLastCalledWith('sendApplication',
+    expect(dispatchSpy).toHaveBeenLastCalledWith('userApplicationCreate',
       expect.objectContaining({
         areaOfExpertise: 'Post-Modern Literary Theory',
         fullName: 'Dr. Francois Lyotard',

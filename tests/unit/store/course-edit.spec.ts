@@ -1,5 +1,5 @@
 import cloneDeep from 'lodash.clonedeep'
-import edit from '@/store/modules/edit'
+import edit from '@/store/modules/course-edit'
 import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import axios from 'axios'
@@ -58,9 +58,9 @@ describe.skip('store module edit', () => {
   //   expect(store.state).toBeDefined()
   // })
   //
-  it('executes fetchCourseList()', () => {
+  it('executes courseListFetch()', () => {
     const dispatchSpy = jest.spyOn(store, 'dispatch')
-    store.dispatch('fetchCourseList')
-    expect(dispatchSpy).toHaveBeenCalledWith('fetchCourseList')
+    store.dispatch('courseListFetch')
+    expect(dispatchSpy).toHaveBeenCalledWith('courseListFetch')
   })
 })

@@ -7,7 +7,7 @@ import { BootstrapVue } from 'bootstrap-vue'
 import 'regenerator-runtime/runtime'
 import sampleApplication from '../../../mocks/sample-application.json'
 import sampleVote from '../../../mocks/sample-vote.json'
-import editor from '@/store/modules/editor'
+import editor from '@/store/modules/applications'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -40,7 +40,7 @@ describe('editor panel', () => {
         editor: cloneDeep(editor)
       }
     })
-    store.commit('setNumberOfEditors', 42)
+    store.commit('editorNumberSet', 42)
 
     // fill store with data
     for (let i = 0; i < 10; i++) { // fill store with applications and votes
@@ -53,19 +53,19 @@ describe('editor panel', () => {
       const app = { ...sampleApplication }
       app.id += i
       app.applicantId += i
-      store.commit('addApplication', app)
+      store.commit('applicationAdd', app)
       const vote1 = cloneDeep(sampleVote)
       vote1.id += (2 * i)
       vote1.vote = randomBool()
       vote1.applicationId = 1 + i
       vote1.editorId = randomId() % 3
-      store.commit('addEditorVote', vote1)
+      store.commit('editorVoteAdd', vote1)
       const vote2 = { ...sampleVote }
       vote2.id += (2 * i) + 1
       vote2.vote = randomBool()
       vote2.applicationId = 1 + i
       vote2.editorId = randomId() % 3
-      store.commit('addEditorVote', vote2)
+      store.commit('editorVoteAdd', vote2)
     }
   })
   beforeEach(() => {
@@ -101,7 +101,7 @@ describe('editor panel', () => {
   it('fetches editor votes onCreated', () => {
     expect(store.getters.applicationList.length).toBe(10)
     expect(store.getters.editorVotes.length).toBe(20)
-    expect(dispatchSpy).toHaveBeenCalledWith('getApplications')
+    expect(dispatchSpy).toHaveBeenCalledWith('applicationsFetch')
   })
 
   it('shows as many rows as there are applications', () => {
@@ -151,7 +151,7 @@ describe('editor panel', () => {
     expect(wrapper.find('#approve-button').attributes('disabled')).toBeUndefined()
     await wrapper.find('#approve-button').trigger('click')
     await localVue.nextTick()
-    expect(commitSpy).toHaveBeenLastCalledWith('addEditorVote', expect.objectContaining({
+    expect(commitSpy).toHaveBeenLastCalledWith('editorVoteAdd', expect.objectContaining({
       editorId: 42,
       vote: true
     }))
@@ -160,13 +160,13 @@ describe('editor panel', () => {
 
   it('decreases count of application when editor revokes vote', async () => {
     if (store.getters.editorVotes.some(e => e.editorId === 42)) {
-      store.commit('changeVote', {
+      store.commit('editorVoteChange', {
         application: store.getters.applicationList[0],
         editorId: 42,
         vote: true
       })
     } else {
-      store.commit('addEditorVote', { applicationId: 1, editorId: 42, vote: true })
+      store.commit('editorVoteAdd', { applicationId: 1, editorId: 42, vote: true })
     }
     const modalButton = wrapper.find('.btn-secondary')
     await modalButton.trigger('click')
@@ -179,7 +179,7 @@ describe('editor panel', () => {
     await revokeButton.trigger('click')
     await localVue.nextTick()
     expect(store.getters.applicationList[0].votes).toBe(voteCount - 1)
-    expect(commitSpy).toHaveBeenLastCalledWith('changeVote', expect.objectContaining({
+    expect(commitSpy).toHaveBeenLastCalledWith('editorVoteChange', expect.objectContaining({
       editorId: 42,
       vote: false
     }))
@@ -188,13 +188,13 @@ describe('editor panel', () => {
 
   it('increases count of application when editor changes vote from no to yes', async () => {
     if (store.getters.editorVotes.some(e => e.editorId === 42)) {
-      store.commit('changeVote', {
+      store.commit('editorVoteChange', {
         application: store.getters.applicationList[0],
         editorId: 42,
         vote: false
       })
     } else {
-      store.commit('addEditorVote', { applicationId: 1, editorId: 42, vote: false })
+      store.commit('editorVoteAdd', { applicationId: 1, editorId: 42, vote: false })
     }
     const modalButton = wrapper.find('.btn-secondary')
     await modalButton.trigger('click')
@@ -207,7 +207,7 @@ describe('editor panel', () => {
     await approveButton.trigger('click')
     await localVue.nextTick()
     expect(store.getters.applicationList[0].votes).toBe(voteCount + 1)
-    expect(commitSpy).toHaveBeenLastCalledWith('changeVote', expect.objectContaining({
+    expect(commitSpy).toHaveBeenLastCalledWith('editorVoteChange', expect.objectContaining({
       editorId: 42,
       vote: true
     }))
@@ -218,7 +218,7 @@ describe('editor panel', () => {
   it('shows editor`s decision for each application', async () => {
     for (let i = 1; i <= 10; i++) { // have all decisions in editorVotes
       if (i % 3 !== 0) { // leave out every third application
-        store.commit('addEditorVote', {
+        store.commit('editorVoteAdd', {
           applicationId: i,
           editorId: 42,
           vote: (i % 2 === 0) // approve if index is even
@@ -249,6 +249,6 @@ describe('editor panel', () => {
 
   it('saves votes beforeDestroy', () => {
     wrapper.destroy()
-    expect(dispatchSpy).toHaveBeenCalledWith('saveVotes')
+    expect(dispatchSpy).toHaveBeenCalledWith('editorVoteUpdateAll')
   })
 })
