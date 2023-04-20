@@ -29,7 +29,7 @@ Dependencies:
       :id="playerId"
       preload="auto"
       data-debug
-      :data-lang="profileLang"
+      :data-lang="profileLanguage"
       data-force-lang
     >
 
@@ -93,7 +93,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['content', 'profileLang']),
+    ...mapGetters(['content', 'profileLanguage']),
 
     /**
      * playerId: return an id for ableplayer html element

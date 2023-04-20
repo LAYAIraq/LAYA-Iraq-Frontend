@@ -209,7 +209,7 @@ export default {
     ...mapGetters([
       'course',
       'courseList',
-      'mediaPrefs',
+      'preferencesMedia',
       'userId'
     ]),
 
@@ -296,10 +296,10 @@ export default {
         // eslint-disable-next-line
         const props = (({enrollment, ...o}) => o) (course.properties) // filter enrollment, can be removed when it is reinstated
         let complicit = true
-        for (const prop of Object.keys(this.mediaPrefs)) { // check each user pref
+        for (const prop of Object.keys(this.preferencesMedia)) { // check each user pref
           // check prop settings in course's props array
           if (Object.prototype.hasOwnProperty.call(props, prop)) { // setting is found in props
-            if (props[prop] !== this.mediaPrefs[prop]) { // if not the same as user's pref, mark non complicit
+            if (props[prop] !== this.preferencesMedia[prop]) { // if not the same as user's pref, mark non complicit
               complicit = false
               this.markAsNonComplicit(course.courseId, prop)
             }

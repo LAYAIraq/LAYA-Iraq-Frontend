@@ -9,7 +9,7 @@ import { mapGetters } from 'vuex'
 import * as i18n from '../../assets/i18n'
 export default {
   computed: {
-    ...mapGetters(['profileLang']),
+    ...mapGetters(['profileLanguage']),
 
     /**
      * i18n: return locale for user language property
@@ -19,7 +19,7 @@ export default {
      * Last Updated: May 3, 2021
      */
     i18n () {
-      return i18n[this.profileLang]
+      return i18n[this.profileLanguage]
     },
 
     /**
@@ -28,10 +28,10 @@ export default {
      * Author: cmc
      *
      * Last Updated: November 16, 2021
-     * @returns true if 'ar' or 'ku' is set as profileLang
+     * @returns true if 'ar' or 'ku' is set as profileLanguage
      */
     langIsAr () {
-      return this.profileLang === 'ar' || this.profileLang === 'ku'
+      return this.profileLanguage === 'ar' || this.profileLanguage === 'ku'
     }
   },
 

@@ -2,8 +2,7 @@
  * Filename: profile.ts
  * Use: settings for logged users
  * Creator: core
- * Date: unknown
- * Dependencies: axios
+ * Since: v1.0.0
  */
 
 import http from 'axios'
@@ -13,103 +12,46 @@ export default {
   state: {
     avatar: '',
     email: '',
-    lang: 'en',
-    prefs: {
-      font: {
-        chosen: 'standard',
-        size: 18
-      },
-      media: {
-        audio: false,
-        simple: false,
-        text: true,
-        video: true
-      }
+    language: 'en',
+    preferencesFont: {
+      chosen: 'standard',
+      size: 18
+    },
+    preferencesMedia: {
+      audio: false,
+      simple: false,
+      text: true,
+      video: true
     },
     username: ''
   },
   getters: {
-
-    /**
-     * Functions fontOptions: return fontOptions for logged users
-     *
-     * Author: cmc
-     *
-     * Last Updated: September 23, 2021
-     * @param state preferences as object
-     * @returns {object} fontOptions
-     */
-    fontOptions (state: {
-      prefs: {
-        font: object
-      }
-    }) {
-      return state.prefs.font
-    },
-
-    /**
-     * function mediaPrefs: return user's preferred media
-     *
-     * Author: cmc
-     *
-     * Last Updated: October 26, 2021
-     *
-     */
-    mediaPrefs (state: {
-      prefs: {
-        media: object
-      }
-    }) {
-      return state.prefs.media
-    },
-
-    /**
-     * function profile: make whole state available via getter
-     *
-     * Author: cmc
-     *
-     * Last Updated: March 18, 2022
-     * @param {object} state all state variables in module
-     */
-    profile (state: object) {
-      return state
-    },
-
-    /**
-     * Function profileLang: get stored language
-     *
-     * Author: cmc
-     *
-     * Last Updated: unknown
-     *
-     * @param state contains lang
-     * @returns current user locale
-     */
-    profileLang (state: { lang: string }) {
-      return state.lang
-    }
+    preferencesFont: (state: { preferencesFont: object }) => state.preferencesFont,
+    preferencesMedia: (state: { preferencesMedia: object }) => state.preferencesMedia,
+    profile: (state: object) => state,
+    profileLanguage: (state: { language: string }) => state.language
   },
   mutations: {
 
     /**
-     * function setLang: set user locale to given language if supported
+     * function languageSet: set user locale to given language if supported
      *
      * Author: core
      *
      * Last Updated: January 27, 2022
      *
-     * @param state contains lang
+     * @param state contains language
      * @param lang language to set
      */
-    setLang (
-      state: { lang: string },
+    languageSet (
+      state: { language: string },
       lang: string
     ) {
-      state.lang = (supportedLangs.includes(lang)) ? lang : supportedLangs[0]
+      state.language = (supportedLangs.includes(lang)) ? lang : supportedLangs[0]
     },
 
     /**
-     * Function setMedia: set input media boolean
+     * Function preferencesMediaSet: set input media boolean
      *
      * Author: cmc
      *
@@ -120,18 +62,14 @@ export default {
      * @param value: boolean
      *
      */
-    setMedia (
-      state: {
-        prefs: {
-          media: object
-        }
-      },
+    preferencesMediaSet (
+      state: { preferencesMedia: object },
       { type, value }: {
         type: string,
         value: boolean
       }) {
-      state.prefs.media[type] = value
-    },
+      state.preferencesMedia[type] = value
+    }, // TODO: continue here
 
     /**
      * Function setPrefs: set all media preferences at once
@@ -266,7 +204,7 @@ export default {
         langData
       )
         .then(() => {
-          commit('setLang', langData.lang)
+          commit('languageSet', langData.lang)
         })
         .catch((err) => console.error(err))
     }

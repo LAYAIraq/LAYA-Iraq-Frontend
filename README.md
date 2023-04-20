@@ -204,7 +204,7 @@ describe('Course delete', () => {
   let modalButtons
   beforeEach(() => {
     getters = {
-      profileLang: () => 'en', // necessary in every component for rendering
+      profileLanguage: () => 'en', // necessary in every component for rendering
       course: () => {
         return {
           courseId: 'test'
@@ -266,7 +266,7 @@ describe('Course delete', () => {
 describe('test for full branch coverage', () => {
   it('prompts error log when store returns rejection', async () => {
     const getters = {
-      profileLang: () => 'en',
+      profileLanguage: () => 'en',
       course: () => {
         return {
           courseId: 'test'

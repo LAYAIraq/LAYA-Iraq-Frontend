@@ -431,7 +431,7 @@ export default {
         username: this.name,
         password: this.passwordSet,
         // avatar: avatarFileName,
-        lang: this.profileLang
+        lang: this.profileLanguage
       })
         .then(() => {
           this.submitOk = true

@@ -17,7 +17,7 @@ export default {
      */
     dateLocalized (dateStr) {
       return new Date(Date.parse(dateStr))
-        .toLocaleDateString(this.profileLang)
+        .toLocaleDateString(this.profileLanguage)
     },
 
     /**
@@ -32,7 +32,7 @@ export default {
      */
     dateShort (dateStr) {
       return new Date(Date.parse(dateStr))
-        .toLocaleDateString(this.profileLang, {
+        .toLocaleDateString(this.profileLanguage, {
           day: '2-digit',
           month: '2-digit',
           year: '2-digit'
@@ -49,7 +49,7 @@ export default {
      */
     timeLocalized (dateStr) {
       return new Date(Date.parse(dateStr))
-        .toLocaleTimeString(this.profileLang, {
+        .toLocaleTimeString(this.profileLanguage, {
           hour: '2-digit',
           minute: '2-digit'
         })

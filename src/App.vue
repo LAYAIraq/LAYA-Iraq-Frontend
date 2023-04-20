@@ -43,8 +43,8 @@ export default {
 
   computed: {
     ...mapGetters([
-      'fontOptions',
-      'profileLang'
+      'preferencesFont',
+      'profileLanguage'
     ])
   },
 
@@ -63,8 +63,8 @@ export default {
   methods: {
 
     getClasses () {
-      return this.getReadingDir() + ` laya-font-${this.fontOptions.chosen}` +
-        ` font-size-${this.fontOptions.size}`
+      return this.getReadingDir() + ` laya-font-${this.preferencesFont.chosen}` +
+        ` font-size-${this.preferencesFont.size}`
     },
     /**
      * Function getReadingDir: set dir prop depending on locale
@@ -76,7 +76,7 @@ export default {
      * @returns {string} class name for reading direction
      */
     getReadingDir () {
-      if (this.profileLang === 'ar' || this.profileLang === 'ku') {
+      if (this.profileLanguage === 'ar' || this.profileLanguage === 'ku') {
         return 'right-to-left'
       }
       return 'left-to-right'

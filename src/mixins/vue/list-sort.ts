@@ -9,7 +9,7 @@ import { mapGetters } from 'vuex'
 import * as locale from '../../assets/i18n'
 export default {
   computed: {
-    ...mapGetters(['profileLang']),
+    ...mapGetters(['profileLanguage']),
 
     /**
      * tooltips(): filters i18n file for needed tooltip keys
@@ -27,12 +27,12 @@ export default {
       ]
 
       // filtered object from i18n
-      return Object.keys(locale[this.profileLang])
+      return Object.keys(locale[this.profileLanguage])
         .filter(key => needed.includes(key))
         .reduce((obj, key) => {
           return {
             ...obj,
-            [key]: locale[this.profileLang][key]
+            [key]: locale[this.profileLanguage][key]
           }
         }, {})
     }

@@ -443,6 +443,7 @@ import PasswordInput from '@/components/helpers/password-input.vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import fontOptions from '@/options/font-options'
 import fontSizeOptions from '@/options/font-size-options'
+import { deepCopy } from '@/mixins/general/helpers'
 // import '@/styles/fonts.css'
 // import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
 
@@ -480,6 +481,8 @@ export default {
   computed: {
     ...mapGetters([
       'isAuthor',
+      'preferencesFont',
+      'preferencesMedia',
       'profile',
       'userApplication',
       'userId'
@@ -572,7 +575,10 @@ export default {
     profile: {
       deep: true,
       handler () {
-        this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
+        this.prefs = {
+          font: deepCopy(this.preferencesFont),
+          media: deepCopy(this.preferencesMedia)
+        }
       }
     },
     userApplication (val) { // mirror changes in store for render (e.g. when new application is set)

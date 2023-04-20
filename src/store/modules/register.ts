@@ -65,7 +65,7 @@ export default {
           email: data.email,
           username: data.username,
           password: data.password,
-          lang: data.lang
+          language: data.lang
         })
           .then(({ data }) => resolve(data))
           .catch(err => reject(err))

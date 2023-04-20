@@ -9,7 +9,7 @@ import { mapGetters } from 'vuex'
 import * as locale from '@/assets/i18n'
 export default {
   computed: {
-    ...mapGetters(['profileLang']),
+    ...mapGetters(['profileLanguage']),
 
     /**
      * types(): filter i18n file for mimeType keys
@@ -22,12 +22,12 @@ export default {
       const types = {}
 
       // filter i18n file for key containing 'files'
-      for (const key in locale[this.profileLang]) {
+      for (const key in locale[this.profileLanguage]) {
         if (Object.prototype.hasOwnProperty
-          .call(locale[this.profileLang], key)) {
+          .call(locale[this.profileLanguage], key)) {
           if (/files/.test(key) === true) {
             // add to types in scope
-            types[key] = locale[this.profileLang][key]
+            types[key] = locale[this.profileLanguage][key]
           }
         }
       }

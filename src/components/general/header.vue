@@ -97,9 +97,9 @@ Dependencies:
           <b-nav-item-dropdown>
             <template #button-content>
               <img
-                :src="icons[profileLang]"
+                :src="icons[profileLanguage]"
                 class="lang-icon"
-                :alt="profileLang"
+                :alt="profileLanguage"
               >
             </template>
 
@@ -121,7 +121,7 @@ Dependencies:
           <b-nav-item-dropdown right>
             <template #button-content>
               <img
-                :src="icons[profileLang]"
+                :src="icons[profileLanguage]"
                 class="lang-icon"
                 :alt="y18n('langSelect')"
               >
@@ -174,7 +174,7 @@ export default {
     ...mapGetters([
       'isAdmin',
       'isEditor',
-      'profileLang',
+      'profileLanguage',
       'userId',
       'userOnline'
     ])
@@ -223,7 +223,7 @@ export default {
     },
 
     /**
-    * Function setLang: set a new User Language
+    * Function languageSet: set a new User Language
     *
     *
     * Author: cmc
@@ -235,7 +235,7 @@ export default {
       this.$store.commit('setLang', newlang)
       if (this.userOnline) {
         const data = {
-          lang: this.profileLang,
+          lang: this.profileLanguage,
           uid: this.userId
         }
         this.$store.dispatch('setUserLang', data)

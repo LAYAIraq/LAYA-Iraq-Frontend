@@ -389,7 +389,7 @@ export default {
       if (this.categories.length === 0) {
         const tmpItem = {
           label: this.y18n('categoryMatching.answer') + ' 1',
-          simple: 'simple lang alternative',
+          simple: 'simple language alternative',
           category: -1,
           flagged: false,
           id: uuidv4()
@@ -429,7 +429,7 @@ export default {
     newItem () {
       return {
         label: this.y18n('plugin.sampleOption'),
-        simple: 'simple lang alternative',
+        simple: 'simple language alternative',
         category: -1,
         flagged: false,
         id: uuidv4()
