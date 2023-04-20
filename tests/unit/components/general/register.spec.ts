@@ -8,7 +8,7 @@ localVue.use(Vuex)
 
 describe('register component', () => {
   const getters = {
-    profileLang: () => 'en',
+    profileLanguage: () => 'en',
     passwordRepeat: () => 'secret',
     passwordSet: () => 'secret12'
   }
@@ -191,7 +191,7 @@ describe('register component', () => {
   it('catches rejects of store promises', async () => {
     console.error = jest.fn()
     const tmpGetters = {
-      profileLang: () => 'en',
+      profileLanguage: () => 'en',
       passwordRepeat: () => 'a',
       passwordSet: () => 'a'
     }
@@ -234,7 +234,7 @@ describe('register component', () => {
 
   it('has form error correct', async () => {
     const tmpGetters = {
-      profileLang: () => 'en',
+      profileLanguage: () => 'en',
       passwordRepeat: () => '',
       passwordSet: () => ''
     }

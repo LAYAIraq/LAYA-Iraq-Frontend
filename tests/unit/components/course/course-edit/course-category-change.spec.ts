@@ -8,7 +8,7 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(BootstrapVue)
 
-describe('Course changeCategory', () => {
+describe('CourseCategoryChange', () => {
   let getters
   let actions
   let state
@@ -24,7 +24,7 @@ describe('Course changeCategory', () => {
       }
     }
     getters = {
-      profileLang: () => 'en',
+      profileLanguage: () => 'en',
       course: () => {
         return state.course
       },
@@ -36,11 +36,11 @@ describe('Course changeCategory', () => {
       }
     }
     actions = {
-      fetchCourseList: jest.fn(),
-      updateCourse: jest.fn(() => { return Promise.resolve() })
+      courseListFetch: jest.fn(),
+      courseUpdate: jest.fn(() => { return Promise.resolve() })
     }
     mutations = {
-      changeCourseCategory: jest.fn((category) => { state.course.category = category })
+      courseCategoryChange: jest.fn((category) => { state.course.category = category })
     }
     const store = new Vuex.Store({
       state,
@@ -85,8 +85,8 @@ describe('Course changeCategory', () => {
   it('does not close, highlights input field and shows a warning when no input', async () => {
     await button.trigger('click')
     await saveButton.trigger('click')
-    expect(mutations.changeCourseCategory).not.toHaveBeenCalled()
-    expect(actions.updateCourse).not.toHaveBeenCalled()
+    expect(mutations.courseCategoryChange).not.toHaveBeenCalled()
+    expect(actions.courseUpdate).not.toHaveBeenCalled()
     expect(wrapper.find('#author-change-category-confirm').isVisible()).toBeTruthy()
     expect(wrapper.find('input').classes()).toContain('border-danger')
     expect(wrapper.find('#input-warning').isVisible()).toBeTruthy()
@@ -96,8 +96,8 @@ describe('Course changeCategory', () => {
     await button.trigger('click')
     await wrapper.find('input').setValue('education')
     await saveButton.trigger('click')
-    expect(mutations.changeCourseCategory).not.toHaveBeenCalled()
-    expect(actions.updateCourse).not.toHaveBeenCalled()
+    expect(mutations.courseCategoryChange).not.toHaveBeenCalled()
+    expect(actions.courseUpdate).not.toHaveBeenCalled()
     expect(wrapper.find('#author-change-category-confirm').isVisible()).toBeTruthy()
     expect(wrapper.find('input').classes()).toContain('border-danger')
     expect(wrapper.find('#input-warning').isVisible()).toBeTruthy()
@@ -107,8 +107,8 @@ describe('Course changeCategory', () => {
     await button.trigger('click')
     await wrapper.find('input').setValue('  test  ')
     await saveButton.trigger('click')
-    expect(mutations.changeCourseCategory).toHaveBeenCalledWith(expect.any(Object), 'test')
-    expect(actions.updateCourse).toHaveBeenCalled()
+    expect(mutations.courseCategoryChange).toHaveBeenCalledWith(expect.any(Object), 'test')
+    expect(actions.courseUpdate).toHaveBeenCalled()
     expect(wrapper.find('#author-change-category-confirm').isVisible()).toBeFalsy()
   })
 
@@ -116,8 +116,8 @@ describe('Course changeCategory', () => {
     await button.trigger('click')
     await wrapper.find('input').setValue('newCategory')
     await saveButton.trigger('click')
-    expect(mutations.changeCourseCategory).toHaveBeenCalledWith(expect.any(Object), 'newCategory')
-    expect(actions.updateCourse).toHaveBeenCalled()
+    expect(mutations.courseCategoryChange).toHaveBeenCalledWith(expect.any(Object), 'newCategory')
+    expect(actions.courseUpdate).toHaveBeenCalled()
     expect(wrapper.find('#author-change-category-confirm').isVisible()).toBeFalsy()
   })
 })

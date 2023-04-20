@@ -32,7 +32,7 @@ describe('profile view', () => {
     }
     // jest.resetAllMocks()
     getters = {
-      profileLang: () => 'en',
+      profileLanguage: () => 'en',
       passwordRepeat: () => state.pwdRepeat,
       passwordSet: () => 'secret12',
       isAuthor: () => state.author
@@ -154,7 +154,7 @@ describe('profile view', () => {
         }
       }))
     expect(dispatchSpy).toHaveBeenCalledWith('saveProfile')
-    // expect(actions.changePassword).toHaveBeenCalled()
+    // expect(actions.passwordUpdate).toHaveBeenCalled()
     // expect(actions.saveProfile).toHaveBeenCalledTimes(3)
   })
 

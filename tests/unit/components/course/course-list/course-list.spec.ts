@@ -10,7 +10,7 @@ localVue.use(BootstrapVue)
 const consoleWarn = console.warn
 const consoleErr = console.error
 
-describe('laya course list', () => {
+describe('CourseList', () => {
   let state
   let getters
   let actions
@@ -28,10 +28,10 @@ describe('laya course list', () => {
       ]
     }
     getters = {
-      mediaPrefs: () => {
+      preferencesMedia: () => {
         return { audio: true, simple: true, text: true, video: false }
       }, // courses #2 and #5 are not complicit
-      profileLang: () => 'en',
+      profileLanguage: () => 'en',
       course: () => {
         return {
           name: 'Video Test',
@@ -42,18 +42,18 @@ describe('laya course list', () => {
       userId: () => 1
     }
     actions = {
-      createEnrollment: jest.fn(() => Promise.resolve(5)), // mock the createEnrollment action, course #5 needs enrollment
-      fetchCourse: jest.fn(() => Promise.resolve()),
-      fetchEnrollment: jest.fn(() => Promise.resolve()),
+      enrollmentCreate: jest.fn(() => Promise.resolve(5)), // mock the enrollmentCreate action, course #5 needs enrollment
+      courseFetch: jest.fn(() => Promise.resolve()),
+      enrollmentFetch: jest.fn(() => Promise.resolve()),
       fetchSingleEnrollment: jest.fn(() => Promise.resolve({
         data: { sublist: [] }
       })),
-      fetchUserEnrollments: jest.fn(() => Promise.resolve({
+      enrollmentsUserFetch: jest.fn(() => Promise.resolve({
         data: { sublist: [] }
       }))
     }
     mutations = {
-      unsetCourseUpdated: jest.fn()
+      courseUpdatedSet: jest.fn()
     }
     const store = new Vuex.Store({
       state,
@@ -100,7 +100,7 @@ describe('laya course list', () => {
 
   it('loads new course when button is clicked', async () => {
     await wrapper.find('a').trigger('click') // choose 'testest' course
-    expect(actions.fetchCourse).toHaveBeenCalled()
+    expect(actions.courseFetch).toHaveBeenCalled()
   })
 
   it('triggers watcher when courseList changes', async () => {
@@ -122,11 +122,11 @@ describe('laya course list', () => {
     })
   })
 
-  it('calls createEnrollment when enrollment button is clicked, changes text', async () => {
+  it('calls enrollmentCreate when enrollment button is clicked, changes text', async () => {
     await wrapper.setData({ complicitCourses: new Set([5]) }) // circumvent the content compliance check
     let button = wrapper.findAll('.course').at(4).find('a')
     await button.trigger('click')
-    expect(actions.createEnrollment).toHaveBeenCalledWith(expect.any(Object), { courseId: 5, studentId: 1 })
+    expect(actions.enrollmentCreate).toHaveBeenCalledWith(expect.any(Object), { courseId: 5, studentId: 1 })
     expect(wrapper.vm.enrolledIn.includes(5)).toBeTruthy()
     await localVue.nextTick()
     button = wrapper.findAll('.course').at(4).find('a')

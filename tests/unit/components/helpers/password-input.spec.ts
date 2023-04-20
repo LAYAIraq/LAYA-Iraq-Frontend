@@ -19,13 +19,13 @@ describe('password input component', () => {
       passwordRepeat: ''
     }
     getters = {
-      profileLang: () => 'en',
+      profileLanguage: () => 'en',
       passwordSet: () => state.passwordSet,
       passwordRepeat: () => state.passwordRepeat
     }
     mutations = {
       setPwd (state, input) {
-        state.passwordSet = input
+        state.password = input
       },
       setPwdRepeat (state, input) {
         state.passwordRepeat = input

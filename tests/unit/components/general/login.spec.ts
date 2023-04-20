@@ -21,7 +21,7 @@ describe('login component', () => {
   beforeEach(() => {
     console.log = jest.fn()
     getters = {
-      profileLang: () => 'en'
+      profileLanguage: () => 'en'
     }
     actions = {
       sendCredentials: jest.fn(),
@@ -112,7 +112,7 @@ describe('login component', () => {
     expect(actions.sendCredentials).toHaveBeenCalledWith(
       expect.objectContaining({
         getters: {
-          profileLang: 'en'
+          profileLanguage: 'en'
         }
       }),
       expect.objectContaining({

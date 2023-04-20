@@ -9,7 +9,7 @@ localVue.use(Vuex)
 localVue.use(BootstrapVue)
 
 describe('CourseDelete.vue', () => {
-  describe('deleteCourse() resolves', () => {
+  describe('courseDelete() resolves', () => {
     let getters
     let actions
     let mutations
@@ -19,7 +19,7 @@ describe('CourseDelete.vue', () => {
 
     beforeEach(() => {
       getters = {
-        profileLang: () => 'en',
+        profileLanguage: () => 'en',
         course: () => {
           return {
             courseId: 'test'
@@ -27,12 +27,12 @@ describe('CourseDelete.vue', () => {
         }
       }
       actions = {
-        deleteCourse: jest.fn(() => {
+        courseDelete: jest.fn(() => {
           return Promise.resolve()
         })
       }
       mutations = {
-        removeFromCourseList: jest.fn()
+        courseListRemove: jest.fn()
       }
       const store = new Vuex.Store({
         getters,
@@ -71,17 +71,17 @@ describe('CourseDelete.vue', () => {
         }
       })
       await button.trigger('click')
-      expect(actions.deleteCourse).toHaveBeenCalled()
-      expect(mutations.removeFromCourseList).toHaveBeenCalled()
+      expect(actions.courseDelete).toHaveBeenCalled()
+      expect(mutations.courseListRemove).toHaveBeenCalled()
       expect(wrapper.vm.$router.push).toHaveBeenCalledWith('/courses')
       // expect(vm.$router.push).toHaveBeenCalled()
     })
   })
 
-  describe('deleteCourse() rejects', () => {
+  describe('courseDelete() rejects', () => {
     it('prompts error log when store returns rejection', async () => {
       const getters = {
-        profileLang: () => 'en',
+        profileLanguage: () => 'en',
         course: () => {
           return {
             courseId: 'test'
@@ -89,7 +89,7 @@ describe('CourseDelete.vue', () => {
         }
       }
       const actions = {
-        deleteCourse: jest.fn(() => {
+        courseDelete: jest.fn(() => {
           return Promise.reject(new Error('err!'))
         })
       }
@@ -121,7 +121,7 @@ describe('CourseDelete.vue', () => {
       })
       await button.trigger('click')
       await localVue.nextTick()
-      expect(actions.deleteCourse).toHaveBeenCalled()
+      expect(actions.courseDelete).toHaveBeenCalled()
       expect(console.error).toHaveBeenCalledWith('ERROR:', expect.any(Error))
     })
   })

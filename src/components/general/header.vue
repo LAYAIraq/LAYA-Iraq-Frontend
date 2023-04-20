@@ -206,7 +206,7 @@ export default {
       } else {
         lang = navigator.language
       }
-      this.$store.commit('setLang', lang)
+      this.$store.commit('languageSet', lang)
       document.documentElement.setAttribute('lang', lang)
     },
 
@@ -232,14 +232,15 @@ export default {
      * @param {string} newlang 2-letter locale string
     */
     setLang (newlang) {
-      this.$store.commit('setLang', newlang)
+      this.$store.commit('languageSet', newlang)
       if (this.userOnline) {
+        console.log('setting user language')
         const data = {
           lang: this.profileLanguage,
           uid: this.userId
         }
         this.$store.dispatch('setUserLang', data)
-      }
+      } else { console.log('user not online') }
     },
 
     /**

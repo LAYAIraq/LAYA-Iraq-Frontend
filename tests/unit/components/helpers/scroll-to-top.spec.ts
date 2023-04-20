@@ -15,7 +15,7 @@ describe('Scroll to top button', () => {
     window.scroll = jest.fn()
     store = new Vuex.Store({
       getters: {
-        profileLang: () => 'en'
+        profileLanguage: () => 'en'
       }
     })
     wrapper = mount(

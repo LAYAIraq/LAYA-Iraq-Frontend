@@ -51,7 +51,7 @@ describe('Category Matching create component', () => {
     }
     getters = {
       courseSimple: () => state.courseSimple,
-      profileLang: () => 'en'
+      profileLanguage: () => 'en'
     }
     const store = new Vuex.Store({
       state,
@@ -119,7 +119,7 @@ describe('Category Matching edit component', () => {
     getters = {
       courseSimple: () => true,
       courseContent: () => ({ test: contentInput }),
-      profileLang: () => 'en',
+      profileLanguage: () => 'en',
       courseContentPathId: () => () => 'test',
       pathId: () => 'test'
     }
@@ -164,7 +164,7 @@ describe('Category Matching View Component', () => {
     getters = {
       courseSimple: () => state.courseSimple,
       courseUpdated: () => false,
-      profileLang: () => 'en',
+      profileLanguage: () => 'en',
       storeBusy: () => false
     }
     store = new Vuex.Store({

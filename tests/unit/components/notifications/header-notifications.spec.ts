@@ -16,11 +16,11 @@ describe('header notifications dropdown', () => {
   let state
   beforeEach(() => {
     getters = {
-      profileLang: () => 'en',
+      profileLanguage: () => 'en',
       userId: () => 1,
       messages: () => state.messages,
       unreadMessages: () => state.unreadMessages,
-      unreadMsgNo: () => state.unreadMsgNo
+      notificationsUnreadNumber: () => state.notificationsUnreadNumber
     }
     mutations = {
       allRead: jest.fn()
@@ -28,7 +28,7 @@ describe('header notifications dropdown', () => {
     state = {
       messages: [],
       unreadMessages: false,
-      unreadMsgNo: 0
+      notificationsUnreadNumber: 0
     }
     actions = {
       getAllMessages: jest.fn(() => Promise.resolve(state.messages = [
@@ -64,12 +64,12 @@ describe('header notifications dropdown', () => {
     wrapper.destroy()
   })
 
-  it('requests messages on creation', async () => {
+  it('requests notifications on creation', async () => {
     await localVue.nextTick()
     expect(wrapper.findAll('a').length).toBe(8)
   })
 
-  it('calls allRead when clicked', async () => {
+  it('calls notificationsReadAll when clicked', async () => {
     const markAsReadButton = wrapper.findAll('button').wrappers[1] // 'all read' button
     // expect (getButton !== markAsReadButton).toBeTruthy()
     expect(markAsReadButton.text()).toBe('Mark all as read')
@@ -77,16 +77,16 @@ describe('header notifications dropdown', () => {
     expect(mutations.allRead).toHaveBeenCalled()
   })
 
-  it('fetches more messages on click', async () => {
+  it('fetches more notifications on click', async () => {
     const button = wrapper.findAll('button').wrappers[2] // 'fetch more' button
     await button.trigger('click')
     expect(actions.getNewMessages).toHaveBeenCalled()
     await localVue.nextTick()
   })
 
-  it('shows icon when there are unread messages', async () => {
+  it('shows icon when there are unread notifications', async () => {
     state.unreadMessages = true
-    state.unreadMsgNo = 5
+    state.notificationsUnreadNumber = 5
     await localVue.nextTick()
     const unreadBadge = wrapper.find('.note-badge')
     expect(unreadBadge.exists()).toBeTruthy()

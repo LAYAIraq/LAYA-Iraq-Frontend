@@ -17,7 +17,7 @@ describe('Course delete block', () => {
   let modalButtons
   beforeEach(() => {
     getters = {
-      profileLang: () => 'en',
+      profileLanguage: () => 'en',
       courseContent () {
         return {
           test: {
@@ -28,7 +28,7 @@ describe('Course delete block', () => {
       courseContentPathId: () => () => 'test'
     }
     actions = {
-      storeCourse: jest.fn(() => {
+      courseUpdate: jest.fn(() => {
         return Promise.resolve()
       })
     }
@@ -71,7 +71,7 @@ describe('Course delete block', () => {
     })
     await button.trigger('click')
     expect(mutations.courseContentRemove).toHaveBeenCalledWith(expect.any(Object), 'test')
-    expect(actions.storeCourse).toHaveBeenCalled()
+    expect(actions.courseUpdate).toHaveBeenCalled()
   })
 
   it('is not rendered when there is no content', async () => {

@@ -100,7 +100,7 @@ export default {
      * @function returns subchapter slugs of the current coursePath
      * @author cmc
      * @since v1.3.0
-     * @returns {string[]} The subchapter slugs of the current coursePath
+     * @returns {[]} The subchapter slugs of the current coursePath
      */
     subchapters () {
       return this.coursePath.split('/').slice(0, -1)

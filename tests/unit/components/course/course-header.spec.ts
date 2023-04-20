@@ -13,7 +13,7 @@ localVue.use(Vuex)
 localVue.use(VueRouter)
 const router = new VueRouter({
   routes: [
-    { name: 'courses-view', path: '/courses' },
+    { name: 'course-list', path: '/courses' },
     { name: 'course', path: '/courses/:name/:coursePath?' }
   ]
 })
@@ -31,7 +31,7 @@ describe('course detail header', () => {
   const getters = {
     courseChapterNames: () => state.courseChapterNames,
     courseSimple: () => state.courseSimple,
-    profileLang: () => 'en'
+    profileLanguage: () => 'en'
   }
   const mutations = {
     setSimple: (state, value) => {

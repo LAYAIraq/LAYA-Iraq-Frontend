@@ -33,7 +33,7 @@ describe('Image Matching Create component', () => {
       simple: false
     }
     getters = {
-      profileLang: () => 'en',
+      profileLanguage: () => 'en',
       courseSimple: () => state.simple
     }
     const store = new Vuex.Store({
@@ -102,7 +102,7 @@ describe('Image Matching Create component', () => {
 describe('Image Matching edit component', () => {
   it('loads data from store', () => {
     const getters = {
-      profileLang: () => 'en',
+      profileLanguage: () => 'en',
       courseSimple: () => state.simple,
       courseContent: () => state.courseContent,
       courseContentPathId: () => () => 'test',
@@ -157,7 +157,7 @@ describe('Image Matching View component', () => {
       simple: false
     }
     getters = {
-      profileLang: () => 'en',
+      profileLanguage: () => 'en',
       courseSimple: () => state.simple,
       courseUpdated: () => false,
       courseContent: () => ({ test: stepInput }),

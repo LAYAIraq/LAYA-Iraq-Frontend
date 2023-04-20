@@ -28,7 +28,7 @@ describe('editor panel', () => {
       role: 'editor'
     }
     getters = {
-      profileLang: () => 'en',
+      profileLanguage: () => 'en',
       isEditor: () => state.role === 'editor',
       userId: () => 42
     }

@@ -22,7 +22,7 @@ export default {
         .then(() => {
           this.enrollmentFetch()
           this.$store.commit('courseUpdatedSet', false)
-          document.title = `LAYA | ${this.$store.state.courseEdit.course.name}`
+          document.title = `LAYA | ${this.$store.getters.course.name}`
         })
         .catch(err => {
           this.$router.push('/courses')

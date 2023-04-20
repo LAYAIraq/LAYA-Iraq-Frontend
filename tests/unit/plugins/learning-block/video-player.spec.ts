@@ -15,7 +15,7 @@ localVue.use(BootstrapVue)
 //   beforeEach(() => {
 //     getters = {
 //       courseSimple: () => true,
-//       profileLang: () => 'en'
+//       profileLanguageuage: () => 'en'
 //     }
 //     const store = new Vuex.Store({
 //       getters
@@ -221,7 +221,7 @@ describe('Plyr edit component', () => {
       pathId: () => 'test',
       courseContentPathId: () => () => 'test',
       courseSimple: () => true,
-      profileLang: () => 'en'
+      profileLanguage: () => 'en'
     }
     const store = new Vuex.Store({
       getters
@@ -296,7 +296,7 @@ describe('Plyr view component', () => {
   }
   beforeEach(() => {
     getters = {
-      profileLang: () => 'en',
+      profileLanguage: () => 'en',
       courseSimple: () => false
     }
     const store = new Vuex.Store({

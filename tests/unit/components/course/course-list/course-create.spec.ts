@@ -18,12 +18,11 @@ describe('Course create', () => {
       courseList: () => [
         { name: 'existing' }
       ],
-      profileLang: () => 'en',
+      profileLanguage: () => 'en',
       userId: () => 1
     }
     actions = {
-      createCourse: () => Promise.resolve(),
-      createAuthorEnrollment: jest.fn(() => Promise.resolve())
+      courseCreate: () => Promise.resolve()
     }
     const store = new Vuex.Store({
       getters,

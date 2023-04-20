@@ -24,7 +24,7 @@ describe('Course rename', () => {
       }
     }
     getters = {
-      profileLang: () => 'en',
+      profileLanguage: () => 'en',
       course: () => {
         return state.course
       },
@@ -36,10 +36,10 @@ describe('Course rename', () => {
       }
     }
     actions = {
-      updateRenamedCourse: jest.fn(() => { return Promise.resolve() })
+      courseUpdateRename: jest.fn(() => { return Promise.resolve() })
     }
     mutations = {
-      renameCourse: jest.fn((name) => { state.course.name = name })
+      courseRename: jest.fn((name) => { state.course.name = name })
     }
     const store = new Vuex.Store({
       state,
@@ -87,8 +87,8 @@ describe('Course rename', () => {
   it('does not close, highlights input field and shows a warning when no input', async () => {
     await button.trigger('click')
     await renameButton.trigger('click')
-    expect(mutations.renameCourse).not.toHaveBeenCalled()
-    expect(actions.updateRenamedCourse).not.toHaveBeenCalled()
+    expect(mutations.courseRename).not.toHaveBeenCalled()
+    expect(actions.courseUpdateRename).not.toHaveBeenCalled()
     expect(wrapper.find('#author-rename-course-confirm').isVisible()).toBeTruthy()
     expect(wrapper.find('input').classes()).toContain('border-danger')
     expect(wrapper.find('#no-input-error').isVisible()).toBeTruthy()
@@ -98,8 +98,8 @@ describe('Course rename', () => {
     await button.trigger('click')
     await wrapper.find('input').setValue('test')
     await renameButton.trigger('click')
-    expect(mutations.renameCourse).not.toHaveBeenCalled()
-    expect(actions.updateRenamedCourse).not.toHaveBeenCalled()
+    expect(mutations.courseRename).not.toHaveBeenCalled()
+    expect(actions.courseUpdateRename).not.toHaveBeenCalled()
     expect(wrapper.find('#author-rename-course-confirm').isVisible()).toBeTruthy()
     expect(wrapper.find('input').classes()).toContain('border-danger')
     expect(wrapper.find('#same-name-error').isVisible()).toBeTruthy()
@@ -109,8 +109,8 @@ describe('Course rename', () => {
     await button.trigger('click')
     await wrapper.find('input').setValue('exists')
     await renameButton.trigger('click')
-    expect(mutations.renameCourse).not.toHaveBeenCalled()
-    expect(actions.updateRenamedCourse).not.toHaveBeenCalled()
+    expect(mutations.courseRename).not.toHaveBeenCalled()
+    expect(actions.courseUpdateRename).not.toHaveBeenCalled()
     expect(wrapper.find('#author-rename-course-confirm').isVisible()).toBeTruthy()
     expect(wrapper.find('input').classes()).toContain('border-danger')
     expect(wrapper.find('#duplicate-name-error').isVisible()).toBeTruthy()
@@ -120,8 +120,8 @@ describe('Course rename', () => {
     await button.trigger('click')
     await wrapper.find('input').setValue('  test  ')
     await renameButton.trigger('click')
-    expect(mutations.renameCourse).toHaveBeenCalledWith(expect.any(Object), 'test')
-    expect(actions.updateRenamedCourse).toHaveBeenCalled()
+    expect(mutations.courseRename).toHaveBeenCalledWith(expect.any(Object), 'test')
+    expect(actions.courseUpdateRename).toHaveBeenCalled()
     expect(wrapper.find('#author-rename-course-confirm').isVisible()).toBeFalsy()
   })
 
@@ -129,8 +129,8 @@ describe('Course rename', () => {
     await button.trigger('click')
     await wrapper.find('input').setValue('newName')
     await renameButton.trigger('click')
-    expect(mutations.renameCourse).toHaveBeenCalledWith(expect.any(Object), 'newName')
-    expect(await actions.updateRenamedCourse).toHaveBeenCalled()
+    expect(mutations.courseRename).toHaveBeenCalledWith(expect.any(Object), 'newName')
+    expect(await actions.courseUpdateRename).toHaveBeenCalled()
     expect(wrapper.find('#author-rename-course-confirm').isVisible()).toBeFalsy()
     expect(wrapper.vm.$router.replace).toHaveBeenCalledWith(expect.objectContaining({ name: 'course', params: { name: 'newName' } }))
   })
