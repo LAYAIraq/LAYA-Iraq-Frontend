@@ -1,13 +1,11 @@
-import http from 'axios'
-
 /**
  * Filename: enrollment.ts
  * Use: organize enrollment for users
  * Creator: cmc
- * Date: September 8, 2022
- * Dependencies:
- *   axios
+ * Since: v1.1.0
  */
+import http from 'axios'
+import { stripKey } from '@/mixins/general/helpers'
 
 export default {
   state: {
@@ -63,7 +61,27 @@ export default {
 
   mutations: {
     /**
-     * addFeedback: Add new Feedback to feedback object or update existing feedback
+     * Function enrollmentSet: set an enrollment for current user
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 27, 2022
+     *
+     * @param state contains enrollment, userEnrolled
+     * @param enrollmentData enrollment object
+     */
+    enrollmentSet (
+      state: {
+        enrollment: object,
+        userEnrolled: boolean
+      },
+      enrollmentData: object
+    ) {
+      state.enrollment = enrollmentData
+      state.userEnrolled = true
+    },
+    /**
+     * feedbackAdd: Add new Feedback to feedback object or update existing feedback
      *
      * Author: cmc
      *
@@ -72,7 +90,7 @@ export default {
      * @param state contains feedback
      * @param feedbackData contains feedbackData to be stored in feedback
      */
-    addFeedback (
+    feedbackAdd (
       state: {
         enrollment: {
           feedback: object
@@ -92,28 +110,7 @@ export default {
       if (Array.isArray(state.enrollment.feedback)) {
         state.enrollment.feedback = {}
       }
-      state.enrollment.feedback[id] = (({ id, ...o }) => o)(feedbackData)
-    },
-
-    /**
-     * Function setEnrollment: set an enrollment for current user
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 27, 2022
-     *
-     * @param state contains enrollment, userEnrolled
-     * @param enrollmentData enrollment object
-     */
-    setEnrollment (
-      state: {
-        enrollment: object,
-        userEnrolled: boolean
-      },
-      enrollmentData: object
-    ) {
-      state.enrollment = enrollmentData
-      state.userEnrolled = true
+      state.enrollment.feedback[id] = stripKey('id', feedbackData)
     }
   },
 
@@ -127,7 +124,7 @@ export default {
      * @param state state variables
      * @param data course name, user ID
      */
-    createAuthorEnrollment (state, data: {
+    createAuthorEnrollment (state, data: { // TODO: move to back end
       courseName: string,
       userId: number
     }) {
@@ -147,7 +144,7 @@ export default {
     },
 
     /**
-     * createEnrollment
+     * enrollmentCreate
      *
      * Author: cmc
      *
@@ -155,7 +152,7 @@ export default {
      * @param state
      * @param data
      */
-    createEnrollment ({ state },
+    enrollmentCreate ({ state },
       data: object
     ) {
       return new Promise((resolve, reject) => {
@@ -175,11 +172,11 @@ export default {
      * @param param0 state variables
      * @param courseId identifier for enrollment
      */
-    fetchEnrollment (
+    enrollmentFetch (
       { commit, rootState },
       courseId: string
     ) {
-      const studentId = rootState.auth.userId
+      const studentId = rootState.authentication.userId
       if (studentId && courseId) {
         commit('setBusy', true)
         return new Promise((resolve, reject) => {
@@ -195,7 +192,7 @@ export default {
           })
             .then(({ data }) => {
               // console.log('Enrollment exists!')
-              commit('setEnrollment', data)
+              commit('enrollmentSet', data)
               resolve('Enrollment exists!')
             })
             .catch(err => reject(err))
@@ -208,17 +205,40 @@ export default {
     },
 
     /**
-     * fetchUserEnrollments
+     * function enrollmentsCourseFetch: fetches enrollment data including feedback
+     *
+     * Author: nv
+     *
+     * Last Updated: October 12, 2022
+     *
+     * @param state state variables
+     * @param data courseId
+     */
+    enrollmentsCourseFetch (state, data: {
+      courseId: string
+    }) {
+      return new Promise((resolve, reject) => {
+        http
+          .get(`enrollments/getAllByCourseId?courseId=${data.courseId}`)
+          .then(resp => {
+            resolve(resp.data.subs)
+          })
+          .catch(error => reject(error))
+      })
+    },
+
+    /**
+     * enrollmentsUserFetch
      *
      * Author: cmc
      *
      * Last updated: September 10, 2022
      * @param state
      */
-    fetchUserEnrollments ({ rootState }) {
+    enrollmentsUserFetch ({ rootState }) {
       return new Promise((resolve, reject) => {
         http
-          .get(`enrollments/getAllByStudentId/?uid=${rootState.auth.userId}`)
+          .get(`enrollments/getAllByStudentId/?uid=${rootState.authentication.userId}`)
           .then(data => {
             resolve(data)
           })
@@ -235,7 +255,7 @@ export default {
      *
      * @param param0 state variables
      */
-    updateEnrollment ({ state }) {
+    enrollmentUpdate ({ state }) {
       const enrol = state.enrollment
       return enrol
         ? new Promise((resolve, reject) => {
@@ -247,28 +267,6 @@ export default {
             .catch(err => reject(err))
         })
         : Promise.reject(new Error('No enrollment found!'))
-    },
-    /**
-     * function fetchEnrollmentData: fetches enrollment data including feedback
-     *
-     * Author: nv
-     *
-     * Last Updated: October 12, 2022
-     *
-     * @param state state variables
-     * @param data courseId
-     */
-    fetchEnrollmentData (state, data: {
-      courseId: string
-    }) {
-      return new Promise((resolve, reject) => {
-        http
-          .get(`enrollments/getAllByCourseId?courseId=${data.courseId}`)
-          .then(resp => {
-            resolve(resp.data.subs)
-          })
-          .catch(error => reject(error))
-      })
     }
   }
 }

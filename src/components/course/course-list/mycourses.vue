@@ -364,7 +364,7 @@ export default {
       /*
       * fetch courses */
       http
-        .get(`accounts/${ctx.auth.userId}/mycourses?filter[include]=author`)
+        .get(`accounts/${ctx.authentication.userId}/mycourses?filter[include]=author`)
         .then(function ({ data }) {
           ctx.courses = data
           /*

@@ -242,7 +242,7 @@ export default {
     }
 
     if (!this.userEnrolled) {
-      this.$store.dispatch('fetchEnrollment', this.courseId)
+      this.$store.dispatch('enrollmentFetch', this.courseId)
     }
   },
   beforeDestroy () {
@@ -311,9 +311,9 @@ export default {
      */
     storeFeedback () {
       const newFeedback = this.bundleFeedback()
-      this.$store.commit('addFeedback', newFeedback)
+      this.$store.commit('feedbackAdd', newFeedback)
       // this.$forceUpdate()
-      this.$store.dispatch('updateEnrollment')
+      this.$store.dispatch('enrollmentUpdate')
       !this.answered
         ? this.$bvToast.show('feedback-new')
         : this.$bvToast.show('feedback-updated')

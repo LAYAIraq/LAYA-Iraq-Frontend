@@ -568,7 +568,7 @@ export default {
                 commit('courseUpdatedSet', true)
                 commit('courseFilesSet', data.files)
                 commit('setCourseContentAndNav', data)
-                dispatch('getCourseFlags', state.course.courseId)
+                dispatch('courseFlagsFetch', state.course.courseId)
                 resolve('Course loaded')
               })
               .catch(err => {
@@ -588,7 +588,7 @@ export default {
                   commit('courseSet', course)
                   commit('courseUpdatedSet', true)
                   commit('setCourseContentAndNav', course)
-                  dispatch('getCourseFlags', state.course.courseId)
+                  dispatch('courseFlagsFetch', state.course.courseId)
                   resolve('Course loaded')
                 } else {
                   reject(new Error('Course not found'))

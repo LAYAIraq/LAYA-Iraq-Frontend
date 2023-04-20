@@ -57,11 +57,11 @@
         </div>
       </div>
       <ul
-        v-if="messages.length !== 0"
+        v-if="notifications.length !== 0"
         class="list-group"
       >
         <li
-          v-for="(note ,i) in messages"
+          v-for="(note ,i) in notifications"
           :id="note.noteId"
           :key="i"
           class="list-group-item"
@@ -190,25 +190,25 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['messages', 'unreadMessages']),
+    ...mapGetters(['notifications', 'unreadMessages']),
     ...mapState(['message']),
     /**
-     * moreMessages: return true if more messages can be loaded
+     * moreMessages: return true if more notifications can be loaded
      * Author: cmc
      * Last Updated: June 10, 2021
      */
     moreMessages () {
-      return (this.messages.length !== 0 && !this.messages.length % 10 === 0)
+      return (this.notifications.length !== 0 && !this.notifications.length % 10 === 0)
     }
   },
 
   created () {
-    this.$store.dispatch('getInitialMessages')
+    this.$store.dispatch('notificationsFetchInitial')
     if (Object.prototype.hasOwnProperty.call(this.$route.query, 'id')) {
       this.highlightId = this.$route.query.id
     }
     this.cacheValues()
-    // this.messages.forEach(note => this.msgList.push(note))
+    // this.notifications.forEach(note => this.msgList.push(note))
     // this.msgList.forEach(note => {
     //   let courseName = this.getReference(note.data.courseId)
     //   let courseHref = this.linkToCourse(note)
@@ -234,7 +234,7 @@ export default {
   },
 
   beforeDestroy () {
-    this.$store.dispatch('updateReadProp')
+    this.$store.dispatch('notificationsUpdateRead')
   },
 
   methods: {
@@ -250,7 +250,7 @@ export default {
     cacheValues () {
       this.loading = true
       const queries = []
-      this.messages.forEach(elem => {
+      this.notifications.forEach(elem => {
         queries.push(
           this.getReference(elem.data.courseId)
             .then(r => {
@@ -360,7 +360,7 @@ export default {
     },
 
     /**
-     * Function loadMoreNotifications: get more messages from database
+     * Function loadMoreNotifications: get more notifications from database
      *
      * Author: cmc
      *
@@ -368,7 +368,7 @@ export default {
      */
     loadMoreNotifications () {
       this.loading = true
-      this.$store.dispatch('getAdditionalMessages')
+      this.$store.dispatch('notificationsFetchAdditional')
         .catch(err => {
           console.error(err)
         })
@@ -384,7 +384,7 @@ export default {
      * @param {string} msg message to mark as read
      */
     markAsRead (msg) {
-      this.$store.commit('readNotification', msg.noteId)
+      this.$store.commit('notificationRead', msg.noteId)
     },
 
     /**

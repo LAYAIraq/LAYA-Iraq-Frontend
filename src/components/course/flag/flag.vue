@@ -61,14 +61,14 @@ export default {
       deep: true,
       handler () {
         // this.$store.dispatch('flagsUpdate')
-        this.flag = this.$store.getters.singleFlag(this.$attrs.id)
+        this.flag = this.$store.getters.courseFlagSingle(this.$attrs.id)
       }
     }
   },
 
   created () {
     if (!this.courseId) this.courseFetch()
-    this.flag = this.$store.getters.singleFlag(this.$attrs.id)
+    this.flag = this.$store.getters.courseFlagSingle(this.$attrs.id)
   }
 }
 </script>

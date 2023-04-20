@@ -14,7 +14,7 @@
         v-if="unreadMessages"
         class="note-badge"
       >
-        {{ unreadMsgNo }}
+        {{ notificationsUnreadNo }}
       </span>
     </template>
 
@@ -102,9 +102,9 @@ export default {
 
   computed: {
     ...mapGetters([
-      'messages',
+      'notifications',
       'unreadMessages',
-      'unreadMsgNo',
+      'notificationsUnreadNumber',
       'userId'
     ]),
     /**
@@ -113,23 +113,23 @@ export default {
      * Last Updated: June 10, 2021
      */
     messagesPresent () {
-      return this.messages.length !== 0
+      return this.notifications.length !== 0
     }
   },
 
   watch: {
-    messages () {
+    notifications () {
       this.$nextTick(() => this.setShortlist())
     }
   },
 
   created () {
-    this.$store.dispatch('getAllMessages')
+    this.$store.dispatch('notificationsFetchInitial')
     this.setShortlist()
   },
 
   beforeDestroy () {
-    this.$store.dispatch('updateReadProp')
+    this.$store.dispatch('notificationsUpdateRead')
   },
 
   methods: {
@@ -141,14 +141,14 @@ export default {
      */
     setShortlist () {
       const createShortList = () => {
-        const tempList = [...this.messages]
+        const tempList = [...this.notifications]
         tempList.sort((a, b) => a.time - b.time)
         if (tempList.length > 5) {
           tempList.length = 5
         }
         this.notifyShortList = tempList
       }
-      if (this.messages) {
+      if (this.notifications) {
         createShortList()
       } else {
         this.$nextTick(() => {

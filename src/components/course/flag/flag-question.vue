@@ -139,13 +139,13 @@ export default {
             ? this.$store.state.enrollment.id
             : null
         }
-        this.$store.commit('setFlag', flag)
-        this.$store.dispatch('saveFlags')
+        this.$store.commit('courseFlagNewSet', flag)
+        this.$store.dispatch('courseFlagCreate')
         // this.newFlag = {
         //   ...flag,
         //   created: Date.now()
         // }
-        this.$store.dispatch('checkCourseFlags')
+        this.$store.dispatch('courseFlagsCheck')
       }
     }
   }

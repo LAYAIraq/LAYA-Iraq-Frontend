@@ -175,6 +175,7 @@ export default {
       'isAdmin',
       'isEditor',
       'profileLang',
+      'userId',
       'userOnline'
     ])
   },
@@ -235,7 +236,7 @@ export default {
       if (this.userOnline) {
         const data = {
           lang: this.profileLang,
-          uid: this.$store.state.auth.userId
+          uid: this.userId
         }
         this.$store.dispatch('setUserLang', data)
       }

@@ -421,7 +421,7 @@ export default {
      * @returns {null|object} current flag
      */
     currentFlag () {
-      return this.$store.getters.singleFlag(this.$route.params.id)
+      return this.$store.getters.courseFlagSingle(this.$route.params.id)
     },
 
     /**
@@ -484,7 +484,7 @@ export default {
         isQuestion: this.answerIsQuestion,
         id: uuidv4()
       }
-      this.$store.commit('appendFlagAnswer', {
+      this.$store.commit('flagAnswerAppend', {
         answer: myAnswer,
         id: this.currentFlag.referenceId
       })
@@ -550,7 +550,7 @@ export default {
      * @param answer store item
      */
     saveAnswer (answer) {
-      this.$store.commit('updateAnswer', {
+      this.$store.commit('flagAnswerUpdate', {
         answer: answer,
         text: this.answerToEdit,
         bool: this.editedAnswerIsQuestion
@@ -566,7 +566,7 @@ export default {
      * Last Updated: September 20, 2021
      */
     saveQuestion () {
-      this.$store.commit('updateFlagQuestion',
+      this.$store.commit('flagQuestionUpdate',
         { flag: this.currentFlag, question: this.question })
       this.editQuestion = false
     },
@@ -603,7 +603,7 @@ export default {
      * Last Updated: September 20, 2021
      */
     updateFilteredFlag () {
-      this.filteredFlag = this.$store.getters.singleFlag(this.$route.params.id)
+      this.filteredFlag = this.$store.getters.courseFlagSingle(this.$route.params.id)
       this.question = this.filteredFlag.question.text
     },
 
@@ -637,7 +637,7 @@ export default {
         })
       } else {
         const uid = this.userId + ''
-        this.$store.commit('voteOnFlagAnswer', { answer, val, uid })
+        this.$store.commit('flagAnswerVote', { answer, val, uid })
       }
     },
 

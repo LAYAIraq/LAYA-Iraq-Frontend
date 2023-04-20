@@ -38,7 +38,7 @@ export default {
      */
     enrollmentFetch () {
       if (this.course.properties?.enrollment) {
-        this.$store.dispatch('fetchEnrollment', this.course.courseId)
+        this.$store.dispatch('enrollmentFetch', this.course.courseId)
       }
     },
 
@@ -50,7 +50,7 @@ export default {
      * Last Updated: October 27, 2020
      */
     enrollmentUpdate () {
-      this.$store.dispatch('updateEnrollment')
+      this.$store.dispatch('enrollmentUpdate')
     },
 
     /**
@@ -61,7 +61,7 @@ export default {
      * Last Updated: July 7, 2021
      */
     flagsFetch () {
-      this.$store.dispatch('getCourseFlags', this.course.courseId)
+      this.$store.dispatch('courseFlagsFetch', this.course.courseId)
     },
 
     /**
@@ -72,11 +72,11 @@ export default {
      * Last Updated: July 7, 2021
      */
     flagsUpdate () {
-      this.$store.dispatch('updateFlags')
+      this.$store.dispatch('courseFlagsUpdate')
     },
 
     /**
-     * Function notificationsFetch: get messages newer than
+     * Function notificationsFetch: get notifications newer than
      *  newest in store
      *
      * Author: cmc
@@ -84,18 +84,18 @@ export default {
      * Last Updated: June 26, 2021
      */
     notificationsFetch () {
-      this.$store.dispatch('getNewMessages')
+      this.$store.dispatch('notificationsFetchNew')
     },
 
     /**
-     * Function notificationsMarkRead: set allRead commit in store
+     * Function notificationsMarkRead: set notificationsReadAll commit in store
      *
      * Author: cmc
      *
      * Last Updated: May 28, 2021
      */
     notificationsMarkRead () {
-      this.$store.commit('allRead')
+      this.$store.commit('notificationsReadAll')
     }
   }
 }

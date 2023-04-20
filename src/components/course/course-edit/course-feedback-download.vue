@@ -64,7 +64,7 @@ export default {
 
   computed: {
     ...mapActions([
-      'fetchEnrollmentData'
+      'enrollmentsCourseFetch'
     ]),
     ...mapGetters([
       'enrollmentFeedback',
@@ -85,7 +85,7 @@ export default {
      */
     getFeedback () {
       const feedback = {}
-      this.$store.dispatch('fetchEnrollmentData', { courseId: this.courseId })
+      this.$store.dispatch('enrollmentsCourseFetch', { courseId: this.courseId })
         .then((resp) => {
           for (const enrol of resp) {
             // create arrays of feedback per feedback block

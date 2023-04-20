@@ -2,16 +2,14 @@
  * Filename: flags.ts
  * Use: Handle flags for courses in vuex
  * Creator: cmc
- * Date: July 2, 2021
- * Dependecies:
- *  axios
+ * Since: v1.1.0
  */
 
 import http from 'axios'
 export default {
   state: {
     courseFlags: [],
-    flagsToAdd: []
+    courseFlagNew: {}
   },
 
   getters: {
@@ -28,7 +26,7 @@ export default {
     },
 
     /**
-     * singleFlag: return a single flag that matches id
+     * courseFlagSingle: return a single flag that matches id
      *
      * Author: cmc
      *
@@ -36,7 +34,7 @@ export default {
      * @param state courseFlags
      * @param id identifier of flag to return
      */
-    singleFlag: (
+    courseFlagSingle: (
       state: {
         courseFlags: [
           flag: {
@@ -44,51 +42,41 @@ export default {
           }
         ]
       }) => (id: string) => {
-      for (const flag of state.courseFlags) {
-        if (flag.referenceId === id) {
-          return flag
-        }
-      }
-      return null
+      return state.courseFlags.find(flag => flag.referenceId === id)
     }
   },
 
   mutations: {
     /**
-     * Function appendFlag(): append flag to courseFlags
+     * Function courseFlagNewSet(): add Flag to flagsToAdd array
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 27, 2022
+     * @param state state variables
+     * @param flag Object to be added
+     */
+    courseFlagNewSet (
+      state: { courseFlagNew: object },
+      flag: object
+    ) {
+      state.courseFlagNew = flag
+    },
+
+    /**
+     * Function courseFlagsClear(): set courseFlags array to empty
      *
      * Author: cmc
      *
      * Last Updated: August 17, 2021
-     * @param state state variable
-     * @param flag flag to add
+     * @param state state variables
      */
-    appendFlag (
-      state: { courseFlags: Array<object> },
-      flag: {
-       courseId: String,
-       referenceId: String,
-       question: String
-      }
-    ) {
-      if (!state.courseFlags.some( // duplicate check if invoked several times
-        (existingFlag: {
-            courseId: String,
-            referenceId: String,
-            question: String
-          }) => {
-          // check if flag exists by mapping course, reference and question
-          return (existingFlag.courseId === flag.courseId &&
-                existingFlag.referenceId === flag.referenceId &&
-                existingFlag.question === flag.question)
-        })
-      ) { // fresh flag: push in array
-        state.courseFlags.push(flag)
-      }
+    courseFlagsClear (state: { courseFlags: Array<Object> }) {
+      state.courseFlags = []
     },
 
     /**
-     * Function appendFlagAnswer(): add answer to answers array of a flag
+     * Function flagAnswerAppend(): add answer to answers array of a flag
      *
      * Author: cmc
      *
@@ -96,7 +84,7 @@ export default {
      * @param state state variables
      * @param answerData id for flag and answer object
      */
-    appendFlagAnswer (
+    flagAnswerAppend (
       state: {
         courseFlags: Array<{
           answers: Array<object>,
@@ -109,53 +97,44 @@ export default {
       }) {
       // find element courseFlags
       const arr = state.courseFlags.filter(flag => flag.referenceId === answerData.id)
-      // if (arr.length > 1) console.error('More than one flag with same ID!')
       arr[0].answers.push(answerData.answer)
-      // console.log(state.courseFlags)
     },
 
     /**
-     * Function clearFlagList(): set courseFlags array to empty
+     * Function flagAppend(): append flag to courseFlags
      *
      * Author: cmc
      *
      * Last Updated: August 17, 2021
-     * @param state state variables
+     * @param state state variable
+     * @param flag flag to add
      */
-    clearFlagList (state: { courseFlags: Array<Object> }) {
-      state.courseFlags = []
-    },
-
-    /**
-     * Function clearFlagsToAddList(): clear list of flags to add
-     *
-     * Author: cmc
-     *
-     * Last Updated: August 17, 2021
-     * @param state state variables
-     */
-    clearFlagsToAddList (state: { flagsToAdd: Array<Object> }) {
-      state.flagsToAdd = []
-    },
-
-    /**
-     * Function setFlag(): add Flag to flagsToAdd array
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 27, 2022
-     * @param state state variables
-     * @param flag Object to be added
-     */
-    setFlag (
-      state: { flagsToAdd: Array<object> },
-      flag: object
+    flagAppend (
+      state: { courseFlags: Array<object> },
+      flag: {
+       courseId: string,
+       referenceId: string,
+       question: string
+      }
     ) {
-      state.flagsToAdd.push(flag)
+      if (!state.courseFlags.some( // duplicate check if invoked several times
+        (existingFlag: {
+            courseId: string,
+            referenceId: string,
+            question: string
+          }) => {
+          // check if flag exists by mapping course, reference and question
+          return (existingFlag.courseId === flag.courseId &&
+                existingFlag.referenceId === flag.referenceId &&
+                existingFlag.question === flag.question)
+        })
+      ) { // fresh flag: push in array
+        state.courseFlags.push(flag)
+      }
     },
 
     /**
-     * Function updateAnswer: update an answer in store,
+     * Function flagAnswerUpdate: update an answer in store,
      *  store old answer in history, state par
      *
      * Author: cmc
@@ -166,7 +145,7 @@ export default {
      * @param text the new answer text
      * @param bool if answer is question
      */
-    updateAnswer (
+    flagAnswerUpdate (
       state,
       { answer, text, bool }: {
         answer: {
@@ -195,34 +174,7 @@ export default {
     },
 
     /**
-     * function updateFlagQuestion: update the text of a question
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 27, 2022
-     * @param state flag is a reference here
-     * @param flag the flag to answer
-     * @param question string that represents the new question
-     */
-    updateFlagQuestion (
-      state,
-      { flag, question }: {
-        flag: {
-          question: {
-            text: string,
-            edited: boolean,
-            editTime: number
-          }
-        },
-        question: string
-      }) {
-      flag.question.text = question
-      flag.question.edited = true
-      flag.question.editTime = Date.now()
-    },
-
-    /**
-     * function voteOnFlagAnswer: upvote or downvote an answer
+     * function flagAnswerVote: upvote or downvote an answer
      *
      * Author: cmc
      *
@@ -232,7 +184,7 @@ export default {
      * @param val -1 if downvote, 1 if upvote
      * @param uid userId of voter
      */
-    voteOnFlagAnswer (
+    flagAnswerVote (
       state,
       { answer, val, uid }: {
         answer: {
@@ -293,12 +245,60 @@ export default {
         flagged: boolean
       }) {
       elem.flagged = true
+    },
+
+    /**
+     * function flagQuestionUpdate: update the text of a question
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 27, 2022
+     * @param state flag is a reference here
+     * @param flag the flag to answer
+     * @param question string that represents the new question
+     */
+    flagQuestionUpdate (
+      state,
+      { flag, question }: {
+        flag: {
+          question: {
+            text: string,
+            edited: boolean,
+            editTime: number
+          }
+        },
+        question: string
+      }) {
+      flag.question.text = question
+      flag.question.edited = true
+      flag.question.editTime = Date.now()
     }
   },
 
   actions: {
     /**
-     * checkCourseFlags(): check if any parts of the course are
+     * function courseFlagCreate(): persist flagsToAdd into backend
+     *
+     * Author: cmc
+     *
+     * Last Updated: January 27, 2022
+     * @param state state variables
+     * @param commit commit function
+     */
+    courseFlagCreate ({
+      state,
+      commit
+    }) {
+      http.post('flags', state.courseFlagNew)
+        .then(resp => {
+          commit('flagAppend', resp.data)
+          commit('courseFlagNewSet', {})
+        })
+        .catch(err => console.error(err))
+    },
+
+    /**
+     * courseFlagsCheck(): check if any parts of the course are
      *  flagged, mutate their properties accordingly
      *
      * Author: cmc
@@ -308,11 +308,11 @@ export default {
      * @param rootState rootState to get course
      * @param state state variables
      */
-    checkCourseFlags ({
+    courseFlagsCheck ({
       commit,
       rootState,
       state
-    }) {
+    }) { // TODO: update for new course structure
       // console.log('We are checking Course Flags!')
       const content = rootState.edit.course.content
       const flags = state.courseFlags
@@ -324,9 +324,8 @@ export default {
         if (!elem) {
           console.error(`not an element: ${elem}`)
         } else if (Object.prototype.hasOwnProperty.call(elem, 'flagged')) {
-          const elemId = elem.id
           for (const flag of flags) {
-            if (flag.referenceId === elemId) {
+            if (flag.referenceId === elem.id) {
               // console.log(`${elemId} has a flag, trying to mutate it!`)
               commit('flagFlaggableElement', elem)
             } else {
@@ -346,7 +345,9 @@ export default {
           if (typeof (elem) === 'object') {
             if (Array.isArray(elem)) {
               for (const iter of elem) {
-                if (iter) checkIfFlagged(iter)
+                if (iter) {
+                  checkIfFlagged(iter)
+                }
               }
             } else if (elem) {
               checkIfFlagged(elem)
@@ -357,7 +358,7 @@ export default {
     },
 
     /**
-     * Function getCourseFlags(): fetch course Flag for courseID from backend
+     * Function courseFlagsFetch(): fetch course Flag for courseID from backend
      *
      * Author: cmc
      *
@@ -365,14 +366,14 @@ export default {
      * @param param0 store functions
      * @param cid courseId for course
      */
-    getCourseFlags (
+    courseFlagsFetch (
       { commit, dispatch }: {
         commit: Function,
         dispatch: Function
       },
       cid: string
     ) {
-      commit('clearFlagList')
+      commit('courseFlagsClear')
       // console.log('getting elements for courseId: ', cid)
       http.get('flags', {
         params: {
@@ -384,35 +385,11 @@ export default {
           resp.data.forEach(elem => {
           // console.log(elem)
           // console.log('Adding ' + elem.referenceId + 'to flag list')
-            commit('appendFlag', elem)
+            commit('flagAppend', elem)
           })
-          dispatch('checkCourseFlags')
+          dispatch('courseFlagsCheck')
         })
         .catch(err => console.error(err))
-    },
-
-    /**
-     * function saveFlags(): persist flagsToAdd into backend
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 27, 2022
-     * @param state state variables
-     * @param commit commit function
-     */
-    saveFlags ({
-      state,
-      commit
-    }) {
-      state.flagsToAdd.forEach(flag => {
-        // console.log(flag)
-        http.post('flags', flag)
-          .then(resp => {
-            commit('appendFlag', resp.data)
-          })
-          .catch(err => console.error(err))
-      })
-      commit('clearFlagsToAddList')
     },
 
     /**
@@ -424,7 +401,7 @@ export default {
      * @param commit commit function
      * @param state state variables
      */
-    updateFlags ({
+    courseFlagsUpdate ({
       state,
       commit
     }) {
@@ -443,7 +420,7 @@ export default {
       http.all(reqs)
         // .then( () => console.log('Flags updated'))
         .catch((err) => console.error(err))
-      commit('clearFlagList')
+      commit('courseFlagsClear')
     }
   }
 }

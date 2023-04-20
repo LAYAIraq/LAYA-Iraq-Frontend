@@ -218,7 +218,7 @@ export default {
      * @param param0 state variables
      */
     fetchProfile ({ commit, rootState }) {
-      http.get(`accounts/${rootState.auth.userId}`)
+      http.get(`accounts/${rootState.authentication.userId}`)
         .then(({ data }) => {
           commit('setProfile', data)
         })
@@ -236,7 +236,7 @@ export default {
      */
     saveProfile ({ state, rootState }) {
       http.patch(
-        `accounts/${rootState.auth.userId}`,
+        `accounts/${rootState.authentication.userId}`,
         { ...state })
         .catch(err => {
           console.error(err)

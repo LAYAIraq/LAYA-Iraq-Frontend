@@ -374,7 +374,7 @@ export default {
      * Last Updated: May 24, 2022
      */
     getSubs () {
-      this.$store.dispatch('fetchUserEnrollments')
+      this.$store.dispatch('enrollmentsUserFetch')
         .then((data) => {
           const list = data.data.sublist
           for (const item of list) {
@@ -414,7 +414,7 @@ export default {
         studentId: this.userId
       }
       // create enrollment in database
-      this.$store.dispatch('createEnrollment', newEnrollment)
+      this.$store.dispatch('enrollmentCreate', newEnrollment)
         .then(courseId => this.enrolledIn.push(courseId))
     }
   }

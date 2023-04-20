@@ -190,7 +190,7 @@ export default {
      */
     courseFlags () {
       // console.log(val)
-      this.$store.dispatch('checkCourseFlags')
+      this.$store.dispatch('courseFlagsCheck')
     }
   },
 
@@ -215,7 +215,7 @@ export default {
 
   beforeDestroy () {
     /* if (this.enrollment.length > 0) this.enrollmentUpdate()
-    this.saveFlags() */
+    this.courseFlagCreate() */
   },
 
   methods: {
