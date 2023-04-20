@@ -1,15 +1,13 @@
 /**
- * Filename: note.ts
+ * Filename: mutex.ts
  * Use: setting busy for certain frontend components
  * Creator: core
- * Date: unknown
- * Dependencies: none
+ * Since: v1.0.0
  */
 
 export default {
   state: {
-    busy: false,
-    myCourses: 0
+    busy: false
   },
   getters: {
     /**
@@ -21,37 +19,9 @@ export default {
      * @param state contains busy bool
      * @returns {boolean} true if store is busy
      */
-    storeBusy (state: { busy: boolean }) {
-      return state.busy
-    }
+    storeBusy: (state: { busy: boolean }) => state.busy
   },
   mutations: {
-    /**
-     * Function addMyCourse: increment myCourses variable
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     *
-     * @param state contains myCourses variable
-     */
-    addMyCourse (state: { myCourses: number }) {
-      state.myCourses++
-    },
-
-    /**
-     * Function clearMyCourse: set myCourses to 0
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     *
-     * @param state contains myCourses
-     */
-    clearMyCourse (state: { myCourses: number }) {
-      state.myCourses = 0
-    },
-
     /**
      * Function setBusy: set busy to given boolean value
      *

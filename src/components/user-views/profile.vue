@@ -713,7 +713,7 @@ export default {
       /* change password request */
       if (this.newPasswordInput) {
         this.busy = true
-        this.$store.dispatch('changePassword', this.oldPwd)
+        this.$store.dispatch('passwordUpdate', this.oldPwd)
           .then(() => {
             this.$bvToast.show('submit-ok')
           })

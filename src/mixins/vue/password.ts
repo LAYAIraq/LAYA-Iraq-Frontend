@@ -1,6 +1,6 @@
 /**
  * Filename: password.ts
- * Use: Set passwordOk boolean and return passwordSet and passwordRepeat
+ * Use: Set passwordOk boolean and return password and passwordRepeat
  * Creator: cmc
  * Since: v1.1.0
  */

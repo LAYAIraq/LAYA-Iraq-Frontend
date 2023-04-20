@@ -21,8 +21,8 @@ import courseFiles from './modules/course-files'
 import courseList from './modules/course-list'
 import enrollment from './modules/enrollment'
 import flags from './modules/flags'
-import message from './modules/notifications'
-import note from './modules/note'
+import mutex from './modules/mutex'
+import notifications from './modules/notifications'
 import password from './modules/password'
 import profile from './modules/profile'
 import register from './modules/register'
@@ -46,8 +46,8 @@ export default new Vuex.Store({
     courseList,
     enrollment,
     flags,
-    message,
-    note,
+    mutex,
+    notifications,
     password,
     profile,
     register,

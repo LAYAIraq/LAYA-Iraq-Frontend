@@ -11,10 +11,10 @@
       <i class="fas fa-bell fa-lg"></i>
 
       <span
-        v-if="unreadMessages"
+        v-if="notificationsUnreadNumber > 0"
         class="note-badge"
       >
-        {{ notificationsUnreadNo }}
+        {{ notificationsUnreadNumber }}
       </span>
     </template>
 
@@ -103,7 +103,6 @@ export default {
   computed: {
     ...mapGetters([
       'notifications',
-      'unreadMessages',
       'notificationsUnreadNumber',
       'userId'
     ]),

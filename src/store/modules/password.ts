@@ -2,67 +2,40 @@
  * Filename: password.ts
  * Use: handle password related requests
  * Creator: cmc
- * Date: March 18, 2022
- * Dependencies: axios
+ * Since: v1.1.0
  */
 
 import http from 'axios'
 export default {
   state:
     {
-      passwordSet: '', // necessary for password component
+      password: '', // necessary for password component
       passwordRepeat: ''
     },
   getters: {
-
-    /**
-     * Function passwordRepeat: return passwordRepeat
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 17, 2022
-     *
-     * @param0 contains passwordRepeat string
-     * @returns password to set
-     */
-    passwordRepeat (state: { passwordRepeat: string }) {
-      return state.passwordRepeat
-    },
-
-    /**
-     * Function passwordSet: return passwordSet
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 17, 2021
-     *
-     * @param0 contains passwordSet string
-     * @returns password to set
-     */
-    passwordSet (state: { passwordSet: string }) {
-      return state.passwordSet
-    }
+    password: (state: { password: string }) => state.password,
+    passwordRepeat: (state: { passwordRepeat: string }) => state.passwordRepeat
   },
   mutations: {
     /**
-     * function setPwd: set passwordSet to input string
+     * function passwordSet: set password to input string
      *  exists to avoid passing props to deep nested component
      *
      *  Author: cmc
      *
      *  Last Updated: January 17, 2022
-     * @param state contains passwordSet string
+     * @param state contains password string
      * @param input new string to set
      */
-    setPwd (
-      state: { passwordSet: string },
+    passwordSet (
+      state: { password: string },
       input: string
     ) {
-      state.passwordSet = input
+      state.password = input
     },
 
     /**
-     * function setPwdRepeat: set passwordRepeat to input string
+     * function passwordRepeatSet: set passwordRepeat to input string
      *  exists to avoid passing props to deep nested component
      *
      *  Author: cmc
@@ -71,7 +44,7 @@ export default {
      * @param state contains passwordRepeat string
      * @param input new string to set
      */
-    setPwdRepeat (
+    passwordRepeatSet (
       state: { passwordRepeat: string},
       input: string
     ) {
@@ -80,36 +53,32 @@ export default {
   },
   actions: {
     /**
-     * function changePassword: fire change-password request
+     * function passwordReset: fire reset password request when
+     *  email for user exists
      *
      * Author: cmc
      *
-     * Last Updated: February 21, 2021
-     * @param state contains passwordSet
-     * @param {string} oldPwd old password for user
+     * Last Updated: March 16, 2022
+     * @param state store variable
+     * @param {string} email user emails
      */
-    changePassword ({ state }, oldPwd: string) {
-      if (state.passwordSet !== state.passwordRepeat) {
-        return Promise.reject(new Error('passwords don\'t match!'))
-      } else {
-        return new Promise((resolve, reject) => {
-          http
-            .post('accounts/change-password', {
-              oldPassword: oldPwd,
-              newPassword: state.passwordSet
-            })
-            .then(() => {
-              resolve(null)
-            })
-            .catch(err => {
-              reject(err)
-            })
-        })
-      }
+    passwordReset (
+      { state },
+      email: string
+    ) {
+      return new Promise((resolve, reject) => {
+        http.get(`accounts/email/${email}`)
+          .then(({ data }) => {
+            http.post(`accounts/pwd-reset/${data}`)
+              .then(() => resolve(null))
+              .catch(err => reject(err))
+          })
+          .catch(err => reject(err))
+      })
     },
 
     /**
-     * function resetPassword: fire request to change password
+     * function passwordSetNew: fire request to change password
      *
      * Author: cmc
      *
@@ -117,7 +86,7 @@ export default {
      * @param state not used, but neccessary in signature
      * @param data contains userId, verificationToken, password
      */
-    resetPassword ({ state }, data: {
+    passwordSetNew ({ state }, data: {
       userId: string,
       verificationToken: string,
       password: string
@@ -131,28 +100,32 @@ export default {
     },
 
     /**
-     * function resetUserPassword: fire reset password request when
-     *  email for user exists
+     * function passwordUpdate: fire change-password request
      *
      * Author: cmc
      *
-     * Last Updated: March 16, 2022
-     * @param state store variable
-     * @param {string} email user emails
+     * Last Updated: February 21, 2021
+     * @param state contains password
+     * @param {string} oldPwd old password for user
      */
-    resetUserPassword (
-      { state },
-      email: string
-    ) {
-      return new Promise((resolve, reject) => {
-        http.get(`accounts/email/${email}`)
-          .then(({ data }) => {
-            http.post(`accounts/pwd-reset/${data}`)
-              .then(() => resolve(null))
-              .catch(err => reject(err))
-          })
-          .catch(err => reject(err))
-      })
+    passwordUpdate ({ state }, oldPwd: string) {
+      if (state.password !== state.passwordRepeat) {
+        return Promise.reject(new Error('passwords don\'t match!'))
+      } else {
+        return new Promise((resolve, reject) => {
+          http
+            .post('accounts/change-password', {
+              oldPassword: oldPwd,
+              newPassword: state.password
+            })
+            .then(() => {
+              resolve(null)
+            })
+            .catch(err => {
+              reject(err)
+            })
+        })
+      }
     }
   }
 }

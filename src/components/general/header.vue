@@ -252,6 +252,7 @@ export default {
     logout () {
       this.$ls.remove('auth')
       this.$store.commit('logout')
+      this.$store.commit('roleSet', 'student')
       this.$router.push('/login')
     },
 

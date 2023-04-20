@@ -66,7 +66,7 @@ export default {
      * @param state contains role string
      * @param role new role
      */
-    roleSet (state: { role: any }, role: any) {
+    roleSet (state: { role: any }, role: string) {
       state.role = role
     }
   },
@@ -81,9 +81,9 @@ export default {
      *
      * @param data vuex state and commit handles
      */
-    roleFetch ({ commit, state }) {
+    roleFetch ({ commit, getters }) {
       http
-        .get(`accounts/${state.userId}/role`)
+        .get(`accounts/${getters.userId}/role`)
         .then(({ data }) => commit('roleSet', data.role))
         .catch((err) => console.error(err))
     }

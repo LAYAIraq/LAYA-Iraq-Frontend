@@ -95,7 +95,7 @@
           <div class="text-center">
             {{ y18n('login.registerHint1') }}
             <br>
-            <router-link :to="{ name: 'register-view'}">
+            <router-link :to="{ name: 'register'}">
               <i class="fas fa-user-plus"></i>
               {{ y18n('login.registerHint2') }}
             </router-link>
@@ -193,7 +193,7 @@ export default {
      * Last Updated: March 16, 2022
      */
     resetPassword () {
-      this.$store.dispatch('resetUserPassword', this.email)
+      this.$store.dispatch('passwordReset', this.email)
         .then(() => this.showToast('success'))
         .catch(() => this.showToast('error'))
     },

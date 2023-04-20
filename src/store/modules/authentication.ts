@@ -40,7 +40,7 @@ export default {
      * @param state contains online and userId
      * @param data response from post request to backend, contains token and userId
      */
-    login (state: { online: boolean, userId: any }, { id, userId }: any) {
+    login (state: { online: boolean, userId: any }, { id, userId }) {
       state.online = true
       state.userId = userId
       // place token ID in axios for all future http requests
@@ -57,17 +57,12 @@ export default {
      * @param state contains boolean online, userId, role string
      * @param commit commit function to call roleSet mutation
      */
-    logout ({ state, commit }: {
-      state: {
-        online: boolean,
-        userId: number,
-        role: string
-      },
-      commit: Function
+    logout (state: {
+      online: boolean,
+      userId: number
     }) {
       state.online = false
       state.userId = -1
-      commit('roleSet', 'student')
       // remove auth token from axios
       delete http.defaults.headers.common.Authorization
     }

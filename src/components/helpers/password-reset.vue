@@ -116,7 +116,7 @@ export default {
      */
     resetPassword () {
       this.busy = true
-      this.$store.dispatch('resetPassword', {
+      this.$store.dispatch('passwordSetNew', {
         userId: this.$route.query.uid,
         verificationToken: this.$route.query.token,
         password: this.passwordSet
@@ -124,7 +124,7 @@ export default {
         .then(() => {
           this.showToast('success')
           this.resetSuccess = true
-          this.$store.commit('setPwd', '')
+          this.$store.commit('passwordSet', '')
         })
         .catch((err) => {
           console.error(err)

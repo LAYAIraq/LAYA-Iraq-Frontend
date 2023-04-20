@@ -298,7 +298,7 @@ export default {
         return this.passwordRepeat
       },
       set (input) {
-        this.$store.commit('setPwdRepeat', input)
+        this.$store.commit('passwordRepeatSet', input)
       }
     },
 
@@ -329,7 +329,7 @@ export default {
     },
 
     /**
-     * pwdSet: get and set store property passwordSet
+     * pwdSet: get and set store property password
      *  this is used b/c of unusual behavior when using props
      *
      *  Author: cmc
@@ -338,10 +338,10 @@ export default {
      */
     pwdSet: {
       get () {
-        return this.passwordSet
+        return this.password
       },
       set (input) {
-        this.$store.commit('setPwd', input)
+        this.$store.commit('passwordSet', input)
       }
     },
 

@@ -550,10 +550,10 @@ export default {
      * @returns Promise to load course object, null if already being loaded
      */
     courseFetch (
-      { commit, dispatch, state, rootState },
+      { commit, dispatch, state, getters },
       name: string
     ) {
-      if (rootState.note.busy) return null
+      if (getters.storeBusy) return null
       return new Promise((resolve, reject) => {
         commit('setBusy', true)
         console.log(name)
