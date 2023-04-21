@@ -7,6 +7,7 @@
 
 import http from 'axios'
 import { ids as supportedLangs } from '@/options/langs.js'
+import { stripKey } from '@/mixins/general/helpers'
 
 export default {
   state: {
@@ -32,7 +33,6 @@ export default {
     profileLanguage: (state: { language: string }) => state.language
   },
   mutations: {
-
     /**
      * function languageSet: set user locale to given language if supported
      *
@@ -51,28 +51,7 @@ export default {
     },
 
     /**
-     * Function preferencesMediaSet: set input media boolean
-     *
-     * Author: cmc
-     *
-     * Last Updated: January 27, 2022
-     *
-     * @param state: contains user preferences
-     * @param type: one of 'audio', 'simple', 'text' and 'video'
-     * @param value: boolean
-     *
-     */
-    preferencesMediaSet (
-      state: { preferencesMedia: object },
-      { type, value }: {
-        type: string,
-        value: boolean
-      }) {
-      state.preferencesMedia[type] = value
-    }, // TODO: continue here
-
-    /**
-     * Function setPrefs: set all media preferences at once
+     * Function preferencesSet: set all media preferences at once
      *
      * Author: core
      *
@@ -81,18 +60,25 @@ export default {
      * @param state contains preferences
      * @param prefs: object containing some options
      */
-    setPrefs (
-      state: { prefs: object },
-      prefs: object
+    preferencesSet (
+      state: {
+        preferencesFont: object,
+        preferencesMedia: object
+      },
+      prefs: { font: object, media: object }
     ) {
-      state.prefs = {
-        ...state.prefs,
-        ...prefs
+      state.preferencesFont = {
+        ...state.preferencesFont,
+        ...prefs.font
+      }
+      state.preferencesMedia = {
+        ...state.preferencesMedia,
+        ...prefs.media
       }
     },
 
     /**
-     * Function setProfile: set state with given input values
+     * Function profileSet: set state with given input values
      *
      * Author: core
      *
@@ -101,53 +87,34 @@ export default {
      * @param state contains all profile information
      * @param settings contains the same key-value pairs to set
      */
-    setProfile (
+    profileSet (
       state: {
         username: string,
         email: string,
-        prefs: object,
+        preferencesFont: object,
+        preferencesMedia: object,
         lang: string,
         avatar: string
       },
       settings: {
         username: string,
         email: string,
-        prefs: object,
+        prefs: {
+          font: object,
+          media: object
+        },
         lang: string,
         avatar: string
       }) {
-      for (const setting in settings) {
-        state[setting] = settings[setting]
-      }
-    },
-
-    /**
-     * Function toggleMedia: toggle input media boolean
-     *
-     * Author: core
-     *
-     * Last Updated: January 27, 2022
-     *
-     * @param state: contains user preferences
-     * @param type: one of 'audio', 'simple', 'text' and 'video'
-     *
-     */
-    toggleMedia (
-      state: {
-        prefs: {
-          media: object
-        }
-      },
-      type: string
-    ) {
-      state.prefs.media[type] = !state.prefs.media[type]
+      state = { ...stripKey('prefs', settings) } // set state with all keys except prefs
+      state.preferencesFont = settings.prefs.font
+      state.preferencesMedia = settings.prefs.media
     }
 
   },
   actions: {
-
     /**
-     * Function fetchProfile: get user settings and set them in store
+     * Function profileFetch: get user settings and set them in store
      *
      * Author: core
      *
@@ -155,16 +122,16 @@ export default {
      *
      * @param param0 state variables
      */
-    fetchProfile ({ commit, rootState }) {
+    profileFetch ({ commit, rootState }) {
       http.get(`accounts/${rootState.authentication.userId}`)
         .then(({ data }) => {
-          commit('setProfile', data)
+          commit('profileSet', data)
         })
         .catch((err) => console.error(err))
     },
 
     /**
-     * Function saveProfile: save profile settings in database
+     * Function profileUpdate: save profile settings in database
      *
      * Author: cmc
      *
@@ -172,7 +139,7 @@ export default {
      *
      * @param param0 state variables
      */
-    saveProfile ({ state, rootState }) {
+    profileUpdate ({ state, rootState }) {
       http.patch(
         `accounts/${rootState.authentication.userId}`,
         { ...state })
@@ -182,7 +149,7 @@ export default {
     },
 
     /**
-     * function setUserLang: persist locale to backend
+     * function profileUpdateLanguage: persist locale to backend
      *
      * Author: cmc
      *
@@ -191,7 +158,7 @@ export default {
      * @param param0 contains state variables
      * @param langData contains user language and id
      */
-    setUserLang (
+    profileUpdateLanguage (
       { commit, state },
       langData: {
         lang: string,
@@ -199,7 +166,7 @@ export default {
       }
     ) {
       // save language choice in User's profile
-      http.post(
+      http.post( // TODO figure out if endpoint is needed
         `/accounts/${langData.uid}/change-language`,
         langData
       )

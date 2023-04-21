@@ -239,7 +239,7 @@ export default {
           lang: this.profileLanguage,
           uid: this.userId
         }
-        this.$store.dispatch('setUserLang', data)
+        this.$store.dispatch('profileUpdateLanguage', data)
       } else { console.log('user not online') }
     },
 

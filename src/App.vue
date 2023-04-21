@@ -115,7 +115,7 @@ export default {
       if (!auth) return
       console.log('Auth restored')
       this.$store.commit('login', auth)
-      this.$store.dispatch('fetchProfile')
+      this.$store.dispatch('profileFetch')
       this.$store.dispatch('roleFetch')
     }
   }

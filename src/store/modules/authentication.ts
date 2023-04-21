@@ -94,7 +94,7 @@ export default {
             commit('login', data)
 
             /* load profile */
-            dispatch('fetchProfile')
+            dispatch('profileFetch')
             dispatch('roleFetch')
 
             /* return data for local storage */

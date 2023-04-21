@@ -591,8 +591,8 @@ export default {
 
   beforeDestroy () {
     // save changes in profile
-    this.setPrefs(this.prefs)
-    this.saveProfile()
+    this.preferencesSet(this.prefs)
+    this.profileUpdate()
     this.submitApplication()
     this.$store.commit('applicationListClear')
   },
@@ -607,7 +607,7 @@ export default {
 
   methods: {
     ...mapActions([
-      'saveProfile',
+      'profileUpdate',
       'userApplicationCreate',
       'userApplicationDecide',
       'userApplicationFetch',
@@ -617,7 +617,7 @@ export default {
       'applicationAdd',
       'applicationDecide',
       'applicationEdit',
-      'setPrefs'
+      'preferencesSet'
     ]),
 
     /**
@@ -734,8 +734,8 @@ export default {
       }
 
       /* update state and save profile preferences */
-      this.$store.commit('setPrefs', this.prefs)
-      this.$store.dispatch('saveProfile')
+      this.$store.commit('preferencesSet', this.prefs)
+      this.$store.dispatch('profileUpdate')
     },
 
     /**
