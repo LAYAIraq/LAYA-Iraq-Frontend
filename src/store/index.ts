@@ -11,7 +11,7 @@ import Vuex from 'vuex'
 /* modules */
 import applications from './modules/applications'
 import authentication from './modules/authentication'
-import course from './modules/course'
+// import course from './modules/course'
 import courseContent from './modules/course-content'
 import courseEdit from './modules/course-edit'
 import courseFiles from './modules/course-files'
@@ -35,7 +35,7 @@ export default new Vuex.Store({
   modules: {
     applications,
     authentication,
-    course,
+    // course,
     // @ts-ignore
     courseContent,
     courseEdit,
