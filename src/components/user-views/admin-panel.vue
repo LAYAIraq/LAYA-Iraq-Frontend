@@ -701,7 +701,7 @@ export default {
      * Last Updated: November 19, 2021
      */
     changeUserRole () {
-      this.$store.dispatch('changeRole', {
+      this.$store.dispatch('userUpdateRole', {
         id: this.changingUserId,
         role: this.changeRole
       })
@@ -715,7 +715,7 @@ export default {
      * Last Updated: November 23, 2021
      */
     createUser () {
-      this.$store.dispatch('createUser', {
+      this.$store.dispatch('userCreate', {
         username: this.createUserName,
         email: this.createUserEmail.toLowerCase(),
         role: this.createUserRole || 'student' // create student when no role chosen
@@ -734,7 +734,7 @@ export default {
      * Last Updated: November 19, 2021
      */
     deleteUser () {
-      this.$store.dispatch('deleteUser', this.changingUserId)
+      this.$store.dispatch('userDelete', this.changingUserId)
     },
 
     /**
@@ -745,7 +745,7 @@ export default {
      * Last Updated: November 19, 2021
      */
     editUserEmail () {
-      this.$store.dispatch('changeEmail', {
+      this.$store.dispatch('userUpdateEmail', {
         id: this.changingUserId,
         email: this.changeEmail
       })
@@ -760,7 +760,7 @@ export default {
      */
     getUserList () {
       if (this.users.length === 0) {
-        this.$store.dispatch('fetchUserList')
+        this.$store.dispatch('userListFetch')
       }
     },
 
@@ -818,7 +818,7 @@ export default {
      * Last Updated: November 19, 2021
      */
     resetUserPassword () {
-      this.$store.dispatch('resetUserPassword', this.changingUserId)
+      this.$store.dispatch('passwordResetAdmin', this.changingUserId)
     },
 
     /**

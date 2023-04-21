@@ -2,10 +2,7 @@
  * Filename: users.ts
  * Use: user management for admin and editors
  * Creator: cmc
- * Date: November 11, 2021
- * Dependencies:
- *  axios,
- *  @/misc/roles.ts
+ * Since: v1.2.0
  */
 
 import http from 'axios'
@@ -14,13 +11,11 @@ export default {
     users: []
   },
   getters: {
-    users (state: {users: Array<object>}) {
-      return state.users
-    }
+    users: (state: { users: object[] }) => state.users
   },
   mutations: {
     /**
-     * addUser: add single User
+     * userAdd: add single User
      *
      * Author: cmc
      *
@@ -28,7 +23,7 @@ export default {
      * @param state state variables
      * @param user user variables
      */
-    addUser (
+    userAdd (
       state: { users: Array<object> },
       user: object
     ) {
@@ -36,7 +31,7 @@ export default {
     },
 
     /**
-     * function changeUserEmail: change user's email in state
+     * function userEmailChange: change user's email in state
      *
      * Author: cmc
      *
@@ -45,7 +40,7 @@ export default {
      * @param user reference to user in state
      * @param role new email
      */
-    changeUserEmail (
+    userEmailChange (
       state,
       { user, email }: {
         user: {
@@ -57,7 +52,7 @@ export default {
     },
 
     /**
-     * function changeUserRole: change user's role in state
+     * function userRoleChange: change user's role in state
      *
      * Author: cmc
      *
@@ -66,7 +61,7 @@ export default {
      * @param user reference to user in state
      * @param role new role
      */
-    changeUserRole (
+    userRoleChange (
       state,
       { user, role }: {
         user: {
@@ -78,7 +73,7 @@ export default {
     },
 
     /**
-     * function removeUser: remove user id from state.users
+     * function userRemove: remove user id from state.users
      *
      * Author: cmc
      *
@@ -86,7 +81,7 @@ export default {
      * @param state state variables
      * @param id user id to delete
      */
-    removeUser (
+    userRemove (
       state: {
         users: Array<{
           id: number
@@ -98,29 +93,11 @@ export default {
       if (idx !== -1) { // element with id exists
         state.users.splice(idx, 1)
       }
-    },
-
-    /**
-     * function setUsersList: set list of users in state
-     *
-     * Author: cmc
-     *
-     * Last Updated: November 11, 2021
-     * @param state state variables
-     * @param list list of users
-     */
-    setUsersList (
-      state: {
-        users: Array<object>
-      },
-      list: Array<object>
-    ) {
-      state.users = list
     }
   },
   actions: {
     /**
-     * function changeEmail: change user's email
+     * function userUpdateEmail: change user's email
      *
      * Author: cmc
      *
@@ -130,7 +107,7 @@ export default {
      * @param {number} id user Id
      * @param {string} email new email address
      */
-    changeEmail (
+    userUpdateEmail (
       { commit, state }: {
         commit: Function,
         state: {
@@ -145,7 +122,7 @@ export default {
       }) {
       const user = state.users.find(el => el.id === id)
       if (user) {
-        commit('changeUserEmail', { user, email })
+        commit('userEmailChange', { user, email })
         http.patch(
           `accounts/${id}`,
           { email: email }
@@ -156,7 +133,7 @@ export default {
     },
 
     /**
-     * function changeRole: change user's role
+     * function userUpdateRole: change user's role
      *
      * Author: cmc
      *
@@ -166,7 +143,7 @@ export default {
      * @param {number} id user Id
      * @param {string} role new role
      */
-    changeRole (
+    userUpdateRole (
       { commit, state }: {
         commit: Function,
         state: {
@@ -181,9 +158,9 @@ export default {
       }) {
       const user = state.users.find(el => el.id === id)
       if (user) {
-        commit('changeUserRole', { user, role })
+        commit('userRoleChange', { user, role })
         http.post(
-          'accounts/change-role',
+          'accounts/change-role', // TODO: change to patch in new backend
           {
             role: role,
             userId: id
@@ -195,7 +172,7 @@ export default {
     },
 
     /**
-     * function createUser: check for duplicate name or email, if none,
+     * function userCreate: check for duplicate name or email, if none,
      * create new user, then update store
      *
      * Author: cmc
@@ -207,7 +184,7 @@ export default {
      * @param email new user's email
      * @param role new user's role
      */
-    createUser (
+    userCreate (
       { commit }: {
         commit: Function,
       },
@@ -223,7 +200,7 @@ export default {
       })
         .then(resp => {
           // console.log(resp)
-          commit('addUser', {
+          commit('userAdd', {
             ...resp.data,
             role: role
           })
@@ -232,7 +209,7 @@ export default {
     },
 
     /**
-     * function deleteUser: delete user from database, then update
+     * function userDelete: delete user from database, then update
      *  store
      *
      * Author: cmc
@@ -242,7 +219,7 @@ export default {
      * @param commit commit function
      * @param id userId to delete
      */
-    deleteUser (
+    userDelete (
       { state, commit }: {
         state: {
           users: Array<{
@@ -259,14 +236,14 @@ export default {
           .then(() => {
             // console.log(resp)
             // console.log('deleted user: ', id)
-            commit('removeUser', id)
+            commit('userRemove', id)
           })
           .catch(err => console.error(err))
       }
     },
 
     /**
-     * function fetchUserList: get Users from Backend
+     * function userListFetch: get Users from Backend
      *
      * Author cmc
      *
@@ -274,12 +251,11 @@ export default {
      * @param commit commit function
      * @param state state variables
      */
-    fetchUserList (
+    userListFetch (
       { commit }: {commit: Function}
     ) {
       http.get('/accounts')
         .then(resp => {
-          // commit('setUsersList', resp.data)
           for (const entry of resp.data) {
             // console.log(entry)
             const user = { ...entry }
@@ -287,7 +263,7 @@ export default {
               .then(resp => {
                 // console.log(resp.data.role)
                 user.role = resp.data.role
-                commit('addUser', user)
+                commit('userAdd', user)
               })
               .catch(err => console.error(err))
             // console.log('new user ', user)
@@ -297,58 +273,8 @@ export default {
     },
 
     /**
-     * function fetchUserList: get Users from Backend
-     *
-     * Author cmc
-     *
-     * Last Updated: November 11, 2021
-     * @param commit commit function
-     * @param state state variables
-     */
-    // this is an approach that uses two "big" requests rather than
-    // one big and many small - we might need to switch depending on
-    // the performance with the initial setup of the live system
-    // fetchUserList({commit, state}){
-    //   let users = []
-    //   let roles = []
-    //   http.get('/accounts')
-    //     .then(resp => {
-    //       console.log('resp get/accounts: ', resp)
-    //       users = [...resp.data]
-    //       http.get('/RoleMappings')
-    //         .then(resp => {
-    //           console.log('resp get/RoleMappings: ', resp)
-    //           roles = [...resp.data]
-    //           const rolePrototypes = roles.filter(el => el.principalType === 'ROLE')
-    //           console.log(users)
-    //           console.log(roles)
-    //           console.log(rolePrototypes)
-    //           for (const entry of users) {
-    //             // console.log(entry)
-    //             const userRole = roles.filter(elem => elem.principalId == entry.id)[0].roleId
-    //             console.log(userRole)
-    //             // [0].roleId
-    //             const user = {
-    //               username: entry.username,
-    //               email: entry.email,
-    //               emailVerified: entry.emailVerified,
-    //               id: entry.id,
-    //               role: rolePrototypes.filter(elem => elem.roleId === userRole)[0].principalId
-    //             }
-    //             console.log(user)
-    //             commit('addUser', user)
-    //           }
-    //         })
-    //         .catch(err => console.error(err))
-    //     })
-    //     .catch(err => console.error(err))
-    //
-    //
-    //   // console.log('new user ', user)
-    // },
-
-    /**
-     * function resetPassword: reset user's password
+     * function passwordResetAdmin: reset user's password
+     *   name follows same scheme as dispatch 'passwordReset' in password.ts
      *
      * Author: cmc
      *
@@ -357,7 +283,7 @@ export default {
      * @param state state variables
      * @param {number} id user Id
      */
-    resetUserPassword (
+    passwordResetAdmin (
       { commit, state }: {
         commit: Function,
         state: {
