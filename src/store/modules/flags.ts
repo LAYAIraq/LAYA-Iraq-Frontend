@@ -305,16 +305,16 @@ export default {
      *
      * Last Updated: January 27, 2022
      * @param commit state commit
-     * @param rootState rootState to get course
+     * @param getters getters to get course
      * @param state state variables
      */
     courseFlagsCheck ({
       commit,
-      rootState,
+      getters,
       state
     }) { // TODO: update for new course structure
       // console.log('We are checking Course Flags!')
-      const content = rootState.edit.course.content
+      const content = getters.content
       const flags = state.courseFlags
       // console.log(course)
       // console.log(flags)

@@ -2,11 +2,7 @@
  * Filename: router.ts
  * Use: register all possible routes
  * Creator: core
- * Date: unknown
- * Dependencies:
- *  vue,
- *  vue-router,
- *  @/views
+ * Since: v1.0.0
  */
 
 import Vue from 'vue'
@@ -155,5 +151,6 @@ export const publicRoutes = [
   '/imprint',
   '/privacy',
   '/reset-password',
-  '/verify'
+  '/verify',
+  '/:catchAll(.*)'
 ]

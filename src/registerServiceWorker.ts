@@ -2,8 +2,7 @@
  * Filename: registerServiceWorker.ts
  * Use: register a service worker to serve app faster in production
  * Creator: core
- * Date: unknown
- * Dependencies: register-service-worker
+ * Since: v1.0.0
  */
 
 /* tslint:disable:no-console */

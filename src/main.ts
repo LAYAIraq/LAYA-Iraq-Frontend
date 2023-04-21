@@ -3,8 +3,7 @@
  * Filename: main.ts
  * Use: packs all components of LAYA together
  * Creator: core
- * Date:unknown
- * Dependencies: see import statements
+ * Since: v1.0.0
  */
 
 import Vue from 'vue'
@@ -13,7 +12,7 @@ import router from './router'
 import store from './store'
 import './registerServiceWorker'
 
-/* set backend address */ // TODO: move to store when separation of concerns is tackled
+/* set backend address */
 import backendUrl from './backend-url'
 import httpClient from 'axios'
 httpClient.defaults.baseURL = backendUrl
@@ -23,7 +22,6 @@ import { BootstrapVue } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(BootstrapVue)
-// Vue.use(BootstrapVueIcons)
 
 /* authenticated images */
 import VueAuthImg from 'vue-auth-image'

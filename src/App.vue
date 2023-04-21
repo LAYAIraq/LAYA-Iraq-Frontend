@@ -2,10 +2,7 @@
 Filename: App.vue
 Use: render Laya
 Creator: core
-Date: unknown
-Dependencies:
-  @/components/header,
-  @/components/footer
+Since: v1.0.0
 -->
 
 <!--suppress ALL -->
@@ -33,8 +30,8 @@ export default {
   name: 'App',
 
   components: {
-    LyHeader,
-    LyFooter
+    LyHeader, // Prefix to avoid clash with HTML header
+    LyFooter // Prefix to avoid clash with HTML footer
   },
 
   beforeRouteUpdate () {
@@ -61,7 +58,11 @@ export default {
   },
 
   methods: {
-
+    /**
+     * Function getClasses: set class prop depending on preferences
+     * (font, size, dir)
+     * @return {string} class name for font, size, and dir
+     */
     getClasses () {
       return this.getReadingDir() + ` laya-font-${this.preferencesFont.chosen}` +
         ` font-size-${this.preferencesFont.size}`

@@ -2,10 +2,7 @@
  * Filename: index.ts
  * Use: make store available to be used in app
  * Creator: core
- * Date: unknown
- * Dependencies:
- *  vue,
- *  vuex
+ * Since: v1.0.0
  */
 
 import Vue from 'vue'
