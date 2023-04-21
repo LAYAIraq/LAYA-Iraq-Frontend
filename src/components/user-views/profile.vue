@@ -547,7 +547,7 @@ export default {
      */
     newPasswordInput () {
       return this.passwordRepeat ||
-        this.passwordSet
+        this.password
     },
 
     /**
@@ -669,7 +669,10 @@ export default {
     setProfileForRender () {
       // make profile settings mutable and render
       this.avatar = this.profile.avatar
-      this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
+      this.prefs = {
+        font: deepCopy(this.preferencesFont),
+        media: deepCopy(this.preferencesMedia)
+      }
       if (!this.prefs.media) { // avoid render error when no prefs set
         this.prefs.media = {}
       }
