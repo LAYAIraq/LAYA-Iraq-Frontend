@@ -18,31 +18,35 @@ describe('header notifications dropdown', () => {
     getters = {
       profileLanguage: () => 'en',
       userId: () => 1,
-      messages: () => state.messages,
+      notifications: () => state.notifications,
       unreadMessages: () => state.unreadMessages,
       notificationsUnreadNumber: () => state.notificationsUnreadNumber
     }
     mutations = {
-      allRead: jest.fn()
+      notificationsReadAll: jest.fn()
     }
     state = {
-      messages: [],
+      notifications: [],
       unreadMessages: false,
       notificationsUnreadNumber: 0
     }
-    actions = {
-      getAllMessages: jest.fn(() => Promise.resolve(state.messages = [
+    const notificationsSet = () => {
+      Promise.resolve(state.notifications = [
         { msg: 'mofo', time: 1, read: false },
         { msg: 'mofo', time: 2, read: false },
         { msg: 'mofo', time: 3, read: false },
         { msg: 'mofo', time: 4, read: false },
         { msg: 'mofo', time: 5, read: false }
-      ])),
-      getNewMessages: jest.fn(() => state.messages.push({
+      ])
+    }
+    actions = {
+      notificationsFetchAll: jest.fn(notificationsSet),
+      notificationsFetchInitial: jest.fn(notificationsSet),
+      notificationsFetchNew: jest.fn(() => state.notifications.push({
         msg: 'mofo', time: 6, read: false
       })),
-      updateReadProp: jest.fn(() => {
-        state.messages.forEach(msg => {
+      notificationsUpdateRead: jest.fn(() => {
+        state.notifications.forEach(msg => {
           msg.read = true
         })
       })
@@ -70,17 +74,19 @@ describe('header notifications dropdown', () => {
   })
 
   it('calls notificationsReadAll when clicked', async () => {
-    const markAsReadButton = wrapper.findAll('button').wrappers[1] // 'all read' button
+    const markAsReadButton = wrapper.findAll('button').at(1) // 'all read' button
+    // buttons.wrappers.forEach(e => console.log(e.text()))
+    // const markAsReadButton = buttons.wrappers.find(e => e.text === 'Mark all as read')
     // expect (getButton !== markAsReadButton).toBeTruthy()
     expect(markAsReadButton.text()).toBe('Mark all as read')
     await markAsReadButton.trigger('click')
-    expect(mutations.allRead).toHaveBeenCalled()
+    expect(mutations.notificationsReadAll).toHaveBeenCalled()
   })
 
   it('fetches more notifications on click', async () => {
     const button = wrapper.findAll('button').wrappers[2] // 'fetch more' button
     await button.trigger('click')
-    expect(actions.getNewMessages).toHaveBeenCalled()
+    expect(actions.notificationsFetchNew).toHaveBeenCalled()
     await localVue.nextTick()
   })
 

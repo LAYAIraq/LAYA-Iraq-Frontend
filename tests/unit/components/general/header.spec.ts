@@ -19,7 +19,7 @@ describe('Header unauthorized', () => {
       getters,
       mutations: {
         logout: jest.fn(),
-        setLang: jest.fn()
+        languageSet: jest.fn()
       }
     })
     wrapper = mount(Header, {

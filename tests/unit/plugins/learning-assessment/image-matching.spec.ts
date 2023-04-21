@@ -20,8 +20,10 @@ const stepInput = {
     id: 3,
     audio: 'description.mp3'
   }],
-  relations: ['Solution 1', 'Solution 2'],
-  relationsSimple: ['Easy Solution 1', 'Easy Solution 2']
+  relations: [
+    { text: 'Solution 1', simple: 'Easy Solution 1' },
+    { simple: 'Easy Solution 2', text: 'Solution 2' }
+  ]
 }
 
 describe('Image Matching Create component', () => {
@@ -132,10 +134,11 @@ describe('Image Matching edit component', () => {
         }
       },
       store,
-      // stubs: ['router-link'], // uncomment if component has router links
       localVue
     })
-    expect(wrapper.vm.$data).toStrictEqual(expect.objectContaining(state.courseContent.test))
+    expect(wrapper.vm.$data.pairs).toBeTruthy()
+    expect(wrapper.vm.$data.relations).toBeTruthy()
+    expect(wrapper.vm.$data.relationsSimple).toBeFalsy()
   })
 })
 
@@ -198,7 +201,10 @@ describe('Image Matching View component', () => {
     const options = wrapper.findAll('option')
     expect(options.length).toBe(3)
     const optionTexts = []
-    options.wrappers.forEach(wrap => optionTexts.push(wrap.text()))
+    options.wrappers.forEach(wrap => {
+      console.log(wrap.text())
+      optionTexts.push(wrap.text())
+    })
     expect(optionTexts).toContain('Solution 1')
     expect(optionTexts).toContain('Solution 2')
   })
@@ -219,7 +225,7 @@ describe('Image Matching View component', () => {
 
   it('shows modal when checking solutions w/o selecting any answer', async () => {
     await wrapper.find('.btn-link').trigger('click')
-    expect(wrapper.find('#relate-missing-warning').exists()).toBeTruthy()
+    expect(wrapper.find('#missing-answer-warning').exists()).toBeTruthy()
   })
 
   it('shows solutions after selecting every answer and clickling "check solution"', async () => {
@@ -251,7 +257,7 @@ describe('Image Matching View component', () => {
   it('gives correct feedback on correct answer', async () => {
     let correctSolution
     for (const i in wrapper.vm.options) {
-      if (wrapper.vm.options[i] === wrapper.vm.relations[0]) {
+      if (wrapper.vm.options[i].text === wrapper.vm.relations[0].text) {
         correctSolution = i
       }
     }

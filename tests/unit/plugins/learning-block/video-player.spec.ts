@@ -1,8 +1,8 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue'
-import PlyrEdit from '@/plugins/learning-block/video/edit.vue'
-import PlyrView from '@/plugins/learning-block/video/view.vue'
+import VideoEdit from '@/plugins/learning-block/video/video-edit.vue'
+import VideoView from '@/plugins/learning-block/video/video-view.vue'
 import 'regenerator-runtime/runtime'
 
 const localVue = createLocalVue()
@@ -38,13 +38,13 @@ localVue.use(BootstrapVue)
 //   })
 //
 //   it('allows to input a title', async () => {
-//     const titleInput = wrapper.find('#laya-plyr-title')
+//     const titleInput = wrapper.find('#title')
 //     await titleInput.setValue('my title')
 //     expect(titleInput.element.value).toBe('my title')
 //   })
 //
 //   it('allows to input a simple title', async () => {
-//     const titleInput = wrapper.find('#laya-plyr-title-simple')
+//     const titleInput = wrapper.find('#title-simple')
 //     await titleInput.setValue('my title')
 //     expect(titleInput.element.value).toBe('my title')
 //   })
@@ -192,7 +192,7 @@ localVue.use(BootstrapVue)
 //   })
 // })
 
-describe('Plyr edit component', () => {
+describe('Video edit component', () => {
   let wrapper
   let getters
   beforeEach(() => {
@@ -226,7 +226,7 @@ describe('Plyr edit component', () => {
     const store = new Vuex.Store({
       getters
     })
-    wrapper = mount(PlyrEdit, {
+    wrapper = mount(VideoEdit, {
       directives: {
         'b-tooltip': () => {
         }
@@ -238,6 +238,9 @@ describe('Plyr edit component', () => {
           }
         }
       },
+      propsData: {
+        edit: true
+      },
       stubs: ['b-jumbotron'],
       store,
       localVue
@@ -246,9 +249,9 @@ describe('Plyr edit component', () => {
 
   it('has loaded title and video from store', async () => {
     await localVue.nextTick()
-    const titleInput = wrapper.find('#laya-plyr-title')
+    const titleInput = wrapper.find('#video-title')
     expect(titleInput.element.value).toBe('some vid')
-    const simpleTitleInput = wrapper.find('#laya-plyr-title-simple')
+    const simpleTitleInput = wrapper.find('#video-title-simple')
     expect(simpleTitleInput.element.value).toBe('Video')
     const vidInput = wrapper.find('#vid-id')
     expect(vidInput.element.value).toBe('youtu.be/1hcSloy35hj')
@@ -302,7 +305,7 @@ describe('Plyr view component', () => {
     const store = new Vuex.Store({
       getters
     })
-    wrapper = shallowMount(PlyrView, {
+    wrapper = shallowMount(VideoView, {
       mocks: {
         $route: {
           params: {
@@ -321,7 +324,7 @@ describe('Plyr view component', () => {
 
   it('shows a video container', () => {
     // expect(wrapper.vm.playerId).toBe('video-div')
-    const videoContainer = wrapper.find(`#${wrapper.vm.playerId}`)
+    const videoContainer = wrapper.find('#video-player')
     expect(videoContainer.exists()).toBeTruthy()
   })
 
@@ -341,7 +344,7 @@ describe('Plyr view component', () => {
     const store = new Vuex.Store({
       getters
     })
-    wrapper = shallowMount(PlyrView, {
+    wrapper = shallowMount(VideoView, {
       mocks: {
         $route: {
           params: {

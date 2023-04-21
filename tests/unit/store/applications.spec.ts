@@ -8,7 +8,7 @@ import http from 'axios'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
-describe('editor store mutations', () => {
+describe('applications store mutations', () => {
   let store
   let sampleApplication
   beforeEach(() => {

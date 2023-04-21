@@ -1,10 +1,11 @@
-import 'regenerator-runtime/runtime'
-import SampleCourse from '../../mocks/sample-course-short.json'
-import axios from 'axios'
-import SampleCourseSimple from '../../mocks/sample-course-simple.json'
+// import 'regenerator-runtime/runtime'
+// import SampleCourse from '../../mocks/sample-course-short.json'
+// import axios from 'axios'
+// import SampleCourseSimple from '../../mocks/sample-course-simple.json'
 
 describe.skip('course edit mutations', () => {
   // TODO add tests for simple language and property check that have been in courseListFetch before
+  it('dummy', () => {})
   // it('courseListFetch sets properties correctly (content input)', async () => {
   //   const data = [{ ...SampleCourse, properties: {} }]
   //   jest.spyOn(axios, 'get').mockResolvedValue({ data })

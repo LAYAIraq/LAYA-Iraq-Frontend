@@ -22,7 +22,17 @@ describe('course-content store module actions', () => {
     }
   })
 
-  const actions = courseContent.actions
+  const actions = {
+    ...courseContent.actions,
+    courseFetch: jest.fn(({ commit }, call) => {
+      if (call === 'fail') {
+        return Promise.reject(new Error('test error'))
+      } else {
+        commit('courseStructureDestructure', SampleCourseChapters)
+        Promise.resolve(SampleCourseChapters)
+      }
+    })
+  }
   const commit = jest.fn()
 
   describe('courseContentFetch', () => {

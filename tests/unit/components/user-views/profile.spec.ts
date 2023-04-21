@@ -34,7 +34,7 @@ describe('profile view', () => {
     getters = {
       profileLanguage: () => 'en',
       passwordRepeat: () => state.pwdRepeat,
-      passwordSet: () => 'secret12',
+      password: () => 'secret12',
       isAuthor: () => state.author
       // userApplication: () => state.application
     }
@@ -43,7 +43,8 @@ describe('profile view', () => {
       avatar: 'mypic.png',
       email: 'admin@laya',
       lang: 'en',
-      prefs: {},
+      preferencesFont: {},
+      preferencesMedia: {},
       username: 'admin',
       realm: null,
       emailVerified: false,
@@ -52,7 +53,7 @@ describe('profile view', () => {
     }
 
     mutations = {
-      setPrefs: jest.fn((prefs) => {
+      preferencesSet: jest.fn((prefs) => {
         profileState.prefs = prefs
       })
     }
@@ -71,6 +72,8 @@ describe('profile view', () => {
             profile () {
               return profileState
             },
+            preferencesFont: () => profileState.preferencesFont,
+            preferencesMedia: () => profileState.preferencesMedia,
             userId: () => profileState.id
           },
           mutations,
@@ -120,7 +123,7 @@ describe('profile view', () => {
     const saveButton = wrapper.find('#save-profile')
     await saveButton.trigger('click')
     await localVue.nextTick()
-    expect(mutations.setPrefs).toHaveBeenCalledWith(
+    expect(mutations.preferencesSet).toHaveBeenCalledWith(
       expect.objectContaining({ id: 1 }), expect.objectContaining({
         media: {
           text: true,
@@ -132,7 +135,7 @@ describe('profile view', () => {
     const inputFields = wrapper.findAll('input').filter(elem => elem.attributes('type') === 'checkbox')
     inputFields.setChecked(false)
     await saveButton.trigger('click')
-    expect(mutations.setPrefs).toHaveBeenLastCalledWith(
+    expect(mutations.preferencesSet).toHaveBeenLastCalledWith(
       expect.objectContaining({ id: 1 }), expect.objectContaining({
         media: {
           text: false,
@@ -144,7 +147,7 @@ describe('profile view', () => {
     inputFields.at(1).setChecked(true)
     inputFields.at(3).setChecked(true)
     await saveButton.trigger('click')
-    expect(mutations.setPrefs).toHaveBeenLastCalledWith(
+    expect(mutations.preferencesSet).toHaveBeenLastCalledWith(
       expect.objectContaining({ id: 1 }), expect.objectContaining({
         media: {
           text: false,
@@ -185,7 +188,7 @@ describe('profile view', () => {
   // })
 
   it('shows toast when password is saved', async () => {
-    actions.changePassword = jest.fn(() => Promise.resolve())
+    actions.passwordUpdate = jest.fn(() => Promise.resolve())
     store = new Vuex.Store({
       state,
       getters,
@@ -195,7 +198,9 @@ describe('profile view', () => {
           getters: {
             profile () {
               return profileState
-            }
+            },
+            preferencesFont: () => profileState.preferencesFont,
+            preferencesMedia: () => profileState.preferencesMedia
           },
           mutations,
           actions
@@ -220,13 +225,13 @@ describe('profile view', () => {
     await wrapper.setData({ passwordOk: true })
     const button = wrapper.find('#save-profile')
     await button.trigger('click')
-    expect(actions.changePassword).toHaveBeenCalled()
+    expect(actions.passwordUpdate).toHaveBeenCalled()
     // await localVue.nextTick()
     expect(wrapper.find('#submit-ok').exists()).toBeTruthy()
   }) // FIXME: succeeds but doesn't really test the toast
 
   it('shows toast when password saving failed', async () => {
-    actions.changePassword = jest.fn(() => Promise.reject(new Error('fail')))
+    actions.passwordUpdate = jest.fn(() => Promise.reject(new Error('fail')))
     store = new Vuex.Store({
       state,
       getters,
@@ -236,7 +241,9 @@ describe('profile view', () => {
           getters: {
             profile () {
               return profileState
-            }
+            },
+            preferencesFont: () => profileState.preferencesFont,
+            preferencesMedia: () => profileState.preferencesMedia
           },
           mutations,
           actions
@@ -259,7 +266,7 @@ describe('profile view', () => {
     await wrapper.setData({ passwordOk: true })
     const button = wrapper.find('button')
     await button.trigger('click')
-    expect(actions.changePassword).toHaveBeenCalled()
+    expect(actions.passwordUpdate).toHaveBeenCalled()
     expect(wrapper.find('#submit-failed').exists()).toBeTruthy()
   }) // FIXME: succeeds but doesn't really test the toast
 
