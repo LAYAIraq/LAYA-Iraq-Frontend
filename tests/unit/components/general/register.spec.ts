@@ -9,8 +9,7 @@ localVue.use(Vuex)
 describe('register component', () => {
   const getters = {
     profileLanguage: () => 'en',
-    passwordRepeat: () => 'secret',
-    passwordSet: () => 'secret12'
+    passwordRepeat: () => 'secret'
   }
   const actions = {
     checkEmailTaken: jest.fn(() => Promise.reject(new Error('404'))),

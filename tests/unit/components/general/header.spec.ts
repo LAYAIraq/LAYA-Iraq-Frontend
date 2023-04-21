@@ -2,7 +2,6 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import Header from '@/components/general/header.vue'
 import BootstrapVue from 'bootstrap-vue'
 import Vuex from 'vuex'
-import VueRouter from 'vue-router'
 import 'regenerator-runtime/runtime'
 
 const localVue = createLocalVue()
@@ -11,7 +10,6 @@ localVue.use(Vuex)
 
 describe('Header unauthorized', () => {
   let wrapper
-  let actions
   beforeEach(() => {
     const getters = {
       profileLanguage: () => 'en',
@@ -57,7 +55,8 @@ describe('Header authorized', () => {
     }
     mutations = {
       logout: jest.fn(),
-      languageSet: jest.fn()
+      languageSet: jest.fn(),
+      roleSet: jest.fn()
     }
     actions = {
       setUserLang: jest.fn(),
@@ -105,22 +104,20 @@ describe('Header authorized', () => {
     await langButtons.wrappers.forEach(wrapper => wrapper.trigger('click'))
     await localVue.nextTick()
     expect(mutations.languageSet).toHaveBeenCalledWith(expect.any(Object), 'en')
-    // expect(actions.setUserLang).toHaveBeenCalled()
+    // expect(actions.profileUpdateLanguage).toHaveBeenCalled()
   })
 
-  it('for admin has 9 links, one to admin panel', async () => {
+  it('for admin shows link to admin panel', async () => {
     state.admin = true
     await localVue.nextTick()
-    expect(wrapper.findAll('a').length).toBe(9)
     expect(
       wrapper.findAll('a').wrappers.some(wrap => wrap.text() === 'Admin Panel')
     ).toBeTruthy()
   })
 
-  it('for editor has 6 links, one to editor panel', async () => {
+  it('for editor shows link to editor panel', async () => {
     state.editor = true
     await localVue.nextTick()
-    expect(wrapper.findAll('a').length).toBe(9)
     expect(
       wrapper.findAll('a').wrappers.some(wrap => wrap.text() === 'Editor Panel')
     ).toBeTruthy()

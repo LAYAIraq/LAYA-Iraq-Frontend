@@ -153,9 +153,9 @@ describe('profile view', () => {
           simple: true
         }
       }))
-    expect(dispatchSpy).toHaveBeenCalledWith('saveProfile')
+    expect(dispatchSpy).toHaveBeenCalledWith('profileUpdate')
     // expect(actions.passwordUpdate).toHaveBeenCalled()
-    // expect(actions.saveProfile).toHaveBeenCalledTimes(3)
+    // expect(actions.profileUpdate).toHaveBeenCalledTimes(3)
   })
 
   it('disables button when password input wrong', async () => {
@@ -169,8 +169,8 @@ describe('profile view', () => {
 
   it('calls store methods on destroy', () => {
     wrapper.destroy()
-    expect(dispatchSpy).toHaveBeenCalledWith('saveProfile')
-    expect(commitSpy).toHaveBeenCalledWith('setPrefs', expect.any(Object))
+    expect(dispatchSpy).toHaveBeenCalledWith('profileUpdate')
+    expect(commitSpy).toHaveBeenCalledWith('preferencesSet', expect.any(Object))
   })
 
   // it('sets correct size when range is set', async () => {

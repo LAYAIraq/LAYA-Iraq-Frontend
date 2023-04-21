@@ -15,19 +15,19 @@ describe('password input component', () => {
   let pwdRepeat
   beforeEach(() => {
     state = {
-      passwordSet: '',
+      password: '',
       passwordRepeat: ''
     }
     getters = {
       profileLanguage: () => 'en',
-      passwordSet: () => state.passwordSet,
+      password: () => state.password,
       passwordRepeat: () => state.passwordRepeat
     }
     mutations = {
-      setPwd (state, input) {
+      passwordSet (state, input) {
         state.password = input
       },
-      setPwdRepeat (state, input) {
+      passwordRepeatSet (state, input) {
         state.passwordRepeat = input
       }
     }
@@ -49,8 +49,7 @@ describe('password input component', () => {
     await pwdRepeat.setValue('secret11')
     expect(wrapper.vm.pwdMatch).toBeFalsy()
     const diffErr = wrapper.find('#pwd-diff-msg')
-    expect(diffErr).toBeDefined()
-    expect(diffErr.text()).toBeTruthy()
+    expect(diffErr?.text()).toBeTruthy()
   })
 
   it('shows no error when passwords match and have min length', async () => {
