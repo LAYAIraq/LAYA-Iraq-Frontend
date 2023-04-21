@@ -246,8 +246,8 @@ export default {
 
   computed: {
     ...mapGetters([
-      'passwordRepeat',
-      'passwordSet'
+      'password',
+      'passwordRepeat'
     ]),
 
     /**
