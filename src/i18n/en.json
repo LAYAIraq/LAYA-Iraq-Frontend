@@ -556,5 +556,20 @@
 	"type.modal.text": "New Type*",
 	"type.modal.title": "Change content type",
 	"usernamePH": "Username",
-	"verify.success": "Verification successful! Please wait to be redirected to the login page..."
+	"verify.success": "Verification successful! Please wait to be redirected to the login page...",
+	"profile.institution.mosul": "University of Mosul",
+	"profile.institution.dohuk": "University of Dohuk",
+	"profile.institution.zakho": "Universtity of Zakho",
+	"profile.institution.kufa": "University of Kufa",
+	"profile.institution.garmian": "University of Garmian",
+	"profile.institution.flensburg":"University of Flensburg",
+	"profile.institution.vechta": "University of Vechta",
+	"profile.institution.oldenburg": "University of Oldenburg",
+	"profile.institution.others": "Others",
+	"profile.occupation.student": "Student",
+	"profile.occupation.teacher": "Teacher",
+	"profile.occupation.lecturer": "Lecturer",
+	"profile.occupation.professor": "Professor",
+	"profile.occupation.researcher": "Researcher",
+	"profile.occupation.admin": "Administrator"
 }
