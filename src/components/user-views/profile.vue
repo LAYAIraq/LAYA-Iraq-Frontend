@@ -22,7 +22,7 @@ Since: v1.0.0
             >
             <img
               v-else
-              src="../assets/anmelden.svg"
+              src="../../assets/anmelden.svg"
               alt="Avatar"
               class="d-block rounded-circle mx-auto avatar"
             >
@@ -470,8 +470,8 @@ import { locale, pwdProps } from '@/mixins'
 import api from '@/backend-url'
 import PasswordInput from '@/components/password-input.vue'
 import { mapActions, mapGetters } from 'vuex'
-import institutions from '@/misc/institutions'
-import occupations from '@/misc/occupations'
+import institutions from '@/options/institutions'
+import occupations from '@/options/occupations'
 import AuthorApplication from '@/components/author-application'
 import AccessibilitySettings from '@/components/accessibility-settings'
 // import '@/styles/fonts.css'
