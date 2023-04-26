@@ -1,116 +1,395 @@
 <!--
-  Filename: profile.vue
-  Use: User Profile Settings, such as password and avatar
-  Creator: core
-  Since: v1.0.0
+Filename: profile.vue
+Use: User Profile Settings, such as password and avatar
+Creator: core
+Since: v1.0.0
 -->
 
 <!--suppress JSAnnotator -->
 <template>
   <div>
-    <div class="container-fluid">
-      <div class="row">
-        <!-- profile header -->
-        <div class="bg-dark w-100 pt-5 pb-3">
-          <!-- avatar -->
-          <img
-            v-if="avatar !== ''"
-            :src="avatarURL"
-            alt="Avatar"
-            class="d-block rounded-circle mx-auto avatar"
-          >
-          <img
-            v-else
-            src="../../assets/images/anmelden.svg"
-            alt="Avatar"
-            class="d-block rounded-circle mx-auto avatar"
-          >
+    <div>
+      <div class="container-fluid">
+        <div class="row">
+          <!-- profile header -->
+          <div class="bg-dark w-100 pt-5 pb-3">
+            <!-- avatar -->
+            <img
+              v-if="avatar !== ''"
+              :src="avatarURL"
+              alt="Avatar"
+              class="d-block rounded-circle mx-auto avatar"
+            >
+            <img
+              v-else
+              src="../../assets/images/anmelden.svg"
+              alt="Avatar"
+              class="d-block rounded-circle mx-auto avatar"
+            >
 
-          <h1 class="text-center text-light">
-            {{ profile.username }}
-          </h1>
+            <h1 class="text-center text-light">
+              {{ profile.username }}
+            </h1>
+          </div>
+        </div>
+        <!-- row -->
+      </div>
+      <!-- container -->
+
+      <div class="container">
+        <div class="row">
+          <form
+            class="w-100"
+            style="margin-top: 1rem"
+          >
+            <h3 :class="langIsAr? 'text-right' : 'text-left'">
+              {{ y18n('profile.title') }}
+            </h3>
+            <hr>
+
+            <!-- Username -->
+            <div class="form-group row">
+              <label
+                for="username"
+                class="col-sm-3 col-form-label"
+              >{{ y18n('usernamePH') }}</label>
+              <div class="col-sm-9">
+                <input
+                  id="username"
+                  v-model="profile.username"
+                  type="text"
+                  class="form-control"
+                  readonly
+                  tabindex="-1"
+                >
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group row">
+              <label
+                for="email"
+                class="col-sm-3 col-form-label"
+              >{{ y18n('emailPH') }}</label>
+              <div class="col-sm-9">
+                <input
+                  id="email"
+                  v-model="profile.email"
+                  type="text"
+                  class="form-control"
+                  readonly
+                  tabindex="-1"
+                >
+              </div>
+            </div>
+
+            <!-- Full Name -->
+            <div class="form-group row">
+              <label
+                for="fullname"
+                class="col-sm-3 col-form-label"
+              >{{ y18n('namePH') }}</label>
+              <div class="col-sm-9">
+                <input
+                  id="fullname"
+                  v-model="profile.fullName"
+                  type="text"
+                  class="form-control"
+                  :placeholder="y18n('namePH')"
+                  autocomplete="on"
+                >
+              </div>
+            </div>
+
+            <!-- Institution -->
+            <div class="form-group row">
+              <label
+                for="institution"
+                class="col-sm-3 col-form-label"
+              >{{ y18n('institutionPH') }}</label>
+              <div class="col-sm-9">
+                <b-form-select
+                  v-model="profile.institution"
+                >
+                  <b-form-select-option
+                    v-for="(opt, i) in institutionChoose"
+                    :key="i"
+                    :value="opt.value"
+                  >
+                    <span :class="opt.value">
+                      {{ opt.text }}
+                    </span>
+                  </b-form-select-option>
+                </b-form-select>
+              </div>
+            </div>
+
+            <!-- Occupation -->
+            <div class="form-group row">
+              <label
+                for="occupation"
+                class="col-sm-3 col-form-label"
+              >{{ y18n('occupationPH') }}</label>
+              <div class="col-sm-9">
+                <b-form-select
+                  v-model="profile.occupation"
+                >
+                  <b-form-select-option
+                    v-for="(opt, i) in occupationChoose"
+                    :key="i"
+                    :value="opt.value"
+                  >
+                    <span :class="opt.value">
+                      {{ opt.text }}
+                    </span>
+                  </b-form-select-option>
+                </b-form-select>
+              </div>
+            </div>
+
+            <hr>
+
+            <div class="container">
+              <div class="row">
+                <form
+                  class="w-100"
+                  style="margin-top: 1rem"
+                >
+                  <h3 :class="langIsAr? 'text-right' : 'text-left'">
+                    {{ y18n('profile.change') }}
+                  </h3>
+                  <hr>
+                  <div class="row row-cols-3">
+                    <!-- change username -->
+                    <div class="col-3">
+                      <b-button
+                        id="username-button"
+                        block
+                        variant="secondary"
+                        @click="$bvModal.show('change-username-form')"
+                      >
+                        {{ y18n('profile.usernameChange') }}
+                      </b-button>
+                      <b-modal
+                        id="change-username-form"
+                        :title="y18n('profile.usernameChange')"
+                        header-bg-variant="info"
+                        ok-variant="success"
+                        :ok-title="y18n('save')"
+                        :cancel-title="y18n('cancel')"
+                        centered
+                        static
+                        :ok-disabled="usernameNew === profile.username || usernameNew === ''"
+                        @ok="usernameChange"
+                      >
+                        <!-- new username -->
+                        <div class="form-group row">
+                          <label
+                            for="newUsername"
+                            class="col-sm-3 col-form-label"
+                          >{{ y18n('profile.usernameNew') }}</label>
+                          <div class="col-sm-9">
+                            <p>
+                              <input
+                                id="newUsername"
+                                v-model="usernameNew"
+                                type="text"
+                                class="form-control"
+                                :placeholder="y18n('profile.usernameNew')"
+                                autocomplete="on"
+                              >
+                            </p>
+                            <p
+                              v-if="usernameTaken"
+                              id="username-taken"
+                            >
+                              {{ y18n('profile.usernameTaken') }}
+                            </p>
+                            <p
+                              v-if="usernameNew === ''"
+                              id="username-empty"
+                            >
+                              {{ y18n('profile.usernameEmpty') }}
+                            </p>
+                            <p
+                              v-if="usernameNew === profile.username"
+                              id="username-same"
+                            >
+                              {{ y18n('profile.usernameSame') }}
+                            </p>
+                          </div>
+                        </div>
+                      </b-modal>
+                    </div>
+
+                    <!-- change email -->
+                    <div class="col-3">
+                      <b-button
+                        id="email-button"
+                        block
+                        variant="secondary"
+                        @click="$bvModal.show('change-email-form')"
+                      >
+                        {{ y18n('profile.emailChange') }}
+                      </b-button>
+                      <b-modal
+                        id="change-email-form"
+                        :title="y18n('profile.emailChange')"
+                        header-bg-variant="info"
+                        ok-variant="success"
+                        :ok-title="y18n('save')"
+                        :cancel-title="y18n('cancel')"
+                        centered
+                        static
+                        :ok-disabled="emailRepeat !== emailNew || emailOld !== profile.email"
+                        @ok="emailChange"
+                      >
+                        <!-- Old email -->
+                        <div class="form-group row">
+                          <label
+                            for="oldEmail"
+                            class="col-sm-3 col-form-label"
+                          >{{ y18n('profile.emailOld') }}</label>
+                          <div class="col-sm-9">
+                            <input
+                              id="oldEmail"
+                              v-model="emailOld"
+                              type="text"
+                              class="form-control"
+                              :placeholder="y18n('profile.emailOld')"
+                              autocomplete="on"
+                            >
+                            <p
+                              v-if="emailOld !== profile.email"
+                              id="email-old-incorrect"
+                            >
+                              {{ y18n('profile.emailOldIncorrect') }}
+                            </p>
+                            <p
+                              v-if="emailOld === ''"
+                              id="email-old-empty"
+                            >
+                              {{ y18n('profile.emailEmpty') }}
+                            </p>
+                          </div>
+                        </div>
+                        <!-- new email -->
+                        <div class="form-group row">
+                          <label
+                            for="newEmail"
+                            class="col-sm-3 col-form-label"
+                          >{{ y18n('profile.emailNew') }}</label>
+                          <div class="col-sm-9">
+                            <input
+                              id="newEmail"
+                              v-model="emailNew"
+                              type="text"
+                              class="form-control"
+                              :placeholder="y18n('profile.emailNew')"
+                              autocomplete="on"
+                            >
+                            <p
+                              v-if="emailTakenCheck"
+                              id="email-new-taken"
+                            >
+                              {{ y18n('profile.emailNewTaken') }}
+                            </p>
+                            <p
+                              v-if="emailConformityCheck"
+                              id="email-new-not-conform"
+                            >
+                              {{ y18n('profile.emailNewNotConform') }}
+                            </p>
+                            <p
+                              v-if="emailNew === ''"
+                              id="email-new-empty"
+                            >
+                              {{ y18n('profile.emailEmpty') }}
+                            </p>
+                          </div>
+                        </div>
+                        <!-- repeat email -->
+                        <div class="form-group row">
+                          <label
+                            for="repeatEmail"
+                            class="col-sm-3 col-form-label"
+                          >{{ y18n('profile.emailRepeat') }}</label>
+                          <div class="col-sm-9">
+                            <input
+                              id="repeatEmail"
+                              v-model="emailRepeat"
+                              type="text"
+                              class="form-control"
+                              :placeholder="y18n('profile.emailRepeat')"
+                              autocomplete="on"
+                            >
+                            <p
+                              v-if="emailRepeat !== emailNew"
+                              id="email-compare-incorrect"
+                            >
+                              {{ y18n('profile.emailCompareIncorrect') }}
+                            </p>
+                          </div>
+                        </div>
+                      </b-modal>
+                    </div>
+
+                    <!-- change password -->
+                    <div class="col-3">
+                      <b-button
+                        id="password-button"
+                        block
+                        variant="secondary"
+                        @click="$bvModal.show('change-password-form')"
+                      >
+                        {{ y18n('profile.passwordChange') }}
+                      </b-button>
+                      <b-modal
+                        id="change-password-form"
+                        :title="y18n('profile.passwordChange')"
+                        header-bg-variant="info"
+                        ok-variant="success"
+                        :ok-title="y18n('save')"
+                        :cancel-title="y18n('cancel')"
+                        centered
+                        static
+                        @ok="passwordChange"
+                      >
+                        <!-- Old Password -->
+                        <div class="form-group row">
+                          <label
+                            for="oldPwd"
+                            class="col-sm-3 col-form-label"
+                          >{{ y18n('profile.passwordOld') }}</label>
+                          <div class="col-sm-9">
+                            <input
+                              id="passwordOld"
+                              v-model="passwordOld"
+                              type="password"
+                              class="form-control"
+                              :placeholder="y18n('profile.passwordOld')"
+                              autocomplete="on"
+                            >
+                          </div>
+                        </div>
+                        <!-- new password -->
+                        <PasswordInput
+                          class="pwd-input"
+                          :label-icons-only="false"
+                          :label-width="3"
+                          @compliantLength="newPwdOk"
+                        ></PasswordInput>
+                      </b-modal>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
-      <!-- row -->
-    </div>
-    <!-- container -->
-
-    <div class="container">
-      <div class="row">
-        <form
-          class="w-100"
-          style="margin-top: 1rem"
-        >
-          <h2 :class="langIsAr? 'text-right' : 'text-left'">
-            {{ y18n('profile.title') }}
-          </h2>
-          <hr>
-
-          <!-- Name -->
-          <div class="form-group row">
-            <label
-              for="username"
-              class="col-sm-3 col-form-label"
-            >{{ y18n('namePH') }}</label>
-            <div class="col-sm-9">
-              <input
-                id="username"
-                v-model="profile.username"
-                type="text"
-                class="form-control"
-                readonly
-                tabindex="-1"
-              >
-            </div>
-          </div>
-
-          <!-- Email -->
-          <div class="form-group row">
-            <label
-              for="email"
-              class="col-sm-3 col-form-label"
-            >{{ y18n('emailPH') }}</label>
-            <div class="col-sm-9">
-              <input
-                id="email"
-                v-model="profile.email"
-                type="text"
-                class="form-control"
-                readonly
-                tabindex="-1"
-              >
-            </div>
-          </div>
-
-          <hr>
-          <!-- Old Password -->
-          <div class="form-group row">
-            <label
-              for="oldPwd"
-              class="col-sm-3 col-form-label"
-            >{{ y18n('profile.oldPwd') }}</label>
-            <div class="col-sm-9">
-              <input
-                id="oldPwd"
-                v-model="oldPwd"
-                type="password"
-                class="form-control"
-                :placeholder="y18n('profile.oldPwd')"
-                autocomplete="on"
-              >
-            </div>
-          </div>
-
-          <PasswordInput
-            class="pwd-input"
-            :label-icons-only="false"
-            :label-width="3"
-            @compliantLength="newPwdOk"
-          ></PasswordInput>
-          <hr>
-
-          <!-- avatar upload TODO: FIX Cropper Problems
-
+      <hr>
+      <!-- avatar upload TODO: FIX Cropper Problems
           <div class="form-group row">
             <div class="col-sm-3">
               Avatar
@@ -121,113 +400,16 @@
             <div class="col-sm-6">
               <laya-upload-avatar :oldAvatar="avatarURL" :type="'avatar'"></laya-upload-avatar>
             </div>
-
           </div>
-
           <hr>
           -->
 
-          <!-- Default Media Forms -->
-          <div class="form-group row">
-            <label class="col-sm-3 col-form-label">{{ y18n('profile.defmedia.label') }}</label>
-            <div class="col-sm-9 d-inline-flex justify-content-between align-items-center">
-              <!-- Text -->
-              <div class="checkbox-inline">
-                <label>
-                  <input
-                    v-model="prefs.media.text"
-                    type="checkbox"
-                  >
-                  {{ y18n('profile.defmedia.text') }}
-                </label>
-              </div>
+      <accessibility-settings> </accessibility-settings>
 
-              <!-- Simple -->
-              <div class="checkbox-inline">
-                <label>
-                  <input
-                    v-model="prefs.media.simple"
-                    type="checkbox"
-                  >
-                  {{ y18n('profile.defmedia.simple') }}
-                </label>
-              </div>
+      <author-application> </author-application>
 
-              <!-- Video -->
-              <div class="checkbox-inline">
-                <label>
-                  <input
-                    v-model="prefs.media.video"
-                    type="checkbox"
-                  >
-                  {{ y18n('profile.defmedia.video') }}
-                </label>
-              </div>
-
-              <!-- Audio -->
-              <div class="checkbox-inline">
-                <label>
-                  <input
-                    v-model="prefs.media.audio"
-                    type="checkbox"
-                  >
-                  {{ y18n('profile.defmedia.audio') }}
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <hr>
-          <!-- Font Options -->
-          <div class="form-group row">
-            <label class="col-sm-3 col-form-label">
-              {{ y18n('profile.fontOptions') }}
-            </label>
-            <div
-              class="col-sm-9 d-inline-flex justify-content-between align-items-center"
-            >
-              <div class="input-inline">
-                <label>
-                  {{ y18n('profile.font') }}
-                  <b-form-select
-                    v-model="prefs.font.chosen"
-                  >
-                    <b-form-select-option
-                      v-for="(opt, i) in introFontOptions"
-                      :key="i"
-                      :value="opt.value"
-                      :class="`laya-font-${opt.value}`"
-                    >
-                      <span :class="opt.value? `laya-font-${opt.value}`:''">
-                        {{ opt.text }}
-                      </span>
-                    </b-form-select-option>
-                  </b-form-select>
-                </label>
-              </div>
-              <!-- Font Size -->
-              <div>
-                <label>
-                  {{ y18n('profile.fontSize') }}
-                  <b-form-input
-                    v-model="chosenSize"
-                    type="range"
-                    min="0"
-                    :max="fontSizeOptions.length-1"
-                  ></b-form-input>
-                </label>
-                <div class="d-flex justify-content-between w-100">
-                  <div
-                    v-for="(opt, i) in fontSizeOptions"
-                    :key="`text-option-${i}`"
-                  >
-                    {{ opt }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
+      <div class="container">
+        <div class="row">
           <!-- Save Button -->
           <div class="form-group">
             <button
@@ -242,197 +424,41 @@
               {{ y18n('save') }}
             </button>
           </div>
-          <strong class="form-text text-center">{{ formMsg }}</strong>
-        </form>
+        </div>
       </div>
-      <hr>
-      <!-- author application -->
-      <div
-        v-if="!isAuthor"
-        id="author-application"
-        class="row"
+
+      <b-toast
+        id="submit-failed"
+        variant="danger"
+        :title="y18n('savingFailed')"
+        class="author-toast"
+        auto-hide-delay="1500"
+        static
       >
-        <div class="col-3">
-          {{ y18n('profile.application') }}
-          <i
-            v-b-tooltip.auto
-            class="fas fa-question-circle"
-            :title="y18n('profile.application.tooltip')"
-          ></i>
-        </div>
-        <div
-          v-if="applicationNew && applicationEdited === -1"
-          class="col"
-        >
-          <b-button
-            id="application-button"
-            block
-            variant="secondary"
-            @click="$bvModal.show('author-application-form')"
-          >
-            {{ y18n('profile.application.fillOut') }}
-          </b-button>
-        </div>
-        <div
-          v-else-if="userApplication &&
-            userApplication.decidedOn"
-          class="col"
-        >
-          <span
-            v-if="userApplication.status === 'withdrawn'"
-            id="application-withdrawn"
-          >
-            {{ y18n('profile.application.withdrawn')
-              .replace('{DATE}', Date(userApplication.decidedOn)
-                .toLocaleString()) }}
-          </span>
-          <span
-            v-else
-            id="application-decided"
-          >
-            {{ y18n('profile.application.decided')
-              .replace('{date}', Date(userApplication.decidedOn)
-                .toLocaleString()
-              ).replace('{status}', userApplication.status)
-            }}
-          </span>
-          <span v-if="userApplication.status === 'accepted'">
-            {{ y18n('profile.application.congrats') }}
-          </span>
-        </div>
-        <div
-          v-else
-          class="col"
-        >
-          <b-button
-            id="edit-application-button"
-            block
-            variant="secondary"
-            @click="$bvModal.show('author-application-form')"
-          >
-            {{ y18n('profile.application.edit') }}
-          </b-button>
-          <b-button
-            id="withdraw-application-button"
-            block
-            variant="warning"
-            @click="$bvModal.show('application-withdraw-modal')"
-          >
-            {{ y18n('profile.application.withdraw') }}
-          </b-button>
-        </div>
-      </div>
+        {{ y18n('profile.submitFail') }}
+      </b-toast>
+      <b-toast
+        id="submit-ok"
+        variant="success"
+        :title="y18n('layaUploadFileList.success')"
+        class="author-toast"
+        auto-hide-delay="1500"
+        static
+      >
+        {{ y18n('profile.submitOk') }}
+      </b-toast>
+
+      <b-toast
+        id="profile-save-toast"
+        :title="y18n('profile.submitOk')"
+        static
+        variant="success"
+        auto-hide-delay="1500"
+        class="profile-toast"
+      >
+        {{ y18n('successfulSave') }}
+      </b-toast>
     </div>
-    <b-toast
-      id="submit-failed"
-      variant="danger"
-      :title="y18n('savingFailed')"
-      class="author-toast"
-      auto-hide-delay="1500"
-      static
-    >
-      {{ y18n('profile.submitFail') }}
-    </b-toast>
-    <b-toast
-      id="submit-ok"
-      variant="success"
-      :title="y18n('uploadFile.success')"
-      class="author-toast"
-      auto-hide-delay="1500"
-      static
-    >
-      {{ y18n('profile.submitOk') }}
-    </b-toast>
-    <b-modal
-      id="author-application-form"
-      :title="y18n('profile.application')"
-      header-bg-variant="info"
-      ok-variant="success"
-      :ok-title="y18n('profile.application.save')"
-      :cancel-title="y18n('cancel')"
-      centered
-      static
-      @ok="saveApplication"
-    >
-      <div class="form-group p-2">
-        <div class="form-group row">
-          <label
-            for="applicant-name"
-            class="col-form-label"
-          >
-            {{ y18n('profile.application.fullName') }}
-          </label>
-          <input
-            id="applicant-name"
-            v-model="formInput.fullName"
-            class="form-control"
-            type="text"
-          >
-        </div>
-        <div class="form-group row">
-          <label
-            for="applicant-institution"
-            class="col-form-label"
-          >
-            {{ y18n('profile.application.institution') }}
-          </label>
-          <input
-            id="applicant-institution"
-            v-model="formInput.institution"
-            class="form-control"
-            type="text"
-          >
-        </div>
-        <div class="form-group row">
-          <label
-            for="applicant-expertise"
-            class="col-form-label"
-          >
-            {{ y18n('profile.application.areaOfExpertise') }}
-          </label>
-          <input
-            id="applicant-expertise"
-            v-model="formInput.areaOfExpertise"
-            class="form-control"
-            type="text"
-          >
-        </div>
-        <div class="form-group row">
-          <label
-            for="applicant-text"
-            class="col-form-label"
-          >
-            {{ y18n('profile.application.text') }}
-            <i
-              v-b-tooltip.auto
-              class="fas fa-question-circle"
-              :title="y18n('profile.application.textTooltip')"
-            ></i>
-          </label>
-          <textarea
-            id="applicant-text"
-            v-model="formInput.applicationText"
-            class="form-control"
-            rows="5"
-          ></textarea>
-        </div>
-      </div>
-    </b-modal>
-    <b-modal
-      id="application-withdraw-modal"
-      :title="y18n('profile.application.withdraw')"
-      header-bg-variant="warning"
-      ok-variant="warning"
-      :ok-title="y18n('profile.application.withdraw')"
-      :cancel-title="y18n('cancel')"
-      centered
-      static
-      @ok="withdrawApplication"
-    >
-      <p>
-        {{ y18n('profile.application.withdrawConfirm') }}
-      </p>
-    </b-modal>
   </div>
 </template>
 
@@ -440,10 +466,11 @@
 import { locale, password } from '@/mixins'
 import api from '@/backend-url'
 import PasswordInput from '@/components/helpers/password-input.vue'
-import { mapActions, mapGetters, mapMutations } from 'vuex'
-import fontOptions from '@/options/font-options'
-import fontSizeOptions from '@/options/font-size-options'
-import { deepCopy } from '@/mixins/general/helpers'
+import { mapActions, mapGetters } from 'vuex'
+import AuthorApplication from '@/components/user-views/author-application'
+import AccessibilitySettings from '@/components/user-views/accessibility-settings'
+import institutions from '@/options/institution.ts'
+import occupations from '@/options/occupation.ts'
 // import '@/styles/fonts.css'
 // import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
 
@@ -451,6 +478,8 @@ export default {
   name: 'Profile',
 
   components: {
+    AccessibilitySettings,
+    AuthorApplication,
     PasswordInput // not lazily loaded b/c always visible
   },
 
@@ -462,29 +491,27 @@ export default {
   data () {
     return {
       avatar: null,
-      oldPwd: '',
-      pwdMsg: '',
-      formMsg: '',
       busy: false,
+      email: '',
+      emailNew: '',
+      emailNewConform: false,
+      emailNewTaken: false,
+      emailOld: '',
+      emailRepeat: '',
+      fullName: '',
+      institution: '',
+      passwordMessage: '',
+      passwordOld: '',
       prefs: {},
-      formInput: {
-        applicationText: '',
-        areaOfExpertise: '',
-        fullName: '',
-        institution: ''
-      },
-      applicationEdited: -1, // increments once when data is loaded from store
-      applicationNew: false
+      usernameNew: '',
+      usernameTaken: null,
+      occupation: ''
     }
   },
 
   computed: {
     ...mapGetters([
-      'isAuthor',
-      'preferencesFont',
-      'preferencesMedia',
       'profile',
-      'userApplication',
       'userId'
     ]),
 
@@ -500,56 +527,42 @@ export default {
         ? null
         : `${api}/storage/img/download/${this.avatar}`
     },
-
     /**
-     * chosenSize: returns index of chosen size in fontSizeOptions,
-     *  sets pref.font.size when changed
+     * institutionChoose(): add institutions
      *
-     * Author: cmc
+     * Author: nv
      *
-     * Last Updated: September 22, 2021
-     * @returns {number} index in fontSizeOptions array
+     * Last Updated: April 13, 2023
      */
-    chosenSize: {
-      get () {
-        return this.fontSizeOptions.indexOf(this.prefs.font.size)
-      },
-      set (newVal) {
-        this.prefs.font.size = this.fontSizeOptions[newVal]
-      }
-    },
-
-    /**
-     * introFontOptions(): add placeholder in locale to fontOptions
-     *
-     * Author: cmc
-     *
-     * Last Updated: September 22, 2021
-     */
-    introFontOptions () {
+    institutionChoose () {
       return [
-        { value: null, text: this.y18n('profile.fontChoose') },
-        ...fontOptions
+        { value: '', text: this.y18n('institutionPH') },
+        ...institutions
       ]
     },
-
-    fontSizeOptions () {
-      return fontSizeOptions
-    },
-
     /**
-     * function newPasswordInput: returns something when password input is set
+     * occupationChoose(): add occupation
+     * Author: nv
+     * Last Updated: April 13, 2023
+     */
+    occupationChoose () {
+      return [
+        { value: '', text: this.y18n('occupationPH') },
+        ...occupations
+      ]
+    },
+    /**
+     * function passwordInputNew: returns something when password input is set
      *
      * Author: cmc
      *
      * Last Updated: February 21, 2022
      * @returns {string}
      */
-    newPasswordInput () {
+    passwordInputNew () {
       return this.passwordRepeat ||
-        this.password
+        this.passwordSet
     },
-
     /**
      * passwordsInputOk: returns true if no new password set or
      *  new password is secure
@@ -559,106 +572,103 @@ export default {
      * Last Updated: February 21, 2022
      */
     passwordInputOk () {
-      return this.newPasswordInput
+      return this.passwordInputNew
         ? this.passwordOk
         : true
     }
   },
-
   watch: {
-    formInput: { // watch for changed on form input
-      handler () {
-        this.applicationEdited++
-      },
-      deep: true
-    },
     profile: {
       deep: true,
       handler () {
-        this.prefs = {
-          font: deepCopy(this.preferencesFont),
-          media: deepCopy(this.preferencesMedia)
-        }
+        this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
       }
     },
-    userApplication (val) { // mirror changes in store for render (e.g. when new application is set)
-      this.formInput.applicationText = val.applicationText
-      this.formInput.institution = val.institution
-      this.formInput.areaOfExpertise = val.areaOfExpertise
-      this.formInput.fullName = val.fullName
+    usernameNew () { // reset username taken if username input changes
+      if (this.usernameTaken) {
+        this.usernameTaken = false
+      }
     }
   },
-
   beforeDestroy () {
-    // save changes in profile
-    this.preferencesSet(this.prefs)
-    this.profileUpdate()
-    this.submitApplication()
-    this.$store.commit('applicationListClear')
+    this.saveProfile()
   },
-
   created () {
     this.setProfileForRender()
-    this.setUserApplication()
     window.addEventListener('beforeunload', () => {
       this.$destroy()
     })
   },
-
   methods: {
     ...mapActions([
-      'profileUpdate',
-      'userApplicationCreate',
-      'userApplicationDecide',
-      'userApplicationFetch',
-      'userApplicationUpdate'
+      'saveProfile'
     ]),
-    ...mapMutations([
-      'applicationAdd',
-      'applicationDecide',
-      'applicationEdit',
-      'preferencesSet'
-    ]),
-
     /**
-     * functionSaveApplication: save edits to application in store
-     *
-     * Author: cmc
-     *
-     * Last Updated: May 4, 2022
+     * @function change email if requirements are fulfilled
+     * @author nv
+     * @since v1.3.0
      */
-    saveApplication () {
-      const {
-        applicationText,
-        areaOfExpertise,
-        fullName,
-        institution
-      } = this.formInput
-      // noinspection JSCheckFunctionSignatures
-      if (this.applicationNew) {
-        this.applicationAdd({
-          applicationText: applicationText,
-          areaOfExpertise: areaOfExpertise,
-          fullName: fullName,
-          institution: institution,
-          applicantId: this.userId
-        })
-      } else if (this.applicationEdited > 0) {
-        this.applicationEdit({
-          id: this.userApplication.id,
-          applicationText: applicationText,
-          areaOfExpertise: areaOfExpertise,
-          fullName: fullName,
-          institution: institution
-        })
+    emailChange (e) {
+      e.preventDefault()
+      if (this.emailOld === this.profile.email) {
+        if (this.emailNewConform === false &&
+          this.emailNewTaken === false &&
+          this.emailNew === this.emailRepeat) {
+          this.$store.commit('emailSet', this.emailNew)
+          this.submit()
+        }
       }
-      this.$bvToast.toast(this.y18n('profile.application.saved'), {
-        title: this.y18n('profile.success'),
-        toaster: 'b-toaster-bottom-center',
-        variant: 'success'
-      })
     },
-
+    /**
+     * @function check if email conformity is met
+     * @author nv
+     * @since v1.3.0
+     */
+    emailConformityCheck () {
+      if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.emailNew))) {
+        this.emailNewConform = true
+        return true
+      }
+    },
+    /**
+     * @function check if email is taken
+     * @author nv
+     * @since v1.3.0
+     */
+    emailTakenCheck () {
+      this.$store.dispatch('checkEmailTaken', this.email)
+        .then(resp => {
+          if (resp === true) {
+            this.emailNewTaken = true
+            console.log(this.emailNewTaken)
+            return true
+          }
+        })
+        .catch(err => { console.log(err) })
+    },
+    /**
+     * @function change password if requirements are fulfilled
+     * @author cmc
+     * @since v1.1.0
+     */
+    passwordChange () {
+      if (this.passwordInputNew) {
+        this.busy = true
+        this.$store.dispatch('changePassword', this.passwordOld)
+          .then(() => {
+            this.$bvToast.show('submit-ok')
+            this.submit()
+          })
+          .catch(err => {
+            console.error(err)
+            this.passwordMessage = this.y18n('profile.passwordFail')
+            this.$bvToast.show('submit-failed')
+          })
+          .finally(() => {
+            this.busy = false
+          })
+      }
+    },
     /**
      * function setProfileForRender: deep copy prefs for mutation, render
      *
@@ -669,10 +679,7 @@ export default {
     setProfileForRender () {
       // make profile settings mutable and render
       this.avatar = this.profile.avatar
-      this.prefs = {
-        font: deepCopy(this.preferencesFont),
-        media: deepCopy(this.preferencesMedia)
-      }
+      this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
       if (!this.prefs.media) { // avoid render error when no prefs set
         this.prefs.media = {}
       }
@@ -683,116 +690,71 @@ export default {
         }
       }
     },
-
-    /**
-     * function setUserApplication: set mutable application parts, fetch
-     *  application if none present
-     *
-     *  Author: cmc
-     *
-     *  Last Updated: May 6, 2022
-     */
-    setUserApplication () {
-      if (!this.userApplication) {
-        this.userApplicationFetch(this.userId)
-          .then(resp => {
-            if (!resp) { // application doesn't exist
-              this.applicationNew = true
-            }
-          })
-          .catch(err => console.error(err))
-      } else { // userApplication already in store, set values for render
-        this.formInput.applicationText = this.userApplication.applicationText
-        this.formInput.institution = this.userApplication.institution
-        this.formInput.areaOfExpertise = this.userApplication.areaOfExpertise
-        this.formInput.fullName = this.userApplication.fullName
-      }
-    },
-
     /**
      * Function submit: get password change request and fire it
-     *
      * Author: core
-     *
-     * Last Updated: unknown
+     * Since: v1.0.0
      */
     submit () {
       this.formMsg = ''
-
-      /* change password request */
-      if (this.newPasswordInput) {
-        this.busy = true
-        this.$store.dispatch('passwordUpdate', this.oldPwd)
-          .then(() => {
-            this.$bvToast.show('submit-ok')
-          })
-          .catch(err => {
-            console.error(err)
-            this.pwdMsg = this.y18n('profile.pwdFail')
-            this.$bvToast.show('submit-failed')
-          })
-          .finally(() => {
-            this.busy = false
-          })
-      }
-
+      this.$store.commit('fullNameSet', this.profile.fullName)
+      this.$store.commit('institutionSet', this.profile.institution)
+      this.$store.commit('occupationSet', this.profile.occupation)
       /* update state and save profile preferences */
-      this.$store.commit('preferencesSet', this.prefs)
-      this.$store.dispatch('profileUpdate')
+      this.$store.commit('setPrefs', this.profile.prefs)
+      this.$store.dispatch('saveProfile')
+        .then(() => { this.$bvToast.show('profile-save-toast') })
+        .catch(err => {
+          console.error(err)
+          this.$bvToast.show('submit-failed')
+        })
     },
-
     /**
-     * function submitApplication: depending on if application existed before,
-     *  update existing or send new application, to be called onDestoy
-     *
-     *  Author: cmc
-     *
-     *  Last Updated: May 4, 2022
+     * @function check if username is taken
+     * @author nv
+     * @since v1.3.0
      */
-    submitApplication () {
-      if (this.applicationNew) {
-        this.userApplicationCreate(this.userApplication)
-      } else {
-        this.userApplicationUpdate(this.userApplication)
-      }
-    },
-
-    /**
-     * function withdrawApplication: withdraw application, save in store
-     *
-     * Author: cmc
-     *
-     * Last Updated: May 6, 2022
-     */
-    withdrawApplication () {
-      this.applicationDecide({ applicationId: this.userApplication.id, decision: 'withdrawn' })
-      this.userApplicationDecide()
+    usernameChange (e) {
+      e.preventDefault()
+      this.$store.dispatch('checkNameTaken', this.usernameNew)
+        .then(resp => {
+          if (!resp) {
+            this.$store.commit('usernameSet', this.usernameNew)
+            this.submit()
+          } else {
+            this.usernameTaken = true
+          }
+        })
+        .catch(err => { console.log(err) })
     }
   }
 }
 </script>
 
 <style scoped>
-
 .avatar {
   width: 7rem;
   height: 7rem;
   border: 2px solid #eee;
   background-color: #eee;
 }
-
 .checkbox-inline label {
   display: inline-flex;
   justify-content: center;
   align-items: center;
   margin: 0;
 }
-
 .checkbox-inline input {
   margin-right: 5px;
 }
-
 .author-toast {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11002;
+}
+.profile-toast {
   position: fixed;
   top: 10px;
   left: 50%;

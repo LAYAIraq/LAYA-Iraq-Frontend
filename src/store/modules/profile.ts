@@ -34,6 +34,54 @@ export default {
   },
   mutations: {
     /**
+     * Function emailSet: set email address
+     *
+     * Author: nv
+     *
+     * Last Updated: February 13, 2023
+     *
+     * @param state contains occupation
+     * @param email: string containing occuptation
+     */
+    emailSet (
+      state: { email: string },
+      email: string
+    ) {
+      state.email = email
+    },
+    /**
+     * Function fullNameSet: set full name
+     *
+     * Author: nv
+     *
+     * Last Updated: February 06, 2023
+     *
+     * @param state contains occupation
+     * @param fullName: string containing occuptation
+     */
+    fullNameSet (
+      state: { fullName: string },
+      fullName: string
+    ) {
+      state.fullName = fullName
+    },
+    /**
+     * Function institutionSet: set institution
+     *
+     * Author: nv
+     *
+     * Last Updated: February 06, 2023
+     *
+     * @param state contains institution
+     * @param institution: string containing institution
+     */
+    institutionSet (
+      state: { institution: string },
+      institution: string
+    ) {
+      state.institution = institution
+    },
+    /**
      * function languageSet: set user locale to given language if supported
      *
      * Author: core
@@ -49,7 +97,22 @@ export default {
     ) {
       state.language = (supportedLangs.includes(lang)) ? lang : supportedLangs[0]
     },
-
+    /**
+     * Function occupationSet: set occupation
+     *
+     * Author: nv
+     *
+     * Last Updated: February 06, 2023
+     *
+     * @param state contains occupation
+     * @param occupation: string containing occuptation
+     */
+    occupationSet (
+      state: { occupation: string },
+      occupation: string
+    ) {
+      state.occupation = occupation
+    },
     /**
      * Function preferencesSet: set all media preferences at once
      *
@@ -109,8 +172,23 @@ export default {
       state = { ...stripKey('prefs', settings) } // set state with all keys except prefs
       state.preferencesFont = settings.prefs.font
       state.preferencesMedia = settings.prefs.media
+    },
+    /**
+     * Function usernameSet: set username
+     *
+     * Author: nv
+     *
+     * Last Updated: February 06, 2023
+     *
+     * @param state contains occupation
+     * @param username: string containing occuptation
+     */
+    usernameSet (
+      state: { username: string },
+      username: string
+    ) {
+      state.username = username
     }
-
   },
   actions: {
     /**
