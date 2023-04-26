@@ -200,7 +200,7 @@ Since: v1.0.0
                               >
                             </p>
                             <p
-                              v-if="usernameTakenCheck"
+                              v-if="usernameTaken"
                               id="username-taken"
                             >
                               {{ y18n('profile.usernameTaken') }}
@@ -507,7 +507,7 @@ export default {
       passwordOld: '',
       prefs: {},
       usernameNew: '',
-      usernameTaken: false,
+      usernameTaken: null,
       occupation: ''
     }
   },
@@ -711,18 +711,6 @@ export default {
         })
     },
     /**
-     * @function change username if requirements are fulfilled
-     * @author nv
-     * @since v1.3.0
-     */
-    usernameChange (e) {
-      e.preventDefault()
-      if (this.usernameTakenCheck() === false) {
-        this.$store.commit('setUsername', this.usernameNew)
-        this.submit()
-      }
-    },
-    /**
      * @function check if username is taken
      * @author nv
      * @since v1.3.0
@@ -730,12 +718,11 @@ export default {
     usernameTakenCheck () {
       this.$store.dispatch('checkNameTaken', this.usernameNew)
         .then(resp => {
-          if (resp === true) {
-            this.usernameTaken = true
-            return true
+          if (!resp) {
+            this.$store.commit('setUsername', this.usernameNew)
+            this.submit()
           } else {
-            this.usernameTaken = false
-            return false
+            this.usernameTaken = true
           }
         })
         .catch(err => { console.log(err) })

@@ -187,9 +187,8 @@ import { mapActions, mapGetters, mapMutations } from 'vuex'
 export default {
   name: 'AuthorApplication',
 
-  mixins: {
-    locale
-  },
+  mixins:
+    [locale],
 
   data () {
     return {
@@ -206,7 +205,9 @@ export default {
 
   computed: {
     ...mapGetters([
-      'isAuthor'
+      'isAuthor',
+      'profile',
+      'userApplication'
     ])
   },
 
