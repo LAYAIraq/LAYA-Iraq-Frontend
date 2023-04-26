@@ -586,6 +586,11 @@ export default {
       handler () {
         this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
       }
+    },
+    usernameNew () { // reset username taken if username input changes
+      if (this.usernameTaken) {
+        this.usernameTaken = false
+      }
     }
   },
 
@@ -715,7 +720,8 @@ export default {
      * @author nv
      * @since v1.3.0
      */
-    usernameTakenCheck () {
+    usernameChange (e) {
+      e.preventDefault()
       this.$store.dispatch('checkNameTaken', this.usernameNew)
         .then(resp => {
           if (!resp) {

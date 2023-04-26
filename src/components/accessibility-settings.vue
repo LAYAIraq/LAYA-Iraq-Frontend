@@ -132,14 +132,12 @@ import fontSizeOptions from '@/misc/font-size-options'
 export default {
   name: 'AccessibilitySettings',
 
-  mixins: {
-    locale
-  },
+  mixins: [locale],
 
   data () {
     return {
-      formMsg: '',
-      prefs: {}
+      formMsg: ''
+      // prefs: {}
     }
   },
 
@@ -188,7 +186,8 @@ export default {
       set (newVal) {
         this.prefs.font.size = this.fontSizeOptions[newVal]
       }
-    }
+    },
+    prefs () { return this.profile.prefs }
   },
 
   methods: {
