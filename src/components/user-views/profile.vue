@@ -289,13 +289,13 @@ Since: v1.0.0
                               autocomplete="on"
                             >
                             <p
-                              v-if="emailTakenCheck"
+                              v-if="emailNewTaken"
                               id="email-new-taken"
                             >
                               {{ y18n('profile.emailNewTaken') }}
                             </p>
                             <p
-                              v-if="emailConformityCheck"
+                              v-if="emailNewConform"
                               id="email-new-not-conform"
                             >
                               {{ y18n('profile.emailNewNotConform') }}
@@ -464,6 +464,7 @@ Since: v1.0.0
 
 <script>
 import { locale, password } from '@/mixins'
+// import { deepCopy } from '@/mixins/general/helpers'
 import api from '@/backend-url'
 import PasswordInput from '@/components/helpers/password-input.vue'
 import { mapActions, mapGetters } from 'vuex'
@@ -494,8 +495,8 @@ export default {
       busy: false,
       email: '',
       emailNew: '',
-      emailNewConform: false,
-      emailNewTaken: false,
+      emailNewConform: null,
+      emailNewTaken: null,
       emailOld: '',
       emailRepeat: '',
       fullName: '',
@@ -578,6 +579,11 @@ export default {
     }
   },
   watch: {
+    emailNew () { // reset email taken if email input changes
+      if (this.emailTaken) {
+        this.emailTaken = false
+      }
+    },
     profile: {
       deep: true,
       handler () {
@@ -610,41 +616,25 @@ export default {
      */
     emailChange (e) {
       e.preventDefault()
-      if (this.emailOld === this.profile.email) {
-        if (this.emailNewConform === false &&
-          this.emailNewTaken === false &&
-          this.emailNew === this.emailRepeat) {
-          this.$store.commit('emailSet', this.emailNew)
-          this.submit()
+      if (this.emailOld === this.profile.email &&
+        this.emailNew === this.emailRepeat) {
+        if ((/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.emailNew))) {
+          this.emailNewConform = false
+          this.$store.dispatch('checkEmailTaken', this.email)
+            .then(resp => {
+              if (!resp) {
+                this.emailNewTaken = true
+                this.$store.commit('emailSet', this.emailNew)
+                this.submit()
+              } else {
+                this.emailTaken = true
+              }
+            })
+            .catch(err => { console.log(err) })
+        } else {
+          this.emailNewConform = true
         }
       }
-    },
-    /**
-     * @function check if email conformity is met
-     * @author nv
-     * @since v1.3.0
-     */
-    emailConformityCheck () {
-      if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.emailNew))) {
-        this.emailNewConform = true
-        return true
-      }
-    },
-    /**
-     * @function check if email is taken
-     * @author nv
-     * @since v1.3.0
-     */
-    emailTakenCheck () {
-      this.$store.dispatch('checkEmailTaken', this.email)
-        .then(resp => {
-          if (resp === true) {
-            this.emailNewTaken = true
-            console.log(this.emailNewTaken)
-            return true
-          }
-        })
-        .catch(err => { console.log(err) })
     },
     /**
      * @function change password if requirements are fulfilled
@@ -679,7 +669,8 @@ export default {
     setProfileForRender () {
       // make profile settings mutable and render
       this.avatar = this.profile.avatar
-      this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
+      this.prefs = this.deepCopy(this.profile.prefs)
+
       if (!this.prefs.media) { // avoid render error when no prefs set
         this.prefs.media = {}
       }
