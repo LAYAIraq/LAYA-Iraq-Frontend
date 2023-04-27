@@ -88,13 +88,13 @@ export default new Router({
       children: [
         {
           path: 'edit',
-          name: 'course-content',
+          name: 'course-content-edit',
           component: CourseContent,
           props: true
         },
         {
           path: 'new/:type',
-          name: 'course-content',
+          name: 'course-content-new',
           component: CourseContent,
           props: true
         },

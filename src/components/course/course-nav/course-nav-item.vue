@@ -102,7 +102,7 @@ import { locale } from '@/mixins'
 import CourseNavFollowSet from '@/components/course/course-nav/course-nav-follow-set.vue'
 import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
 import { mapGetters } from 'vuex'
-import { deepCopy } from '@/mixins/general/helpers'
+import { deepCopy, kebabToCamel } from '@/mixins/general/helpers'
 
 export default {
   name: 'CourseNavItem',
@@ -161,7 +161,7 @@ export default {
      * @return {string} Localized name of block
      */
     getName () {
-      return this.y18n(this.$laya.li[this.item.name].name + '.name')
+      return this.y18n(kebabToCamel(this.value.type) + '.name')
     },
     /**
      * @description emit event to propagate change to parent
