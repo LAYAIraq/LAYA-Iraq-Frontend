@@ -11,7 +11,10 @@
       :id="`item-header-${item.id}`"
       class="d-flex"
     >
-      <div class="drag-handle">
+      <div
+        class="drag-handle"
+        tabindex="0"
+      >
         <i class="fas fa-bars"></i>
       </div>
       <div class="show-item-details">
@@ -27,6 +30,7 @@
             'mr-1': langIsAr
           }"
           :title="y18n('showDetails')"
+          @keyup.enter="toggleCollapsed"
           @click="toggleCollapsed"
         ></i>
       </div>
@@ -44,6 +48,16 @@
       class="collapsible px-3"
       :class="langIsAr? 'mr-3': 'ml-3'"
     >
+      <div class="d-flex">
+        <span
+          class="text-muted small btn-link"
+          :class="langIsAr? 'ml-2': 'mr-2'"
+          @keyup.enter="previewEmit(value.id)"
+          @click="previewEmit(value.id)"
+        >
+          {{ y18n('courseNavEdit.preview') }}
+        </span>
+      </div>
       <div class="d-flex">
         <span
           class="text-muted small"
