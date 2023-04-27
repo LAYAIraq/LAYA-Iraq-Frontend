@@ -39,6 +39,7 @@
           :chapter-name="item.chapterName"
           :chapter-name-duplicate="duplicateChapterNames.includes(i)"
           :following-content="getFirstContentId(chapter.children,i + 1)"
+          @preview="pid => previewEmit(pid)"
           @propagatePropertyChange="propagatePropertyChange"
         />
         <course-nav-item
@@ -49,6 +50,7 @@
           :value="item"
           @visibilityChange="changeChildVisibility"
           @propagatePropertyChange="propagatePropertyChange"
+          @preview="pid => previewEmit(pid)"
         />
       </div>
     </draggable>
@@ -59,7 +61,7 @@ import { mapGetters } from 'vuex'
 import Draggable from 'vuedraggable'
 import CourseNavItem from '@/components/course/course-nav/course-nav-item.vue'
 import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
-import { locale } from '@/mixins'
+import { courseNavEmits, locale } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 import { courseChapterIdConvertToName, courseChapterNameConvertToId } from '@/mixins/general/course-navigation'
 
@@ -70,7 +72,7 @@ export default {
     CourseNavPropertyEdit,
     CourseNavItem
   },
-  mixins: [locale],
+  mixins: [courseNavEmits, locale],
   props: {
     chapter: {
       type: Object,

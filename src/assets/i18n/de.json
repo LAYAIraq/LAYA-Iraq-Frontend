@@ -80,6 +80,7 @@
 	"courseNavEdit.fullPath": "Ganzer Pfad",
 	"courseNavEdit.graph": "Grafische Vorschau:",
 	"courseNavEdit.graphTip": "(Du kannst die Grafik beliebig oft erneuern)",
+	"courseNavEdit.preview": "Vorschau ansehen",
 	"courseNavEdit.table.contentNo": "Inhalt-Nr.",
 	"courseNavEdit.table.contentType": "Art des Inhalts",
 	"courseNavEdit.table.missingInfo": "Bitte fülle alle Felder aus!",
