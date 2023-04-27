@@ -112,13 +112,11 @@ Since: v1.0.0
                   v-model="profile.institution"
                 >
                   <b-form-select-option
-                    v-for="(opt, i) in institutionChoose"
-                    :key="i"
-                    :value="opt.value"
+                    v-for="opt in institutionChoose"
+                    :key="opt"
+                    :value="opt"
                   >
-                    <span :class="opt.value">
-                      {{ opt.text }}
-                    </span>
+                    {{ y18n(`profile.institution.${opt}`) }}
                   </b-form-select-option>
                 </b-form-select>
               </div>
@@ -135,13 +133,11 @@ Since: v1.0.0
                   v-model="profile.occupation"
                 >
                   <b-form-select-option
-                    v-for="(opt, i) in occupationChoose"
-                    :key="i"
-                    :value="opt.value"
+                    v-for="opt in occupationChoose"
+                    :key="opt"
+                    :value="opt"
                   >
-                    <span :class="opt.value">
-                      {{ opt.text }}
-                    </span>
+                    {{ y18n(`profile.occupation.${opt}`) }}
                   </b-form-select-option>
                 </b-form-select>
               </div>
@@ -537,7 +533,6 @@ export default {
      */
     institutionChoose () {
       return [
-        { value: '', text: this.y18n('institutionPH') },
         ...institutions
       ]
     },
@@ -548,7 +543,6 @@ export default {
      */
     occupationChoose () {
       return [
-        { value: '', text: this.y18n('occupationPH') },
         ...occupations
       ]
     },
