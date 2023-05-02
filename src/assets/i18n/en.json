@@ -82,6 +82,8 @@
 	"courseNavEdit.graphTip": "(You can reload the graphic any number of times)",
 	"courseNavEdit.id": "ID",
 	"courseNavEdit.preview": "View Preview",
+	"courseNavEdit.previewClear": "Back to Navigation Editor",
+	"courseNavEdit.previewTitle": "This is a preview of the Course Block",
 	"courseNavEdit.slug": "Slug",
 	"courseNavEdit.table.contentNo": "Content No.",
 	"courseNavEdit.table.contentType": "Type of Content",

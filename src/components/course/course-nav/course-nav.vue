@@ -41,20 +41,27 @@
       id="block-preview"
     >
       <div class="row">
-        <div class="col">
-          <h3 class="col">{{ y18n('courseNavEdit.preview') }}</h3>
+        <div class="col-4">
+          <button
+            class="btn-lg btn-primary"
+            @click="previewClear"
+          >
+            {{ y18n('courseNavEdit.previewClear') }}
+          </button>
         </div>
-        <button @click="previewClear">Clear</button>
+        <h3 class="col">
+          {{ y18n('courseNavEdit.previewTitle') }}
+        </h3>
       </div>
-        <div class="row">
-          <div class="col">
-            <component
-              :is="previewComponent"
-              :view-data="previewData"
-              :edit-preview="true"
-            />
-          </div>
+      <div class="row">
+        <div class="col">
+          <component
+            :is="previewComponent"
+            :view-data="previewData"
+            :edit-preview="true"
+          />
         </div>
+      </div>
     </div>
     <div
       v-if="showRawData"
@@ -143,7 +150,7 @@ export default {
     previewSet (pid) {
       this.preview = true
       this.previewId = pid
-    },
+    }
   }
 }
 </script>
