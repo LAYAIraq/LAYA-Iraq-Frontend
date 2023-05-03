@@ -7,7 +7,7 @@
 -->
 <template>
   <div>
-    <div>
+    <div class="container">
       <hr>
       <!-- buttons -->
       <div
@@ -85,6 +85,7 @@
           </b-button>
         </div>
       </div>
+      <hr>
     </div>
     <!-- modals -->
     <b-modal

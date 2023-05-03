@@ -591,10 +591,12 @@
 	"profile.institution.vechta": "University of Vechta",
 	"profile.institution.oldenburg": "University of Oldenburg",
 	"profile.institution.others": "Others",
+	"profile.institution.placeholder": "Institution",
 	"profile.occupation.student": "Student",
 	"profile.occupation.teacher": "Teacher",
 	"profile.occupation.lecturer": "Lecturer",
 	"profile.occupation.professor": "Professor",
 	"profile.occupation.researcher": "Researcher",
-	"profile.occupation.admin": "Administrator"
+	"profile.occupation.admin": "Administrator",
+	"profile.occupation.placeholder": "Institution"
 }

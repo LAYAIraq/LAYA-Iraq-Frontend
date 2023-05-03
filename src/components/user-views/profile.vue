@@ -95,7 +95,6 @@ Since: v1.0.0
                   v-model="profile.fullName"
                   type="text"
                   class="form-control"
-                  :placeholder="y18n('namePH')"
                   autocomplete="on"
                 >
               </div>
@@ -157,7 +156,7 @@ Since: v1.0.0
                   <hr>
                   <div class="row row-cols-3">
                     <!-- change username -->
-                    <div class="col-3">
+                    <div class="col">
                       <b-button
                         id="username-button"
                         block
@@ -219,7 +218,7 @@ Since: v1.0.0
                     </div>
 
                     <!-- change email -->
-                    <div class="col-3">
+                    <div class="col">
                       <b-button
                         id="email-button"
                         block
@@ -331,7 +330,7 @@ Since: v1.0.0
                     </div>
 
                     <!-- change password -->
-                    <div class="col-3">
+                    <div class="col">
                       <b-button
                         id="password-button"
                         block
@@ -378,13 +377,13 @@ Since: v1.0.0
                       </b-modal>
                     </div>
                   </div>
+                  <hr>
                 </form>
               </div>
             </div>
           </form>
         </div>
       </div>
-      <hr>
       <!-- avatar upload TODO: FIX Cropper Problems
           <div class="form-group row">
             <div class="col-sm-3">
@@ -405,7 +404,7 @@ Since: v1.0.0
       <author-application> </author-application>
 
       <div class="container">
-        <div class="row">
+        <div class="col">
           <!-- Save Button -->
           <div class="form-group">
             <button
@@ -687,7 +686,7 @@ export default {
       this.$store.commit('occupationSet', this.profile.occupation)
       /* update state and save profile preferences */
       this.$store.commit('setPrefs', this.profile.prefs)
-      this.$store.dispatch('saveProfile')
+      this.$store.dispatch('profileUpdate')
         .then(() => { this.$bvToast.show('profile-save-toast') })
         .catch(err => {
           console.error(err)
