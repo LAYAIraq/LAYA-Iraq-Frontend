@@ -598,5 +598,10 @@
 	"profile.occupation.professor": "Professor",
 	"profile.occupation.researcher": "Researcher",
 	"profile.occupation.admin": "Administrator",
-	"profile.occupation.placeholder": "Institution"
+	"profile.occupation.placeholder": "Institution",
+	"profile.language.kurdish": "Kurdish",
+	"profile.language.german": "German",
+	"profile.language.english": "English",
+	"profile.language.arabic": "Arabic",
+	"profile.languagePreference.label": "Language preferences"
 }

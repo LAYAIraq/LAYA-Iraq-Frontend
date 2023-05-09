@@ -13,10 +13,17 @@ export default {
   state: {
     avatar: '',
     email: '',
+    fullname: '',
     language: 'en',
     preferencesFont: {
       chosen: 'standard',
       size: 18
+    },
+    preferencesLanguages: {
+      english: true,
+      german: false,
+      arabic: false,
+      kurdish: false
     },
     preferencesMedia: {
       audio: false,
@@ -28,6 +35,7 @@ export default {
   },
   getters: {
     preferencesFont: (state: { preferencesFont: object }) => state.preferencesFont,
+    preferencesLanguages: (state: { preferencesLanguages: object }) => state.preferencesLanguages,
     preferencesMedia: (state: { preferencesMedia: object }) => state.preferencesMedia,
     profile: (state: object) => state,
     profileLanguage: (state: { language: string }) => state.language
@@ -126,12 +134,17 @@ export default {
     preferencesSet (
       state: {
         preferencesFont: object,
+        preferencesLanguages: object,
         preferencesMedia: object
       },
       prefs: { font: object, media: object }
     ) {
       state.preferencesFont = {
         ...state.preferencesFont,
+        ...prefs.font
+      }
+      state.preferencesLanguages = {
+        ...state.preferencesLanguages,
         ...prefs.font
       }
       state.preferencesMedia = {
@@ -155,6 +168,7 @@ export default {
         username: string,
         email: string,
         preferencesFont: object,
+        preferencesLanguages: object,
         preferencesMedia: object,
         lang: string,
         avatar: string
@@ -164,6 +178,7 @@ export default {
         email: string,
         prefs: {
           font: object,
+          languages: object,
           media: object
         },
         lang: string,
@@ -171,6 +186,7 @@ export default {
       }) {
       state = { ...stripKey('prefs', settings) } // set state with all keys except prefs
       state.preferencesFont = settings.prefs.font
+      state.preferencesLanguages = settings.prefs.languages
       state.preferencesMedia = settings.prefs.media
     },
     /**

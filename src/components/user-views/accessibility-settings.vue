@@ -30,7 +30,6 @@
                   {{ y18n('profile.defmedia.text') }}
                 </label>
               </div>
-
               <!-- Simple -->
               <div class="checkbox-inline">
                 <label>
@@ -41,7 +40,6 @@
                   {{ y18n('profile.defmedia.simple') }}
                 </label>
               </div>
-
               <!-- Video -->
               <div class="checkbox-inline">
                 <label>
@@ -52,7 +50,6 @@
                   {{ y18n('profile.defmedia.video') }}
                 </label>
               </div>
-
               <!-- Audio -->
               <div class="checkbox-inline">
                 <label>
@@ -65,7 +62,54 @@
               </div>
             </div>
           </div>
-
+          <!-- Language Options -->
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">
+              {{ y18n('profile.languagePreference.label') }}
+            </label>
+            <div class="col-sm-9 d-inline-flex justify-content-between align-items-center">
+              <!-- English -->
+              <div class="checkbox-inline">
+                <label>
+                  <input
+                    v-model="preferencesLanguages.english"
+                    type="checkbox"
+                  >
+                  {{ y18n('profile.language.english') }}
+                </label>
+              </div>
+              <!-- German -->
+              <div class="checkbox-inline">
+                <label>
+                  <input
+                    v-model="preferencesLanguages.german"
+                    type="checkbox"
+                  >
+                  {{ y18n('profile.language.german') }}
+                </label>
+              </div>
+              <!-- Arabic -->
+              <div class="checkbox-inline">
+                <label>
+                  <input
+                    v-model="preferencesLanguages.arabic"
+                    type="checkbox"
+                  >
+                  {{ y18n('profile.language.arabic') }}
+                </label>
+              </div>
+              <!-- Kurdish -->
+              <div class="checkbox-inline">
+                <label>
+                  <input
+                    v-model="preferencesLanguages.kurdish"
+                    type="checkbox"
+                  >
+                  {{ y18n('profile.language.kurdish') }}
+                </label>
+              </div>
+            </div>
+          </div>
           <!-- Font Options -->
           <div class="form-group row">
             <label class="col-sm-3 col-form-label">
@@ -134,16 +178,18 @@ export default {
   mixins: [locale],
   data () {
     return {
-      formMsg: ''
-      // prefs: {}
+      formMsg: '',
+      languages: '',
+      prefs: {}
     }
   },
   computed: {
     ...mapGetters([
-      'profile',
-      'userId',
       'preferencesFont',
-      'preferencesMedia'
+      'preferencesLanguages',
+      'preferencesMedia',
+      'profile',
+      'userId'
     ]),
     /**
      * fontOptionsIntro(): add placeholder in locale to fontOptions
@@ -185,13 +231,18 @@ export default {
         this.preferencesFont.size = this.fontSizeOptions[newVal]
       }
     },
-    prefs () { return this.profile.prefs }
+    prefsFont () { return this.profile.preferencesFont },
+    prefsLanguages () { return this.profile.preferencesLanguages },
+    prefsMedia () { return this.profile.preferencesMedia }
+
   },
   methods: {
     ...mapMutations([
+      'languageSet',
       'preferencesSet'
     ]),
     prefsSet () {
+      this.prefs = { font: this.prefsFont, language: this.prefsLanguages, media: this.prefsMedia }
       return this.prefs
     }
   }
