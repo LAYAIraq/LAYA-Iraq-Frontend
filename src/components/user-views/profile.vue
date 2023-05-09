@@ -593,7 +593,9 @@ export default {
     profile: {
       deep: true,
       handler () {
-        this.prefs = JSON.parse(JSON.stringify(this.profile.prefs))
+        this.prefsFont = deepCopy(this.profile.preferencesFont)
+        this.prefsLanguages = deepCopy(this.profile.preferencesLanguages)
+        this.prefsMedia = deepCopy(this.profile.preferencesMedia)
       }
     },
     usernameNew () { // reset username taken if username input changes
