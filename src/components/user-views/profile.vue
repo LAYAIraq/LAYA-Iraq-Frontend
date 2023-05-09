@@ -384,20 +384,21 @@ Since: v1.0.0
           </form>
         </div>
       </div>
-      <!-- avatar upload TODO: FIX Cropper Problems
-          <div class="form-group row">
-            <div class="col-sm-3">
-              Avatar
-            </div>
-            <div class="col-sm-3" >
-              <img :src="avatarURL">
-            </div>
-            <div class="col-sm-6">
-              <laya-upload-avatar :oldAvatar="avatarURL" :type="'avatar'"></laya-upload-avatar>
-            </div>
+      <!-- avatar upload -->
+      <div class="container">
+        <div class="col">
+          <div class="col-sm-3">
+            <img :src="avatarURL">
           </div>
-          <hr>
-          -->
+          <div class="col-sm-6">
+            <upload-avatar
+              :old-avatar="avatarURL"
+              :type="'avatar'"
+            ></upload-avatar>
+          </div>
+        </div>
+      </div>
+      <hr>
 
       <accessibility-settings> </accessibility-settings>
 
@@ -459,16 +460,16 @@ Since: v1.0.0
 
 <script>
 import { locale, password } from '@/mixins'
-// import { deepCopy } from '@/mixins/general/helpers'
+import { deepCopy } from '@/mixins/general/helpers'
 import api from '@/backend-url'
 import PasswordInput from '@/components/helpers/password-input.vue'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import AuthorApplication from '@/components/user-views/author-application'
 import AccessibilitySettings from '@/components/user-views/accessibility-settings'
 import institutions from '@/options/institution.ts'
 import occupations from '@/options/occupation.ts'
 // import '@/styles/fonts.css'
-// import LayaUploadAvatar from '@/plugins/misc/laya-upload-avatar/avatar.vue'
+import UploadAvatar from '@/components/helpers/upload-avatar'
 
 export default {
   name: 'Profile',
@@ -476,6 +477,7 @@ export default {
   components: {
     AccessibilitySettings,
     AuthorApplication,
+    UploadAvatar,
     PasswordInput // not lazily loaded b/c always visible
   },
 
@@ -499,6 +501,9 @@ export default {
       passwordMessage: '',
       passwordOld: '',
       prefs: {},
+      prefsFont: {},
+      prefsLanguages: {},
+      prefsMedia: {},
       usernameNew: '',
       usernameTaken: null,
       occupation: ''
@@ -507,6 +512,11 @@ export default {
 
   computed: {
     ...mapGetters([
+      'password',
+      'passwordRepeat',
+      'preferencesFont',
+      'preferencesLanguages',
+      'preferencesMedia',
       'profile',
       'userId'
     ]),
@@ -576,6 +586,9 @@ export default {
       if (this.emailTaken) {
         this.emailTaken = false
       }
+      if (this.emailNewConform) {
+        this.emailNewConform = false
+      }
     },
     profile: {
       deep: true,
@@ -590,7 +603,7 @@ export default {
     }
   },
   beforeDestroy () {
-    this.saveProfile()
+    this.profileUpdate()
   },
   created () {
     this.setProfileForRender()
@@ -600,7 +613,18 @@ export default {
   },
   methods: {
     ...mapActions([
-      'saveProfile'
+      'checkEmailTaken',
+      'checkNameTaken',
+      'passwordUpdate',
+      'profileUpdate'
+    ]),
+    ...mapMutations([
+      'emailSet',
+      'fullNameSet',
+      'institutionSet',
+      'occupationSet',
+      'preferencesSet',
+      'usernameSet'
     ]),
     /**
      * @function change email if requirements are fulfilled
@@ -637,7 +661,7 @@ export default {
     passwordChange () {
       if (this.passwordInputNew) {
         this.busy = true
-        this.$store.dispatch('changePassword', this.passwordOld)
+        this.$store.dispatch('passwodUpdate', this.passwordOld)
           .then(() => {
             this.$bvToast.show('submit-ok')
             this.submit()
@@ -662,13 +686,14 @@ export default {
     setProfileForRender () {
       // make profile settings mutable and render
       this.avatar = this.profile.avatar
-      this.prefs = this.deepCopy(this.profile.prefs)
+      this.prefsFont = deepCopy(this.profile.preferencesFont)
+      this.prefsMedia = deepCopy(this.profile.preferencesMedia)
 
-      if (!this.prefs.media) { // avoid render error when no prefs set
-        this.prefs.media = {}
+      if (!this.prefsMedia) { // avoid render error when no prefs set
+        this.prefsMedia = {}
       }
-      if (!this.prefs.font) {
-        this.prefs.font = {
+      if (!this.prefsFont) {
+        this.prefsFont = {
           chosen: 'standard',
           size: 18
         }
@@ -685,7 +710,7 @@ export default {
       this.$store.commit('institutionSet', this.profile.institution)
       this.$store.commit('occupationSet', this.profile.occupation)
       /* update state and save profile preferences */
-      this.$store.commit('setPrefs', this.profile.prefs)
+      this.$store.commit('preferencesSet', this.profile.prefs)
       this.$store.dispatch('profileUpdate')
         .then(() => { this.$bvToast.show('profile-save-toast') })
         .catch(err => {
