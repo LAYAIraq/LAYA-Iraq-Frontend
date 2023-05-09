@@ -30,16 +30,6 @@
                   {{ y18n('profile.defmedia.text') }}
                 </label>
               </div>
-              <!-- Simple -->
-              <div class="checkbox-inline">
-                <label>
-                  <input
-                    v-model="preferencesMedia.simple"
-                    type="checkbox"
-                  >
-                  {{ y18n('profile.defmedia.simple') }}
-                </label>
-              </div>
               <!-- Video -->
               <div class="checkbox-inline">
                 <label>
@@ -58,6 +48,16 @@
                     type="checkbox"
                   >
                   {{ y18n('profile.defmedia.audio') }}
+                </label>
+              </div>
+              <!-- Simple -->
+              <div class="checkbox-inline">
+                <label>
+                  <input
+                    v-model="preferencesMedia.simple"
+                    type="checkbox"
+                  >
+                  {{ y18n('profile.defmedia.simple') }}
                 </label>
               </div>
             </div>
