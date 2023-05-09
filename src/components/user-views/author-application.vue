@@ -222,7 +222,7 @@ export default {
   },
   beforeDestroy () {
     this.applicationSubmit()
-    this.$store.commit('clearApplicationList')
+    this.$store.commit('applicationListClear')
   },
   created () {
     this.applicationUserSet()
@@ -237,7 +237,8 @@ export default {
     ...mapMutations([
       'applicationAdd',
       'applicationDecide',
-      'applicationEdit'
+      'applicationEdit',
+      'applicationListClear'
     ]),
     /**
      * functionSaveApplication: save edits to application in store
