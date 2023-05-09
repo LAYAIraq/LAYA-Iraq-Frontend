@@ -593,9 +593,6 @@ export default {
     profile: {
       deep: true,
       handler () {
-        this.prefsFont = deepCopy(this.profile.preferencesFont)
-        this.prefsLanguages = deepCopy(this.profile.preferencesLanguages)
-        this.prefsMedia = deepCopy(this.profile.preferencesMedia)
       }
     },
     usernameNew () { // reset username taken if username input changes
@@ -689,16 +686,20 @@ export default {
       // make profile settings mutable and render
       this.avatar = this.profile.avatar
       this.prefsFont = deepCopy(this.profile.preferencesFont)
+      this.prefsLanguages = deepCopy(this.profile.preferencesLanguages)
       this.prefsMedia = deepCopy(this.profile.preferencesMedia)
 
-      if (!this.prefsMedia) { // avoid render error when no prefs set
-        this.prefsMedia = {}
-      }
       if (!this.prefsFont) {
         this.prefsFont = {
           chosen: 'standard',
           size: 18
         }
+      }
+      if (!this.prefsLanguages) { // avoid render error when no prefs set
+        this.prefsLanguages = {}
+      }
+      if (!this.prefsMedia) { // avoid render error when no prefs set
+        this.prefsMedia = {}
       }
     },
     /**
