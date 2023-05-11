@@ -5,7 +5,10 @@
   Since: v1.3.0
 -->
 <template>
-  <div class="chapter-item">
+  <div class="chapter-item"
+    @blur="blockHighlightUnset"
+    @mouseup="blockHighlightUnset"
+  >
     <i
       v-if="chapter.isChapter && !main"
       class="fa fa-bars drag-handle"
@@ -38,17 +41,21 @@
           :chapter="item"
           :chapter-name="item.chapterName"
           :chapter-name-duplicate="duplicateChapterNames.includes(i)"
-          :following-content="getFirstContentId(chapter.children,i + 1)"
+          :following-content="firstContentId(chapter.children, i + 1)"
+          :highlighted-block="main? highlightId : highlightedBlock"
+          @highlight="blockHighlight"
           @preview="pid => previewEmit(pid)"
           @propagatePropertyChange="propagatePropertyChange"
         />
         <course-nav-item
           v-else-if="!collapsed"
+          :class="{ 'border-success': item.id === highlightId }"
           :drag-bubble="[!dragging && dragStartIndex === i, childrenVisibility[item.id]]"
           :drag-end="[!dragging && dragEndIndex === i, childrenVisibility[item.id]]"
-          :following-content="chapter.children[i + 1] ? chapter.children[i + 1].id : followingContent"
+          :following-content="firstContentId(chapter.children, i + 1)"
           :value="item"
-          @visibilityChange="changeChildVisibility"
+          @highlight="blockHighlight"
+          @visibilityChange="childVisibilityChange"
           @propagatePropertyChange="propagatePropertyChange"
           @preview="pid => previewEmit(pid)"
         />
@@ -91,6 +98,10 @@ export default {
       type: String,
       default: () => null
     },
+    highlightedBlock: {
+      type: String,
+      default: () => null
+    },
     main: {
       type: Boolean,
       default: () => false
@@ -103,7 +114,8 @@ export default {
       id: '', // exists to make v-for keys unique,
       dragging: false,
       dragStartIndex: null,
-      dragEndIndex: null
+      dragEndIndex: null,
+      highlightId: null
     }
   },
   computed: {
@@ -149,7 +161,7 @@ export default {
         console.log('chapter changed')
         if (this.main && this.coherentItem) {
           console.log('changing following content....')
-          this.setFollowingContent()
+          this.followingContentSet()
         }
       },
       deep: true
@@ -160,13 +172,26 @@ export default {
     this.chapter.children.forEach(child => { this.childrenVisibility[child.id] = false })
   },
   methods: {
+    blockHighlight (id) {
+      console.log(id)
+      if (this.main) {
+        this.highlightId = id
+      } else {
+        this.$emit('hightlight', id)
+      }
+    },
+    blockHighlightUnset () {
+      if (this.main && this.highlightId) {
+        this.highlightId = null
+      }
+    },
     /**
      * @function set visibility of child in childrenVisibility object
      * @author cmc
      * @param id id of child
      * @param visibility visibility of child
      */
-    changeChildVisibility (id, visibility) {
+    childVisibilityChange (id, visibility) {
       this.childrenVisibility[id] = visibility
     },
     courseChapterNameConvertToId,
@@ -181,7 +206,7 @@ export default {
       this.dragStartIndex = event.oldIndex
     },
     /**
-     * @function handle event when drag ends, setting dragEndIndex and calling setFollowingContent if main element
+     * @function handle event when drag ends, setting dragEndIndex and calling followingContentSet if main element
      * @author cmc
      * @param event emitted event from draggable component
      */
@@ -196,10 +221,10 @@ export default {
      * @param index index of the chapter to check
      * @return {string|null} id of the first content of the chapter, or null the index is out of bounds
      */
-    getFirstContentId (chapter, index) {
+    firstContentId (chapter, index) {
       if (chapter && chapter[index]) {
         if (chapter[index].isChapter) {
-          return this.getFirstContentId(chapter[index].children, 0)
+          return this.firstContentId(chapter[index].children, 0)
         } else {
           return chapter[index].id
         }
@@ -220,7 +245,7 @@ export default {
      * @function set followingContent property of all items in the chapter
      * @author cmc
      */
-    setFollowingContent () {
+    followingContentSet () {
       const setFollow = (item, follow) => {
         if (item.type !== 'laya-dialog') {
           item.follow = follow
@@ -239,7 +264,7 @@ export default {
             if (res) { // if automaticFollow returns something, set followingContent to next block
               console.log('reach last element')
               console.log('recursion depth: ', depth)
-              const nextInput = this.getFirstContentId(item.children[i + 1], 0)
+              const nextInput = this.firstContentId(item.children[i + 1], 0)
               console.log('nextInput: ', nextInput)
 
               if (!nextInput) {

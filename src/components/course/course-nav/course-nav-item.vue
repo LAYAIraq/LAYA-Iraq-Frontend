@@ -103,9 +103,10 @@
           Follow
         </div>
         <course-nav-follow-set
-          :follow="value.follow"
+          :follow="followingContent"
           :item="item"
           @follow-changed="v => propagateChange('follow', v)"
+          @highlight="p => $emit('highlight', p)"
         ></course-nav-follow-set>
       </div>
     </div>
@@ -137,6 +138,9 @@ export default {
     dragStart: {
       type: Boolean,
       default: () => false
+    },
+    followingContent:  {
+      type: [String, Number, Array]
     },
     value: {
       type: Object,

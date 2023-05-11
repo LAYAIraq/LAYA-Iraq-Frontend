@@ -6,7 +6,7 @@
 -->
 <template>
   <div class="d-block">
-    <div v-if="item.name === 'laya-dialog'">
+    <div v-if="item.name === 'button-navigation'">
       <div
         v-if="followSet.length !== item.answers.length"
         id="incomplete-follow"
@@ -29,17 +29,28 @@
       v-else
       class="d-block"
     >
-      {{ follow }}
+      <div v-if="follow"
+       :title="y18n('courseNavEdit.followHighlight')"
+       v-b-tooltip.top
+       @mousedown="followHighlight"
+      >
+        {{ follow }}
+      </div>
+      <div v-else>
+
+      </div>
     </div>
   </div>
 </template>
 <script>
 import Draggable from 'vuedraggable'
+import { locale } from '@/mixins'
 export default {
   name: 'CourseNavFollowSet',
   components: {
     Draggable
   },
+  mixins: [locale],
   props: {
     follow: {
       type: [Number, String, Array],
@@ -67,6 +78,14 @@ export default {
     }
   },
   methods: {
+    followHighlight (e) {
+      e.preventDefault()
+      console.log(e.shiftKey)
+      if (e.shiftKey) {
+        this.$emit('highlight', this.follow)
+        console.log(e.shiftKey)
+      }
+    }
   }
 }
 </script>

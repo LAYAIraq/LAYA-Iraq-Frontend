@@ -77,6 +77,7 @@
 	"courseNavEdit.chapterAdd": "Add Chapter",
 	"courseNavEdit.chapterNew": "New Chapter",
 	"courseNavEdit.chapterPlaceholder": "Chapter Name",
+	"courseNavEdit.followHighlight": "Hold shift + click to see the following block",
 	"courseNavEdit.fullPath": "Full Path",
 	"courseNavEdit.graph": "Graphical Preview:",
 	"courseNavEdit.graphTip": "(You can reload the graphic any number of times)",
