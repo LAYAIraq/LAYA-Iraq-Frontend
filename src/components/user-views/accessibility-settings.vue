@@ -24,7 +24,7 @@
               <div class="checkbox-inline">
                 <label>
                   <input
-                    v-model="preferencesMedia.text"
+                    v-model="prefsMedia.text"
                     type="checkbox"
                   >
                   {{ y18n('profile.defmedia.text') }}
@@ -54,7 +54,7 @@
               <div class="checkbox-inline">
                 <label>
                   <input
-                    v-model="preferencesMedia.simple"
+                    v-model="prefsMedia.simple"
                     type="checkbox"
                   >
                   {{ y18n('profile.defmedia.simple') }}
@@ -72,7 +72,7 @@
               <div class="checkbox-inline">
                 <label>
                   <input
-                    v-model="preferencesLanguages.english"
+                    v-model="prefsLanguages.english"
                     type="checkbox"
                   >
                   {{ y18n('profile.language.english') }}
@@ -82,7 +82,7 @@
               <div class="checkbox-inline">
                 <label>
                   <input
-                    v-model="preferencesLanguages.german"
+                    v-model="prefsLanguages.german"
                     type="checkbox"
                   >
                   {{ y18n('profile.language.german') }}
@@ -92,7 +92,7 @@
               <div class="checkbox-inline">
                 <label>
                   <input
-                    v-model="preferencesLanguages.arabic"
+                    v-model="prefsLanguages.arabic"
                     type="checkbox"
                   >
                   {{ y18n('profile.language.arabic') }}
@@ -102,7 +102,7 @@
               <div class="checkbox-inline">
                 <label>
                   <input
-                    v-model="preferencesLanguages.kurdish"
+                    v-model="prefsLanguages.kurdish"
                     type="checkbox"
                   >
                   {{ y18n('profile.language.kurdish') }}
@@ -122,7 +122,7 @@
                 <label>
                   {{ y18n('profile.font') }}
                   <b-form-select
-                    v-model="preferencesFont.chosen"
+                    v-model="prefsFont.chosen"
                   >
                     <b-form-select-option
                       v-for="(opt, i) in fontOptionsIntro"
@@ -142,7 +142,7 @@
                 <label>
                   {{ y18n('profile.fontSize') }}
                   <b-form-input
-                    v-model="sizeChosen"
+                    v-model="prefsFont.sizeChosen"
                     type="range"
                     min="0"
                     :max="fontSizeOptions.length-1"
@@ -169,6 +169,7 @@
 
 <script>
 import { locale } from '@/mixins'
+import { deepCopy } from '@/mixins/general/helpers'
 import { mapGetters, mapMutations } from 'vuex'
 import fontOptions from '@/options/font-options'
 import fontSizeOptions from '@/options/font-size-options'
@@ -235,6 +236,19 @@ export default {
     prefsLanguages () { return this.profile.preferencesLanguages },
     prefsMedia () { return this.profile.preferencesMedia }
 
+  },
+  watch: {
+    prefs: {
+      deep: true,
+      handler () {
+        this.$emit('prefsChanged', this.prefs)
+      }
+    }
+  },
+  created () {
+    this.prefsFont = deepCopy(this.profile.preferencesFont)
+    this.prefsLanguages = deepCopy(this.profile.preferencesLanguages)
+    this.prefsMedia = deepCopy(this.profile.preferencesMedia)
   },
   methods: {
     ...mapMutations([

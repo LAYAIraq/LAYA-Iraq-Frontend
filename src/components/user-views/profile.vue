@@ -28,7 +28,7 @@ Since: v1.0.0
             >
 
             <h1 class="text-center text-light">
-              {{ profile.username }}
+              {{ username }}
             </h1>
           </div>
         </div>
@@ -56,7 +56,7 @@ Since: v1.0.0
               <div class="col-sm-9">
                 <input
                   id="username"
-                  v-model="profile.username"
+                  v-model="username"
                   type="text"
                   class="form-control"
                   readonly
@@ -74,7 +74,7 @@ Since: v1.0.0
               <div class="col-sm-9">
                 <input
                   id="email"
-                  v-model="profile.email"
+                  v-model="email"
                   type="text"
                   class="form-control"
                   readonly
@@ -92,7 +92,7 @@ Since: v1.0.0
               <div class="col-sm-9">
                 <input
                   id="fullname"
-                  v-model="profile.fullName"
+                  v-model="fullName"
                   type="text"
                   class="form-control"
                   autocomplete="on"
@@ -129,7 +129,7 @@ Since: v1.0.0
               >{{ y18n('occupationPH') }}</label>
               <div class="col-sm-9">
                 <b-form-select
-                  v-model="profile.occupation"
+                  v-model="occupation"
                 >
                   <b-form-select-option
                     v-for="opt in occupationChoose"
@@ -490,7 +490,6 @@ export default {
     return {
       avatar: null,
       busy: false,
-      email: '',
       emailNew: '',
       emailNewConform: null,
       emailNewTaken: null,
@@ -505,8 +504,7 @@ export default {
       prefsLanguages: {},
       prefsMedia: {},
       usernameNew: '',
-      usernameTaken: null,
-      occupation: ''
+      usernameTaken: null
     }
   },
 
@@ -533,6 +531,22 @@ export default {
         ? null
         : `${api}/storage/img/download/${this.avatar}`
     },
+    email: {
+      get () {
+        return this.profile.email
+      },
+      set (val) {
+        this.$store.commit('emailSet', val)
+      }
+    },
+    fullName: {
+      get () {
+        return this.profile.fullName
+      },
+      set (val) {
+        this.$store.commit('fullNameSet', val)
+      }
+    },
     /**
      * institutionChoose(): add institutions
      *
@@ -554,6 +568,14 @@ export default {
       return [
         ...occupations
       ]
+    },
+    occupation: {
+      get () {
+        return this.profile.occupation
+      },
+      set (val) {
+        this.$store.commit('occupationSet', val)
+      }
     },
     /**
      * function passwordInputNew: returns something when password input is set
@@ -579,6 +601,14 @@ export default {
       return this.passwordInputNew
         ? this.passwordOk
         : true
+    },
+    username: {
+      get () {
+        return this.profile.username
+      },
+      set (val) {
+        this.$store.commit('usernameSet', val)
+      }
     }
   },
   watch: {
@@ -588,11 +618,6 @@ export default {
       }
       if (this.emailNewConform) {
         this.emailNewConform = false
-      }
-    },
-    profile: {
-      deep: true,
-      handler () {
       }
     },
     usernameNew () { // reset username taken if username input changes
@@ -709,11 +734,11 @@ export default {
      */
     submit () {
       this.formMsg = ''
-      this.$store.commit('fullNameSet', this.profile.fullName)
-      this.$store.commit('institutionSet', this.profile.institution)
-      this.$store.commit('occupationSet', this.profile.occupation)
+      this.$store.commit('fullNameSet', this.fullName)
+      this.$store.commit('institutionSet', this.institution)
+      this.$store.commit('occupationSet', this.occupation)
       /* update state and save profile preferences */
-      this.$store.commit('preferencesSet', this.profile.prefs)
+      this.$store.commit('preferencesSet', this.prefs)
       this.$store.dispatch('profileUpdate')
         .then(() => { this.$bvToast.show('profile-save-toast') })
         .catch(err => {
