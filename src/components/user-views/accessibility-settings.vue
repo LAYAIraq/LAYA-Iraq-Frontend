@@ -34,7 +34,7 @@
               <div class="checkbox-inline">
                 <label>
                   <input
-                    v-model="preferencesMedia.video"
+                    v-model="prefsMedia.video"
                     type="checkbox"
                   >
                   {{ y18n('profile.defmedia.video') }}
@@ -44,7 +44,7 @@
               <div class="checkbox-inline">
                 <label>
                   <input
-                    v-model="preferencesMedia.audio"
+                    v-model="prefsMedia.audio"
                     type="checkbox"
                   >
                   {{ y18n('profile.defmedia.audio') }}
@@ -181,7 +181,9 @@ export default {
     return {
       formMsg: '',
       languages: '',
-      prefs: {}
+      prefsFont: {},
+      prefsLanguages: {},
+      prefsMedia: {}
     }
   },
   computed: {
@@ -215,6 +217,9 @@ export default {
     fontSizeOptions () {
       return fontSizeOptions
     },
+    prefs () {
+      return { font: this.prefsFont, language: this.prefsLanguages, media: this.prefsMedia }
+    },
     /**
      * sizeChosen: returns index of chosen size in fontSizeOptions,
      *  sets pref.font.size when changed
@@ -231,11 +236,7 @@ export default {
       set (newVal) {
         this.preferencesFont.size = this.fontSizeOptions[newVal]
       }
-    },
-    prefsFont () { return this.profile.preferencesFont },
-    prefsLanguages () { return this.profile.preferencesLanguages },
-    prefsMedia () { return this.profile.preferencesMedia }
-
+    }
   },
   watch: {
     prefs: {
@@ -254,11 +255,7 @@ export default {
     ...mapMutations([
       'languageSet',
       'preferencesSet'
-    ]),
-    prefsSet () {
-      this.prefs = { font: this.prefsFont, language: this.prefsLanguages, media: this.prefsMedia }
-      return this.prefs
-    }
+    ])
   }
 }
 </script>

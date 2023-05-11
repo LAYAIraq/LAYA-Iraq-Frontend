@@ -108,7 +108,7 @@ Since: v1.0.0
               >{{ y18n('institutionPH') }}</label>
               <div class="col-sm-9">
                 <b-form-select
-                  v-model="profile.institution"
+                  v-model="institution"
                 >
                   <b-form-select-option
                     v-for="opt in institutionChoose"
@@ -400,7 +400,8 @@ Since: v1.0.0
       </div>
       <hr>
 
-      <accessibility-settings> </accessibility-settings>
+      <accessibility-settings @prefsChanged="p => prefs = p">
+      </accessibility-settings>
 
       <author-application> </author-application>
 
@@ -495,8 +496,6 @@ export default {
       emailNewTaken: null,
       emailOld: '',
       emailRepeat: '',
-      fullName: '',
-      institution: '',
       passwordMessage: '',
       passwordOld: '',
       prefs: {},
@@ -558,6 +557,14 @@ export default {
       return [
         ...institutions
       ]
+    },
+    institution: {
+      get () {
+        return this.profile.institution
+      },
+      set (val) {
+        this.$store.commit('institutionSet', val)
+      }
     },
     /**
      * occupationChoose(): add occupation
