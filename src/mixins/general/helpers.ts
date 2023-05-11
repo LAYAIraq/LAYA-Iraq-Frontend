@@ -46,16 +46,20 @@ export const stripKey = (key, obj) => {
  * @description filter object with keys, returning an objecto only containing param keys
  * @param keys key list to filter the object
  * @param obj source object
+ * @param nestedKey optional key to extract from nested objects
  * @returns object only containing keys from `keys` list
  */
-export const filterObject = (keys: string[], obj) => {
+export const filterObject = (keys: string[], obj: object, nestedKey?: string) => {
   if (!keys) {
     return obj
   } else {
     let filteredObj = {}
     for (const key of keys) {
       console.log('filtering for ', key)
-      filteredObj = { ...filteredObj, [key]: obj[key] }
+      const objKey = typeof obj[key] === 'object'
+        ? obj[key][nestedKey]
+        : obj[key]
+      filteredObj = { ...filteredObj, [key]: objKey }
     }
     return filteredObj
   }

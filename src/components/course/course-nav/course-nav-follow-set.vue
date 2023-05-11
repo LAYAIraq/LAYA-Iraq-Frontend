@@ -7,20 +7,22 @@
 <template>
   <div class="d-block">
     <div>
-      <div v-if="followSet && followSet.length === 1"
-       :title="y18n('courseNavEdit.followHighlight')"
-       v-b-tooltip.top
-       @mousedown="followHighlight"
+      <div
+        v-if="followSet && followSet.length === 1"
+        v-b-tooltip.top
+        :title="y18n('courseNavEdit.followHighlight')"
+        @mousedown="followHighlight"
       >
         {{ follow }}
       </div>
-      <div v-else
-       id="incomplete-follow"
+      <div
+        v-else
+        id="incomplete-follow"
       >
         Add following content
         <suggesting-input
           :domain="courseContent"
-          :keys="['id', 'title', 'name']"
+          :keys="['title', 'name']"
           @select="followSet = $event"
         ></suggesting-input>
         <ul id="follow-list">
@@ -75,7 +77,7 @@ export default {
       },
       set (val) {
         console.log('followSet', val)
-        this.$emit('followUpdate',[...this.follow, val])
+        this.$emit('followUpdate', [...this.follow, val])
       }
     }
   },

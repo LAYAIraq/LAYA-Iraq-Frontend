@@ -5,7 +5,8 @@
   Since: v1.3.0
 -->
 <template>
-  <div class="chapter-item"
+  <div
+    class="chapter-item"
     @blur="blockHighlightUnset"
     @mouseup="blockHighlightUnset"
   >

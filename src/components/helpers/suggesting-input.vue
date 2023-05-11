@@ -6,14 +6,36 @@
 --->
 <template>
   <div class="suggesting-input">
-
+    <b-form v-if="!selected">
+      <b-form-input
+        v-model="searchTerm"
+        :placeholder="y18n('suggestingInput.typeToSearch')"
+        list="result-list"
+        @change="selectedSet"
+      ></b-form-input>
+      <b-form-datalist
+        id="result-list"
+      >
+        <option
+          v-for="o in searchResult"
+        >
+          Title: {{ domain[o[1]].title.text }},
+          Type: {{ y18n(`${kebabToCamel(domain[o[1]].name)}.title`) }},
+          Id: {{ domain[o[1]].id }}
+        </option>
+      </b-form-datalist>
+    </b-form>
+    <div v-else>
+      {{ selected }}
+    </div>
   </div>
 </template>
 <script>
 import { locale } from '@/mixins'
-import { filterObject } from '@/mixins/general/helpers'
+import { filterObject, kebabToCamel } from '@/mixins/general/helpers'
 export default {
   name: 'SuggestingInput',
+  mixins: [locale],
   props: {
     // the input data on which to search for keys
     domain: {
@@ -26,14 +48,19 @@ export default {
       default: () => null
     }
   },
-  mixins: [locale],
+  data () {
+    return {
+      searchTerm: '',
+      selected: ''
+    }
+  },
   computed: {
     searchDomain () {
       if (!Array.isArray(this.domain)) { // input domain is an object
         const dom = []
         Object.values(this.domain).forEach((e, i) => {
           let filteredEl = { ...e, elementId: Object.keys(this.domain)[i] } // integrate ID
-          filteredEl = filterObject(this.keys, filteredEl)
+          filteredEl = filterObject([...this.keys, 'elementId'], filteredEl, 'text')
           dom.push(filteredEl)
         })
         return dom
@@ -44,10 +71,29 @@ export default {
       }
     },
     searchResult () {
-      // TODO: continue here by creating a method that checks if input matches anything in domain
+      return this.searchLookup.filter(e => e[0].includes(this.searchTerm))
     },
     searchLookup () {
-      // TODO: create a lookup, i.e. list of tuples where one is key and one is ID of object
+      if (typeof this.searchDomain[0] === 'object') {
+        const lookup = []
+        this.searchDomain.forEach(e => {
+          Object.values(e).forEach(k => lookup.push([k, e.elementId]))
+        })
+        return lookup
+      } else {
+        return this.searchDomain
+      }
+    }
+  },
+  methods: {
+    kebabToCamel,
+    followSelect (o) {
+      console.log('selected:', o)
+      this.selected = o[1]
+    },
+    selectedSet (e) {
+      console.log(e)
+      this.selected = this.searchTerm.split(' ').at(-1)
     }
   }
 
