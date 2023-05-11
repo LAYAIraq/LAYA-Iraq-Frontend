@@ -43,6 +43,25 @@ export const stripKey = (key, obj) => {
 }
 
 /**
+ * @description filter object with keys, returning an objecto only containing param keys
+ * @param keys key list to filter the object
+ * @param obj source object
+ * @returns object only containing keys from `keys` list
+ */
+export const filterObject = (keys: string[], obj) => {
+  if (!keys) {
+    return obj
+  } else {
+    let filteredObj = {}
+    for (const key of keys) {
+      console.log('filtering for ', key)
+      filteredObj = { ...filteredObj, [key]: obj[key] }
+    }
+    return filteredObj
+  }
+}
+
+/**
  * @description deep copy an object, intended for use with vuex references
  * @author cmc
  * @param obj - object to copy

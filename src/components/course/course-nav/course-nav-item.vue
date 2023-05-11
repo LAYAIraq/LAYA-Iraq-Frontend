@@ -105,7 +105,7 @@
         <course-nav-follow-set
           :follow="followingContent"
           :item="item"
-          @follow-changed="v => propagateChange('follow', v)"
+          @follow-update="v => propagateChange('follow', v)"
           @highlight="p => $emit('highlight', p)"
         ></course-nav-follow-set>
       </div>
@@ -140,7 +140,7 @@ export default {
       default: () => false
     },
     followingContent:  {
-      type: [String, Number, Array]
+      type: [String, Array]
     },
     value: {
       type: Object,

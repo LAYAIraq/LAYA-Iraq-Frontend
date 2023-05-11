@@ -6,49 +6,47 @@
 -->
 <template>
   <div class="d-block">
-    <div v-if="item.name === 'button-navigation'">
-      <div
-        v-if="followSet.length !== item.answers.length"
-        id="incomplete-follow"
-      >
-        Add following content
-        <suggesting-input></suggesting-input>
-      </div>
-      <ul id="follow-list">
-        <draggable
-          :list="followSet"
-        >
-          <li
-            v-for="e in followSet"
-            :key="e"
-          ></li>
-        </draggable>
-      </ul>
-    </div>
-    <div
-      v-else
-      class="d-block"
-    >
-      <div v-if="follow"
+    <div>
+      <div v-if="followSet && followSet.length === 1"
        :title="y18n('courseNavEdit.followHighlight')"
        v-b-tooltip.top
        @mousedown="followHighlight"
       >
         {{ follow }}
       </div>
-      <div v-else>
-
+      <div v-else
+       id="incomplete-follow"
+      >
+        Add following content
+        <suggesting-input
+          :domain="courseContent"
+          :keys="['id', 'title', 'name']"
+          @select="followSet = $event"
+        ></suggesting-input>
+        <ul id="follow-list">
+          <draggable
+            :list="followSet"
+          >
+            <li
+              v-for="e in followSet"
+              :key="e"
+            ></li>
+          </draggable>
+        </ul>
       </div>
     </div>
   </div>
 </template>
 <script>
 import Draggable from 'vuedraggable'
+import SuggestingInput from '@/components/helpers/suggesting-input.vue'
 import { locale } from '@/mixins'
+
 export default {
   name: 'CourseNavFollowSet',
   components: {
-    Draggable
+    Draggable,
+    SuggestingInput
   },
   mixins: [locale],
   props: {
@@ -66,6 +64,9 @@ export default {
     }
   },
   computed: {
+    courseContent () {
+      return this.$store.getters.courseContent
+    },
     followSet: {
       get () {
         return (!this.follow || Array.isArray(this.follow))
@@ -73,7 +74,8 @@ export default {
           : [this.follow]
       },
       set (val) {
-        console.log(val)
+        console.log('followSet', val)
+        this.$emit('followUpdate',[...this.follow, val])
       }
     }
   },
