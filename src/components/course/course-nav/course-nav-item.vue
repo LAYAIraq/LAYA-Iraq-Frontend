@@ -139,8 +139,9 @@ export default {
       type: Boolean,
       default: () => false
     },
-    followingContent:  {
-      type: [String, Array]
+    followingContent: {
+      type: [String, Array],
+      required: true
     },
     value: {
       type: Object,

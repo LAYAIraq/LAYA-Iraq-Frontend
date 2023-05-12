@@ -22,7 +22,8 @@
         Add following content
         <suggesting-input
           :domain="courseContent"
-          :keys="['title', 'name']"
+          :keys="['title', 'name', 'id']"
+          :nested-key="'text'"
           @select="followSet = $event"
         ></suggesting-input>
         <ul id="follow-list">

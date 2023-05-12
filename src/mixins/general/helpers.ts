@@ -43,7 +43,7 @@ export const stripKey = (key, obj) => {
 }
 
 /**
- * @description filter object with keys, returning an objecto only containing param keys
+ * @description filter object with keys, returning an object only containing param keys
  * @param keys key list to filter the object
  * @param obj source object
  * @param nestedKey optional key to extract from nested objects
@@ -71,7 +71,7 @@ export const filterObject = (keys: string[], obj: object, nestedKey?: string) =>
  * @param obj - object to copy
  * @return {any} - deep copy of obj
  */
-export const deepCopy = (obj) => {
+export const deepCopy = (obj: object) => {
   return JSON.parse(JSON.stringify(obj))
 }
 
@@ -80,6 +80,22 @@ export const deepCopy = (obj) => {
  * @author cmc
  * @param str - string to convert
  */
-export const kebabToCamel = (str) => {
+export const kebabToCamel = (str: string) => {
   return str.replace(/-([a-z])/g, (g) => g[1].toUpperCase())
+}
+/**
+ * @function render camelCase strings as separated uppercase words
+ * @param str
+ */
+export const camelToRender = (str: string) => {
+  let res: string = ''
+  str.split(/(?=[A-Z])/).forEach((w: string, i: number) => {
+    if (i !== 0) {
+      res += ' '
+    }
+    w.split(/[0-9]+/).forEach(t => {
+      res += t.charAt(0).toUpperCase() + t.slice(1)
+    })
+  })
+  return res
 }
