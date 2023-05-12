@@ -148,8 +148,7 @@ export default {
     titleLabelText: {
       type: String,
       default: () => 'Select labels with drop down'
-    },
-
+    }
   },
   data () {
     return {
@@ -169,8 +168,8 @@ export default {
         : ''
     },
     resultObject () {
-      return this.searchDomain[this.selectedTag[0]]
-        ?? filterObject(this.keys, this.domain[this.selectedTag[0]], 'text')
+      return this.searchDomain[this.selectedTag[0]] ??
+        filterObject(this.keys, this.domain[this.selectedTag[0]], 'text')
     },
     /**
      * @function converts input domain: if it's an object, transform into array of
