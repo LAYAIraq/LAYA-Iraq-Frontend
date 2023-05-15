@@ -603,5 +603,6 @@
 	"profile.language.german": "German",
 	"profile.language.english": "English",
 	"profile.language.arabic": "Arabic",
-	"profile.languagePreference.label": "Language preferences"
+	"profile.languagePreference.label": "Language preferences",
+	"profile.avatar.change": "Change profile picture"
 }

@@ -14,6 +14,17 @@ Since: v1.0.0
           <!-- profile header -->
           <div class="bg-dark w-100 pt-5 pb-3">
             <!-- avatar -->
+            <div class="d-block mx-auto avatar">
+              <b-avatar
+                src="../../assets/images/anmelden.svg"
+                size="7rem"
+                square
+                button
+                @click="avatarChange"
+              >
+              </b-avatar>
+            </div>
+            <!--
             <img
               v-if="avatar !== ''"
               :src="avatarURL"
@@ -26,7 +37,7 @@ Since: v1.0.0
               alt="Avatar"
               class="d-block rounded-circle mx-auto avatar"
             >
-
+-->
             <h1 class="text-center text-light">
               {{ username }}
             </h1>
@@ -384,26 +395,11 @@ Since: v1.0.0
           </form>
         </div>
       </div>
-      <!-- avatar upload -->
-      <div class="container">
-        <div class="col">
-          <div class="col-sm-3">
-            <img :src="avatarURL">
-          </div>
-          <div class="col-sm-6">
-            <upload-avatar
-              :old-avatar="avatarURL"
-              :type="'avatar'"
-            ></upload-avatar>
-          </div>
-        </div>
-      </div>
       <hr>
-
       <accessibility-settings @prefsChanged="p => prefs = p">
       </accessibility-settings>
 
-      <author-application> </author-application>
+      <!-- <author-application> </author-application> -->
 
       <div class="container">
         <div class="col">
@@ -424,6 +420,33 @@ Since: v1.0.0
         </div>
       </div>
 
+      <!-- avatar modal -->
+      <b-modal
+        id="avatar-change-modal"
+        :title="y18n('profile.avatar.change')"
+        header-bg-variant="info"
+        ok-variant="success"
+        centered
+        static
+        :ok-title="y18n('save')"
+        :cancel-title="y18n('cancel')"
+        @ok="submit"
+      >
+        <!-- avatar upload -->
+        <div class="container">
+          <div class="col">
+            <div class="col">
+              <img :src="avatarURL">
+            </div>
+            <div class="col">
+              <upload-avatar
+                :old-avatar="avatarURL"
+                :type="'avatar'"
+              ></upload-avatar>
+            </div>
+          </div>
+        </div>
+      </b-modal>
       <b-toast
         id="submit-failed"
         variant="danger"
@@ -444,7 +467,6 @@ Since: v1.0.0
       >
         {{ y18n('profile.submitOk') }}
       </b-toast>
-
       <b-toast
         id="profile-save-toast"
         :title="y18n('profile.submitOk')"
@@ -662,6 +684,14 @@ export default {
      * @author nv
      * @since v1.3.0
      */
+    avatarChange () {
+      this.$bvModal.show('avatar-change-modal')
+    },
+    /**
+     * @function change email if requirements are fulfilled
+     * @author nv
+     * @since v1.3.0
+     */
     emailChange (e) {
       e.preventDefault()
       if (this.emailOld === this.profile.email &&
@@ -805,4 +835,5 @@ export default {
   transform: translateX(-50%);
   z-index: 11002;
 }
+
 </style>
