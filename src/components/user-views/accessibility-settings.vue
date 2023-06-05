@@ -163,6 +163,7 @@
           <strong class="form-text text-center">{{ formMsg }}</strong>
         </form>
       </div>
+      <hr>
     </div>
   </div>
 </template>
