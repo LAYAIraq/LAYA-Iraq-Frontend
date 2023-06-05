@@ -7,14 +7,16 @@
 
 import http from 'axios'
 import { ids as supportedLangs } from '@/options/langs.js'
-import { stripKey } from '@/mixins/general/helpers'
+import { deepCopy, stripKey } from '@/mixins/general/helpers'
 
 export default {
   state: {
     avatar: '',
     email: '',
-    fullname: '',
+    fullName: '',
+    institution: '',
     language: 'en',
+    occupation: '',
     preferencesFont: {
       chosen: 'standard',
       size: 18
@@ -34,9 +36,19 @@ export default {
     username: ''
   },
   getters: {
+    fullName: (state: { fullName: string}) => state.fullName,
+    institution: (state: { institution: string }) => state.institution,
+    occupation: (state: { occupation: string }) => state.occupation,
     preferencesFont: (state: { preferencesFont: object }) => state.preferencesFont,
     preferencesLanguages: (state: { preferencesLanguages: object }) => state.preferencesLanguages,
     preferencesMedia: (state: { preferencesMedia: object }) => state.preferencesMedia,
+    prefs: (state) => {
+      return {
+        media: state.preferencesMedia,
+        font: state.preferencesFont,
+        languages: state.preferencesLanguages
+      }
+    },
     profile: (state: object) => state,
     profileLanguage: (state: { language: string }) => state.language
   },
@@ -184,7 +196,11 @@ export default {
         lang: string,
         avatar: string
       }) {
-      state = { ...stripKey('prefs', settings) } // set state with all keys except prefs
+      console.log(settings)
+      state.username = settings.username
+      state.email = settings.email
+      state.lang = settings.lang
+      state.avatar = settings.avatar
       state.preferencesFont = settings.prefs.font
       state.preferencesLanguages = settings.prefs.languages
       state.preferencesMedia = settings.prefs.media
@@ -219,7 +235,9 @@ export default {
     profileFetch ({ commit, rootState }) {
       http.get(`accounts/${rootState.authentication.userId}`)
         .then(({ data }) => {
-          commit('profileSet', data)
+          console.log(data)
+          commit('profileSet', data
+          )
         })
         .catch((err) => console.error(err))
     },
@@ -233,10 +251,14 @@ export default {
      *
      * @param param0 state variables
      */
-    profileUpdate ({ state, rootState }) {
+    profileUpdate ({ getters, state, rootState }) {
+      console.log(state)
       http.patch(
         `accounts/${rootState.authentication.userId}`,
-        { ...state })
+        {
+          ...state,
+          prefs: getters.prefs
+        })
         .catch(err => {
           console.error(err)
         })
