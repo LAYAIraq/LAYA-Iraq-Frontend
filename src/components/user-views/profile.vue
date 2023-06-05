@@ -16,7 +16,7 @@ Since: v1.0.0
             <!-- avatar -->
             <div class="d-block mx-auto avatar">
               <b-avatar
-                src="../../assets/images/anmelden.svg"
+                src="avatarURL"
                 size="7rem"
                 square
                 button
@@ -185,7 +185,7 @@ Since: v1.0.0
                         :cancel-title="y18n('cancel')"
                         centered
                         static
-                        :ok-disabled="usernameNew === profile.username || usernameNew === ''"
+                        :ok-disabled="usernameNew === username || usernameNew === ''"
                         @ok="usernameChange"
                       >
                         <!-- new username -->
@@ -218,7 +218,7 @@ Since: v1.0.0
                               {{ y18n('profile.usernameEmpty') }}
                             </p>
                             <p
-                              v-if="usernameNew === profile.username"
+                              v-if="usernameNew === username"
                               id="username-same"
                             >
                               {{ y18n('profile.usernameSame') }}
@@ -247,7 +247,7 @@ Since: v1.0.0
                         :cancel-title="y18n('cancel')"
                         centered
                         static
-                        :ok-disabled="emailRepeat !== emailNew || emailOld !== profile.email"
+                        :ok-disabled="emailRepeat !== emailNew || emailOld !== email"
                         @ok="emailChange"
                       >
                         <!-- Old email -->
@@ -266,7 +266,7 @@ Since: v1.0.0
                               autocomplete="on"
                             >
                             <p
-                              v-if="emailOld !== profile.email"
+                              v-if="emailOld !== email"
                               id="email-old-incorrect"
                             >
                               {{ y18n('profile.emailOldIncorrect') }}
@@ -395,11 +395,11 @@ Since: v1.0.0
           </form>
         </div>
       </div>
-      <hr>
+
       <accessibility-settings @prefsChanged="p => prefs = p">
       </accessibility-settings>
 
-      <!-- <author-application> </author-application> -->
+      <author-application> </author-application>
 
       <div class="container">
         <div class="col">
@@ -521,9 +521,6 @@ export default {
       passwordMessage: '',
       passwordOld: '',
       prefs: {},
-      prefsFont: {},
-      prefsLanguages: {},
-      prefsMedia: {},
       usernameNew: '',
       usernameTaken: null
     }
@@ -531,11 +528,11 @@ export default {
 
   computed: {
     ...mapGetters([
+      'fullName',
+      'institution',
+      'occupation',
       'password',
       'passwordRepeat',
-      'preferencesFont',
-      'preferencesLanguages',
-      'preferencesMedia',
       'profile',
       'userId'
     ]),
@@ -694,7 +691,7 @@ export default {
      */
     emailChange (e) {
       e.preventDefault()
-      if (this.emailOld === this.profile.email &&
+      if (this.emailOld === this.email &&
         this.emailNew === this.emailRepeat) {
         if ((/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.emailNew))) {
           this.emailNewConform = false
@@ -746,22 +743,11 @@ export default {
      */
     setProfileForRender () {
       // make profile settings mutable and render
-      this.avatar = this.profile.avatar
-      this.prefsFont = deepCopy(this.profile.preferencesFont)
-      this.prefsLanguages = deepCopy(this.profile.preferencesLanguages)
-      this.prefsMedia = deepCopy(this.profile.preferencesMedia)
-
-      if (!this.prefsFont) {
-        this.prefsFont = {
-          chosen: 'standard',
-          size: 18
+      const tmp = deepCopy(this.profile)
+      for (const key of Object.keys(tmp)) {
+        if (!key.includes('pref')) {
+          this[key] = tmp[key]
         }
-      }
-      if (!this.prefsLanguages) { // avoid render error when no prefs set
-        this.prefsLanguages = {}
-      }
-      if (!this.prefsMedia) { // avoid render error when no prefs set
-        this.prefsMedia = {}
       }
     },
     /**
