@@ -13,8 +13,10 @@ export default {
   state: {
     avatar: '',
     email: '',
-    fullname: '',
+    fullName: '',
+    institution: '',
     language: 'en',
+    occupation: '',
     preferencesFont: {
       chosen: 'standard',
       size: 18
@@ -137,7 +139,7 @@ export default {
         preferencesLanguages: object,
         preferencesMedia: object
       },
-      prefs: { font: object, media: object }
+      prefs: { font: object, language: object, media: object }
     ) {
       state.preferencesFont = {
         ...state.preferencesFont,
@@ -145,7 +147,7 @@ export default {
       }
       state.preferencesLanguages = {
         ...state.preferencesLanguages,
-        ...prefs.font
+        ...prefs.language
       }
       state.preferencesMedia = {
         ...state.preferencesMedia,
@@ -178,7 +180,7 @@ export default {
         email: string,
         prefs: {
           font: object,
-          languages: object,
+          language: object,
           media: object
         },
         lang: string,
@@ -186,7 +188,7 @@ export default {
       }) {
       state = { ...stripKey('prefs', settings) } // set state with all keys except prefs
       state.preferencesFont = settings.prefs.font
-      state.preferencesLanguages = settings.prefs.languages
+      state.preferencesLanguages = settings.prefs.language
       state.preferencesMedia = settings.prefs.media
     },
     /**
