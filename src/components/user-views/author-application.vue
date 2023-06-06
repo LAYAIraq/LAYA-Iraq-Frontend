@@ -298,9 +298,9 @@ export default {
      *  Last Updated: May 4, 2022
      */
     applicationSubmit () {
-      if (this.applicationNew) {
-        this.userApplicationCreate(this.userApplication)
-      } else {
+      if (this.applicationNew && this.applicationEdited >= 0) {
+        this.userApplicationCreate()
+      } else if (!this.applicationNew && this.applicationEdited > 0) {
         this.userApplicationUpdate(this.userApplication)
       } else {
         console.warn('unexpected case!')
