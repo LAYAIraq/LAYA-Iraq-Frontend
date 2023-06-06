@@ -657,9 +657,9 @@ export default {
   },
   created () {
     this.setProfileForRender()
-    window.addEventListener('beforeunload', () => {
-      this.$destroy()
-    })
+    // window.addEventListener('beforeunload', () => {
+    //   this.$destroy()
+    // })
   },
   methods: {
     ...mapActions([
@@ -744,8 +744,10 @@ export default {
     setProfileForRender () {
       // make profile settings mutable and render
       const tmp = deepCopy(this.profile)
+      console.log(tmp)
       for (const key of Object.keys(tmp)) {
         if (!key.includes('pref')) {
+          console.log('setting', key, 'to', tmp[key])
           this[key] = tmp[key]
         }
       }
@@ -757,9 +759,9 @@ export default {
      */
     submit () {
       this.formMsg = ''
-      this.$store.commit('fullNameSet', this.fullName)
-      this.$store.commit('institutionSet', this.institution)
-      this.$store.commit('occupationSet', this.occupation)
+      // this.$store.commit('fullNameSet', this.fullName)
+      // this.$store.commit('institutionSet', this.institution)
+      // this.$store.commit('occupationSet', this.occupation)
       /* update state and save profile preferences */
       this.$store.commit('preferencesSet', this.prefs)
       this.$store.dispatch('profileUpdate')
