@@ -302,6 +302,8 @@ export default {
         this.userApplicationCreate(this.userApplication)
       } else {
         this.userApplicationUpdate(this.userApplication)
+      } else {
+        console.warn('unexpected case!')
       }
     },
     /**
@@ -316,6 +318,7 @@ export default {
       if (!this.userApplication) {
         this.userApplicationFetch(this.userId)
           .then(resp => {
+            console.log(resp)
             if (!resp) { // application doesn't exist
               this.applicationNew = true
             }
