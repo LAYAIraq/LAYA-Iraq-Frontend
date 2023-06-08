@@ -176,7 +176,21 @@ describe('profile store module', () => {
       })
     })
     describe('profile', () => {
-
+      it('is set to what is put in', () => {
+        const prfl = {
+          username: 'test',
+          email: 'test@laya',
+          institution: 'vechta',
+          occupation: 'professor',
+          fullName: 'test User',
+          avatar: 'avatar.jpg',
+          language: 'de'
+        }
+        store.commit('profileSet', prfl)
+        expect(state).toStrictEqual(
+          expect.objectContaining(prfl)
+        )
+      })
     })
   })
 })

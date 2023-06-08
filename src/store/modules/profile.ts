@@ -169,27 +169,24 @@ export default {
       state: {
         username: string,
         email: string,
-        preferencesFont: object,
-        preferencesLanguages: object,
-        preferencesMedia: object,
-        lang: string,
-        avatar: string
+        language: string,
+        avatar: string,
+        occupation: string,
+        institution: string,
+        fullName: string
       },
       settings: {
         username: string,
         email: string,
-        prefs: {
-          font: object,
-          language: object,
-          media: object
-        },
-        lang: string,
-        avatar: string
+        language: string,
+        avatar: string,
+        occupation: string,
+        institution: string,
+        fullName: string
       }) {
-      state = { ...stripKey('prefs', settings) } // set state with all keys except prefs
-      state.preferencesFont = settings.prefs.font
-      state.preferencesLanguages = settings.prefs.language
-      state.preferencesMedia = settings.prefs.media
+      Object.keys(settings).forEach(key => {
+        state[key] = settings[key]
+      })
     },
     /**
      * Function usernameSet: set username
@@ -221,7 +218,8 @@ export default {
     profileFetch ({ commit, rootState }) {
       http.get(`accounts/${rootState.authentication.userId}`)
         .then(({ data }) => {
-          commit('profileSet', data)
+          commit('profileSet', stripKey('prefs', data))
+          commit('preferencesSet', data.prefs)
         })
         .catch((err) => console.error(err))
     },
