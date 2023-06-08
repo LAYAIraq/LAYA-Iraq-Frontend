@@ -35,6 +35,9 @@
           <h2>{{ y18n('namePH') }}</h2>
         </div>
         <div class="col">
+          <h3>{{ y18n('author') }}</h3>
+        </div>
+        <div class="col">
           <h3>{{ y18n('cat') }}</h3>
         </div>
         <div class="col-2">
@@ -66,12 +69,21 @@
             ></i>
           </span>
           {{ course.name }}
+          <b-button
+            v-b-toggle="'collapse-2'"
+            class="m-1"
+          >
+            {{ y18n('expand') }}
+          </b-button>
+        </div>
+
+        <div class="col">
+          {{ course.author }}
         </div>
 
         <div class="col">
           {{ course.category }}
         </div>
-
         <div class="col-2">
           <ul class="course-props">
             <li
@@ -98,7 +110,6 @@
             </li>
           </ul>
         </div>
-
         <div class="col-3">
           <a
             class="btn indicated-btn"
@@ -123,6 +134,15 @@
             <i class="fas fa-exclamation-circle"></i>
           </div>
         </div>
+        <b-collapse id="collapse-2">
+          <b-card>
+            {{ y18n('abstract') }}:
+            course.abstract
+
+            {{ y18n('keywords') }}:
+            course.keywords
+          </b-card>
+        </b-collapse>
       </div>
     </div>
     <b-modal

@@ -604,5 +604,9 @@
 	"profile.language.english": "English",
 	"profile.language.arabic": "Arabic",
 	"profile.languagePreference.label": "Language preferences",
-	"profile.avatar.change": "Change profile picture"
+	"profile.avatar.change": "Change profile picture",
+	"author": "Course Author",
+	"expand": ">",
+	"keywords": "Keywords",
+	"abstract": "Abstract"
 }
