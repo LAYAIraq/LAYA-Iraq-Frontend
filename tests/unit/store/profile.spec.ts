@@ -114,5 +114,69 @@ describe('profile store module', () => {
         expect(state.occupation).toBeFalsy()
       })
     })
+    describe('preferences', () => {
+      it('has initial state', () => {
+        expect(state.preferencesFont).toStrictEqual(expect.objectContaining({
+          chosen: 'standard',
+          size: 18
+        }))
+        expect(state.preferencesLanguages).toStrictEqual(expect.objectContaining({
+          english: true,
+          german: false,
+          arabic: false,
+          kurdish: false
+        }))
+        expect(state.preferencesMedia).toStrictEqual(expect.objectContaining({
+          audio: false,
+          simple: false,
+          text: true,
+          video: true
+        }))
+      })
+      it('doesn\'t change if setter is empty', () => {
+        store.commit('preferencesSet', {})
+        expect(state.preferencesFont).toStrictEqual(expect.objectContaining({
+          chosen: 'standard',
+          size: 18
+        }))
+        expect(state.preferencesLanguages).toStrictEqual(expect.objectContaining({
+          english: true,
+          german: false,
+          arabic: false,
+          kurdish: false
+        }))
+        expect(state.preferencesMedia).toStrictEqual(expect.objectContaining({
+          audio: false,
+          simple: false,
+          text: true,
+          video: true
+        }))
+      })
+      it('keeps settings that are not touched', () => {
+        store.commit('preferencesSet', {
+          language: {
+            kurdish: true
+          },
+          font: {
+            size: 20
+          },
+          media: {
+            audio: true
+          }
+        })
+        expect(state.preferencesLanguages).toStrictEqual(
+          expect.objectContaining({ kurdish: true, english: true })
+        )
+        expect(state.preferencesFont).toStrictEqual(
+          expect.objectContaining({ chosen: 'standard', size: 20 })
+        )
+        expect(state.preferencesMedia).toStrictEqual(
+          expect.objectContaining({ audio: true, simple: false })
+        )
+      })
+    })
+    describe('profile', () => {
+
+    })
   })
 })
