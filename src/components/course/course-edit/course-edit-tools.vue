@@ -34,6 +34,8 @@
 
     <course-category-change @changedCategory="$emit('saveChanges')"></course-category-change>
 
+    <course-language-change @changedLanguage="$emit('saveChanges')"></course-language-change>
+
     <course-block-delete
       :name="name"
       :course-path="coursePath"
@@ -55,6 +57,7 @@ import {
   CoursePreferences,
   CourseBlockEdit,
   CourseCategoryChange,
+  CourseLanguageChange,
   CourseNavEdit,
   CourseBlockDelete,
   CourseCopy,
@@ -72,6 +75,7 @@ export default {
     CoursePreferences,
     CourseBlockEdit,
     CourseCategoryChange,
+    CourseLanguageChange,
     CourseNavEdit,
     CourseBlockDelete,
     CourseCopy,

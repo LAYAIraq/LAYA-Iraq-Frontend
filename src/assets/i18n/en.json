@@ -604,5 +604,8 @@
 	"profile.language.english": "English",
 	"profile.language.arabic": "Arabic",
 	"profile.languagePreference.label": "Language preferences",
-	"profile.avatar.change": "Change profile picture"
+	"profile.avatar.change": "Change profile picture",
+	"changeCourseLanguage": "Change Course Language",
+	"changeCourseLanguage.tip": "Change the language this course is mainly conisting of.",
+	"changeCourseLanguage.new": "New Course Language"
 }

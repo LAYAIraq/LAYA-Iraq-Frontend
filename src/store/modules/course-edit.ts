@@ -160,6 +160,24 @@ export default {
     },
 
     /**
+     * function courseLanguageChange: update course category
+     * Author: nv
+     * Since: v1.3.0
+     * @param state contains course object
+     * @param newLanguage new language
+     */
+    courseLanguageChange (
+      state: {
+        course: {
+          language: string
+        }
+      },
+      newLanguage: string
+    ) {
+      state.course.language = newLanguage
+    },
+
+    /**
      * function coursePropertiesChange: update course properties
      *
      * Author: cmc
