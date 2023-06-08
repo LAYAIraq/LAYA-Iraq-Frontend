@@ -32,10 +32,13 @@
         class="row header"
       >
         <div class="col">
-          <h2>{{ y18n('namePH') }}</h2>
+          <h2>{{ y18n('courseCreate.courseName') }}</h2>
         </div>
         <div class="col">
           <h3>{{ y18n('cat') }}</h3>
+        </div>
+        <div class="col">
+          <h3>{{ y18n('courseLanguage') }}</h3>
         </div>
         <div class="col-2">
           <h4
@@ -70,6 +73,10 @@
 
         <div class="col">
           {{ course.category }}
+        </div>
+
+        <div class="col">
+          {{ y18n(`profile.language.${course.language}`) }}
         </div>
 
         <div class="col-2">

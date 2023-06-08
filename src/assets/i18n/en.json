@@ -37,7 +37,7 @@
 	"captionTypes.captions": "Captions",
 	"captionTypes.descriptions": "Descriptions",
 	"captionTypes.chapters": "Chapters",
-	"cat": "Category",
+	"cat": "Course Category",
 	"changeCategory": "Change Category",
 	"changeCategory.empty": "The new category cannot be empty",
 	"changeCategory.new": "New Category",
@@ -607,5 +607,6 @@
 	"profile.avatar.change": "Change profile picture",
 	"changeCourseLanguage": "Change Course Language",
 	"changeCourseLanguage.tip": "Change the language this course is mainly conisting of.",
-	"changeCourseLanguage.new": "New Course Language"
+	"changeCourseLanguage.new": "New Course Language",
+	"courseLanguage": "Course Language"
 }

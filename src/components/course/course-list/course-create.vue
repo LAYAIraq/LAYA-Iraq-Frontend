@@ -50,6 +50,28 @@
       </div>
       <div class="form-group row">
         <label
+          for="new-course-language"
+          class="col-3 col-form-label"
+        >
+          {{ y18n('courseLanguage') }}
+        </label>
+        <div class="col">
+          <b-form-select
+            v-model="newCourse.language"
+            :aria-label="y18n('courseLanguage')"
+          >
+            <b-form-select-option
+              v-for="opt in languageChoose"
+              :key="opt"
+              :value="opt"
+            >
+              {{ y18n(`profile.language.${opt}`) }}
+            </b-form-select-option>
+          </b-form-select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label
           for="new-course-enrollment"
           class="col-3 col-form-label"
         >
@@ -92,6 +114,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
+import languages from '@/options/languages.ts'
 
 export default {
   name: 'CourseCreate',
@@ -106,6 +129,7 @@ export default {
       msg: '',
       newCourse: {
         category: '',
+        language: '',
         name: ''
       },
       newCourseNeedsEncoding: false
@@ -125,6 +149,16 @@ export default {
       return !!this.newCourse.name && !!this.newCourse.category
     },
 
+    /**
+     * languageChoose(): add languages
+     * Author: nv
+     * Since: v1.3.0
+     */
+    languageChoose () {
+      return [
+        ...languages
+      ]
+    },
     /**
      * needsEnrollment: Check if new course will need an enrollment
      *
