@@ -69,7 +69,7 @@
         </div>
 
         <div class="col">
-          {{ course.category }}
+          {{ y18n(`course.category.${course.category}`) }}
         </div>
 
         <div class="col-2">

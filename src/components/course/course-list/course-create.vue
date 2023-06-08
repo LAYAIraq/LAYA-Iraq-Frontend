@@ -38,6 +38,19 @@
           {{ y18n('cat') }}
         </label>
         <div class="col">
+          <b-form-select
+            v-model="newCourse.category"
+            :aria-label="y18n('cat')"
+          >
+            <b-form-select-option
+              v-for="opt in categoryChoose"
+              :key="opt"
+              :value="opt"
+            >
+              {{ y18n(`course.category.${opt}`) }}
+            </b-form-select-option>
+          </b-form-select>
+          <!--
           <input
             id="new-course-category"
             v-model="newCourse.category"
@@ -46,6 +59,7 @@
             :placeholder="y18n('cat')"
             @blur="trimNames"
           >
+          -->
         </div>
       </div>
       <div class="form-group row">
@@ -92,6 +106,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
+import courseCategories from '@/options/course-categories.ts'
 
 export default {
   name: 'CourseCreate',
@@ -113,6 +128,17 @@ export default {
   },
   computed: {
     ...mapGetters(['courseList', 'userId']),
+
+    /**
+     * categoryChoose(): add categories
+     * Author: nv
+     * Since: v1.3.0
+     */
+    categoryChoose () {
+      return [
+        ...courseCategories
+      ]
+    },
 
     /**
      * formValid: to test if both name and category are set

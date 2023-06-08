@@ -604,5 +604,12 @@
 	"profile.language.english": "English",
 	"profile.language.arabic": "Arabic",
 	"profile.languagePreference.label": "Language preferences",
-	"profile.avatar.change": "Change profile picture"
+	"profile.avatar.change": "Change profile picture",
+	"course.category.inclusive": "Inclusive Education",
+	"course.category.special": "Special Needs Education",
+	"course.category.primary": "Primary School Education",
+	"course.category.secondary": "Secondary School Education",
+	"course.category.university": "University Education",
+	"course.category.cooperative": "Cooperative Learning",
+	"course.category.indvidual": "Individual Learning"
 }
