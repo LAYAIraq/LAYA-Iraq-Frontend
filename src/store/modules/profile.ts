@@ -256,7 +256,11 @@ export default {
       http.patch(
         `accounts/${rootState.authentication.userId}`,
         {
-          ...state,
+          fullName: state.fullName,
+          email: state.email,
+          username: state.username,
+          institution: state.institution,
+          occupation: state.occupation,
           prefs: getters.prefs
         })
         .catch(err => {
