@@ -34,6 +34,10 @@
 
     <course-category-change @changedCategory="$emit('saveChanges')"></course-category-change>
 
+    <course-keywords-change @changedKeywords="$emit('saveChanges')"></course-keywords-change>
+
+    <course-abstract-change @changedAbstract="$emit('saveChanges')"></course-abstract-change>
+
     <course-block-delete
       :name="name"
       :course-path="coursePath"
@@ -58,6 +62,8 @@ import {
   CourseNavEdit,
   CourseBlockDelete,
   CourseCopy,
+  CourseKeywordsChange,
+  CourseAbstractChange,
   CourseDelete,
   CourseTypeEdit,
   CourseRename
@@ -75,6 +81,8 @@ export default {
     CourseNavEdit,
     CourseBlockDelete,
     CourseCopy,
+    CourseKeywordsChange,
+    CourseAbstractChange,
     CourseDelete,
     CourseTypeEdit,
     CourseRename

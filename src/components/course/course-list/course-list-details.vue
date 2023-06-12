@@ -135,12 +135,15 @@
           </div>
         </div>
         <b-collapse id="collapse-2">
-          <b-card>
-            {{ y18n('abstract') }}:
-            course.abstract
-
-            {{ y18n('keywords') }}:
-            course.keywords
+          <b-card
+            :title="y18n('abstract')"
+            :text="course.abstract"
+          >
+          </b-card>
+          <b-card
+            :title="y18n('keywords')"
+            :text="course.keywords"
+          >
           </b-card>
         </b-collapse>
       </div>

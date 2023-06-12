@@ -30,6 +30,7 @@
           >
         </div>
       </div>
+      <!-- Category -->
       <div class="form-group row">
         <label
           for="new-course-category"
@@ -48,6 +49,44 @@
           >
         </div>
       </div>
+      <!-- Keywords -->
+      <div class="form-group row">
+        <label
+          for="new-course-keywords"
+          class="col-3 col-form-label"
+        >
+          {{ y18n('keywords') }}
+        </label>
+        <div class="col">
+          <input
+            id="new-course-keywords"
+            v-model="newCourse.keywords"
+            type="text"
+            class="form-control"
+            :placeholder="y18n('keywords')"
+          >
+        </div>
+      </div>
+      <!-- Abstract -->
+      <div class="form-group row">
+        <label
+          for="new-course-abstract"
+          class="col-3 col-form-label"
+        >
+          {{ y18n('abstract') }}
+        </label>
+        <div class="col">
+          <textarea
+            id="new-course-abstract"
+            v-model="newCourse.abstract"
+            type="text"
+            class="form-control"
+            :placeholder="y18n('abstract')"
+            rows="5"
+          ></textarea>
+        </div>
+      </div>
+
       <div class="form-group row">
         <label
           for="new-course-enrollment"
@@ -106,7 +145,9 @@ export default {
       msg: '',
       newCourse: {
         category: '',
-        name: ''
+        name: '',
+        keywords: '',
+        abstract: ''
       },
       newCourseNeedsEncoding: false
     }

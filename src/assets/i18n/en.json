@@ -608,5 +608,11 @@
 	"author": "Course Author",
 	"expand": ">",
 	"keywords": "Keywords",
-	"abstract": "Abstract"
+	"abstract": "Abstract",
+	"changeAbstract": "Change Course Abstract",
+	"changeAbstract.new": "New Abstract",
+	"changeAbstract.tip": "Change your course abstract here.",
+	"changeKeywords": "Change Course Keywords",
+	"changeKeywords.new": "New Keywords",
+	"changeKeywords.tip": "Change your course keywords here."
 }
