@@ -179,6 +179,9 @@ export default {
       state: {
         username: string,
         email: string,
+        institution: string,
+        occupation: string
+        fullName: string,
         preferencesFont: object,
         preferencesLanguages: object,
         preferencesMedia: object,
@@ -188,6 +191,9 @@ export default {
       settings: {
         username: string,
         email: string,
+        institution: string,
+        occupation: string
+        fullName: string,
         prefs: {
           font: object,
           languages: object,
@@ -198,6 +204,9 @@ export default {
       }) {
       console.log(settings)
       state.username = settings.username
+      state.fullName = settings.fullName
+      state.institution = settings.institution
+      state.occupation = settings.occupation
       state.email = settings.email
       state.lang = settings.lang
       state.avatar = settings.avatar
