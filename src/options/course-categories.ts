@@ -6,11 +6,16 @@
  */
 
 export default [
-  'inclusive',
-  'special',
-  'cooperative',
   'individual',
-  'primary',
-  'secondary',
-  'university'
+  'individualDiagnostics',
+  'individualDisabilities',
+  'school',
+  'schoolEducation',
+  'schoolParents',
+  'schoolTeachers',
+  'society',
+  'societyEducationSystem',
+  'societyLaws',
+  'societyRegion',
+  'others'
 ]

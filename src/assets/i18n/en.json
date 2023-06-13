@@ -605,11 +605,16 @@
 	"profile.language.arabic": "Arabic",
 	"profile.languagePreference.label": "Language preferences",
 	"profile.avatar.change": "Change profile picture",
-	"course.category.inclusive": "Inclusive Education",
-	"course.category.special": "Special Needs Education",
-	"course.category.primary": "Primary School Education",
-	"course.category.secondary": "Secondary School Education",
-	"course.category.university": "University Education",
-	"course.category.cooperative": "Cooperative Learning",
-	"course.category.indvidual": "Individual Learning"
+	"course.category.society": "Society (in general)",
+	"course.category.societyLaws": "Society: Laws and Policies about Inclusion or Inclusive Education",
+	"course.category.societyRegion": "Society: Region (Infrastrcture or Extracurricular Education Programs)",
+	"course.category.societyEducationSystem": "Society: Education System (Teacher Training, Organization of the School System)",
+	"course.category.school": "School (in general)",
+	"course.category.schoolTeachers": "School: Teachers",
+	"course.category.schoolParents": "School: Parents",
+	"course.category.schoolEducation": "School: Education",
+	"course.category.individual": "Individual (in general)",
+	"course.category.individualDiagnostics": "Individual: Diagnostics",
+	"course.category.individualDisabilities": "Individual: Disabilities",
+	"course.category.others": "Others"
 }
