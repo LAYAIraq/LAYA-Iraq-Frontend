@@ -6,7 +6,7 @@
 -->
 <template>
   <div>
-    <div v-if="type === 'avatar'">
+    <div>
       <div
         v-show="$refs.upload && $refs.upload.dropActive"
         class="drop-active"
@@ -36,9 +36,11 @@
             name="file"
             class="btn btn-primary"
             :post-action="postAvatar"
+            :headers="headers"
             :drop="!edit"
-            @input-filter="inputFilter"
             @input-file="inputFile"
+            @input-filter="inputFilter"
+            @input="setFileURL"
           >
             {{ y18n('layaUploadAvatar.uploadFile') }}
           </file-upload>
@@ -77,32 +79,6 @@
         </div>
       </div>
     </div>
-
-    <div v-else>
-      <file-upload
-        ref="upload"
-        v-model="files"
-        post-action=""
-        @input-file="inputFile"
-        @input-filter="inputFilter"
-      >
-        {{ y18n('layaUploadAvatar.uploadFile') }}
-      </file-upload>
-      <button
-        v-show="!$refs.upload || !$refs.upload.active"
-        type="button"
-        @click.prevent="$refs.upload.active = true"
-      >
-        {{ y18n('startUpload') }}
-      </button>
-      <button
-        v-show="$refs.upload && $refs.upload.active"
-        type="button"
-        @click.prevent="$refs.upload.active = false"
-      >
-        {{ y18n('stopUpload') }}
-      </button>
-    </div>
   </div>
 </template>
 
@@ -125,10 +101,6 @@ export default {
   ],
 
   props: {
-    type: {
-      type: String,
-      default () { return '' }
-    },
     oldAvatar: {
       type: String,
       default () { return '' }
@@ -144,8 +116,22 @@ export default {
   },
 
   computed: {
+    /**
+     * @function return authorization headers for upload
+     * @author cmc
+     * @return {{Authorization: string}} authorization headers
+     */
+    headers () {
+      const idToken = this.$ls.get('auth').id
+      return {
+        Authorization: `${idToken}`
+      }
+    },
     postAvatar () {
       return `${api}/storage/img/upload`
+    },
+    downloadURL () {
+      return `${api}/storage/img/download/`
     }
   },
 
@@ -171,7 +157,6 @@ export default {
   },
 
   methods: {
-
     editSave () {
       // console.log(`editSave function entered`)
       this.edit = false
@@ -198,7 +183,9 @@ export default {
         arr[i] = binStr.charCodeAt(i)
       }
 
-      const file = new File(arr, oldFile.name, { type: oldFile.type })
+      const file = new File(arr, oldFile.name, {
+        type: oldFile.type
+      })
       this.$refs.upload.update(oldFile.id, {
         file,
         type: file.type,
@@ -233,6 +220,7 @@ export default {
       }
 
       if (newFile && (!oldFile || newFile.file !== oldFile.file)) {
+        // console.log(newFile)
         newFile.url = ''
         const URL = window.URL || window.webkitURL
         // console.log(URL)
@@ -240,6 +228,11 @@ export default {
           newFile.url = URL.createObjectURL(newFile.file)
         }
       }
+    },
+    setFileURL () {
+      this.$nextTick(() => {
+        this.files[0].url = this.downloadURL + this.files[0].response.result.files.file[0].name
+      })
     }
   }
 

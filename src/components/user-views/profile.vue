@@ -16,7 +16,7 @@ Since: v1.0.0
             <!-- avatar -->
             <div class="d-block mx-auto avatar">
               <b-avatar
-                src="avatarURL"
+                :src="avatarURL"
                 size="7rem"
                 square
                 button
