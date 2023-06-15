@@ -95,7 +95,7 @@ export default {
 
   data () {
     return {
-      doNotDisturb: false,
+      // doNotDisturb: false,
       notifyShortList: []
     }
   },

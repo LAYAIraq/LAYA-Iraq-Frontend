@@ -30,10 +30,10 @@ export default {
     }
   },
   created () {
-    this.verify()
+    this.verifyUser()
   },
   methods: {
-    verify () { // TODO: move to store
+    verifyUser () { // TODO: move to store
       this.busy = true
       http.get(`/accounts/confirm?uid=${this.$route.query.uid}&token=${this.$route.query.token}`)
         .then(() => {

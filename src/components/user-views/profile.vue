@@ -379,12 +379,12 @@ Since: v1.0.0
                           </div>
                         </div>
                         <!-- new password -->
-                        <PasswordInput
+                        <password-input
                           class="pwd-input"
                           :label-icons-only="false"
                           :label-width="3"
                           @compliantLength="newPwdOk"
-                        ></PasswordInput>
+                        ></password-input>
                       </b-modal>
                     </div>
                   </div>
