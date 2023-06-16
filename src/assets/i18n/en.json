@@ -435,6 +435,7 @@
 	"profile.application.withdrawConfirm": " Are you sure you want to withdraw you application?",
 	"profile.application.withdrawn": "You withdrew you application on {DATE}",
 	"profile.change": "Login Details",
+	"profile.editAvatar": "Edit Avatar image",
 	"profile.emailChange": "Change Email",
 	"profile.passwordChange": "Change Password",
 	"profile.usernameChange": "Change Username",

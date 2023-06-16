@@ -54,6 +54,22 @@ export default {
   },
   mutations: {
     /**
+     * Function avatarSet: set avatar source address
+     *
+     * Author: nv
+     *
+     * Since: v1.3.0
+     *
+     * @param state contains avatar
+     * @param avatar string containing avatar
+     */
+    avatarSet (
+      state: { avatar: string },
+      avatar: string
+    ) {
+      state.avatar = avatar
+    },
+    /**
      * Function emailSet: set email address
      *
      * Author: nv
@@ -265,6 +281,7 @@ export default {
       http.patch(
         `accounts/${rootState.authentication.userId}`,
         {
+          avatar: state.avatar,
           fullName: state.fullName,
           email: state.email,
           username: state.username,

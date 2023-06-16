@@ -20,7 +20,7 @@
         <div class="text-center p-2">
           <label>
             <img
-              :src="files.length ? files[0].url : oldAvatar"
+              v-auth-image="files.length ? files[0].url : oldAvatar"
               class="d-block rounded-circle avatar-preview"
               alt="User Avatar"
             >
@@ -159,7 +159,6 @@ export default {
   methods: {
     editSave () {
       // console.log(`editSave function entered`)
-      this.edit = false
 
       const oldFile = this.files[0]
 
@@ -168,6 +167,7 @@ export default {
 
       console.log(canvasData)
       console.log(imageData)
+      console.log(oldFile.size, oldFile.type)
 
       if (this.cropper.canvasData.height !== this.cropper.imageData.height) {
         this.cropper.imageData.scaleY = this.cropper.imageData.height / this.cropper.canvasData.height
@@ -177,30 +177,32 @@ export default {
         this.cropper.imageData.scaleX = this.cropper.imageData.width / this.cropper.canvasData.width
       }
 
-      const binStr = atob(this.cropper.getCroppedCanvas().toDataURL(oldFile.type).split(',')[1])
-      const arr = new Uint8Array(binStr.length)
-      for (let i = 0; i < binStr.length; i++) {
-        arr[i] = binStr.charCodeAt(i)
-      }
-
-      const file = new File(arr, oldFile.name, {
-        type: oldFile.type
+      // const binStr = atob(this.cropper.getCroppedCanvas().toDataURL(oldFile.type).split(',')[1])
+      // const arr = new Uint8Array(binStr.length)
+      // for (let i = 0; i < binStr.length; i++) {
+      //   arr[i] = binStr.charCodeAt(i)
+      // }
+      const croppedBlob = this.cropper.getCroppedCanvas()
+      croppedBlob.type = oldFile.type
+      croppedBlob.toBlob(async (blob) => {
+        console.log(blob)
+        this.$refs.upload.update(oldFile.id, {
+          file: blob,
+          type: oldFile.type,
+          size: blob.size,
+          active: true
+        })
       })
-      this.$refs.upload.update(oldFile.id, {
-        file,
-        type: file.type,
-        size: file.size,
-        active: true
-      })
-      return false
+      this.edit = false
     },
 
     alert (msg) {
       alert(msg)
     },
 
-    inputFile (newFile, oldFile) {
+    async inputFile (newFile, oldFile) {
       if (newFile && !oldFile) {
+        console.log(await newFile)
         this.$nextTick(() => {
           this.edit = true
         })
@@ -229,10 +231,10 @@ export default {
         }
       }
     },
-    setFileURL () {
-      this.$nextTick(() => {
-        this.files[0].url = this.downloadURL + this.files[0].response.result.files.file[0].name
-      })
+    async setFileURL () {
+      const fileName = await this.files[0].response.result.files.file[0].name
+      this.files[0].url = this.downloadURL + fileName
+      this.$emit('uploaded', fileName)
     }
   }
 

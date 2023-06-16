@@ -14,15 +14,26 @@ Since: v1.0.0
           <!-- profile header -->
           <div class="bg-dark w-100 pt-5 pb-3">
             <!-- avatar -->
-            <div class="d-block mx-auto avatar">
-              <b-avatar
-                :src="avatarURL"
-                size="7rem"
-                square
-                button
+            <div class="d-block mx-auto avatar rounded-circle">
+              <img
+                v-if="avatarURL"
+                v-auth-image="avatarURL"
+                class="rounded-circle avatar-display"
+              >
+              <i
+                v-else
+                class="fas fa-chalkboard-teacher display-3 pt-3 pl-2"
+              ></i>
+              <b-badge
+                v-b-tooltip.bottom
+                pill
+                variant="warning"
+                class="edit-badge"
+                :title="y18n('profile.editAvatar')"
                 @click="avatarChange"
               >
-              </b-avatar>
+                <i class="fas fa-edit"></i>
+              </b-badge>
             </div>
             <!--
             <img
@@ -436,12 +447,9 @@ Since: v1.0.0
         <div class="container">
           <div class="col">
             <div class="col">
-              <img :src="avatarURL">
-            </div>
-            <div class="col">
               <upload-avatar
                 :old-avatar="avatarURL"
-                :type="'avatar'"
+                @uploaded="a => $store.commit('avatarSet', a)"
               ></upload-avatar>
             </div>
           </div>
@@ -545,9 +553,9 @@ export default {
      * Last Updated: unknown
      */
     avatarURL () {
-      return (!this.avatar || this.avatar === '')
+      return (!this.profile.avatar || this.profile.avatar === '')
         ? null
-        : `${api}/storage/img/download/${this.avatar}`
+        : `${api}/storage/img/download/${this.profile.avatar}`
     },
     email: {
       get () {
@@ -799,6 +807,13 @@ export default {
   height: 7rem;
   border: 2px solid #eee;
   background-color: #eee;
+  position: relative;
+  box-sizing: content-box;
+}
+.avatar-display {
+  width: 7rem;
+  height: 7rem;
+  position: absolute;
 }
 .checkbox-inline label {
   display: inline-flex;
@@ -808,6 +823,17 @@ export default {
 }
 .checkbox-inline input {
   margin-right: 5px;
+}
+.edit-badge {
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  font-size: .9em;
+  border-radius: 50%;
+  padding: 3px;
+  min-width: 25px;
+  min-height: 25px;
+  cursor: pointer;
 }
 .author-toast {
   position: fixed;
