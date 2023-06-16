@@ -468,7 +468,7 @@ Since: v1.0.0
       <b-toast
         id="submit-ok"
         variant="success"
-        :title="y18n('layaUploadFileList.success')"
+        :title="y18n('uploadFileList.success')"
         class="author-toast"
         auto-hide-delay="1500"
         static
@@ -703,17 +703,14 @@ export default {
         this.emailNew === this.emailRepeat) {
         if ((/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.emailNew))) {
           this.emailNewConform = false
-          this.$store.dispatch('checkEmailTaken', this.email)
-            .then(resp => {
-              if (!resp) {
-                this.emailNewTaken = true
-                this.$store.commit('emailSet', this.emailNew)
-                this.submit()
-              } else {
-                this.emailTaken = true
-              }
+          this.$store.dispatch('checkEmailTaken', this.emailNew)
+            .then(() => {
+              this.emailNewTaken = true
             })
-            .catch(err => { console.log(err) })
+            .catch(() => {
+              this.$store.commit('emailSet', this.emailNew)
+              this.submit()
+            })
         } else {
           this.emailNewConform = true
         }
@@ -727,10 +724,13 @@ export default {
     passwordChange () {
       if (this.passwordInputNew) {
         this.busy = true
-        this.$store.dispatch('passwodUpdate', this.passwordOld)
+        this.$store.dispatch('passwordUpdate', this.passwordOld)
           .then(() => {
-            this.$bvToast.show('submit-ok')
-            this.submit()
+            this.$bvToast.show('profile-save-toast')
+            this.$bvModal.hide('change-password-form')
+            this.passwordOld = ''
+            this.$store.commit('passwordSet', '')
+            this.$store.commit('passwordRepeatSet', '')
           })
           .catch(err => {
             console.error(err)
@@ -767,13 +767,14 @@ export default {
      */
     submit () {
       this.formMsg = ''
-      // this.$store.commit('fullNameSet', this.fullName)
-      // this.$store.commit('institutionSet', this.institution)
-      // this.$store.commit('occupationSet', this.occupation)
       /* update state and save profile preferences */
       this.$store.commit('preferencesSet', this.prefs)
       this.$store.dispatch('profileUpdate')
-        .then(() => { this.$bvToast.show('profile-save-toast') })
+        .then(() => {
+          this.$bvToast.show('profile-save-toast')
+          this.$bvModal.hide('change-username-form')
+          this.$bvModal.hide('change-email-form')
+        })
         .catch(err => {
           console.error(err)
           this.$bvToast.show('submit-failed')
