@@ -603,10 +603,11 @@
 	"profile.language.german": "German",
 	"profile.language.english": "English",
 	"profile.language.arabic": "Arabic",
+	"profile.language.notlisted": "Not listed",
 	"profile.languagePreference.label": "Language preferences",
 	"profile.avatar.change": "Change profile picture",
 	"changeCourseLanguage": "Change Course Language",
-	"changeCourseLanguage.tip": "Change the language this course is mainly conisting of.",
+	"changeCourseLanguage.tip": "Change the language this course is mainly consisting of.",
 	"changeCourseLanguage.new": "New Course Language",
 	"courseLanguage": "Course Language"
 }

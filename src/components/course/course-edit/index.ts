@@ -8,6 +8,7 @@
 
 export { default as CourseCopy } from './course-copy.vue'
 export { default as CourseCategoryChange } from './course-category-change.vue'
+export { default as CourseLanguageChange } from './course-language-change.vue'
 export { default as CourseDelete } from './course-delete.vue'
 export { default as CourseBlockDelete } from './course-block-delete.vue'
 export { default as CourseBlockEdit } from './course-block-edit.vue'

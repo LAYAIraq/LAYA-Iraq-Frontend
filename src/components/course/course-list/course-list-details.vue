@@ -76,7 +76,7 @@
         </div>
 
         <div class="col">
-          {{ y18n(`profile.language.${course.language}`) }}
+          {{ languageList.some(lang => lang === course.language) ? y18n(`profile.language.${course.language}`) : y18n('profile.language.notlisted') }}
         </div>
 
         <div class="col-2">
@@ -181,6 +181,7 @@
 import { mapGetters } from 'vuex'
 import { locale, storeHandler } from '@/mixins'
 import { slugify } from '@/mixins/general/course-structure'
+import languages from '@/options/languages.ts'
 
 export default {
   name: 'CourseListDetails',
@@ -219,6 +220,17 @@ export default {
       'preferencesMedia',
       'userId'
     ]),
+
+    /**
+     * languageList(): add languages
+     * Author: nv
+     * Since: v1.3.0
+     */
+    languageList () {
+      return [
+        ...languages
+      ]
+    },
 
     /**
      * function complicitReady(): returns true if complicit Set has any members
