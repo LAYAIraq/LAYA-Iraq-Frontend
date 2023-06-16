@@ -12,7 +12,7 @@ Since: v1.3.0
         size="sm"
         variant="warning"
         :class="langIsAr? 'float-left' : 'float-right'"
-        @click="$bvModal.show('author-change-category-confirm')"
+        @click="$bvModal.show('author-change-language-confirm')"
       >
         <i class="fas fa-exclamation-circle"></i> {{ y18n('changeCourseLanguage') }}
       </b-button>
@@ -23,7 +23,7 @@ Since: v1.3.0
     </div>
 
     <b-modal
-      id="author-change-category-confirm"
+      id="author-change-language-confirm"
       :title="y18n('changeCourseLanguage')"
       header-bg-variant="warning"
       ok-variant="warning"
@@ -101,20 +101,20 @@ export default {
      */
     changeCourseLanguage (e) {
       e.preventDefault()
-      if (!this.newLanguage) {
-      } else if (this.newLanguage === this.course.language) {
-      } else {
-        this.$nextTick(() => {
-          this.$bvModal.hide('author-change-language-confirm')
+      // if (!this.newLanguage) {
+      // } else if (this.newLanguage === this.course.language) {
+      // } else {
+      this.$nextTick(() => {
+        this.$bvModal.hide('author-change-language-confirm')
+      })
+      this.$store.commit('courseLanguageChange', this.newLanguage)
+      this.$store.dispatch('courseUpdate')
+        .then(() => {
+          this.$store.dispatch('courseListFetch')
+          this.$emit('changedLanguage')
         })
-        this.$store.commit('courseLanguageChange', this.newLanguage)
-        this.$store.dispatch('courseUpdate')
-          .then(() => {
-            this.$store.dispatch('courseListFetch')
-            this.$emit('changedLanguage')
-          })
-          .catch(err => console.error(err))
-      }
+        .catch(err => console.error(err))
+      // }
     }
   }
 }
