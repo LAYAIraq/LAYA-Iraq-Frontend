@@ -531,5 +531,8 @@
 	"type.modal.ok": "Typ ändern",
 	"type.modal.text": "Neuer Typ*",
 	"type.modal.title": "Inhalts-Typ ändern",
+	"verify.backHome": "Zurück zur Startseite",
+	"verify.fail": "Etwas ist bei der Bestätigung schiefgelaufen!",
+	"verify.ongoing": "Konto wird verifiziert...",
 	"verify.success": "Bestätigung erfolgreich, du wirst zum Login weitergeleitet..."
 }

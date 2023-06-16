@@ -10,7 +10,7 @@
     <div class="container">
       <div
         v-if="$route.params.verified"
-        class="text-center"
+        class="text-center mt-3"
       >
         {{ y18n('login.verified') }}
       </div>
