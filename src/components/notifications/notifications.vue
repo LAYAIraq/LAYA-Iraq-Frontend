@@ -204,9 +204,9 @@ export default {
 
   created () {
     this.$store.dispatch('notificationsFetchInitial')
-    if (Object.prototype.hasOwnProperty.call(this.$route.query, 'id')) {
-      this.highlightId = this.$route.query.id
-    }
+    // if (Object.prototype.hasOwnProperty.call(this.$route.query, 'id')) {
+    //   this.highlightId = this.$route.query.id
+    // }
     this.cacheValues()
     // this.notifications.forEach(note => this.msgList.push(note))
     // this.msgList.forEach(note => {
@@ -381,7 +381,7 @@ export default {
      * Author: cmc
      *
      * Last Updated: May 27, 2021
-     * @param {string} msg message to mark as read
+     * @param {object} msg message to mark as read
      */
     markAsRead (msg) {
       this.$store.commit('notificationRead', msg.noteId)

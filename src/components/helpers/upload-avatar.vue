@@ -177,6 +177,21 @@ export default {
       this.edit = false
 
       const oldFile = this.files[0]
+
+      const canvasData = this.cropper.getCanvasData()
+      const imageData = this.cropper.getImageData()
+
+      console.log(canvasData)
+      console.log(imageData)
+
+      if (this.cropper.canvasData.height !== this.cropper.imageData.height) {
+        this.cropper.imageData.scaleY = this.cropper.imageData.height / this.cropper.canvasData.height
+      }
+
+      if (this.cropper.canvasData.width !== this.cropper.imageData.width) {
+        this.cropper.imageData.scaleX = this.cropper.imageData.width / this.cropper.canvasData.width
+      }
+
       const binStr = atob(this.cropper.getCroppedCanvas().toDataURL(oldFile.type).split(',')[1])
       const arr = new Uint8Array(binStr.length)
       for (let i = 0; i < binStr.length; i++) {
@@ -237,5 +252,7 @@ export default {
   height: 7rem;
   margin: auto;
 }
-
+img {
+  max-width: 100%;
+}
 </style>

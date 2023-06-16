@@ -11,11 +11,11 @@
           <i
             v-b-tooltip.auto
             class="fas fa-key"
-            :title="newInput? y18n('profile.newPwd'): y18n('pwdPH')"
+            :title="newInput? y18n('profile.newPassword'): y18n('passwordPH')"
           ></i>
         </span>
         <span v-else>
-          {{ newInput? y18n('profile.newPwd'): y18n('pwdPH') }}
+          {{ newInput? y18n('profile.newPassword'): y18n('passwordPH') }}
         </span>
 
       </span>
@@ -28,7 +28,7 @@
           :label-hide="y18n('password.hide')"
           :label-show="y18n('password.show')"
           :secure-length="Number(secureLength)"
-          :placeholder="newInput? y18n('profile.newPwd'): y18n('pwdPH')"
+          :placeholder="newInput? y18n('profile.newPassword'): y18n('passwordPH')"
           :toggle="!langIsAr"
           :badge="!langIsAr"
           @feedback="pwdHints"
@@ -55,11 +55,11 @@
           <i
             v-b-tooltip.auto
             class="fas fa-redo-alt"
-            :title="y18n('pwd2PH')"
+            :title="y18n('password2PH')"
           ></i>
         </span>
         <span v-else>
-          {{ y18n('pwd2PH') }}
+          {{ y18n('password2PH') }}
         </span>
       </label>
       <div :class="`col-${inputWidth}`">
@@ -68,7 +68,7 @@
           v-model="pwdRepeat"
           type="password"
           class="form-control"
-          :placeholder="y18n('pwd2PH')"
+          :placeholder="y18n('password2PH')"
         >
       </div>
     </div>
@@ -86,11 +86,11 @@
           <i
             v-b-tooltip.auto
             class="fas fa-lightbulb"
-            :title="y18n('profile.pwdSuggestion')"
+            :title="y18n('profile.passwordSuggestion')"
           ></i>
         </span>
         <span v-else>
-          {{ y18n('profile.pwdSuggestion') }}
+          {{ y18n('profile.passwordSuggestion') }}
         </span>
       </div>
       <div
@@ -270,7 +270,7 @@ export default {
      * Last Updated: March 24, 2021
      */
     pwdDiffMsg () {
-      return !this.pwdMatch ? this.y18n('profile.pwdDiffer') : ''
+      return !this.pwdMatch ? this.y18n('profile.passwordDiffer') : ''
     },
 
     /**
@@ -372,7 +372,7 @@ export default {
      */
     wordedPwdStrength () {
       return this.passwordStrength != null
-        ? this.y18n(`pwdStrength${this.passwordStrength}`)
+        ? this.y18n(`passwordStrength${this.passwordStrength}`)
         : ''
     }
   },
@@ -397,13 +397,13 @@ export default {
       if (this.pwdRepeat !== '') { // start checking when user repeated password
         for (const j in this.possibleWarnings) {
           if (warning === this.possibleWarnings[j]) {
-            warning = this.i18n['pwdLanguageSwitchWarning' + j]
+            warning = this.i18n['passwordLanguageSwitchWarning' + j]
           }
         }
         for (const j in suggestions) {
           for (const k in this.possibleSuggestions) {
             if (suggestions[j] === this.possibleSuggestions[k]) {
-              suggestions[j] = this.i18n['pwdLanguageSwitchSuggestion' + k]
+              suggestions[j] = this.i18n['passwordLanguageSwitchSuggestion' + k]
             }
           }
         }

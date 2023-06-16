@@ -10,7 +10,7 @@
     <div class="container">
       <div
         v-if="$route.params.verified"
-        class="text-center"
+        class="text-center mt-3"
       >
         {{ y18n('login.verified') }}
       </div>
@@ -45,10 +45,10 @@
             <input
               id="pwd-input"
               v-model.trim="pwd"
-              :placeholder="y18n('pwdPH')"
+              :placeholder="y18n('passwordPH')"
               type="password"
               autocomplete="on"
-              :aria-label="y18n('pwdPH')"
+              :aria-label="y18n('passwordPH')"
             >
           </div>
 

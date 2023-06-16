@@ -7,16 +7,25 @@
 
 import http from 'axios'
 import { ids as supportedLangs } from '@/options/langs.js'
-import { stripKey } from '@/mixins/general/helpers'
+import { deepCopy, stripKey } from '@/mixins/general/helpers'
 
 export default {
   state: {
     avatar: '',
     email: '',
+    fullName: '',
+    institution: '',
     language: 'en',
+    occupation: '',
     preferencesFont: {
       chosen: 'standard',
       size: 18
+    },
+    preferencesLanguages: {
+      english: true,
+      german: false,
+      arabic: false,
+      kurdish: false
     },
     preferencesMedia: {
       audio: false,
@@ -27,12 +36,71 @@ export default {
     username: ''
   },
   getters: {
+    fullName: (state: { fullName: string}) => state.fullName,
+    institution: (state: { institution: string }) => state.institution,
+    occupation: (state: { occupation: string }) => state.occupation,
     preferencesFont: (state: { preferencesFont: object }) => state.preferencesFont,
+    preferencesLanguages: (state: { preferencesLanguages: object }) => state.preferencesLanguages,
     preferencesMedia: (state: { preferencesMedia: object }) => state.preferencesMedia,
+    prefs: (state) => {
+      return {
+        media: state.preferencesMedia,
+        font: state.preferencesFont,
+        languages: state.preferencesLanguages
+      }
+    },
     profile: (state: object) => state,
     profileLanguage: (state: { language: string }) => state.language
   },
   mutations: {
+    /**
+     * Function emailSet: set email address
+     *
+     * Author: nv
+     *
+     * Last Updated: February 13, 2023
+     *
+     * @param state contains occupation
+     * @param email: string containing occuptation
+     */
+    emailSet (
+      state: { email: string },
+      email: string
+    ) {
+      state.email = email
+    },
+    /**
+     * Function fullNameSet: set full name
+     *
+     * Author: nv
+     *
+     * Last Updated: February 06, 2023
+     *
+     * @param state contains occupation
+     * @param fullName: string containing occuptation
+     */
+    fullNameSet (
+      state: { fullName: string },
+      fullName: string
+    ) {
+      state.fullName = fullName
+    },
+    /**
+     * Function institutionSet: set institution
+     *
+     * Author: nv
+     *
+     * Last Updated: February 06, 2023
+     *
+     * @param state contains institution
+     * @param institution: string containing institution
+     */
+    institutionSet (
+      state: { institution: string },
+      institution: string
+    ) {
+      state.institution = institution
+    },
     /**
      * function languageSet: set user locale to given language if supported
      *
@@ -49,7 +117,22 @@ export default {
     ) {
       state.language = (supportedLangs.includes(lang)) ? lang : supportedLangs[0]
     },
-
+    /**
+     * Function occupationSet: set occupation
+     *
+     * Author: nv
+     *
+     * Last Updated: February 06, 2023
+     *
+     * @param state contains occupation
+     * @param occupation: string containing occuptation
+     */
+    occupationSet (
+      state: { occupation: string },
+      occupation: string
+    ) {
+      state.occupation = occupation
+    },
     /**
      * Function preferencesSet: set all media preferences at once
      *
@@ -63,12 +146,17 @@ export default {
     preferencesSet (
       state: {
         preferencesFont: object,
+        preferencesLanguages: object,
         preferencesMedia: object
       },
       prefs: { font: object, media: object }
     ) {
       state.preferencesFont = {
         ...state.preferencesFont,
+        ...prefs.font
+      }
+      state.preferencesLanguages = {
+        ...state.preferencesLanguages,
         ...prefs.font
       }
       state.preferencesMedia = {
@@ -91,7 +179,11 @@ export default {
       state: {
         username: string,
         email: string,
+        institution: string,
+        occupation: string
+        fullName: string,
         preferencesFont: object,
+        preferencesLanguages: object,
         preferencesMedia: object,
         lang: string,
         avatar: string
@@ -99,18 +191,45 @@ export default {
       settings: {
         username: string,
         email: string,
+        institution: string,
+        occupation: string
+        fullName: string,
         prefs: {
           font: object,
+          languages: object,
           media: object
         },
         lang: string,
         avatar: string
       }) {
-      state = { ...stripKey('prefs', settings) } // set state with all keys except prefs
+      console.log(settings)
+      state.username = settings.username
+      state.fullName = settings.fullName
+      state.institution = settings.institution
+      state.occupation = settings.occupation
+      state.email = settings.email
+      state.lang = settings.lang
+      state.avatar = settings.avatar
       state.preferencesFont = settings.prefs.font
+      state.preferencesLanguages = settings.prefs.languages
       state.preferencesMedia = settings.prefs.media
+    },
+    /**
+     * Function usernameSet: set username
+     *
+     * Author: nv
+     *
+     * Last Updated: February 06, 2023
+     *
+     * @param state contains occupation
+     * @param username: string containing occuptation
+     */
+    usernameSet (
+      state: { username: string },
+      username: string
+    ) {
+      state.username = username
     }
-
   },
   actions: {
     /**
@@ -125,7 +244,9 @@ export default {
     profileFetch ({ commit, rootState }) {
       http.get(`accounts/${rootState.authentication.userId}`)
         .then(({ data }) => {
-          commit('profileSet', data)
+          console.log(data)
+          commit('profileSet', data
+          )
         })
         .catch((err) => console.error(err))
     },
@@ -139,10 +260,18 @@ export default {
      *
      * @param param0 state variables
      */
-    profileUpdate ({ state, rootState }) {
+    profileUpdate ({ getters, state, rootState }) {
+      console.log(state)
       http.patch(
         `accounts/${rootState.authentication.userId}`,
-        { ...state })
+        {
+          fullName: state.fullName,
+          email: state.email,
+          username: state.username,
+          institution: state.institution,
+          occupation: state.occupation,
+          prefs: getters.prefs
+        })
         .catch(err => {
           console.error(err)
         })

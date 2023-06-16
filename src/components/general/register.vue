@@ -429,7 +429,7 @@ export default {
       this.$store.dispatch('registerUser', {
         email: this.email,
         username: this.name,
-        password: this.passwordSet,
+        password: this.password,
         // avatar: avatarFileName,
         lang: this.profileLanguage
       })
