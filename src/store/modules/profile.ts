@@ -215,8 +215,8 @@ export default {
      *
      * @param param0 state variables
      */
-    profileFetch ({ commit, rootState }) {
-      http.get(`accounts/${rootState.authentication.userId}`)
+    profileFetch ({ commit, getters }) {
+      http.get(`accounts/${getters.userId}`)
         .then(({ data }) => {
           commit('profileSet', stripKey('prefs', data))
           commit('preferencesSet', data.prefs)
