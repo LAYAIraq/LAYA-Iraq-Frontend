@@ -2,6 +2,9 @@ import cloneDeep from 'lodash.clonedeep'
 import profile from '@/store/modules/profile'
 import Vuex from 'vuex'
 import { createLocalVue } from '@vue/test-utils'
+import axios from 'axios'
+import { stripKey } from '@/mixins/general/helpers'
+import 'regenerator-runtime/runtime'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -115,7 +118,7 @@ describe('profile store module', () => {
       })
     })
     describe('preferences', () => {
-      it('has initial state', () => {
+      const initialStateTest = () => {
         expect(state.preferencesFont).toStrictEqual(expect.objectContaining({
           chosen: 'standard',
           size: 18
@@ -132,25 +135,13 @@ describe('profile store module', () => {
           text: true,
           video: true
         }))
+      }
+      it('has initial state', () => {
+        initialStateTest()
       })
       it('doesn\'t change if setter is empty', () => {
         store.commit('preferencesSet', {})
-        expect(state.preferencesFont).toStrictEqual(expect.objectContaining({
-          chosen: 'standard',
-          size: 18
-        }))
-        expect(state.preferencesLanguages).toStrictEqual(expect.objectContaining({
-          english: true,
-          german: false,
-          arabic: false,
-          kurdish: false
-        }))
-        expect(state.preferencesMedia).toStrictEqual(expect.objectContaining({
-          audio: false,
-          simple: false,
-          text: true,
-          video: true
-        }))
+        initialStateTest()
       })
       it('keeps settings that are not touched', () => {
         store.commit('preferencesSet', {
@@ -190,6 +181,52 @@ describe('profile store module', () => {
         expect(state).toStrictEqual(
           expect.objectContaining(prfl)
         )
+      })
+    })
+  })
+  describe('actions', () => {
+    beforeAll(() => {
+      store = new Vuex.Store(
+        {
+          modules: {
+            profile
+          },
+          state: {
+            authentication: {
+              userId: 1
+            }
+          }
+        }
+      )
+    })
+    describe('profileFetch', () => {
+      const mockUser = {
+        username: 'test',
+        email: 'test@test',
+        role: 'editor',
+        institution: 'vechta',
+        prefs: {
+          media: {
+            video: false
+          },
+          font: {
+            size: 13
+          },
+          language: {
+            arabic: true
+          }
+        }
+      }
+
+      it('sets data after being resolved', async () => {
+        jest.spyOn(axios, 'get').mockImplementation(() =>
+          Promise.resolve(mockUser)
+        )
+        const profSpy = jest.spyOn(mutations, 'profileSet')
+        const prefSpy = jest.spyOn(mutations, 'preferencesSet')
+        await actions.profileFetch(store)
+        expect(profSpy).toHaveBeenCalledWith(stripKey('prefs', mockUser))
+        expect(prefSpy).toHaveBeenCalledWith(mockUser.prefs)
       })
     })
   })
