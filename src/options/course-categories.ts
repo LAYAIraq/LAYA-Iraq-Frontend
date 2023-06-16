@@ -17,5 +17,5 @@ export default [
   'societyEducationSystem',
   'societyLaws',
   'societyRegion',
-  'others'
+  'other'
 ]

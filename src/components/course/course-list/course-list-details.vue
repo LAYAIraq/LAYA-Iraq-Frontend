@@ -69,7 +69,7 @@
         </div>
 
         <div class="col">
-          {{ y18n(`course.category.${course.category}`) }}
+          {{ categoryList.some(cat => cat === course.category) ? y18n(`course.category.${course.category}`) : y18n('course.category.other') }}
         </div>
 
         <div class="col-2">
@@ -174,6 +174,7 @@
 import { mapGetters } from 'vuex'
 import { locale, storeHandler } from '@/mixins'
 import { slugify } from '@/mixins/general/course-structure'
+import courseCategories from '@/options/course-categories.ts'
 
 export default {
   name: 'CourseListDetails',
@@ -212,6 +213,17 @@ export default {
       'preferencesMedia',
       'userId'
     ]),
+
+    /**
+     * categoryList(): add categories
+     * Author: nv
+     * Since: v1.3.0
+     */
+    categoryList () {
+      return [
+        ...courseCategories
+      ]
+    },
 
     /**
      * function complicitReady(): returns true if complicit Set has any members
