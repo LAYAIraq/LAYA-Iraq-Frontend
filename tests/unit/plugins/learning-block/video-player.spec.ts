@@ -1,8 +1,8 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue'
-import VideoEdit from '@/plugins/learning-block/video/video-edit.vue'
-import VideoView from '@/plugins/learning-block/video/video-view.vue'
+import VideoEdit from '@/plugins/learning-block/video-player/video-edit.vue'
+import VideoView from '@/plugins/learning-block/video-player/video-view.vue'
 import 'regenerator-runtime/runtime'
 
 const localVue = createLocalVue()
