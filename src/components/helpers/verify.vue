@@ -13,13 +13,13 @@
       <p>{{ y18n('verify.fail') }}</p>
       <p>
         <router-link to="/">
-          {{ y18n('verify.backHome')}}
+          {{ y18n('verify.backHome') }}
         </router-link>
       </p>
     </div>
     <div v-else-if="busy">
       <i class="fas fa-spinner fa-spin"></i>
-        {{ y18n('verify.ongoing')}}
+      {{ y18n('verify.ongoing') }}
     </div>
   </div>
 </template>
@@ -60,7 +60,7 @@ export default {
             })
           }, 2500)
         })
-        .catch(() => this.fail = true)
+        .catch(() => { this.fail = true })
         .finally(() => {
           this.busy = false
         })
