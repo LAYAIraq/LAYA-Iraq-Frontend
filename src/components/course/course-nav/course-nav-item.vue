@@ -141,7 +141,8 @@ export default {
     },
     followingContent: {
       type: [String, Array],
-      required: true
+      default: () => null
+      // required: true
     },
     value: {
       type: Object,

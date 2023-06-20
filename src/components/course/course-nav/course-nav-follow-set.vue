@@ -8,12 +8,37 @@
   <div class="d-block">
     <div>
       <div
-        v-if="followSet && followSet.length === 1"
+        v-if="followSet && followSet.length === 1 && edit === false"
         v-b-tooltip.top
         :title="y18n('courseNavEdit.followHighlight')"
+        class="d-flex follow-content"
+        @click="edit = true"
         @mousedown="followHighlight"
       >
-        {{ follow }}
+        <div>
+          <p v-if="followSet.length === 1">{{ follow }}</p>
+          <ul
+            v-else
+            id="follow-list"
+          >
+            <draggable
+              :list="followSet"
+            >
+              <li
+                v-for="e in followSet"
+                :key="e"
+              >
+                {{ e }}
+              </li>
+            </draggable>
+          </ul>
+        </div>
+        <i
+          v-b-tooltip.top.ds500
+          class="fas fa-edit"
+          :class="langIsAr ? 'mr-auto' : 'ml-auto'"
+          :title="y18n('courseWrapper.edit')"
+        ></i>
       </div>
       <div
         v-else
@@ -24,18 +49,9 @@
           :domain="courseContent"
           :keys="['title', 'name', 'id']"
           :nested-key="'text'"
-          @select="followSet = $event"
+          :previous-selection="follow"
+          @tagSelected="followSet = $event; edit = false"
         ></suggesting-input>
-        <ul id="follow-list">
-          <draggable
-            :list="followSet"
-          >
-            <li
-              v-for="e in followSet"
-              :key="e"
-            ></li>
-          </draggable>
-        </ul>
       </div>
     </div>
   </div>
@@ -64,6 +80,7 @@ export default {
   },
   data () {
     return {
+      edit: false
     }
   },
   computed: {
@@ -72,13 +89,14 @@ export default {
     },
     followSet: {
       get () {
-        return (!this.follow || Array.isArray(this.follow))
-          ? this.follow
-          : [this.follow]
+        return this.follow
+          ? Array.isArray(this.follow) // return array as is, turn string into array of length 1
+            ? this.follow
+            : [this.follow]
+          : null
       },
       set (val) {
-        console.log('followSet', val)
-        this.$emit('followUpdate', [...this.follow, val])
+        this.$emit('follow-update', val) // TODO: what if there's more than one item?
       }
     }
   },
@@ -94,3 +112,11 @@ export default {
   }
 }
 </script>
+<style>
+.follow-content>i {
+  display: none;
+}
+.follow-content:hover>i {
+  display: inline-flex;
+}
+</style>

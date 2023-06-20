@@ -55,7 +55,7 @@ export const filterObject = (keys: string[], obj: object, nestedKey?: string) =>
   } else {
     let filteredObj = {}
     for (const key of keys) {
-      console.log('filtering for ', key)
+      // console.log('filtering for ', key)
       const objKey = typeof obj[key] === 'object'
         ? obj[key][nestedKey]
         : obj[key]

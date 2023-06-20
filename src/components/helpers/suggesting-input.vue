@@ -129,6 +129,11 @@ export default {
       type: String,
       default: () => 'No tags'
     },
+    // already selected input
+    previousSelection: {
+      type: [String, Array],
+      default: () => null
+    },
     // placeholder for search input
     searchInputPlaceholder: {
       type: String,
@@ -228,6 +233,13 @@ export default {
         }
       })
     }
+  },
+  created () {
+    this.selectedTag = this.previousSelection
+      ?  Array.isArray(this.previousSelection)
+        ? this.previousSelection
+        : [this.previousSelection]
+      : []
   },
   methods: {
     kebabToCamel,

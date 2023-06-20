@@ -53,7 +53,7 @@
           :class="{ 'border-success': item.id === highlightId }"
           :drag-bubble="[!dragging && dragStartIndex === i, childrenVisibility[item.id]]"
           :drag-end="[!dragging && dragEndIndex === i, childrenVisibility[item.id]]"
-          :following-content="firstContentId(chapter.children, i + 1)"
+          :following-content="item.follow ? item.follow : firstContentId(chapter.children, i + 1)"
           :value="item"
           @highlight="blockHighlight"
           @visibilityChange="childVisibilityChange"
