@@ -16,7 +16,9 @@
         @mousedown="followHighlight"
       >
         <div>
-          <p v-if="followSet.length === 1">{{ follow }}</p>
+          <p v-if="followSet.length === 1">
+            {{ follow }}
+          </p>
           <ul
             v-else
             id="follow-list"

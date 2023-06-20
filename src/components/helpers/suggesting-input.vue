@@ -236,7 +236,7 @@ export default {
   },
   created () {
     this.selectedTag = this.previousSelection
-      ?  Array.isArray(this.previousSelection)
+      ? Array.isArray(this.previousSelection)
         ? this.previousSelection
         : [this.previousSelection]
       : []
