@@ -24,7 +24,7 @@
           :chapter-name="courseNavEdit.chapterName"
           :main="true"
           @preview="previewSet"
-          @propagatePropertyChange="changeProperty"
+          @propagate-property-change="changeProperty"
         />
       </div>
       <div

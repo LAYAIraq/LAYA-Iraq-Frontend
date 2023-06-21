@@ -8,7 +8,7 @@
   <div class="d-block">
     <div>
       <div
-        v-if="followSet && followSet.length === 1 && edit === false"
+        v-if="followSet && followSet.length === followLength && edit === false"
         v-b-tooltip.top
         :title="y18n('courseNavEdit.followHighlight')"
         class="d-flex follow-content"
@@ -52,7 +52,8 @@
           :keys="['title', 'name', 'id']"
           :nested-key="'text'"
           :previous-selection="follow"
-          @tagSelected="followSet = $event; edit = false"
+          :tags-needed="followLength"
+          @tags-selected="followSet = $event; edit = false"
         ></suggesting-input>
       </div>
     </div>
@@ -62,6 +63,7 @@
 import Draggable from 'vuedraggable'
 import SuggestingInput from '@/components/helpers/suggesting-input.vue'
 import { locale } from '@/mixins'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'CourseNavFollowSet',
@@ -86,15 +88,40 @@ export default {
     }
   },
   computed: {
-    courseContent () {
-      return this.$store.getters.courseContent
+    ...mapGetters(['courseContent']),
+    /**
+     * @function return text of buttons if item is button navigation
+     * @author cmc
+     * @since v1.3.0
+     * @returns {string[]} labels of buttons
+     */
+    buttonLabels () {
+      return this.item.name === 'button-navigation'
+        ? this.item.answers.map(el => el.text)
+        : null
     },
+    /**
+     * @function return length of follow items needed (1 for everything but button navigation)
+     * @author cmc
+     * @since v1.3.0
+     * @returns {number} amount of follow items for content block
+     */
+    followLength () {
+      return this.item.name === 'button-navigation'
+        ? this.item.answers.length
+        : 1
+    },
+    /**
+     * @function return follow set as array, set propagate change to follow set
+     * @author cmc
+     * @since v1.3.0
+     */
     followSet: {
       get () {
         return this.follow
-          ? Array.isArray(this.follow) // return array as is, turn string into array of length 1
-            ? this.follow
-            : [this.follow]
+          ? Array.isArray(this.follow) // either array or string
+            ? this.follow // return array as is
+            : [this.follow] // return string as single item in array
           : null
       },
       set (val) {

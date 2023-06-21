@@ -21,7 +21,7 @@
       :form-placeholder="y18n('courseNavEdit.chapterPlaceholder')"
       :property="chapterName"
       :class="{ 'border rounded border-danger': chapterNameDuplicate }"
-      @changed="e => propagatePropertyChange(chapter, 'chapterName', e)"
+      @changed="propagatePropertyChange(chapter, 'chapterName', $event)"
     />
     <draggable
       :list="chapter.children"
@@ -46,7 +46,7 @@
           :highlighted-block="main? highlightId : highlightedBlock"
           @highlight="blockHighlight"
           @preview="pid => previewEmit(pid)"
-          @propagatePropertyChange="propagatePropertyChange"
+          @propagate-property-change="propagatePropertyChange"
         />
         <course-nav-item
           v-else-if="!collapsed"
@@ -56,8 +56,8 @@
           :following-content="item.follow ? item.follow : firstContentId(chapter.children, i + 1)"
           :value="item"
           @highlight="blockHighlight"
-          @visibilityChange="childVisibilityChange"
-          @propagatePropertyChange="propagatePropertyChange"
+          @visibility-change="childVisibilityChange"
+          @propagate-property-change="propagatePropertyChange"
           @preview="pid => previewEmit(pid)"
         />
       </div>
@@ -178,7 +178,7 @@ export default {
       if (this.main) {
         this.highlightId = id
       } else {
-        this.$emit('hightlight', id)
+        this.$emit('highlight', id)
       }
     },
     blockHighlightUnset () {
@@ -240,7 +240,7 @@ export default {
      * @param value new value for property to propagate to parent
      */
     propagatePropertyChange (chapter, property, value) {
-      this.$emit('propagatePropertyChange', chapter, property, value)
+      this.$emit('propagate-property-change', chapter, property, value)
     },
     /**
      * @function set followingContent property of all items in the chapter

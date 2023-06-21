@@ -12,7 +12,7 @@
     >
       <b-form-tags
         id="tags-with-dropdown"
-        v-model="selectedTag"
+        v-model="selectedTags"
         no-outer-focus
         class="mb-2"
         :limit="1"
@@ -39,7 +39,7 @@
           </ul>
 
           <b-dropdown
-            v-if="selectedTag.length !== 1"
+            v-if="selectedTags.length !== tagsNeeded"
             size="sm"
             variant="outline-secondary"
             block
@@ -83,7 +83,7 @@
           <b-button
             v-else
             class="btn-block btn-success"
-            @click="$emit('tagSelected', selectedTag[0])"
+            @click="tagsSelected"
           >
             {{ submitButtonText }}
           </b-button>
@@ -149,6 +149,11 @@ export default {
       type: String,
       default: () => 'Submit'
     },
+    // number of tags to select
+    tagsNeeded: {
+      type: Number,
+      default: () => 1
+    },
     // title above Form
     titleLabelText: {
       type: String,
@@ -158,7 +163,7 @@ export default {
   data () {
     return {
       searchTerm: '',
-      selectedTag: []
+      selectedTags: []
     }
   },
   computed: {
@@ -173,8 +178,8 @@ export default {
         : ''
     },
     resultObject () {
-      return this.searchDomain[this.selectedTag[0]] ??
-        filterObject(this.keys, this.domain[this.selectedTag[0]], 'text')
+      return this.searchDomain[this.selectedTags[0]] ??
+        filterObject(this.keys, this.domain[this.selectedTags[0]], 'text')
     },
     /**
      * @function converts input domain: if it's an object, transform into array of
@@ -235,7 +240,7 @@ export default {
     }
   },
   created () {
-    this.selectedTag = this.previousSelection
+    this.selectedTags = this.previousSelection
       ? Array.isArray(this.previousSelection)
         ? this.previousSelection
         : [this.previousSelection]
@@ -279,6 +284,16 @@ export default {
       return (typeof el === 'object') // object to render
         ? this.objectRender(el)
         : el
+    },
+    /**
+     * @function emit tags-selected event with single item or array
+     * @author cmc
+     * @since v1.3.0
+     */
+    tagsSelected () {
+      this.tagsNeeded === 1
+        ? this.$emit('tags-selected', this.selectedTags[0])
+        : this.$emit('tags-selected', this.selectedTags)
     }
   }
 }
