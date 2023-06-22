@@ -15,7 +15,7 @@
         v-model="selectedTags"
         no-outer-focus
         class="mb-2"
-        :limit="1"
+        :limit="tagsNeeded"
       >
         <template #default="{ tags, disabled, addTag, removeTag }">
           <ul
@@ -23,7 +23,7 @@
             class="list-inline d-inline-block mb-2"
           >
             <li
-              v-for="tag in tags"
+              v-for="(tag, i) in tags"
               :key="tag"
               class="list-inline-item"
             >
@@ -33,7 +33,7 @@
                 variant="info"
                 @remove="removeTag(tag)"
               >
-                {{ objectRender(resultObject) }}
+                {{ objectRender(tagRender(i)) }}
               </b-form-tag>
             </li>
           </ul>
@@ -113,6 +113,11 @@ export default {
     keys: {
       type: [String, Array],
       default: () => null
+    },
+    // whether component is used inline or modal
+    inline: {
+      type: Boolean,
+      default: () => true
     },
     // key to use if search domain has nested objects
     nestedKey: {
@@ -284,6 +289,17 @@ export default {
       return (typeof el === 'object') // object to render
         ? this.objectRender(el)
         : el
+    },
+    /**
+     * @function represent selected object by filtering keys
+     * @author cmc
+     * @since v1.3.0
+     * @param i index of object in tags array
+     * @return {*|object} representation of element in tag
+     */
+    tagRender (i) {
+      return this.searchDomain[this.selectedTags[i]] ??
+        filterObject(this.keys, this.domain[this.selectedTags[i]], 'text')
     },
     /**
      * @function emit tags-selected event with single item or array

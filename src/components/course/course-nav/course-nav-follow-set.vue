@@ -50,6 +50,7 @@
         <suggesting-input
           :domain="courseContent"
           :keys="['title', 'name', 'id']"
+          :inline="false"
           :nested-key="'text'"
           :previous-selection="follow"
           :tags-needed="followLength"
