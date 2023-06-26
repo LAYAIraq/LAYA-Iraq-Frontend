@@ -8,11 +8,11 @@
   <div class="d-block">
     <div>
       <div
-        v-if="followSet && followSet.length === followLength && edit === false"
+        v-if="followSet && followSet.length === followLength"
         v-b-tooltip.top
         :title="y18n('courseNavEdit.followHighlight')"
         class="d-flex follow-content"
-        @click="edit = true"
+        @click="$bvModal.show('follow-edit')"
         @mousedown="followHighlight"
       >
         <div>
@@ -44,19 +44,36 @@
       </div>
       <div
         v-else
-        id="incomplete-follow"
+        @click="$bvModal.show('follow-edit')"
       >
         Add following content
+        <i
+          v-b-tooltip.top.ds500
+          class="fas fa-edit"
+          :class="langIsAr ? 'mr-auto' : 'ml-auto'"
+          :title="y18n('courseWrapper.edit')"
+        ></i>
+      </div>
+      <b-modal
+        id="follow-edit"
+        :title="'Edit Follow Set'"
+        static
+        centered
+        @ok="followSet = followSetChange"
+        @cancel="followSetChange = null"
+      >
+
         <suggesting-input
           :domain="courseContent"
           :keys="['title', 'name', 'id']"
           :inline="false"
           :nested-key="'text'"
           :previous-selection="follow"
+          :submit-button="false"
           :tags-needed="followLength"
-          @tags-selected="followSet = $event; edit = false"
+          @tags-selected="followSetChange = $event"
         ></suggesting-input>
-      </div>
+      </b-modal>
     </div>
   </div>
 </template>
@@ -85,7 +102,7 @@ export default {
   },
   data () {
     return {
-      edit: false
+      followSetChange: null
     }
   },
   computed: {

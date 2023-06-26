@@ -81,7 +81,7 @@
             </b-dropdown-text>
           </b-dropdown>
           <b-button
-            v-else
+            v-else-if="submitButton"
             class="btn-block btn-success"
             @click="tagsSelected"
           >
@@ -148,6 +148,11 @@ export default {
     searchLabelText: {
       type: String,
       default: () => 'Search for tags'
+    },
+    // wether or not to render a button for submitting
+    submitButton: {
+      type: Boolean,
+      default: () => true
     },
     // text for submit button
     submitButtonText: {
@@ -242,6 +247,9 @@ export default {
           return e.toLowerCase().includes(this.searchQuery)
         }
       })
+    },
+    selectedTagsNo () {
+      return this.selectedTags.length
     }
   },
   created () {
@@ -250,6 +258,15 @@ export default {
         ? this.previousSelection
         : [this.previousSelection]
       : []
+  },
+  watch: {
+    // emit tags-selected event when component selected tags matches the number of tags needed
+    // only applicable when submitButton prop is false
+    selectedTagsNo (v) {
+      if (!this.submitButton && v === this.tagsNeeded) {
+        this.tagsSelected()
+      }
+    }
   },
   methods: {
     kebabToCamel,
