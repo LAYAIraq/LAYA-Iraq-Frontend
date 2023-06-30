@@ -85,8 +85,7 @@ export default {
      */
     changeCourseabstract (e) {
       e.preventDefault()
-      if (!this.newAbstract) {
-      } else if (this.newAbstract === this.course.abstract) {
+      if (this.newAbstract === this.course.abstract) {
         this.$nextTick(() => {
           this.$bvModal.hide('author-change-abstract-confirm')
         })

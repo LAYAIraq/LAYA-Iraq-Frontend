@@ -86,8 +86,7 @@ export default {
      */
     changeCourseKeywords (e) {
       e.preventDefault()
-      if (!this.newKeywords) {
-      } else if (this.newKeywords === this.course.keywords) {
+      if (this.newKeywords === this.course.keywords) {
         this.$nextTick(() => {
           this.$bvModal.hide('author-change-keywords-confirm')
         })
