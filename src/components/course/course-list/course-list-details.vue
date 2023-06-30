@@ -32,7 +32,7 @@
         class="row header"
       >
         <div class="col">
-          <h2>{{ y18n('namePH') }}</h2>
+          <h2>{{ y18n('courseName') }}</h2>
         </div>
         <div class="col">
           <h3>{{ y18n('author') }}</h3>

@@ -109,6 +109,7 @@
 	"courseCreate.modal.categoryHint": "The combination of course title and category already exists! Please choose a new category or change the title!",
 	"courseCreate.modal.ok": "Ok",
 	"courseCreate.modal.titleHint": "That course name already exists! Do you want to choose a new name?",
+	"courseName": "Course Name",
 	"courseWrapper.edit": "Edit",
 	"courseWrapper.preview": "Preview",
 	"courses.brain": "Brain",
