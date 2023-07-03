@@ -7,7 +7,7 @@
 
 import http from 'axios'
 import { ids as supportedLangs } from '@/options/langs.js'
-import { stripKey } from '@/mixins/general/helpers'
+import { deepCopy, stripKey } from '@/mixins/general/helpers'
 
 export default {
   state: {
@@ -36,13 +36,39 @@ export default {
     username: ''
   },
   getters: {
+    fullName: (state: { fullName: string}) => state.fullName,
+    institution: (state: { institution: string }) => state.institution,
+    occupation: (state: { occupation: string }) => state.occupation,
     preferencesFont: (state: { preferencesFont: object }) => state.preferencesFont,
     preferencesLanguages: (state: { preferencesLanguages: object }) => state.preferencesLanguages,
     preferencesMedia: (state: { preferencesMedia: object }) => state.preferencesMedia,
+    prefs: (state) => {
+      return {
+        media: state.preferencesMedia,
+        font: state.preferencesFont,
+        languages: state.preferencesLanguages
+      }
+    },
     profile: (state: object) => state,
     profileLanguage: (state: { language: string }) => state.language
   },
   mutations: {
+    /**
+     * Function avatarSet: set avatar source address
+     *
+     * Author: nv
+     *
+     * Since: v1.3.0
+     *
+     * @param state contains avatar
+     * @param avatar string containing avatar
+     */
+    avatarSet (
+      state: { avatar: string },
+      avatar: string
+    ) {
+      state.avatar = avatar
+    },
     /**
      * Function emailSet: set email address
      *
@@ -233,10 +259,19 @@ export default {
      *
      * @param param0 state variables
      */
-    profileUpdate ({ state, rootState }) {
+    profileUpdate ({ getters, state, rootState }) {
+      console.log(state)
       http.patch(
         `accounts/${rootState.authentication.userId}`,
-        { ...state })
+        {
+          avatar: state.avatar,
+          fullName: state.fullName,
+          email: state.email,
+          username: state.username,
+          institution: state.institution,
+          occupation: state.occupation,
+          prefs: getters.prefs
+        })
         .catch(err => {
           console.error(err)
         })

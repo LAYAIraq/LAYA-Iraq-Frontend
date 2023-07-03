@@ -119,7 +119,7 @@ export default {
       this.$store.dispatch('passwordSetNew', {
         userId: this.$route.query.uid,
         verificationToken: this.$route.query.token,
-        password: this.passwordSet
+        password: this.password
       })
         .then(() => {
           this.showToast('success')

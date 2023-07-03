@@ -14,15 +14,26 @@ Since: v1.0.0
           <!-- profile header -->
           <div class="bg-dark w-100 pt-5 pb-3">
             <!-- avatar -->
-            <div class="d-block mx-auto avatar">
-              <b-avatar
-                src="../../assets/images/anmelden.svg"
-                size="7rem"
-                square
-                button
+            <div class="d-block mx-auto avatar rounded-circle">
+              <img
+                v-if="avatarURL"
+                v-auth-image="avatarURL"
+                class="rounded-circle avatar-display"
+              >
+              <i
+                v-else
+                class="fas fa-chalkboard-teacher display-3 pt-3 pl-2"
+              ></i>
+              <b-badge
+                v-b-tooltip.bottom
+                pill
+                variant="warning"
+                class="edit-badge"
+                :title="y18n('profile.editAvatar')"
                 @click="avatarChange"
               >
-              </b-avatar>
+                <i class="fas fa-edit"></i>
+              </b-badge>
             </div>
             <!--
             <img
@@ -185,7 +196,7 @@ Since: v1.0.0
                         :cancel-title="y18n('cancel')"
                         centered
                         static
-                        :ok-disabled="usernameNew === profile.username || usernameNew === ''"
+                        :ok-disabled="usernameNew === username || usernameNew === ''"
                         @ok="usernameChange"
                       >
                         <!-- new username -->
@@ -218,7 +229,7 @@ Since: v1.0.0
                               {{ y18n('profile.usernameEmpty') }}
                             </p>
                             <p
-                              v-if="usernameNew === profile.username"
+                              v-if="usernameNew === username"
                               id="username-same"
                             >
                               {{ y18n('profile.usernameSame') }}
@@ -247,7 +258,7 @@ Since: v1.0.0
                         :cancel-title="y18n('cancel')"
                         centered
                         static
-                        :ok-disabled="emailRepeat !== emailNew || emailOld !== profile.email"
+                        :ok-disabled="emailRepeat !== emailNew || emailOld !== email"
                         @ok="emailChange"
                       >
                         <!-- Old email -->
@@ -266,7 +277,7 @@ Since: v1.0.0
                               autocomplete="on"
                             >
                             <p
-                              v-if="emailOld !== profile.email"
+                              v-if="emailOld !== email"
                               id="email-old-incorrect"
                             >
                               {{ y18n('profile.emailOldIncorrect') }}
@@ -395,11 +406,11 @@ Since: v1.0.0
           </form>
         </div>
       </div>
-      <hr>
+
       <accessibility-settings @prefsChanged="p => prefs = p">
       </accessibility-settings>
 
-      <!-- <author-application> </author-application> -->
+      <author-application> </author-application>
 
       <div class="container">
         <div class="col">
@@ -436,12 +447,9 @@ Since: v1.0.0
         <div class="container">
           <div class="col">
             <div class="col">
-              <img :src="avatarURL">
-            </div>
-            <div class="col">
               <upload-avatar
                 :old-avatar="avatarURL"
-                :type="'avatar'"
+                @uploaded="a => $store.commit('avatarSet', a)"
               ></upload-avatar>
             </div>
           </div>
@@ -460,7 +468,7 @@ Since: v1.0.0
       <b-toast
         id="submit-ok"
         variant="success"
-        :title="y18n('layaUploadFileList.success')"
+        :title="y18n('uploadFileList.success')"
         class="author-toast"
         auto-hide-delay="1500"
         static
@@ -521,9 +529,6 @@ export default {
       passwordMessage: '',
       passwordOld: '',
       prefs: {},
-      prefsFont: {},
-      prefsLanguages: {},
-      prefsMedia: {},
       usernameNew: '',
       usernameTaken: null
     }
@@ -531,11 +536,11 @@ export default {
 
   computed: {
     ...mapGetters([
+      'fullName',
+      'institution',
+      'occupation',
       'password',
       'passwordRepeat',
-      'preferencesFont',
-      'preferencesLanguages',
-      'preferencesMedia',
       'profile',
       'userId'
     ]),
@@ -548,9 +553,9 @@ export default {
      * Last Updated: unknown
      */
     avatarURL () {
-      return (!this.avatar || this.avatar === '')
+      return (!this.profile.avatar || this.profile.avatar === '')
         ? null
-        : `${api}/storage/img/download/${this.avatar}`
+        : `${api}/storage/img/download/${this.profile.avatar}`
     },
     email: {
       get () {
@@ -660,9 +665,9 @@ export default {
   },
   created () {
     this.setProfileForRender()
-    window.addEventListener('beforeunload', () => {
-      this.$destroy()
-    })
+    // window.addEventListener('beforeunload', () => {
+    //   this.$destroy()
+    // })
   },
   methods: {
     ...mapActions([
@@ -694,21 +699,18 @@ export default {
      */
     emailChange (e) {
       e.preventDefault()
-      if (this.emailOld === this.profile.email &&
+      if (this.emailOld === this.email &&
         this.emailNew === this.emailRepeat) {
         if ((/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.emailNew))) {
           this.emailNewConform = false
-          this.$store.dispatch('checkEmailTaken', this.email)
-            .then(resp => {
-              if (!resp) {
-                this.emailNewTaken = true
-                this.$store.commit('emailSet', this.emailNew)
-                this.submit()
-              } else {
-                this.emailTaken = true
-              }
+          this.$store.dispatch('checkEmailTaken', this.emailNew)
+            .then(() => {
+              this.emailNewTaken = true
             })
-            .catch(err => { console.log(err) })
+            .catch(() => {
+              this.$store.commit('emailSet', this.emailNew)
+              this.submit()
+            })
         } else {
           this.emailNewConform = true
         }
@@ -722,10 +724,13 @@ export default {
     passwordChange () {
       if (this.passwordInputNew) {
         this.busy = true
-        this.$store.dispatch('passwodUpdate', this.passwordOld)
+        this.$store.dispatch('passwordUpdate', this.passwordOld)
           .then(() => {
-            this.$bvToast.show('submit-ok')
-            this.submit()
+            this.$bvToast.show('profile-save-toast')
+            this.$bvModal.hide('change-password-form')
+            this.passwordOld = ''
+            this.$store.commit('passwordSet', '')
+            this.$store.commit('passwordRepeatSet', '')
           })
           .catch(err => {
             console.error(err)
@@ -746,22 +751,13 @@ export default {
      */
     setProfileForRender () {
       // make profile settings mutable and render
-      this.avatar = this.profile.avatar
-      this.prefsFont = deepCopy(this.profile.preferencesFont)
-      this.prefsLanguages = deepCopy(this.profile.preferencesLanguages)
-      this.prefsMedia = deepCopy(this.profile.preferencesMedia)
-
-      if (!this.prefsFont) {
-        this.prefsFont = {
-          chosen: 'standard',
-          size: 18
+      const tmp = deepCopy(this.profile)
+      console.log(tmp)
+      for (const key of Object.keys(tmp)) {
+        if (!key.includes('pref')) {
+          console.log('setting', key, 'to', tmp[key])
+          this[key] = tmp[key]
         }
-      }
-      if (!this.prefsLanguages) { // avoid render error when no prefs set
-        this.prefsLanguages = {}
-      }
-      if (!this.prefsMedia) { // avoid render error when no prefs set
-        this.prefsMedia = {}
       }
     },
     /**
@@ -771,13 +767,14 @@ export default {
      */
     submit () {
       this.formMsg = ''
-      this.$store.commit('fullNameSet', this.fullName)
-      this.$store.commit('institutionSet', this.institution)
-      this.$store.commit('occupationSet', this.occupation)
       /* update state and save profile preferences */
       this.$store.commit('preferencesSet', this.prefs)
       this.$store.dispatch('profileUpdate')
-        .then(() => { this.$bvToast.show('profile-save-toast') })
+        .then(() => {
+          this.$bvToast.show('profile-save-toast')
+          this.$bvModal.hide('change-username-form')
+          this.$bvModal.hide('change-email-form')
+        })
         .catch(err => {
           console.error(err)
           this.$bvToast.show('submit-failed')
@@ -811,6 +808,13 @@ export default {
   height: 7rem;
   border: 2px solid #eee;
   background-color: #eee;
+  position: relative;
+  box-sizing: content-box;
+}
+.avatar-display {
+  width: 7rem;
+  height: 7rem;
+  position: absolute;
 }
 .checkbox-inline label {
   display: inline-flex;
@@ -820,6 +824,17 @@ export default {
 }
 .checkbox-inline input {
   margin-right: 5px;
+}
+.edit-badge {
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  font-size: .9em;
+  border-radius: 50%;
+  padding: 3px;
+  min-width: 25px;
+  min-height: 25px;
+  cursor: pointer;
 }
 .author-toast {
   position: fixed;

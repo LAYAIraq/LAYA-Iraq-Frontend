@@ -8,7 +8,6 @@
 <template>
   <div>
     <div class="container">
-      <hr>
       <!-- buttons -->
       <div
         v-if="!isAuthor"
@@ -123,7 +122,7 @@
             {{ y18n('profile.application.fullName') }}
           </label>
           <input
-            v-model="profile.fullName"
+            v-model="fullName"
             class="form-control"
             type="text"
             readonly
@@ -138,7 +137,7 @@
           </label>
           <input
             id="applicant-institution"
-            v-model="profile.institution"
+            v-model="institution"
             class="form-control"
             type="text"
             readonly
@@ -193,8 +192,6 @@ export default {
     return {
       applicationEdited: -1, // increments once when data is loaded from store
       applicationNew: false,
-      fullName: '',
-      institution: '',
       formInput: {
         applicationText: '',
         areaOfExpertise: ''
@@ -206,7 +203,23 @@ export default {
       'isAuthor',
       'profile',
       'userApplication'
-    ])
+    ]),
+    fullName: {
+      get () {
+        return this.profile.fullName
+      },
+      set (val) {
+        this.$store.commit('fullNameSet', val)
+      }
+    },
+    institution: {
+      get () {
+        return this.y18n(`profile.institution.${this.profile.institution}`)
+      },
+      set (val) {
+        this.$store.commit('institutionSet', val)
+      }
+    }
   },
   watch: {
     formInput: { // watch for changed on form input
@@ -285,10 +298,12 @@ export default {
      *  Last Updated: May 4, 2022
      */
     applicationSubmit () {
-      if (this.applicationNew) {
-        this.userApplicationCreate(this.userApplication)
-      } else {
+      if (this.applicationNew && this.applicationEdited >= 0) {
+        this.userApplicationCreate()
+      } else if (!this.applicationNew && this.applicationEdited > 0) {
         this.userApplicationUpdate(this.userApplication)
+      } else {
+        console.warn('unexpected case!')
       }
     },
     /**
@@ -303,6 +318,7 @@ export default {
       if (!this.userApplication) {
         this.userApplicationFetch(this.userId)
           .then(resp => {
+            console.log(resp)
             if (!resp) { // application doesn't exist
               this.applicationNew = true
             }
