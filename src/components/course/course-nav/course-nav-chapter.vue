@@ -258,7 +258,7 @@ export default {
        * @param followingItem reference to following item if exists
        * @param depth recursion depth
        */
-      const automaticFollow = (item, followingItem, depth) => {
+      const automaticFollow = (item, followingItem, depth) => { // TODO revisit
         if (item.isChapter) {
           item.children.forEach((child, i) => {
             const res = automaticFollow(child, item.children[i + 1] ?? null, depth + 1)

@@ -252,13 +252,6 @@ export default {
       return this.selectedTags.length
     }
   },
-  created () {
-    this.selectedTags = this.previousSelection
-      ? Array.isArray(this.previousSelection)
-        ? this.previousSelection
-        : [this.previousSelection]
-      : []
-  },
   watch: {
     // emit tags-selected event when component selected tags matches the number of tags needed
     // only applicable when submitButton prop is false
@@ -267,6 +260,13 @@ export default {
         this.tagsSelected()
       }
     }
+  },
+  created () {
+    this.selectedTags = this.previousSelection
+      ? Array.isArray(this.previousSelection)
+        ? this.previousSelection
+        : [this.previousSelection]
+      : []
   },
   methods: {
     kebabToCamel,

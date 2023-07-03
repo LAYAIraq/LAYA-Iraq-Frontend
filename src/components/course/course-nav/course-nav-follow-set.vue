@@ -62,7 +62,6 @@
         @ok="followSet = followSetChange"
         @cancel="followSetChange = null"
       >
-
         <suggesting-input
           :domain="courseContent"
           :keys="['title', 'name', 'id']"
