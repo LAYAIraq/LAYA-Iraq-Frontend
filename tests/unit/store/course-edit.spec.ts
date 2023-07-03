@@ -7,8 +7,8 @@ import SampleCourse from '../../mocks/sample-course-short.json'
 
 // FIXME: probably related to this: https://github.com/facebook/jest/issues/10147
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
+// const localVue = createLocalVue()
+// localVue.use(Vuex)
 
 describe.skip('store module edit', () => {
   const store = new Vuex.Store({
