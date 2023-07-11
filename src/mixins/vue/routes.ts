@@ -40,7 +40,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['courseContentPathId']),
+    ...mapGetters(['courseContent', 'courseContentPathId']),
+    /**
+     * contentToDisplay: return current content block
+     *
+     * Author: cmc
+     *
+     * Last Updated: October 27, 2020
+     */
+    contentToDisplay () {
+      return this.courseContent[this.pathId]
+    },
     pathId () {
       return this.courseContentPathId(this.coursePath)
     }
