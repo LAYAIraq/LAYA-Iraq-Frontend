@@ -31,7 +31,7 @@
                 :title="tag"
                 :disabled="disabled"
                 variant="info"
-                @remove="removeTag(tag)"
+                @remove="removeTag(tag); $emit('removed')"
               >
                 {{ objectRender(tagRender(i)) }}
               </b-form-tag>
@@ -167,7 +167,7 @@ export default {
     // title above Form
     titleLabelText: {
       type: String,
-      default: () => 'Select labels with drop down'
+      default: () => ''
     }
   },
   data () {

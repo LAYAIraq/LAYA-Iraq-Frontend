@@ -241,7 +241,7 @@ export default {
     },
 
     /**
-     * Function followContent: returns follow set for content block
+     * Function followingContent: returns follow set for content block
      *
      * Author: core
      *
