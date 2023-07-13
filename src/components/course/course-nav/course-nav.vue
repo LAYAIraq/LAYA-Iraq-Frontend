@@ -34,6 +34,9 @@
         <button @click="addChapter">
           {{ y18n('courseNavEdit.chapterAdd') }}
         </button>
+        <button @click="navigationSave">
+          Save Navigation
+        </button>
       </div>
     </div>
     <div
@@ -75,9 +78,9 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { courseChapterTransformToDraggable } from '@/mixins/general/course-navigation'
 import { locale } from '@/mixins'
 import CourseNavChapter from './course-nav-chapter.vue'
+import { deepCopy } from '@/mixins/general/helpers'
 export default {
   name: 'CourseNavigationEditor',
   components: {
@@ -93,7 +96,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['courseContent', 'courseNav']),
+    ...mapGetters(['courseChapters', 'courseContent', 'courseNav']),
     previewComponent () {
       const comps = { ...this.$laya.blocks, ...this.$laya.assessments, ...this.$laya.organization }
       console.log('comps', comps)
@@ -107,7 +110,7 @@ export default {
     }
   },
   created () {
-    this.courseNavEdit = courseChapterTransformToDraggable(this.courseNav.structure)
+    this.courseNavEdit = { isChapter: true, children: deepCopy(this.courseChapters) }
   },
   methods: {
     /**
@@ -150,6 +153,9 @@ export default {
     previewSet (pid) {
       this.preview = true
       this.previewId = pid
+    },
+    navigationSave () {
+      this.$store.commit('courseChaptersSet', this.courseNavEdit.children)
     }
   }
 }

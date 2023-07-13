@@ -8,9 +8,7 @@
 import {
   ContentBlock,
   Course,
-  CourseNavigation,
   CourseNavigationItem,
-  CourseNavigationStructure,
   LegacyContentBlock,
   LegacyContentInput,
   LegacyCourse
@@ -38,6 +36,7 @@ export default {
   },
 
   getters: {
+    courseChapters: (state: { courseChapters: object[] }) => state.courseChapters,
     courseChapterNames: (state: { courseChapterNames: { [id: string]: string } }) => state.courseChapterNames,
     courseContent: (state: { courseContent: { [id: string]: CourseNavigationItem } }) => state.courseContent,
     courseContentIdRouteMap: (state: { courseRoutes: any }) => {
@@ -100,7 +99,7 @@ export default {
         courseContent: { },
         courseIds: { [id: string]: number },
         courseStart: string,
-        courseChapters: CourseNavigationStructure,
+        courseChapters: CourseNavigationItem[],
         courseChapterNames: { [id: string]: string },
         courseRoutes: any
       },
@@ -140,6 +139,10 @@ export default {
 
     courseContentRemove (state: { courseContent: any }, id: string) {
       state.courseContent = stripKey(state.courseContent, id)
+    },
+
+    courseChaptersSet (state: { courseChapters: object[] }, chapters: object[]) {
+      state.courseChapters = chapters
     },
 
     /**

@@ -85,6 +85,7 @@ export default {
     ...mapGetters([
       'content',
       'course',
+      'courseChapters',
       'courseChapterNames',
       'courseContent',
       'courseContentIdRouteMap',
@@ -251,7 +252,7 @@ export default {
      */
     followingContent (contentBlock) {
       if (!this.contentToDisplay) return () => {}
-      const follow = this.courseNav.structure
+      const follow = this.courseChapters
         .find((block) => block.id === contentBlock.id).follow // follow array in course nav structure
       if (!follow) return () => {} // no follow set
       // el is the content block to follow, return router push function

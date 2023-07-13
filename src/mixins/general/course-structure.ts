@@ -5,7 +5,6 @@
  */
 
 import {
-  CourseNavigationStructure,
   CourseNavigationItem,
   LegacyContentBlock
 } from '@/mixins/types/course-structure'
@@ -104,26 +103,19 @@ const courseStructureRoutesStartAdd = (
  * @param routes - array of routes, will be modified
  */
 const courseStructureRoutesCollect = (
-  structure: CourseNavigationStructure,
-  start: string | number,
+  structure: CourseNavigationItem[] | CourseNavigationItem,
   currentPath: string,
   routes: Array<[route: string, id: string]>
 ) => {
   if (structure instanceof Array) { // stucture is CourseNavigationItem[]
     structure.forEach((item) => {
-      courseStructureRoutesStartAdd(item, start, routes, structure.indexOf(item))
-      courseStructureRoutesCollect(item, start, currentPath, routes)
+      courseStructureRoutesCollect(item, currentPath, routes)
       // routes.push([currentPath + '/' + item.slug ? item.slug : item.id, item.id]) // can have alternative path
     })
-  } else if (Object.prototype.hasOwnProperty.call(structure, 'id')) { // structure is CourseNavigationItem
-    // @ts-ignore b/c of check above
-    courseStructureRoutesStartAdd(structure, start, routes)
-    // @ts-ignore ditto
+  } else if (structure.isChapter) { // childern
+    courseStructureRoutesCollect(structure.children, currentPath + '/' + structure.slug, routes)
+  } else if (!routes.some(el => el[1] === structure.id)) { // add path to routes if id is not already there
     routes.push([currentPath + '/' + structure.slug, structure.id])
-  } else { // structure is CourseNavigationChapter
-    for (const chapter of Object.keys(structure)) {
-      courseStructureRoutesCollect(structure[chapter], start, currentPath + '/' + chapter, routes)
-    }
   }
 }
 
@@ -134,17 +126,16 @@ const courseStructureRoutesCollect = (
  * @returns list of tuples with route and id
  */
 export const coursePathsGet =
-  (courseNav: CourseNavigationStructure, start: string | number):
+  (courseNav: CourseNavigationItem[], start: string):
     [[route: string, id: string]] => {
-    // @ts-ignore
-    const routes: [[route: string, id: string]] = [] // instantiate here because of recursion
-    courseStructureRoutesCollect(courseNav, start, '', routes)
+    const routes: [[route: string, id: string]] = [['', start]] // instantiate here because of recursion
+    courseStructureRoutesCollect(courseNav, '', routes)
     for (const i in routes) {
       if (routes[i][0][0] === '/') {
         // console.log('removing leading slash', routes[i][0])
         routes[i][0] = routes[i][0].substring(1)
       } // remove leading slash
-      if (routes[i][1] === start || typeof start === 'number') { // remove duplicate route for start element
+      if (routes[i][1] === start) { // remove duplicate route for start element
         for (const j in routes) {
           if (i !== j && routes[i][1] === routes[j][1]) { // remove longer duplicate route, i.e. keep ''
             if (routes[i][0].length < routes[j][0].length) {
@@ -164,18 +155,13 @@ export const coursePathsGet =
  * @param ids object containing ids of content blocks, will be modified consisting
  *  all ids of content blocks in course structure
  */
-export const courseStructureContentIdsExtract = (structure: CourseNavigationStructure, ids: any): void => {
-  if (structure instanceof Array) { // stucture is CourseNavigationItem[]
-    structure.forEach((item) => {
-      ids[item.id] = { partOfArray: true }
-    })
-  } else if (Object.prototype.hasOwnProperty.call(structure, 'id')) { // structure is CourseNavigationItem
-    // @ts-ignore
+export const courseStructureContentIdsExtract = (structure: CourseNavigationItem[] | CourseNavigationItem, ids: any): void => {
+  if (Array.isArray(structure)) { // structure is array of CourseNavigationItems
+    structure.forEach(item => courseStructureContentIdsExtract(item, ids))
+  } else if (structure.isChapter && structure.children) { // structure is single CourseNavigationItem
+    structure.children.forEach(item => courseStructureContentIdsExtract(item, ids)) // recursively call for each child
+  } else {
     ids[structure.id] = {}
-  } else { // structure is CourseNavigationChapter
-    for (const chapter in structure) {
-      courseStructureContentIdsExtract(structure[chapter], ids)
-    }
   }
 }
 
@@ -211,7 +197,7 @@ const courseSubChapterSlugTrim = (
  *  keys, courseRoutes: list of tuples [route, id]
  */
 export const courseStructureDescent = (
-  courseChapters: CourseNavigationStructure,
+  courseChapters: CourseNavigationItem[],
   start: string,
   subChapterSlug?: boolean
 ):

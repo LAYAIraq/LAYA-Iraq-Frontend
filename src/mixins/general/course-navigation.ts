@@ -3,14 +3,13 @@
  * @author cmc
  * @since 1.3.0
  */
-import { CourseNavigationStructure } from '@/mixins/types/course-structure'
-import { DraggableCourseChapter } from '@/mixins/types/course-navigation'
+import { CourseNavigationItem } from '@/mixins/types/course-structure'
 
 /**
  * @description transform course navigation structure object to draggable array
  * @param courseChapter course navigation structure object
  */
-export const courseChapterTransformToDraggable = (courseChapter: CourseNavigationStructure): DraggableCourseChapter => {
+export const courseChapterTransformToDraggable = (courseChapter: CourseNavigationItem[] | CourseNavigationItem): CourseNavigationItem => {
   if (courseChapter instanceof Array) { // courseChapter is CourseNavigationItem[]
     return {
       isChapter: true,
@@ -22,7 +21,7 @@ export const courseChapterTransformToDraggable = (courseChapter: CourseNavigatio
       isChapter: false,
       ...courseChapter
     }
-  } else { // courseChapter is CourseNavigationStructure
+  } else { // courseChapter is CourseNavigation
     return {
       isChapter: true,
       children: Object.keys(courseChapter).map((chapter) => {
