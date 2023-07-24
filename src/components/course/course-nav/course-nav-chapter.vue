@@ -16,8 +16,6 @@
     ></i>
     <course-nav-property-edit
       v-if="chapter.isChapter && !main"
-      :callback="courseChapterNameConvertToId"
-      :display="courseChapterIdConvertToName"
       :form-placeholder="y18n('courseNavEdit.chapterPlaceholder')"
       :property="chapterName"
       :class="{ 'border rounded border-danger': chapterNameDuplicate }"

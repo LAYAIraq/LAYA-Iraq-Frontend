@@ -28,7 +28,7 @@ export default {
 
   state: {
     courseContent: {},
-    courseIds: {},
+    courseContentFollowMap: {},
     courseStart: '',
     courseChapters: {},
     courseChapterNames: {},
@@ -48,7 +48,6 @@ export default {
       }
       return map
     },
-    courseContentIndexIdMap: (state: { courseIds: { [id: string]: number } }) => state.courseIds,
     courseContentRouteIdMap: (state: { courseRoutes: any, courseStart: string }) => {
       const map = {}
       for (const [route, id] of state.courseRoutes) {
@@ -153,7 +152,7 @@ export default {
     setCourseContentAndNav (
       state: {
         courseContent: any,
-        courseIds: any,
+        courseContentFollowMap: any,
         courseRoutes: any,
         courseStart: any,
         courseChapters: any
@@ -162,12 +161,12 @@ export default {
     ) {
       state.courseChapters = []
       state.courseContent = {}
-      state.courseIds = {}
+      state.courseContentFollowMap = {}
       for (const block of course.content) {
         const blockId = uuidv4().split('-')[0] // legacy content blocks have no id
         const i = course.content.indexOf(block)
         state.courseContent[blockId] = { ...block.input, name: block.name, id: blockId } // this is analogous to the new course structure
-        state.courseIds[i] = blockId // index of block in content array for legacy content
+        state.courseContentFollowMap[blockId] = [] // index of block in content array for legacy content
         state.courseChapters.push({
           id: blockId,
           slug: slugify(block.input.title.text),
@@ -179,6 +178,7 @@ export default {
         }
       }
       legacyContentFollowTransform(state.courseChapters)
+      state.courseChapters.forEach(chapter => state.courseContentFollowMap[chapter.id] = chapter.follow)
       // traverse course content and create routes
       state.courseRoutes = coursePathsGet(state.courseChapters, state.courseStart)
     }
