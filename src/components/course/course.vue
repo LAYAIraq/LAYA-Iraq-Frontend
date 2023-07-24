@@ -240,7 +240,7 @@ export default {
      * @param contentBlock content block object
      */
     followingContent (contentBlock) {
-      if (!this.contentToDisplay ) return [() => {}] // no follow set
+      if (!this.contentToDisplay) return [() => {}] // no follow set
       // el is the content block to follow, return router push function
       // if el is number, use courseContentIndexIdMap to get id
       const routePushLookup = (el) => {
