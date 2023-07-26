@@ -731,6 +731,7 @@ export default {
             this.passwordOld = ''
             this.$store.commit('passwordSet', '')
             this.$store.commit('passwordRepeatSet', '')
+            this.submit()
           })
           .catch(err => {
             console.error(err)
