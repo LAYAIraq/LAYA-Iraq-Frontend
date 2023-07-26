@@ -165,7 +165,7 @@ export default {
         preferencesLanguages: object,
         preferencesMedia: object
       },
-      prefs: { font: object, media: object }
+      prefs: { font: object, language: object, media: object }
     ) {
       state.preferencesFont = {
         ...state.preferencesFont,
@@ -173,7 +173,7 @@ export default {
       }
       state.preferencesLanguages = {
         ...state.preferencesLanguages,
-        ...prefs.font
+        ...prefs.language
       }
       state.preferencesMedia = {
         ...state.preferencesMedia,
@@ -195,40 +195,24 @@ export default {
       state: {
         username: string,
         email: string,
+        language: string,
+        avatar: string,
+        occupation: string,
         institution: string,
-        occupation: string
-        fullName: string,
-        preferencesFont: object,
-        preferencesLanguages: object,
-        preferencesMedia: object,
-        lang: string,
-        avatar: string
+        fullName: string
       },
       settings: {
         username: string,
         email: string,
+        language: string,
+        avatar: string,
+        occupation: string,
         institution: string,
-        occupation: string
-        fullName: string,
-        prefs: {
-          font: object,
-          languages: object,
-          media: object
-        },
-        lang: string,
-        avatar: string
+        fullName: string
       }) {
-      console.log(settings)
-      state.username = settings.username
-      state.fullName = settings.fullName
-      state.institution = settings.institution
-      state.occupation = settings.occupation
-      state.email = settings.email
-      state.lang = settings.lang
-      state.avatar = settings.avatar
-      state.preferencesFont = settings.prefs.font
-      state.preferencesLanguages = settings.prefs.languages
-      state.preferencesMedia = settings.prefs.media
+      Object.keys(settings).forEach(key => {
+        state[key] = settings[key]
+      })
     },
     /**
      * Function usernameSet: set username
@@ -257,12 +241,11 @@ export default {
      *
      * @param param0 state variables
      */
-    profileFetch ({ commit, rootState }) {
-      http.get(`accounts/${rootState.authentication.userId}`)
+    profileFetch ({ commit, getters }) {
+      http.get(`accounts/${getters.userId}`)
         .then(({ data }) => {
-          console.log(data)
-          commit('profileSet', data
-          )
+          commit('profileSet', stripKey('prefs', data))
+          commit('preferencesSet', data.prefs)
         })
         .catch((err) => console.error(err))
     },
