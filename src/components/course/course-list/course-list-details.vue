@@ -40,6 +40,14 @@
         <div class="col">
           <h3>{{ y18n('cat') }}</h3>
         </div>
+        <div class="col-3">
+          <b-button
+            v-b-toggle="'collapse-2'"
+            class="m-1"
+          >
+            {{ y18n('expand') }}
+          </b-button>
+        </div>
         <div class="col-2">
           <h4
             class="sr-only"
@@ -69,12 +77,6 @@
             ></i>
           </span>
           {{ course.name }}
-          <b-button
-            v-b-toggle="'collapse-2'"
-            class="m-1"
-          >
-            {{ y18n('expand') }}
-          </b-button>
         </div>
 
         <div class="col">
@@ -134,18 +136,22 @@
             <i class="fas fa-exclamation-circle"></i>
           </div>
         </div>
-        <b-collapse id="collapse-2">
-          <b-card
-            :title="y18n('abstract')"
-            :text="course.abstract"
-          >
-          </b-card>
-          <b-card
-            :title="y18n('keywords')"
-            :text="course.keywords"
-          >
-          </b-card>
-        </b-collapse>
+        <div class="container-fluid">
+          <b-collapse id="collapse-2">
+            <b-card
+              :title="y18n('abstract')"
+              title-tag="h5"
+            >
+              {{ course.abstract }}
+            </b-card>
+            <b-card
+              :title="y18n('keywords')"
+              title-tag="h5"
+            >
+              {{ course.keywords }}
+            </b-card>
+          </b-collapse>
+        </div>
       </div>
     </div>
     <b-modal
