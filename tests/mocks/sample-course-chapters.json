@@ -6,7 +6,6 @@
   "chapters": [
     {
       "isChapter": false,
-      "chapterName": "start",
       "follow": [
         "zw31",
         "dr31"
@@ -17,16 +16,27 @@
     {
       "chapterName": "video",
       "id": "zw31",
-      "isChapter": false,
-      "follow": "dr31",
+      "isChapter": true,
+      "children": [
+        {
+          "id": "zw31",
+          "isChapter": false,
+          "slug": "video",
+          "follow": "dr31"
+        }
+      ],
       "slug": "video"
     },
     {
-      "chapterName": "editor",
-      "follow": "v13r",
-      "id": "dr31",
-      "isChapter": false,
-      "slug": "wysiwyg"
+      "chapterName": "Editor",
+      "isChapter": true,
+      "children": [{
+          "follow": "v13r",
+          "id": "dr31",
+          "isChapter": false,
+          "slug": "wysiwyg"
+      }],
+      "slug": "editor"
     },
     {
       "chapterName": "quiz",
@@ -42,6 +52,7 @@
           "slug": "drag-drop"
         }
       ],
+      "slug": "quiz",
       "isChapter": true
     }
   ],

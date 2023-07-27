@@ -76,7 +76,7 @@ export const deepCopy = (obj: object) => {
 }
 
 /**
- * @function convert kebab case string to camel case
+ * @description convert kebab case string to camel case
  * @author cmc
  * @param str - string to convert
  */
@@ -88,14 +88,7 @@ export const kebabToCamel = (str: string) => {
  * @param str
  */
 export const camelToRender = (str: string) => {
-  let res: string = ''
-  str.split(/(?=[A-Z])/).forEach((w: string, i: number) => {
-    if (i !== 0) {
-      res += ' '
-    }
-    w.split(/[0-9]+/).forEach(t => {
-      res += t.charAt(0).toUpperCase() + t.slice(1)
-    })
-  })
-  return res
+  // return camelCaseString as Camel Case String
+  return str.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase()).replace(/(\d+)/g, ' $1')
+  // put a space before a number in a string
 }

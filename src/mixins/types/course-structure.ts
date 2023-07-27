@@ -3,7 +3,6 @@
  * @author cmc
  * @since 1.3.0
  */
-import CourseNav from '@/components/course/course-nav/course-nav.vue'
 
 // Old course structure
 export type LegacyContentBlock = {
@@ -68,7 +67,7 @@ export type CourseNavigationItem = {
  * @property name - name of course
  * @property abstract - abstract of course
  * @property category - category of course
- * @property chapters - content of course structured as nested object
+ * @property chapters - content of course structured as nested array
  * @property start - id of first content block
  */
 export type Course = {

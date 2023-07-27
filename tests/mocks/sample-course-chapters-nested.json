@@ -8,80 +8,111 @@
       "chapterName": "main",
       "children": [
         {
-          "chapterName": "start",
-          "follow": [
-            "zw31",
-            "dr31"
+          "chapterName": "quiz",
+          "children": [
+            {
+              "chapterName": "scmc",
+              "isChapter": true,
+              "children": [
+                {
+                  "id": "v13r",
+                  "isChapter": false,
+                  "slug": "sc-quiz"
+                },
+                {
+                  "id": "fu3nf",
+                  "isChapter": false,
+                  "slug": "mc-quiz"
+                },
+                {
+                  "id": "53ch5",
+                  "isChapter": true,
+                  "slug": "some-sub-chapter",
+                  "children": [{
+                    "id": "53ch5",
+                    "isChapter": false,
+                    "slug": "tf-quiz"
+                  }]
+                }
+              ],
+              "slug": "scmc"
+            },
+            {
+              "chapterName": "other",
+              "children": [
+                {
+                  "isChapter": true,
+                  "children":
+                  [
+                    {
+                      "id": "513b3n",
+                      "isChapter": false,
+                      "slug": "drag-drop"
+                    }
+                  ],
+                  "slug": "drag-drop"
+                },
+                {
+                  "isChapter": true,
+                  "slug": "relate",
+                  "children": [
+                    {
+                      "id": "4cht",
+                      "isChapter": false,
+                      "slug": "relate"
+                    }]
+                }
+              ],
+              "isChapter": true,
+              "slug": "other"
+            }
           ],
-          "id": "e1ns",
           "isChapter": true,
-          "slug": "dialog-sample"
+          "slug": "quiz"
         },
         {
-          "chapterName": "video",
-          "id": "zw31",
+          "chapterName": "start",
+          "children": [
+            {
+              "follow": [
+                "zw31",
+                "dr31"
+              ],
+              "id": "e1ns",
+              "slug": "dialog-sample",
+              "isChapter": false
+            }
+          ],
           "isChapter": true,
+          "slug": "start"
+        },
+        {
+          "id": "zw31",
+          "isChapter": false,
           "follow": "dr31",
           "slug": "video"
         },
         {
-          "chapterName": "editor",
           "follow": "v13r",
           "id": "dr31",
           "isChapter": false,
           "slug": "wysiwyg"
         }
       ],
-      "isChapter": true
+      "isChapter": true,
+      "slug": "main"
     },
+
     {
-      "chapterName": "quiz",
+      "isChapter": true,
+      "slug": "feedback",
       "children": [
         {
-          "chapterName": "scmc",
-          "isChapter": true,
-          "children": [
-            {
-              "id": "v13r",
-              "isChapter": false,
-              "slug": "sc-quiz"
-            },
-            {
-              "id": "fu3nf",
-              "isChapter": false,
-              "slug": "mc-quiz"
-            },
-            {
-              "id": "53ch5",
-              "isChapter": false,
-              "slug": "tf-quiz"
-            }
-          ]
-        },
-        {
-          "chapterName": "other",
-          "children": [
-            {
-              "chapterName": "drag-drop",
-              "id": "513b3n",
-              "isChapter": true,
-              "slug": "drag-drop"
-            },
-            {
-              "chapterName": "relate",
-              "id": "4cht",
-              "isChapter": true,
-              "slug": "relate"
-             }
-          ],
-          "isChapter": true
+          "id": "f33db4ck",
+          "isChapter": false,
+          "slug": "feedback"
         }
-      ],
-      "isChapter": true
-    }, {
-      "id": "f33db4ck",
-      "isChapter": false,
-      "slug": "feedback"
+      ]
     }
     ],
   "feedback": [],

@@ -77,7 +77,7 @@ export default {
       // console.log('found content path', res)
       return contentPath ? contentPath[1] : null
     },
-    courseNav: (state) => {
+    courseNav: (state: { courseStart: string, courseChapters: object[] }) => {
       return {
         start: state.courseStart,
         structure: state.courseChapters
@@ -99,21 +99,19 @@ export default {
         courseIds: { [id: string]: number },
         courseStart: string,
         courseChapters: CourseNavigationItem[],
-        courseChapterNames: { [id: string]: string },
         courseRoutes: any
       },
       course: Course
     ) {
       [state.courseContent, state.courseRoutes] = courseStructureDescent(
         course.chapters,
-        course.start,
         course.properties ? course.properties.showSingleSubChapterTitleSlug : null
       )
       state.courseChapters = course.chapters
       state.courseStart = course.start
-      state.courseChapterNames = course.chapterNames
     },
 
+    // only exists for converting old courses to new ones
     courseContentAdd (state: { courseContent: { [id: string]: ContentBlock } }, content: any) {
       const newId = uuidv4().split('-')[0]
       state.courseContent[newId] = { ...content, id: newId }
@@ -133,7 +131,9 @@ export default {
      */
     courseContentSetProperty (
       state: { courseContent: { [id: string]: ContentBlock } }, { id, property, value }: { id: string, property: string, value: any }) {
-      Vue.set(state.courseContent[id], property, value)
+      if (state.courseContent[id] && property && value) { // only update if content block exists and property and value are defined
+        Vue.set(state.courseContent[id], property, value)
+      }
     },
 
     courseContentRemove (state: { courseContent: any }, id: string) {
@@ -141,7 +141,9 @@ export default {
     },
 
     courseChaptersSet (state: { courseChapters: object[] }, chapters: object[]) {
-      state.courseChapters = chapters
+      if (chapters) {
+        state.courseChapters = chapters
+      }
     },
 
     /**
@@ -178,9 +180,11 @@ export default {
         }
       }
       legacyContentFollowTransform(state.courseChapters)
-      state.courseChapters.forEach(chapter => state.courseContentFollowMap[chapter.id] = chapter.follow)
+      state.courseChapters.forEach((chapter: CourseNavigationItem) => {
+        state.courseContentFollowMap[chapter.id] = chapter.follow
+      })
       // traverse course content and create routes
-      state.courseRoutes = coursePathsGet(state.courseChapters, state.courseStart)
+      state.courseRoutes = coursePathsGet(state.courseChapters)
     }
   },
 

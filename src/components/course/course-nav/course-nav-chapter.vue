@@ -69,7 +69,6 @@ import CourseNavItem from '@/components/course/course-nav/course-nav-item.vue'
 import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
 import { courseNavEmits, locale } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
-import { courseChapterIdConvertToName, courseChapterNameConvertToId } from '@/mixins/general/course-navigation'
 
 export default {
   name: 'CourseNavChapter',
@@ -193,8 +192,6 @@ export default {
     childVisibilityChange (id, visibility) {
       this.childrenVisibility[id] = visibility
     },
-    courseChapterNameConvertToId,
-    courseChapterIdConvertToName,
     /**
      * @function handle event when drag starts, setting dragStartIndex and dragging to true
      * @author cmc

@@ -22,17 +22,7 @@ describe('course-content store module actions', () => {
     }
   })
 
-  const actions = {
-    ...courseContent.actions,
-    courseFetch: jest.fn(({ commit }, call) => {
-      if (call === 'fail') {
-        return Promise.reject(new Error('test error'))
-      } else {
-        commit('courseStructureDestructure', SampleCourseChapters)
-        Promise.resolve(SampleCourseChapters)
-      }
-    })
-  }
+  const { actions } = courseContent
   const commit = jest.fn()
 
   describe('courseContentFetch', () => {
@@ -46,47 +36,41 @@ describe('course-content store module actions', () => {
     })
   })
   describe('courseContentPersist', () => {
-    const postSpy = jest.spyOn(axios, 'post').mockResolvedValue('ok')
-    const putSpy = jest.spyOn(axios, 'put').mockResolvedValue('ok')
-    const deleteSpy = jest.spyOn(axios, 'delete').mockResolvedValue('ok')
-    const patchSpy = jest.spyOn(axios, 'patch').mockResolvedValue('ok')
+    describe('resolved promise', () => {
+      const postSpy = jest.spyOn(axios, 'post').mockResolvedValue('ok')
+      const putSpy = jest.spyOn(axios, 'put').mockResolvedValue('ok')
+      const deleteSpy = jest.spyOn(axios, 'delete').mockResolvedValue('ok')
+      const patchSpy = jest.spyOn(axios, 'patch').mockResolvedValue('ok')
 
-    it('call setBusy commit twice', async () => {
-      await actions.courseContentPersist({ commit }, 'post', SampleCourseChaptersContent['zw31'])
-      expect(commit).toHaveBeenCalledWith('setBusy', true)
-      expect(commit).toHaveBeenLastCalledWith('setBusy', false)
-    })
-    it('should call the correct methods', async () => {
-      const block = SampleCourseChaptersContent.zw31
-      await actions.courseContentPersist({ commit }, 'post', block)
-      await expect(postSpy).toHaveBeenCalledWith(`course-content/${block.id}`, block)
-      await actions.courseContentPersist({ commit }, 'put', block)
-      await expect(putSpy).toHaveBeenCalledWith(`course-content/${block.id}`, block)
-      await actions.courseContentPersist({ commit }, 'delete', block)
-      await expect(deleteSpy).toHaveBeenCalledWith(`course-content/${block.id}`, block)
-      await actions.courseContentPersist({ commit }, 'patch', block)
-      await expect(patchSpy).toHaveBeenCalledWith(`course-content/${block.id}`, block)
-    })
+      it('call setBusy commit twice', async () => {
+        await actions.courseContentPersist({ commit }, 'post', SampleCourseChaptersContent['zw31'])
+        expect(commit).toHaveBeenCalledWith('setBusy', true)
+        expect(commit).toHaveBeenLastCalledWith('setBusy', false)
+      })
+      it('should call the correct methods', async () => {
+        const block = SampleCourseChaptersContent.zw31
+        await actions.courseContentPersist({ commit }, 'post', block)
+        expect(postSpy).toHaveBeenCalledWith(`course-content/${block.id}`, block)
+        await actions.courseContentPersist({ commit }, 'put', block)
+        expect(putSpy).toHaveBeenCalledWith(`course-content/${block.id}`, block)
+        await actions.courseContentPersist({ commit }, 'delete', block)
+        expect(deleteSpy).toHaveBeenCalledWith(`course-content/${block.id}`, block)
+        await actions.courseContentPersist({ commit }, 'patch', block)
+        expect(patchSpy).toHaveBeenCalledWith(`course-content/${block.id}`, block)
+      })
 
-    it('should reject with error when using GET', async () => {
-      await expect(
-        actions.courseContentPersist({ commit }, 'get', SampleCourseChaptersContent['zw31'])
-      ).rejects.toThrow('Cannot use GET verb for course content persist')
-    })
-  })
-  describe('courseFetch', () => {
-    it('gets course from back end', async () => {
-      await actions.courseFetch({ commit }, 'sample-course')
-      expect(commit).toHaveBeenCalledWith('courseStructureDestructure', SampleCourseChapters)
+      it('should reject with error when using GET', async () => {
+        await expect(
+          actions.courseContentPersist({ commit }, 'get', SampleCourseChaptersContent['zw31'])
+        ).rejects.toThrow('Cannot use GET verb for course content persist')
+      })
     })
 
-    it('calls courseContentSet with correct payload', async () => {
-      await actions.courseContentFetch({ commit }, 'e1ns')
-      expect(commit).toHaveBeenCalledWith('courseContentSet', SampleCourseChaptersContent.e1ns)
-    })
-
-    it('rejects with error', async () => {
-      await expect(actions.courseFetch({ commit }, 'fail')).rejects.toThrow('test error')
+    describe('rejected promise', () => {
+      it('should return a rejected promise', async () => {
+        jest.spyOn(axios, 'post').mockRejectedValue(new Error('test error'))
+        await expect(actions.courseContentPersist({ commit }, 'post', SampleCourseChaptersContent['zw31'])).rejects.toThrow('test error')
+      })
     })
   })
 })
