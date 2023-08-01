@@ -80,7 +80,7 @@
         </div>
 
         <div class="col">
-          {{ course.author }}
+          {{ authorName }}
         </div>
 
         <div class="col">
@@ -223,6 +223,7 @@ export default {
 
   data () {
     return {
+      authorName: '',
       buttonAction: null,
       complicitCourses: null,
       complicitCheck: null,

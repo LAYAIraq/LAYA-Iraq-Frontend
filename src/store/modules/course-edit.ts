@@ -41,6 +41,7 @@ export default {
      */
     course (state: { course: {
       authorId: number,
+      authorName: string,
       name: string,
       properties: object
       }
