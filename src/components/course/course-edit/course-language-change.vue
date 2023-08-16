@@ -101,9 +101,6 @@ export default {
      */
     changeCourseLanguage (e) {
       e.preventDefault()
-      // if (!this.newLanguage) {
-      // } else if (this.newLanguage === this.course.language) {
-      // } else {
       this.$nextTick(() => {
         this.$bvModal.hide('author-change-language-confirm')
       })

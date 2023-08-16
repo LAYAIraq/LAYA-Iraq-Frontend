@@ -17,7 +17,9 @@ export default {
      */
     courseList (state: { courseList: object[] }) {
       return state.courseList
-    }
+    },
+    courseLanguage: (state: { language: string }) => state.language
+
   },
   mutations: {
     /**
@@ -36,6 +38,7 @@ export default {
       courseListItem: {
         author: number,
         category: string,
+        language: string,
         courseId: string,
         name: string,
         properties: object,
@@ -50,7 +53,7 @@ export default {
      *
      * Author: pj
      *
-     * Last Updated: February 20, 2022
+     * Last Updated: August 14 2023 by nv
      *
      * @param state course list array
      * @param data new properties to be set
@@ -101,15 +104,19 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: November 7, 2022
+     * Last Updated: August 14 2023 by nv
      * @param state contains courseList
      * @param courseId id of updated course
      */
     courseListUpdate (
       state: {
-        course: { category: string, name: string },
+        course: {
+          language: string,
+          category: string,
+          name: string },
         courseList: Array<{
           category: string,
+          language: string,
           courseId: string,
           name: string,
           slug: string
@@ -122,6 +129,7 @@ export default {
       console.log(listItem)
       listItem.name = state.course.name
       listItem.category = state.course.category
+      listItem.language = state.course.language
       listItem.slug = slugify(state.course.name)
       console.log(listItem)
       console.log(state.courseList)
@@ -133,7 +141,7 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: October 19, 2022
+     * Last Updated: August 14 2023 by nv
      *
      * @param param0 state variables
      */
@@ -144,6 +152,7 @@ export default {
           for (const courseObject of data) {
             const listData = {
               category: courseObject.category,
+              language: courseObject.language,
               name: courseObject.name,
               slug: slugify(courseObject.name), // TODO: handle arabic & kurdish
               properties: courseObject.properties,
