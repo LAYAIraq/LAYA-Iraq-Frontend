@@ -9,6 +9,5 @@ export default [
   'english',
   'german',
   'arabic',
-  'kurdish',
-  'notlisted'
+  'kurdish'
 ]

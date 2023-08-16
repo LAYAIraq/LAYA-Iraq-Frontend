@@ -353,6 +353,7 @@ export default {
      */
     courseCreate (state, data: {
       name: string,
+      language: string,
       category: string,
       userId: number,
       enrollment?: boolean
@@ -368,6 +369,7 @@ export default {
             http.post('courses', {
               name: data.name,
               category: data.category,
+              language: data.language,
               authorId: data.userId,
               storageId: storageId,
               properties: { enrollment: data.enrollment }
