@@ -18,7 +18,7 @@ Since: v1.0.0
               <img
                 v-if="avatarURL"
                 v-auth-image="avatarURL"
-                class="rounded-circle avatar-display"
+                :class="langIsAr? 'rounded-circle avatar-display ar' : 'rounded-circle avatar-display'"
               >
               <i
                 v-else
@@ -816,6 +816,11 @@ export default {
   width: 7rem;
   height: 7rem;
   position: absolute;
+}
+
+.ar {
+  position: absolute;
+  left: 0px;
 }
 .checkbox-inline label {
   display: inline-flex;
