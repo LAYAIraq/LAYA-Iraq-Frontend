@@ -609,11 +609,14 @@
 	"author": "Course Author",
 	"expand": "Expand/Collapse All",
 	"keywords": "Keywords",
+	"keywords.notListed": "Not listed.",
 	"abstract": "Abstract",
+	"abstract.notListed": "Not listed.",
 	"changeAbstract": "Change Course Abstract",
 	"changeAbstract.new": "New Abstract",
 	"changeAbstract.tip": "Change your course abstract here.",
 	"changeKeywords": "Change Course Keywords",
 	"changeKeywords.new": "New Keywords",
-	"changeKeywords.tip": "Change your course keywords here."
+	"changeKeywords.tip": "Change your course keywords here.",
+	"category.notListed": "Not listed."
 }

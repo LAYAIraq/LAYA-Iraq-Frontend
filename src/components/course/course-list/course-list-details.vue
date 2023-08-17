@@ -37,16 +37,15 @@
         <div class="col">
           <h3>{{ y18n('author') }}</h3>
         </div>
-        <div class="col">
-          <h3>{{ y18n('cat') }}</h3>
-        </div>
         <div class="col-3">
-          <b-button
-            v-b-toggle="'collapse-2'"
-            class="m-1"
-          >
-            {{ y18n('expand') }}
-          </b-button>
+          <div :class="langIsAr? 'align-left' : 'align-right'">
+            <b-button
+              v-b-toggle="'collapse-2'"
+              class="m-1"
+            >
+              {{ y18n('expand') }}
+            </b-button>
+          </div>
         </div>
         <div class="col-2">
           <h4
@@ -83,9 +82,6 @@
           {{ authorName }}
         </div>
 
-        <div class="col">
-          {{ course.category }}
-        </div>
         <div class="col-2">
           <ul class="course-props">
             <li
@@ -136,19 +132,30 @@
             <i class="fas fa-exclamation-circle"></i>
           </div>
         </div>
-        <div class="container-fluid">
+        <div class="container-fluid p-2">
           <b-collapse id="collapse-2">
             <b-card
-              :title="y18n('abstract')"
-              title-tag="h5"
+              :header="y18n('abstract')"
+              header-class="collap-header"
+              body-class="collap-body"
             >
-              {{ course.abstract }}
+              {{ null === course.abstract ? y18n('abstract.notListed') : course.abstract }}
             </b-card>
+
             <b-card
-              :title="y18n('keywords')"
-              title-tag="h5"
+              :header="y18n('cat')"
+              header-class="collap-header"
+              body-class="collap-body"
             >
-              {{ course.keywords }}
+              {{ null === course.category ? y18n('category.notListed') : course.category }}
+            </b-card>
+
+            <b-card
+              :header="y18n('keywords')"
+              header-class="collap-header"
+              body-class="collap-body"
+            >
+              {{ null === course.keywords ? y18n('keywords.notListed') : course.keywords }}
             </b-card>
           </b-collapse>
         </div>
@@ -514,6 +521,22 @@ i.icons-list {
   font-size: 1.5rem;
   margin-left: 1.5rem;
   margin-right: -3rem;
+}
+
+.collap-button {
+  position: absolute;
+}
+
+.collap-button-ar {
+  position: absolute;
+}
+
+.collap-header {
+  font-weight: bold;
+}
+
+.collap-body {
+  font-size: 16px;
 }
 
 </style>
