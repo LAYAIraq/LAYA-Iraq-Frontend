@@ -85,10 +85,10 @@ export default {
     ...mapGetters([
       'content',
       'course',
+      'courseChapters',
       'courseChapterNames',
       'courseContent',
       'courseContentIdRouteMap',
-      'courseContentIndexIdMap',
       'courseContentRouteIdMap',
       'courseFlags',
       'courseNav',
@@ -115,21 +115,6 @@ export default {
     },
 
     /**
-     *  onFinishDummy: returns empty function on every [] invocation
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     * */
-    onFinishDummy () {
-      return new Proxy({}, {
-        get () {
-          return () => {}
-        }
-      })
-    },
-
-    /**
      * contentToDisplay: return current content object
      *
      * Author: cmc
@@ -144,6 +129,11 @@ export default {
       }
     },
 
+    /**
+     * @function return a route push for following content
+     * @author cmc
+     * @return {(function())|*|[(function(): *)]}
+     */
     followContent () {
       return this.followingContent(this.contentToDisplay)
     },
@@ -241,7 +231,7 @@ export default {
     },
 
     /**
-     * Function followContent: returns follow set for content block
+     * Function followingContent: returns follow set for content block
      *
      * Author: core
      *
@@ -250,10 +240,7 @@ export default {
      * @param contentBlock content block object
      */
     followingContent (contentBlock) {
-      if (!this.contentToDisplay) return () => {}
-      const follow = this.courseNav.structure
-        .find((block) => block.id === contentBlock.id).follow // follow array in course nav structure
-      if (!follow) return () => {} // no follow set
+      if (!this.contentToDisplay) return [() => {}] // no follow set
       // el is the content block to follow, return router push function
       // if el is number, use courseContentIndexIdMap to get id
       const routePushLookup = (el) => {
@@ -261,17 +248,18 @@ export default {
           params: {
             name: this.name,
             coursePath: typeof el === 'number' // if element is a number, it's an index
-              ? this.courseContentIdRouteMap[this.courseContentIndexIdMap[el]] // get id from index, then route from id
+              ? this.courseContentIdRouteMap[el] // get id from index, then route from id
               : `${el}`
           }
         })
       }
-
-      return typeof follow === 'object'
-        ? follow.map(el => // create a router.push call for each element in follow array
+      const k = typeof contentBlock.follow === 'object'
+        ? contentBlock.follow.map(el => // create a router.push call for each element in follow array
           routePushLookup(el)
         )
-        : [routePushLookup(follow)] // has to be array
+        : [routePushLookup(contentBlock.follow)] // has to be array
+      console.log(k)
+      return k
     }
   }
 }

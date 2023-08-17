@@ -141,7 +141,8 @@ export default {
     },
     followingContent: {
       type: [String, Array],
-      required: true
+      default: () => null
+      // required: true
     },
     value: {
       type: Object,
@@ -190,7 +191,7 @@ export default {
      * @param value change value for slug
      */
     propagateChange (property, value) {
-      this.$emit('propagatePropertyChange', this.value, property, value)
+      this.$emit('propagate-property-change', this.value, property, value)
     },
     /**
      * @description toggle collapsed state of item, emit event to parent
@@ -199,7 +200,7 @@ export default {
      */
     toggleCollapsed () {
       this.collapsed = !this.collapsed
-      this.$emit('visibilityChange', this.value.id, !this.collapsed) // negate because we want to know if it is visible
+      this.$emit('visibility-change', this.value.id, !this.collapsed) // negate because we want to know if it is visible
     },
     /**
      * @description commit title update to store

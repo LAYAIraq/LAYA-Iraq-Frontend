@@ -12,10 +12,10 @@
     >
       <b-form-tags
         id="tags-with-dropdown"
-        v-model="selectedTag"
+        v-model="selectedTags"
         no-outer-focus
         class="mb-2"
-        :limit="1"
+        :limit="tagsNeeded"
       >
         <template #default="{ tags, disabled, addTag, removeTag }">
           <ul
@@ -23,7 +23,7 @@
             class="list-inline d-inline-block mb-2"
           >
             <li
-              v-for="tag in tags"
+              v-for="(tag, i) in tags"
               :key="tag"
               class="list-inline-item"
             >
@@ -31,15 +31,15 @@
                 :title="tag"
                 :disabled="disabled"
                 variant="info"
-                @remove="removeTag(tag)"
+                @remove="removeTag(tag); $emit('removed')"
               >
-                {{ objectRender(resultObject) }}
+                {{ objectRender(tagRender(i)) }}
               </b-form-tag>
             </li>
           </ul>
 
           <b-dropdown
-            v-if="selectedTag.length !== 1"
+            v-if="selectedTags.length !== tagsNeeded"
             size="sm"
             variant="outline-secondary"
             block
@@ -81,9 +81,9 @@
             </b-dropdown-text>
           </b-dropdown>
           <b-button
-            v-else
+            v-else-if="submitButton"
             class="btn-block btn-success"
-            @click="$emit('tagSelected', selectedTag[0])"
+            @click="tagsSelected"
           >
             {{ submitButtonText }}
           </b-button>
@@ -114,6 +114,11 @@ export default {
       type: [String, Array],
       default: () => null
     },
+    // whether component is used inline or modal
+    inline: {
+      type: Boolean,
+      default: () => true
+    },
     // key to use if search domain has nested objects
     nestedKey: {
       type: String,
@@ -129,6 +134,11 @@ export default {
       type: String,
       default: () => 'No tags'
     },
+    // already selected input
+    previousSelection: {
+      type: [String, Array],
+      default: () => null
+    },
     // placeholder for search input
     searchInputPlaceholder: {
       type: String,
@@ -139,21 +149,31 @@ export default {
       type: String,
       default: () => 'Search for tags'
     },
+    // wether or not to render a button for submitting
+    submitButton: {
+      type: Boolean,
+      default: () => true
+    },
     // text for submit button
     submitButtonText: {
       type: String,
       default: () => 'Submit'
     },
+    // number of tags to select
+    tagsNeeded: {
+      type: Number,
+      default: () => 1
+    },
     // title above Form
     titleLabelText: {
       type: String,
-      default: () => 'Select labels with drop down'
+      default: () => ''
     }
   },
   data () {
     return {
       searchTerm: '',
-      selectedTag: []
+      selectedTags: []
     }
   },
   computed: {
@@ -168,8 +188,8 @@ export default {
         : ''
     },
     resultObject () {
-      return this.searchDomain[this.selectedTag[0]] ??
-        filterObject(this.keys, this.domain[this.selectedTag[0]], 'text')
+      return this.searchDomain[this.selectedTags[0]] ??
+        filterObject(this.keys, this.domain[this.selectedTags[0]], 'text')
     },
     /**
      * @function converts input domain: if it's an object, transform into array of
@@ -227,7 +247,26 @@ export default {
           return e.toLowerCase().includes(this.searchQuery)
         }
       })
+    },
+    selectedTagsNo () {
+      return this.selectedTags.length
     }
+  },
+  watch: {
+    // emit tags-selected event when component selected tags matches the number of tags needed
+    // only applicable when submitButton prop is false
+    selectedTagsNo (v) {
+      if (!this.submitButton && v === this.tagsNeeded) {
+        this.tagsSelected()
+      }
+    }
+  },
+  created () {
+    this.selectedTags = this.previousSelection
+      ? Array.isArray(this.previousSelection)
+        ? this.previousSelection
+        : [this.previousSelection]
+      : []
   },
   methods: {
     kebabToCamel,
@@ -267,6 +306,27 @@ export default {
       return (typeof el === 'object') // object to render
         ? this.objectRender(el)
         : el
+    },
+    /**
+     * @function represent selected object by filtering keys
+     * @author cmc
+     * @since v1.3.0
+     * @param i index of object in tags array
+     * @return {*|object} representation of element in tag
+     */
+    tagRender (i) {
+      return this.searchDomain[this.selectedTags[i]] ??
+        filterObject(this.keys, this.domain[this.selectedTags[i]], 'text')
+    },
+    /**
+     * @function emit tags-selected event with single item or array
+     * @author cmc
+     * @since v1.3.0
+     */
+    tagsSelected () {
+      this.tagsNeeded === 1
+        ? this.$emit('tags-selected', this.selectedTags[0])
+        : this.$emit('tags-selected', this.selectedTags)
     }
   }
 }

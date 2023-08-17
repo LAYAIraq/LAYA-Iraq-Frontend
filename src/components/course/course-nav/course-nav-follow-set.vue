@@ -8,35 +8,71 @@
   <div class="d-block">
     <div>
       <div
-        v-if="followSet && followSet.length === 1"
+        v-if="followSet && followSet.length === followLength"
         v-b-tooltip.top
         :title="y18n('courseNavEdit.followHighlight')"
+        class="d-flex follow-content"
+        @click="$bvModal.show('follow-edit')"
         @mousedown="followHighlight"
       >
-        {{ follow }}
+        <div>
+          <p v-if="followSet.length === 1">
+            {{ follow }}
+          </p>
+          <ul
+            v-else
+            id="follow-list"
+          >
+            <draggable
+              :list="followSet"
+            >
+              <li
+                v-for="e in followSet"
+                :key="e"
+              >
+                {{ e }}
+              </li>
+            </draggable>
+          </ul>
+        </div>
+        <i
+          v-b-tooltip.top.ds500
+          class="fas fa-edit"
+          :class="langIsAr ? 'mr-auto' : 'ml-auto'"
+          :title="y18n('courseWrapper.edit')"
+        ></i>
       </div>
       <div
         v-else
-        id="incomplete-follow"
+        @click="$bvModal.show('follow-edit')"
       >
         Add following content
+        <i
+          v-b-tooltip.top.ds500
+          class="fas fa-edit"
+          :class="langIsAr ? 'mr-auto' : 'ml-auto'"
+          :title="y18n('courseWrapper.edit')"
+        ></i>
+      </div>
+      <b-modal
+        id="follow-edit"
+        :title="'Edit Follow Set'"
+        static
+        centered
+        @ok="followSet = followSetChange"
+        @cancel="followSetChange = null"
+      >
         <suggesting-input
           :domain="courseContent"
           :keys="['title', 'name', 'id']"
+          :inline="false"
           :nested-key="'text'"
-          @select="followSet = $event"
+          :previous-selection="follow"
+          :submit-button="false"
+          :tags-needed="followLength"
+          @tags-selected="followSetChange = $event"
         ></suggesting-input>
-        <ul id="follow-list">
-          <draggable
-            :list="followSet"
-          >
-            <li
-              v-for="e in followSet"
-              :key="e"
-            ></li>
-          </draggable>
-        </ul>
-      </div>
+      </b-modal>
     </div>
   </div>
 </template>
@@ -44,6 +80,7 @@
 import Draggable from 'vuedraggable'
 import SuggestingInput from '@/components/helpers/suggesting-input.vue'
 import { locale } from '@/mixins'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'CourseNavFollowSet',
@@ -64,21 +101,48 @@ export default {
   },
   data () {
     return {
+      followSetChange: null
     }
   },
   computed: {
-    courseContent () {
-      return this.$store.getters.courseContent
+    ...mapGetters(['courseContent']),
+    /**
+     * @function return text of buttons if item is button navigation
+     * @author cmc
+     * @since v1.3.0
+     * @returns {string[]} labels of buttons
+     */
+    buttonLabels () {
+      return this.item.name === 'button-navigation'
+        ? this.item.answers.map(el => el.text)
+        : null
     },
+    /**
+     * @function return length of follow items needed (1 for everything but button navigation)
+     * @author cmc
+     * @since v1.3.0
+     * @returns {number} amount of follow items for content block
+     */
+    followLength () {
+      return this.item.name === 'button-navigation'
+        ? this.item.answers.length
+        : 1
+    },
+    /**
+     * @function return follow set as array, set propagate change to follow set
+     * @author cmc
+     * @since v1.3.0
+     */
     followSet: {
       get () {
-        return (!this.follow || Array.isArray(this.follow))
-          ? this.follow
-          : [this.follow]
+        return this.follow
+          ? Array.isArray(this.follow) // either array or string
+            ? this.follow // return array as is
+            : [this.follow] // return string as single item in array
+          : null
       },
       set (val) {
-        console.log('followSet', val)
-        this.$emit('followUpdate', [...this.follow, val])
+        this.$emit('follow-update', val) // TODO: what if there's more than one item?
       }
     }
   },
@@ -94,3 +158,11 @@ export default {
   }
 }
 </script>
+<style>
+.follow-content>i {
+  display: none;
+}
+.follow-content:hover>i {
+  display: inline-flex;
+}
+</style>

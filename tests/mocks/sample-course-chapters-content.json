@@ -1,7 +1,7 @@
 {
   "e1ns": {
     "id": "e1ns",
-    "name": "laya-dialog",
+    "name": "button-navigation",
     "bg": "",
     "question": {
       "flagged": true,
@@ -28,7 +28,7 @@
   },
   "zw31": {
     "id": "zw31",
-    "name": "laya-plyr",
+    "name": "video-player",
     "src": "https://vimeo.com/27244727",
     "title": {
       "text": "Video",
@@ -38,7 +38,7 @@
   },
   "dr31": {
     "id": "dr31",
-    "name": "laya-wysiwyg",
+    "name": "free-text",
     "title": {
       "text": "WYSIWYG",
       "id": "99test34",
@@ -77,7 +77,7 @@
       "id": "99test23",
       "text": "SC Quiz"
     },
-    "name": "laya-scmc"
+    "name": "choice-question"
   },
   "fu3nf": {
     "id": "fu3nf",
@@ -110,6 +110,6 @@
       "id": "99test26",
       "text": "Drag & Drop"
     },
-    "name": "laya-quiz-drag-drop"
+    "name": "category-matching"
   }
 }

@@ -16,12 +16,10 @@
     ></i>
     <course-nav-property-edit
       v-if="chapter.isChapter && !main"
-      :callback="courseChapterNameConvertToId"
-      :display="courseChapterIdConvertToName"
       :form-placeholder="y18n('courseNavEdit.chapterPlaceholder')"
       :property="chapterName"
       :class="{ 'border rounded border-danger': chapterNameDuplicate }"
-      @changed="e => propagatePropertyChange(chapter, 'chapterName', e)"
+      @changed="propagatePropertyChange(chapter, 'chapterName', $event)"
     />
     <draggable
       :list="chapter.children"
@@ -46,18 +44,18 @@
           :highlighted-block="main? highlightId : highlightedBlock"
           @highlight="blockHighlight"
           @preview="pid => previewEmit(pid)"
-          @propagatePropertyChange="propagatePropertyChange"
+          @propagate-property-change="propagatePropertyChange"
         />
         <course-nav-item
           v-else-if="!collapsed"
           :class="{ 'border-success': item.id === highlightId }"
           :drag-bubble="[!dragging && dragStartIndex === i, childrenVisibility[item.id]]"
           :drag-end="[!dragging && dragEndIndex === i, childrenVisibility[item.id]]"
-          :following-content="firstContentId(chapter.children, i + 1)"
+          :following-content="item.follow ? item.follow : firstContentId(chapter.children, i + 1)"
           :value="item"
           @highlight="blockHighlight"
-          @visibilityChange="childVisibilityChange"
-          @propagatePropertyChange="propagatePropertyChange"
+          @visibility-change="childVisibilityChange"
+          @propagate-property-change="propagatePropertyChange"
           @preview="pid => previewEmit(pid)"
         />
       </div>
@@ -71,7 +69,6 @@ import CourseNavItem from '@/components/course/course-nav/course-nav-item.vue'
 import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
 import { courseNavEmits, locale } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
-import { courseChapterIdConvertToName, courseChapterNameConvertToId } from '@/mixins/general/course-navigation'
 
 export default {
   name: 'CourseNavChapter',
@@ -178,7 +175,7 @@ export default {
       if (this.main) {
         this.highlightId = id
       } else {
-        this.$emit('hightlight', id)
+        this.$emit('highlight', id)
       }
     },
     blockHighlightUnset () {
@@ -195,8 +192,6 @@ export default {
     childVisibilityChange (id, visibility) {
       this.childrenVisibility[id] = visibility
     },
-    courseChapterNameConvertToId,
-    courseChapterIdConvertToName,
     /**
      * @function handle event when drag starts, setting dragStartIndex and dragging to true
      * @author cmc
@@ -240,7 +235,7 @@ export default {
      * @param value new value for property to propagate to parent
      */
     propagatePropertyChange (chapter, property, value) {
-      this.$emit('propagatePropertyChange', chapter, property, value)
+      this.$emit('propagate-property-change', chapter, property, value)
     },
     /**
      * @function set followingContent property of all items in the chapter
@@ -258,7 +253,7 @@ export default {
        * @param followingItem reference to following item if exists
        * @param depth recursion depth
        */
-      const automaticFollow = (item, followingItem, depth) => {
+      const automaticFollow = (item, followingItem, depth) => { // TODO revisit
         if (item.isChapter) {
           item.children.forEach((child, i) => {
             const res = automaticFollow(child, item.children[i + 1] ?? null, depth + 1)

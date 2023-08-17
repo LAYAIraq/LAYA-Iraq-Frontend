@@ -50,7 +50,6 @@ Dependencies:
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { locale, routes } from '@/mixins'
 
 export default {
@@ -60,21 +59,6 @@ export default {
     locale,
     routes
   ],
-
-  computed: {
-    ...mapGetters(['courseContent']),
-
-    /**
-     * Function contentToDisplay: return current content block
-     *
-     * Author: cmc
-     *
-     * Last Updated: March 24, 2021
-     */
-    contentToDisplay () {
-      return this.courseContent[this.pathId]
-    }
-  },
 
   methods: {
 

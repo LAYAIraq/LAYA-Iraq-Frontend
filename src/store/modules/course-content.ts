@@ -8,9 +8,7 @@
 import {
   ContentBlock,
   Course,
-  CourseNavigation,
   CourseNavigationItem,
-  CourseNavigationStructure,
   LegacyContentBlock,
   LegacyContentInput,
   LegacyCourse
@@ -30,7 +28,7 @@ export default {
 
   state: {
     courseContent: {},
-    courseIds: {},
+    courseContentFollowMap: {},
     courseStart: '',
     courseChapters: {},
     courseChapterNames: {},
@@ -38,6 +36,7 @@ export default {
   },
 
   getters: {
+    courseChapters: (state: { courseChapters: object[] }) => state.courseChapters,
     courseChapterNames: (state: { courseChapterNames: { [id: string]: string } }) => state.courseChapterNames,
     courseContent: (state: { courseContent: { [id: string]: CourseNavigationItem } }) => state.courseContent,
     courseContentIdRouteMap: (state: { courseRoutes: any }) => {
@@ -49,7 +48,6 @@ export default {
       }
       return map
     },
-    courseContentIndexIdMap: (state: { courseIds: { [id: string]: number } }) => state.courseIds,
     courseContentRouteIdMap: (state: { courseRoutes: any, courseStart: string }) => {
       const map = {}
       for (const [route, id] of state.courseRoutes) {
@@ -79,7 +77,7 @@ export default {
       // console.log('found content path', res)
       return contentPath ? contentPath[1] : null
     },
-    courseNav: (state) => {
+    courseNav: (state: { courseStart: string, courseChapters: object[] }) => {
       return {
         start: state.courseStart,
         structure: state.courseChapters
@@ -100,22 +98,20 @@ export default {
         courseContent: { },
         courseIds: { [id: string]: number },
         courseStart: string,
-        courseChapters: CourseNavigationStructure,
-        courseChapterNames: { [id: string]: string },
+        courseChapters: CourseNavigationItem[],
         courseRoutes: any
       },
       course: Course
     ) {
       [state.courseContent, state.courseRoutes] = courseStructureDescent(
         course.chapters,
-        course.start,
         course.properties ? course.properties.showSingleSubChapterTitleSlug : null
       )
       state.courseChapters = course.chapters
       state.courseStart = course.start
-      state.courseChapterNames = course.chapterNames
     },
 
+    // only exists for converting old courses to new ones
     courseContentAdd (state: { courseContent: { [id: string]: ContentBlock } }, content: any) {
       const newId = uuidv4().split('-')[0]
       state.courseContent[newId] = { ...content, id: newId }
@@ -135,11 +131,19 @@ export default {
      */
     courseContentSetProperty (
       state: { courseContent: { [id: string]: ContentBlock } }, { id, property, value }: { id: string, property: string, value: any }) {
-      Vue.set(state.courseContent[id], property, value)
+      if (state.courseContent[id] && property && value) { // only update if content block exists and property and value are defined
+        Vue.set(state.courseContent[id], property, value)
+      }
     },
 
     courseContentRemove (state: { courseContent: any }, id: string) {
       state.courseContent = stripKey(state.courseContent, id)
+    },
+
+    courseChaptersSet (state: { courseChapters: object[] }, chapters: object[]) {
+      if (chapters) {
+        state.courseChapters = chapters
+      }
     },
 
     /**
@@ -150,7 +154,7 @@ export default {
     setCourseContentAndNav (
       state: {
         courseContent: any,
-        courseIds: any,
+        courseContentFollowMap: any,
         courseRoutes: any,
         courseStart: any,
         courseChapters: any
@@ -159,12 +163,12 @@ export default {
     ) {
       state.courseChapters = []
       state.courseContent = {}
-      state.courseIds = {}
+      state.courseContentFollowMap = {}
       for (const block of course.content) {
         const blockId = uuidv4().split('-')[0] // legacy content blocks have no id
         const i = course.content.indexOf(block)
         state.courseContent[blockId] = { ...block.input, name: block.name, id: blockId } // this is analogous to the new course structure
-        state.courseIds[i] = blockId // index of block in content array for legacy content
+        state.courseContentFollowMap[blockId] = [] // index of block in content array for legacy content
         state.courseChapters.push({
           id: blockId,
           slug: slugify(block.input.title.text),
@@ -176,8 +180,11 @@ export default {
         }
       }
       legacyContentFollowTransform(state.courseChapters)
+      state.courseChapters.forEach((chapter: CourseNavigationItem) => {
+        state.courseContentFollowMap[chapter.id] = chapter.follow
+      })
       // traverse course content and create routes
-      state.courseRoutes = coursePathsGet(state.courseChapters, state.courseStart)
+      state.courseRoutes = coursePathsGet(state.courseChapters)
     }
   },
 

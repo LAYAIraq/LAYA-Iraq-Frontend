@@ -51,7 +51,6 @@ Dependencies:
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { locale, routes } from '@/mixins'
 import { kebabToCamel } from '@/mixins/general/helpers'
 
@@ -70,19 +69,6 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['courseContent']),
-
-    /**
-     * contentToDisplay: return current content block
-     *
-     * Author: cmc
-     *
-     * Last Updated: October 27, 2020
-     */
-    contentToDisplay () {
-      return this.courseContent[this.pathId]
-    },
-
     /**
      * plugins: make localized names of laya plugins available
      *  as computed property

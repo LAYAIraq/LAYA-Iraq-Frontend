@@ -3,8 +3,9 @@
   "authorId": 1,
   "category": "Kurs",
   "start": "e1ns",
-  "chapters": {
-    "start": {
+  "chapters": [
+    {
+      "isChapter": false,
       "follow": [
         "zw31",
         "dr31"
@@ -12,27 +13,49 @@
       "id": "e1ns",
       "slug": "dialog-sample"
     },
-    "video": {
+    {
+      "chapterName": "video",
       "id": "zw31",
-      "follow": "dr31",
+      "isChapter": true,
+      "children": [
+        {
+          "id": "zw31",
+          "isChapter": false,
+          "slug": "video",
+          "follow": "dr31"
+        }
+      ],
       "slug": "video"
     },
-    "editor": {
-      "follow": "v13r",
-      "id": "dr31",
-      "slug": "wysiwyg"
+    {
+      "chapterName": "Editor",
+      "isChapter": true,
+      "children": [{
+          "follow": "v13r",
+          "id": "dr31",
+          "isChapter": false,
+          "slug": "wysiwyg"
+      }],
+      "slug": "editor"
     },
-    "quiz": [
-      {
-        "id": "v13r",
-        "slug": "sc-quiz"
-      },
-      {
-        "id": "fu3nf",
-        "slug": "drag-drop"
-      }
-    ]
-  },
+    {
+      "chapterName": "quiz",
+      "children": [
+        {
+          "isChapter": false,
+          "id": "v13r",
+          "slug": "sc-quiz"
+        },
+        {
+          "id": "fu3nf",
+          "isChapter": false,
+          "slug": "drag-drop"
+        }
+      ],
+      "slug": "quiz",
+      "isChapter": true
+    }
+  ],
   "feedback": [],
   "files": [],
   "locked": false,
