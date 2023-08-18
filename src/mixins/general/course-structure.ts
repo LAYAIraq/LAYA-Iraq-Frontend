@@ -53,7 +53,14 @@ export const legacyContentFollowTransform = (courseChapters: CourseNavigationIte
   * @see https://gist.github.com/mathewbyrne/1280286
  *  @param text string to convert
  */
-export const slugify = (text: string): string => { // TODO: convert arabic & kurdish letters to latin
+export const slugify = (text: string): string => {
+  // check if there are non-latin letters
+  // eslint-disable-next-line no-control-regex
+  const nonLatin = text.match(/[^\u0000-\u00ff]/)
+  if (nonLatin) {
+    // replace arabic letters with latin letters
+    text = arabicToChat(text)
+  }
   return text.toString().toLowerCase()
     .replace(/\s+/g, '-') // Replace spaces with -
     .replace(/[^\w-]+/g, '') // Remove all non-word chars
@@ -193,34 +200,51 @@ export const courseStructureDescent = (
   return [ids, routes]
 }
 
+// take arabic string, transcribe to chat alphabet
+const arabicToChat = (text: string): string => {
+  // transform arabic letters to latin letters
+  text = text.replace(/[\u0600-\u06FF]/g, (letter) => {
+    return arabicToLatin[letter] || letter
+  })
+  // replace arabic numbers with latin numbers
+  // text = text.replace(/[٠١٢٣٤٥٦٧٨٩]/g, (number) => {
+  //   return arabicToLatin[number] || number
+  // })
+  // replace 'aa' with hyphen
+  text = text.replace(/aa/g, '-')
+  // remove any double vowels
+  text = text.replace(/([aeiou])\1+/g, '$1')
+  return text
+}
+
 // lookup table for mapping arabic to latin letters
 const arabicToLatin = {
-  ء: 'A',
-  آ: 'A',
-  أ: 'A',
-  ؤ: 'A',
-  إ: 'A',
-  ئ: 'A',
+  ء: '2',
+  آ: '2',
+  أ: '2',
+  ؤ: '2',
+  إ: '2',
+  ئ: '2',
   ا: 'A',
   ب: 'B',
   ة: 'H',
   ت: 'T',
-  ث: 'T',
-  ج: 'J',
-  ح: 'H',
-  خ: 'H',
+  ث: 'th',
+  ج: 'j',
+  ح: '7',
+  خ: 'kh',
   د: 'D',
-  ذ: 'D',
+  ذ: 'DH',
   ر: 'R',
   ز: 'Z',
   س: 'S',
-  ش: 'S',
-  ص: 'S',
-  ض: 'D',
-  ط: 'T',
-  ظ: 'Z',
-  ع: 'A',
-  غ: 'G',
+  ش: 'SH',
+  ص: '9',
+  ض: 'DH',
+  ط: '6',
+  ظ: 'TH',
+  ع: '3',
+  غ: '8',
   ف: 'F',
   ق: 'Q',
   ك: 'K',
@@ -230,5 +254,15 @@ const arabicToLatin = {
   ه: 'H',
   و: 'W',
   ى: 'A',
-  ي: 'Y'
+  ي: 'I',
+  '٠': '0',
+  '١': '1',
+  '٢': '2',
+  '٣': '3',
+  '٤': '4',
+  '٥': '5',
+  '٦': '6',
+  '٧': '7',
+  '٨': '8',
+  '٩': '9'
 }

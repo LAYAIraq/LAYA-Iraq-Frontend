@@ -139,12 +139,36 @@ describe('content-structure methods', () => {
       expect(validateSlug(slug)).toBeTruthy()
     })
 
-    it.skip('does useful things when given an arabic string', () => {
+    it('does useful things when given an arabic string', () => {
       const arabicString = 'مرحبا بالعالم'
       const slug = slugify(arabicString)
       expect(slug).toBeTruthy()
       expect(validateSlug(slug)).toBeTruthy()
-      expect(slug).toBe('mrhba-b-l3lm')
+      expect(slug).toBe('mr7ba-bal3alm')
+    })
+
+    it('converts arabic numbers to latin numbers', () => {
+      const arabicString = '١٢٣٤٥٦٧٨٩٠'
+      const slug = slugify(arabicString)
+      expect(slug).toBeTruthy()
+      expect(validateSlug(slug)).toBeTruthy()
+      expect(slug).toBe('1234567890')
+    })
+
+    it('adds spaces when converting arabic numbers', () => {
+      const arabicString = '١٢٣ ٤٥٦٧٨٩٠'
+      const slug = slugify(arabicString)
+      expect(slug).toBeTruthy()
+      expect(validateSlug(slug)).toBeTruthy()
+      expect(slug).toBe('123-4567890')
+    })
+
+    it.skip('adds spaces between letters and numbers when converting arabic numbers', () => { // skipped b/c not sure if this is desirable
+      const arabicString = '١٢٣٤٥٦٧٨٩٠abc'
+      const slug = slugify(arabicString)
+      expect(slug).toBeTruthy()
+      expect(validateSlug(slug)).toBeTruthy()
+      expect(slug).toBe('1234567890-abc')
     })
   })
 
