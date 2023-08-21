@@ -79,7 +79,7 @@
         </div>
 
         <div class="col">
-          {{ authorName }}
+          {{ course.authorName }}
         </div>
 
         <div class="col-2">

@@ -145,6 +145,7 @@ export default {
       msg: '',
       newCourse: {
         category: '',
+        authorName: '',
         name: '',
         keywords: '',
         abstract: ''
@@ -153,7 +154,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['courseList', 'userId']),
+    ...mapGetters(['courseList', 'userId', 'profile', 'fullName']),
 
     /**
      * formValid: to test if both name and category are set
@@ -227,6 +228,7 @@ export default {
      *  */
     storeNewCourse () {
       this.checkNames()
+      this.authorName = this.profile.fullName
       const { newCourse, userId } = this
       if (this.newCourseNeedsEncoding) {
         this.msg = this.y18n('courseList.needsEncoding')

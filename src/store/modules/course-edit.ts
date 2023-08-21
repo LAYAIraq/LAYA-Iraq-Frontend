@@ -369,6 +369,7 @@ export default {
      */
     courseCreate (state, data: {
       name: string,
+      authorName: string,
       category: string,
       abstract: string,
       keywords: string,
@@ -388,6 +389,7 @@ export default {
               category: data.category,
               abstract: data.abstract,
               keywords: data.keywords,
+              authorName: data.authorName,
               authorId: data.userId,
               storageId: storageId,
               properties: { enrollment: data.enrollment }
