@@ -38,14 +38,12 @@
           <h3>{{ y18n('author') }}</h3>
         </div>
         <div class="col-3">
-          <div :class="langIsAr? 'align-left' : 'align-right'">
-            <b-button
-              v-b-toggle="'collapse-2'"
-              class="m-1"
-            >
-              {{ y18n('expand') }}
-            </b-button>
-          </div>
+          <b-button
+            v-b-toggle="'collapse-2'"
+            :class="langIsAr? 'mr-auto' : 'ml-auto'"
+          >
+            {{ y18n('expand') }}
+          </b-button>
         </div>
         <div class="col-2">
           <h4
