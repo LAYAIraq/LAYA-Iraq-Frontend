@@ -37,14 +37,6 @@
         <div class="col">
           <h3>{{ y18n('author') }}</h3>
         </div>
-        <div class="col-3">
-          <b-button
-            v-b-toggle="'collapse-2'"
-            :class="langIsAr? 'mr-auto' : 'ml-auto'"
-          >
-            {{ y18n('expand') }}
-          </b-button>
-        </div>
         <div class="col-2">
           <h4
             class="sr-only"
@@ -54,6 +46,12 @@
           </h4>
         </div>
         <div class="col-3">
+          <b-button
+            v-b-toggle="'collapse-2'"
+            :class="langIsAr? 'mr-auto' : 'ml-auto'"
+          >
+            {{ y18n('expand') }}
+          </b-button>
         </div>
       </div>
 
