@@ -49,6 +49,7 @@ Dependencies:
 import { locale, routes } from '@/mixins'
 import CourseEditHeader from '@/components/course/course-edit/course-edit-header.vue'
 import CourseEditTools from '@/components/course/course-edit/course-edit-tools.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'CourseEdit',
@@ -64,6 +65,20 @@ export default {
   data () {
     return {
       changesToSave: false
+    }
+  },
+
+  computed: {
+    ...mapGetters(['courseContent'])
+  },
+
+  watch: {
+    courseContent: {
+      handler () {
+        console.log('courseContent changed, updating routes...')
+        this.$store.commit('courseRoutesUpdate')
+      },
+      deep: true
     }
   },
 

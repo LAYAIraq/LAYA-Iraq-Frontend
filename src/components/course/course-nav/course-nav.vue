@@ -90,6 +90,7 @@ export default {
   data () {
     return {
       courseNavEdit: [],
+      edited: false,
       preview: false,
       previewId: null,
       showRawData: false
@@ -111,6 +112,11 @@ export default {
   },
   created () {
     this.courseNavEdit = { isChapter: true, children: deepCopy(this.courseChapters) }
+  },
+  beforeDestroy () {
+    // if (this.edited) {
+    //
+    // }
   },
   methods: {
     /**
@@ -136,6 +142,7 @@ export default {
       if (property !== 'followingContent') { // followingContent emit has no data
         chapter[property] = value
       }
+      this.edited = true
     },
     /**
      * @function set preview variables to default
@@ -154,8 +161,15 @@ export default {
       this.preview = true
       this.previewId = pid
     },
+
+    navigationPersist () {
+
+    },
+
     navigationSave () {
       this.$store.commit('courseChaptersSet', this.courseNavEdit.children)
+      this.edited = false
+      this.$store.commit('courseRoutesUpdate')
     }
   }
 }

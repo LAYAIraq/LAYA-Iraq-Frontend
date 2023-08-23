@@ -67,6 +67,7 @@ import { locale, routes } from '@/mixins'
 import { mapGetters } from 'vuex'
 import CourseFiles from '@/components/course/course-edit/course-files.vue'
 import { stripKey } from '@/mixins/general/helpers'
+import { contentBlockToNavItemTransform } from '@/mixins/general/course-structure'
 
 export default {
   name: 'CourseContent',
@@ -196,6 +197,7 @@ export default {
       // choose way depending on new or existing content
       if (!this.editContent) {
         this.$store.commit('courseContentAdd', updatedStep)
+        this.$store.commit('courseChapterAdd', contentBlockToNavItemTransform(updatedStep))
       } else {
         this.$store.commit('courseContentSet', { ...updatedStep, id: this.pathId })
       }

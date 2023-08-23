@@ -5,6 +5,7 @@
  */
 
 import {
+  ContentBlock,
   CourseNavigationItem,
   LegacyContentBlock
 } from '@/mixins/types/course-structure'
@@ -96,7 +97,7 @@ const courseStructureRoutesCollect = (
       courseStructureRoutesCollect(item, currentPath, routes)
       // routes.push([currentPath + '/' + item.slug ? item.slug : item.id, item.id]) // can have alternative path
     })
-  } else if (structure.isChapter) { // childern
+  } else if (structure.isChapter) { // children
     courseStructureRoutesCollect(structure.children, currentPathSnippet + structure.slug, routes)
   } else if (!routes.some(el => el[1] === structure.id)) { // add path to routes if id is not already there
     routes.push([currentPathSnippet + structure.slug, structure.id])
@@ -128,6 +129,15 @@ export const firstContentIdGet = (courseNav: CourseNavigationItem[] | CourseNavi
   }
 }
 
+export const contentBlockToNavItemTransform = (block: ContentBlock): CourseNavigationItem => {
+  return {
+    isChapter: false,
+    slug: slugify(block.title.text),
+    type: block.name,
+    follow: null
+  }
+}
+
 /**
  * @function set all follow properties to the next content block, barring button navigation blocks
  * @author cmc
@@ -155,9 +165,12 @@ export const chapterFollowSet = (chapter: CourseNavigationItem | any, nextChapte
  */
 export const coursePathsGet =
   (courseNav: CourseNavigationItem[]):
-    [[route: string, id: string]] => {
+    any[] => {
+    const routes = [] // instantiate here because of recursion
     const start = firstContentIdGet(courseNav)
-    const routes: [[route: string, id: string]] = [['', start]] // instantiate here because of recursion
+    if (start) {
+      routes.push(['', start])
+    }
     courseStructureRoutesCollect(courseNav, '', routes)
     return routes
   }
@@ -226,7 +239,7 @@ export const courseStructureDescent = (
 ):
   [
     { [id: string]: {} },
-    [[route: string, id: string]]
+    any[]
   ] => {
   const ids: { [id: string]: {} } = {}
   courseStructureContentIdsExtract(courseChapters, ids)

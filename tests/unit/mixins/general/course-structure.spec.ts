@@ -360,6 +360,11 @@ describe('content-structure methods', () => {
       expect(paths).toContainEqual(['b/some-slug', 'some-id'])
       expect(paths).toContainEqual(['a/video', 'c7c75ede'])
     })
+
+    it('returns array of length 0 with empty array', () => {
+      const paths = coursePathsGet([])
+      expect(paths).toHaveLength(0)
+    })
   })
 
   describe('courseStructureDescent', () => { // TODO: reactivate

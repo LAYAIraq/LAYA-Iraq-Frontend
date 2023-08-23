@@ -30,7 +30,7 @@ export default {
     courseContent: {},
     courseContentFollowMap: {},
     courseStart: '',
-    courseChapters: {},
+    courseChapters: [],
     courseChapterNames: {},
     courseRoutes: []
   },
@@ -111,10 +111,11 @@ export default {
       state.courseStart = course.start
     },
 
-    // only exists for converting old courses to new ones
-    courseContentAdd (state: { courseContent: { [id: string]: ContentBlock } }, content: any) {
-      const newId = uuidv4().split('-')[0]
-      state.courseContent[newId] = { ...content, id: newId }
+    courseContentAdd (state: { courseContent: { [id: string]: ContentBlock }, courseChapters: any[] }, content: any) {
+      const id = uuidv4().split('-')[0]
+      const newContent = { ...content, id }
+      state.courseContent[id] = newContent
+      state.courseChapters.push(newContent)
     },
 
     courseContentSet (state: { courseContent: { [id: string]: ContentBlock } }, block: ContentBlock) {
@@ -140,10 +141,21 @@ export default {
       state.courseContent = stripKey(state.courseContent, id)
     },
 
-    courseChaptersSet (state: { courseChapters: object[] }, chapters: object[]) {
+    courseChaptersSet (state: { courseChapters: CourseNavigationItem[] }, chapters: CourseNavigationItem[]) {
       if (chapters) {
-        state.courseChapters = chapters
+        Vue.set(state, 'courseChapters', chapters)
       }
+    },
+
+    courseChapterAdd (state: { courseChapters: CourseNavigationItem[], courseStart: string }, chapter: CourseNavigationItem) {
+      if (state.courseChapters.length === 0) {
+        Vue.set(state, 'courseStart', chapter.id)
+      }
+      state.courseChapters.push(chapter)
+    },
+
+    courseRoutesUpdate (state: { courseChapters: any, courseRoutes: any }) {
+      Vue.set(state, 'courseRoutes', coursePathsGet(state.courseChapters))
     },
 
     /**
