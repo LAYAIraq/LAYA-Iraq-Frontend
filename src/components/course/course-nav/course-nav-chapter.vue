@@ -40,7 +40,7 @@
           :chapter="item"
           :chapter-name="item.chapterName"
           :chapter-name-duplicate="duplicateChapterNames.includes(i)"
-          :following-content="firstContentId(chapter.children, i + 1)"
+          :following-content="item.follow"
           :highlighted-block="main? highlightId : highlightedBlock"
           @highlight="blockHighlight"
           @preview="pid => previewEmit(pid)"
@@ -51,7 +51,7 @@
           :class="{ 'border-success': item.id === highlightId }"
           :drag-bubble="[!dragging && dragStartIndex === i, childrenVisibility[item.id]]"
           :drag-end="[!dragging && dragEndIndex === i, childrenVisibility[item.id]]"
-          :following-content="item.follow ? item.follow : firstContentId(chapter.children, i + 1)"
+          :following-content="item.follow"
           :value="item"
           @highlight="blockHighlight"
           @visibility-change="childVisibilityChange"
@@ -69,6 +69,7 @@ import CourseNavItem from '@/components/course/course-nav/course-nav-item.vue'
 import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
 import { courseNavEmits, locale } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
+import { chapterFollowSet } from '@/mixins/general/course-structure'
 
 export default {
   name: 'CourseNavChapter',
@@ -156,9 +157,9 @@ export default {
   watch: {
     chapter: {
       handler () {
-        console.log('chapter changed')
-        if (this.main && this.coherentItem) {
-          console.log('changing following content....')
+        // console.log('chapter changed')
+        if (this.main) {
+          // console.log('changing following content....')
           this.followingContentSet()
         }
       },
@@ -211,23 +212,6 @@ export default {
       this.dragEndIndex = event.newIndex
     },
     /**
-     * @function get the id of the first content of the chapter, recursively
-     * @author cmc
-     * @param chapter reference to `chapter` object
-     * @param index index of the chapter to check
-     * @return {string|null} id of the first content of the chapter, or null the index is out of bounds
-     */
-    firstContentId (chapter, index) {
-      if (chapter && chapter[index]) {
-        if (chapter[index].isChapter) {
-          return this.firstContentId(chapter[index].children, 0)
-        } else {
-          return chapter[index].id
-        }
-      }
-      return null
-    },
-    /**
      * @function propagate property change from child Component to parent
      * @author cmc
      * @param chapter reference to `chapter` object
@@ -242,58 +226,11 @@ export default {
      * @author cmc
      */
     followingContentSet () {
-      const setFollow = (item, follow) => {
-        if (item.type !== 'laya-dialog') {
-          item.follow = follow
-        }
-      }
-      /**
-       * @function automaticFollow recursively sets the followingContent property of all but dialog items in the chapter
-       * @param item reference to item to set followingContent for
-       * @param followingItem reference to following item if exists
-       * @param depth recursion depth
-       */
-      const automaticFollow = (item, followingItem, depth) => { // TODO revisit
-        if (item.isChapter) {
-          item.children.forEach((child, i) => {
-            const res = automaticFollow(child, item.children[i + 1] ?? null, depth + 1)
-            if (res) { // if automaticFollow returns something, set followingContent to next block
-              console.log('reach last element')
-              console.log('recursion depth: ', depth)
-              const nextInput = this.firstContentId(item.children[i + 1], 0)
-              console.log('nextInput: ', nextInput)
-
-              if (!nextInput) {
-                if (depth !== 0) {
-                  return item
-                } else {
-                  setFollow(item, null)
-                  return null
-                }
-              } else {
-                setFollow(item, nextInput)
-                return null
-              }
-            }
-          })
-        } else { // set followingContent if exists
-          if (followingItem) {
-            setFollow(item, followingItem.id)
-            return null
-          } else {
-            return item
-          }
-        }
-      }
-      const k = automaticFollow(this.chapter, null, 0) // TODO: nested follow of last elements still broken
-      if (!k) {
-        console.log('no return, all gucci')
-      } else {
-        console.log('something went wrong')
-      }
+      chapterFollowSet(this.chapter, null)
     }
   }
 }
+
 </script>
 <style>
 .drag-area {

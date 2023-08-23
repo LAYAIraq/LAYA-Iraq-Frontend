@@ -3,17 +3,22 @@ import SampleCourseChapters from '../../../mocks/sample-course-chapters.json'
 import SampleCourseChaptersNested from '../../../mocks/sample-course-chapters-nested.json'
 import {
   Course,
+  CourseNavigationItem,
   LegacyContentBlock,
   LegacyCourse
 } from '@/mixins/types/course-structure'
 import {
+  chapterFollowSet,
   coursePathsGet,
   courseStructureContentIdsExtract,
   courseStructureDescent,
+  firstContentIdGet,
   legacyContentStepsTransform,
-  slugify, unslugify
+  slugify,
+  unslugify
 } from '@/mixins/general/course-structure'
 import { validateSlug } from '../../../helpers/validations'
+import { deepCopy } from '@/mixins/general/helpers'
 
 // prerequisites to make sure sample data is valid
 describe('content-structure types', () => {
@@ -92,6 +97,7 @@ describe('content-structure methods', () => {
       }
     })
   })
+
   describe('slugify', () => {
     it('converts strings to slugs', () => {
       const strings = ['Hello World', 'Hello World!', 'Hello World!!', 'Hello World!!!']
@@ -180,6 +186,131 @@ describe('content-structure methods', () => {
         const string = unslugify(slug)
         expect(string).toBe(expectedStrings[index])
       })
+    })
+  })
+
+  describe('firstContentIdGet', () => {
+    it('returns correct id for new courses', () => {
+      const courseChapters = SampleCourseChapters.chapters
+      const firstContentId = firstContentIdGet(courseChapters)
+      expect(firstContentId).toBe('e1ns')
+    })
+
+    it('returns correct id for deeply nested courses', () => {
+      const courseChaptersNested = SampleCourseChaptersNested.chapters
+      const firstContentId = firstContentIdGet(courseChaptersNested)
+      expect(firstContentId).toBe('v13r')
+    })
+
+    it('returns correct id for old courses', () => {
+      const courseChapters = [
+        { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] },
+        { id: 'c7c75ede', isChapter: false, slug: 'video', follow: 2 },
+        { id: '562a0638', isChapter: false, slug: 'wysiwyg', follow: 3 },
+        { id: 'a7bd9c9c', isChapter: false, slug: 'multiple-choice-test', follow: 4 },
+        { id: 'd0b662f2', isChapter: false, slug: 'drag-drop-sample', follow: -1 }
+      ]
+      const firstContentId = firstContentIdGet(courseChapters)
+      expect(firstContentId).toBe('ba3b89ef')
+    })
+
+    it('returns null when no id is found', () => {
+      const courseChapters = [
+        { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] },
+        { id: 'c7c75ede', isChapter: false, slug: 'video', follow: 2 },
+        { isChapter: true, children: [] }
+      ]
+      expect(firstContentIdGet(courseChapters.slice(2))).toBeNull()
+    })
+
+    it('returns id of when given single CourseNavItem', () => {
+      const courseChapters = { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] }
+      expect(firstContentIdGet(courseChapters)).toBe('ba3b89ef')
+    })
+
+    it('returns id of first child f given single chapter', () => {
+      const courseChapters = {
+        isChapter: true,
+        children: [
+          { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] },
+          { id: 'c7c75ede', isChapter: false, slug: 'video', follow: 2 }
+        ]
+      }
+      expect(firstContentIdGet(courseChapters)).toBe('ba3b89ef')
+    })
+  })
+
+  describe('chapterFollowSet', () => {
+    let courseChapters: CourseNavigationItem
+    const linearChapters = {
+      isChapter: true,
+      children: [
+        { id: 'e1n5', isChapter: false, slug: 'dialog-sample', type: 'button-navigation', follow: ['zw31', 'dr31'] },
+        { id: 'zw31', isChapter: false, slug: 'video', follow: 'dr31' },
+        { id: 'dr31', isChapter: false, slug: 'wysiwyg', follow: 'v13r' },
+        { id: 'v13r', isChapter: false, slug: 'multiple-choice-test', follow: 'fu3nf' },
+        { id: 'fu3nf', isChapter: false, slug: 'drag-drop-sample', follow: null }
+      ]
+    }
+    beforeEach(() => {
+      courseChapters = deepCopy(linearChapters)
+    })
+
+    it('sets follow property for all chapters', () => {
+      courseChapters.children.forEach((chapter) => {
+        chapter.follow = null
+      })
+      chapterFollowSet(courseChapters, null)
+      expect(courseChapters.children).toStrictEqual([
+        { id: 'e1n5', isChapter: false, slug: 'dialog-sample', type: 'button-navigation', follow: null },
+        { id: 'zw31', isChapter: false, slug: 'video', follow: 'dr31' },
+        { id: 'dr31', isChapter: false, slug: 'wysiwyg', follow: 'v13r' },
+        { id: 'v13r', isChapter: false, slug: 'multiple-choice-test', follow: 'fu3nf' },
+        { id: 'fu3nf', isChapter: false, slug: 'drag-drop-sample', follow: null }
+      ])
+    })
+
+    it('sets follow correctly when order is reversed', () => {
+      courseChapters.children.reverse()
+      chapterFollowSet(courseChapters, null)
+      expect(courseChapters.children).toStrictEqual([
+        { id: 'fu3nf', isChapter: false, slug: 'drag-drop-sample', follow: 'v13r' },
+        { id: 'v13r', isChapter: false, slug: 'multiple-choice-test', follow: 'dr31' },
+        { id: 'dr31', isChapter: false, slug: 'wysiwyg', follow: 'zw31' },
+        { id: 'zw31', isChapter: false, slug: 'video', follow: 'e1n5' },
+        { id: 'e1n5', isChapter: false, slug: 'dialog-sample', type: 'button-navigation', follow: ['zw31', 'dr31'] }
+      ])
+    })
+
+    it('sets follow correctly in nested chapters', () => {
+      courseChapters = {
+        isChapter: true,
+        children: [
+          {
+            id: 'b',
+            isChapter: true,
+            children: [
+              { id: 'e', isChapter: false },
+              { id: 'f', isChapter: false }
+            ]
+          },
+          { id: 'c', isChapter: false },
+          { id: 'd', isChapter: false }
+        ]
+      }
+      chapterFollowSet(courseChapters, null)
+      expect(courseChapters.children).toStrictEqual([
+        {
+          id: 'b',
+          isChapter: true,
+          children: [
+            { id: 'e', isChapter: false, follow: 'f' },
+            { id: 'f', isChapter: false, follow: 'c' }
+          ]
+        },
+        { id: 'c', isChapter: false, follow: 'd' },
+        { id: 'd', isChapter: false, follow: null }
+      ])
     })
   })
 

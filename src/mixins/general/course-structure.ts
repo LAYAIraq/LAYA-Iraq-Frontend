@@ -91,7 +91,7 @@ const courseStructureRoutesCollect = (
   routes: Array<[route: string, id: string]>
 ) => {
   const currentPathSnippet = currentPath ? currentPath + '/' : ''
-  if (structure instanceof Array) { // stucture is CourseNavigationItem[]
+  if (structure instanceof Array) { // structure is CourseNavigationItem[]
     structure.forEach((item) => {
       courseStructureRoutesCollect(item, currentPath, routes)
       // routes.push([currentPath + '/' + item.slug ? item.slug : item.id, item.id]) // can have alternative path
@@ -103,12 +103,49 @@ const courseStructureRoutesCollect = (
   }
 }
 
-const firstContentIdGet = (courseNav: CourseNavigationItem[]): string => {
-  if (courseNav[0].isChapter) {
-    return firstContentIdGet(courseNav[0].children)
-  } else {
-    return courseNav[0].id
+/**
+ * @function return id of first content in chapter, recursively if nested
+ * @author cmc
+ * @since v1.3.0
+ * @param courseNav list of or single CourseNavigationItem
+ */
+export const firstContentIdGet = (courseNav: CourseNavigationItem[] | CourseNavigationItem): string => {
+  if (!courseNav) {
+    return null
   }
+  if (Array.isArray(courseNav)) {
+    if (courseNav.length === 0) {
+      return null
+    } else if (courseNav[0].isChapter) {
+      return firstContentIdGet(courseNav[0].children)
+    } else {
+      return courseNav[0].id
+    }
+  } else if (courseNav.isChapter) { // no array of CourseNavigationItems
+    return firstContentIdGet(courseNav.children)
+  } else {
+    return courseNav.id
+  }
+}
+
+/**
+ * @function set all follow properties to the next content block, barring button navigation blocks
+ * @author cmc
+ * @since v1.3.0
+ * @param chapter reference to chapter that is examined
+ * @param nextChapter reference to following chapter (when called recursively)
+ */
+export const chapterFollowSet = (chapter: CourseNavigationItem | any, nextChapter: CourseNavigationItem) => {
+  chapter.children.forEach((item: any, i: number) => {
+    const followingChapter = i === chapter.children.length - 1
+      ? nextChapter
+      : chapter.children[i + 1]
+    if (item.isChapter) {
+      chapterFollowSet(item, followingChapter)
+    } else if (item.type !== 'button-navigation') {
+      item.follow = firstContentIdGet(followingChapter)
+    } // else: button-navigation => no new follow
+  })
 }
 
 /**
