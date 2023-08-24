@@ -41,6 +41,7 @@ export default {
      */
     course (state: { course: {
       authorId: number,
+      authorName: string,
       name: string,
       properties: object
       }
@@ -140,6 +141,22 @@ export default {
 
   mutations: {
     /**
+     * function courseAbstractChange: update course abstract
+     * Author: nv
+     *Since: v1.3.0
+     */
+    courseAbstractChange (
+      state: {
+        course: {
+          abstract: string
+        }
+      },
+      newAbstract: string
+    ) {
+      state.course.abstract = newAbstract
+    },
+
+    /**
      * function courseCategoryChange: update course category
      *
      * Author: cmc
@@ -157,6 +174,23 @@ export default {
       newCategory: string
     ) {
       state.course.category = newCategory
+    },
+
+    /**
+     * function courseKeywordsChange: update course keywords
+
+     * Author: nv
+     *Since: v1.3.0
+     */
+    courseKeywordsChange (
+      state: {
+        course: {
+          keywords: string
+        }
+      },
+      newKeywords: string
+    ) {
+      state.course.keywords = newKeywords
     },
 
     /**
@@ -335,7 +369,10 @@ export default {
      */
     courseCreate (state, data: {
       name: string,
+      authorName: string,
       category: string,
+      abstract: string,
+      keywords: string,
       userId: number,
       enrollment?: boolean
     }) {
@@ -350,6 +387,9 @@ export default {
             http.post('courses', {
               name: data.name,
               category: data.category,
+              abstract: data.abstract,
+              keywords: data.keywords,
+              authorName: data.authorName,
               authorId: data.userId,
               storageId: storageId,
               properties: { enrollment: data.enrollment }
