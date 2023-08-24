@@ -51,7 +51,7 @@
         <div class="col-3">
           <b-button
             v-b-toggle="'collapse-2'"
-            :class="langIsAr? 'mr-auto' : 'ml-auto'"
+            :class="langIsAr? 'float-left mr-auto' : 'float-right ml-auto'"
           >
             {{ y18n('expand') }}
           </b-button>
@@ -150,7 +150,7 @@
               header-class="collap-header"
               body-class="collap-body"
             >
-              {{ null === course.category ? y18n('category.notListed') : course.category }}
+              {{ categoryList.some(cat => cat === course.category) ? y18n(`course.category.${course.category}`) : y18n('course.category.other') }}
             </b-card>
 
             <b-card
@@ -213,6 +213,7 @@
 import { mapGetters } from 'vuex'
 import { locale, storeHandler } from '@/mixins'
 import { slugify } from '@/mixins/general/course-structure'
+import courseCategories from '@/options/course-categories.ts'
 import languages from '@/options/languages.ts'
 
 export default {
@@ -253,6 +254,17 @@ export default {
       'preferencesMedia',
       'userId'
     ]),
+
+    /**
+     * categoryList(): add categories
+     * Author: nv
+     * Since: v1.3.0
+     */
+    categoryList () {
+      return [
+        ...courseCategories
+      ]
+    },
 
     /**
      * languageList(): add languages
