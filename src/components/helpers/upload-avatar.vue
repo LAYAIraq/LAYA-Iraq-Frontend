@@ -6,7 +6,7 @@
 -->
 <template>
   <div>
-    <div v-if="type === 'avatar'">
+    <div>
       <div
         v-show="$refs.upload && $refs.upload.dropActive"
         class="drop-active"
@@ -20,7 +20,7 @@
         <div class="text-center p-2">
           <label>
             <img
-              :src="files.length ? files[0].url : oldAvatar"
+              v-auth-image="files.length ? files[0].url : oldAvatar"
               class="d-block rounded-circle avatar-preview"
               alt="User Avatar"
             >
@@ -36,9 +36,11 @@
             name="file"
             class="btn btn-primary"
             :post-action="postAvatar"
+            :headers="headers"
             :drop="!edit"
-            @input-filter="inputFilter"
             @input-file="inputFile"
+            @input-filter="inputFilter"
+            @input="setFileURL"
           >
             {{ y18n('layaUploadAvatar.uploadFile') }}
           </file-upload>
@@ -77,32 +79,6 @@
         </div>
       </div>
     </div>
-
-    <div v-else>
-      <file-upload
-        ref="upload"
-        v-model="files"
-        post-action=""
-        @input-file="inputFile"
-        @input-filter="inputFilter"
-      >
-        {{ y18n('layaUploadAvatar.uploadFile') }}
-      </file-upload>
-      <button
-        v-show="!$refs.upload || !$refs.upload.active"
-        type="button"
-        @click.prevent="$refs.upload.active = true"
-      >
-        {{ y18n('startUpload') }}
-      </button>
-      <button
-        v-show="$refs.upload && $refs.upload.active"
-        type="button"
-        @click.prevent="$refs.upload.active = false"
-      >
-        {{ y18n('stopUpload') }}
-      </button>
-    </div>
   </div>
 </template>
 
@@ -125,10 +101,6 @@ export default {
   ],
 
   props: {
-    type: {
-      type: String,
-      default () { return '' }
-    },
     oldAvatar: {
       type: String,
       default () { return '' }
@@ -144,8 +116,22 @@ export default {
   },
 
   computed: {
+    /**
+     * @function return authorization headers for upload
+     * @author cmc
+     * @return {{Authorization: string}} authorization headers
+     */
+    headers () {
+      const idToken = this.$ls.get('auth').id
+      return {
+        Authorization: `${idToken}`
+      }
+    },
     postAvatar () {
       return `${api}/storage/img/upload`
+    },
+    downloadURL () {
+      return `${api}/storage/img/download/`
     }
   },
 
@@ -171,10 +157,8 @@ export default {
   },
 
   methods: {
-
     editSave () {
       // console.log(`editSave function entered`)
-      this.edit = false
 
       const oldFile = this.files[0]
 
@@ -183,6 +167,7 @@ export default {
 
       console.log(canvasData)
       console.log(imageData)
+      console.log(oldFile.size, oldFile.type)
 
       if (this.cropper.canvasData.height !== this.cropper.imageData.height) {
         this.cropper.imageData.scaleY = this.cropper.imageData.height / this.cropper.canvasData.height
@@ -192,28 +177,32 @@ export default {
         this.cropper.imageData.scaleX = this.cropper.imageData.width / this.cropper.canvasData.width
       }
 
-      const binStr = atob(this.cropper.getCroppedCanvas().toDataURL(oldFile.type).split(',')[1])
-      const arr = new Uint8Array(binStr.length)
-      for (let i = 0; i < binStr.length; i++) {
-        arr[i] = binStr.charCodeAt(i)
-      }
-
-      const file = new File(arr, oldFile.name, { type: oldFile.type })
-      this.$refs.upload.update(oldFile.id, {
-        file,
-        type: file.type,
-        size: file.size,
-        active: true
+      // const binStr = atob(this.cropper.getCroppedCanvas().toDataURL(oldFile.type).split(',')[1])
+      // const arr = new Uint8Array(binStr.length)
+      // for (let i = 0; i < binStr.length; i++) {
+      //   arr[i] = binStr.charCodeAt(i)
+      // }
+      const croppedBlob = this.cropper.getCroppedCanvas()
+      croppedBlob.type = oldFile.type
+      croppedBlob.toBlob(async (blob) => {
+        console.log(blob)
+        this.$refs.upload.update(oldFile.id, {
+          file: blob,
+          type: oldFile.type,
+          size: blob.size,
+          active: true
+        })
       })
-      return false
+      this.edit = false
     },
 
     alert (msg) {
       alert(msg)
     },
 
-    inputFile (newFile, oldFile) {
+    async inputFile (newFile, oldFile) {
       if (newFile && !oldFile) {
+        console.log(await newFile)
         this.$nextTick(() => {
           this.edit = true
         })
@@ -233,6 +222,7 @@ export default {
       }
 
       if (newFile && (!oldFile || newFile.file !== oldFile.file)) {
+        // console.log(newFile)
         newFile.url = ''
         const URL = window.URL || window.webkitURL
         // console.log(URL)
@@ -240,6 +230,11 @@ export default {
           newFile.url = URL.createObjectURL(newFile.file)
         }
       }
+    },
+    async setFileURL () {
+      const fileName = await this.files[0].response.result.files.file[0].name
+      this.files[0].url = this.downloadURL + fileName
+      this.$emit('uploaded', fileName)
     }
   }
 
