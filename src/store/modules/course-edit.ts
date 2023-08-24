@@ -192,8 +192,8 @@ export default {
       newLanguage: string
     ) {
       state.course.language = newLanguage
-      },   
-    
+    },
+
     /**
      * function courseKeywordsChange: update course keywords
      * Author: nv

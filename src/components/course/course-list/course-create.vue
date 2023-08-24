@@ -169,7 +169,6 @@ export default {
       newCourse: {
         category: '',
         language: '',
-        name: ''
         authorName: '',
         name: '',
         keywords: '',
