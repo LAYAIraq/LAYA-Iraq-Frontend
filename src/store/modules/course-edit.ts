@@ -177,8 +177,25 @@ export default {
     },
 
     /**
-     * function courseKeywordsChange: update course keywords
+     * function courseLanguageChange: update course category
+     * Author: nv
+     * Since: v1.3.0
+     * @param state contains course object
+     * @param newLanguage new language
+     */
+    courseLanguageChange (
+      state: {
+        course: {
+          language: string
+        }
+      },
+      newLanguage: string
+    ) {
+      state.course.language = newLanguage
+    },
 
+    /**
+     * function courseKeywordsChange: update course keywords
      * Author: nv
      *Since: v1.3.0
      */
@@ -369,6 +386,7 @@ export default {
      */
     courseCreate (state, data: {
       name: string,
+      language: string,
       authorName: string,
       category: string,
       abstract: string,
@@ -387,6 +405,7 @@ export default {
             http.post('courses', {
               name: data.name,
               category: data.category,
+              language: data.language,
               abstract: data.abstract,
               keywords: data.keywords,
               authorName: data.authorName,

@@ -34,6 +34,8 @@
 
     <course-category-change @changedCategory="$emit('saveChanges')"></course-category-change>
 
+    <course-language-change @changedLanguage="$emit('saveChanges')"></course-language-change>
+
     <course-keywords-change @changedKeywords="$emit('saveChanges')"></course-keywords-change>
 
     <course-abstract-change @changedAbstract="$emit('saveChanges')"></course-abstract-change>
@@ -59,6 +61,7 @@ import {
   CoursePreferences,
   CourseBlockEdit,
   CourseCategoryChange,
+  CourseLanguageChange,
   CourseNavEdit,
   CourseBlockDelete,
   CourseCopy,
@@ -78,6 +81,7 @@ export default {
     CoursePreferences,
     CourseBlockEdit,
     CourseCategoryChange,
+    CourseLanguageChange,
     CourseNavEdit,
     CourseBlockDelete,
     CourseCopy,
