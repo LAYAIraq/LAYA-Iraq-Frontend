@@ -32,10 +32,10 @@
         class="row header"
       >
         <div class="col">
-          <h2>{{ y18n('courseCreate.courseName') }}</h2>
+          <h2>{{ y18n('courseName') }}</h2>
         </div>
         <div class="col">
-          <h3>{{ y18n('cat') }}</h3>
+          <h3>{{ y18n('author') }}</h3>
         </div>
         <div class="col">
           <h3>{{ y18n('courseLanguage') }}</h3>
@@ -49,6 +49,12 @@
           </h4>
         </div>
         <div class="col-3">
+          <b-button
+            v-b-toggle="'collapse-2'"
+            :class="langIsAr? 'mr-auto' : 'ml-auto'"
+          >
+            {{ y18n('expand') }}
+          </b-button>
         </div>
       </div>
 
@@ -72,7 +78,7 @@
         </div>
 
         <div class="col">
-          {{ course.category }}
+          {{ course.authorName }}
         </div>
 
         <div class="col">
@@ -105,7 +111,6 @@
             </li>
           </ul>
         </div>
-
         <div class="col-3">
           <a
             class="btn indicated-btn"
@@ -129,6 +134,33 @@
           >
             <i class="fas fa-exclamation-circle"></i>
           </div>
+        </div>
+        <div class="container-fluid p-2">
+          <b-collapse id="collapse-2">
+            <b-card
+              :header="y18n('abstract')"
+              header-class="collap-header"
+              body-class="collap-body"
+            >
+              {{ null === course.abstract ? y18n('abstract.notListed') : course.abstract }}
+            </b-card>
+
+            <b-card
+              :header="y18n('cat')"
+              header-class="collap-header"
+              body-class="collap-body"
+            >
+              {{ null === course.category ? y18n('category.notListed') : course.category }}
+            </b-card>
+
+            <b-card
+              :header="y18n('keywords')"
+              header-class="collap-header"
+              body-class="collap-body"
+            >
+              {{ null === course.keywords ? y18n('keywords.notListed') : course.keywords }}
+            </b-card>
+          </b-collapse>
         </div>
       </div>
     </div>
@@ -202,6 +234,7 @@ export default {
 
   data () {
     return {
+      authorName: '',
       buttonAction: null,
       complicitCourses: null,
       complicitCheck: null,
@@ -503,6 +536,22 @@ i.icons-list {
   font-size: 1.5rem;
   margin-left: 1.5rem;
   margin-right: -3rem;
+}
+
+.collap-button {
+  position: absolute;
+}
+
+.collap-button-ar {
+  position: absolute;
+}
+
+.collap-header {
+  font-weight: bold;
+}
+
+.collap-body {
+  font-size: 16px;
 }
 
 </style>

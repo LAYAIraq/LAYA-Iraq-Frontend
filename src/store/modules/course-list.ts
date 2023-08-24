@@ -36,6 +36,8 @@ export default {
     courseListAppend (
       state: { courseList: object[] },
       courseListItem: {
+        abstract: string,
+        keywords: string,
         author: number,
         category: string,
         language: string,
@@ -115,6 +117,8 @@ export default {
           category: string,
           name: string },
         courseList: Array<{
+          abstract: string,
+          keywords: string,
           category: string,
           language: string,
           courseId: string,
@@ -151,6 +155,8 @@ export default {
         .then(({ data }) => {
           for (const courseObject of data) {
             const listData = {
+              abstract: courseObject.abstract,
+              keywords: courseObject.keywords,
               category: courseObject.category,
               language: courseObject.language,
               name: courseObject.name,
