@@ -51,7 +51,7 @@
         <div class="col-3">
           <b-button
             v-b-toggle="'collapse-2'"
-            :class="langIsAr? 'mr-auto' : 'ml-auto'"
+            :class="langIsAr? 'float-left mr-auto' : 'float-right ml-auto'"
           >
             {{ y18n('expand') }}
           </b-button>
@@ -151,7 +151,7 @@
               body-class="collap-body"
             >
               {{ categoryList.some(cat => cat === course.category) ? y18n(`course.category.${course.category}`) : y18n('course.category.other') }}
-             </b-card>
+            </b-card>
 
             <b-card
               :header="y18n('keywords')"
@@ -266,7 +266,7 @@ export default {
       ]
     },
 
-  /**
+    /**
      * languageList(): add languages
      * Author: nv
      * Since: v1.3.0
