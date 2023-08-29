@@ -363,7 +363,7 @@ Since: v1.0.0
                       </b-button>
                       <b-modal
                         id="change-password-form"
-                        :title="y18n('profile.passwordChange')"
+                        :title="y18n('profile.password')"
                         header-bg-variant="info"
                         ok-variant="success"
                         :ok-title="y18n('save')"
@@ -377,14 +377,14 @@ Since: v1.0.0
                           <label
                             for="oldPwd"
                             class="col-sm-3 col-form-label"
-                          >{{ y18n('profile.passwordOld') }}</label>
+                          >{{ y18n('profile.oldPassword') }}</label>
                           <div class="col-sm-9">
                             <input
                               id="passwordOld"
                               v-model="passwordOld"
                               type="password"
                               class="form-control"
-                              :placeholder="y18n('profile.passwordOld')"
+                              :placeholder="y18n('profile.oldPassword')"
                               autocomplete="on"
                             >
                           </div>

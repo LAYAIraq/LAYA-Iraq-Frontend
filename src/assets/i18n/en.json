@@ -509,7 +509,7 @@
 	"profile.passwordChange": "Change Password",
 	"profile.passwordDiffer": "Passwords must be identical!",
 	"profile.passwordFail": "The current password you entered is wrong",
-	"profile.passwordOld": "Current password",
+	"profile.oldPassword": "Current password",
 	"profile.passwordStrength": "Password strength",
 	"profile.passwordSuggestion": "Suggestions",
 	"profile.screenreader": "Activate screenreader support",
