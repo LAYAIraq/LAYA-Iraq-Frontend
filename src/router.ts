@@ -14,6 +14,8 @@ const Course = () => import('./components/course/course.vue')
 const CourseContent = () => import('./components/course/course-edit/course-content.vue')
 const CourseNav = () => import('./components/course/course-nav/course-nav.vue')
 const CourseList = () => import('./components/course/course-list/course-list.vue')
+// const MyCourses = () => import('./components/course/course-list/mycourses.vue')
+const FilteredCourses = () => import('./components/course/course-list/course-list-filtered.vue')
 const EditorPanel = () => import('@/components/user-views/editor-panel.vue')
 const Flag = () => import('./components/course/flag/flag.vue')
 const Imprint = () => import('./components/general/imprint.vue')
@@ -114,8 +116,13 @@ export default new Router({
     // {
     //   path: '/mycourses',
     //   name: 'mycourses-view',
-    //   component: views.mycourses
+    //   component: MyCourses
     // },
+    {
+      path: '/mycourses',
+      name: 'mycourses-view',
+      component: FilteredCourses
+    },
     {
       path: '/imprint',
       name: 'imprint',

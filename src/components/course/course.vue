@@ -11,6 +11,7 @@
     class="course"
   >
     <CourseHeader
+      v-if="contentToDisplay"
       :content-title="contentToDisplay.title"
       :course-name="course.name"
       :course-path="coursePath"
@@ -42,7 +43,7 @@
     </div>
 
     <CourseEdit
-      v-if="isCourseAuthor && content"
+      v-if="isCourseAuthor"
       :name="name"
       :course-path="coursePath"
     ></CourseEdit>

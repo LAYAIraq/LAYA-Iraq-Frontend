@@ -13,7 +13,8 @@ Dependencies: none
       <div class="list">
         <div
           class="item"
-          :for="d in data"
+          v-for="d in data"
+          :key="d"
         >
           <slot
             name="item"

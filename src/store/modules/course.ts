@@ -26,6 +26,18 @@ export default {
             reject(error)
           })
       })
+    },
+
+    /**
+     * find course by id.
+     * @param id to get course for
+     */
+    courseGetById ({ commit }, id: string) {
+      return new Promise((resolve, reject) => {
+        http.get(`courses/${id}`).then(course => {
+          resolve(course)
+        }).catch(error => reject(error))
+      })
     }
   }
 }

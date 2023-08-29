@@ -47,7 +47,9 @@ Dependencies:
             ></i>
             {{ y18n('header.courses') }}
           </b-nav-item>
-          <!-- <b-nav-item to="/mycourses">{{ y18n('mycourses.title') }}</b-nav-item> -->
+          <b-nav-item to="/mycourses">
+            {{ y18n('mycourses.title') }}
+          </b-nav-item>
         </b-navbar-nav>
 
         <!-- right links unauthorized -->
