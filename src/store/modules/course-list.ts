@@ -17,9 +17,7 @@ export default {
      */
     courseList (state: { courseList: object[] }) {
       return state.courseList
-    },
-    courseLanguage: (state: { language: string }) => state.language
-
+    }
   },
   mutations: {
     /**

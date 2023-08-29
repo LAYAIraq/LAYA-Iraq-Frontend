@@ -108,6 +108,11 @@ export default {
       this.$store.dispatch('courseUpdate')
         .then(() => {
           this.$store.dispatch('courseListFetch')
+          const data = {
+            lang: this.courseLanguage,
+            cid: this.courseId
+          }
+          this.$store.dispatch('courseUpdateLanguage', data)
           this.$emit('changedLanguage')
         })
         .catch(err => console.error(err))

@@ -300,6 +300,11 @@ export default {
           enrollment: this.needsEnrollment
         })
           .then(() => {
+            const data = {
+              lang: this.courseLanguage,
+              cid: this.courseId
+            }
+            this.$store.dispatch('courseUpdateLanguage', data)
             if (this.needsEnrollment) {
               this.$store.dispatch('createAuthorEnrollment', {
                 courseName: newCourse.name,

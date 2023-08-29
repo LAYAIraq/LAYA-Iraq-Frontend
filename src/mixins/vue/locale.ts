@@ -34,7 +34,16 @@ export default {
       return this.profileLanguage === 'ar' || this.profileLanguage === 'ku'
     },
 
+    /**
+     * coourseLangIsAr: checks if Arabic script language is set, for rtl shenanigans
+     *
+     * Author: nv
+     *
+     * Since: v1.3.0
+     * @returns true if 'arabic' or 'kurdish' is set as courseLanguage
+     */
     courseLangIsAr () {
+      console.log('courseLanguage in locale is ' + this.courseLanguage)
       return this.courseLanguage === 'arabic' || this.courseLanguage === 'kurdish'
     }
   },
