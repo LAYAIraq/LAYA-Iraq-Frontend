@@ -15,7 +15,8 @@ export default {
      *  @param commit - commit function
      *  @param courseIdentifier - identifier for course, can be id or slug
      */
-    courseFetch ({ commit }, courseIdentifier: string) {
+    /**
+     courseFetch ({ commit }, courseIdentifier: string) {
       return new Promise((resolve, reject) => {
         http.get(`courses/${courseIdentifier}`)
           .then((response: AxiosResponse<Course>) => {
@@ -27,5 +28,6 @@ export default {
           })
       })
     }
+     **/
   }
 }
