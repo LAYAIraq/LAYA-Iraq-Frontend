@@ -10,26 +10,27 @@
     v-if="!storeBusy"
     class="course"
   >
-    <CourseHeader
-      :content-title="contentToDisplay.title"
-      :course-name="course.name"
-      :course-path="coursePath"
-    ></CourseHeader>
-
     <!-- content -->
-    <div class="container content">
+    <div
+      v-if="contentToDisplay && viewPermit"
+      class="container content"
+    >
       <div class="row">
         <div class="col">
+          <CourseHeader
+            :content-title="contentToDisplay.title"
+            :course-name="course.name"
+            :course-path="coursePath"
+          ></CourseHeader>
           <component
             :is="contentToDisplay.name"
-            v-if="contentToDisplay && viewPermit"
             :key="contentToDisplay.title.text"
             :view-data="contentToDisplay"
             :on-finish="followContent"
           >
           </component>
 
-          <div v-else>
+          <div>
             <!--            <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">-->
             {{ y18n('courseDetail.content') }}
             <!--            </h2>-->
@@ -42,7 +43,7 @@
     </div>
 
     <CourseEdit
-      v-if="isCourseAuthor && content"
+      v-if="isCourseAuthor"
       :name="name"
       :course-path="coursePath"
     ></CourseEdit>
