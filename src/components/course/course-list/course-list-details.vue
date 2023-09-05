@@ -235,7 +235,6 @@ export default {
 
   data () {
     return {
-      authorName: '',
       buttonAction: null,
       complicitCourses: null,
       complicitCheck: null,

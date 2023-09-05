@@ -288,7 +288,7 @@ export default {
      *  */
     storeNewCourse () {
       this.checkNames()
-      this.authorName = this.profile.fullName
+      this.newCourse.authorName = this.profile.fullName
       const { newCourse, userId } = this
       if (this.newCourseNeedsEncoding) {
         this.msg = this.y18n('courseList.needsEncoding')
