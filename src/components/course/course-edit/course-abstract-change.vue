@@ -35,7 +35,7 @@ Since: v1.3.0
       @ok="changeCourseabstract"
     >
       <p>
-        {{ y18n('changeabstract') }}
+        {{ y18n('changeAbstract') }}
         <input
           v-model="newAbstract"
           type="text"
