@@ -78,7 +78,7 @@
         </div>
 
         <div class="col">
-          {{ course.authorName }}
+          {{ course.authorName ? course.authorName : y18n('profile.language.notlisted') }}
         </div>
 
         <div class="col">
@@ -313,6 +313,7 @@ export default {
     this.getSubs()
     this.filteredList = [...this.courseList]
     this.getComplicitCourses()
+    console.log(this.course.authorName)
   },
 
   methods: {
