@@ -157,6 +157,22 @@ export default {
     },
 
     /**
+     * function courseAuthorNameChange: update course author name
+     * Author: nv
+     *Since: v1.3.0
+     */
+    courseAuthorNameChange (
+      state: {
+        course: {
+          authorName: string
+        }
+      },
+      newAuthorName: string
+    ) {
+      state.course.authorName = newAuthorName
+    },
+
+    /**
      * function courseCategoryChange: update course category
      *
      * Author: cmc

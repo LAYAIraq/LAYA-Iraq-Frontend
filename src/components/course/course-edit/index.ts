@@ -6,6 +6,7 @@
  * Dependencies: none
  */
 
+export { default as CourseAuthornameChange } from './course-authorname-change.vue'
 export { default as CourseAbstractChange } from './course-abstract-change.vue'
 export { default as CourseKeywordsChange } from './course-keywords-change.vue'
 export { default as CourseCopy } from './course-copy.vue'

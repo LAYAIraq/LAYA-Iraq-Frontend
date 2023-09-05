@@ -32,6 +32,8 @@
 
     <course-copy @success="$emit('saveChanges')"></course-copy>
 
+    <course-authorname-change @changedAuthorName="$emit('saveChanges')"></course-authorname-change>
+
     <course-category-change @changedCategory="$emit('saveChanges')"></course-category-change>
 
     <course-language-change @changedLanguage="$emit('saveChanges')"></course-language-change>
@@ -57,6 +59,7 @@
 <script>
 import {
   CourseFeedbackDownload,
+  CourseAuthornameChange,
   CourseBlockNew,
   CoursePreferences,
   CourseBlockEdit,
@@ -77,6 +80,7 @@ export default {
   name: 'CourseEditTools',
   components: {
     CourseFeedbackDownload,
+    CourseAuthornameChange,
     CourseBlockNew,
     CoursePreferences,
     CourseBlockEdit,
