@@ -29,17 +29,16 @@
             :on-finish="followContent"
           >
           </component>
-
-          <div>
-            <!--            <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">-->
-            {{ y18n('courseDetail.content') }}
-            <!--            </h2>-->
-            <!--            <h2 v-else class="mt-5 text-center text-muted">-->
-            <!--              {{ y18n('courseDetail.noPermit') }}-->
-            <!--            </h2>-->
-          </div>
         </div>
       </div>
+    </div>
+    <div v-else>
+      <!--            <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">-->
+      {{ y18n('courseDetail.content') }}
+      <!--            </h2>-->
+      <!--            <h2 v-else class="mt-5 text-center text-muted">-->
+      <!--              {{ y18n('courseDetail.noPermit') }}-->
+      <!--            </h2>-->
     </div>
 
     <CourseEdit
