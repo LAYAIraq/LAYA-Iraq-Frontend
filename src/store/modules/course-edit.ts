@@ -5,6 +5,7 @@ import { LegacyContentBlock } from '@/mixins/types/course-structure'
 
 export default {
   state: {
+    cLanguage: 'english',
     course: {},
     courseUpdated: false
   },
@@ -80,6 +81,8 @@ export default {
     }) {
       return state.course.courseId
     },
+
+    courseLanguage: (state: { cLanguage: string }) => state.cLanguage,
 
     /**
      * function courseSimple: return true if course has simpleLanguage
@@ -706,6 +709,40 @@ export default {
           .finally(() => {
             commit('courseUpdatedSet', false)
             resolve('Course updated successfully')
+          })
+      })
+    },
+
+    /**
+     * function courseUpdateLanguage: persist locale to backend
+     * Author: nv
+     * Since: v1.3.0
+     * @param param0 contains state variables
+     * @param langData contains course language and id
+     */
+    courseUpdateLanguage (
+      { commit, state }: {
+        state: {
+          course: {
+            language: string,
+            courseId: string
+          }
+        },
+        commit: Function
+      }) {
+      const langData = {
+        language: state.course.language
+      }
+      console.log('update course language in course.ts')
+      return new Promise((resolve, reject) => {
+        http.patch(
+        `/course/${state.course.courseId}`, langData
+        ).then(() => {
+          commit('courseLanguageChange', langData.language)
+          resolve('Updated Course Language!')
+        })
+          .catch((err) => {
+            reject(err)
           })
       })
     },

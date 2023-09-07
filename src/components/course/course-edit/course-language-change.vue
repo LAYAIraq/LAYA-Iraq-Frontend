@@ -61,7 +61,7 @@ Since: v1.3.0
 
 <script>
 import { locale } from '@/mixins'
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import languages from '@/options/languages'
 
 export default {
@@ -93,6 +93,7 @@ export default {
   },
 
   methods: {
+    ...mapActions(['courseUpdateLanguage']),
 
     /**
      * Function changeCourseLanguage: change course language
@@ -108,12 +109,16 @@ export default {
       this.$store.dispatch('courseUpdate')
         .then(() => {
           this.$store.dispatch('courseListFetch')
-          const data = {
-            lang: this.courseLanguage,
-            cid: this.courseId
-          }
-          this.$store.dispatch('courseUpdateLanguage', data)
-          this.$emit('changedLanguage')
+            .then(() => {
+              console.log('updating courselist')
+              const data = {
+                language: this.newLanguage,
+                courseId: this.courseId
+              }
+              this.$store.dispatch('courseUpdateLanguage', data)
+              console.log('updating course language')
+              this.$emit('changedLanguage')
+            }).catch(err => console.error(err))
         })
         .catch(err => console.error(err))
       // }
