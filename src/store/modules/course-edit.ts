@@ -5,7 +5,6 @@ import { LegacyContentBlock } from '@/mixins/types/course-structure'
 
 export default {
   state: {
-    cLanguage: 'english',
     course: {},
     courseUpdated: false
   },
@@ -82,7 +81,19 @@ export default {
       return state.course.courseId
     },
 
-    courseLanguage: (state: { cLanguage: string }) => state.cLanguage,
+    /**
+     * function courseLanguage: return course language to locale
+     *  Author: nv
+     *  Last Updated: October 29, 2021
+     * @param state contains language
+     */
+    courseLanguage (state: {
+      course: {
+        language: string
+      }
+    }) {
+      return state.course.language
+    },
 
     /**
      * function courseSimple: return true if course has simpleLanguage
@@ -718,7 +729,7 @@ export default {
      * Author: nv
      * Since: v1.3.0
      * @param param0 contains state variables
-     * @param langData contains course language and id
+     * @param langData contains course language
      */
     courseUpdateLanguage (
       { commit, state }: {
@@ -736,7 +747,7 @@ export default {
       console.log('update course language in course.ts')
       return new Promise((resolve, reject) => {
         http.patch(
-        `/course/${state.course.courseId}`, langData
+        `/courses/${state.course.courseId}`, langData
         ).then(() => {
           commit('courseLanguageChange', langData.language)
           resolve('Updated Course Language!')
