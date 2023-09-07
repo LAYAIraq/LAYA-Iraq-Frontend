@@ -37,6 +37,7 @@ export default {
         abstract: string,
         keywords: string,
         author: number,
+        authorName: string,
         category: string,
         language: string,
         courseId: string,
@@ -116,6 +117,7 @@ export default {
           name: string },
         courseList: Array<{
           abstract: string,
+          authorName: string,
           keywords: string,
           category: string,
           language: string,
@@ -161,7 +163,8 @@ export default {
               slug: slugify(courseObject.name), // TODO: handle arabic & kurdish
               properties: courseObject.properties,
               courseId: courseObject.courseId,
-              author: courseObject.authorId
+              author: courseObject.authorId,
+              authorName: courseObject.authorName
             }
 
             if (!state.courseList.some( // add to course list if not present

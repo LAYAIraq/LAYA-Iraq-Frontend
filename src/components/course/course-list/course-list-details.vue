@@ -78,7 +78,7 @@
         </div>
 
         <div class="col">
-          {{ course.authorName ? course.authorName : y18n('profile.language.notlisted') }}
+          {{ course.authorName === "" || course.authorName === null ? y18n('profile.language.notlisted') : course.authorName }}
         </div>
 
         <div class="col">
@@ -235,6 +235,7 @@ export default {
 
   data () {
     return {
+      authorName: '',
       buttonAction: null,
       complicitCourses: null,
       complicitCheck: null,
@@ -313,7 +314,8 @@ export default {
     this.getSubs()
     this.filteredList = [...this.courseList]
     this.getComplicitCourses()
-    console.log(this.course.authorName)
+    console.log('authorname ' + this.course.authorName)
+    console.log(this.course)
   },
 
   methods: {
