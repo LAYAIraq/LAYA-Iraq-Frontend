@@ -90,7 +90,7 @@ export default {
         this.$nextTick(() => {
           this.$bvModal.hide('author-change-authorname-confirm')
         })
-        this.$store.commit('courseAuthorNameChange')
+        this.$store.commit('courseAuthorNameChange', this.newAuthorName)
         console.log('authornamechange')
         this.$store.dispatch('courseUpdate')
           .then(() => {
