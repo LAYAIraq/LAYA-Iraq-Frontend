@@ -6,131 +6,137 @@
 -->
 
 <template>
-  <div class="container">
-    <div
-      :id="title.id"
-      class="flaggable row mb-3"
-    >
-      <div class="col">
-        <h2>
-          {{ courseSimple? title.simple : title.text }}
-          <audio-button
-            v-if="taskAudioExists"
-            :src="courseSimple?
-              taskAudio.simple :
-              taskAudio.text"
-          ></audio-button>
-        </h2>
+  <fieldset
+    class="category-matching-view"
+    :class="courseLangIsAr? 'text-right' : 'text-left'"
+  >
+    <div class="container">
+      <div
+        :id="title.id"
+        class="flaggable row mb-3"
+      >
+        <div class="col">
+          <h2>
+            {{ courseSimple? title.simple : title.text }}
+            <audio-button
+              v-if="taskAudioExists"
+              :src="courseSimple?
+                taskAudio.simple :
+                taskAudio.text"
+            ></audio-button>
+          </h2>
+        </div>
+        <flag-icon
+          v-if="!editPreview"
+          :ref-data="title"
+          @flagged="title.flagged = true"
+        ></flag-icon>
       </div>
-      <flag-icon
-        v-if="!editPreview"
-        :ref-data="title"
-        @flagged="title.flagged = true"
-      ></flag-icon>
-    </div>
 
-    <div
-      :id="task.id"
-      class="flaggable row"
-    >
-      <div class="col">
-        <p>{{ courseSimple? task.simple : task.text }}</p>
+      <div
+        :id="task.id"
+        class="flaggable row"
+      >
+        <div class="col">
+          <p>{{ courseSimple? task.simple : task.text }}</p>
+        </div>
+        <flag-icon
+          v-if="!editPreview"
+          :ref-data="task"
+
+          @flagged="task.flagged = true"
+        ></flag-icon>
       </div>
-      <flag-icon
-        v-if="!editPreview"
-        :ref-data="task"
+      <hr>
 
-        @flagged="task.flagged = true"
-      ></flag-icon>
-    </div>
-    <hr>
-
-    <div class="row">
-      <div class="col">
-        <div
-          v-for="(item,i) in items"
-          :id="item.id"
-          :key="item.id"
-          class="flaggable item mb-5"
-        >
-          <h3 class="text-center item-label">
-            {{ courseSimple? item.simple : item.label }}
-            <i
-              v-if="checked"
-              class="fas"
-              :class="{
-                'fa-check text-success': eval[i],
-                'fa-times text-danger': !eval[i]
-              }"
-            >
-            </i>
-          </h3>
-
-          <div class="d-flex justify-content-between">
-            <b
-              v-for="cat in categories"
-              :key="cat.text"
-            >
-              {{ courseSimple? cat.simple : cat.text }}
-            </b>
-          </div>
-          <input
-            v-model.number="solution[i]"
-            type="range"
-            class="custom-range"
-            min="0"
-            :max="categories.length-1"
-            :disabled="checked"
-            :aria-valuenow="solution[i]"
-            :aria-valuetext="courseSimple? categories[solution[i]].simple: categories[solution[i]].text"
-            :aria-label="y18n('categoryMatching.label.slider')"
+      <div class="row">
+        <div class="col">
+          <div
+            v-for="(item,i) in items"
+            :id="item.id"
+            :key="item.id"
+            class="flaggable item mb-5"
           >
-          <flag-icon
-            v-if="!editPreview"
-            :ref-data="item"
-            :interactive="true"
-            @flagged="item.flagged = true"
-          ></flag-icon>
+            <h3 class="text-center item-label">
+              {{ courseSimple? item.simple : item.label }}
+              <i
+                v-if="checked"
+                class="fas"
+                :class="{
+                  'fa-check text-success': eval[i],
+                  'fa-times text-danger': !eval[i]
+                }"
+              >
+              </i>
+            </h3>
+
+            <div class="d-flex justify-content-between">
+              <b
+                v-for="cat in categories"
+                :key="cat.text"
+              >
+                {{ courseSimple? cat.simple : cat.text }}
+              </b>
+            </div>
+            <input
+              v-model.number="solution[i]"
+              type="range"
+              class="custom-range"
+              :class="courseLangIsAr? 'mr-3': 'ml-3'"
+              min="0"
+              :max="categories.length-1"
+              :disabled="checked"
+              :aria-valuenow="solution[i]"
+              :aria-valuetext="courseSimple? categories[solution[i]].simple: categories[solution[i]].text"
+              :aria-label="y18n('categoryMatching.label.slider')"
+            >
+            <flag-icon
+              v-if="!editPreview"
+              :ref-data="item"
+              :interactive="true"
+              @flagged="item.flagged = true"
+            ></flag-icon>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <button
+          type="button"
+          class="btn btn-link mt-3"
+          :class="langIsAr? 'float-right': 'float-left'"
+          :disabled="checked"
+          aria-labelledby="solutions"
+          @click="check"
+        >
+          {{ y18n('check') }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary mt-3"
+          :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
+          @click="done"
+        >
+          {{ y18n('nextContent') }}
+          <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
+        </button>
+      </div>
+      <div
+        v-if="showSolutionsBool"
+        id="solutions"
+      >
+        {{ i18n["choiceQuestion.showCorrect"] }}
+        <div
+          v-for="(item, index) in items"
+          :key="index"
+        >
+          {{ item.label }}: {{ courseSimple
+            ? categories[item.category].simple
+            : categories[item.category].text
+          }}
         </div>
       </div>
     </div>
-    <div class="row">
-      <button
-        type="button"
-        class="btn btn-link mt-3"
-        :class="langIsAr? 'float-right': 'float-left'"
-        :disabled="checked"
-        aria-labelledby="solutions"
-        @click="check"
-      >
-        {{ y18n('check') }}
-      </button>
-      <button
-        type="button"
-        class="btn btn-primary mt-3"
-        :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-        @click="done"
-      >
-        {{ y18n('nextContent') }}
-        <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
-      </button>
-    </div>
-    <div
-      v-if="showSolutionsBool"
-      id="solutions"
-    >
-      {{ i18n["choiceQuestion.showCorrect"] }}
-      <div
-        v-for="(item, index) in items"
-        :key="index"
-      >
-        {{ item.label }}: {{ courseSimple
-          ? categories[item.category].simple
-          : categories[item.category].text
-        }}
-      </div>
-    </div>
-  </div>
+  </fieldset>
 </template>
 
 <script>

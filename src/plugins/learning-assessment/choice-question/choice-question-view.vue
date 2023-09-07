@@ -7,7 +7,7 @@ Since: v1.0.0
 
 <template>
   <fieldset
-    class="choice-question"
+    class="choice-question-view"
     :class="courseLangIsAr? 'text-right' : 'text-left'"
   >
     <!-- render task -->
@@ -133,12 +133,12 @@ Since: v1.0.0
       <button
         type="button"
         class="btn btn-primary mt-3"
-        :class="courseLangIsAr? 'float-left': 'float-right'"
+        :class="langIsAr? 'float-left': 'float-right'"
         @click="onFinish[0]() || {}"
       >
         <span>
           {{ y18n('nextContent') }}
-          <i :class="courseLangIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
+          <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
         </span>
       </button>
       <span
