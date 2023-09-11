@@ -11,13 +11,14 @@ import {
   CourseNavigationItem,
   LegacyContentBlock,
   LegacyContentInput,
-  LegacyCourse
+  LegacyCourse, CourseNavigationItemBlock
 } from '@/mixins/types/course-structure'
 import {
-  legacyContentStepsTransform,
-  courseStructureDescent,
   coursePathsGet,
-  slugify, legacyContentFollowTransform
+  courseStructureDescent,
+  legacyContentFollowTransform,
+  legacyContentStepsTransform,
+  slugify
 } from '@/mixins/general/course-structure'
 import { stripKey } from '@/mixins/general/helpers'
 import { v4 as uuidv4 } from 'uuid'
@@ -147,7 +148,7 @@ export default {
       }
     },
 
-    courseChapterAdd (state: { courseChapters: CourseNavigationItem[], courseStart: string }, chapter: CourseNavigationItem) {
+    courseChapterAdd (state: { courseChapters: CourseNavigationItem[], courseStart: string }, chapter: CourseNavigationItemBlock) {
       if (state.courseChapters.length === 0) {
         Vue.set(state, 'courseStart', chapter.id)
       }
@@ -192,7 +193,7 @@ export default {
         }
       }
       legacyContentFollowTransform(state.courseChapters)
-      state.courseChapters.forEach((chapter: CourseNavigationItem) => {
+      state.courseChapters.forEach((chapter: CourseNavigationItemBlock) => {
         state.courseContentFollowMap[chapter.id] = chapter.follow
       })
       // traverse course content and create routes

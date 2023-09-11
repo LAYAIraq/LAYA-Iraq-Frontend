@@ -11,7 +11,8 @@
         "dr31"
       ],
       "id": "e1ns",
-      "slug": "dialog-sample"
+      "slug": "dialog-sample",
+      "type": "button-navigation"
     },
     {
       "chapterName": "video",
@@ -22,6 +23,7 @@
           "id": "zw31",
           "isChapter": false,
           "slug": "video",
+          "type": "video",
           "follow": "dr31"
         }
       ],
@@ -34,6 +36,7 @@
           "follow": "v13r",
           "id": "dr31",
           "isChapter": false,
+          "type": "free-text",
           "slug": "wysiwyg"
       }],
       "slug": "editor"
@@ -44,12 +47,14 @@
         {
           "isChapter": false,
           "id": "v13r",
-          "slug": "sc-quiz"
+          "slug": "sc-quiz",
+          "type": "choice-question"
         },
         {
           "id": "fu3nf",
           "isChapter": false,
-          "slug": "drag-drop"
+          "slug": "drag-drop",
+          "type": "category-matching"
         }
       ],
       "slug": "quiz",

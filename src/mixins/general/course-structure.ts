@@ -7,6 +7,7 @@
 import {
   ContentBlock,
   CourseNavigationItem,
+  CourseNavigationItemBlock,
   LegacyContentBlock
 } from '@/mixins/types/course-structure'
 
@@ -29,7 +30,7 @@ export const legacyContentStepsTransform = (block: LegacyContentBlock): number[]
  * @description transforms follow property from number to id
  * @param courseChapters array of course chapters, result of setCourseContentAndNav mutation
  */
-export const legacyContentFollowTransform = (courseChapters: CourseNavigationItem[]): void => {
+export const legacyContentFollowTransform = (courseChapters: CourseNavigationItemBlock[]): void => {
   courseChapters.forEach(chapter => {
     const transformNumberToId = (follow: number): string => {
       const followChapter = courseChapters[follow] ? courseChapters[follow].id : null
@@ -87,7 +88,7 @@ export const unslugify = (text: string): string => {
  * @param routes - array of routes, will be modified
  */
 const courseStructureRoutesCollect = (
-  structure: CourseNavigationItem[] | CourseNavigationItem,
+  structure: any,
   currentPath: string,
   routes: Array<[route: string, id: string]>
 ) => {
@@ -97,7 +98,7 @@ const courseStructureRoutesCollect = (
       courseStructureRoutesCollect(item, currentPath, routes)
       // routes.push([currentPath + '/' + item.slug ? item.slug : item.id, item.id]) // can have alternative path
     })
-  } else if (structure.isChapter) { // children
+  } else if (structure.isChapter) { // structure is CourseNavigationItemChapter
     courseStructureRoutesCollect(structure.children, currentPathSnippet + structure.slug, routes)
   } else if (!routes.some(el => el[1] === structure.id)) { // add path to routes if id is not already there
     routes.push([currentPathSnippet + structure.slug, structure.id])
@@ -110,11 +111,11 @@ const courseStructureRoutesCollect = (
  * @since v1.3.0
  * @param courseNav list of or single CourseNavigationItem
  */
-export const firstContentIdGet = (courseNav: CourseNavigationItem[] | CourseNavigationItem): string => {
+export const firstContentIdGet = (courseNav: any): string => {
   if (!courseNav) {
     return null
   }
-  if (Array.isArray(courseNav)) {
+  if (Array.isArray(courseNav)) { // courseNav is CourseNavigationItem[]
     if (courseNav.length === 0) {
       return null
     } else if (courseNav[0].isChapter) {
@@ -122,17 +123,18 @@ export const firstContentIdGet = (courseNav: CourseNavigationItem[] | CourseNavi
     } else {
       return courseNav[0].id
     }
-  } else if (courseNav.isChapter) { // no array of CourseNavigationItems
+  } else if (courseNav.isChapter) { // courseNav is CourseNavigationItemChapter
     return firstContentIdGet(courseNav.children)
-  } else {
+  } else { // courseNav is CourseNavigationItemBlock
     return courseNav.id
   }
 }
 
-export const contentBlockToNavItemTransform = (block: ContentBlock): CourseNavigationItem => {
+export const contentBlockToNavItemTransform = (block: ContentBlock): CourseNavigationItemBlock => {
   const slug = slugify(block.title.text)
   const noConflict = slug !== 'edit' && slug !== 'new'
   return {
+    id: block.id,
     isChapter: false,
     slug: noConflict ? slug : slug + '-' + block.name,
     type: block.name,
@@ -184,11 +186,11 @@ export const coursePathsGet =
  * @param ids object containing ids of content blocks, will be modified consisting
  *  all ids of content blocks in course structure
  */
-export const courseStructureContentIdsExtract = (structure: CourseNavigationItem[] | CourseNavigationItem, ids: any): void => {
+export const courseStructureContentIdsExtract = (structure: any, ids: any): void => {
   if (Array.isArray(structure)) { // structure is array of CourseNavigationItems
     structure.forEach(item => courseStructureContentIdsExtract(item, ids))
   } else if (structure.isChapter && structure.children) { // structure is single CourseNavigationItem
-    structure.children.forEach(item => courseStructureContentIdsExtract(item, ids)) // recursively call for each child
+    structure.children.forEach((item: CourseNavigationItem) => courseStructureContentIdsExtract(item, ids)) // recursively call for each child
   } else {
     ids[structure.id] = {}
   }

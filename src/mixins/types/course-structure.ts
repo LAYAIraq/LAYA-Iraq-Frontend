@@ -43,22 +43,35 @@ export interface LegacyCourse {
 type FollowingContent = string | string[] | number | number[]
 
 /**
- * @description Course navigation item has id and slug with optional follow
- *  property
+ * @description Course navigation item has id and slug
  * @property id unique id for course content block
  * @property slug slug for course content block (can be used for route)
- * @property type type of content block (e.g. 'laya-dialog')
- * @property follow following content (can be marked with number (step) or
- *  string (id/slug), also as array)
  */
-export type CourseNavigationItem = {
-  chapterName?: string
-  children?: CourseNavigationItem[]
-  follow?: FollowingContent
-  id?: string
-  isChapter: boolean
-  slug?: string
-  type?: string
+export interface CourseNavigationItem {
+  isChapter: boolean,
+  slug: string
+}
+
+/**
+ * @description Course Chapters have a chapterName and a list of child CourseNavigationItems
+ * @property chapterName Name for chapter
+ * @property children List of children, i.e. sub-chapters
+ */
+export interface CourseNavigationItemChapter extends CourseNavigationItem {
+  chapterName: string,
+  children: CourseNavigationItem[],
+}
+
+/**
+ * @description Course Blocks have type, id and follow set
+ * @property type name of plugin type
+ * @property id unique id for content block, used for lookup
+ * @property follow Content following, single id or list of ids (only for button-navigation)
+ */
+export interface CourseNavigationItemBlock extends CourseNavigationItem {
+  type: string,
+  id: string,
+  follow: FollowingContent
 }
 
 /**

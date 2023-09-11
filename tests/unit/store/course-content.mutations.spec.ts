@@ -2,7 +2,7 @@ import courseContent from '@/store/modules/course-content'
 import SampleCourse from '../../mocks/sample-course-short.json'
 import SampleCourseChapters from '../../mocks/sample-course-chapters.json'
 import { deepCopy } from '@/mixins/general/helpers'
-import { CourseNavigationItem } from '@/mixins/types/course-structure'
+import { CourseNavigationItemBlock } from '@/mixins/types/course-structure'
 
 describe('store module course-content mutations', () => {
   let state: any
@@ -71,10 +71,12 @@ describe('store module course-content mutations', () => {
     })
 
     it('adds courseChapter to empty chapters, modifying courseStart', () => {
-      const mockChapter: CourseNavigationItem = {
+      const mockChapter: CourseNavigationItemBlock = {
         isChapter: false,
         id: 'abc',
-        type: 'button-navigation'
+        slug: 'test-nav',
+        type: 'button-navigation',
+        follow: null
       }
       mutations.courseChapterAdd(state, mockChapter)
       expect(state.courseStart).toBe('abc')
@@ -82,7 +84,7 @@ describe('store module course-content mutations', () => {
     })
 
     it('adds chapter at end of existing chapters', () => {
-      const newChapter = SampleCourseChapters.chapters[3]
+      const newChapter = deepCopy(SampleCourseChapters.chapters[0])
       mutations.courseChapterAdd(state, newChapter)
       expect(state.courseChapters.length).toBe(2)
       expect(state.courseChapters[1]).toStrictEqual(newChapter)
