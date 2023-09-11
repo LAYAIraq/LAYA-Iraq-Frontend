@@ -6,6 +6,7 @@ import { CourseNavigationItemBlock } from '@/mixins/types/course-structure'
 
 describe('store module course-content mutations', () => {
   let state: any
+
   const emptyState = {
     courseContent: {},
     courseIds: {},
@@ -43,7 +44,8 @@ describe('store module course-content mutations', () => {
     })
 
     it('sets the start property in courseNav', () => {
-      expect(state.courseContent[state.courseStart]).toStrictEqual(
+      const courseStart = courseContent.getters.courseStart(state)
+      expect(state.courseContent[courseStart]).toStrictEqual(
         expect.objectContaining(SampleCourse.content[0].input)
       )
     })
@@ -241,10 +243,6 @@ describe('store module course-content mutations', () => {
     })
     it.skip('creates an entry in courseContent for each course block', () => { // skipped b/c this is function in course-structure.ts
       expect(Object.keys(state.courseContent).length).toBe(5)
-    })
-
-    it('sets the start property', () => {
-      expect(state.courseStart).toBe('e1ns')
     })
 
     it('copies the chapters in store', () => {

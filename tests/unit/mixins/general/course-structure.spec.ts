@@ -10,10 +10,11 @@ import {
 import {
   chapterFollowSet,
   contentBlockToNavItemTransform,
+  contentIdGet,
   coursePathsGet,
+  courseStructureChapterNames,
   courseStructureContentIdsExtract,
   courseStructureDescent,
-  contentIdGet,
   legacyContentStepsTransform,
   slugify,
   unslugify
@@ -42,7 +43,7 @@ describe('content-structure types', () => {
 })
 
 describe('content-structure methods', () => {
-  const getNumberBetween1and10 = () => Math.floor(Math.random() * 10) + 1
+  const getNumberBetween1and10 = () => Math.ceil(Math.random() * 10)
   describe('legacyContentStepsTransform', () => {
     const content = SampleCourse.content
     const mockContentBlock: LegacyContentBlock = {
@@ -454,6 +455,38 @@ describe('content-structure methods', () => {
     })
   })
 
+  describe('courseStructureChapterNames', () => {
+    it('returns null if no chapter array is passed', () => {
+      expect(courseStructureChapterNames(null)).toBeNull()
+      expect(courseStructureChapterNames(undefined)).toBeNull()
+    })
+    it('returns empty object for empty chapter array', () => {
+      expect(courseStructureChapterNames([])).toStrictEqual({})
+    })
+    it('returns the correct object for simple chapters', () => {
+      expect(courseStructureChapterNames(SampleCourseChapters.chapters)).toStrictEqual({
+        video: 'video',
+        editor: 'Editor',
+        quiz: 'quiz'
+      })
+    })
+    it('returns the correct object for nested chapters', () => {
+      expect(courseStructureChapterNames(SampleCourseChaptersNested.chapters)).toStrictEqual({
+        quiz: 'quiz',
+        scmc: 'scmc',
+        'choice-quizzes': 'Choice-Quizzes',
+        other: 'other',
+        'drag-drop': 'Drag & Drop',
+        relate: 'Relate',
+        start: 'start',
+        'last-chapter': 'Last Chapter',
+        main: 'main',
+        'some-sub-chapter': 'Some - Sub–Chapter',
+        feedback: 'Feedback'
+      })
+    })
+  })
+
   describe('courseStructureDescent', () => { // TODO: reactivate
     it('only returns blank string for first course block', () => {
       const singleChapterCourseStructure = [
@@ -508,29 +541,46 @@ describe('content-structure methods', () => {
       const [ids, paths] = courseStructureDescent(courseChaptersNested)
       expect(Object.keys(ids).length).toBe(9)
       expect(paths).toHaveLength(9)
-      expect(paths).toContainEqual(['main/start/dialog-sample', 'e1ns'])
       expect(paths).toContainEqual(['', 'v13r'])
-      expect(paths).toContainEqual(['main/wysiwyg', 'dr31'])
-      expect(paths).toContainEqual(['main/quiz/scmc/mc-quiz', 'fu3nf'])
-      expect(paths).toContainEqual(['main/quiz/scmc/some-sub-chapter/tf-quiz', '53ch5'])
+      expect(paths).toContainEqual(['feedback/feedback', 'f33db4ck'])
+      expect(paths).toContainEqual(['main/last-chapter/video', 'zw31'])
+      expect(paths).toContainEqual(['main/last-chapter/wysiwyg', 'dr31'])
       expect(paths).toContainEqual(['main/quiz/other/drag-drop/drag-drop', '513b3n'])
       expect(paths).toContainEqual(['main/quiz/other/relate/relate', '4cht'])
-      expect(paths).toContainEqual(['feedback/feedback', 'f33db4ck'])
+      expect(paths).toContainEqual(['main/quiz/scmc/choice-quizzes/mc-quiz', 'fu3nf'])
+      expect(paths).toContainEqual(['main/quiz/scmc/some-sub-chapter/tf-quiz', '53ch5'])
+      expect(paths).toContainEqual(['main/start/dialog-sample', 'e1ns'])
     })
 
-    it('returns correct paths for deeply nested courses (with trimming)', () => {
+    it('returns correct paths for deeply nested courses (with trimming of chapter)', () => {
       const courseChaptersNested = SampleCourseChaptersNested.chapters
       const [ids, paths] = courseStructureDescent(courseChaptersNested, 'block')
       expect(Object.keys(ids).length).toBe(9)
       expect(paths).toHaveLength(9)
       expect(paths).toContainEqual(['', 'v13r'])
-      expect(paths).toContainEqual(['main/video', 'zw31'])
-      expect(paths).toContainEqual(['main/wysiwyg', 'dr31'])
-      expect(paths).toContainEqual(['main/quiz/scmc/mc-quiz', 'fu3nf'])
-      expect(paths).toContainEqual(['main/quiz/scmc/tf-quiz', '53ch5'])
+      expect(paths).toContainEqual(['feedback', 'f33db4ck'])
+      expect(paths).toContainEqual(['main/last-chapter/video', 'zw31'])
+      expect(paths).toContainEqual(['main/last-chapter/wysiwyg', 'dr31'])
       expect(paths).toContainEqual(['main/quiz/other/drag-drop', '513b3n'])
       expect(paths).toContainEqual(['main/quiz/other/relate', '4cht'])
+      expect(paths).toContainEqual(['main/quiz/scmc/mc-quiz', 'fu3nf'])
+      expect(paths).toContainEqual(['main/quiz/scmc/tf-quiz', '53ch5'])
+      expect(paths).toContainEqual(['main/dialog-sample', 'e1ns'])
+    })
+    it('returns correct paths for deeply nested courses (with trimming of block)', () => {
+      const courseChaptersNested = SampleCourseChaptersNested.chapters
+      const [ids, paths] = courseStructureDescent(courseChaptersNested, 'chapter')
+      expect(Object.keys(ids).length).toBe(9)
+      expect(paths).toHaveLength(9)
+      expect(paths).toContainEqual(['', 'v13r'])
       expect(paths).toContainEqual(['feedback', 'f33db4ck'])
+      expect(paths).toContainEqual(['main/last-chapter/video', 'zw31'])
+      expect(paths).toContainEqual(['main/last-chapter/wysiwyg', 'dr31'])
+      expect(paths).toContainEqual(['main/quiz/other/drag-drop', '513b3n'])
+      expect(paths).toContainEqual(['main/quiz/other/relate', '4cht'])
+      expect(paths).toContainEqual(['main/quiz/scmc/choice-quizzes', 'fu3nf'])
+      expect(paths).toContainEqual(['main/quiz/scmc/some-sub-chapter', '53ch5'])
+      expect(paths).toContainEqual(['main/start', 'e1ns'])
     })
   })
 

@@ -1,25 +1,28 @@
 import courseContent from '@/store/modules/course-content'
 import SampleCourse from '../../mocks/sample-course-short.json'
 import SampleCourseChapters from '../../mocks/sample-course-chapters.json'
+import { deepCopy } from '@/mixins/general/helpers'
 describe('store module course-content getters', () => {
   let state: any
   const emptyState = {
     courseContent: {},
     courseIds: {},
-    courseChapters: {},
+    courseChapters: [],
     courseChapterNames: {},
     courseRoutes: [],
     courseStart: ''
   }
   const getters = courseContent.getters
   const Course = { ...SampleCourse, properties: {}, lastChanged: Date.now() }
-  beforeAll(() => {
-    state = emptyState
+  beforeEach(() => {
+    state = deepCopy(emptyState)
   })
-
   describe('courseChapters', () => {
-    it('returns empty object when state is empty', () => {
-      expect(getters.courseChapters(state)).toStrictEqual({})
+    beforeAll(() => {
+      state = deepCopy(emptyState)
+    })
+    it('returns empty array when state is empty', () => {
+      expect(getters.courseChapters(state)).toStrictEqual([])
     })
 
     it('returns object that resides in state', () => {
@@ -33,17 +36,24 @@ describe('store module course-content getters', () => {
     })
   })
   describe('courseChapterNames', () => {
+    beforeAll(() => {
+      state = deepCopy(emptyState)
+    })
     it('returns empty object if state is empty', () => {
       expect(getters.courseChapterNames(state)).toStrictEqual({})
     })
 
     it('returns object that resides in state', () => {
-      state.courseChapterNames = SampleCourseChapters
-      expect(getters.courseChapterNames(state)).toStrictEqual(SampleCourseChapters)
+      state.courseChapters = SampleCourseChapters.chapters
+      expect(getters.courseChapterNames(state)).toStrictEqual({
+        editor: 'Editor',
+        quiz: 'quiz',
+        video: 'video'
+      })
     })
 
     it('returns null if courseChapterNames is null', () => {
-      state.courseChapterNames = null
+      state.courseChapters = null
       expect(getters.courseChapterNames(state)).toBeNull()
     })
   })
@@ -81,27 +91,27 @@ describe('store module course-content getters', () => {
   })
 
   describe('courseContentRouteIdMap', () => {
-    beforeAll(() => {
-      state.courseStart = 'test'
-    })
     it('returns empty object if courseRoutes are empty', () => {
       state.courseRoutes = []
-      expect(getters.courseContentRouteIdMap(state)).toStrictEqual({})
+      expect(getters.courseContentRouteIdMap(state, getters)).toStrictEqual({})
     })
 
     it('returns object with route as key and id as value', () => {
-      state.courseRoutes = [['', 'test'], ['/test', 'test']]
-      expect(getters.courseContentRouteIdMap(state)).toStrictEqual({ '': 'test' })
+      state.courseChapters = [{ slug: 'test', isChapter: true, chapterName: 'Test', children: [{ id: 'test', slug: 'test' }] }]
+      expect(getters.courseStart(state)).toBe('test')
+      state.courseRoutes = [['', 'test'], ['test/test', 'test']]
+      expect(getters.courseContentRouteIdMap(state, getters)).toStrictEqual({ '': 'test' })
     })
 
     it('returns object with all keys and values', () => {
-      state.courseRoutes = [['', 'test'], ['/test', 'test'], ['/test2', 'test2']]
-      expect(getters.courseContentRouteIdMap(state)).toStrictEqual({ '': 'test', '/test2': 'test2' })
+      state.courseChapters = [{ slug: 'test', isChapter: true, chapterName: 'Test', children: [{ id: 'test', slug: 'test' }] }]
+      state.courseRoutes = [['', 'test'], ['test/test', 'test'], ['test/test2', 'test2']]
+      expect(getters.courseContentRouteIdMap(state, getters)).toStrictEqual({ '': 'test', 'test/test2': 'test2' })
     })
   })
 
   describe('courseContentPathId', () => {
-    beforeAll(() => {
+    beforeEach(() => {
       state.courseRoutes = [['', 'test'], ['/test', 'test']]
     })
     it('returns null if path is undefined', () => {
@@ -122,18 +132,16 @@ describe('store module course-content getters', () => {
   })
 
   describe('courseNav', () => {
-    it('returns empty object if state is empty', () => {
-      state.courseStart = ''
+    it('returns empty object if no courseChapters', () => {
       state.courseChapters = []
-      expect(getters.courseNav(state)).toStrictEqual({ start: '', structure: [] })
+      expect(getters.courseNav(state, getters)).toStrictEqual({ start: null, structure: [] })
     })
 
     it('returns object consisting of courseStart and courseChapters', () => {
-      state.courseChapters = Course
-      state.courseStart = 'test'
-      expect(getters.courseNav(state)).toStrictEqual({
-        start: 'test',
-        structure: Course
+      state.courseChapters = SampleCourseChapters.chapters
+      expect(getters.courseNav(state, getters)).toStrictEqual({
+        start: 'e1ns',
+        structure: SampleCourseChapters.chapters
       })
     })
   })
