@@ -197,11 +197,7 @@ export default {
       // choose way depending on new or existing content
       if (!this.editContent) {
         this.$store.commit('courseContentAdd', updatedStep)
-        const { courseChapterNew, noConflict } = contentBlockToNavItemTransform(updatedStep)
-        this.$store.commit('courseChapterAdd', courseChapterNew)
-        if (!noConflict) {
-          this.$bvToast.show('modified-slug')
-        }
+        this.$store.commit('courseChapterAdd', contentBlockToNavItemTransform(updatedStep))
       } else {
         this.$store.commit('courseContentSet', { ...updatedStep, id: this.pathId })
       }

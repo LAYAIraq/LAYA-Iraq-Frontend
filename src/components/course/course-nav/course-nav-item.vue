@@ -74,11 +74,7 @@
         >
           {{ y18n('courseNavEdit.slug') }}
         </span>
-        <course-nav-property-edit
-          :form-placeholder="y18n('courseNavEdit.slug')"
-          :property="value.slug"
-          @changed="v => propagateChange('slug', v)"
-        ></course-nav-property-edit>
+        {{ value.slug }}
       </div>
       <div class="d-flex">
         <span

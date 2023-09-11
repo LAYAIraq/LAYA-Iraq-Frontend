@@ -2,6 +2,7 @@ import SampleCourse from '../../../mocks/sample-course-short.json'
 import SampleCourseChapters from '../../../mocks/sample-course-chapters.json'
 import SampleCourseChaptersNested from '../../../mocks/sample-course-chapters-nested.json'
 import {
+  ContentBlock,
   Course,
   CourseNavigationItem,
   LegacyContentBlock,
@@ -9,6 +10,7 @@ import {
 } from '@/mixins/types/course-structure'
 import {
   chapterFollowSet,
+  contentBlockToNavItemTransform,
   coursePathsGet,
   courseStructureContentIdsExtract,
   courseStructureDescent,
@@ -311,6 +313,42 @@ describe('content-structure methods', () => {
         { id: 'c', isChapter: false, follow: 'd' },
         { id: 'd', isChapter: false, follow: null }
       ])
+    })
+  })
+
+  describe('contentBlockToNavItemTransform', () => {
+    let content: ContentBlock
+    beforeEach(() => {
+      content = {
+        id: 'content',
+        title: {
+          text: 'Test'
+        },
+        name: 'button-navigation'
+      }
+    })
+
+    it('returns navItem as return value', () => {
+      const navItem = contentBlockToNavItemTransform(content)
+      expect(typeof navItem).toBe('object')
+      expect(Array.isArray(navItem)).toBeFalsy()
+    })
+
+    it('returns a proper navItem', () => {
+      const navItem = contentBlockToNavItemTransform(content)
+      expect(Object.keys(navItem)).toContain('isChapter')
+    })
+
+    it('does not create a slug that ends on "edit" and returns false', () => {
+      content.title.text = 'Edit'
+      const navItem = contentBlockToNavItemTransform(content)
+      expect(navItem.slug).not.toBe('edit')
+    })
+
+    it('does not create a slug that ends on "new" and returns false', () => {
+      content.title.text = 'New'
+      const navItem = contentBlockToNavItemTransform(content)
+      expect(navItem.slug).not.toBe('new')
     })
   })
 

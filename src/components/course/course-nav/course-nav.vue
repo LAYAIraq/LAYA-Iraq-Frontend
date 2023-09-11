@@ -81,6 +81,7 @@ import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 import CourseNavChapter from './course-nav-chapter.vue'
 import { deepCopy } from '@/mixins/general/helpers'
+import { slugify } from '@/mixins/general/course-structure'
 export default {
   name: 'CourseNavigationEditor',
   components: {
@@ -101,7 +102,7 @@ export default {
     previewComponent () {
       const comps = { ...this.$laya.blocks, ...this.$laya.assessments, ...this.$laya.organization }
       console.log('comps', comps)
-      return comps[this.previewData.name].components.view
+      return this.previewData ? comps[this.previewData.name].components.view : null
     },
     previewData () {
       return this.courseContent[this.previewId]
@@ -126,6 +127,7 @@ export default {
     addChapter () {
       this.courseNavEdit.children.push({
         chapterName: this.y18n('courseNavEdit.chapterNew'),
+        slug: slugify(this.y18n('courseNavEdit.chapterNew')),
         isChapter: true,
         children: []
       })
@@ -141,6 +143,9 @@ export default {
     changeProperty (chapter, property, value) {
       if (property !== 'followingContent') { // followingContent emit has no data
         chapter[property] = value
+      }
+      if (property === 'chapterName') {
+        chapter.slug = slugify(value)
       }
       this.edited = true
     },
@@ -167,7 +172,7 @@ export default {
     },
 
     navigationSave () {
-      this.$store.commit('courseChaptersSet', this.courseNavEdit.children)
+      this.$store.commit('courseChaptersSet', deepCopy(this.courseNavEdit.children))
       this.edited = false
       this.$store.commit('courseRoutesUpdate')
     }

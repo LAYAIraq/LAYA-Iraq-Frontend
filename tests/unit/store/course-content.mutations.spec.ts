@@ -1,6 +1,8 @@
 import courseContent from '@/store/modules/course-content'
 import SampleCourse from '../../mocks/sample-course-short.json'
 import SampleCourseChapters from '../../mocks/sample-course-chapters.json'
+import { deepCopy } from '@/mixins/general/helpers'
+import { CourseNavigationItem } from '@/mixins/types/course-structure'
 
 describe('store module course-content mutations', () => {
   let state: any
@@ -11,7 +13,7 @@ describe('store module course-content mutations', () => {
       start: null,
       structure: []
     },
-    courseChapters: {},
+    courseChapters: [],
     courseRoutes: [],
     courseStart: ''
   }
@@ -20,7 +22,7 @@ describe('store module course-content mutations', () => {
 
   describe('setCourseContentAndNav', () => {
     beforeAll(() => {
-      state = emptyState
+      state = deepCopy(emptyState)
       mutations.setCourseContentAndNav(state, Course)
     })
     it('creates an entry in courseContent for each course block', () => {
@@ -63,13 +65,38 @@ describe('store module course-content mutations', () => {
     })
   })
 
+  describe('courseChapterAdd', () => {
+    beforeAll(() => {
+      state = deepCopy(emptyState)
+    })
+
+    it('adds courseChapter to empty chapters, modifying courseStart', () => {
+      const mockChapter: CourseNavigationItem = {
+        isChapter: false,
+        id: 'abc',
+        type: 'button-navigation'
+      }
+      mutations.courseChapterAdd(state, mockChapter)
+      expect(state.courseStart).toBe('abc')
+      expect(state.courseChapters[0]).toStrictEqual(mockChapter)
+    })
+
+    it('adds chapter at end of existing chapters', () => {
+      const newChapter = SampleCourseChapters.chapters[3]
+      mutations.courseChapterAdd(state, newChapter)
+      expect(state.courseChapters.length).toBe(2)
+      expect(state.courseChapters[1]).toStrictEqual(newChapter)
+    })
+  })
+
   describe('courseChaptersSet', () => {
     beforeAll(() => {
-      state = emptyState
-      mutations.courseChaptersSet(state, SampleCourseChapters.chapters)
+      state = deepCopy(emptyState)
     })
 
     it('sets the courseChapters property', () => {
+      expect(state.courseChapters).toStrictEqual(emptyState.courseChapters)
+      mutations.courseChaptersSet(state, SampleCourseChapters.chapters)
       expect(state.courseChapters).toStrictEqual(SampleCourseChapters.chapters)
     })
 
@@ -81,7 +108,7 @@ describe('store module course-content mutations', () => {
 
   describe('courseContentAdd', () => {
     beforeAll(() => {
-      state = emptyState
+      state = deepCopy(emptyState)
     })
 
     it('adds a new block to courseContent', () => {
@@ -115,7 +142,7 @@ describe('store module course-content mutations', () => {
 
   describe('courseContentSet', () => {
     beforeAll(() => {
-      state = emptyState
+      state = deepCopy(emptyState)
     })
 
     it('adds a new block to courseContent', () => {
@@ -146,7 +173,7 @@ describe('store module course-content mutations', () => {
 
   describe('courseContentSetProperty', () => {
     beforeAll(() => {
-      state = emptyState
+      state = deepCopy(emptyState)
       state.courseContent['test'] = {
         id: 'test',
         title: {
@@ -186,9 +213,28 @@ describe('store module course-content mutations', () => {
     })
   })
 
+  describe('courseRoutesUpdate', () => {
+    beforeAll(() => {
+      state = deepCopy(emptyState)
+    })
+
+    it('sets courseRoutes to argument of courseRoutes mutation', () => {
+      mutations.courseChaptersSet(state, SampleCourseChapters.chapters)
+      mutations.courseRoutesUpdate(state)
+      expect(state.courseRoutes.length).toBe(5)
+      state.courseRoutes.forEach(([route, id], i: number) => {
+        if (i === 0) {
+          expect(id).toBe('e1ns')
+        }
+        expect(typeof route === 'string')
+        expect(typeof id === 'string')
+      })
+    })
+  })
+
   describe('courseStructureDestructure', () => { // skipped b/c imported methods create problems
     beforeAll(() => {
-      state = emptyState
+      state = deepCopy(emptyState)
       mutations.courseStructureDestructure(state, SampleCourseChapters)
     })
     it.skip('creates an entry in courseContent for each course block', () => { // skipped b/c this is function in course-structure.ts

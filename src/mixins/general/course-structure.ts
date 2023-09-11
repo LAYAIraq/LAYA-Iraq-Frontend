@@ -129,16 +129,15 @@ export const firstContentIdGet = (courseNav: CourseNavigationItem[] | CourseNavi
   }
 }
 
-export const contentBlockToNavItemTransform = (block: ContentBlock): { navItem: CourseNavigationItem, noConflict: boolean } => {
+export const contentBlockToNavItemTransform = (block: ContentBlock): CourseNavigationItem => {
   const slug = slugify(block.title.text)
   const noConflict = slug !== 'edit' && slug !== 'new'
-  const navItem = {
+  return {
     isChapter: false,
     slug: noConflict ? slug : slug + '-' + block.name,
     type: block.name,
     follow: null
   }
-  return { navItem, noConflict }
 }
 
 /**
