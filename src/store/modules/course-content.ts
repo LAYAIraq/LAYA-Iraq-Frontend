@@ -14,11 +14,13 @@ import {
   LegacyCourse, CourseNavigationItemBlock
 } from '@/mixins/types/course-structure'
 import {
+  contentIdGet,
   coursePathsGet,
+  courseStructureChapterNames,
   courseStructureDescent,
   legacyContentFollowTransform,
   legacyContentStepsTransform,
-  slugify, contentIdGet
+  slugify
 } from '@/mixins/general/course-structure'
 import { stripKey } from '@/mixins/general/helpers'
 import { v4 as uuidv4 } from 'uuid'
@@ -37,7 +39,7 @@ export default {
 
   getters: {
     courseChapters: (state: { courseChapters: object[] }) => state.courseChapters,
-    courseChapterNames: (state: { courseChapterNames: { [id: string]: string } }) => state.courseChapterNames,
+    courseChapterNames: (state: { courseChapters: CourseNavigationItem[] }) => courseStructureChapterNames(state.courseChapters),
     courseContent: (state: { courseContent: { [id: string]: CourseNavigationItem } }) => state.courseContent,
     courseContentIdRouteMap: (state: { courseRoutes: any }) => {
       const map = {}
@@ -48,10 +50,10 @@ export default {
       }
       return map
     },
-    courseContentRouteIdMap: (state: { courseRoutes: any, courseStart: string }) => {
+    courseContentRouteIdMap: (state: { courseRoutes: any }, getters: { courseStart: any }) => {
       const map = {}
       for (const [route, id] of state.courseRoutes) {
-        if (id === state.courseStart) {
+        if (id === getters.courseStart(state)) {
           if (route === '') { // only add start route to map
             map[route] = id
           }
@@ -77,9 +79,9 @@ export default {
       // console.log('found content path', res)
       return contentPath ? contentPath[1] : null
     },
-    courseNav: (state: { courseStart: string, courseChapters: object[] }) => {
+    courseNav: (state: { courseStart: string, courseChapters: object[] }, getters: { courseStart: any }) => {
       return {
-        start: state.courseStart,
+        start: getters.courseStart(state),
         structure: state.courseChapters
       }
     },
@@ -110,7 +112,6 @@ export default {
         course.properties ? course.properties.showSingleSubChapterTitleSlug : null
       )
       state.courseChapters = course.chapters
-      state.courseStart = course.start
     },
 
     courseContentAdd (state: { courseContent: { [id: string]: ContentBlock }, courseChapters: any[] }, content: any) {
@@ -180,7 +181,6 @@ export default {
       state.courseContentFollowMap = {}
       for (const block of course.content) {
         const blockId = uuidv4().split('-')[0] // legacy content blocks have no id
-        const i = course.content.indexOf(block)
         state.courseContent[blockId] = { ...block.input, name: block.name, id: blockId } // this is analogous to the new course structure
         state.courseContentFollowMap[blockId] = [] // index of block in content array for legacy content
         state.courseChapters.push({
@@ -189,9 +189,6 @@ export default {
           type: block.name,
           follow: legacyContentStepsTransform(block)
         })
-        if (i === 0) {
-          state.courseStart = blockId
-        }
       }
       legacyContentFollowTransform(state.courseChapters)
       state.courseChapters.forEach((chapter: CourseNavigationItemBlock) => {

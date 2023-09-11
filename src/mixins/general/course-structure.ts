@@ -106,6 +106,25 @@ const courseStructureRoutesCollect = (
 }
 
 /**
+ * @description traverses chapters, extracts object that has slugs as keys and chapterNames as values
+ * @param chapters courseChapters to inspect
+ */
+export const courseStructureChapterNames = (chapters: CourseNavigationItem[]): object => {
+  if (!chapters) {
+    return null
+  }
+  let chapterNames = {}
+  chapters.forEach((chapter: any) => {
+    if (chapter.isChapter) {
+      chapterNames[chapter.slug] = chapter.chapterName
+      chapterNames = { ...chapterNames, ...courseStructureChapterNames(chapter.children) }
+    }
+    return chapterNames
+  })
+  return chapterNames
+}
+
+/**
  * @function return id of first content in chapter, recursively if nested
  * @author cmc
  * @since v1.3.0
@@ -161,6 +180,22 @@ export const chapterFollowSet = (chapter: CourseNavigationItem | any, nextChapte
     } else if (item.type !== 'button-navigation') {
       item.follow = contentIdGet(followingChapter, 'first')
     } // else: button-navigation => no new follow
+  })
+}
+
+/**
+ * @description update slug for chapter corresponding to id
+ * @param chapters Course Navigation
+ * @param id of course block that had title updated
+ * @param title the updated title to be turned into a new slug
+ */
+export const chapterSlugUpdate = (chapters: CourseNavigationItem[], id: string, title: string) => {
+  chapters.forEach((chapter: any) => {
+    if (chapter.isChapter) {
+      chapterSlugUpdate(chapter.children, id, title)
+    } else if (chapter.id === id) {
+      chapter.slug = slugify(title)
+    }
   })
 }
 
