@@ -35,63 +35,30 @@
             </draggable>
           </ul>
         </div>
-        <i
-          v-b-tooltip.top.ds500
-          class="fas fa-edit"
-          :class="langIsAr ? 'mr-auto' : 'ml-auto'"
-          :title="y18n('courseWrapper.edit')"
-        ></i>
       </div>
       <div
         v-else
         @click="$bvModal.show('follow-edit')"
       >
         Add following content
-        <i
-          v-b-tooltip.top.ds500
-          class="fas fa-edit"
-          :class="langIsAr ? 'mr-auto' : 'ml-auto'"
-          :title="y18n('courseWrapper.edit')"
-        ></i>
       </div>
-      <b-modal
-        id="follow-edit"
-        :title="'Edit Follow Set'"
-        static
-        centered
-        @ok="followSet = followSetChange"
-        @cancel="followSetChange = null"
-      >
-        <suggesting-input
-          :domain="courseContent"
-          :keys="['title', 'name', 'id']"
-          :inline="false"
-          :nested-key="'text'"
-          :previous-selection="follow"
-          :submit-button="false"
-          :tags-needed="followLength"
-          @tags-selected="followSetChange = $event"
-        ></suggesting-input>
-      </b-modal>
     </div>
   </div>
 </template>
 <script>
 import Draggable from 'vuedraggable'
-import SuggestingInput from '@/components/helpers/suggesting-input.vue'
 import { locale } from '@/mixins'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'CourseNavFollowSet',
   components: {
-    Draggable,
-    SuggestingInput
+    Draggable
   },
   mixins: [locale],
   props: {
     follow: {
-      type: [Number, String, Array],
+      type: [String, Array],
       default: () => null
     },
     item: {

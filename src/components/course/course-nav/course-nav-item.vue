@@ -94,9 +94,22 @@
         </span>
         {{ getName() }}
       </div>
-      <div class="d-block">
-        <div class="d-flex text-muted small">
-          Follow
+      <div
+        v-if="value.id !== courseEnd"
+        class="d-block"
+      >
+        <div class="d-flex">
+          <span class="text-muted small">
+            Follow
+          </span>
+          <i
+            v-if="value.type === 'button-navigation'"
+            v-b-tooltip.top.ds500
+            class="fas fa-edit"
+            :class="langIsAr ? 'mr-auto' : 'ml-auto'"
+            :title="y18n('courseWrapper.edit')"
+            @click="$router.push({name: 'content-follow-edit', params: { contentId: value.id }})"
+          ></i>
         </div>
         <course-nav-follow-set
           :follow="followingContent"
@@ -152,7 +165,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['courseContent']),
+    ...mapGetters(['courseContent', 'courseEnd']),
     item () {
       return this.courseContent[this.value.id]
     }

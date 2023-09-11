@@ -105,8 +105,8 @@ export default new Router({
           component: CourseNav
         },
         {
-          path: 'follow-edit',
-          name: 'follow-edit',
+          path: 'edit-follow?id=:contentId',
+          name: 'content-follow-edit',
           component: CourseNavFollowEdit,
           props: true
         }

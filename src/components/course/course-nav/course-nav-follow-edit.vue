@@ -6,42 +6,37 @@
 -->
 <template>
   <div class="container">
-    <div>
-      <div>
-        Add following content
-      </div>
+    <div
+      v-if="multiple"
+    >
+      <h2 class="row">
+        Edit Follow Set
+      </h2>
       <div
-        v-if="multiple"
+        v-for="(label, i) in buttonLabels"
+        :key="label"
+        class="m-2"
       >
-        <h2 class="row">
-          Edit Follow Set
-        </h2>
-        <div
-          v-for="(label, i) in buttonLabels"
-          :key="label"
-          class="m-2"
-        >
-          <div class="row">
-            <b-button
-              size="lg"
-              variant="info"
-            >
-              {{ label }}
-            </b-button>
-          </div>
-          <div class="row">
-            <suggesting-input
-              class="col"
-              :domain="courseContent"
-              :keys="['title', 'name', 'id']"
-              :inline="false"
-              :nested-key="'text'"
-              :previous-selection="followSet? followSet[i]: null"
-              :submit-button="false"
-              @removed="_itemDelete(followSetNew, i)"
-              @tags-selected="followSetNew[i] = $event"
-            ></suggesting-input>
-          </div>
+        <div class="row">
+          <b-button
+            size="lg"
+            variant="info"
+          >
+            {{ label }}
+          </b-button>
+        </div>
+        <div class="row">
+          <suggesting-input
+            class="col"
+            :domain="courseContent"
+            :keys="['title', 'name', 'id']"
+            :inline="false"
+            :nested-key="'text'"
+            :previous-selection="followSet? followSet[i]: null"
+            :submit-button="false"
+            @removed="_itemDelete(followSetNew, i)"
+            @tags-selected="followSetNew[i] = $event"
+          ></suggesting-input>
         </div>
       </div>
     </div>
@@ -68,9 +63,9 @@ export default {
   },
   mixins: [array, locale, routes],
   props: {
-    coursePath: {
+    contentId: {
       type: String,
-      default: () => ''
+      required: true
     },
     follow: {
       type: [String, Array],
@@ -118,7 +113,7 @@ export default {
       this.followSetNew.forEach(el => {
         if (!el) { return false }
       })
-      return true
+      return this.followSetNew.length === this.buttonLabels.length
     },
     /**
      * @function return true if content block is button navigation
@@ -138,7 +133,12 @@ export default {
      */
     saveFollow () {
       if (this.followSetNewComplete) {
-        this.$store.commit()
+        this.$store.commit('courseContentSetProperty',
+          { id: this.contentToDisplay.id, property: 'follow', value: this.followSetNew }
+        )
+        this.$router.push({ name: 'course-nav' })
+      } else {
+        // TODO: add warning
       }
     }
   }

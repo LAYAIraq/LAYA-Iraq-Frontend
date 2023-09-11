@@ -24,7 +24,6 @@
           ></CourseHeader>
           <component
             :is="contentToDisplay.name"
-
             :key="contentToDisplay.title.text"
             :view-data="contentToDisplay"
             :on-finish="followContent"

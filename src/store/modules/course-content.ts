@@ -18,7 +18,7 @@ import {
   courseStructureDescent,
   legacyContentFollowTransform,
   legacyContentStepsTransform,
-  slugify
+  slugify, contentIdGet
 } from '@/mixins/general/course-structure'
 import { stripKey } from '@/mixins/general/helpers'
 import { v4 as uuidv4 } from 'uuid'
@@ -30,7 +30,6 @@ export default {
   state: {
     courseContent: {},
     courseContentFollowMap: {},
-    courseStart: '',
     courseChapters: [],
     courseChapterNames: {},
     courseRoutes: []
@@ -84,7 +83,9 @@ export default {
         structure: state.courseChapters
       }
     },
-    courseRoutes: (state: { courseRoutes: any }) => state.courseRoutes
+    courseRoutes: (state: { courseRoutes: any }) => state.courseRoutes,
+    courseStart: (state: { courseChapters: CourseNavigationItem[] }) => contentIdGet(state.courseChapters, 'first'),
+    courseEnd: (state: { courseChapters: CourseNavigationItem[] }) => contentIdGet(state.courseChapters, 'last')
   },
 
   mutations: {

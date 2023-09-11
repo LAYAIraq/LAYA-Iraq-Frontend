@@ -110,21 +110,23 @@ const courseStructureRoutesCollect = (
  * @author cmc
  * @since v1.3.0
  * @param courseNav list of or single CourseNavigationItem
+ * @param mode either 'first' or 'last'
  */
-export const firstContentIdGet = (courseNav: any): string => {
-  if (!courseNav) {
+export const contentIdGet = (courseNav: any, mode: string): string => {
+  if (!courseNav || (mode !== 'first' && mode !== 'last')) {
     return null
   }
   if (Array.isArray(courseNav)) { // courseNav is CourseNavigationItem[]
+    const index = mode === 'first' ? 0 : courseNav.length - 1 // first or last element depending on mode
     if (courseNav.length === 0) {
       return null
-    } else if (courseNav[0].isChapter) {
-      return firstContentIdGet(courseNav[0].children)
+    } else if (courseNav[index].isChapter) {
+      return contentIdGet(courseNav[index].children, mode)
     } else {
-      return courseNav[0].id
+      return courseNav[index].id
     }
   } else if (courseNav.isChapter) { // courseNav is CourseNavigationItemChapter
-    return firstContentIdGet(courseNav.children)
+    return contentIdGet(courseNav.children, mode)
   } else { // courseNav is CourseNavigationItemBlock
     return courseNav.id
   }
@@ -157,7 +159,7 @@ export const chapterFollowSet = (chapter: CourseNavigationItem | any, nextChapte
     if (item.isChapter) {
       chapterFollowSet(item, followingChapter)
     } else if (item.type !== 'button-navigation') {
-      item.follow = firstContentIdGet(followingChapter)
+      item.follow = contentIdGet(followingChapter, 'first')
     } // else: button-navigation => no new follow
   })
 }
@@ -171,7 +173,7 @@ export const coursePathsGet =
   (courseNav: CourseNavigationItem[]):
     any[] => {
     const routes = [] // instantiate here because of recursion
-    const start = firstContentIdGet(courseNav)
+    const start = contentIdGet(courseNav, 'first')
     if (start) {
       routes.push(['', start])
     }
