@@ -729,7 +729,6 @@ export default {
      * Author: nv
      * Since: v1.3.0
      * @param param0 contains state variables
-     * @param langData contains course language
      */
     courseUpdateLanguage (
       { commit, state }: {
