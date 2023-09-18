@@ -22,6 +22,7 @@
         <course-nav-chapter
           :chapter="courseNavEdit"
           :chapter-name="courseNavEdit.chapterName"
+          :course-end="courseEnd"
           :main="true"
           @preview="previewSet"
           @propagate-property-change="changeProperty"
@@ -81,7 +82,8 @@ import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 import CourseNavChapter from './course-nav-chapter.vue'
 import { deepCopy } from '@/mixins/general/helpers'
-import { slugify } from '@/mixins/general/course-structure'
+import { contentIdGet, slugify } from '@/mixins/general/course-structure'
+
 export default {
   name: 'CourseNavigationEditor',
   components: {
@@ -99,6 +101,9 @@ export default {
   },
   computed: {
     ...mapGetters(['courseChapters', 'courseContent', 'courseNav']),
+    courseEnd () {
+      return contentIdGet(this.courseNavEdit.children, 'last')
+    },
     previewComponent () {
       const comps = { ...this.$laya.blocks, ...this.$laya.assessments, ...this.$laya.organization }
       console.log('comps', comps)

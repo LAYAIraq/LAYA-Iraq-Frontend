@@ -40,6 +40,7 @@
           :chapter="item"
           :chapter-name="item.chapterName"
           :chapter-name-duplicate="duplicateChapterNames.includes(i)"
+          :course-end="courseEnd"
           :following-content="item.follow"
           :highlighted-block="main? highlightId : highlightedBlock"
           @highlight="blockHighlight"
@@ -49,6 +50,7 @@
         <course-nav-item
           v-else-if="!collapsed"
           :class="{ 'border-success': item.id === highlightId }"
+          :course-end="courseEnd"
           :drag-bubble="[!dragging && dragStartIndex === i, childrenVisibility[item.id]]"
           :drag-end="[!dragging && dragEndIndex === i, childrenVisibility[item.id]]"
           :following-content="item.follow"
@@ -92,6 +94,10 @@ export default {
     chapterNameDuplicate: {
       type: Boolean,
       default: () => false
+    },
+    courseEnd: {
+      type: String,
+      required: true
     },
     followingContent: {
       type: String,

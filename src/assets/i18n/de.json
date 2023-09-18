@@ -81,6 +81,8 @@
 	"courseNavEdit.fullPath": "Ganzer Pfad",
 	"courseNavEdit.graph": "Grafische Vorschau:",
 	"courseNavEdit.graphTip": "(Du kannst die Grafik beliebig oft erneuern)",
+	"courseNavEdit.incompleteFollow.msg": "Du hast nicht für alle Elemente Nachfolger bestimmt! Das führt dazu, dass einige Buttons keine Funktion haben. Möchtest du trotzdem fortfahren?",
+	"courseNavEdit.incompleteFollow.title": "Nachfolger nicht vollständig",
 	"courseNavEdit.preview": "Vorschau ansehen",
 	"courseNavEdit.table.contentNo": "Inhalt-Nr.",
 	"courseNavEdit.table.contentType": "Art des Inhalts",

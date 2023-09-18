@@ -81,6 +81,8 @@
 	"courseNavEdit.fullPath": "Full Path",
 	"courseNavEdit.graph": "Graphical Preview:",
 	"courseNavEdit.graphTip": "(You can reload the graphic any number of times)",
+	"courseNavEdit.incompleteFollow.msg": "You did not assign follow elements to all buttons! This results in some buttons having no function. Do you want to continue?",
+	"courseNavEdit.incompleteFollow.title": "Follow list incomplete",
 	"courseNavEdit.id": "ID",
 	"courseNavEdit.preview": "View Preview",
 	"courseNavEdit.previewClear": "Back to Navigation Editor",

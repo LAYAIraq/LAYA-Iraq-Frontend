@@ -6,38 +6,34 @@
 -->
 <template>
   <div class="container">
+    <h2 class="row">
+      Edit Follow Set
+    </h2>
     <div
-      v-if="multiple"
+      v-for="(label, i) in buttonLabels"
+      :key="label"
+      class="m-2"
     >
-      <h2 class="row">
-        Edit Follow Set
-      </h2>
-      <div
-        v-for="(label, i) in buttonLabels"
-        :key="label"
-        class="m-2"
-      >
-        <div class="row">
-          <b-button
-            size="lg"
-            variant="info"
-          >
-            {{ label }}
-          </b-button>
-        </div>
-        <div class="row">
-          <suggesting-input
-            class="col"
-            :domain="courseContent"
-            :keys="['title', 'name', 'id']"
-            :inline="false"
-            :nested-key="'text'"
-            :previous-selection="followSet? followSet[i]: null"
-            :submit-button="false"
-            @removed="_itemDelete(followSetNew, i)"
-            @tags-selected="followSetNew[i] = $event"
-          ></suggesting-input>
-        </div>
+      <div class="row">
+        <b-button
+          size="lg"
+          variant="info"
+        >
+          {{ label }}
+        </b-button>
+      </div>
+      <div class="row">
+        <suggesting-input
+          class="col"
+          :domain="courseContent"
+          :keys="['title', 'name', 'id']"
+          :inline="false"
+          :nested-key="'text'"
+          :previous-selection="follow? follow[i]: null"
+          :submit-button="false"
+          @removed="followEdit(i, null)"
+          @tags-selected="followEdit(i, $event)"
+        ></suggesting-input>
       </div>
     </div>
     <div>
@@ -49,7 +45,26 @@
         <i class="fas fa-save"></i>
         {{ y18n('save') }}
       </b-button>
+      <b-button
+        variant="warning"
+        block
+        @click="$router.push({ name: 'course-nav' })"
+      >
+        {{ y18n('cancel') }}
+      </b-button>
     </div>
+    <b-modal
+      id="follow-incomplete"
+      :title="y18n('courseNavEdit.incompleteFollow.title')"
+      :cancel-title="y18n('cancel')"
+      :ok-title="y18n('courseCreate.modal.ok')"
+      header-bg-variant="warning"
+      static
+      centered
+      @ok="$router.push({ name: 'course-nav' })"
+    >
+      {{ y18n('courseNavEdit.incompleteFollow.msg') }}
+    </b-modal>
   </div>
 </template>
 <script>
@@ -68,14 +83,13 @@ export default {
       required: true
     },
     follow: {
-      type: [String, Array],
+      type: Array,
       default: () => null
     }
   },
   data () {
     return {
-      followSetChange: null,
-      followSetNew: []
+      followSetNew: this.follow.slice()
     }
   },
   computed: {
@@ -86,59 +100,50 @@ export default {
      * @returns {string[]} labels of buttons
      */
     buttonLabels () {
-      return this.multiple
-        ? this.contentToDisplay.answers.map(el => el.text)
-        : null
+      return this.contentToDisplay.answers.map(el => el.text)
     },
     /**
-     * @function return follow set as array
-     * @author cmc
-     * @since v1.3.0
-     * @returns {string[] | null} array of follow ids
+     * @description return if follow set has been changed
+     * @return {boolean}
      */
-    followSet () {
-      return this.follow
-        ? Array.isArray(this.follow) // either array or string
-          ? this.follow // return array as is
-          : [this.follow] // return string as single item in array
-        : null
+    followSetChange () {
+      for (const i in this.follow) { // forEach does not work correctly
+        if (this.follow[i] !== this.followSetNew[i]) {
+          return true
+        }
+      }
+      return false
     },
     /**
-     * @function returns false if any value in followSetNew is undefined
-     * @author cmc
-     * @since v1.3.0
-     * @return {boolean} true if followSetNew is filled with non-null values
+     * @description returns true if follow set is complete, i.e. has no null values
+     * @return {boolean}
      */
-    followSetNewComplete () {
-      this.followSetNew.forEach(el => {
-        if (!el) { return false }
-      })
-      return this.followSetNew.length === this.buttonLabels.length
-    },
-    /**
-     * @function return true if content block is button navigation
-     * @author cmc
-     * @since v1.3.0
-     * @return {boolean} true if content block name is 'button-navigation'
-     */
-    multiple () {
-      return this.contentToDisplay.name === 'button-navigation'
+    followSetComplete () {
+      return this.followSetNew.some(el => !el)
+        ? false
+        : this.followSetNew.length === this.buttonLabels.length
     }
   },
   methods: {
+    /**
+     * @description modify followSetNew array so reactivity is intact
+     * @param idx index of array
+     * @param val new value at index
+     */
+    followEdit (idx, val) {
+      this.followSetNew.splice(idx, 1, val)
+    },
     /**
      * @function check if follow set is complete, then store it
      * @author cmc
      * @since v1.3.0
      */
     saveFollow () {
-      if (this.followSetNewComplete) {
-        this.$store.commit('courseContentSetProperty',
-          { id: this.contentToDisplay.id, property: 'follow', value: this.followSetNew }
-        )
-        this.$router.push({ name: 'course-nav' })
+      if (this.followSetComplete) {
+        this.$store.commit('courseChapterUpdateFollow', { id: this.contentId, value: this.followSetNew })
+        this.$router.push('edit-nav')
       } else {
-        // TODO: add warning
+        this.$bvModal.show('follow-incomplete')
       }
     }
   }
