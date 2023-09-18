@@ -50,10 +50,10 @@ export default {
       }
       return map
     },
-    courseContentRouteIdMap: (state: { courseRoutes: any }, getters: { courseStart: any }) => {
+    courseContentRouteIdMap: (state: { courseRoutes: any }, getters: { courseStart: string }) => {
       const map = {}
       for (const [route, id] of state.courseRoutes) {
-        if (id === getters.courseStart(state)) {
+        if (id === getters.courseStart) {
           if (route === '') { // only add start route to map
             map[route] = id
           }
@@ -81,13 +81,12 @@ export default {
     },
     courseNav: (state: { courseStart: string, courseChapters: object[] }, getters: { courseStart: any }) => {
       return {
-        start: getters.courseStart(state),
+        start: getters.courseStart,
         structure: state.courseChapters
       }
     },
     courseRoutes: (state: { courseRoutes: any }) => state.courseRoutes,
-    courseStart: (state: { courseChapters: CourseNavigationItem[] }) => contentIdGet(state.courseChapters, 'first'),
-    courseEnd: (state: { courseChapters: CourseNavigationItem[] }) => contentIdGet(state.courseChapters, 'last')
+    courseStart: (state: { courseChapters: CourseNavigationItem[] }) => contentIdGet(state.courseChapters, 'first')
   },
 
   mutations: {
@@ -151,10 +150,30 @@ export default {
     },
 
     courseChapterAdd (state: { courseChapters: CourseNavigationItem[], courseStart: string }, chapter: CourseNavigationItemBlock) {
-      if (state.courseChapters.length === 0) {
-        Vue.set(state, 'courseStart', chapter.id)
-      }
       state.courseChapters.push(chapter)
+    },
+
+    courseChapterUpdateFollow (state: { courseChapters: CourseNavigationItem[]}, data: { id: string, value: string[] }) {
+      const updateOrDeeper = (arr: any) => {
+        if (Array.isArray(arr)) {
+          arr.forEach((el: any) => {
+            if (el.isChapter) {
+              updateOrDeeper(el.children)
+            } else if (el.id === data.id) {
+              Vue.set(el, 'follow', data.value)
+            }
+          })
+        } else {
+          if (arr.isChapter) {
+            updateOrDeeper(arr.children)
+          } else if (arr.id === data.id) {
+            Vue.set(arr, 'follow', data.value)
+          }
+        }
+      }
+      if (data.value) {
+        state.courseChapters.forEach((c: any) => updateOrDeeper(c))
+      }
     },
 
     courseRoutesUpdate (state: { courseChapters: any, courseRoutes: any }) {

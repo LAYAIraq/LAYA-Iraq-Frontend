@@ -1,6 +1,7 @@
 import courseContent from '@/store/modules/course-content'
 import SampleCourse from '../../mocks/sample-course-short.json'
 import SampleCourseChapters from '../../mocks/sample-course-chapters.json'
+import SampleCourseChaptersNested from '../../mocks/sample-course-chapters-nested.json'
 import { deepCopy } from '@/mixins/general/helpers'
 import { CourseNavigationItemBlock } from '@/mixins/types/course-structure'
 
@@ -81,7 +82,7 @@ describe('store module course-content mutations', () => {
         follow: null
       }
       mutations.courseChapterAdd(state, mockChapter)
-      expect(state.courseStart).toBe('abc')
+      // expect(state.courseStart).toBe('abc')
       expect(state.courseChapters[0]).toStrictEqual(mockChapter)
     })
 
@@ -90,6 +91,35 @@ describe('store module course-content mutations', () => {
       mutations.courseChapterAdd(state, newChapter)
       expect(state.courseChapters.length).toBe(2)
       expect(state.courseChapters[1]).toStrictEqual(newChapter)
+    })
+  })
+
+  describe('courseChapterFollowUpdate', () => {
+    beforeEach(() => {
+      state = deepCopy(emptyState)
+      state.courseChapters = SampleCourseChaptersNested.chapters
+    })
+
+    it('does nothing when not passing anything', () => {
+      mutations.courseChapterUpdateFollow(state, { id: null, value: null })
+      expect(state.courseChapters).toStrictEqual(SampleCourseChaptersNested.chapters)
+    })
+
+    it('does nothing when not passing new values', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'v13r', value: null })
+      const a = state.courseChapters[0].children[0].children[0].children[0].children[0]
+      expect(a.follow).toStrictEqual('fu3nf')
+    })
+
+    it('does nothing when id does not exist', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'nasdg713', value: ['abc', 'def'] })
+      expect(state.courseChapters).toStrictEqual(SampleCourseChaptersNested.chapters)
+    })
+
+    it('changes follow value of deeply nested chapter', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'v13r', value: ['abc', 'def'] })
+      const a = state.courseChapters[0].children[0].children[0].children[0].children[0]
+      expect(a.follow).toStrictEqual(['abc', 'def'])
     })
   })
 

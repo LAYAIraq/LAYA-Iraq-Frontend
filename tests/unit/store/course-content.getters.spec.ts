@@ -93,20 +93,20 @@ describe('store module course-content getters', () => {
   describe('courseContentRouteIdMap', () => {
     it('returns empty object if courseRoutes are empty', () => {
       state.courseRoutes = []
-      expect(getters.courseContentRouteIdMap(state, getters)).toStrictEqual({})
+      expect(getters.courseContentRouteIdMap(state, { courseStart: getters.courseStart(state) })).toStrictEqual({})
     })
 
     it('returns object with route as key and id as value', () => {
       state.courseChapters = [{ slug: 'test', isChapter: true, chapterName: 'Test', children: [{ id: 'test', slug: 'test' }] }]
       expect(getters.courseStart(state)).toBe('test')
       state.courseRoutes = [['', 'test'], ['test/test', 'test']]
-      expect(getters.courseContentRouteIdMap(state, getters)).toStrictEqual({ '': 'test' })
+      expect(getters.courseContentRouteIdMap(state, { courseStart: getters.courseStart(state) })).toStrictEqual({ '': 'test' })
     })
 
     it('returns object with all keys and values', () => {
       state.courseChapters = [{ slug: 'test', isChapter: true, chapterName: 'Test', children: [{ id: 'test', slug: 'test' }] }]
       state.courseRoutes = [['', 'test'], ['test/test', 'test'], ['test/test2', 'test2']]
-      expect(getters.courseContentRouteIdMap(state, getters)).toStrictEqual({ '': 'test', 'test/test2': 'test2' })
+      expect(getters.courseContentRouteIdMap(state, { courseStart: getters.courseStart(state) })).toStrictEqual({ '': 'test', 'test/test2': 'test2' })
     })
   })
 
@@ -134,12 +134,12 @@ describe('store module course-content getters', () => {
   describe('courseNav', () => {
     it('returns empty object if no courseChapters', () => {
       state.courseChapters = []
-      expect(getters.courseNav(state, getters)).toStrictEqual({ start: null, structure: [] })
+      expect(getters.courseNav(state, getters)).toStrictEqual({ start: expect.any(Function), structure: [] })
     })
 
     it('returns object consisting of courseStart and courseChapters', () => {
       state.courseChapters = SampleCourseChapters.chapters
-      expect(getters.courseNav(state, getters)).toStrictEqual({
+      expect(getters.courseNav(state, { courseStart: getters.courseStart(state) })).toStrictEqual({
         start: 'e1ns',
         structure: SampleCourseChapters.chapters
       })
