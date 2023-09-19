@@ -112,6 +112,7 @@
 	"courseList.start": "Los",
 	"courseList.subscribe": "Einschreiben",
 	"courseNavEdit.chapterAdd": "Kapitel hinzufügen",
+	"courseNavEdit.chapterDelete": "Kapitel löschen",
 	"courseNavEdit.chapterNew": "Neues Kapitel",
 	"courseNavEdit.chapterPlaceholder": "Kapitelname",
 	"courseNavEdit.followHighlight": "Umschalt- und Maustaste gedrückt halten, um nachfolgendes Element anzuzeigen",

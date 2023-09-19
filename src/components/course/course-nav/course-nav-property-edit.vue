@@ -9,7 +9,7 @@
     <div
       v-if="!edit"
       class="d-flex justify-content-between"
-      @click="edit = true"
+      @click="stateChange(true)"
     >
       {{ propertyDisplay }}
       <i
@@ -86,8 +86,12 @@ export default {
      * @author cmc
      */
     changeProperty () {
-      this.edit = false
+      this.stateChange(false)
       this.$emit('changed', this.callback(this.newProperty))
+    },
+    stateChange (val) {
+      this.edit = val
+      this.$emit('state-changed', this.edit)
     }
   }
 }
@@ -96,6 +100,7 @@ export default {
 .property-edit {
   display: inline-block;
   cursor: auto;
+  min-width: 10vw;
 }
 .property-edit>div>i {
   display: none;

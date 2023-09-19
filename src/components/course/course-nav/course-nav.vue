@@ -22,7 +22,7 @@
         <course-nav-chapter
           :chapter="courseNavEdit"
           :chapter-name="courseNavEdit.chapterName"
-          :course-end="courseEnd"
+          :course-end="courseEnd ? courseEnd : ''"
           :main="true"
           @preview="previewSet"
           @propagate-property-change="changeProperty"

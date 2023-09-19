@@ -10,17 +10,33 @@
     @blur="blockHighlightUnset"
     @mouseup="blockHighlightUnset"
   >
-    <i
-      v-if="chapter.isChapter && !main"
-      class="fa fa-bars drag-handle"
-    ></i>
-    <course-nav-property-edit
-      v-if="chapter.isChapter && !main"
-      :form-placeholder="y18n('courseNavEdit.chapterPlaceholder')"
-      :property="chapterName"
-      :class="{ 'border rounded border-danger': chapterNameDuplicate }"
-      @changed="propagatePropertyChange(chapter, 'chapterName', $event)"
-    />
+    <div
+      v-if="!main && chapter.isChapter"
+      class="chapter-name d-flex"
+    >
+      <i
+        class="fa fa-bars drag-handle"
+      ></i>
+      <course-nav-property-edit
+        :form-placeholder="y18n('courseNavEdit.chapterPlaceholder')"
+        :property="chapterName"
+        class="chapter-edit"
+        :class="{ 'border rounded border-danger': chapterNameDuplicate }"
+        @changed="propagatePropertyChange(chapter, 'chapterName', $event)"
+        @state-changed="chapterNameChange = $event"
+      />
+      <b-button
+        v-if="!chapterNameChange"
+        v-b-tooltip.top
+        class="chapter-delete-button"
+        size="sm"
+        variant="danger"
+        :title="y18n('courseNavEdit.chapterDelete')"
+        @click="chapterDelete"
+      >
+        <i class="fas fa-times"></i>
+      </b-button>
+    </div>
     <draggable
       :list="chapter.children"
       :group="{ name: 'chapters' }"
@@ -43,6 +59,7 @@
           :course-end="courseEnd"
           :following-content="item.follow"
           :highlighted-block="main? highlightId : highlightedBlock"
+          @chapter-delete="chapterDeletedUpdate"
           @highlight="blockHighlight"
           @preview="pid => previewEmit(pid)"
           @propagate-property-change="propagatePropertyChange"
@@ -72,6 +89,7 @@ import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-pro
 import { courseNavEmits, locale } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 import { chapterFollowSet } from '@/mixins/general/course-structure'
+import { deepCopy } from '@/mixins/general/helpers'
 
 export default {
   name: 'CourseNavChapter',
@@ -114,9 +132,10 @@ export default {
   },
   data () {
     return {
+      chapterNameChange: false,
       childrenVisibility: {},
       collapsed: false,
-      id: '', // exists to make v-for keys unique,
+      id: uuidv4(), // exists to make v-for keys unique,
       dragging: false,
       dragStartIndex: null,
       dragEndIndex: null,
@@ -173,12 +192,10 @@ export default {
     }
   },
   created () {
-    this.id = uuidv4()
     this.chapter.children.forEach(child => { this.childrenVisibility[child.id] = false })
   },
   methods: {
     blockHighlight (id) {
-      console.log(id)
       if (this.main) {
         this.highlightId = id
       } else {
@@ -189,6 +206,28 @@ export default {
       if (this.main && this.highlightId) {
         this.highlightId = null
       }
+    },
+    /**
+     * @description propagate removal of a chapter
+     */
+    chapterDelete () {
+      this.$emit('chapter-delete', this.chapterName, deepCopy(this.chapter.children))
+    },
+    /**
+     * @description remove chapter by name, adding their children to chapter, propagate changes
+     * @param deletedChapterName name of deleted chapter
+     * @param newChildren children of deleted chapter to be added to chapter
+     */
+    chapterDeletedUpdate (deletedChapterName, newChildren) {
+      const deleteIndex = this.chapter.children.findIndex(e => e.chapterName === deletedChapterName)
+      const children = deepCopy(this.chapter.children)
+      const croppedChildren = []
+      children.forEach((el, i) => { // using Array.slice() did not yield the correct result
+        if (i !== deleteIndex) {
+          croppedChildren.push(el)
+        }
+      })
+      this.propagatePropertyChange(this.chapter, 'children', [...croppedChildren, ...newChildren])
     },
     /**
      * @function set visibility of child in childrenVisibility object
@@ -264,10 +303,27 @@ export default {
 .chapter-child {
   margin: .25em 0;
 }
+.chapter-delete-button {
+  margin-left: .5em;
+  flex-shrink: 0;
+}
+.chapter-edit {
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: max-content
+}
+.chapter-name > .chapter-delete-button {
+  visibility: hidden;
+}
+.chapter-name:hover > .chapter-delete-button {
+  visibility: visible;
+}
 .drag-handle {
   cursor: grab;
-  margin-right: .5em;
-  display: inline-flex;
+  display: inline-block;
+  margin-right: .5rem;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 </style>

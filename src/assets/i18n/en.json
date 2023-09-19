@@ -142,6 +142,7 @@
 	"courseList.subscribe": "Subscribe",
 	"courseName": "Course Name",
 	"courseNavEdit.chapterAdd": "Add Chapter",
+	"courseNavEdit.chapterDelete": "Delete Chapter",
 	"courseNavEdit.chapterNew": "New Chapter",
 	"courseNavEdit.chapterPlaceholder": "Chapter Name",
 	"courseNavEdit.followHighlight": "Hold shift + click to see the following block",
