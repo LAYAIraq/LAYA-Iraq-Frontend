@@ -32,7 +32,6 @@ Dependencies:
 
 <script>
 import { locale, routes } from '@/mixins'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'CourseBlockEdit',
@@ -40,22 +39,7 @@ export default {
   mixins: [
     locale,
     routes
-  ],
-
-  computed: {
-    ...mapGetters(['courseContent']),
-
-    /**
-     * contentToDisplay: return current content object
-     *
-     * Author: cmc
-     *
-     * Last Updated: October 27, 2020
-     */
-    contentToDisplay () {
-      return this.courseContent[this.pathId]
-    }
-  }
+  ]
 
 }
 </script>

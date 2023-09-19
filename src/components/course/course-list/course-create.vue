@@ -40,6 +40,7 @@
         </label>
         <div class="col">
           <b-form-select
+            id="new-course-category"
             v-model="newCourse.category"
             :aria-label="y18n('cat')"
           >

@@ -11,7 +11,10 @@
       :id="`item-header-${item.id}`"
       class="d-flex"
     >
-      <div class="drag-handle">
+      <div
+        class="drag-handle"
+        tabindex="0"
+      >
         <i class="fas fa-bars"></i>
       </div>
       <div class="show-item-details">
@@ -27,6 +30,7 @@
             'mr-1': langIsAr
           }"
           :title="y18n('showDetails')"
+          @keyup.enter="toggleCollapsed"
           @click="toggleCollapsed"
         ></i>
       </div>
@@ -46,6 +50,16 @@
     >
       <div class="d-flex">
         <span
+          class="text-muted small btn-link"
+          :class="langIsAr? 'ml-2': 'mr-2'"
+          @keyup.enter="previewEmit(value.id)"
+          @click="previewEmit(value.id)"
+        >
+          {{ y18n('courseNavEdit.preview') }}
+        </span>
+      </div>
+      <div class="d-flex">
+        <span
           class="text-muted small"
           :class="langIsAr? 'ml-2': 'mr-2'"
         >
@@ -60,11 +74,7 @@
         >
           {{ y18n('courseNavEdit.slug') }}
         </span>
-        <course-nav-property-edit
-          :form-placeholder="y18n('courseNavEdit.slug')"
-          :property="value.slug"
-          @changed="v => propagateChange('slug', v)"
-        ></course-nav-property-edit>
+        {{ value.slug }}
       </div>
       <div class="d-flex">
         <span
@@ -84,25 +94,39 @@
         </span>
         {{ getName() }}
       </div>
-      <div class="d-block">
-        <div class="d-flex text-muted small">
-          Follow
+      <div
+        v-if="value.id !== courseEnd || value.type === 'button-navigation'"
+        class="d-block"
+      >
+        <div class="d-flex">
+          <span class="text-muted small">
+            Follow
+          </span>
+          <i
+            v-if="value.type === 'button-navigation'"
+            v-b-tooltip.top.ds500
+            class="fas fa-edit"
+            :class="langIsAr ? 'mr-auto' : 'ml-auto'"
+            :title="y18n('courseWrapper.edit')"
+            @click="$router.push({name: 'content-follow-edit', params: { contentId: value.id, follow: value.follow }})"
+          ></i>
         </div>
         <course-nav-follow-set
-          :follow="value.follow"
+          :follow="followingContent"
           :item="item"
-          @follow-changed="v => propagateChange('follow', v)"
+          @follow-update="v => propagateChange('follow', v)"
+          @highlight="p => $emit('highlight', p)"
         ></course-nav-follow-set>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { locale } from '@/mixins'
+import { courseNavEmits, locale } from '@/mixins'
 import CourseNavFollowSet from '@/components/course/course-nav/course-nav-follow-set.vue'
 import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
 import { mapGetters } from 'vuex'
-import { deepCopy } from '@/mixins/general/helpers'
+import { deepCopy, kebabToCamel } from '@/mixins/general/helpers'
 
 export default {
   name: 'CourseNavItem',
@@ -110,7 +134,7 @@ export default {
     CourseNavFollowSet,
     CourseNavPropertyEdit
   },
-  mixins: [locale],
+  mixins: [courseNavEmits, locale],
   props: {
     dragBubble: {
       type: Array,
@@ -123,6 +147,15 @@ export default {
     dragStart: {
       type: Boolean,
       default: () => false
+    },
+    courseEnd: {
+      type: String,
+      required: true
+    },
+    followingContent: {
+      type: [String, Array],
+      default: () => null
+      // required: true
     },
     value: {
       type: Object,
@@ -161,7 +194,7 @@ export default {
      * @return {string} Localized name of block
      */
     getName () {
-      return this.y18n(this.$laya.li[this.item.name].name + '.name')
+      return this.y18n(kebabToCamel(this.value.type) + '.name')
     },
     /**
      * @description emit event to propagate change to parent
@@ -171,7 +204,7 @@ export default {
      * @param value change value for slug
      */
     propagateChange (property, value) {
-      this.$emit('propagatePropertyChange', this.value, property, value)
+      this.$emit('propagate-property-change', this.value, property, value)
     },
     /**
      * @description toggle collapsed state of item, emit event to parent
@@ -180,7 +213,7 @@ export default {
      */
     toggleCollapsed () {
       this.collapsed = !this.collapsed
-      this.$emit('visibilityChange', this.value.id, !this.collapsed) // negate because we want to know if it is visible
+      this.$emit('visibility-change', this.value.id, !this.collapsed) // negate because we want to know if it is visible
     },
     /**
      * @description commit title update to store

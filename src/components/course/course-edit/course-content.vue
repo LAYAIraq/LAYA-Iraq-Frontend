@@ -11,12 +11,12 @@
       <div class="row">
         <div class="col">
           <!-- preview -->
-          <div
+          <component
             :is="comps.view"
             v-if="preview"
             :view-data="stepData"
             :edit-preview="true"
-          ></div>
+          ></component>
 
           <!-- editing view -->
           <div v-show="!preview">
@@ -66,7 +66,8 @@
 import { locale, routes } from '@/mixins'
 import { mapGetters } from 'vuex'
 import CourseFiles from '@/components/course/course-edit/course-files.vue'
-import { stripKey } from '@/mixins/general/helpers'
+import { deepCopy, stripKey } from '@/mixins/general/helpers'
+import { contentBlockToNavItemTransform } from '@/mixins/general/course-structure'
 
 export default {
   name: 'CourseContent',
@@ -190,12 +191,13 @@ export default {
     save () {
       const updatedStep = {
         name: this.cid,
-        ...JSON.parse(JSON.stringify(this.stepData)) // deep copy to get rid of store references
+        ...deepCopy(this.stepData) // deep copy to get rid of store references
       }
 
       // choose way depending on new or existing content
       if (!this.editContent) {
         this.$store.commit('courseContentAdd', updatedStep)
+        this.$store.commit('courseChapterAdd', contentBlockToNavItemTransform(updatedStep))
       } else {
         this.$store.commit('courseContentSet', { ...updatedStep, id: this.pathId })
       }

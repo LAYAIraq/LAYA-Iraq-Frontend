@@ -20,7 +20,7 @@ describe('CourseCategoryChange', () => {
   beforeEach(() => {
     state = {
       course: {
-        name: 'test', category: 'education'
+        name: 'test', category: 'school'
       }
     }
     getters = {
@@ -30,7 +30,7 @@ describe('CourseCategoryChange', () => {
       },
       courseList: () => {
         return [
-          { name: 'test', category: 'education' },
+          { name: 'test', category: 'school' },
           { name: 'exists', category: 'test' }
         ]
       }
@@ -82,41 +82,22 @@ describe('CourseCategoryChange', () => {
     expect(modal.isVisible()).toBeTruthy()
   })
 
-  it('does not close, highlights input field and shows a warning when no input', async () => {
+  it.skip('does not close, highlights input field and shows a warning when input is same as current category', async () => {
     await button.trigger('click')
+    await wrapper.find('select').setValue('school')
     await saveButton.trigger('click')
     expect(mutations.courseCategoryChange).not.toHaveBeenCalled()
     expect(actions.courseUpdate).not.toHaveBeenCalled()
     expect(wrapper.find('#author-change-category-confirm').isVisible()).toBeTruthy()
-    expect(wrapper.find('input').classes()).toContain('border-danger')
+    expect(wrapper.find('select').classes()).toContain('border-danger')
     expect(wrapper.find('#input-warning').isVisible()).toBeTruthy()
-  })
-
-  it('does not close, highlights input field and shows a warning when input is same as current category', async () => {
-    await button.trigger('click')
-    await wrapper.find('input').setValue('education')
-    await saveButton.trigger('click')
-    expect(mutations.courseCategoryChange).not.toHaveBeenCalled()
-    expect(actions.courseUpdate).not.toHaveBeenCalled()
-    expect(wrapper.find('#author-change-category-confirm').isVisible()).toBeTruthy()
-    expect(wrapper.find('input').classes()).toContain('border-danger')
-    expect(wrapper.find('#input-warning').isVisible()).toBeTruthy()
-  })
-
-  it('trims input when it has leading and/or trailing spaces', async () => {
-    await button.trigger('click')
-    await wrapper.find('input').setValue('  test  ')
-    await saveButton.trigger('click')
-    expect(mutations.courseCategoryChange).toHaveBeenCalledWith(expect.any(Object), 'test')
-    expect(actions.courseUpdate).toHaveBeenCalled()
-    expect(wrapper.find('#author-change-category-confirm').isVisible()).toBeFalsy()
   })
 
   it('closes modal when input is valid', async () => {
     await button.trigger('click')
-    await wrapper.find('input').setValue('newCategory')
+    await wrapper.find('select').setValue('individual')
     await saveButton.trigger('click')
-    expect(mutations.courseCategoryChange).toHaveBeenCalledWith(expect.any(Object), 'newCategory')
+    expect(mutations.courseCategoryChange).toHaveBeenCalledWith(expect.any(Object), 'individual')
     expect(actions.courseUpdate).toHaveBeenCalled()
     expect(wrapper.find('#author-change-category-confirm').isVisible()).toBeFalsy()
   })

@@ -1,10 +1,12 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount } from '@vue/test-utils'
 import Vuex from 'vuex'
+import BootstrapVue from 'bootstrap-vue'
 import CourseCreate from '@/components/course/course-list/course-create.vue'
 import 'regenerator-runtime/runtime'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
+localVue.use(BootstrapVue)
 
 describe('Course create', () => {
   let wrapper
@@ -15,20 +17,27 @@ describe('Course create', () => {
   let button
   beforeEach(() => {
     const getters = {
+      courseLanguage: () => 'en',
       courseList: () => [
         { name: 'existing' }
       ],
+      profile () {
+        return {
+          fullName: 'name'
+        }
+      },
       profileLanguage: () => 'en',
       userId: () => 1
     }
     actions = {
-      courseCreate: () => Promise.resolve()
+      courseCreate: () => Promise.resolve(),
+      courseUpdateLanguage: () => Promise.resolve()
     }
     const store = new Vuex.Store({
       getters,
       actions
     })
-    wrapper = shallowMount(
+    wrapper = mount(
       CourseCreate, {
         mocks: {
           $router: {
@@ -48,7 +57,7 @@ describe('Course create', () => {
   it('detects form errors when name or category not set', async () => {
     await nameInput.setValue('some thing')
     expect(button.attributes('disabled')).toBeTruthy()
-    await catInput.setValue('some other thing')
+    await catInput.setValue('individual')
     expect(button.attributes('disabled')).toBeFalsy()
     await nameInput.setValue('')
     expect(button.attributes('disabled')).toBeTruthy()
@@ -56,36 +65,31 @@ describe('Course create', () => {
 
   it('sets the correct data properties', async () => {
     await nameInput.setValue('Course Name')
-    await catInput.setValue('Course Category')
-    expect(vm.newCourse).toStrictEqual({ name: 'Course Name', category: 'Course Category' })
+    await catInput.setValue('individual')
+    expect(vm.newCourse).toStrictEqual(expect.objectContaining({ name: 'Course Name', category: 'individual' }))
   })
 
   it('trims names properly', async () => {
     await nameInput.setValue('   some thing   ')
-    await catInput.setValue('    some other thing    ')
     await nameInput.trigger('blur')
     expect(nameInput.element.value).toBe('some thing')
-    expect(catInput.element.value).toBe('some other thing')
   })
 
   it('detects reserved characters in new course name or category', async () => {
     await nameInput.setValue('Is anything correct?')
-    await catInput.setValue('something')
+    await catInput.setValue('individual')
     await button.trigger('click')
     const msg = wrapper.find('#error-msg')
     expect(msg.text()).toBeTruthy()
+    expect(vm.$router.push).not.toHaveBeenCalled()
     await nameInput.setValue('no reserved characters')
-    await catInput.setValue('Or can I put these: !=&')
-    await button.trigger('click')
-    expect(msg.text()).toBeTruthy()
-    await catInput.setValue('everything fine')
     await button.trigger('click')
     expect(msg.text()).toBeFalsy()
   })
 
   it('detects existing course names', async () => {
     await nameInput.setValue('existing')
-    await catInput.setValue('course')
+    await catInput.setValue('individual')
     await button.trigger('click')
     const msg = wrapper.find('#error-msg')
     expect(msg.text()).toBeTruthy()
@@ -93,7 +97,7 @@ describe('Course create', () => {
 
   it('redirects to newly created course', async () => {
     await nameInput.setValue('New')
-    await catInput.setValue('Course')
+    await catInput.setValue('individual')
     await button.trigger('click')
     expect(vm.$router.push).toHaveBeenCalledWith('/courses/New/1')
   })

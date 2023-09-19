@@ -5,8 +5,9 @@
  */
 
 import {
-  CourseNavigationStructure,
+  ContentBlock,
   CourseNavigationItem,
+  CourseNavigationItemBlock,
   LegacyContentBlock
 } from '@/mixins/types/course-structure'
 
@@ -29,7 +30,7 @@ export const legacyContentStepsTransform = (block: LegacyContentBlock): number[]
  * @description transforms follow property from number to id
  * @param courseChapters array of course chapters, result of setCourseContentAndNav mutation
  */
-export const legacyContentFollowTransform = (courseChapters: CourseNavigationItem[]): void => {
+export const legacyContentFollowTransform = (courseChapters: CourseNavigationItemBlock[]): void => {
   courseChapters.forEach(chapter => {
     const transformNumberToId = (follow: number): string => {
       const followChapter = courseChapters[follow] ? courseChapters[follow].id : null
@@ -54,7 +55,14 @@ export const legacyContentFollowTransform = (courseChapters: CourseNavigationIte
   * @see https://gist.github.com/mathewbyrne/1280286
  *  @param text string to convert
  */
-export const slugify = (text: string): string => { // TODO: convert arabic & kurdish letters to latin
+export const slugify = (text: string): string => {
+  // check if there are non-latin letters
+  // eslint-disable-next-line no-control-regex
+  const nonLatin = text.match(/[^\u0000-\u00ff]/)
+  if (nonLatin) {
+    // replace arabic letters with latin letters
+    text = arabicToChat(text)
+  }
   return text.toString().toLowerCase()
     .replace(/\s+/g, '-') // Replace spaces with -
     .replace(/[^\w-]+/g, '') // Remove all non-word chars
@@ -74,86 +82,137 @@ export const unslugify = (text: string): string => {
 }
 
 /**
- * @description add start route to array of routes
- * @param item course navigation item
- * @param start start of course (id or index)
- * @param routes array of routes
- * @param idx index of item in array (for old course structure)
- */
-const courseStructureRoutesStartAdd = (
-  item: CourseNavigationItem,
-  start: number | string,
-  routes: Array<any>,
-  idx?: number
-): void => {
-  if (
-    (typeof start === 'number' && idx === start) || // start element is given by number => index
-    (typeof start === 'string' && item.id === start) // start element is given by string => id
-  ) {
-    if (!routes.some(e => e[0] === '' && e[1] === item.id)) { // add start route if not already present
-      routes.push(['', item.id])
-    }
-  }
-}
-
-/**
  * @description descent into course navigation structure and add routes to array
  * @param structure - course navigation structure
- * @param start - start of course navigation
  * @param currentPath - current path in course navigation structure
  * @param routes - array of routes, will be modified
  */
 const courseStructureRoutesCollect = (
-  structure: CourseNavigationStructure,
-  start: string | number,
+  structure: any,
   currentPath: string,
   routes: Array<[route: string, id: string]>
 ) => {
-  if (structure instanceof Array) { // stucture is CourseNavigationItem[]
+  const currentPathSnippet = currentPath ? currentPath + '/' : ''
+  if (structure instanceof Array) { // structure is CourseNavigationItem[]
     structure.forEach((item) => {
-      courseStructureRoutesStartAdd(item, start, routes, structure.indexOf(item))
-      courseStructureRoutesCollect(item, start, currentPath, routes)
+      courseStructureRoutesCollect(item, currentPath, routes)
       // routes.push([currentPath + '/' + item.slug ? item.slug : item.id, item.id]) // can have alternative path
     })
-  } else if (Object.prototype.hasOwnProperty.call(structure, 'id')) { // structure is CourseNavigationItem
-    // @ts-ignore b/c of check above
-    courseStructureRoutesStartAdd(structure, start, routes)
-    // @ts-ignore ditto
-    routes.push([currentPath + '/' + structure.slug, structure.id])
-  } else { // structure is CourseNavigationChapter
-    for (const chapter of Object.keys(structure)) {
-      courseStructureRoutesCollect(structure[chapter], start, currentPath + '/' + chapter, routes)
-    }
+  } else if (structure.isChapter) { // structure is CourseNavigationItemChapter
+    courseStructureRoutesCollect(structure.children, currentPathSnippet + structure.slug, routes)
+  } else if (!routes.some(el => el[1] === structure.id)) { // add path to routes if id is not already there
+    routes.push([currentPathSnippet + structure.slug, structure.id])
   }
+}
+
+/**
+ * @description traverses chapters, extracts object that has slugs as keys and chapterNames as values
+ * @param chapters courseChapters to inspect
+ */
+export const courseStructureChapterNames = (chapters: CourseNavigationItem[]): object => {
+  if (!chapters) {
+    return null
+  }
+  let chapterNames = {}
+  chapters.forEach((chapter: any) => {
+    if (chapter.isChapter) {
+      chapterNames[chapter.slug] = chapter.chapterName
+      chapterNames = { ...chapterNames, ...courseStructureChapterNames(chapter.children) }
+    }
+    return chapterNames
+  })
+  return chapterNames
+}
+
+/**
+ * @function return id of first content in chapter, recursively if nested
+ * @author cmc
+ * @since v1.3.0
+ * @param courseNav list of or single CourseNavigationItem
+ * @param mode either 'first' or 'last'
+ */
+export const contentIdGet = (courseNav: any, mode: string): string => {
+  if (!courseNav || (mode !== 'first' && mode !== 'last')) {
+    return null
+  }
+  if (Array.isArray(courseNav)) { // courseNav is CourseNavigationItem[]
+    const index = mode === 'first' ? 0 : courseNav.length - 1 // first or last element depending on mode
+    if (courseNav.length === 0) {
+      return null
+    } else if (courseNav[index].isChapter) {
+      return contentIdGet(courseNav[index].children, mode)
+    } else {
+      return courseNav[index].id
+    }
+  } else if (courseNav.isChapter) { // courseNav is CourseNavigationItemChapter
+    return contentIdGet(courseNav.children, mode)
+  } else { // courseNav is CourseNavigationItemBlock
+    return courseNav.id
+  }
+}
+
+export const contentBlockToNavItemTransform = (block: ContentBlock): CourseNavigationItemBlock => {
+  const slug = slugify(block.title.text)
+  const noConflict = slug !== 'edit' && slug !== 'new'
+  return {
+    id: block.id,
+    isChapter: false,
+    slug: noConflict ? slug : slug + '-' + block.name,
+    type: block.name,
+    follow: null
+  }
+}
+
+/**
+ * @function set all follow properties to the next content block, barring button navigation blocks
+ * @author cmc
+ * @since v1.3.0
+ * @param chapter reference to chapter that is examined
+ * @param nextChapter reference to following chapter (when called recursively)
+ */
+export const chapterFollowSet = (chapter: CourseNavigationItem | any, nextChapter: CourseNavigationItem) => {
+  chapter.children.forEach((item: any, i: number) => {
+    const followingChapter = i === chapter.children.length - 1
+      ? nextChapter
+      : chapter.children[i + 1]
+    if (item.isChapter) {
+      chapterFollowSet(item, followingChapter)
+    } else if (item.type !== 'button-navigation') {
+      item.follow = contentIdGet(followingChapter, 'first')
+    } // else: button-navigation => no new follow
+  })
+}
+
+/**
+ * @description update slug for chapter corresponding to id
+ * @param chapters Course Navigation
+ * @param id of course block that had title updated
+ * @param title the updated title to be turned into a new slug
+ */
+export const chapterSlugUpdate = (chapters: CourseNavigationItem[], id: string, title: string) => {
+  chapters.forEach((chapter: any) => {
+    if (chapter.isChapter) {
+      chapterSlugUpdate(chapter.children, id, title)
+    } else if (chapter.id === id) {
+      chapter.slug = slugify(title)
+    }
+  })
 }
 
 /**
  * @description traverse course nav object, return set of all paths
  * @param courseNav course navigation object
- * @param start course starting point (id or array index)
  * @returns list of tuples with route and id
  */
 export const coursePathsGet =
-  (courseNav: CourseNavigationStructure, start: string | number):
-    [[route: string, id: string]] => {
-    // @ts-ignore
-    const routes: [[route: string, id: string]] = [] // instantiate here because of recursion
-    courseStructureRoutesCollect(courseNav, start, '', routes)
-    for (const i in routes) {
-      if (routes[i][0][0] === '/') {
-        // console.log('removing leading slash', routes[i][0])
-        routes[i][0] = routes[i][0].substring(1)
-      } // remove leading slash
-      if (routes[i][1] === start || typeof start === 'number') { // remove duplicate route for start element
-        for (const j in routes) {
-          if (i !== j && routes[i][1] === routes[j][1]) { // remove longer duplicate route, i.e. keep ''
-            if (routes[i][0].length < routes[j][0].length) {
-              routes.splice(parseInt(j), 1)
-            } // no other cases because '' will always be added before other routes
-          }
-        }
-      }
+  (courseNav: CourseNavigationItem[]):
+    any[] => {
+    const routes = [] // instantiate here because of recursion
+    const start = contentIdGet(courseNav, 'first')
+    if (start) {
+      routes.push(['', start])
     }
+    courseStructureRoutesCollect(courseNav, '', routes)
     return routes
   }
 
@@ -164,18 +223,13 @@ export const coursePathsGet =
  * @param ids object containing ids of content blocks, will be modified consisting
  *  all ids of content blocks in course structure
  */
-export const courseStructureContentIdsExtract = (structure: CourseNavigationStructure, ids: any): void => {
-  if (structure instanceof Array) { // stucture is CourseNavigationItem[]
-    structure.forEach((item) => {
-      ids[item.id] = { partOfArray: true }
-    })
-  } else if (Object.prototype.hasOwnProperty.call(structure, 'id')) { // structure is CourseNavigationItem
-    // @ts-ignore
+export const courseStructureContentIdsExtract = (structure: any, ids: any): void => {
+  if (Array.isArray(structure)) { // structure is array of CourseNavigationItems
+    structure.forEach(item => courseStructureContentIdsExtract(item, ids))
+  } else if (structure.isChapter && structure.children) { // structure is single CourseNavigationItem
+    structure.children.forEach((item: CourseNavigationItem) => courseStructureContentIdsExtract(item, ids)) // recursively call for each child
+  } else {
     ids[structure.id] = {}
-  } else { // structure is CourseNavigationChapter
-    for (const chapter in structure) {
-      courseStructureContentIdsExtract(structure[chapter], ids)
-    }
   }
 }
 
@@ -184,78 +238,104 @@ export const courseStructureContentIdsExtract = (structure: CourseNavigationStru
  * @author cmc
  * @since v1.3.0
  * @param routes list of routes
+ * @param subChapterSlug slug to keep (chapter or block)
  */
 const courseSubChapterSlugTrim = (
-  routes: Array<[route: string, id: string]>
+  routes: Array<[route: string, id: string]>,
+  subChapterSlug: string
 ): void => {
-  routes.forEach((route: [string, string]) => {
-    const pathList = route[0].split('/') // split path into list
-    if (pathList.length >= 2) { // more than one member => subchapters
-      const subChapter = routes.filter(
-        e => e[0].includes(pathList.slice(0, -1).join('/'))
-      )// find all subchapters i.e. all paths with same prefix
-      // @ts-ignore
-      if (subChapter.length === 1) { // only one subchapter => remove slug from path
-        route[0] = route[0].split('/').slice(0, -1).join('/')
+  if (subChapterSlug === 'chapter' || subChapterSlug === 'block') {
+    routes.forEach((route: [string, string]) => {
+      const pathList = route[0].split('/') // split path into list
+      if (pathList.length >= 2) { // more than one member => subchapters
+        const subChapter = routes.filter(
+          e => e[0].includes(pathList.slice(0, -1).join('/'))
+        )// find all subchapters i.e. all paths with same prefix
+        // @ts-ignore
+        if (subChapter.length === 1) { // only one subchapter => remove slug from path
+          const pathList = route[0].split('/')
+          if (subChapterSlug === 'chapter') { // keep chapter slug
+            route[0] = pathList.slice(0, -1).join('/')
+          } else { // keep block slug
+            route[0] = pathList.length > 2
+              ? pathList.slice(0, -2).join('/') + '/' + pathList.slice(-1)
+              : '' + pathList.slice(-1)
+          }
+        }
       }
-    }
-  })
+    })
+  }
 }
 
 /**
  * @description traverse course nav object, return tuple: object with ids of content blocks and list of routes
  * @param courseChapters course structure object
- * @param start course starting point (id)
  * @param subChapterSlug course property (trim subchapter slug when only one subchapter)
  * @returns [courseContent, courseRoutes] - courseContent: object with ids as
  *  keys, courseRoutes: list of tuples [route, id]
  */
 export const courseStructureDescent = (
-  courseChapters: CourseNavigationStructure,
-  start: string,
-  subChapterSlug?: boolean
+  courseChapters: CourseNavigationItem[],
+  subChapterSlug?: string
 ):
   [
     { [id: string]: {} },
-    [[route: string, id: string]]
+    any[]
   ] => {
   const ids: { [id: string]: {} } = {}
   courseStructureContentIdsExtract(courseChapters, ids)
-  const routes = coursePathsGet(courseChapters, start)
+  const routes = coursePathsGet(courseChapters)
   if (subChapterSlug) {
-    courseSubChapterSlugTrim(routes)
+    courseSubChapterSlugTrim(routes, subChapterSlug)
   }
   return [ids, routes]
 }
 
+// take arabic string, transcribe to chat alphabet
+const arabicToChat = (text: string): string => {
+  // transform arabic letters to latin letters
+  text = text.replace(/[\u0600-\u06FF]/g, (letter) => {
+    return arabicToLatin[letter] || letter
+  })
+  // replace arabic numbers with latin numbers
+  // text = text.replace(/[٠١٢٣٤٥٦٧٨٩]/g, (number) => {
+  //   return arabicToLatin[number] || number
+  // })
+  // replace 'aa' with hyphen
+  text = text.replace(/aa/g, '-')
+  // remove any double vowels
+  text = text.replace(/([aeiou])\1+/g, '$1')
+  return text
+}
+
 // lookup table for mapping arabic to latin letters
 const arabicToLatin = {
-  ء: 'A',
-  آ: 'A',
-  أ: 'A',
-  ؤ: 'A',
-  إ: 'A',
-  ئ: 'A',
+  ء: '2',
+  آ: '2',
+  أ: '2',
+  ؤ: '2',
+  إ: '2',
+  ئ: '2',
   ا: 'A',
   ب: 'B',
   ة: 'H',
   ت: 'T',
-  ث: 'T',
-  ج: 'J',
-  ح: 'H',
-  خ: 'H',
+  ث: 'th',
+  ج: 'j',
+  ح: '7',
+  خ: 'kh',
   د: 'D',
-  ذ: 'D',
+  ذ: 'DH',
   ر: 'R',
   ز: 'Z',
   س: 'S',
-  ش: 'S',
-  ص: 'S',
-  ض: 'D',
-  ط: 'T',
-  ظ: 'Z',
-  ع: 'A',
-  غ: 'G',
+  ش: 'SH',
+  ص: '9',
+  ض: 'DH',
+  ط: '6',
+  ظ: 'TH',
+  ع: '3',
+  غ: '8',
   ف: 'F',
   ق: 'Q',
   ك: 'K',
@@ -265,5 +345,15 @@ const arabicToLatin = {
   ه: 'H',
   و: 'W',
   ى: 'A',
-  ي: 'Y'
+  ي: 'I',
+  '٠': '0',
+  '١': '1',
+  '٢': '2',
+  '٣': '3',
+  '٤': '4',
+  '٥': '5',
+  '٦': '6',
+  '٧': '7',
+  '٨': '8',
+  '٩': '9'
 }

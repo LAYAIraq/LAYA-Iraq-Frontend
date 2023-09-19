@@ -6,43 +6,59 @@
 -->
 <template>
   <div class="d-block">
-    <div v-if="item.name === 'laya-dialog'">
+    <div>
       <div
-        v-if="followSet.length !== item.answers.length"
-        id="incomplete-follow"
+        v-if="followSet && followSet.length === followLength"
+        v-b-tooltip.top
+        :title="y18n('courseNavEdit.followHighlight')"
+        class="d-flex follow-content"
+        @click="$bvModal.show('follow-edit')"
+        @mousedown="followHighlight"
+      >
+        <div>
+          <p v-if="followSet.length === 1">
+            {{ follow }}
+          </p>
+          <ul
+            v-else
+            id="follow-list"
+          >
+            <draggable
+              :list="followSet"
+            >
+              <li
+                v-for="e in followSet"
+                :key="e"
+              >
+                {{ e }}
+              </li>
+            </draggable>
+          </ul>
+        </div>
+      </div>
+      <div
+        v-else
+        @click="$bvModal.show('follow-edit')"
       >
         Add following content
-        <suggesting-input></suggesting-input>
       </div>
-      <ul id="follow-list">
-        <draggable
-          :list="followSet"
-        >
-          <li
-            v-for="e in followSet"
-            :key="e"
-          ></li>
-        </draggable>
-      </ul>
-    </div>
-    <div
-      v-else
-      class="d-block"
-    >
-      {{ follow }}
     </div>
   </div>
 </template>
 <script>
 import Draggable from 'vuedraggable'
+import { locale } from '@/mixins'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'CourseNavFollowSet',
   components: {
     Draggable
   },
+  mixins: [locale],
   props: {
     follow: {
-      type: [Number, String, Array],
+      type: [String, Array],
       default: () => null
     },
     item: {
@@ -52,21 +68,68 @@ export default {
   },
   data () {
     return {
+      followSetChange: null
     }
   },
   computed: {
+    ...mapGetters(['courseContent']),
+    /**
+     * @function return text of buttons if item is button navigation
+     * @author cmc
+     * @since v1.3.0
+     * @returns {string[]} labels of buttons
+     */
+    buttonLabels () {
+      return this.item.name === 'button-navigation'
+        ? this.item.answers.map(el => el.text)
+        : null
+    },
+    /**
+     * @function return length of follow items needed (1 for everything but button navigation)
+     * @author cmc
+     * @since v1.3.0
+     * @returns {number} amount of follow items for content block
+     */
+    followLength () {
+      return this.item.name === 'button-navigation'
+        ? this.item.answers.length
+        : 1
+    },
+    /**
+     * @function return follow set as array, set propagate change to follow set
+     * @author cmc
+     * @since v1.3.0
+     */
     followSet: {
       get () {
-        return (!this.follow || Array.isArray(this.follow))
-          ? this.follow
-          : [this.follow]
+        return this.follow
+          ? Array.isArray(this.follow) // either array or string
+            ? this.follow // return array as is
+            : [this.follow] // return string as single item in array
+          : null
       },
       set (val) {
-        console.log(val)
+        this.$emit('follow-update', val) // TODO: what if there's more than one item?
       }
     }
   },
   methods: {
+    followHighlight (e) {
+      e.preventDefault()
+      console.log(e.shiftKey)
+      if (e.shiftKey) {
+        this.$emit('highlight', this.follow)
+        console.log(e.shiftKey)
+      }
+    }
   }
 }
 </script>
+<style>
+.follow-content>i {
+  display: none;
+}
+.follow-content:hover>i {
+  display: inline-flex;
+}
+</style>

@@ -5,19 +5,21 @@
   Since: v1.3.0
 -->
 <template>
-  <div class="chapter-item">
+  <div
+    class="chapter-item"
+    @blur="blockHighlightUnset"
+    @mouseup="blockHighlightUnset"
+  >
     <i
       v-if="chapter.isChapter && !main"
       class="fa fa-bars drag-handle"
     ></i>
     <course-nav-property-edit
       v-if="chapter.isChapter && !main"
-      :callback="courseChapterNameConvertToId"
-      :display="courseChapterIdConvertToName"
       :form-placeholder="y18n('courseNavEdit.chapterPlaceholder')"
       :property="chapterName"
       :class="{ 'border rounded border-danger': chapterNameDuplicate }"
-      @changed="e => propagatePropertyChange(chapter, 'chapterName', e)"
+      @changed="propagatePropertyChange(chapter, 'chapterName', $event)"
     />
     <draggable
       :list="chapter.children"
@@ -38,17 +40,25 @@
           :chapter="item"
           :chapter-name="item.chapterName"
           :chapter-name-duplicate="duplicateChapterNames.includes(i)"
-          :following-content="getFirstContentId(chapter.children,i + 1)"
-          @propagatePropertyChange="propagatePropertyChange"
+          :course-end="courseEnd"
+          :following-content="item.follow"
+          :highlighted-block="main? highlightId : highlightedBlock"
+          @highlight="blockHighlight"
+          @preview="pid => previewEmit(pid)"
+          @propagate-property-change="propagatePropertyChange"
         />
         <course-nav-item
           v-else-if="!collapsed"
+          :class="{ 'border-success': item.id === highlightId }"
+          :course-end="courseEnd"
           :drag-bubble="[!dragging && dragStartIndex === i, childrenVisibility[item.id]]"
           :drag-end="[!dragging && dragEndIndex === i, childrenVisibility[item.id]]"
-          :following-content="chapter.children[i + 1] ? chapter.children[i + 1].id : followingContent"
+          :following-content="item.follow"
           :value="item"
-          @visibilityChange="changeChildVisibility"
-          @propagatePropertyChange="propagatePropertyChange"
+          @highlight="blockHighlight"
+          @visibility-change="childVisibilityChange"
+          @propagate-property-change="propagatePropertyChange"
+          @preview="pid => previewEmit(pid)"
         />
       </div>
     </draggable>
@@ -59,9 +69,9 @@ import { mapGetters } from 'vuex'
 import Draggable from 'vuedraggable'
 import CourseNavItem from '@/components/course/course-nav/course-nav-item.vue'
 import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
-import { locale } from '@/mixins'
+import { courseNavEmits, locale } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
-import { courseChapterIdConvertToName, courseChapterNameConvertToId } from '@/mixins/general/course-navigation'
+import { chapterFollowSet } from '@/mixins/general/course-structure'
 
 export default {
   name: 'CourseNavChapter',
@@ -70,7 +80,7 @@ export default {
     CourseNavPropertyEdit,
     CourseNavItem
   },
-  mixins: [locale],
+  mixins: [courseNavEmits, locale],
   props: {
     chapter: {
       type: Object,
@@ -85,7 +95,15 @@ export default {
       type: Boolean,
       default: () => false
     },
+    courseEnd: {
+      type: String,
+      required: true
+    },
     followingContent: {
+      type: String,
+      default: () => null
+    },
+    highlightedBlock: {
       type: String,
       default: () => null
     },
@@ -101,7 +119,8 @@ export default {
       id: '', // exists to make v-for keys unique,
       dragging: false,
       dragStartIndex: null,
-      dragEndIndex: null
+      dragEndIndex: null,
+      highlightId: null
     }
   },
   computed: {
@@ -144,10 +163,10 @@ export default {
   watch: {
     chapter: {
       handler () {
-        console.log('chapter changed')
-        if (this.main && this.coherentItem) {
-          console.log('changing following content....')
-          this.setFollowingContent()
+        // console.log('chapter changed')
+        if (this.main) {
+          // console.log('changing following content....')
+          this.followingContentSet()
         }
       },
       deep: true
@@ -158,17 +177,28 @@ export default {
     this.chapter.children.forEach(child => { this.childrenVisibility[child.id] = false })
   },
   methods: {
+    blockHighlight (id) {
+      console.log(id)
+      if (this.main) {
+        this.highlightId = id
+      } else {
+        this.$emit('highlight', id)
+      }
+    },
+    blockHighlightUnset () {
+      if (this.main && this.highlightId) {
+        this.highlightId = null
+      }
+    },
     /**
      * @function set visibility of child in childrenVisibility object
      * @author cmc
      * @param id id of child
      * @param visibility visibility of child
      */
-    changeChildVisibility (id, visibility) {
+    childVisibilityChange (id, visibility) {
       this.childrenVisibility[id] = visibility
     },
-    courseChapterNameConvertToId,
-    courseChapterIdConvertToName,
     /**
      * @function handle event when drag starts, setting dragStartIndex and dragging to true
      * @author cmc
@@ -179,30 +209,13 @@ export default {
       this.dragStartIndex = event.oldIndex
     },
     /**
-     * @function handle event when drag ends, setting dragEndIndex and calling setFollowingContent if main element
+     * @function handle event when drag ends, setting dragEndIndex and calling followingContentSet if main element
      * @author cmc
      * @param event emitted event from draggable component
      */
     dragEnd (event) {
       this.dragging = false
       this.dragEndIndex = event.newIndex
-    },
-    /**
-     * @function get the id of the first content of the chapter, recursively
-     * @author cmc
-     * @param chapter reference to `chapter` object
-     * @param index index of the chapter to check
-     * @return {string|null} id of the first content of the chapter, or null the index is out of bounds
-     */
-    getFirstContentId (chapter, index) {
-      if (chapter && chapter[index]) {
-        if (chapter[index].isChapter) {
-          return this.getFirstContentId(chapter[index].children, 0)
-        } else {
-          return chapter[index].id
-        }
-      }
-      return null
     },
     /**
      * @function propagate property change from child Component to parent
@@ -212,65 +225,18 @@ export default {
      * @param value new value for property to propagate to parent
      */
     propagatePropertyChange (chapter, property, value) {
-      this.$emit('propagatePropertyChange', chapter, property, value)
+      this.$emit('propagate-property-change', chapter, property, value)
     },
     /**
      * @function set followingContent property of all items in the chapter
      * @author cmc
      */
-    setFollowingContent () {
-      const setFollow = (item, follow) => {
-        if (item.type !== 'laya-dialog') {
-          item.follow = follow
-        }
-      }
-      /**
-       * @function automaticFollow recursively sets the followingContent property of all but dialog items in the chapter
-       * @param item reference to item to set followingContent for
-       * @param followingItem reference to following item if exists
-       * @param depth recursion depth
-       */
-      const automaticFollow = (item, followingItem, depth) => {
-        if (item.isChapter) {
-          item.children.forEach((child, i) => {
-            const res = automaticFollow(child, item.children[i + 1] ?? null, depth + 1)
-            if (res) { // if automaticFollow returns something, set followingContent to next block
-              console.log('reach last element')
-              console.log('recursion depth: ', depth)
-              const nextInput = this.getFirstContentId(item.children[i + 1], 0)
-              console.log('nextInput: ', nextInput)
-
-              if (!nextInput) {
-                if (depth !== 0) {
-                  return item
-                } else {
-                  setFollow(item, null)
-                  return null
-                }
-              } else {
-                setFollow(item, nextInput)
-                return null
-              }
-            }
-          })
-        } else { // set followingContent if exists
-          if (followingItem) {
-            setFollow(item, followingItem.id)
-            return null
-          } else {
-            return item
-          }
-        }
-      }
-      const k = automaticFollow(this.chapter, null, 0) // TODO: nested follow of last elements still broken
-      if (!k) {
-        console.log('no return, all gucci')
-      } else {
-        console.log('something went wrong')
-      }
+    followingContentSet () {
+      chapterFollowSet(this.chapter, null)
     }
   }
 }
+
 </script>
 <style>
 .drag-area {

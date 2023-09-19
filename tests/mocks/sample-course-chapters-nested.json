@@ -3,58 +3,134 @@
   "authorId": 1,
   "category": "Kurs",
   "start": "e1ns",
-  "chapters": {
-    "main": {
-      "start": {
-        "follow": [
-          "zw31",
-          "dr31"
-        ],
-        "id": "e1ns",
-        "slug": "dialog-sample"
-      },
-      "video": {
-        "id": "zw31",
-        "follow": "dr31",
-        "slug": "video"
-      },
-      "editor": {
-        "follow": "v13r",
-        "id": "dr31",
-        "slug": "wysiwyg"
-      },
-      "quiz": {
-        "scmc": [
-          {
-            "id": "v13r",
-            "slug": "sc-quiz"
+  "chapters": [
+    {
+      "chapterName": "main",
+      "children": [
+        {
+          "chapterName": "quiz",
+          "children": [
+            {
+              "chapterName": "scmc",
+              "isChapter": true,
+              "children": [
+                {
+                  "isChapter": true,
+                  "chapterName": "Choice-Quizzes",
+                  "slug": "choice-quizzes",
+                  "children": [
+                    {
+                      "id": "v13r",
+                      "isChapter": false,
+                      "slug": "sc-quiz",
+                      "follow": "fu3nf"
+                    },
+                    {
+                      "id": "fu3nf",
+                      "isChapter": false,
+                      "slug": "mc-quiz"
+                    }
+                  ]
+                },
+                {
+                  "isChapter": true,
+                  "slug": "some-sub-chapter",
+                  "chapterName": "Some - Sub–Chapter",
+                  "children": [{
+                    "id": "53ch5",
+                    "isChapter": false,
+                    "slug": "tf-quiz"
+                  }]
+                }
+              ],
+              "slug": "scmc"
+            },
+            {
+              "chapterName": "other",
+              "children": [
+                {
+                  "isChapter": true,
+                  "chapterName": "Drag & Drop",
+                  "children":
+                  [
+                    {
+                      "id": "513b3n",
+                      "isChapter": false,
+                      "slug": "drag-drop"
+                    }
+                  ],
+                  "slug": "drag-drop"
+                },
+                {
+                  "isChapter": true,
+                  "chapterName": "Relate",
+                  "slug": "relate",
+                  "children": [
+                    {
+                      "id": "4cht",
+                      "isChapter": false,
+                      "slug": "relate"
+                    }]
+                }
+              ],
+              "isChapter": true,
+              "slug": "other"
+            }
+          ],
+          "isChapter": true,
+          "slug": "quiz"
+        },
+        {
+          "chapterName": "start",
+          "children": [
+            {
+              "follow": [
+                "zw31",
+                "dr31"
+              ],
+              "id": "e1ns",
+              "slug": "dialog-sample",
+              "isChapter": false
+            }
+          ],
+          "isChapter": true,
+          "slug": "start"
+        },
+        {
+          "isChapter": true,
+          "chapterName": "Last Chapter",
+          "slug": "last-chapter",
+          "children": [{
+            "id": "zw31",
+            "isChapter": false,
+            "follow": "dr31",
+            "slug": "video"
           },
           {
-            "id": "fu3nf",
-            "slug": "mc-quiz"
-          },
-          {
-            "id": "53ch5",
-            "slug": "tf-quiz"
-          }
-        ],
-        "other": {
-          "drag-drop": {
-            "id": "513b3n",
-            "slug": "drag-drop"
-          },
-          "relate": {
-            "id": "4cht",
-            "slug": "relate"
-          }
+            "follow": "v13r",
+            "id": "dr31",
+            "isChapter": false,
+            "slug": "wysiwyg"
+          }]
         }
-      }
+      ],
+      "isChapter": true,
+      "slug": "main"
     },
-    "feedback": {
-      "id": "f33db4ck",
-      "slug": "feedback"
+
+    {
+      "isChapter": true,
+      "chapterName": "Feedback",
+      "slug": "feedback",
+      "children": [
+        {
+          "id": "f33db4ck",
+          "isChapter": false,
+          "slug": "feedback"
+        }
+      ]
     }
-  },
+    ],
   "feedback": [],
   "files": [],
   "locked": false,

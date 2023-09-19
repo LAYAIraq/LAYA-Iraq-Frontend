@@ -9,9 +9,9 @@ export type LegacyContentBlock = {
   name: string,
   input: {
     title: {
-      flagged?: boolean,
-      id: string,
-      simple?: string,
+      flagged?: boolean
+      id: string
+      simple?: string
       text: string
     },
     [key: string]: any
@@ -22,16 +22,16 @@ export type LegacyContentBlock = {
 export type LegacyContentInput = LegacyContentBlock[]
 
 export interface LegacyCourse {
-  abstract: string,
-  category: string,
+  abstract: string
+  category: string
   content: LegacyContentInput
-  files: string[],
-  name: string,
-  properties: object,
-  readonly authorId: number,
-  readonly courseId: string,
-  readonly lastChanged?: number | string,
-  readonly locked: boolean,
+  files: string[]
+  name: string
+  properties: object
+  readonly authorId: number
+  readonly courseId: string
+  readonly lastChanged?: number | string
+  readonly locked: boolean
   storageId: string
 }
 
@@ -43,39 +43,35 @@ export interface LegacyCourse {
 type FollowingContent = string | string[] | number | number[]
 
 /**
- * @description Course navigation item has id and slug with optional follow
- *  property
+ * @description Course navigation item has id and slug
  * @property id unique id for course content block
  * @property slug slug for course content block (can be used for route)
- * @property type type of content block (e.g. 'laya-dialog')
- * @property follow following content (can be marked with number (step) or
- *  string (id/slug), also as array)
  */
-export type CourseNavigationItem = {
-  id: string,
-  slug: string,
-  type?: string,
-  follow?: FollowingContent
+export interface CourseNavigationItem {
+  isChapter: boolean,
+  slug: string
 }
 
 /**
- * @description Course navigation can be either a nested object or an array
- *  (like old course structure)
+ * @description Course Chapters have a chapterName and a list of child CourseNavigationItems
+ * @property chapterName Name for chapter
+ * @property children List of children, i.e. sub-chapters
  */
-export type CourseNavigationStructure =
-  { [chapterName: string]: CourseNavigationStructure } |
-  CourseNavigationItem[] |
-  CourseNavigationItem
+export interface CourseNavigationItemChapter extends CourseNavigationItem {
+  chapterName: string,
+  children: CourseNavigationItem[],
+}
 
 /**
- * @description Course navigation as TypeScript interface
- * @property start start of course navigation (index of array, first chapter
- *  name or content id / slug)
- * @property structure course navigation structure (nested object or array)
+ * @description Course Blocks have type, id and follow set
+ * @property type name of plugin type
+ * @property id unique id for content block, used for lookup
+ * @property follow Content following, single id or list of ids (only for button-navigation)
  */
-export type CourseNavigation = {
-  start: string,
-  structure: CourseNavigationStructure
+export interface CourseNavigationItemBlock extends CourseNavigationItem {
+  type: string,
+  id: string,
+  follow: FollowingContent
 }
 
 /**
@@ -84,17 +80,17 @@ export type CourseNavigation = {
  * @property name - name of course
  * @property abstract - abstract of course
  * @property category - category of course
- * @property chapters - content of course structured as nested object
+ * @property chapters - content of course structured as nested array
  * @property start - id of first content block
  */
 export type Course = {
-  courseId: string,
-  name: string,
-  start: string,
-  abstract: string,
-  category: string,
-  chapters: CourseNavigationStructure,
-  chapterNames?:{ [chapterName: string]: string }, // chapter names for breadcrumb
+  courseId: string
+  name: string
+  start: string
+  abstract: string
+  category: string
+  chapters: CourseNavigationItem[]
+  chapterNames?:{ [chapterName: string]: string } // chapter names for breadcrumb
   [key: string]: any
 }
 
@@ -105,8 +101,8 @@ export type Course = {
  * @property title - title of content block
  */
 export type ContentBlock = {
-  id: string,
-  name: string,
-  title: { text: string },
+  id: string
+  name: string
+  title: { text: string }
   [prop: string]: any
 }

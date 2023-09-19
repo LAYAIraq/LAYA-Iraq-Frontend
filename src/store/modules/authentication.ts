@@ -17,7 +17,7 @@ export default {
      * getter userId: return userId
      * Author: cmc
      * Last Updated: June 20, 2021
-     * @param state: state variables
+     * @param state state variables
      */
     userId (state: { userId: number }) {
       return state.userId
@@ -54,8 +54,7 @@ export default {
      *
      * Last Updated: unknown
      *
-     * @param state contains boolean online, userId, role string
-     * @param commit commit function to call roleSet mutation
+     * @param state contains boolean online, userId
      */
     logout (state: {
       online: boolean,
@@ -68,6 +67,23 @@ export default {
     }
   },
   actions: {
+    /**
+     * @function fire request to verify
+     * @author cmc
+     * @since v1.3.0
+     * @param _ store data, not used here
+     * @param data uid and verificationToken
+     * @returns promise to GET /accounts/confirm
+     */
+    accountVerify (_, data: { uid: number, token: string }) {
+      return new Promise((resolve, reject) => {
+        http.get(`/accounts/confirm?uid=${data.uid}&token=${data.token}`)
+          .then(() => {
+            resolve(null)
+          })
+          .catch(err => reject(err))
+      })
+    },
     /**
      * function sendCredentials: fire login request
      *

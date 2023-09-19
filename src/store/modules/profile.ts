@@ -7,7 +7,7 @@
 
 import http from 'axios'
 import { ids as supportedLangs } from '@/options/langs.js'
-import { deepCopy, stripKey } from '@/mixins/general/helpers'
+import { stripKey } from '@/mixins/general/helpers'
 
 export default {
   state: {
@@ -77,7 +77,7 @@ export default {
      * Last Updated: February 13, 2023
      *
      * @param state contains occupation
-     * @param email: string containing occuptation
+     * @param email string containing occuptation
      */
     emailSet (
       state: { email: string },
@@ -93,7 +93,7 @@ export default {
      * Last Updated: February 06, 2023
      *
      * @param state contains occupation
-     * @param fullName: string containing occuptation
+     * @param fullName string containing occuptation
      */
     fullNameSet (
       state: { fullName: string },
@@ -109,7 +109,7 @@ export default {
      * Last Updated: February 06, 2023
      *
      * @param state contains institution
-     * @param institution: string containing institution
+     * @param institution string containing institution
      */
     institutionSet (
       state: { institution: string },
@@ -141,7 +141,7 @@ export default {
      * Last Updated: February 06, 2023
      *
      * @param state contains occupation
-     * @param occupation: string containing occuptation
+     * @param occupation string containing occuptation
      */
     occupationSet (
       state: { occupation: string },
@@ -157,7 +157,7 @@ export default {
      * Last Updated: January 27, 2022
      *
      * @param state contains preferences
-     * @param prefs: object containing some options
+     * @param prefs object containing some options
      */
     preferencesSet (
       state: {
@@ -222,7 +222,7 @@ export default {
      * Last Updated: February 06, 2023
      *
      * @param state contains occupation
-     * @param username: string containing occuptation
+     * @param username string containing occuptation
      */
     usernameSet (
       state: { username: string },

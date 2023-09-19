@@ -13,6 +13,7 @@ const AdminPanel = () => import('@/components/user-views/admin-panel.vue')
 const Course = () => import('./components/course/course.vue')
 const CourseContent = () => import('./components/course/course-edit/course-content.vue')
 const CourseNav = () => import('./components/course/course-nav/course-nav.vue')
+const CourseNavFollowEdit = () => import('./components/course/course-nav/course-nav-follow-edit.vue')
 const CourseList = () => import('./components/course/course-list/course-list.vue')
 const EditorPanel = () => import('@/components/user-views/editor-panel.vue')
 const Flag = () => import('./components/course/flag/flag.vue')
@@ -88,13 +89,13 @@ export default new Router({
       children: [
         {
           path: 'edit',
-          name: 'course-content',
+          name: 'course-content-edit',
           component: CourseContent,
           props: true
         },
         {
           path: 'new/:type',
-          name: 'course-content',
+          name: 'course-content-new',
           component: CourseContent,
           props: true
         },
@@ -102,6 +103,12 @@ export default new Router({
           path: 'edit-nav',
           name: 'course-nav',
           component: CourseNav
+        },
+        {
+          path: 'edit-follow?id=:contentId',
+          name: 'content-follow-edit',
+          component: CourseNavFollowEdit,
+          props: true
         }
       ]
     },
