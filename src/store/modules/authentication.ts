@@ -17,7 +17,7 @@ export default {
      * getter userId: return userId
      * Author: cmc
      * Last Updated: June 20, 2021
-     * @param state: state variables
+     * @param state state variables
      */
     userId (state: { userId: number }) {
       return state.userId

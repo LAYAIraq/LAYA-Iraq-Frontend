@@ -6,36 +6,41 @@ Since: v1.0.0
 -->
 
 <template>
-  <div class="free-text-view">
-    <div
-      v-if="title.show"
-      :id="title.id"
-      class="flaggable row"
-    >
-      <h2>{{ courseSimple? title.simple : title.text }}</h2>
-      <flag-icon
-        v-if="!editPreview"
-        :ref-data="title"
-        @flagged="title.flagged = true"
-      ></flag-icon>
-    </div>
-    <div id="free-text-viewer"></div>
-    <div class="row">
-      <button
-        type="button"
-        class="btn btn-primary mt-3 d-block"
-        :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-        @click="onFinish[0]() || {}"
+  <fieldset
+    class="free-text-view"
+    :class="courseLangIsAr? 'text-right' : 'text-left'"
+  >
+    <div>
+      <div
+        v-if="title.show"
+        :id="title.id"
+        class="flaggable row"
       >
-        {{ y18n('nextContent') }}
-        <i
-          :class="langIsAr?
-            'fas fa-arrow-left':
-            'fas fa-arrow-right'"
-        ></i>
-      </button>
+        <h2>{{ courseSimple? title.simple : title.text }}</h2>
+        <flag-icon
+          v-if="!editPreview"
+          :ref-data="title"
+          @flagged="title.flagged = true"
+        ></flag-icon>
+      </div>
+      <div id="free-text-viewer"></div>
+      <div class="row">
+        <button
+          type="button"
+          class="btn btn-primary mt-3 d-block"
+          :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
+          @click="onFinish[0]() || {}"
+        >
+          {{ y18n('nextContent') }}
+          <i
+            :class="langIsAr?
+              'fas fa-arrow-left':
+              'fas fa-arrow-right'"
+          ></i>
+        </button>
+      </div>
     </div>
-  </div>
+  </fieldset>
 </template>
 
 <script>

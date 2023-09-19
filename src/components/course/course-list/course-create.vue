@@ -30,6 +30,7 @@
           >
         </div>
       </div>
+      <!-- Category -->
       <div class="form-group row">
         <label
           for="new-course-category"
@@ -38,6 +39,20 @@
           {{ y18n('cat') }}
         </label>
         <div class="col">
+          <b-form-select
+            id="new-course-category"
+            v-model="newCourse.category"
+            :aria-label="y18n('cat')"
+          >
+            <b-form-select-option
+              v-for="opt in categoryChoose"
+              :key="opt"
+              :value="opt"
+            >
+              {{ y18n(`course.category.${opt}`) }}
+            </b-form-select-option>
+          </b-form-select>
+          <!--
           <input
             id="new-course-category"
             v-model="newCourse.category"
@@ -46,6 +61,67 @@
             :placeholder="y18n('cat')"
             @blur="trimNames"
           >
+          -->
+        </div>
+      </div>
+      <!-- Keywords -->
+      <div class="form-group row">
+        <label
+          for="new-course-keywords"
+          class="col-3 col-form-label"
+        >
+          {{ y18n('keywords') }}
+        </label>
+        <div class="col">
+          <input
+            id="new-course-keywords"
+            v-model="newCourse.keywords"
+            type="text"
+            class="form-control"
+            :placeholder="y18n('keywords')"
+          >
+        </div>
+      </div>
+      <!-- Abstract -->
+      <div class="form-group row">
+        <label
+          for="new-course-abstract"
+          class="col-3 col-form-label"
+        >
+          {{ y18n('abstract') }}
+        </label>
+        <div class="col">
+          <textarea
+            id="new-course-abstract"
+            v-model="newCourse.abstract"
+            type="text"
+            class="form-control"
+            :placeholder="y18n('abstract')"
+            rows="5"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label
+          for="new-course-language"
+          class="col-3 col-form-label"
+        >
+          {{ y18n('courseLanguage') }}
+        </label>
+        <div class="col">
+          <b-form-select
+            v-model="newCourse.language"
+            :aria-label="y18n('courseLanguage')"
+          >
+            <b-form-select-option
+              v-for="opt in languageChoose"
+              :key="opt"
+              :value="opt"
+            >
+              {{ y18n(`profile.language.${opt}`) }}
+            </b-form-select-option>
+          </b-form-select>
         </div>
       </div>
       <div class="form-group row">
@@ -92,6 +168,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
+import courseCategories from '@/options/course-categories.ts'
+import languages from '@/options/languages.ts'
 
 export default {
   name: 'CourseCreate',
@@ -106,13 +184,28 @@ export default {
       msg: '',
       newCourse: {
         category: '',
-        name: ''
+        language: '',
+        authorName: '',
+        name: '',
+        keywords: '',
+        abstract: ''
       },
       newCourseNeedsEncoding: false
     }
   },
   computed: {
-    ...mapGetters(['courseList', 'userId']),
+    ...mapGetters(['courseList', 'userId', 'profile', 'fullName']),
+
+    /**
+     * categoryChoose(): add categories
+     * Author: nv
+     * Since: v1.3.0
+     */
+    categoryChoose () {
+      return [
+        ...courseCategories
+      ]
+    },
 
     /**
      * formValid: to test if both name and category are set
@@ -125,6 +218,16 @@ export default {
       return !!this.newCourse.name && !!this.newCourse.category
     },
 
+    /**
+     * languageChoose(): add languages
+     * Author: nv
+     * Since: v1.3.0
+     */
+    languageChoose () {
+      return [
+        ...languages
+      ]
+    },
     /**
      * needsEnrollment: Check if new course will need an enrollment
      *
@@ -186,6 +289,7 @@ export default {
      *  */
     storeNewCourse () {
       this.checkNames()
+      this.newCourse.authorName = this.profile.fullName
       const { newCourse, userId } = this
       if (this.newCourseNeedsEncoding) {
         this.msg = this.y18n('courseList.needsEncoding')
@@ -197,6 +301,11 @@ export default {
           enrollment: this.needsEnrollment
         })
           .then(() => {
+            const data = {
+              lang: this.courseLanguage,
+              cid: this.courseId
+            }
+            this.$store.dispatch('courseUpdateLanguage', data)
             if (this.needsEnrollment) {
               this.$store.dispatch('createAuthorEnrollment', {
                 courseName: newCourse.name,

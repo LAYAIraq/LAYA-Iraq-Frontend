@@ -7,8 +7,8 @@ Since: v1.0.0
 
 <template>
   <fieldset
-    class="choice-question"
-    :class="langIsAr? 'text-right' : 'text-left'"
+    class="choice-question-view"
+    :class="courseLangIsAr? 'text-right' : 'text-left'"
   >
     <!-- render task -->
     <div
@@ -61,7 +61,7 @@ Since: v1.0.0
             :id="'mchoice-in-'+i"
             v-model="answers"
             class="position-absolute mt-2"
-            :class="langIsAr? 'mr-3': 'ml-3'"
+            :class="courseLangIsAr? 'float-right mr-3 mt-2': 'float-left ml-3 mt-2'"
             type="checkbox"
             :disabled="freeze"
             :value="i"
@@ -70,8 +70,7 @@ Since: v1.0.0
             v-else
             :id="'mchoice-in-'+i"
             v-model="answers[0]"
-            class="position-absolute mt-2"
-            :class="langIsAr? 'mr-3': 'ml-3'"
+            :class="courseLangIsAr? 'float-right mr-3 mt-2': 'float-left ml-3 mt-2'"
             type="radio"
             :disabled="freeze"
             :value="i"
@@ -80,7 +79,7 @@ Since: v1.0.0
           <label
             :for="'mchoice-in-'+i"
             class="form-check-label"
-            :class="langIsAr? 'mr-4' : ''"
+            :class="courseLangIsAr? 'mr-4' : ''"
           >
             {{ courseSimple? option.simple: option.text }}
           </label>
@@ -114,6 +113,7 @@ Since: v1.0.0
       <button
         type="button"
         class="btn btn-link mt-3"
+        :class="langIsAr? 'float-right': 'float-left'"
         :disabled="freeze"
         @click="diffSolution"
       >

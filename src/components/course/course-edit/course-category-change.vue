@@ -2,10 +2,7 @@
 Filename: course-category-change.vue
 Use: Change course category
 Author: cmc
-Date: October 27, 2020
-Dependencies:
-  vuex,
-  @/mixins/locale.vue
+Since: v1.2.0
 -->
 
 <template>
@@ -39,6 +36,19 @@ Dependencies:
     >
       <p>
         {{ y18n('changeCategory') }}
+        <b-form-select
+          v-model="newCategory"
+          :aria-label="y18n('changeCategory.new')"
+        >
+          <b-form-select-option
+            v-for="opt in categoryChoose"
+            :key="opt"
+            :value="opt"
+          >
+            {{ y18n(`course.category.${opt}`) }}
+          </b-form-select-option>
+        </b-form-select>
+        <!--
         <input
           v-model="newCategory"
           type="text"
@@ -56,6 +66,8 @@ Dependencies:
         <i class="fas fa-exclamation-triangle"></i>
         {{ inputWarning }}
       </p>
+      -->
+      </p>
     </b-modal>
     <div
       id="openPopup"
@@ -69,6 +81,7 @@ Dependencies:
 <script>
 import { locale } from '@/mixins'
 import { mapGetters } from 'vuex'
+import courseCategories from '@/options/course-categories'
 
 export default {
   name: 'CourseCategoryChange',
@@ -86,6 +99,17 @@ export default {
 
   computed: {
     ...mapGetters(['course']),
+
+    /**
+     * categoryChoose(): add categories
+     * Author: nv
+     * Since: v1.3.0
+     */
+    categoryChoose () {
+      return [
+        ...courseCategories
+      ]
+    },
 
     inputWarning () {
       return this.badInput ? this.y18n(`changeCategory.${this.badInput}`) : ''

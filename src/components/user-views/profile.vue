@@ -14,15 +14,26 @@ Since: v1.0.0
           <!-- profile header -->
           <div class="bg-dark w-100 pt-5 pb-3">
             <!-- avatar -->
-            <div class="d-block mx-auto avatar">
-              <b-avatar
-                src="avatarURL"
-                size="7rem"
-                square
-                button
+            <div class="d-block mx-auto avatar rounded-circle">
+              <img
+                v-if="avatarURL"
+                v-auth-image="avatarURL"
+                :class="langIsAr? 'rounded-circle avatar-display ar' : 'rounded-circle avatar-display'"
+              >
+              <i
+                v-else
+                class="fas fa-chalkboard-teacher display-3 pt-3 pl-2"
+              ></i>
+              <b-badge
+                v-b-tooltip.bottom
+                pill
+                variant="warning"
+                class="edit-badge"
+                :title="y18n('profile.editAvatar')"
                 @click="avatarChange"
               >
-              </b-avatar>
+                <i class="fas fa-edit"></i>
+              </b-badge>
             </div>
             <!--
             <img
@@ -352,7 +363,7 @@ Since: v1.0.0
                       </b-button>
                       <b-modal
                         id="change-password-form"
-                        :title="y18n('profile.passwordChange')"
+                        :title="y18n('profile.password')"
                         header-bg-variant="info"
                         ok-variant="success"
                         :ok-title="y18n('save')"
@@ -366,25 +377,25 @@ Since: v1.0.0
                           <label
                             for="oldPwd"
                             class="col-sm-3 col-form-label"
-                          >{{ y18n('profile.passwordOld') }}</label>
+                          >{{ y18n('profile.oldPassword') }}</label>
                           <div class="col-sm-9">
                             <input
                               id="passwordOld"
                               v-model="passwordOld"
                               type="password"
                               class="form-control"
-                              :placeholder="y18n('profile.passwordOld')"
+                              :placeholder="y18n('profile.oldPassword')"
                               autocomplete="on"
                             >
                           </div>
                         </div>
                         <!-- new password -->
-                        <password-input
+                        <PasswordInput
                           class="pwd-input"
                           :label-icons-only="false"
                           :label-width="3"
                           @compliantLength="newPwdOk"
-                        ></password-input>
+                        ></PasswordInput>
                       </b-modal>
                     </div>
                   </div>
@@ -436,12 +447,9 @@ Since: v1.0.0
         <div class="container">
           <div class="col">
             <div class="col">
-              <img :src="avatarURL">
-            </div>
-            <div class="col">
               <upload-avatar
                 :old-avatar="avatarURL"
-                :type="'avatar'"
+                @uploaded="a => $store.commit('avatarSet', a)"
               ></upload-avatar>
             </div>
           </div>
@@ -460,7 +468,7 @@ Since: v1.0.0
       <b-toast
         id="submit-ok"
         variant="success"
-        :title="y18n('layaUploadFileList.success')"
+        :title="y18n('uploadFileList.success')"
         class="author-toast"
         auto-hide-delay="1500"
         static
@@ -545,9 +553,9 @@ export default {
      * Last Updated: unknown
      */
     avatarURL () {
-      return (!this.avatar || this.avatar === '')
+      return (!this.profile.avatar || this.profile.avatar === '')
         ? null
-        : `${api}/storage/img/download/${this.avatar}`
+        : `${api}/storage/img/download/${this.profile.avatar}`
     },
     email: {
       get () {
@@ -695,17 +703,14 @@ export default {
         this.emailNew === this.emailRepeat) {
         if ((/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.emailNew))) {
           this.emailNewConform = false
-          this.$store.dispatch('checkEmailTaken', this.email)
-            .then(resp => {
-              if (!resp) {
-                this.emailNewTaken = true
-                this.$store.commit('emailSet', this.emailNew)
-                this.submit()
-              } else {
-                this.emailTaken = true
-              }
+          this.$store.dispatch('checkEmailTaken', this.emailNew)
+            .then(() => {
+              this.emailNewTaken = true
             })
-            .catch(err => { console.log(err) })
+            .catch(() => {
+              this.$store.commit('emailSet', this.emailNew)
+              this.submit()
+            })
         } else {
           this.emailNewConform = true
         }
@@ -719,9 +724,13 @@ export default {
     passwordChange () {
       if (this.passwordInputNew) {
         this.busy = true
-        this.$store.dispatch('passwodUpdate', this.passwordOld)
+        this.$store.dispatch('passwordUpdate', this.passwordOld)
           .then(() => {
-            this.$bvToast.show('submit-ok')
+            this.$bvToast.show('profile-save-toast')
+            this.$bvModal.hide('change-password-form')
+            this.passwordOld = ''
+            this.$store.commit('passwordSet', '')
+            this.$store.commit('passwordRepeatSet', '')
             this.submit()
           })
           .catch(err => {
@@ -759,13 +768,14 @@ export default {
      */
     submit () {
       this.formMsg = ''
-      // this.$store.commit('fullNameSet', this.fullName)
-      // this.$store.commit('institutionSet', this.institution)
-      // this.$store.commit('occupationSet', this.occupation)
       /* update state and save profile preferences */
       this.$store.commit('preferencesSet', this.prefs)
       this.$store.dispatch('profileUpdate')
-        .then(() => { this.$bvToast.show('profile-save-toast') })
+        .then(() => {
+          this.$bvToast.show('profile-save-toast')
+          this.$bvModal.hide('change-username-form')
+          this.$bvModal.hide('change-email-form')
+        })
         .catch(err => {
           console.error(err)
           this.$bvToast.show('submit-failed')
@@ -799,6 +809,18 @@ export default {
   height: 7rem;
   border: 2px solid #eee;
   background-color: #eee;
+  position: relative;
+  box-sizing: content-box;
+}
+.avatar-display {
+  width: 7rem;
+  height: 7rem;
+  position: absolute;
+}
+
+.ar {
+  position: absolute;
+  left: 0px;
 }
 .checkbox-inline label {
   display: inline-flex;
@@ -808,6 +830,17 @@ export default {
 }
 .checkbox-inline input {
   margin-right: 5px;
+}
+.edit-badge {
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  font-size: .9em;
+  border-radius: 50%;
+  padding: 3px;
+  min-width: 25px;
+  min-height: 25px;
+  cursor: pointer;
 }
 .author-toast {
   position: fixed;

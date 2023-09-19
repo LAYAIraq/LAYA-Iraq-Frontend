@@ -32,10 +32,13 @@
         class="row header"
       >
         <div class="col">
-          <h2>{{ y18n('namePH') }}</h2>
+          <h2>{{ y18n('courseName') }}</h2>
         </div>
         <div class="col">
-          <h3>{{ y18n('cat') }}</h3>
+          <h3>{{ y18n('author') }}</h3>
+        </div>
+        <div class="col">
+          <h3>{{ y18n('courseLanguage') }}</h3>
         </div>
         <div class="col-2">
           <h4
@@ -46,6 +49,12 @@
           </h4>
         </div>
         <div class="col-3">
+          <b-button
+            v-b-toggle="'collapse-2'"
+            :class="langIsAr? 'float-left mr-auto' : 'float-right ml-auto'"
+          >
+            {{ y18n('expand') }}
+          </b-button>
         </div>
       </div>
 
@@ -69,7 +78,11 @@
         </div>
 
         <div class="col">
-          {{ course.category }}
+          {{ course.authorName === "" || course.authorName === null ? y18n('profile.language.notlisted') : course.authorName }}
+        </div>
+
+        <div class="col">
+          {{ languageList.some(lang => lang === course.language) ? y18n(`profile.language.${course.language}`) : y18n('profile.language.notlisted') }}
         </div>
 
         <div class="col-2">
@@ -98,7 +111,6 @@
             </li>
           </ul>
         </div>
-
         <div class="col-3">
           <a
             class="btn indicated-btn"
@@ -122,6 +134,33 @@
           >
             <i class="fas fa-exclamation-circle"></i>
           </div>
+        </div>
+        <div class="container-fluid p-2">
+          <b-collapse id="collapse-2">
+            <b-card
+              :header="y18n('abstract')"
+              header-class="collap-header"
+              body-class="collap-body"
+            >
+              {{ null === course.abstract ? y18n('abstract.notListed') : course.abstract }}
+            </b-card>
+
+            <b-card
+              :header="y18n('cat')"
+              header-class="collap-header"
+              body-class="collap-body"
+            >
+              {{ categoryList.some(cat => cat === course.category) ? y18n(`course.category.${course.category}`) : y18n('course.category.other') }}
+            </b-card>
+
+            <b-card
+              :header="y18n('keywords')"
+              header-class="collap-header"
+              body-class="collap-body"
+            >
+              {{ null === course.keywords ? y18n('keywords.notListed') : course.keywords }}
+            </b-card>
+          </b-collapse>
         </div>
       </div>
     </div>
@@ -174,6 +213,8 @@
 import { mapGetters } from 'vuex'
 import { locale, storeHandler } from '@/mixins'
 import { slugify } from '@/mixins/general/course-structure'
+import courseCategories from '@/options/course-categories.ts'
+import languages from '@/options/languages.ts'
 
 export default {
   name: 'CourseListDetails',
@@ -194,6 +235,7 @@ export default {
 
   data () {
     return {
+      authorName: '',
       buttonAction: null,
       complicitCourses: null,
       complicitCheck: null,
@@ -212,6 +254,28 @@ export default {
       'preferencesMedia',
       'userId'
     ]),
+
+    /**
+     * categoryList(): add categories
+     * Author: nv
+     * Since: v1.3.0
+     */
+    categoryList () {
+      return [
+        ...courseCategories
+      ]
+    },
+
+    /**
+     * languageList(): add languages
+     * Author: nv
+     * Since: v1.3.0
+     */
+    languageList () {
+      return [
+        ...languages
+      ]
+    },
 
     /**
      * function complicitReady(): returns true if complicit Set has any members
@@ -250,6 +314,8 @@ export default {
     this.getSubs()
     this.filteredList = [...this.courseList]
     this.getComplicitCourses()
+    console.log('authorname ' + this.course.authorName)
+    console.log(this.course)
   },
 
   methods: {
@@ -484,6 +550,22 @@ i.icons-list {
   font-size: 1.5rem;
   margin-left: 1.5rem;
   margin-right: -3rem;
+}
+
+.collap-button {
+  position: absolute;
+}
+
+.collap-button-ar {
+  position: absolute;
+}
+
+.collap-header {
+  font-weight: bold;
+}
+
+.collap-body {
+  font-size: 16px;
 }
 
 </style>

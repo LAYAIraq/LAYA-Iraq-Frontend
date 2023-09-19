@@ -8,7 +8,7 @@
 <template>
   <div
     class="image-matching-view"
-    :class="langIsAr? 'text-right' : 'text-left'"
+    :class="courseLangIsAr? 'text-right' : 'text-left'"
   >
     <div class="container">
       <div
@@ -23,7 +23,9 @@
             {{ courseSimple? title.simple: title.text }}
             <audio-button
               v-if="taskAudio"
-              :src="taskAudio"
+              :src="courseSimple?
+                taskAudio.regular:
+                taskAudio.simple"
             >
             </audio-button>
           </h4>
@@ -72,7 +74,7 @@
                 >
                 <audio-button
                   v-if="pair.audio"
-                  :class="langIsAr? 'mr-2' : 'ml-2'"
+                  :class="courseLangIsAr? 'mr-2' : 'ml-2'"
                   :src="pair.audio"
                 >
                 </audio-button>

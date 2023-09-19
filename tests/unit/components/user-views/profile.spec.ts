@@ -11,7 +11,7 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(BootstrapVue)
 
-describe.skip('profile view', () => { // TODO: reactivate, make work after #355
+describe.skip('profile view', () => {
   let mutations
   let profileState
   let getters
@@ -42,8 +42,9 @@ describe.skip('profile view', () => { // TODO: reactivate, make work after #355
       author: false,
       avatar: 'mypic.png',
       email: 'admin@laya',
-      lang: 'en',
+      language: 'en',
       preferencesFont: {},
+      preferencesLanguages: {},
       preferencesMedia: {},
       username: 'admin',
       realm: null,
@@ -69,10 +70,16 @@ describe.skip('profile view', () => { // TODO: reactivate, make work after #355
         profile: {
           state: profileState,
           getters: {
-            profile () {
-              return profileState
+            profile: () => profileState,
+            prefs () {
+              return {
+                font: profileState.preferencesFont,
+                language: profileState.preferencesLanguages,
+                media: profileState.preferencesMedia
+              }
             },
             preferencesFont: () => profileState.preferencesFont,
+            preferencesLanguages: () => profileState.preferencesLanguages,
             preferencesMedia: () => profileState.preferencesMedia,
             userId: () => profileState.id
           },
@@ -107,7 +114,7 @@ describe.skip('profile view', () => { // TODO: reactivate, make work after #355
   it('saves media input as chosen', async () => {
     await wrapper.setData({ passwordOk: true })
     const mediaPrefChecks = wrapper.findAll('input')
-    expect(mediaPrefChecks.length).toBe(13)
+    expect(mediaPrefChecks.length).toBe(20)
     mediaPrefChecks.wrappers.forEach((wrapper) => {
       // console.log(wrapper)
       if (wrapper.attributes('type') === 'checkbox') {

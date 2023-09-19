@@ -205,19 +205,19 @@ Dependencies:
           id="caption-input-header"
           class="row mb-3"
         >
-          <div class="col-2">
+          <div class="col-sm-2">
             {{ y18n('type') }}
           </div>
-          <div class="col">
+          <div class="col-sm-2">
             {{ y18n('videoPlayer.captions.label') }}
           </div>
-          <div class="col-1">
+          <div class="col-sm-2">
             {{ y18n('videoPlayer.captions.lang') }}
           </div>
-          <div class="col">
+          <div class="col-sm-2">
             {{ y18n('videoPlayer.captions.src') }}
           </div>
-          <div class="col-1">
+          <div class="col-sm-2">
             {{ y18n('videoPlayer.captions.default') }}
           </div>
           <div class="col-1"></div> <!-- placeholder for alignment -->
@@ -229,8 +229,9 @@ Dependencies:
           class="row"
         >
           <!-- caption type -->
-          <div class="col-2">
+          <div class="col-sm-2">
             <label
+              id="caption-type"
               class="form-check-label sr-only"
               :for="`type-select-${i}`"
             >
@@ -253,8 +254,9 @@ Dependencies:
             </b-select>
           </div>
           <!-- caption label -->
-          <div class="col">
+          <div class="col-sm-2">
             <label
+              :id="caption-label"
               :for="`label-input-${i}`"
               class="form-check-label sr-only"
             >
@@ -269,7 +271,7 @@ Dependencies:
             >
           </div>
           <!-- caption language -->
-          <div class="col-1">
+          <div class="col-sm-2">
             <label
               :for="`srclang-input-${i}`"
               class="form-check-label sr-only"
@@ -285,7 +287,7 @@ Dependencies:
             >
           </div>
           <!-- caption source -->
-          <div class="col">
+          <div class="col-sm-2">
             <label
               :for="`src-input-${i}`"
               class="form-check-label sr-only"
@@ -301,7 +303,7 @@ Dependencies:
             >
           </div>
           <!-- caption default -->
-          <div class="col-1">
+          <div class="col-sm-2">
             <label
               :for="`default-check-${i}`"
               class="col-form-label sr-only"

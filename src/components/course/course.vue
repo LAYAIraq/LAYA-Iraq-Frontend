@@ -41,7 +41,7 @@
       <!--            </h2>-->
     </div>
     <CourseEdit
-      v-if="isCourseAuthor && content"
+      v-if="isCourseAuthor"
       :name="name"
       :course-path="coursePath"
     ></CourseEdit>

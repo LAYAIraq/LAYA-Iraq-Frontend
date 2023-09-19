@@ -41,6 +41,7 @@ export default {
      */
     course (state: { course: {
       authorId: number,
+      authorName: string,
       name: string,
       properties: object
       }
@@ -78,6 +79,20 @@ export default {
       }
     }) {
       return state.course.courseId
+    },
+
+    /**
+     * function courseLanguage: return course language to locale
+     *  Author: nv
+     *  Last Updated: October 29, 2021
+     * @param state contains language
+     */
+    courseLanguage (state: {
+      course: {
+        language: string
+      }
+    }) {
+      return state.course.language
     },
 
     /**
@@ -140,6 +155,38 @@ export default {
 
   mutations: {
     /**
+     * function courseAbstractChange: update course abstract
+     * Author: nv
+     *Since: v1.3.0
+     */
+    courseAbstractChange (
+      state: {
+        course: {
+          abstract: string
+        }
+      },
+      newAbstract: string
+    ) {
+      state.course.abstract = newAbstract
+    },
+
+    /**
+     * function courseAuthorNameChange: update course author name
+     * Author: nv
+     *Since: v1.3.0
+     */
+    courseAuthorNameChange (
+      state: {
+        course: {
+          authorName: string
+        }
+      },
+      newAuthorName: string
+    ) {
+      state.course.authorName = newAuthorName
+    },
+
+    /**
      * function courseCategoryChange: update course category
      *
      * Author: cmc
@@ -157,6 +204,40 @@ export default {
       newCategory: string
     ) {
       state.course.category = newCategory
+    },
+
+    /**
+     * function courseLanguageChange: update course category
+     * Author: nv
+     * Since: v1.3.0
+     * @param state contains course object
+     * @param newLanguage new language
+     */
+    courseLanguageChange (
+      state: {
+        course: {
+          language: string
+        }
+      },
+      newLanguage: string
+    ) {
+      state.course.language = newLanguage
+    },
+
+    /**
+     * function courseKeywordsChange: update course keywords
+     * Author: nv
+     *Since: v1.3.0
+     */
+    courseKeywordsChange (
+      state: {
+        course: {
+          keywords: string
+        }
+      },
+      newKeywords: string
+    ) {
+      state.course.keywords = newKeywords
     },
 
     /**
@@ -335,7 +416,11 @@ export default {
      */
     courseCreate (state, data: {
       name: string,
+      language: string,
+      authorName: string,
       category: string,
+      abstract: string,
+      keywords: string,
       userId: number,
       enrollment?: boolean
     }) {
@@ -350,6 +435,10 @@ export default {
             http.post('courses', {
               name: data.name,
               category: data.category,
+              language: data.language,
+              abstract: data.abstract,
+              keywords: data.keywords,
+              authorName: data.authorName,
               authorId: data.userId,
               storageId: storageId,
               properties: { enrollment: data.enrollment }
@@ -631,6 +720,39 @@ export default {
           .finally(() => {
             commit('courseUpdatedSet', false)
             resolve('Course updated successfully')
+          })
+      })
+    },
+
+    /**
+     * function courseUpdateLanguage: persist locale to backend
+     * Author: nv
+     * Since: v1.3.0
+     * @param param0 contains state variables
+     */
+    courseUpdateLanguage (
+      { commit, state }: {
+        state: {
+          course: {
+            language: string,
+            courseId: string
+          }
+        },
+        commit: Function
+      }) {
+      const langData = {
+        language: state.course.language
+      }
+      console.log('update course language in course.ts')
+      return new Promise((resolve, reject) => {
+        http.patch(
+        `/courses/${state.course.courseId}`, langData
+        ).then(() => {
+          commit('courseLanguageChange', langData.language)
+          resolve('Updated Course Language!')
+        })
+          .catch((err) => {
+            reject(err)
           })
       })
     },

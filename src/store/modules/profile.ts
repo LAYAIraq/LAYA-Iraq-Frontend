@@ -7,7 +7,7 @@
 
 import http from 'axios'
 import { ids as supportedLangs } from '@/options/langs.js'
-import { deepCopy, stripKey } from '@/mixins/general/helpers'
+import { stripKey } from '@/mixins/general/helpers'
 
 export default {
   state: {
@@ -54,6 +54,22 @@ export default {
   },
   mutations: {
     /**
+     * Function avatarSet: set avatar source address
+     *
+     * Author: nv
+     *
+     * Since: v1.3.0
+     *
+     * @param state contains avatar
+     * @param avatar string containing avatar
+     */
+    avatarSet (
+      state: { avatar: string },
+      avatar: string
+    ) {
+      state.avatar = avatar
+    },
+    /**
      * Function emailSet: set email address
      *
      * Author: nv
@@ -61,7 +77,7 @@ export default {
      * Last Updated: February 13, 2023
      *
      * @param state contains occupation
-     * @param email: string containing occuptation
+     * @param email string containing occuptation
      */
     emailSet (
       state: { email: string },
@@ -77,7 +93,7 @@ export default {
      * Last Updated: February 06, 2023
      *
      * @param state contains occupation
-     * @param fullName: string containing occuptation
+     * @param fullName string containing occuptation
      */
     fullNameSet (
       state: { fullName: string },
@@ -93,7 +109,7 @@ export default {
      * Last Updated: February 06, 2023
      *
      * @param state contains institution
-     * @param institution: string containing institution
+     * @param institution string containing institution
      */
     institutionSet (
       state: { institution: string },
@@ -125,7 +141,7 @@ export default {
      * Last Updated: February 06, 2023
      *
      * @param state contains occupation
-     * @param occupation: string containing occuptation
+     * @param occupation string containing occuptation
      */
     occupationSet (
       state: { occupation: string },
@@ -141,7 +157,7 @@ export default {
      * Last Updated: January 27, 2022
      *
      * @param state contains preferences
-     * @param prefs: object containing some options
+     * @param prefs object containing some options
      */
     preferencesSet (
       state: {
@@ -149,7 +165,7 @@ export default {
         preferencesLanguages: object,
         preferencesMedia: object
       },
-      prefs: { font: object, media: object }
+      prefs: { font: object, language: object, media: object }
     ) {
       state.preferencesFont = {
         ...state.preferencesFont,
@@ -157,7 +173,7 @@ export default {
       }
       state.preferencesLanguages = {
         ...state.preferencesLanguages,
-        ...prefs.font
+        ...prefs.language
       }
       state.preferencesMedia = {
         ...state.preferencesMedia,
@@ -179,40 +195,24 @@ export default {
       state: {
         username: string,
         email: string,
+        language: string,
+        avatar: string,
+        occupation: string,
         institution: string,
-        occupation: string
-        fullName: string,
-        preferencesFont: object,
-        preferencesLanguages: object,
-        preferencesMedia: object,
-        lang: string,
-        avatar: string
+        fullName: string
       },
       settings: {
         username: string,
         email: string,
+        language: string,
+        avatar: string,
+        occupation: string,
         institution: string,
-        occupation: string
-        fullName: string,
-        prefs: {
-          font: object,
-          languages: object,
-          media: object
-        },
-        lang: string,
-        avatar: string
+        fullName: string
       }) {
-      console.log(settings)
-      state.username = settings.username
-      state.fullName = settings.fullName
-      state.institution = settings.institution
-      state.occupation = settings.occupation
-      state.email = settings.email
-      state.lang = settings.lang
-      state.avatar = settings.avatar
-      state.preferencesFont = settings.prefs.font
-      state.preferencesLanguages = settings.prefs.languages
-      state.preferencesMedia = settings.prefs.media
+      Object.keys(settings).forEach(key => {
+        state[key] = settings[key]
+      })
     },
     /**
      * Function usernameSet: set username
@@ -222,7 +222,7 @@ export default {
      * Last Updated: February 06, 2023
      *
      * @param state contains occupation
-     * @param username: string containing occuptation
+     * @param username string containing occuptation
      */
     usernameSet (
       state: { username: string },
@@ -241,12 +241,11 @@ export default {
      *
      * @param param0 state variables
      */
-    profileFetch ({ commit, rootState }) {
-      http.get(`accounts/${rootState.authentication.userId}`)
+    profileFetch ({ commit, getters }) {
+      http.get(`accounts/${getters.userId}`)
         .then(({ data }) => {
-          console.log(data)
-          commit('profileSet', data
-          )
+          commit('profileSet', stripKey('prefs', data))
+          commit('preferencesSet', data.prefs)
         })
         .catch((err) => console.error(err))
     },
@@ -265,6 +264,7 @@ export default {
       http.patch(
         `accounts/${rootState.authentication.userId}`,
         {
+          avatar: state.avatar,
           fullName: state.fullName,
           email: state.email,
           username: state.username,
