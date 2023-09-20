@@ -55,11 +55,14 @@
           v-if="item.isChapter"
           :chapter="item"
           :chapter-name="item.chapterName"
-          :chapter-name-duplicate="duplicateChapterNames.includes(i)"
+          :chapter-name-duplicate="duplicateChapterNames.some(el => el === item.chapterName)"
           :course-end="courseEnd"
           :following-content="item.follow"
           :highlighted-block="main? highlightId : highlightedBlock"
+          @chapter-coherent="(c, val) => coherenceEmit(c, val)"
           @chapter-delete="chapterDeletedUpdate"
+          @deleted-chapter="$emit('deleted-chapter', $event)"
+          @duplicate-chapters="(did, bool) => $emit('duplicate-chapters', did, bool)"
           @highlight="blockHighlight"
           @preview="pid => previewEmit(pid)"
           @propagate-property-change="propagatePropertyChange"
@@ -162,7 +165,7 @@ export default {
     /**
      * @description return a list of indexes of children with duplicate chapter names
      * @author cmc
-     * @return {number[]} list of duplicate chapterNames indexes
+     * @return {string[]} list of duplicate chapterNames indexes
      */
     duplicateChapterNames () {
       const chapterNames = this.chapter.children.map(chapter => chapter.chapterName)
@@ -170,8 +173,8 @@ export default {
       chapterNames.forEach((name, i) => { // check if name is in chapterNames, if yes, add to duplicates
         if (name) {
           chapterNames.forEach((name2, j) => {
-            if (name === name2 && i !== j && !duplicates.includes(i)) {
-              duplicates.push(i)
+            if (name === name2 && i !== j && !duplicates.some(e => e === name)) {
+              duplicates.push(name)
             }
           })
         }
@@ -189,10 +192,21 @@ export default {
         }
       },
       deep: true
+    },
+    coherentItem (val) {
+      this.coherenceEmit(this.id, val)
+    },
+    duplicateChapterNames () {
+      this.$emit('duplicate-chapters', this.id, this.duplicateChapterNames.length > 0)
     }
   },
   created () {
     this.chapter.children.forEach(child => { this.childrenVisibility[child.id] = false })
+    this.$emit('chapter-coherent', this.id, this.coherentItem)
+  },
+  destroyed () {
+    console.log('destroy chapter', this.id)
+    this.$emit('deleted-chapter', this.id)
   },
   methods: {
     blockHighlight (id) {
@@ -211,14 +225,15 @@ export default {
      * @description propagate removal of a chapter
      */
     chapterDelete () {
-      this.$emit('chapter-delete', this.chapterName, deepCopy(this.chapter.children))
+      this.$emit('chapter-delete', this.chapterName, deepCopy(this.chapter.children), this.id)
     },
     /**
      * @description remove chapter by name, adding their children to chapter, propagate changes
      * @param deletedChapterName name of deleted chapter
      * @param newChildren children of deleted chapter to be added to chapter
+     * @param deletedChapterId id of deleted chapter
      */
-    chapterDeletedUpdate (deletedChapterName, newChildren) {
+    chapterDeletedUpdate (deletedChapterName, newChildren, deletedChapterId) {
       const deleteIndex = this.chapter.children.findIndex(e => e.chapterName === deletedChapterName)
       const children = deepCopy(this.chapter.children)
       const croppedChildren = []
@@ -228,6 +243,7 @@ export default {
         }
       })
       this.propagatePropertyChange(this.chapter, 'children', [...croppedChildren, ...newChildren])
+      this.$emit('deleted-chapter', deletedChapterId)
     },
     /**
      * @function set visibility of child in childrenVisibility object
@@ -237,6 +253,9 @@ export default {
      */
     childVisibilityChange (id, visibility) {
       this.childrenVisibility[id] = visibility
+    },
+    coherenceEmit (id, val) {
+      this.$emit('chapter-coherent', id, val)
     },
     /**
      * @function handle event when drag starts, setting dragStartIndex and dragging to true

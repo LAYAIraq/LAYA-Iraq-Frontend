@@ -24,6 +24,9 @@
           :chapter-name="courseNavEdit.chapterName"
           :course-end="courseEnd ? courseEnd : ''"
           :main="true"
+          @chapter-coherent="coherentChaptersUpdate"
+          @deleted-chapter="deleteChapter"
+          @duplicate-chapters="chaptersDuplicateUpdate"
           @preview="previewSet"
           @propagate-property-change="changeProperty"
         />
@@ -35,8 +38,8 @@
         <button @click="addChapter">
           {{ y18n('courseNavEdit.chapterAdd') }}
         </button>
-        <button @click="navigationSave">
-          Save Navigation
+        <button @click="integrityCheck">
+          {{ y18n('courseNavEdit.save') }}
         </button>
       </div>
     </div>
@@ -75,13 +78,34 @@
       <h3>Data</h3>
       <pre>{{ valueString }}</pre>
     </div>
+    <b-modal
+      id="nav-integrity-compromised"
+      :title="y18n('courseNavEdit.integrityCheckTitle')"
+      header-bg-variant="warning"
+      static
+      centered
+      :ok-title="y18n('courseNavEdit.integrityCheckOk')"
+      ok-variant="danger"
+      @ok="navigationSave"
+      >
+      <p>{{ y18n('courseNavEdit.integrityCheckMessage')}}</p>
+      <ul>
+        <li v-if="chapterNamesDuplicate">
+          {{ y18n('courseNavEdit.integrityCheckChapterDuplicate') }}
+        </li>
+        <li v-if="chaptersIncoherent">
+          {{ y18n('courseNavEdit.integrityCheckChapterIntegrity') }}
+        </li>
+      </ul>
+      <p>{{ y18n('courseNavEdit.integrityCheckMessageCTA')}}</p>
+    </b-modal>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 import CourseNavChapter from './course-nav-chapter.vue'
-import { deepCopy } from '@/mixins/general/helpers'
+import { deepCopy, stripKey } from '@/mixins/general/helpers'
 import { contentIdGet, slugify } from '@/mixins/general/course-structure'
 
 export default {
@@ -92,6 +116,10 @@ export default {
   mixins: [locale],
   data () {
     return {
+      chaptersDuplicate: {},
+      chapterNamesDuplicate: false,
+      chaptersCoherent: {},
+      chaptersIncoherent: false,
       courseNavEdit: [],
       edited: false,
       preview: false,
@@ -116,6 +144,17 @@ export default {
       return JSON.stringify(this.courseNavEdit.children, null, 1)
     }
   },
+  watch: { // TODO fix check for integrity
+    chaptersCoherent: {
+      handler () {
+        this.chaptersIncoherent = Object.values(this.chaptersCoherent).some(val => val === false)
+      },
+      deep: true
+    },
+    chaptersDuplicate () {
+      this.chapterNamesDuplicate = Object.values(this.chaptersDuplicate).some(val => val === true)
+    }
+  },
   created () {
     this.courseNavEdit = { isChapter: true, children: deepCopy(this.courseChapters) }
   },
@@ -137,6 +176,14 @@ export default {
         children: []
       })
     },
+    /**
+     * @description update chapter map if chapter was deleted
+     * @param id deleted chapter's id
+     */
+    deleteChapter (id) {
+      this.chaptersCoherent = stripKey(id, this.chaptersCoherent)
+      this.chaptersDuplicate = stripKey(id, this.chaptersDuplicate)
+    },
 
     /**
      * @function change chapter name of referenced chapter object
@@ -154,6 +201,21 @@ export default {
       }
       this.edited = true
     },
+    chaptersDuplicateUpdate (id, val) {
+      console.log('duplicate keys in', id)
+      this.chaptersDuplicate[id] = val
+    },
+    coherentChaptersUpdate (id, val) {
+      console.log(id, val)
+      this.chaptersCoherent[id] = val
+    },
+    integrityCheck () {
+      if (this.chapterNamesDuplicate || this.chaptersIncoherent) {
+        this.navigationSave()
+      } else {
+        this.$bvModal.show('nav-integrity-compromised')
+      }
+    },
     /**
      * @function set preview variables to default
      * @author cmc
@@ -170,10 +232,6 @@ export default {
     previewSet (pid) {
       this.preview = true
       this.previewId = pid
-    },
-
-    navigationPersist () {
-
     },
 
     navigationSave () {
