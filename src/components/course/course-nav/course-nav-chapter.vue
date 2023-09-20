@@ -285,7 +285,6 @@ export default {
   padding: 0 0 0 .5em;
   min-height: 50px;
   min-width: 50px;
-  float: inline-end;
   width: 100%;
 }
 .chapter-item {
@@ -311,6 +310,9 @@ export default {
   flex-grow: 0;
   flex-shrink: 1;
   flex-basis: max-content
+}
+.chapter-name {
+  box-sizing: content-box;
 }
 .chapter-name > .chapter-delete-button {
   visibility: hidden;

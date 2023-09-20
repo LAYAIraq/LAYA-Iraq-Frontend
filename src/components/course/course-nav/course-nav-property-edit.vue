@@ -5,7 +5,7 @@
   Since: v1.3.0
 -->
 <template>
-  <div class="property-edit">
+  <div class="property-edit ml-1 mr-1">
     <div
       v-if="!edit"
       class="d-flex justify-content-between"
@@ -19,20 +19,35 @@
         :title="y18n('courseWrapper.edit')"
       ></i>
     </div>
-    <form
+    <b-form
       v-else
+      class="form-row"
       @submit.prevent="changeProperty"
     >
       <b-form-input
         v-model="newProperty"
-        class="p-1"
         :placeholder="formPlaceholder"
         required
         trim
         autofocus
-        @blur="edit = false"
       />
-    </form>
+      <button
+        v-b-tooltip.top
+        class="btn btn-sm btn-warning"
+        :title="y18n('cancel')"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+      <b-button
+        v-b-tooltip.top
+        type="submit"
+        size="sm"
+        :title="y18n('submit')"
+        variant="success"
+      >
+        <i class="fas fa-check"></i>
+      </b-button>
+    </b-form>
   </div>
 </template>
 <script>
@@ -98,7 +113,7 @@ export default {
 </script>
 <style scoped>
 .property-edit {
-  display: inline-block;
+  display: block;
   cursor: auto;
   min-width: 10vw;
 }
@@ -108,7 +123,12 @@ export default {
 .property-edit:hover>div>i {
   display: inline-flex;
 }
-form {
-  display: block;
+.form-row {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  flex-grow: 1;
 }
 </style>
