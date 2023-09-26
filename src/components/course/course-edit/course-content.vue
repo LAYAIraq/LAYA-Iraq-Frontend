@@ -190,7 +190,7 @@ export default {
      */
     save () {
       const updatedStep = {
-        name: this.cid,
+        type: this.cid,
         ...deepCopy(this.stepData) // deep copy to get rid of store references
       }
 
