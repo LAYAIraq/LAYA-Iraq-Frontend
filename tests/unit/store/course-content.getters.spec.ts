@@ -74,6 +74,26 @@ describe('store module course-content getters', () => {
     })
   })
 
+  describe('courseContentFollowMap', () => {
+    beforeAll(() => {
+      state = deepCopy(emptyState)
+    })
+    it('returns empty object when there are no chapters', () => {
+      expect(getters.courseContentFollowMap(state)).toStrictEqual({})
+    })
+
+    it('returns correct object when courseChapters change', () => {
+      state.courseChapters = SampleCourseChapters.chapters
+      expect(getters.courseContentFollowMap(state)).toStrictEqual({
+        e1ns: ['zw31', 'dr31'],
+        zw31: 'dr31',
+        dr31: 'v13r',
+        v13r: 'fu3nf',
+        fu3nf: undefined
+      })
+    })
+  })
+
   describe('courseContentIdRouteMap', () => {
     it('returns empty object if courseRoutes are empty', () => {
       expect(getters.courseContentIdRouteMap(state)).toStrictEqual({})

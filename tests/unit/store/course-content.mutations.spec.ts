@@ -31,10 +31,6 @@ describe('store module course-content mutations', () => {
       expect(Object.keys(state.courseContent).length).toBe(SampleCourse.content.length)
     })
 
-    it('creates an entry in courseContentFollowMap for each course block', () => {
-      expect(Object.keys(state.courseContentFollowMap).length).toBe(SampleCourse.content.length)
-    })
-
     it('recreates the content array in courseNav', () => {
       expect(state.courseChapters.length).toBe(SampleCourse.content.length)
       state.courseChapters.forEach((item, index) => { // check that the courseNav.structure array is in the same order as the course content
@@ -120,6 +116,12 @@ describe('store module course-content mutations', () => {
       mutations.courseChapterUpdateFollow(state, { id: 'v13r', value: ['abc', 'def'] })
       const a = state.courseChapters[0].children[0].children[0].children[0].children[0]
       expect(a.follow).toStrictEqual(['abc', 'def'])
+    })
+
+    it('changes follow value of shallow array', () => {
+      state.courseChapters = [{ id: 'eins', follow: 'zwei' }, { id: 'zwei', follow: 'null' }]
+      mutations.courseChapterUpdateFollow(state, { id: 'zwei', value: ['eins', 'zwei'] })
+      expect(state.courseChapters[1].follow).toStrictEqual(['eins', 'zwei'])
     })
   })
 
@@ -271,7 +273,7 @@ describe('store module course-content mutations', () => {
       state = deepCopy(emptyState)
       mutations.courseStructureDestructure(state, SampleCourseChapters)
     })
-    it.skip('creates an entry in courseContent for each course block', () => { // skipped b/c this is function in course-structure.ts
+    it('creates an entry in courseContent for each course block', () => { // skipped b/c this is function in course-structure.ts
       expect(Object.keys(state.courseContent).length).toBe(5)
     })
 

@@ -48,7 +48,8 @@
           "isChapter": false,
           "id": "v13r",
           "slug": "sc-quiz",
-          "type": "choice-question"
+          "type": "choice-question",
+          "follow": "fu3nf"
         },
         {
           "id": "fu3nf",
