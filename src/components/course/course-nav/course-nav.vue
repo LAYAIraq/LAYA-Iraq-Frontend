@@ -35,12 +35,18 @@
         id="nav-editor-footer"
         class="row"
       >
-        <button @click="addChapter">
+        <b-button
+          secondary
+          @click="addChapter"
+        >
           {{ y18n('courseNavEdit.chapterAdd') }}
-        </button>
-        <button @click="integrityCheck">
+        </b-button>
+        <b-button
+          variant="success"
+          @click="integrityCheck"
+        >
           {{ y18n('courseNavEdit.save') }}
-        </button>
+        </b-button>
       </div>
     </div>
     <div
@@ -87,8 +93,8 @@
       :ok-title="y18n('courseNavEdit.integrityCheckOk')"
       ok-variant="danger"
       @ok="navigationSave"
-      >
-      <p>{{ y18n('courseNavEdit.integrityCheckMessage')}}</p>
+    >
+      <p>{{ y18n('courseNavEdit.integrityCheckMessage') }}</p>
       <ul>
         <li v-if="chapterNamesDuplicate">
           {{ y18n('courseNavEdit.integrityCheckChapterDuplicate') }}
@@ -97,7 +103,7 @@
           {{ y18n('courseNavEdit.integrityCheckChapterIntegrity') }}
         </li>
       </ul>
-      <p>{{ y18n('courseNavEdit.integrityCheckMessageCTA')}}</p>
+      <p>{{ y18n('courseNavEdit.integrityCheckMessageCTA') }}</p>
     </b-modal>
   </div>
 </template>
@@ -151,12 +157,17 @@ export default {
       },
       deep: true
     },
-    chaptersDuplicate () {
-      this.chapterNamesDuplicate = Object.values(this.chaptersDuplicate).some(val => val === true)
+    chaptersDuplicate: {
+      handler () {
+        this.chapterNamesDuplicate = Object.values(this.chaptersDuplicate).some(val => val === true)
+      },
+      deep: true
     }
   },
   created () {
-    this.courseNavEdit = { isChapter: true, children: deepCopy(this.courseChapters) }
+    this.courseNavEdit = this.courseChapters.length === 0 // when chapters empty, create them
+      ? this.chaptersCreate()
+      : { isChapter: true, children: deepCopy(this.courseChapters) }
   },
   beforeDestroy () {
     // if (this.edited) {
@@ -201,6 +212,21 @@ export default {
       }
       this.edited = true
     },
+    chaptersCreate () {
+      const chapters = {
+        isChapter: true,
+        children: []
+      }
+      for (const block of Object.values(this.courseContent)) {
+        chapters.children.push({
+          id: block.id,
+          slug: slugify(block.input.title.text),
+          type: block.type,
+          follow: null
+        })
+      }
+      return chapters
+    },
     chaptersDuplicateUpdate (id, val) {
       console.log('duplicate keys in', id)
       this.chaptersDuplicate[id] = val
@@ -210,7 +236,7 @@ export default {
       this.chaptersCoherent[id] = val
     },
     integrityCheck () {
-      if (this.chapterNamesDuplicate || this.chaptersIncoherent) {
+      if (!this.chapterNamesDuplicate && !this.chaptersIncoherent) {
         this.navigationSave()
       } else {
         this.$bvModal.show('nav-integrity-compromised')
@@ -238,6 +264,14 @@ export default {
       this.$store.commit('courseChaptersSet', deepCopy(this.courseNavEdit.children))
       this.edited = false
       this.$store.commit('courseRoutesUpdate')
+      this.$root.$bvToast.toast(
+        this.y18n('successfulSave'), {
+          title: this.y18n('courseNavEdit.title'),
+          variant: 'success',
+          toaster: 'b-toaster-bottom-center'
+        }
+
+      )
     }
   }
 }

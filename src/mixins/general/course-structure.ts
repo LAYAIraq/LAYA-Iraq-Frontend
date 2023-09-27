@@ -268,6 +268,23 @@ const courseSubChapterSlugTrim = (
 }
 
 /**
+ * @description traverse courseChapters, create mapping ids to follow
+ * @param chapter chapter array or CourseNavItem
+ * @param map resulting mapping
+ */
+export const courseChaptersExtractFollow = (chapter: any, map: object) => {
+  if (Array.isArray(chapter)) {
+    chapter.forEach(child => courseChaptersExtractFollow(child, map))
+  } else if (chapter.isChapter) { // recursively call itself
+    chapter.children.forEach((child: any) => {
+      courseChaptersExtractFollow(child, map)
+    })
+  } else {
+    map[chapter.id] = chapter.follow
+  }
+}
+
+/**
  * @description traverse course nav object, return tuple: object with ids of content blocks and list of routes
  * @param courseChapters course structure object
  * @param subChapterSlug course property (trim subchapter slug when only one subchapter)

@@ -15,6 +15,7 @@ import {
 } from '@/mixins/types/course-structure'
 import {
   contentIdGet,
+  courseChaptersExtractFollow,
   coursePathsGet,
   courseStructureChapterNames,
   courseStructureDescent,
@@ -31,7 +32,6 @@ export default {
 
   state: {
     courseContent: {},
-    courseContentFollowMap: {},
     courseChapters: [],
     courseChapterNames: {},
     courseRoutes: []
@@ -41,6 +41,11 @@ export default {
     courseChapters: (state: { courseChapters: object[] }) => state.courseChapters,
     courseChapterNames: (state: { courseChapters: CourseNavigationItem[] }) => courseStructureChapterNames(state.courseChapters),
     courseContent: (state: { courseContent: { [id: string]: CourseNavigationItem } }) => state.courseContent,
+    courseContentFollowMap: (state: { courseChapters: CourseNavigationItem[] }): object => {
+      const map = {}
+      courseChaptersExtractFollow(state.courseChapters, map)
+      return map
+    },
     courseContentIdRouteMap: (state: { courseRoutes: any }) => {
       const map = {}
       for (const [route, id] of state.courseRoutes) {
@@ -197,11 +202,9 @@ export default {
     ) {
       state.courseChapters = []
       state.courseContent = {}
-      state.courseContentFollowMap = {}
       for (const block of course.content) {
         const blockId = uuidv4().split('-')[0] // legacy content blocks have no id
         state.courseContent[blockId] = { ...block.input, name: block.name, id: blockId } // this is analogous to the new course structure
-        state.courseContentFollowMap[blockId] = [] // index of block in content array for legacy content
         state.courseChapters.push({
           id: blockId,
           slug: slugify(block.input.title.text),
@@ -210,9 +213,6 @@ export default {
         })
       }
       legacyContentFollowTransform(state.courseChapters)
-      state.courseChapters.forEach((chapter: CourseNavigationItemBlock) => {
-        state.courseContentFollowMap[chapter.id] = chapter.follow
-      })
       // traverse course content and create routes
       state.courseRoutes = coursePathsGet(state.courseChapters)
     }
