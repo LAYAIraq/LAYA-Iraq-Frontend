@@ -170,6 +170,7 @@ import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 import courseCategories from '@/options/course-categories.ts'
 import languages from '@/options/languages.ts'
+import { slugify } from '@/mixins/general/course-structure'
 
 export default {
   name: 'CourseCreate',
@@ -312,7 +313,7 @@ export default {
                 userId: userId
               })
             }
-            this.$router.push(`/courses/${newCourse.name}/1`)
+            this.$router.push(`/courses/${slugify(newCourse.name)}`)
           })
           .catch(err => {
             console.log(err)
