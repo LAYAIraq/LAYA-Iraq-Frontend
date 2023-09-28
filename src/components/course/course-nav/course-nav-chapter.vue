@@ -85,7 +85,6 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
 import Draggable from 'vuedraggable'
 import CourseNavItem from '@/components/course/course-nav/course-nav-item.vue'
 import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
@@ -146,8 +145,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['courseNav']),
-
     /**
      * @function check if all children are coherent, i.e. either all are chapters or all are items
      * @author cmc

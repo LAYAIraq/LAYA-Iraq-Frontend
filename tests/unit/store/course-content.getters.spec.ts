@@ -151,21 +151,6 @@ describe('store module course-content getters', () => {
     })
   })
 
-  describe('courseNav', () => {
-    it('returns empty object if no courseChapters', () => {
-      state.courseChapters = []
-      expect(getters.courseNav(state, getters)).toStrictEqual({ start: expect.any(Function), structure: [] })
-    })
-
-    it('returns object consisting of courseStart and courseChapters', () => {
-      state.courseChapters = SampleCourseChapters.chapters
-      expect(getters.courseNav(state, { courseStart: getters.courseStart(state) })).toStrictEqual({
-        start: 'e1ns',
-        structure: SampleCourseChapters.chapters
-      })
-    })
-  })
-
   describe('courseRoutes', () => {
     it('returns empty array if state is empty', () => {
       state.courseRoutes = []

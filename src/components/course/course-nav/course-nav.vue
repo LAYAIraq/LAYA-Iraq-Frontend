@@ -134,7 +134,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['courseChapters', 'courseContent', 'courseNav']),
+    ...mapGetters(['courseChapters', 'courseContent']),
     courseEnd () {
       return contentIdGet(this.courseNavEdit.children, 'last')
     },

@@ -84,12 +84,6 @@ export default {
       // console.log('found content path', res)
       return contentPath ? contentPath[1] : null
     },
-    courseNav: (state: { courseStart: string, courseChapters: object[] }, getters: { courseStart: any }) => {
-      return {
-        start: getters.courseStart,
-        structure: state.courseChapters
-      }
-    },
     courseRoutes: (state: { courseRoutes: any }) => state.courseRoutes,
     courseStart: (state: { courseChapters: CourseNavigationItem[] }) => contentIdGet(state.courseChapters, 'first')
   },
