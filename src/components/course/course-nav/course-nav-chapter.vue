@@ -145,6 +145,9 @@ export default {
     }
   },
   computed: {
+    children () {
+      return this.chapter.children
+    },
     /**
      * @function check if all children are coherent, i.e. either all are chapters or all are items
      * @author cmc
@@ -182,10 +185,11 @@ export default {
   watch: {
     chapter: {
       handler () {
-        // console.log('chapter changed')
+        console.log('chapter changed')
         if (this.main) {
           // console.log('changing following content....')
           this.followingContentSet()
+          this.$emit('edited')
         }
       },
       deep: true
@@ -202,7 +206,6 @@ export default {
     this.$emit('chapter-coherent', this.id, this.coherentItem)
   },
   destroyed () {
-    console.log('destroy chapter', this.id)
     this.$emit('deleted-chapter', this.id)
   },
   methods: {

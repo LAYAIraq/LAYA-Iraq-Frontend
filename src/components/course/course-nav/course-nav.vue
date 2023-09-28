@@ -27,6 +27,7 @@
           @chapter-coherent="coherentChaptersUpdate"
           @deleted-chapter="deleteChapter"
           @duplicate-chapters="chaptersDuplicateUpdate"
+          @edited="edited = true"
           @preview="previewSet"
           @propagate-property-change="changeProperty"
         />
@@ -77,12 +78,14 @@
       </div>
     </div>
     <div
-      v-if="showRawData"
-      id="nav-editor-data"
-      class="col"
+      v-if="messageShow"
+      id="nav-editor-warning-messages"
+      class="col mt-3"
     >
-      <h3>Data</h3>
-      <pre>{{ valueString }}</pre>
+      <h3>{{ y18n('courseNavEdit.warningMessagesTitle') }}</h3>
+      <p v-if="edited">{{y18n('courseNavEdit.warningEdited')}}</p>
+      <p v-if="chaptersIncoherent">{{y18n('courseNavEdit.integrityCheckChapterIntegrity')}}</p>
+      <p v-if="chapterNamesDuplicate">{{y18n('courseNavEdit.integrityCheckChapterDuplicate')}}</p>
     </div>
     <b-modal
       id="nav-integrity-compromised"
@@ -129,14 +132,16 @@ export default {
       courseNavEdit: [],
       edited: false,
       preview: false,
-      previewId: null,
-      showRawData: false
+      previewId: null
     }
   },
   computed: {
     ...mapGetters(['courseChapters', 'courseContent']),
     courseEnd () {
       return contentIdGet(this.courseNavEdit.children, 'last')
+    },
+    messageShow () {
+      return this.edited || this.chaptersIncoherent || this.chapterNamesDuplicate
     },
     previewComponent () {
       const comps = { ...this.$laya.blocks, ...this.$laya.assessments, ...this.$laya.organization }
@@ -145,12 +150,9 @@ export default {
     },
     previewData () {
       return this.courseContent[this.previewId]
-    },
-    valueString () {
-      return JSON.stringify(this.courseNavEdit.children, null, 1)
     }
   },
-  watch: { // TODO fix check for integrity
+  watch: {
     chaptersCoherent: {
       handler () {
         this.chaptersIncoherent = Object.values(this.chaptersCoherent).some(val => val === false)
@@ -228,11 +230,9 @@ export default {
       return chapters
     },
     chaptersDuplicateUpdate (id, val) {
-      console.log('duplicate keys in', id)
       this.chaptersDuplicate[id] = val
     },
     coherentChaptersUpdate (id, val) {
-      console.log(id, val)
       this.chaptersCoherent[id] = val
     },
     integrityCheck () {
