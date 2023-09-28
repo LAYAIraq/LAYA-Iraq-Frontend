@@ -83,9 +83,15 @@
       class="col mt-3"
     >
       <h3>{{ y18n('courseNavEdit.warningMessagesTitle') }}</h3>
-      <p v-if="edited">{{y18n('courseNavEdit.warningEdited')}}</p>
-      <p v-if="chaptersIncoherent">{{y18n('courseNavEdit.integrityCheckChapterIntegrity')}}</p>
-      <p v-if="chapterNamesDuplicate">{{y18n('courseNavEdit.integrityCheckChapterDuplicate')}}</p>
+      <p v-if="edited">
+        {{ y18n('courseNavEdit.warningEdited') }}
+      </p>
+      <p v-if="chaptersIncoherent">
+        {{ y18n('courseNavEdit.integrityCheckChapterIntegrity') }}
+      </p>
+      <p v-if="chapterNamesDuplicate">
+        {{ y18n('courseNavEdit.integrityCheckChapterDuplicate') }}
+      </p>
     </div>
     <b-modal
       id="nav-integrity-compromised"
