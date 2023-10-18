@@ -152,7 +152,8 @@ describe('store module course-content mutations', () => {
         title: {
           text: 'Test'
         },
-        name: 'some-component'
+        name: 'some-component',
+        id: 't3st'
       }
       mutations.courseContentAdd(state, block)
       expect(Object.values(state.courseContent)).toContainEqual(expect.objectContaining(block))
@@ -205,6 +206,18 @@ describe('store module course-content mutations', () => {
       mutations.courseContentSet(state, block)
       expect(state.courseContent.test).toStrictEqual(block)
     })
+
+    it('triggers update in corresponding courseChapter', () => {
+      state.courseChapters = [{ id: 'test', isChapter: false, slug: 'updated-test-title', follow: null, type: 'different-component' }]
+      mutations.courseContentSet(state, {
+        id: 'test',
+        title: {
+          text: 'New Title'
+        },
+        name: 'different-component'
+      })
+      expect(state.courseChapters[0].slug).toBe('new-title')
+    })
   })
 
   describe('courseContentSetProperty', () => {
@@ -217,20 +230,35 @@ describe('store module course-content mutations', () => {
         },
         name: 'some-component'
       }
+      state.courseChapters = [
+        { isChapter: false, id: 'test', slug: 'test', follow: null, type: 'some-component' }
+      ]
     })
     it('sets a property of a courseContent block', () => {
       expect(state.courseContent['test']).toBeTruthy()
-      mutations.courseContentSetProperty(state, { id: 'test', property: 'title', value: 'Test' })
-      expect(state.courseContent.test.title).toBe('Test')
+      mutations.courseContentSetProperty(state, { id: 'test', property: 'context', value: 'Test' })
+      expect(state.courseContent.test.context).toBe('Test')
     })
 
     it('does not overwrite other properties', () => {
-      mutations.courseContentSetProperty(state, { id: 'test', property: 'title', value: 'Updated Test Title' })
-      expect(state.courseContent.test).toStrictEqual({
+      mutations.courseContentSetProperty(state, { id: 'test', property: 'title', value: { text: 'Updated Test Title' } })
+      expect(state.courseContent.test).toStrictEqual(expect.objectContaining({
         id: 'test',
-        title: 'Updated Test Title',
+        title: { text: 'Updated Test Title' },
         name: 'some-component'
       })
+      )
+    })
+
+    it('triggers change in courseChapters when title is changed', () => {
+      mutations.courseContentSetProperty(state, { id: 'test', property: 'title', value: { text: 'Updated Title' } })
+      expect(state.courseContent.test).toStrictEqual(expect.objectContaining({
+        id: 'test',
+        title: { text: 'Updated Title' },
+        name: 'some-component'
+      })
+      )
+      expect(state.courseChapters[0].slug).toBe('updated-title')
     })
 
     it('does not do anything if id does not exist', () => {
@@ -240,12 +268,12 @@ describe('store module course-content mutations', () => {
 
     it('does not do anything if property value is not set', () => {
       mutations.courseContentSetProperty(state, { id: 'test', property: 'title', value: undefined })
-      expect(state.courseContent.test.title).toBe('Updated Test Title')
+      expect(state.courseContent.test.title).toStrictEqual({ text: 'Updated Title' })
     })
 
     it('does not do anything if property is not set', () => {
       mutations.courseContentSetProperty(state, { id: 'test', property: undefined, value: 'Test' })
-      expect(state.courseContent.test.title).toBe('Updated Test Title')
+      expect(state.courseContent.test.title).toStrictEqual({ text: 'Updated Title' })
     })
   })
 
