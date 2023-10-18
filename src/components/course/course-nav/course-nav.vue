@@ -151,7 +151,6 @@ export default {
     },
     previewComponent () {
       const comps = { ...this.$laya.blocks, ...this.$laya.assessments, ...this.$laya.organization }
-      console.log('comps', comps)
       return this.previewData ? comps[this.previewData.name].components.view : null
     },
     previewData () {
@@ -177,11 +176,7 @@ export default {
       ? this.chaptersCreate()
       : { isChapter: true, children: deepCopy(this.courseChapters) }
   },
-  beforeDestroy () {
-    // if (this.edited) {
-    //
-    // }
-  },
+
   methods: {
     /**
      * @function Add chapter object to `courseNavEdit` data prop
@@ -220,6 +215,10 @@ export default {
       }
       this.edited = true
     },
+    /**
+     * @description create courseNav from course chapters if none in store
+     * @returns {{children: *[], isChapter: boolean}} courseNav data structure
+     */
     chaptersCreate () {
       const chapters = {
         isChapter: true,
@@ -235,12 +234,28 @@ export default {
       }
       return chapters
     },
+    /**
+     * @description update chaptersDuplicate object to monitor chapter names
+     * @param {string} id chapter id
+     * @param {boolean} val chapter name duplicate on same level
+     */
     chaptersDuplicateUpdate (id, val) {
       this.chaptersDuplicate[id] = val
     },
+    /**
+     * @description update chaptersCoherent to monitor integrity of sub-chapters
+     * @param {string} id chapter id
+     * @param {boolean} val chapter is coherent
+     */
     coherentChaptersUpdate (id, val) {
       this.chaptersCoherent[id] = val
+      if (!val) { // fixes watcher not triggering on first change
+        this.chaptersIncoherent = true
+      }
     },
+    /**
+     * @description check if chapter names are duplicate or chapters incoherent, show modal if yes
+     */
     integrityCheck () {
       if (!this.chapterNamesDuplicate && !this.chaptersIncoherent) {
         this.navigationSave()
@@ -265,7 +280,9 @@ export default {
       this.preview = true
       this.previewId = pid
     },
-
+    /**
+     * @description write changed nav into store, show toast if successful
+     */
     navigationSave () {
       this.$store.commit('courseChaptersSet', deepCopy(this.courseNavEdit.children))
       this.edited = false
