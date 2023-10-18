@@ -14,6 +14,8 @@ import {
   LegacyCourse, CourseNavigationItemBlock
 } from '@/mixins/types/course-structure'
 import {
+  chapterSlugDuplicateAvoid,
+  chapterSlugUpdate,
   contentIdGet,
   courseChaptersExtractFollow,
   coursePathsGet,
@@ -112,47 +114,89 @@ export default {
       state.courseChapters = course.chapters
     },
 
-    courseContentAdd (state: { courseContent: { [id: string]: ContentBlock }, courseChapters: any[] }, content: any) {
-      const id = uuidv4().split('-')[0]
-      const newContent = { ...content, id }
-      state.courseContent[id] = newContent
-      state.courseChapters.push(newContent)
+    /**
+     * @description add new content block to state
+     * @param state state variables
+     * @param content new content block
+     */
+    courseContentAdd (
+      state: {
+        courseContent: { [id: string]: ContentBlock },
+        courseChapters: any[]
+      },
+      content: ContentBlock) {
+      state.courseContent[content.id] = content
     },
-
-    courseContentSet (state: { courseContent: { [id: string]: ContentBlock } }, block: ContentBlock) {
+    /**
+     * @description update content block by replacing it with given parameter
+     * @param state store variables
+     * @param block new content block data
+     */
+    courseContentSet (state: {
+      courseChapters: any[],
+      courseContent: { [id: string]: ContentBlock }
+    }, block: ContentBlock) {
       state.courseContent[block.id] = block
+      chapterSlugUpdate(state.courseChapters, block.id, block.title.text, block.name)
     },
 
     /**
      * @description update property of courseContent item - used for reactivity in frontend
      * @author cmc
      * @param state holds courseContent object
-     * @param id identifier of content block to change
-     * @param property identifier of property to change
-     * @param value new value for property
+     * @param data id and property to change as well as changed value
      */
     courseContentSetProperty (
-      state: { courseContent: { [id: string]: ContentBlock } }, { id, property, value }: { id: string, property: string, value: any }) {
+      state: {
+        courseChapters: any[],
+        courseContent: { [id: string]: ContentBlock }
+      },
+      { id, property, value }: { id: string, property: string, value: any }) {
       if (state.courseContent[id] && property && value) { // only update if content block exists and property and value are defined
         Vue.set(state.courseContent[id], property, value)
+        if (property === 'title') { // trigger slug changes for corresponding navItem
+          chapterSlugUpdate(state.courseChapters, id, value.text, state.courseContent[id].type)
+        }
       }
     },
 
+    /**
+     * @description remove content block by given id
+     * @param state
+     * @param id
+     */
     courseContentRemove (state: { courseContent: any }, id: string) {
       state.courseContent = stripKey(state.courseContent, id)
     },
 
+    /**
+     * @description set courseChapters in state
+     * @param state store variables
+     * @param chapters course navigation
+     */
     courseChaptersSet (state: { courseChapters: CourseNavigationItem[] }, chapters: CourseNavigationItem[]) {
       if (chapters) {
+        chapterSlugDuplicateAvoid(chapters) // remove duplicate slugs if there are any
         Vue.set(state, 'courseChapters', chapters)
       }
     },
 
+    /**
+     * @description adds chapter to courseChapters
+     * @param state store
+     * @param chapter chapter to add
+     */
     courseChapterAdd (state: { courseChapters: CourseNavigationItem[], courseStart: string }, chapter: CourseNavigationItemBlock) {
       state.courseChapters.push(chapter)
     },
 
+    /**
+     * @description recursively update follow properties
+     * @param state contains courseChapters
+     * @param data id and value for updated follow
+     */
     courseChapterUpdateFollow (state: { courseChapters: CourseNavigationItem[]}, data: { id: string, value: string[] }) {
+      // @description update follow if id is is arr, go deeper if not
       const updateOrDeeper = (arr: any) => {
         if (Array.isArray(arr)) {
           arr.forEach((el: any) => {
@@ -175,6 +219,10 @@ export default {
       }
     },
 
+    /**
+     * @description update course routes to maintain correct mapping
+     * @param state contains courseChapters, courseRoutes
+     */
     courseRoutesUpdate (state: { courseChapters: any, courseRoutes: any }) {
       Vue.set(state, 'courseRoutes', coursePathsGet(state.courseChapters))
     },

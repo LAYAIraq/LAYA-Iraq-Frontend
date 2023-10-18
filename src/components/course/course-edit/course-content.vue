@@ -68,6 +68,7 @@ import { mapGetters } from 'vuex'
 import CourseFiles from '@/components/course/course-edit/course-files.vue'
 import { deepCopy, stripKey } from '@/mixins/general/helpers'
 import { contentBlockToNavItemTransform } from '@/mixins/general/course-structure'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'CourseContent',
@@ -147,7 +148,9 @@ export default {
      * Last Updated: January 20, 2021
      */
     stepData () {
-      const input = {}
+      const input = {
+        id: uuidv4()
+      }
       for (const prop in this.$refs.edit.$data) {
         if (!/^[$_]/.test(prop)) {
           input[prop] = this.$refs.edit.$data[prop]

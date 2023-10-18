@@ -151,13 +151,47 @@ export const contentIdGet = (courseNav: any, mode: string): string => {
   }
 }
 
+/**
+ * @description slugs ending in 'new' and 'edit' can cause routing issues; therefore, avoid them
+ * @param title text to be turned to slug
+ * @param type type of block for fallback
+ */
+const chapterSlugRoutingIssueAvoid = (title: string, type: string): string => {
+  const slug = slugify(title)
+  const noConflict = slug !== 'edit' && slug !== 'new' // avoid routing issues with edit views
+  return noConflict ? slug : slug + '-' + type
+}
+
+/**
+ * @description recursively check for duplicate slugs per level, adding ascending suffixes
+ * @param chapters Course navigation to check
+ */
+export const chapterSlugDuplicateAvoid = (chapters: CourseNavigationItem[]) => {
+  chapters.forEach((el: any, i) => {
+    if (el.isChapter) {
+      chapterSlugDuplicateAvoid(el.children)
+    } else {
+      let count = 2 // ascending count in case there are several duplicates
+      chapters.forEach((el2, j) => {
+        if (i !== j && el.slug === el2.slug) { // same slug at different indexes
+          el2.slug += `-${count}` // append count to slug
+          count++
+        }
+      })
+    }
+  })
+}
+
+/**
+ * @description transform a content block into a course chapter
+ * @param block to be transformed into chapter
+ */
 export const contentBlockToNavItemTransform = (block: ContentBlock): CourseNavigationItemBlock => {
-  const slug = slugify(block.title.text)
-  const noConflict = slug !== 'edit' && slug !== 'new'
+  const slug = chapterSlugRoutingIssueAvoid(block.title.text, block.name)
   return {
     id: block.id,
     isChapter: false,
-    slug: noConflict ? slug : slug + '-' + block.name,
+    slug,
     type: block.name,
     follow: null
   }
@@ -188,13 +222,14 @@ export const chapterFollowSet = (chapter: CourseNavigationItem | any, nextChapte
  * @param chapters Course Navigation
  * @param id of course block that had title updated
  * @param title the updated title to be turned into a new slug
+ * @param type type of corresponding block to avoid routing issues
  */
-export const chapterSlugUpdate = (chapters: CourseNavigationItem[], id: string, title: string) => {
+export const chapterSlugUpdate = (chapters: CourseNavigationItem[], id: string, title: string, type: string) => {
   chapters.forEach((chapter: any) => {
     if (chapter.isChapter) {
-      chapterSlugUpdate(chapter.children, id, title)
+      chapterSlugUpdate(chapter.children, id, title, type)
     } else if (chapter.id === id) {
-      chapter.slug = slugify(title)
+      chapter.slug = chapterSlugRoutingIssueAvoid(title, type)
     }
   })
 }
@@ -312,12 +347,8 @@ export const courseStructureDescent = (
 const arabicToChat = (text: string): string => {
   // transform arabic letters to latin letters
   text = text.replace(/[\u0600-\u06FF]/g, (letter) => {
-    return arabicToLatin[letter] || letter
+    return arabicToLatin[letter]
   })
-  // replace arabic numbers with latin numbers
-  // text = text.replace(/[٠١٢٣٤٥٦٧٨٩]/g, (number) => {
-  //   return arabicToLatin[number] || number
-  // })
   // replace 'aa' with hyphen
   text = text.replace(/aa/g, '-')
   // remove any double vowels
