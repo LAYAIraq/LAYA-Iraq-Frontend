@@ -93,6 +93,7 @@
 	"content": "Content",
 	"content.editContent": "Edit Content",
 	"content.editContentTip": "You can modify the displayed content ( #{step} ).",
+	"contentTitleEdit.warning.titleEmpty": "The title cannot be empty!",
 	"copy.copyCourseTip": "Duplicate this course with a new name. BEWARE:The associated files are not copied!",
 	"copy.modal.ok": "Copy With New Name",
 	"copy.modal.text": "New Course Name*",

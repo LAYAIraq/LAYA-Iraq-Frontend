@@ -9,65 +9,7 @@ Since: v1.0.0
   <div
     :class="langIsAr? 'text-right' : 'text-left'"
   >
-    <form>
-      <div class="form-group">
-        <div class="row">
-          <!-- title -->
-          <label
-            for="free-text-title"
-            class="col-2 col-form-label"
-          >
-            {{ y18n('title') }}
-          </label>
-          <div class="col-8">
-            <input
-              id="free-text-title"
-              v-model="title.text"
-              type="text"
-              class="form-control"
-              :placeholder="y18n('titlePlaceholder')"
-            >
-          </div>
-          <!-- show title button -->
-          <div class="form-group col">
-            <label
-              for="show-title-tick"
-              class="col-form-label"
-            >
-              {{ y18n('showTitle') }}
-              <input
-                id="show-title-tick"
-                v-model="title.show"
-                type="checkbox"
-              >
-            </label>
-          </div>
-        </div>
-        <div
-          v-if="courseSimple"
-          class="row"
-        >
-          <!-- simple title -->
-          <label
-            for="free-text-title-simple"
-            class="col-2 col-form-label"
-          >
-            <span class="sr-only">
-              {{ y18n('simpleAlt') }}
-            </span>
-          </label>
-          <div class="col-8">
-            <input
-              id="free-text-title-simple"
-              v-model="title.simple"
-              type="text"
-              class="form-control"
-              :placeholder="y18n('simpleAlt')"
-            >
-          </div>
-        </div>
-      </div>
-    </form>
+    <content-title-edit> </content-title-edit>
     <div
       class="free-text-edit bg-light"
       :class="langIsAr? 'text-right' : 'text-left'"
@@ -84,10 +26,11 @@ Since: v1.0.0
 import { mapGetters } from 'vuex'
 import Quill from 'quill'
 import { locale, pluginEdit, routes } from '@/mixins'
+import ContentTitleEdit from '@/components/helpers/content-title-edit'
 
 export default {
   name: 'FreeTextEdit',
-
+  components: { ContentTitleEdit },
   mixins: [
     locale,
     pluginEdit,
