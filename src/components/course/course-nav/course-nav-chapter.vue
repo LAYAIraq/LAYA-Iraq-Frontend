@@ -88,7 +88,7 @@
 import Draggable from 'vuedraggable'
 import CourseNavItem from '@/components/course/course-nav/course-nav-item.vue'
 import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
-import { courseNavEmits, locale } from '@/mixins'
+import { locale } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 import { chapterFollowSet } from '@/mixins/general/course-structure'
 import { deepCopy } from '@/mixins/general/helpers'
@@ -100,7 +100,7 @@ export default {
     CourseNavPropertyEdit,
     CourseNavItem
   },
-  mixins: [courseNavEmits, locale],
+  mixins: [locale],
   props: {
     chapter: {
       type: Object,

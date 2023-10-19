@@ -122,7 +122,7 @@
   </div>
 </template>
 <script>
-import { courseNavEmits, locale } from '@/mixins'
+import { locale } from '@/mixins'
 import CourseNavFollowSet from '@/components/course/course-nav/course-nav-follow-set.vue'
 import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
 import { mapGetters } from 'vuex'
@@ -134,7 +134,7 @@ export default {
     CourseNavFollowSet,
     CourseNavPropertyEdit
   },
-  mixins: [courseNavEmits, locale],
+  mixins: [locale],
   props: {
     dragBubble: {
       type: Array,
