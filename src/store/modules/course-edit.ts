@@ -693,15 +693,12 @@ export default {
     },
 
     /**
-     * function courseUpdate: update course in database
-     *
-     * Auhtor: cmc
-     *
-     * Last Updated: August 9, 2022
-     * @param commit to commit mutations
-     * @param state state variables
+     * @description update course in database
+     * @author cmc
+     * Last Updated: October 19, 2023
+     * @param storeVariables commit, state, rootState for courseContent modules
      */
-    courseUpdate ({ commit, state }) {
+    courseUpdate ({ commit, state, rootState }) {
       // check properties and language
       commit('courseSimpleLanguageCheck')
       commit('coursePropertyCheck')
@@ -710,6 +707,8 @@ export default {
           `courses/${state.course.courseId}`,
           {
             ...state.course,
+            chapters: rootState.courseChapters, // intermediate state before new backend
+            courseContent: rootState.courseContent, // intermediate state before new backend
             lastChanged: Date.now() // TODO: remove this line after switching to new back end
           }
         )
