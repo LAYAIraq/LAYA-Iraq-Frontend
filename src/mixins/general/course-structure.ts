@@ -18,7 +18,6 @@ import {
  */
 export const legacyContentStepsTransform = (block: LegacyContentBlock): number[] | number => {
   if (block.nextStep === null) {
-    console.log('no following step')
     return null
   }
   const stepsArray = block.nextStep.split(',')
@@ -33,11 +32,8 @@ export const legacyContentStepsTransform = (block: LegacyContentBlock): number[]
 export const legacyContentFollowTransform = (courseChapters: CourseNavigationItemBlock[]): void => {
   courseChapters.forEach(chapter => {
     const transformNumberToId = (follow: number): string => {
-      const followChapter = courseChapters[follow] ? courseChapters[follow].id : null
-      console.log('followChapter', followChapter)
-      return followChapter
+      return courseChapters[follow] ? courseChapters[follow].id : null
     }
-    console.log('chapter', chapter.id)
     if (Array.isArray(chapter.follow)) {
       chapter.follow.forEach((follow: any, i: number) => {
         chapter.follow[i] = transformNumberToId(follow)

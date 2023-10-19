@@ -185,9 +185,7 @@ export default {
   watch: {
     chapter: {
       handler () {
-        console.log('chapter changed')
         if (this.main) {
-          // console.log('changing following content....')
           this.followingContentSet()
           this.$emit('edited')
         }
