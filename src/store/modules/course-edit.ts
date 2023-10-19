@@ -707,8 +707,8 @@ export default {
           `courses/${state.course.courseId}`,
           {
             ...state.course,
-            chapters: rootState.courseChapters, // intermediate state before new backend
-            courseContent: rootState.courseContent, // intermediate state before new backend
+            chapters: rootState.courseContent.courseChapters, // intermediate state before new backend
+            courseContent: rootState.courseContent.courseContent, // intermediate state before new backend
             lastChanged: Date.now() // TODO: remove this line after switching to new back end
           }
         )

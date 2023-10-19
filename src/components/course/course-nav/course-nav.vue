@@ -293,8 +293,8 @@ export default {
           variant: 'success',
           toaster: 'b-toaster-bottom-center'
         }
-
       )
+      this.$emit('saved') // emit saved to trigger courseUpdate
     }
   }
 }

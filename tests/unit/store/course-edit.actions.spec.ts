@@ -9,8 +9,10 @@ describe('course-edit actions', () => {
     const actions = courseEdit.actions
     const state = { course: SampleCourseShort }
     const rootState = {
-      courseChapters: SampleCourseChaptersIntermediate.chapters,
-      courseContent: SampleCourseChaptersIntermediate.courseContent
+      courseContent: {
+        courseChapters: SampleCourseChaptersIntermediate.chapters,
+        courseContent: SampleCourseChaptersIntermediate.courseContent
+      }
     }
     const commit = jest.fn()
     const patchSpy = jest.spyOn(axios, 'patch').mockResolvedValue('Course updated successfully')
