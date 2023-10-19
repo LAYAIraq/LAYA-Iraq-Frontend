@@ -98,7 +98,7 @@
         v-if="value.id !== courseEnd || value.type === 'button-navigation'"
         class="d-block"
       >
-        <div class="d-flex">
+        <div class="d-flex follow-content">
           <span class="text-muted small">
             Follow
           </span>
@@ -111,19 +111,41 @@
             @click="$router.push({name: 'content-follow-edit', params: { contentId: value.id, follow: value.follow }})"
           ></i>
         </div>
-        <course-nav-follow-set
-          :follow="followingContent"
-          :item="item"
-          @follow-update="v => propagateChange('follow', v)"
-          @highlight="p => $emit('highlight', p)"
-        ></course-nav-follow-set>
+        <div
+          class="d-flex"
+          @click="$bvModal.show('follow-edit')"
+        >
+          <div>
+            <p
+              v-if="followSet.length === 1"
+              v-b-tooltip.right
+              :title="y18n('courseNavEdit.followHighlight')"
+              @mousedown="followHighlight($event, followingContent)"
+            >
+              {{ followingContent }}
+            </p>
+            <ul
+              v-else
+              id="follow-list"
+            >
+              <li
+                v-for="e in followSet"
+                :key="e"
+                v-b-tooltip.right
+                :title="y18n('courseNavEdit.followHighlight')"
+                @mousedown="followHighlight($event,e)"
+              >
+                {{ e }}
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
 import { locale } from '@/mixins'
-import CourseNavFollowSet from '@/components/course/course-nav/course-nav-follow-set.vue'
 import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
 import { mapGetters } from 'vuex'
 import { deepCopy, kebabToCamel } from '@/mixins/general/helpers'
@@ -131,7 +153,6 @@ import { deepCopy, kebabToCamel } from '@/mixins/general/helpers'
 export default {
   name: 'CourseNavItem',
   components: {
-    CourseNavFollowSet,
     CourseNavPropertyEdit
   },
   mixins: [locale],
@@ -170,6 +191,13 @@ export default {
   },
   computed: {
     ...mapGetters(['courseContent']),
+    followSet () {
+      return this.followingContent
+        ? Array.isArray(this.followingContent) // either array or string
+          ? this.followingContent // return array as is
+          : [this.followingContent] // return string as single item in array
+        : null
+    },
     item () {
       return this.courseContent[this.value.id]
     }
@@ -187,6 +215,17 @@ export default {
     }
   },
   methods: {
+    /**
+     * @description emit highlight event when shift is pressed
+     * @author cmc
+     * @since v1.3.0
+     */
+    followHighlight (e, id) {
+      e.preventDefault()
+      if (e.shiftKey) {
+        this.$emit('highlight', id)
+      }
+    },
     /**
      * @description return localized Description of Block type
      * @since v1.3.0
@@ -250,6 +289,12 @@ export default {
   display: none;
 }
 .edit:hover>i {
+  display: inline-flex;
+}
+.follow-content>i {
+  display: none;
+}
+.follow-content:hover>i {
   display: inline-flex;
 }
 </style>

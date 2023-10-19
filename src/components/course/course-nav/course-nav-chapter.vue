@@ -69,7 +69,7 @@
         />
         <course-nav-item
           v-else-if="!collapsed"
-          :class="{ 'border-success': item.id === highlightId }"
+          :class="{ 'border-success': item.id === highlightedBlock }"
           :course-end="courseEnd"
           :drag-bubble="[!dragging && dragStartIndex === i, childrenVisibility[item.id]]"
           :drag-end="[!dragging && dragEndIndex === i, childrenVisibility[item.id]]"
