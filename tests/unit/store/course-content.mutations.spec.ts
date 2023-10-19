@@ -1,6 +1,7 @@
 import courseContent from '@/store/modules/course-content'
 import SampleCourse from '../../mocks/sample-course-short.json'
 import SampleCourseChapters from '../../mocks/sample-course-chapters.json'
+import SampleCourseChaptersIntermediate from '../../mocks/sample-course-chapters-intermediate.json'
 import SampleCourseChaptersNested from '../../mocks/sample-course-chapters-nested.json'
 import { deepCopy } from '@/mixins/general/helpers'
 import { CourseNavigationItemBlock } from '@/mixins/types/course-structure'
@@ -23,44 +24,64 @@ describe('store module course-content mutations', () => {
   const Course = { ...SampleCourse, properties: {}, lastChanged: Date.now() }
 
   describe('setCourseContentAndNav', () => {
-    beforeAll(() => {
-      state = deepCopy(emptyState)
-      mutations.setCourseContentAndNav(state, Course)
-    })
-    it('creates an entry in courseContent for each course block', () => {
-      expect(Object.keys(state.courseContent).length).toBe(SampleCourse.content.length)
-    })
+    describe('old course structure', () => {
+      beforeAll(() => {
+        state = deepCopy(emptyState)
+        mutations.setCourseContentAndNav(state, Course)
+      })
+      it('creates an entry in courseContent for each course block', () => {
+        expect(Object.keys(state.courseContent).length).toBe(SampleCourse.content.length)
+      })
 
-    it('recreates the content array in courseNav', () => {
-      expect(state.courseChapters.length).toBe(SampleCourse.content.length)
-      state.courseChapters.forEach((item, index) => { // check that the courseNav.structure array is in the same order as the course content
-        expect(state.courseContent[item.id]).toStrictEqual(
-          expect.objectContaining(Course.content[index].input)
+      it('recreates the content array in courseNav', () => {
+        expect(state.courseChapters.length).toBe(SampleCourse.content.length)
+        state.courseChapters.forEach((item, index) => { // check that the courseNav.structure array is in the same order as the course content
+          expect(state.courseContent[item.id]).toStrictEqual(
+            expect.objectContaining(Course.content[index].input)
+          )
+        })
+      })
+
+      it('sets the start property in courseNav', () => {
+        const courseStart = courseContent.getters.courseStart(state)
+        expect(state.courseContent[courseStart]).toStrictEqual(
+          expect.objectContaining(SampleCourse.content[0].input)
         )
       })
-    })
 
-    it('sets the start property in courseNav', () => {
-      const courseStart = courseContent.getters.courseStart(state)
-      expect(state.courseContent[courseStart]).toStrictEqual(
-        expect.objectContaining(SampleCourse.content[0].input)
-      )
-    })
+      it('saves a slug for each course block', () => {
+        state.courseNav.structure.forEach((item: any) => {
+          expect(item.slug).toBeTruthy()
+        })
+      })
 
-    it('saves a slug for each course block', () => {
-      state.courseNav.structure.forEach((item: any) => {
-        expect(item.slug).toBeTruthy()
+      it('saves a follow property for each course block', () => {
+        state.courseNav.structure.forEach((item: any) => {
+          expect(item.follow).toBeTruthy()
+        })
+      })
+
+      it('creates a courseRoutes array', () => {
+        expect(state.courseRoutes.length).toBeGreaterThan(0)
       })
     })
-
-    it('saves a follow property for each course block', () => {
-      state.courseNav.structure.forEach((item: any) => {
-        expect(item.follow).toBeTruthy()
+    describe('new course structure', () => {
+      beforeAll(() => {
+        state = deepCopy(emptyState)
+        mutations.setCourseContentAndNav(state, SampleCourseChaptersIntermediate)
       })
-    })
+      it('creates an entry in courseContent for each course block', () => {
+        expect(Object.keys(state.courseContent).length).toBe(5)
+      })
 
-    it('creates a courseRoutes array', () => {
-      expect(state.courseRoutes.length).toBeGreaterThan(0)
+      it('sets chapters in store', () => {
+        expect(state.courseChapters.length).toBe(4)
+        expect(state.courseChapters).toStrictEqual(SampleCourseChaptersIntermediate.chapters)
+      })
+
+      it('creates a courseRoutes array', () => {
+        expect(state.courseRoutes.length).toBe(5)
+      })
     })
   })
 
@@ -296,7 +317,7 @@ describe('store module course-content mutations', () => {
     })
   })
 
-  describe('courseStructureDestructure', () => { // skipped b/c imported methods create problems
+  describe('courseStructureDestructure', () => {
     beforeAll(() => {
       state = deepCopy(emptyState)
       mutations.courseStructureDestructure(state, SampleCourseChapters)
