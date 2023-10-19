@@ -149,7 +149,7 @@ export default {
     /**
      * urlMsg: return warning if URL is not supported
      * Author: cmc
-     * Last Updated: 04.08.23 by nv
+     * Since: v1.3.0 by nv
      */
     urlMsg () {
       if (!this.validUrl) {
@@ -162,7 +162,7 @@ export default {
     /**
      * function validUrl: check if string is a valid URL according to RFC 3886
      * Author: cmc
-     * Last Updated: 04.08.23 by nv
+     * Since: v1.3.0 by nv
      */
     validUrl () {
       if (this.src === '') return false
@@ -188,7 +188,7 @@ export default {
     /**
      * Function fetchData: fetch data from vuex and make data property
      * Author: cmc
-     * Last Updated: 04.08.23 by nv
+     * Since: v1.3.0 by nv
      */
     fetchData () {
       const preData = deepCopy(this.courseContent[this.pathId])

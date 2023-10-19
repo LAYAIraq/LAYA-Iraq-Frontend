@@ -23,8 +23,9 @@ Since: v1.3.0
       ></flag-icon>
     </div>
     <div>
-      <vue-pdf-embed>
-        :src="src"
+      <vue-pdf-embed
+        :source="src"
+      >
       </vue-pdf-embed>
     </div>
     <div class="row">
@@ -49,13 +50,14 @@ Since: v1.3.0
 import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
-import { mapGetters } from 'vuex'
 import VuePdfEmbed from 'vue-pdf-embed/dist/vue2-pdf-embed'
 
 export default {
   name: 'PdfViewerView',
-  components: { FlagIcon, VuePdfEmbed },
-
+  components: {
+    FlagIcon,
+    VuePdfEmbed
+  },
   mixins: [
     locale,
     pluginView
@@ -66,28 +68,6 @@ export default {
       ...this.viewData,
       src: 'https://www.uni-flensburg.de/fileadmin/content/seminare/medienbildung/dokumente/projekte/dig-in/handreichung-inklusiv-digitale-schul-und-unterrichtsentwicklung-wie-gelingt-das.pdf'
     }
-  },
-
-  computerd: {
-    ...mapGetters([
-      'courseContent',
-      'courseSimple'
-    ])
-  },
-
-  mounted () {
-    this.initPdfViewer()
-  },
-
-  methods: {
-
-    initPdfViewer () {
-
-    }
   }
 }
 </script>
-
-<style>
-
-</style>
