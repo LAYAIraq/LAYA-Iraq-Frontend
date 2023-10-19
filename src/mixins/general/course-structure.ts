@@ -39,7 +39,7 @@ export const legacyContentFollowTransform = (courseChapters: CourseNavigationIte
     }
     console.log('chapter', chapter.id)
     if (Array.isArray(chapter.follow)) {
-      chapter.follow.forEach((follow, i) => {
+      chapter.follow.forEach((follow: any, i: number) => {
         chapter.follow[i] = transformNumberToId(follow)
       })
     } else {

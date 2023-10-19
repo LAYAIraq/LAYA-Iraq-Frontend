@@ -99,11 +99,9 @@ export default {
      */
     courseStructureDestructure (
       state: {
-        courseContent: { },
-        courseIds: { [id: string]: number },
-        courseStart: string,
+        courseContent: object,
         courseChapters: CourseNavigationItem[],
-        courseRoutes: any
+        courseRoutes: any[]
       },
       course: Course
     ) {
@@ -244,18 +242,23 @@ export default {
     ) {
       state.courseChapters = []
       state.courseContent = {}
-      for (const block of course.content) {
-        const blockId = uuidv4().split('-')[0] // legacy content blocks have no id
-        state.courseContent[blockId] = { ...block.input, name: block.name, id: blockId } // this is analogous to the new course structure
-        state.courseChapters.push({
-          id: blockId,
-          slug: slugify(block.input.title.text),
-          type: block.name,
-          follow: legacyContentStepsTransform(block)
-        })
+      if (!course.chapters && !course.courseContent) { // actual old course that have not been touched with new system
+        for (const block of course.content) {
+          const blockId = uuidv4().split('-')[0] // legacy content blocks have no id
+          state.courseContent[blockId] = { ...block.input, name: block.name, id: blockId } // this is analogous to the new course structure
+          state.courseChapters.push({
+            id: blockId,
+            slug: slugify(block.input.title.text),
+            type: block.name,
+            follow: legacyContentStepsTransform(block)
+          })
+        }
+        legacyContentFollowTransform(state.courseChapters)
+      } else { // chapters and courseContent are defined, just set them to store
+        state.courseContent = course.courseContent
+        state.courseChapters = course.chapters
       }
-      legacyContentFollowTransform(state.courseChapters)
-      // traverse course content and create routes
+      // traverse course chapters and create routes
       state.courseRoutes = coursePathsGet(state.courseChapters)
     }
   },

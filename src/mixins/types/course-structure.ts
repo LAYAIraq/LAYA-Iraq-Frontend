@@ -4,37 +4,6 @@
  * @since 1.3.0
  */
 
-// Old course structure
-export type LegacyContentBlock = {
-  name: string,
-  input: {
-    title: {
-      flagged?: boolean
-      id: string
-      simple?: string
-      text: string
-    },
-    [key: string]: any
-  },
-  nextStep: string | null
-}
-
-export type LegacyContentInput = LegacyContentBlock[]
-
-export interface LegacyCourse {
-  abstract: string
-  category: string
-  content: LegacyContentInput
-  files: string[]
-  name: string
-  properties: object
-  readonly authorId: number
-  readonly courseId: string
-  readonly lastChanged?: number | string
-  readonly locked: boolean
-  storageId: string
-}
-
 // New course structure
 
 /**
@@ -105,4 +74,41 @@ export type ContentBlock = {
   name: string
   title: { text: string }
   [prop: string]: any
+}
+
+// Old course structure
+export type LegacyContentBlock = {
+  name: string,
+  input: {
+    title: {
+      flagged?: boolean
+      id: string
+      simple?: string
+      text: string
+    },
+    [key: string]: any
+  },
+  nextStep: string | null
+}
+
+export type LegacyContentInput = LegacyContentBlock[]
+
+// optional properties have been added during development
+export interface LegacyCourse {
+  abstract: string
+  authorName?: string
+  category: string
+  chapters?: CourseNavigationItem[] // intermediate
+  content: LegacyContentInput
+  courseContent?: { [id: string]: ContentBlock } // intermediate
+  files: string[]
+  keywords?: string
+  language?: string
+  name: string
+  properties: object
+  readonly authorId: number
+  readonly courseId: string
+  readonly lastChanged?: number | string
+  readonly locked: boolean
+  storageId: string
 }
