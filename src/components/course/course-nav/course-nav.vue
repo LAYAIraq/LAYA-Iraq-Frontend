@@ -281,19 +281,14 @@ export default {
       this.previewId = pid
     },
     /**
-     * @description write changed nav into store, show toast if successful
+     * @description write changed nav into store, emit saved event to trigger persistence
+     * @author cmc
+     * @since v1.3.0
      */
     navigationSave () {
       this.$store.commit('courseChaptersSet', deepCopy(this.courseNavEdit.children))
       this.edited = false
       this.$store.commit('courseRoutesUpdate')
-      this.$root.$bvToast.toast(
-        this.y18n('successfulSave'), {
-          title: this.y18n('courseNavEdit.title'),
-          variant: 'success',
-          toaster: 'b-toaster-bottom-center'
-        }
-      )
       this.$emit('saved') // emit saved to trigger courseUpdate
     }
   }
