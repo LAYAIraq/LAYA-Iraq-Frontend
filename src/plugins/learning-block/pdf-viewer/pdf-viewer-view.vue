@@ -4,7 +4,6 @@ Use: View pdf viewer content block
 Creator: nv
 Since: v1.3.0
 -->
-
 <template>
   <div
     class="pdf-viewer-view"
@@ -66,8 +65,15 @@ export default {
   data () {
     return {
       ...this.viewData,
-      src: 'https://www.uni-flensburg.de/fileadmin/content/seminare/medienbildung/dokumente/projekte/dig-in/handreichung-inklusiv-digitale-schul-und-unterrichtsentwicklung-wie-gelingt-das.pdf'
+      src: '/home/dozhpiven/Downloads/transaktion.pdf'
     }
   }
 }
 </script>
+
+<style>
+.vue-pdf-embed > div {
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px 4px rgba(0, 0, 0, 0.1);
+}
+</style>
