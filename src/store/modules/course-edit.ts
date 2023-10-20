@@ -788,7 +788,7 @@ export default {
       newNameData
         )
           .then(() => {
-            commit('courseListUpdate', state.course.courseId)
+            commit('courseListUpdate', { courseId: state.course.courseId, name: state.course.name })
             resolve('Updated Course name!')
           })
           .catch((err) => {

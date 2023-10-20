@@ -107,14 +107,10 @@ export default {
      *
      * Last Updated: August 14 2023 by nv
      * @param state contains courseList
-     * @param courseId id of updated course
+     * @param data courseId, new name for course in list
      */
     courseListUpdate (
       state: {
-        course: {
-          language: string,
-          category: string,
-          name: string },
         courseList: Array<{
           abstract: string,
           authorName: string,
@@ -126,17 +122,15 @@ export default {
           slug: string
         }>
       },
-      courseId: string
+      data: {
+        courseId: string,
+        name: string
+      }
     ) {
-      console.log('courseListUpdate')
-      const listItem = state.courseList.find((item: { courseId: string, name: string }) => item.courseId === courseId)
-      console.log(listItem)
-      listItem.name = state.course.name
-      listItem.category = state.course.category
-      listItem.language = state.course.language
-      listItem.slug = slugify(state.course.name)
-      console.log(listItem)
-      console.log(state.courseList)
+      const listItem = state.courseList.find((item: { courseId: string, name: string }) => item.courseId === data.courseId)
+      if (listItem) {
+        listItem.name = data.name
+      }
     }
   },
   actions: {
