@@ -66,35 +66,44 @@
       "id": "e1ns",
       "name": "button-navigation",
       "title": {
-        "text": "Dialog Sample"
+        "text": "Dialog Sample",
+        "id": "ref01"
       }
     },
     "zw31": {
       "id": "zw31",
       "name": "video",
       "title": {
-        "text": "Video"
+        "text": "Video",
+        "id": "ref02"
       }
     },
     "dr31": {
       "id": "dr31",
       "name": "free-text",
       "title": {
-        "text": "WYSIWYG"
+        "text": "WYSIWYG",
+        "id": "ref03"
       }
     },
     "v13r": {
       "id": "dr31",
       "name": "choice-question",
       "title": {
-        "text": "SC Quiz"
+        "text": "SC Quiz",
+        "id": "ref04"
+      },
+      "task": {
+        "text": "Please verify!",
+        "id": "ref06"
       }
     },
     "fu3nf": {
       "id": "fu3nf",
       "name": "category-matching",
       "title": {
-        "text": "Drag & Drop"
+        "text": "Drag & Drop",
+        "id": "ref05"
       }
     }
   },

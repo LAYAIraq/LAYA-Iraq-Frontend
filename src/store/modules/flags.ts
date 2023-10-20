@@ -6,6 +6,8 @@
  */
 
 import http from 'axios'
+import { stripKey } from '@/mixins/general/helpers'
+import { ContentBlock } from '@/mixins/types/course-structure'
 export default {
   state: {
     courseFlags: [],
@@ -304,44 +306,29 @@ export default {
      * Author: cmc
      *
      * Last Updated: January 27, 2022
-     * @param commit state commit
-     * @param getters getters to get course
-     * @param state state variables
+     * @param _ store variables
      */
     courseFlagsCheck ({
       commit,
       getters,
       state
-    }) { // TODO: update for new course structure
-      // console.log('We are checking Course Flags!')
-      const content = getters.content
+    }) {
+      const content = getters.courseContent
       const flags = state.courseFlags
-      // console.log(course)
-      // console.log(flags)
-      const checkIfFlagged = (elem) => { // helper function to check if a part is flagged
-        // console.log('checking: ')
-        // console.log(elem)
-        if (!elem) {
-          console.error(`not an element: ${elem}`)
-        } else if (Object.prototype.hasOwnProperty.call(elem, 'flagged')) {
+      const checkIfFlagged = (elem: ContentBlock) => { // helper function to check if a part is flagged
+        if (elem) {
           for (const flag of flags) {
             if (flag.referenceId === elem.id) {
-              // console.log(`${elemId} has a flag, trying to mutate it!`)
               commit('flagFlaggableElement', elem)
-            } else {
-              // console.log(elem + ' can be flagged but no flag exists')
             }
           }
-        } else {
-          // console.log('flagged boolean doesn\'t exist!')
         }
       }
-      // console.log(course.content)
-      for (const step of content) {
-        // console.log(step)
-        const iterInput = Object.values(step.input)
-        // console.log(`iterInput: ${iterInput}`)
-        for (const elem of iterInput) {
+      Object.values(content).forEach((step: object) => {
+        const iterInput = Object.values(stripKey('id', stripKey('name', step)))
+        console.log('iterInput', iterInput)
+        iterInput.forEach((elem:any) => {
+          console.log(elem)
           if (typeof (elem) === 'object') {
             if (Array.isArray(elem)) {
               for (const iter of elem) {
@@ -353,8 +340,8 @@ export default {
               checkIfFlagged(elem)
             }
           }
-        }
-      }
+        })
+      })
     },
 
     /**
