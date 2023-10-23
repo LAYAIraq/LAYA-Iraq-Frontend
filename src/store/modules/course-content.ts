@@ -4,16 +4,15 @@
  * @since 1.3.0
  * @dependencies none
  */
-// @ts-ignore
 import {
   ContentBlock,
   Course,
   CourseNavigationItem,
-  LegacyContentBlock,
-  LegacyContentInput,
-  LegacyCourse, CourseNavigationItemBlock
+  CourseNavigationItemBlock,
+  LegacyCourse
 } from '@/mixins/types/course-structure'
 import {
+  chaptersCheck,
   chapterSlugDuplicateAvoid,
   chapterSlugUpdate,
   contentIdGet,
@@ -41,6 +40,9 @@ export default {
 
   getters: {
     courseChapters: (state: { courseChapters: object[] }) => state.courseChapters,
+    courseChaptersCoherent: (state: { courseChapters: CourseNavigationItem[] }) => chaptersCheck(
+      { isChapter: true, chapterName: 'main', children: state.courseChapters, slug: 'main' }
+    ),
     courseChapterNames: (state: { courseChapters: CourseNavigationItem[] }) => courseStructureChapterNames(state.courseChapters),
     courseContent: (state: { courseContent: { [id: string]: CourseNavigationItem } }) => state.courseContent,
     courseContentFollowMap: (state: { courseChapters: CourseNavigationItem[] }): object => {

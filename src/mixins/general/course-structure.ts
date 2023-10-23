@@ -8,6 +8,7 @@ import {
   ContentBlock,
   CourseNavigationItem,
   CourseNavigationItemBlock,
+  CourseNavigationItemChapter,
   LegacyContentBlock
 } from '@/mixins/types/course-structure'
 
@@ -191,6 +192,36 @@ export const contentBlockToNavItemTransform = (block: ContentBlock): CourseNavig
     type: block.name,
     follow: null
   }
+}
+
+/**
+ * @description checks course chapters for coherence
+ * @author cmc
+ * @since v1.3.0
+ * @param chapters
+ */
+export const chaptersCheck = (chapters: CourseNavigationItemChapter) => {
+  const coherentChapter = (chapter: CourseNavigationItemChapter) => {
+    if (chapter.children.length === 0 || !chapter.isChapter) {
+      return false
+    } else {
+      const subChapters = chapter.children.reduce(
+        (curVal, item) => curVal + (item.isChapter ? 1 : 0),
+        0) // count the number of chapters in the children
+      return subChapters === 0 || subChapters === chapter.children.length
+    }
+  }
+  const checkChapter = (chapter: any) => {
+    let incoherentSubChapterSeen = false
+    if (!coherentChapter(chapter)) { incoherentSubChapterSeen = true }
+    chapter.children.forEach((child: CourseNavigationItem) => {
+      if (child.isChapter && !checkChapter(child)) {
+        incoherentSubChapterSeen = true
+      }
+    })
+    return !incoherentSubChapterSeen
+  }
+  return checkChapter(chapters)
 }
 
 /**
