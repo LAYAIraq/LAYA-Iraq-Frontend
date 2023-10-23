@@ -25,7 +25,7 @@ Dependencies:
     </div>
 
     <div class="col text-dark">
-      {{ y18n('content.editContentTip').replace('{step}', step) }}
+      {{ y18n('content.editContentTip').replace('{step}', blockInfo) }}
     </div>
   </div>
 </template>
@@ -39,7 +39,14 @@ export default {
   mixins: [
     locale,
     routes
-  ]
+  ],
+
+  computed: {
+    blockInfo () {
+      return this.y18n('title') + ': ' + this.contentToDisplay.title.text + ', ' +
+        this.y18n('type') + ': ' + this.typeName(this.contentToDisplay.name)
+    }
+  }
 
 }
 </script>

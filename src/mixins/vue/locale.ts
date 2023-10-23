@@ -7,6 +7,7 @@
 
 import { mapGetters } from 'vuex'
 import * as i18n from '../../assets/i18n'
+import { kebabToCamel } from '@/mixins/general/helpers'
 export default {
   computed: {
     ...mapGetters(['profileLanguage', 'courseLanguage']),
@@ -76,6 +77,16 @@ export default {
      */
     replacePattern (str: string, pattern: RegExp | string, replacement: string) {
       return str.replace(pattern, replacement)
+    },
+
+    /**
+     * @description returns name of content block in locale
+     * @author core
+     * Last Updated: October 23, 2023 by cmc
+     * @param compName name of content block
+     */
+    typeName (compName: string) {
+      return this.i18n[kebabToCamel(compName) + '.name']
     },
 
     /**
