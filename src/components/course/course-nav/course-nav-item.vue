@@ -114,6 +114,7 @@
             v-b-tooltip.top.ds500
             class="fas fa-edit"
             :class="langIsAr ? 'mr-auto' : 'ml-auto'"
+            role="button"
             :title="y18n('courseWrapper.edit')"
             @click="$router.push({name: 'content-follow-edit', params: { contentId: value.id, follow: value.follow }})"
           ></i>

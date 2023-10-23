@@ -152,6 +152,12 @@ export default {
     CourseNavChapter
   },
   mixins: [locale, tooltipIcon],
+  beforeRouteLeave (to, from, next) {
+    if (to.name === 'content-follow-edit') {
+      this.$store.commit('courseChaptersSet', deepCopy(this.courseNavEdit.children))
+    }
+    next()
+  },
   data () {
     return {
       chaptersDuplicate: {},
