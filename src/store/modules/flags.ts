@@ -326,9 +326,7 @@ export default {
       }
       Object.values(content).forEach((step: object) => {
         const iterInput = Object.values(stripKey('id', stripKey('name', step)))
-        console.log('iterInput', iterInput)
         iterInput.forEach((elem:any) => {
-          console.log(elem)
           if (typeof (elem) === 'object') {
             if (Array.isArray(elem)) {
               for (const iter of elem) {
