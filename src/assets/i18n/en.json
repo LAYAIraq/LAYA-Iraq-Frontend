@@ -145,6 +145,7 @@
 	"courseNavEdit.chapterDelete": "Delete Chapter",
 	"courseNavEdit.chapterNew": "New Chapter",
 	"courseNavEdit.chapterPlaceholder": "Chapter Name",
+	"courseNavEdit.firstBlock": "This is the first content block of the course.",
 	"courseNavEdit.followHighlight": "Hold shift + click to see the following block",
 	"courseNavEdit.fullPath": "Full Path",
 	"courseNavEdit.graph": "Graphical Preview:",

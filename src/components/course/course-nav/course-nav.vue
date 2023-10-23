@@ -169,6 +169,12 @@ export default {
         this.chapterNamesDuplicate = Object.values(this.chaptersDuplicate).some(val => val === true)
       },
       deep: true
+    },
+    courseChapters: {
+      handler () {
+        this.courseNavEdit = { isChapter: true, children: deepCopy(this.courseChapters) }
+      },
+      deep: true
     }
   },
   created () {

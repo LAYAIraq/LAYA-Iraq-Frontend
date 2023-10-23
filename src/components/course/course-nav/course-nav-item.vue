@@ -5,7 +5,14 @@
   Since: v1.3.0
 -->
 <template>
-  <div class="w-100 border rounded p-1">
+  <div
+    v-b-tooltip.auto
+    class="w-100 border rounded p-1"
+    :class="{
+      'border-primary': value.id === courseStart,
+    }"
+    :title="value.id === courseStart ? y18n('courseNavEdit.firstBlock') : null"
+  >
     <!-- Item header -->
     <div
       :id="`item-header-${item.id}`"
@@ -190,7 +197,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['courseContent']),
+    ...mapGetters(['courseContent', 'courseStart']),
     followSet () {
       return this.followingContent
         ? Array.isArray(this.followingContent) // either array or string
@@ -242,9 +249,9 @@ export default {
      * @param property the property to change
      * @param value change value for slug
      */
-    propagateChange (property, value) {
-      this.$emit('propagate-property-change', this.value, property, value)
-    },
+    // propagateChange (property, value) {
+    //   this.$emit('propagate-property-change', this.value, property, value)
+    // },
     /**
      * @description toggle collapsed state of item, emit event to parent
      * @author cmc

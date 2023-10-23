@@ -116,6 +116,7 @@
 	"courseNavEdit.chapterDuplicateWarning": "Achtung: Einige Unterkapitel haben den gleichen Namen. Das kann zu Problemen bei der Navigation führen. Bitte nutze einzigartige Namen für Unterkapitel!",
 	"courseNavEdit.chapterNew": "Neues Kapitel",
 	"courseNavEdit.chapterPlaceholder": "Kapitelname",
+	"courseNavEdit.firstBlock": "Dies ist der erste Inhalt im Kurs.",
 	"courseNavEdit.followHighlight": "Umschalt- und Maustaste gedrückt halten, um nachfolgendes Element anzuzeigen",
 	"courseNavEdit.fullPath": "Ganzer Pfad",
 	"courseNavEdit.graph": "Grafische Vorschau:",
