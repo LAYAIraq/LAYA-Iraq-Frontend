@@ -11,10 +11,33 @@
         id="nav-editor-header"
         class="row"
       >
-        <div class="col">
-          <h3>{{ y18n('courseNavEdit.title') }}</h3>
-        </div>
+        <h3>{{ y18n('courseNavEdit.title') }}</h3>
+        <i
+          id="questionmark"
+          v-b-tooltip.left
+          class="fas fa-question-circle"
+          :class="langIsAr? 'mr-auto' : 'ml-auto'"
+          :title="y18n('showTip')"
+          aria-labelledby="tooltipText"
+          aria-live="polite"
+          @click="toggleTip"
+        ></i>
       </div>
+
+      <b-jumbotron
+        v-if="tooltipOn"
+        id="tooltipText"
+        :header="y18n('courseNavEdit.title')"
+        :lead="y18n('tipHeadline')"
+      >
+        <hr class="my-4">
+        <p>{{ y18n('courseNavEdit.helpText') }}</p>
+        <p>{{ y18n('courseNavEdit.helpText2') }}</p>
+        <p>{{ y18n('courseNavEdit.helpText3') }}</p>
+        <p>{{ y18n('courseNavEdit.helpText4') }}</p>
+        <p>{{ y18n('courseNavEdit.helpText5') }}</p>
+      </b-jumbotron>
+
       <div
         id="nav-editor-main"
         class="row bg-light"
@@ -118,7 +141,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { locale } from '@/mixins'
+import { locale, tooltipIcon } from '@/mixins'
 import CourseNavChapter from './course-nav-chapter.vue'
 import { deepCopy, stripKey } from '@/mixins/general/helpers'
 import { contentIdGet, slugify } from '@/mixins/general/course-structure'
@@ -128,7 +151,7 @@ export default {
   components: {
     CourseNavChapter
   },
-  mixins: [locale],
+  mixins: [locale, tooltipIcon],
   data () {
     return {
       chaptersDuplicate: {},
@@ -255,9 +278,6 @@ export default {
      */
     coherentChaptersUpdate (id, val) {
       this.chaptersCoherent[id] = val
-      if (!val) { // fixes watcher not triggering on first change
-        this.chaptersIncoherent = true
-      }
     },
     /**
      * @description check if chapter names are duplicate or chapters incoherent, show modal if yes
