@@ -685,7 +685,7 @@ export default {
       'usernameSet'
     ]),
     /**
-     * @function change email if requirements are fulfilled
+     * @function change avatar if requirements are fulfilled
      * @author nv
      * @since v1.3.0
      */
