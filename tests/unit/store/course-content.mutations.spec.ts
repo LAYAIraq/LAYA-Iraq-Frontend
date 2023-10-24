@@ -75,7 +75,7 @@ describe('store module course-content mutations', () => {
       })
 
       it('sets chapters in store', () => {
-        expect(state.courseChapters.length).toBe(4)
+        expect(state.courseChapters.length).toBe(3)
         expect(state.courseChapters).toStrictEqual(SampleCourseChaptersIntermediate.chapters)
       })
 
@@ -104,7 +104,7 @@ describe('store module course-content mutations', () => {
     })
 
     it('adds chapter at end of existing chapters', () => {
-      const newChapter = deepCopy(SampleCourseChapters.chapters[0])
+      const newChapter = SampleCourseChapters.chapters[0]
       mutations.courseChapterAdd(state, newChapter)
       expect(state.courseChapters.length).toBe(2)
       expect(state.courseChapters[1]).toStrictEqual(newChapter)

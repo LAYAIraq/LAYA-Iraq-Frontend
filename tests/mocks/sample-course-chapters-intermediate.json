@@ -5,16 +5,6 @@
   "content": [],
   "chapters": [
     {
-      "isChapter": false,
-      "follow": [
-        "zw31",
-        "dr31"
-      ],
-      "id": "e1ns",
-      "slug": "dialog-sample",
-      "type": "button-navigation"
-    },
-    {
       "chapterName": "video",
       "isChapter": true,
       "children": [
@@ -24,12 +14,23 @@
           "slug": "video",
           "type": "video",
           "follow": "dr31"
+        },
+        {
+          "isChapter": false,
+          "follow": [
+            "zw31",
+            "dr31"
+          ],
+          "id": "e1ns",
+          "slug": "dialog-sample",
+          "type": "button-navigation"
         }
       ],
       "slug": "video"
     },
     {
       "chapterName": "Editor",
+      "id": "id-editor",
       "isChapter": true,
       "children": [{
           "follow": "v13r",
@@ -58,7 +59,8 @@
         }
       ],
       "slug": "quiz",
-      "isChapter": true
+      "isChapter": true,
+      "id": "id-2193"
     }
   ],
   "courseContent": {

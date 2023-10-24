@@ -1,6 +1,6 @@
 import http from 'axios'
 import { v4 as uuidv4 } from 'uuid'
-import { slugify } from '@/mixins/general/course-structure'
+import { slugify } from '@/mixins/general/slugs'
 import { LegacyContentBlock } from '@/mixins/types/course-structure'
 
 export default {

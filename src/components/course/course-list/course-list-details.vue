@@ -212,7 +212,7 @@
 // import http from 'axios'
 import { mapGetters } from 'vuex'
 import { locale, storeHandler } from '@/mixins'
-import { slugify } from '@/mixins/general/course-structure'
+import { slugify } from '@/mixins/general/slugs'
 import courseCategories from '@/options/course-categories.ts'
 import languages from '@/options/languages.ts'
 

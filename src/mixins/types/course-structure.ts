@@ -17,7 +17,8 @@ type FollowingContent = string | string[] | number | number[]
  * @property slug slug for course content block (can be used for route)
  */
 export interface CourseNavigationItem {
-  isChapter: boolean,
+  id: string
+  isChapter: boolean
   slug: string
 }
 
@@ -39,7 +40,6 @@ export interface CourseNavigationItemChapter extends CourseNavigationItem {
  */
 export interface CourseNavigationItemBlock extends CourseNavigationItem {
   type: string,
-  id: string,
   follow: FollowingContent
 }
 

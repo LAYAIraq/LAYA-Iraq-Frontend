@@ -144,7 +144,8 @@ import { mapGetters } from 'vuex'
 import { locale, tooltipIcon } from '@/mixins'
 import CourseNavChapter from './course-nav-chapter.vue'
 import { deepCopy, stripKey } from '@/mixins/general/helpers'
-import { contentIdGet, slugify } from '@/mixins/general/course-structure'
+import { courseContentIdGet } from '@/mixins/general/course-structure'
+import { slugify } from '@/mixins/general/slugs'
 
 export default {
   name: 'CourseNavigationEditor',
@@ -173,7 +174,7 @@ export default {
   computed: {
     ...mapGetters(['courseChapters', 'courseContent']),
     courseEnd () {
-      return contentIdGet(this.courseNavEdit.children, 'last')
+      return courseContentIdGet(this.courseNavEdit.children, 'last')
     },
     messageShow () {
       return this.edited || this.chaptersIncoherent || this.chapterNamesDuplicate

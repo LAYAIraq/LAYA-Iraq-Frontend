@@ -1,5 +1,5 @@
 import http from 'axios'
-import { slugify } from '@/mixins/general/course-structure'
+import { slugify } from '@/mixins/general/slugs'
 export default {
   state: {
     courseList: []

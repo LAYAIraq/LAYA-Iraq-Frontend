@@ -75,7 +75,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
-import { slugify, unslugify } from '@/mixins/general/course-structure'
+import { slugify, unslugify } from '@/mixins/general/slugs'
 
 export default {
   name: 'CourseHeader',

@@ -1,5 +1,5 @@
 /**
- * @fileOverview Vuex module for course content, esp. course navigation
+ * @file Vuex module for course content, esp. course navigation
  * @author cmc
  * @since 1.3.0
  * @dependencies none
@@ -7,27 +7,27 @@
 import {
   ContentBlock,
   Course,
-  CourseNavigationItem,
-  CourseNavigationItemBlock,
-  LegacyCourse
+  CourseNavigationItem
 } from '@/mixins/types/course-structure'
 import {
-  chaptersCheck,
-  chapterSlugDuplicateAvoid,
-  chapterSlugUpdate,
-  contentIdGet,
-  courseChaptersExtractFollow,
+  courseContentIdGet,
   coursePathsGet,
-  courseStructureChapterNames,
-  courseStructureDescent,
+  courseChaptersCollect,
+  courseDestructure,
   legacyContentFollowTransform,
-  legacyContentStepsTransform,
-  slugify
+  legacyContentStepsTransform
 } from '@/mixins/general/course-structure'
 import { stripKey } from '@/mixins/general/helpers'
 import { v4 as uuidv4 } from 'uuid'
 import http, { AxiosResponse } from 'axios'
 import Vue from 'vue'
+import {
+  chaptersCheck,
+  chaptersExtractFollow,
+  chapterSlugDuplicateAvoid,
+  chapterSlugUpdate
+} from '@/mixins/general/course-chapters'
+import { slugify } from '@/mixins/general/slugs'
 
 export default {
 
@@ -41,13 +41,13 @@ export default {
   getters: {
     courseChapters: (state: { courseChapters: object[] }) => state.courseChapters,
     courseChaptersCoherent: (state: { courseChapters: CourseNavigationItem[] }) => chaptersCheck(
-      { isChapter: true, chapterName: 'main', children: state.courseChapters, slug: 'main' }
+      { id: 'm41n', isChapter: true, chapterName: 'main', children: state.courseChapters, slug: 'main' }
     ),
-    courseChapterNames: (state: { courseChapters: CourseNavigationItem[] }) => courseStructureChapterNames(state.courseChapters),
+    courseChapterNames: (state: { courseChapters: CourseNavigationItem[] }) => courseChaptersCollect(state.courseChapters),
     courseContent: (state: { courseContent: { [id: string]: CourseNavigationItem } }) => state.courseContent,
     courseContentFollowMap: (state: { courseChapters: CourseNavigationItem[] }): object => {
       const map = {}
-      courseChaptersExtractFollow(state.courseChapters, map)
+      chaptersExtractFollow(state.courseChapters, map)
       return map
     },
     courseContentIdRouteMap: (state: { courseRoutes: any }) => {
@@ -86,7 +86,7 @@ export default {
       return contentPath ? contentPath[1] : null
     },
     courseRoutes: (state: { courseRoutes: any }) => state.courseRoutes,
-    courseStart: (state: { courseChapters: CourseNavigationItem[] }) => contentIdGet(state.courseChapters, 'first')
+    courseStart: (state: { courseChapters: CourseNavigationItem[] }) => courseContentIdGet(state.courseChapters, 'first')
   },
 
   mutations: {
@@ -104,7 +104,7 @@ export default {
       },
       course: Course
     ) {
-      [state.courseContent, state.courseRoutes] = courseStructureDescent(
+      [state.courseContent, state.courseRoutes] = courseDestructure(
         course.chapters,
         course.properties ? course.properties.showSingleSubChapterTitleSlug : null
       )
@@ -183,7 +183,7 @@ export default {
      * @param state store
      * @param chapter chapter to add
      */
-    courseChapterAdd (state: { courseChapters: CourseNavigationItem[], courseStart: string }, chapter: CourseNavigationItemBlock) {
+    courseChapterAdd (state: { courseChapters: CourseNavigationItem[], courseStart: string }, chapter: CourseNavigationItem) {
       state.courseChapters.push(chapter)
     },
 
@@ -237,7 +237,7 @@ export default {
         courseStart: any,
         courseChapters: any
       },
-      course: LegacyCourse
+      course: any
     ) {
       state.courseChapters = []
       state.courseContent = {}
