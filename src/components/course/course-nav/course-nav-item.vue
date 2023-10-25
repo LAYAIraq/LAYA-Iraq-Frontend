@@ -55,6 +55,7 @@
       class="collapsible px-3"
       :class="langIsAr? 'mr-3': 'ml-3'"
     >
+      <!-- preview -->
       <div class="d-flex">
         <span
           class="text-muted small btn-link"
@@ -65,6 +66,7 @@
           {{ y18n('courseNavEdit.preview') }}
         </span>
       </div>
+      <!-- id -->
       <div class="d-flex">
         <span
           class="text-muted small"
@@ -74,6 +76,7 @@
         </span>
         {{ item.id }}
       </div>
+      <!-- slug -->
       <div class="d-flex">
         <span
           class="text-muted small"
@@ -83,6 +86,7 @@
         </span>
         {{ value.slug }}
       </div>
+      <!-- full path -->
       <div class="d-flex">
         <span
           class="text-muted small"
@@ -92,6 +96,7 @@
         </span>
         {{ item.path }}
       </div>
+      <!-- type -->
       <div class="d-flex">
         <span
           class="text-muted small"
@@ -101,13 +106,14 @@
         </span>
         {{ typeName(value.type) }}
       </div>
+      <!-- follow -->
       <div
-        v-if="value.id !== courseEnd || value.type === 'button-navigation'"
+        v-if="(value.id !== courseEnd && followingContent) || value.type === 'button-navigation'"
         class="d-block"
       >
         <div class="d-flex follow-content">
           <span class="text-muted small">
-            Follow
+            {{ y18n('courseNavEdit.follow') }}
           </span>
           <i
             v-if="value.type === 'button-navigation'"
@@ -123,7 +129,7 @@
           class="d-flex"
           @click="$bvModal.show('follow-edit')"
         >
-          <div>
+          <div class="text-break">
             <p
               v-if="followSet.length === 1"
               v-b-tooltip.right

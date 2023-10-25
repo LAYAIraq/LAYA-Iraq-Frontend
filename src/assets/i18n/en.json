@@ -150,6 +150,7 @@
 	"courseNavEdit.editNavIncompleteTooltip": "The course navigation contains errors! This can lead to issues displaying the course!",
 	"courseNavEdit.editNavTip": "You can edit the course navigation. Altogether, the course has {steps} different content blocks.",
 	"courseNavEdit.firstBlock": "This is the first content block of the course.",
+	"courseNavEdit.follow": "Following Content",
 	"courseNavEdit.followHighlight": "Hold shift + click to see the following block",
 	"courseNavEdit.fullPath": "Full Path",
 	"courseNavEdit.helpText": "This is to edit the course navigation. By default, content blocks are displayed in the order in which they have been added to the course.",
