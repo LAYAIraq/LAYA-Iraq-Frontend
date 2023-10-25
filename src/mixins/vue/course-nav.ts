@@ -5,7 +5,7 @@
  */
 export default {
   methods: {
-    previewEmit (id) {
+    previewEmit (id: string) {
       this.$emit('preview', id)
     }
   }

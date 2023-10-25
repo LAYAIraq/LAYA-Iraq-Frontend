@@ -67,7 +67,8 @@ import { locale, routes } from '@/mixins'
 import { mapGetters } from 'vuex'
 import CourseFiles from '@/components/course/course-edit/course-files.vue'
 import { deepCopy, stripKey } from '@/mixins/general/helpers'
-import { contentBlockToNavItemTransform } from '@/mixins/general/course-structure'
+import { courseContentBlockToNavItemTransform } from '@/mixins/general/course-structure'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'CourseContent',
@@ -147,7 +148,9 @@ export default {
      * Last Updated: January 20, 2021
      */
     stepData () {
-      const input = {}
+      const input = {
+        id: uuidv4()
+      }
       for (const prop in this.$refs.edit.$data) {
         if (!/^[$_]/.test(prop)) {
           input[prop] = this.$refs.edit.$data[prop]
@@ -190,14 +193,14 @@ export default {
      */
     save () {
       const updatedStep = {
-        type: this.cid,
+        name: this.cid,
         ...deepCopy(this.stepData) // deep copy to get rid of store references
       }
 
       // choose way depending on new or existing content
       if (!this.editContent) {
         this.$store.commit('courseContentAdd', updatedStep)
-        this.$store.commit('courseChapterAdd', contentBlockToNavItemTransform(updatedStep))
+        this.$store.commit('courseChapterAdd', courseContentBlockToNavItemTransform(updatedStep))
       } else {
         this.$store.commit('courseContentSet', { ...updatedStep, id: this.pathId })
       }

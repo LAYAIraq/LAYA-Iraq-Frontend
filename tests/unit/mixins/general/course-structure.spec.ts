@@ -8,19 +8,15 @@ import {
   LegacyCourse
 } from '@/mixins/types/course-structure'
 import {
-  chapterFollowSet,
-  contentBlockToNavItemTransform,
-  contentIdGet,
+  courseContentBlockToNavItemTransform,
+  courseContentIdGet,
   coursePathsGet,
-  courseStructureChapterNames,
-  courseStructureContentIdsExtract,
-  courseStructureDescent,
-  legacyContentStepsTransform,
-  slugify,
-  unslugify
+  courseChaptersCollect,
+  courseContentIdsExtract,
+  courseDestructure,
+  legacyContentStepsTransform
 } from '@/mixins/general/course-structure'
-import { validateSlug } from '../../../helpers/validations'
-import { deepCopy } from '@/mixins/general/helpers'
+import { getNumberBetween1and10 } from '../../../helpers/random-input'
 
 // prerequisites to make sure sample data is valid
 describe('content-structure types', () => {
@@ -43,7 +39,6 @@ describe('content-structure types', () => {
 })
 
 describe('content-structure methods', () => {
-  const getNumberBetween1and10 = () => Math.ceil(Math.random() * 10)
   describe('legacyContentStepsTransform', () => {
     const content = SampleCourse.content
     const mockContentBlock: LegacyContentBlock = {
@@ -100,272 +95,6 @@ describe('content-structure methods', () => {
     })
   })
 
-  describe('slugify', () => {
-    it('converts strings to slugs', () => {
-      const strings = ['Hello World', 'Hello World!', 'Hello World!!', 'Hello World!!!']
-      const expectedSlug = 'hello-world'
-      strings.forEach((string) => {
-        const slug = slugify(string)
-        expect(validateSlug(slug)).toBeTruthy()
-        expect(slug).toBe(expectedSlug)
-      })
-    })
-
-    it('converts random sentences to valid slugs', () => {
-      const noOfWords = getNumberBetween1and10() * 2 // random number between 1 and 10
-      const chars = '()[]{}!@#$%^&*'
-      const letters = 'abcdefghijklmnopqrstuvwxyz'
-      const spaces = ' -_ '
-      const getRandomItem = () => {
-        let str = ''
-        str = str + spaces[Math.floor(Math.random() * spaces.length)]
-        if (Math.random() > 0.75) {
-          str = str + chars[Math.floor(Math.random() * chars.length)]
-          if (Math.random() > 0.5) {
-            str = str + spaces[Math.floor(Math.random() * spaces.length)]
-          }
-        }
-        return str
-      }
-
-      let sentence = ''
-      for (let i = 0; i < noOfWords; i++) {
-        const noOfLetters = getNumberBetween1and10() // random number between 1 and 10
-
-        let word = ''
-        for (let j = 0; j < noOfLetters; j++) {
-          word += letters.charAt(Math.floor(Math.random() * 26))
-          // console.log(word)
-        }
-        const space = i === noOfWords - 1 ? '' : getRandomItem()
-        sentence += word + space
-        // console.log(sentence)
-      }
-      // console.log(sentence)
-      const slug = slugify(sentence)
-      // console.log(slug)
-      expect(validateSlug(slug)).toBeTruthy()
-    })
-
-    it('does useful things when given an arabic string', () => {
-      const arabicString = 'مرحبا بالعالم'
-      const slug = slugify(arabicString)
-      expect(slug).toBeTruthy()
-      expect(validateSlug(slug)).toBeTruthy()
-      expect(slug).toBe('mr7ba-bal3alm')
-    })
-
-    it('converts arabic numbers to latin numbers', () => {
-      const arabicString = '١٢٣٤٥٦٧٨٩٠'
-      const slug = slugify(arabicString)
-      expect(slug).toBeTruthy()
-      expect(validateSlug(slug)).toBeTruthy()
-      expect(slug).toBe('1234567890')
-    })
-
-    it('adds spaces when converting arabic numbers', () => {
-      const arabicString = '١٢٣ ٤٥٦٧٨٩٠'
-      const slug = slugify(arabicString)
-      expect(slug).toBeTruthy()
-      expect(validateSlug(slug)).toBeTruthy()
-      expect(slug).toBe('123-4567890')
-    })
-
-    it.skip('adds spaces between letters and numbers when converting arabic numbers', () => { // skipped b/c not sure if this is desirable
-      const arabicString = '١٢٣٤٥٦٧٨٩٠abc'
-      const slug = slugify(arabicString)
-      expect(slug).toBeTruthy()
-      expect(validateSlug(slug)).toBeTruthy()
-      expect(slug).toBe('1234567890-abc')
-    })
-  })
-
-  describe('unslugify', () => {
-    it('converts slugs to space separated uppercase words', () => {
-      const slugs = ['hello-world', 'hello-world!', 'hello-world!!', 'hello-world!!!', 'very-complicated-slug-lacking-brevity']
-      const expectedStrings = ['Hello World', 'Hello World!', 'Hello World!!', 'Hello World!!!', 'Very Complicated Slug Lacking Brevity']
-      slugs.forEach((slug, index) => {
-        const string = unslugify(slug)
-        expect(string).toBe(expectedStrings[index])
-      })
-    })
-  })
-
-  describe('contentIdGet', () => {
-    describe('first mode', () => {
-      it('returns correct id for new courses', () => {
-        const courseChapters = SampleCourseChapters.chapters
-        const firstContentId = contentIdGet(courseChapters, 'first')
-        expect(firstContentId).toBe('e1ns')
-      })
-
-      it('returns correct id for deeply nested courses', () => {
-        const courseChaptersNested = SampleCourseChaptersNested.chapters
-        const firstContentId = contentIdGet(courseChaptersNested, 'first')
-        expect(firstContentId).toBe('v13r')
-      })
-
-      it('returns correct id for old courses', () => {
-        const courseChapters = [
-          { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] },
-          { id: 'c7c75ede', isChapter: false, slug: 'video', follow: 2 },
-          { id: '562a0638', isChapter: false, slug: 'wysiwyg', follow: 3 },
-          { id: 'a7bd9c9c', isChapter: false, slug: 'multiple-choice-test', follow: 4 },
-          { id: 'd0b662f2', isChapter: false, slug: 'drag-drop-sample', follow: -1 }
-        ]
-        const firstContentId = contentIdGet(courseChapters, 'first')
-        expect(firstContentId).toBe('ba3b89ef')
-      })
-
-      it('returns null when no id is found', () => {
-        const courseChapters = [
-          { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] },
-          { id: 'c7c75ede', isChapter: false, slug: 'video', follow: 2 },
-          { isChapter: true, children: [] }
-        ]
-        expect(contentIdGet(courseChapters.slice(2), 'first')).toBeNull()
-      })
-
-      it('returns id of when given single CourseNavItem', () => {
-        const courseChapters = { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] }
-        expect(contentIdGet(courseChapters, 'first')).toBe('ba3b89ef')
-      })
-
-      it('returns id of first child f given single chapter', () => {
-        const courseChapters = {
-          isChapter: true,
-          children: [
-            { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] },
-            { id: 'c7c75ede', isChapter: false, slug: 'video', follow: 2 }
-          ]
-        }
-        expect(contentIdGet(courseChapters, 'first')).toBe('ba3b89ef')
-      })
-    })
-    describe('last mode', () => {
-      it('returns correct id for new courses', () => {
-        const courseChapters = SampleCourseChapters.chapters
-        const lastContentId = contentIdGet(courseChapters, 'last')
-        expect(lastContentId).toBe('fu3nf')
-      })
-
-      it('returns correct id for deeply nested courses', () => {
-        const courseChaptersNested = SampleCourseChaptersNested.chapters
-        const lastContentId = contentIdGet(courseChaptersNested, 'last')
-        expect(lastContentId).toBe('f33db4ck')
-      })
-
-      it('returns correct id for old courses', () => {
-        const courseChapters = [
-          { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] },
-          { id: 'c7c75ede', isChapter: false, slug: 'video', follow: 2 },
-          { id: '562a0638', isChapter: false, slug: 'wysiwyg', follow: 3 },
-          { id: 'a7bd9c9c', isChapter: false, slug: 'multiple-choice-test', follow: 4 },
-          { id: 'd0b662f2', isChapter: false, slug: 'drag-drop-sample', follow: -1 }
-        ]
-        const lastContentId = contentIdGet(courseChapters, 'last')
-        expect(lastContentId).toBe('d0b662f2')
-      })
-
-      it('returns null when no id is found', () => {
-        const courseChapters = [
-          { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] },
-          { id: 'c7c75ede', isChapter: false, slug: 'video', follow: 2 },
-          { isChapter: true, children: [] }
-        ]
-        expect(contentIdGet(courseChapters.slice(2), 'last')).toBeNull()
-      })
-
-      it('returns id of when given single CourseNavItem', () => {
-        const courseChapters = { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] }
-        expect(contentIdGet(courseChapters, 'last')).toBe('ba3b89ef')
-      })
-
-      it('returns id of last child of given single chapter', () => {
-        const courseChapters = {
-          isChapter: true,
-          children: [
-            { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] },
-            { id: 'c7c75ede', isChapter: false, slug: 'video', follow: 2 }
-          ]
-        }
-        expect(contentIdGet(courseChapters, 'last')).toBe('c7c75ede')
-      })
-    })
-  })
-
-  describe('chapterFollowSet', () => {
-    let courseChapters: any
-    const linearChapters = {
-      isChapter: true,
-      children: [
-        { id: 'e1n5', isChapter: false, slug: 'dialog-sample', type: 'button-navigation', follow: ['zw31', 'dr31'] },
-        { id: 'zw31', isChapter: false, slug: 'video', follow: 'dr31' },
-        { id: 'dr31', isChapter: false, slug: 'wysiwyg', follow: 'v13r' },
-        { id: 'v13r', isChapter: false, slug: 'multiple-choice-test', follow: 'fu3nf' },
-        { id: 'fu3nf', isChapter: false, slug: 'drag-drop-sample', follow: null }
-      ]
-    }
-    beforeEach(() => {
-      courseChapters = deepCopy(linearChapters)
-    })
-
-    it('sets follow property for all chapters', () => {
-      courseChapters.children.forEach((chapter: any) => { chapter.follow = null })
-      chapterFollowSet(courseChapters, null)
-      expect(courseChapters.children).toStrictEqual([
-        { id: 'e1n5', isChapter: false, slug: 'dialog-sample', type: 'button-navigation', follow: null },
-        { id: 'zw31', isChapter: false, slug: 'video', follow: 'dr31' },
-        { id: 'dr31', isChapter: false, slug: 'wysiwyg', follow: 'v13r' },
-        { id: 'v13r', isChapter: false, slug: 'multiple-choice-test', follow: 'fu3nf' },
-        { id: 'fu3nf', isChapter: false, slug: 'drag-drop-sample', follow: null }
-      ])
-    })
-
-    it('sets follow correctly when order is reversed', () => {
-      courseChapters.children.reverse()
-      chapterFollowSet(courseChapters, null)
-      expect(courseChapters.children).toStrictEqual([
-        { id: 'fu3nf', isChapter: false, slug: 'drag-drop-sample', follow: 'v13r' },
-        { id: 'v13r', isChapter: false, slug: 'multiple-choice-test', follow: 'dr31' },
-        { id: 'dr31', isChapter: false, slug: 'wysiwyg', follow: 'zw31' },
-        { id: 'zw31', isChapter: false, slug: 'video', follow: 'e1n5' },
-        { id: 'e1n5', isChapter: false, slug: 'dialog-sample', type: 'button-navigation', follow: ['zw31', 'dr31'] }
-      ])
-    })
-
-    it('sets follow correctly in nested chapters', () => {
-      courseChapters = {
-        isChapter: true,
-        children: [
-          {
-            id: 'b',
-            isChapter: true,
-            children: [
-              { id: 'e', isChapter: false },
-              { id: 'f', isChapter: false }
-            ]
-          },
-          { id: 'c', isChapter: false },
-          { id: 'd', isChapter: false }
-        ]
-      }
-      chapterFollowSet(courseChapters, null)
-      expect(courseChapters.children).toStrictEqual([
-        {
-          id: 'b',
-          isChapter: true,
-          children: [
-            { id: 'e', isChapter: false, follow: 'f' },
-            { id: 'f', isChapter: false, follow: 'c' }
-          ]
-        },
-        { id: 'c', isChapter: false, follow: 'd' },
-        { id: 'd', isChapter: false, follow: null }
-      ])
-    })
-  })
-
   describe('contentBlockToNavItemTransform', () => {
     let content: ContentBlock
     beforeEach(() => {
@@ -379,31 +108,134 @@ describe('content-structure methods', () => {
     })
 
     it('returns navItem as return value', () => {
-      const navItem = contentBlockToNavItemTransform(content)
+      const navItem = courseContentBlockToNavItemTransform(content)
       expect(typeof navItem).toBe('object')
       expect(Array.isArray(navItem)).toBeFalsy()
     })
 
     it('returns a proper navItem', () => {
-      const navItem = contentBlockToNavItemTransform(content)
+      const navItem = courseContentBlockToNavItemTransform(content)
       expect(Object.keys(navItem)).toContain('isChapter')
     })
 
     it('does not create a slug that ends on "edit" and returns false', () => {
       content.title.text = 'Edit'
-      const navItem = contentBlockToNavItemTransform(content)
+      const navItem = courseContentBlockToNavItemTransform(content)
       expect(navItem.slug).not.toBe('edit')
     })
 
     it('does not create a slug that ends on "new" and returns false', () => {
       content.title.text = 'New'
-      const navItem = contentBlockToNavItemTransform(content)
+      const navItem = courseContentBlockToNavItemTransform(content)
       expect(navItem.slug).not.toBe('new')
     })
   })
 
+  describe('courseContentIdGet', () => {
+    describe('first mode', () => {
+      it('returns correct id for new courses', () => {
+        const courseChapters = SampleCourseChapters.chapters
+        const firstContentId = courseContentIdGet(courseChapters, 'first')
+        expect(firstContentId).toBe('e1ns')
+      })
+
+      it('returns correct id for deeply nested courses', () => {
+        const courseChaptersNested = SampleCourseChaptersNested.chapters
+        const firstContentId = courseContentIdGet(courseChaptersNested, 'first')
+        expect(firstContentId).toBe('v13r')
+      })
+
+      it('returns correct id for old courses', () => {
+        const courseChapters = [
+          { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] },
+          { id: 'c7c75ede', isChapter: false, slug: 'video', follow: 2 },
+          { id: '562a0638', isChapter: false, slug: 'wysiwyg', follow: 3 },
+          { id: 'a7bd9c9c', isChapter: false, slug: 'multiple-choice-test', follow: 4 },
+          { id: 'd0b662f2', isChapter: false, slug: 'drag-drop-sample', follow: -1 }
+        ]
+        const firstContentId = courseContentIdGet(courseChapters, 'first')
+        expect(firstContentId).toBe('ba3b89ef')
+      })
+
+      it('returns null when no id is found', () => {
+        const courseChapters = [
+          { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] },
+          { id: 'c7c75ede', isChapter: false, slug: 'video', follow: 2 },
+          { isChapter: true, children: [] }
+        ]
+        expect(courseContentIdGet(courseChapters.slice(2), 'first')).toBeNull()
+      })
+
+      it('returns id of when given single CourseNavItem', () => {
+        const courseChapters = { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] }
+        expect(courseContentIdGet(courseChapters, 'first')).toBe('ba3b89ef')
+      })
+
+      it('returns id of first child f given single chapter', () => {
+        const courseChapters = {
+          isChapter: true,
+          children: [
+            { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] },
+            { id: 'c7c75ede', isChapter: false, slug: 'video', follow: 2 }
+          ]
+        }
+        expect(courseContentIdGet(courseChapters, 'first')).toBe('ba3b89ef')
+      })
+    })
+    describe('last mode', () => {
+      it('returns correct id for new courses', () => {
+        const courseChapters = SampleCourseChapters.chapters
+        const lastContentId = courseContentIdGet(courseChapters, 'last')
+        expect(lastContentId).toBe('fu3nf')
+      })
+
+      it('returns correct id for deeply nested courses', () => {
+        const courseChaptersNested = SampleCourseChaptersNested.chapters
+        const lastContentId = courseContentIdGet(courseChaptersNested, 'last')
+        expect(lastContentId).toBe('f33db4ck')
+      })
+
+      it('returns correct id for old courses', () => {
+        const courseChapters = [
+          { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] },
+          { id: 'c7c75ede', isChapter: false, slug: 'video', follow: 2 },
+          { id: '562a0638', isChapter: false, slug: 'wysiwyg', follow: 3 },
+          { id: 'a7bd9c9c', isChapter: false, slug: 'multiple-choice-test', follow: 4 },
+          { id: 'd0b662f2', isChapter: false, slug: 'drag-drop-sample', follow: -1 }
+        ]
+        const lastContentId = courseContentIdGet(courseChapters, 'last')
+        expect(lastContentId).toBe('d0b662f2')
+      })
+
+      it('returns null when no id is found', () => {
+        const courseChapters = [
+          { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] },
+          { id: 'c7c75ede', isChapter: false, slug: 'video', follow: 2 },
+          { isChapter: true, children: [] }
+        ]
+        expect(courseContentIdGet(courseChapters.slice(2), 'last')).toBeNull()
+      })
+
+      it('returns id of when given single CourseNavItem', () => {
+        const courseChapters = { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] }
+        expect(courseContentIdGet(courseChapters, 'last')).toBe('ba3b89ef')
+      })
+
+      it('returns id of last child of given single chapter', () => {
+        const courseChapters = {
+          isChapter: true,
+          children: [
+            { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] },
+            { id: 'c7c75ede', isChapter: false, slug: 'video', follow: 2 }
+          ]
+        }
+        expect(courseContentIdGet(courseChapters, 'last')).toBe('c7c75ede')
+      })
+    })
+  })
+
   describe('coursePathsGet', () => {
-    it('returns correct paths for old courses', () => { // FIXME: this is new course structure
+    it('returns correct paths for courses', () => {
       const courseChapters = [
         { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] },
         { id: 'c7c75ede', isChapter: false, slug: 'video', follow: 2 },
@@ -420,19 +252,22 @@ describe('content-structure methods', () => {
     it('does not add several start routes when course consists of several arrays', () => {
       const courseChapters = [
         {
+          chapterName: 'A',
+          id: 'a',
           isChapter: true,
           slug: 'a',
-
           children:
-        [
-          { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] },
-          { id: 'c7c75ede', isChapter: false, slug: 'video', follow: 2 },
-          { id: '562a0638', isChapter: false, slug: 'wysiwyg', follow: 3 },
-          { id: 'a7bd9c9c', isChapter: false, slug: 'multiple-choice-test', follow: 4 },
-          { id: 'd0b662f2', isChapter: false, slug: 'drag-drop-sample', follow: -1 }
-        ]
+          [
+            { id: 'ba3b89ef', isChapter: false, slug: 'dialog-sample', follow: [1, 2] },
+            { id: 'c7c75ede', isChapter: false, slug: 'video', follow: 2 },
+            { id: '562a0638', isChapter: false, slug: 'wysiwyg', follow: 3 },
+            { id: 'a7bd9c9c', isChapter: false, slug: 'multiple-choice-test', follow: 4 },
+            { id: 'd0b662f2', isChapter: false, slug: 'drag-drop-sample', follow: -1 }
+          ]
         },
         {
+          chapterName: 'B',
+          id: 'b',
           isChapter: true,
           slug: 'b',
           children: [
@@ -455,23 +290,23 @@ describe('content-structure methods', () => {
     })
   })
 
-  describe('courseStructureChapterNames', () => {
+  describe('courseChaptersCollect', () => {
     it('returns null if no chapter array is passed', () => {
-      expect(courseStructureChapterNames(null)).toBeNull()
-      expect(courseStructureChapterNames(undefined)).toBeNull()
+      expect(courseChaptersCollect(null)).toBeNull()
+      expect(courseChaptersCollect(undefined)).toBeNull()
     })
     it('returns empty object for empty chapter array', () => {
-      expect(courseStructureChapterNames([])).toStrictEqual({})
+      expect(courseChaptersCollect([])).toStrictEqual({})
     })
     it('returns the correct object for simple chapters', () => {
-      expect(courseStructureChapterNames(SampleCourseChapters.chapters)).toStrictEqual({
+      expect(courseChaptersCollect(SampleCourseChapters.chapters)).toStrictEqual({
         video: 'video',
         editor: 'Editor',
         quiz: 'quiz'
       })
     })
     it('returns the correct object for nested chapters', () => {
-      expect(courseStructureChapterNames(SampleCourseChaptersNested.chapters)).toStrictEqual({
+      expect(courseChaptersCollect(SampleCourseChaptersNested.chapters)).toStrictEqual({
         quiz: 'quiz',
         scmc: 'scmc',
         'choice-quizzes': 'Choice-Quizzes',
@@ -487,7 +322,7 @@ describe('content-structure methods', () => {
     })
   })
 
-  describe('courseStructureDescent', () => { // TODO: reactivate
+  describe('courseDestructure', () => {
     it('only returns blank string for first course block', () => {
       const singleChapterCourseStructure = [
         {
@@ -498,7 +333,7 @@ describe('content-structure methods', () => {
           slug: 'former-pope-benedict-dead'
         }
       ]
-      const [ids, paths] = courseStructureDescent(singleChapterCourseStructure, 'h4b3mu5p4p4m')
+      const [ids, paths] = courseDestructure(singleChapterCourseStructure, 'h4b3mu5p4p4m')
       expect(Object.keys(ids)).toHaveLength(1)
       expect(Object.keys(ids)).toContainEqual('h4b3mu5p4p4m')
       expect(paths).toHaveLength(1)
@@ -507,7 +342,7 @@ describe('content-structure methods', () => {
 
     it('returns correct paths for new courses (no trimming)', () => {
       const courseChapters = SampleCourseChapters.chapters
-      const [ids, paths] = courseStructureDescent(courseChapters, 'e1ns')
+      const [ids, paths] = courseDestructure(courseChapters, 'e1ns')
       expect(Object.keys(ids).length).toBe(5)
       expect(paths).toHaveLength(5)
       expect(paths).toContainEqual(['', 'e1ns'])
@@ -519,7 +354,7 @@ describe('content-structure methods', () => {
 
     it('returns correct paths for new courses (with trimming of block slug)', () => {
       const courseChapters = SampleCourseChapters.chapters
-      const [ids, paths] = courseStructureDescent(courseChapters, 'chapter')
+      const [ids, paths] = courseDestructure(courseChapters, 'chapter')
       expect(Object.keys(ids).length).toBe(5)
       expect(paths).toHaveLength(5)
       expect(paths).toContainEqual(['', 'e1ns'])
@@ -531,14 +366,14 @@ describe('content-structure methods', () => {
 
     it('returns correct paths for new courses (with trimming of chapter slug)', () => {
       const courseChapters = SampleCourseChapters.chapters
-      const [_, paths] = courseStructureDescent(courseChapters, 'block')
+      const [_, paths] = courseDestructure(courseChapters, 'block')
       expect(paths).toContainEqual(['video', 'zw31'])
       expect(paths).toContainEqual(['wysiwyg', 'dr31'])
     })
 
     it('returns correct paths for deeply nested courses (no trimming)', () => {
       const courseChaptersNested = SampleCourseChaptersNested.chapters
-      const [ids, paths] = courseStructureDescent(courseChaptersNested)
+      const [ids, paths] = courseDestructure(courseChaptersNested)
       expect(Object.keys(ids).length).toBe(9)
       expect(paths).toHaveLength(9)
       expect(paths).toContainEqual(['', 'v13r'])
@@ -554,7 +389,7 @@ describe('content-structure methods', () => {
 
     it('returns correct paths for deeply nested courses (with trimming of chapter)', () => {
       const courseChaptersNested = SampleCourseChaptersNested.chapters
-      const [ids, paths] = courseStructureDescent(courseChaptersNested, 'block')
+      const [ids, paths] = courseDestructure(courseChaptersNested, 'block')
       expect(Object.keys(ids).length).toBe(9)
       expect(paths).toHaveLength(9)
       expect(paths).toContainEqual(['', 'v13r'])
@@ -569,7 +404,7 @@ describe('content-structure methods', () => {
     })
     it('returns correct paths for deeply nested courses (with trimming of block)', () => {
       const courseChaptersNested = SampleCourseChaptersNested.chapters
-      const [ids, paths] = courseStructureDescent(courseChaptersNested, 'chapter')
+      const [ids, paths] = courseDestructure(courseChaptersNested, 'chapter')
       expect(Object.keys(ids).length).toBe(9)
       expect(paths).toHaveLength(9)
       expect(paths).toContainEqual(['', 'v13r'])
@@ -584,11 +419,11 @@ describe('content-structure methods', () => {
     })
   })
 
-  describe('courseStructureContentIdsExtract', () => {
+  describe('courseContentIdsExtract', () => {
     it('returns correct ids for new courses', () => {
       const courseChapters = SampleCourseChapters.chapters
       const ids = {}
-      courseStructureContentIdsExtract(courseChapters, ids)
+      courseContentIdsExtract(courseChapters, ids)
       expect(Object.keys(ids).length).toBe(5)
       expect(ids).toHaveProperty('e1ns')
       expect(ids).toHaveProperty('zw31')
@@ -600,7 +435,7 @@ describe('content-structure methods', () => {
     it('returns correct ids for deeply nested courses', () => {
       const courseChaptersNested = SampleCourseChaptersNested.chapters
       const ids = {}
-      courseStructureContentIdsExtract(courseChaptersNested, ids)
+      courseContentIdsExtract(courseChaptersNested, ids)
       expect(Object.keys(ids).length).toBe(9)
       expect(ids).toHaveProperty('e1ns')
       expect(ids).toHaveProperty('zw31')

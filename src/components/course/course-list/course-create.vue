@@ -94,7 +94,6 @@
           <textarea
             id="new-course-abstract"
             v-model="newCourse.abstract"
-            type="text"
             class="form-control"
             :placeholder="y18n('abstract')"
             rows="5"
@@ -170,7 +169,7 @@ import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 import courseCategories from '@/options/course-categories.ts'
 import languages from '@/options/languages.ts'
-import { slugify } from '@/mixins/general/course-structure'
+import { slugify } from '@/mixins/general/slugs'
 
 export default {
   name: 'CourseCreate',

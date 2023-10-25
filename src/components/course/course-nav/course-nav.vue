@@ -1,3 +1,8 @@
+<!--
+  @file wrap course navigation editor
+  @author cmc
+  @since v1.3.0
+-->
 <template>
   <div
     id="course-nav-edit"
@@ -11,10 +16,33 @@
         id="nav-editor-header"
         class="row"
       >
-        <div class="col">
-          <h3>{{ y18n('courseNavEdit.title') }}</h3>
-        </div>
+        <h3>{{ y18n('courseNavEdit.title') }}</h3>
+        <i
+          id="questionmark"
+          v-b-tooltip.left
+          class="fas fa-question-circle"
+          :class="langIsAr? 'mr-auto' : 'ml-auto'"
+          :title="y18n('showTip')"
+          aria-labelledby="tooltipText"
+          aria-live="polite"
+          @click="toggleTip"
+        ></i>
       </div>
+
+      <b-jumbotron
+        v-if="tooltipOn"
+        id="tooltipText"
+        :header="y18n('courseNavEdit.title')"
+        :lead="y18n('tipHeadline')"
+      >
+        <hr class="my-4">
+        <p>{{ y18n('courseNavEdit.helpText') }}</p>
+        <p>{{ y18n('courseNavEdit.helpText2') }}</p>
+        <p>{{ y18n('courseNavEdit.helpText3') }}</p>
+        <p>{{ y18n('courseNavEdit.helpText4') }}</p>
+        <p>{{ y18n('courseNavEdit.helpText5') }}</p>
+      </b-jumbotron>
+
       <div
         id="nav-editor-main"
         class="row bg-light"
@@ -24,12 +52,12 @@
           :chapter-name="courseNavEdit.chapterName"
           :course-end="courseEnd ? courseEnd : ''"
           :main="true"
-          @chapter-coherent="coherentChaptersUpdate"
-          @deleted-chapter="deleteChapter"
+          @chapter-coherent="chaptersCoherentUpdate"
+          @deleted-chapter="chapterDelete"
           @duplicate-chapters="chaptersDuplicateUpdate"
           @edited="edited = true"
           @preview="previewSet"
-          @propagate-property-change="changeProperty"
+          @propagate-property-change="propertyChange"
         />
       </div>
       <div
@@ -38,7 +66,7 @@
       >
         <b-button
           secondary
-          @click="addChapter"
+          @click="chapterAdd"
         >
           {{ y18n('courseNavEdit.chapterAdd') }}
         </b-button>
@@ -118,17 +146,25 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { locale } from '@/mixins'
+import { v4 as uuidv4 } from 'uuid'
+import { locale, tooltipIcon } from '@/mixins'
 import CourseNavChapter from './course-nav-chapter.vue'
 import { deepCopy, stripKey } from '@/mixins/general/helpers'
-import { contentIdGet, slugify } from '@/mixins/general/course-structure'
+import { courseContentIdGet } from '@/mixins/general/course-structure'
+import { slugify } from '@/mixins/general/slugs'
 
 export default {
   name: 'CourseNavigationEditor',
   components: {
     CourseNavChapter
   },
-  mixins: [locale],
+  mixins: [locale, tooltipIcon],
+  beforeRouteLeave (to, from, next) {
+    if (to.name === 'content-follow-edit') {
+      this.$store.commit('courseChaptersSet', deepCopy(this.courseNavEdit.children))
+    }
+    next()
+  },
   data () {
     return {
       chaptersDuplicate: {},
@@ -144,14 +180,13 @@ export default {
   computed: {
     ...mapGetters(['courseChapters', 'courseContent']),
     courseEnd () {
-      return contentIdGet(this.courseNavEdit.children, 'last')
+      return courseContentIdGet(this.courseNavEdit.children, 'last')
     },
     messageShow () {
       return this.edited || this.chaptersIncoherent || this.chapterNamesDuplicate
     },
     previewComponent () {
       const comps = { ...this.$laya.blocks, ...this.$laya.assessments, ...this.$laya.organization }
-      console.log('comps', comps)
       return this.previewData ? comps[this.previewData.name].components.view : null
     },
     previewData () {
@@ -170,6 +205,12 @@ export default {
         this.chapterNamesDuplicate = Object.values(this.chaptersDuplicate).some(val => val === true)
       },
       deep: true
+    },
+    courseChapters: {
+      handler () {
+        this.courseNavEdit = { isChapter: true, children: deepCopy(this.courseChapters) }
+      },
+      deep: true
     }
   },
   created () {
@@ -177,21 +218,18 @@ export default {
       ? this.chaptersCreate()
       : { isChapter: true, children: deepCopy(this.courseChapters) }
   },
-  beforeDestroy () {
-    // if (this.edited) {
-    //
-    // }
-  },
+
   methods: {
     /**
      * @function Add chapter object to `courseNavEdit` data prop
      * @author cmc
      */
-    addChapter () {
+    chapterAdd () {
       this.courseNavEdit.children.push({
         chapterName: this.y18n('courseNavEdit.chapterNew'),
         slug: slugify(this.y18n('courseNavEdit.chapterNew')),
         isChapter: true,
+        id: uuidv4(),
         children: []
       })
     },
@@ -199,27 +237,14 @@ export default {
      * @description update chapter map if chapter was deleted
      * @param id deleted chapter's id
      */
-    deleteChapter (id) {
+    chapterDelete (id) {
       this.chaptersCoherent = stripKey(id, this.chaptersCoherent)
       this.chaptersDuplicate = stripKey(id, this.chaptersDuplicate)
     },
-
     /**
-     * @function change chapter name of referenced chapter object
-     * @author cmc
-     * @param chapter reference to object in `courseNavEdit`
-     * @param property property to change
-     * @param value new value for property
+     * @description create courseNav from course chapters if none in store
+     * @returns {{children: *[], isChapter: boolean}} courseNav data structure
      */
-    changeProperty (chapter, property, value) {
-      if (property !== 'followingContent') { // followingContent emit has no data
-        chapter[property] = value
-      }
-      if (property === 'chapterName') {
-        chapter.slug = slugify(value)
-      }
-      this.edited = true
-    },
     chaptersCreate () {
       const chapters = {
         isChapter: true,
@@ -235,18 +260,42 @@ export default {
       }
       return chapters
     },
+    /**
+     * @description update chaptersCoherent to monitor integrity of sub-chapters
+     * @param {string} id chapter id
+     * @param {boolean} val chapter is coherent
+     */
+    chaptersCoherentUpdate (id, val) {
+      this.chaptersCoherent[id] = val
+    },
+    /**
+     * @description update chaptersDuplicate object to monitor chapter names
+     * @param {string} id chapter id
+     * @param {boolean} val chapter name duplicate on same level
+     */
     chaptersDuplicateUpdate (id, val) {
       this.chaptersDuplicate[id] = val
     },
-    coherentChaptersUpdate (id, val) {
-      this.chaptersCoherent[id] = val
-    },
+    /**
+     * @description check if chapter names are duplicate or chapters incoherent, show modal if yes
+     */
     integrityCheck () {
       if (!this.chapterNamesDuplicate && !this.chaptersIncoherent) {
         this.navigationSave()
       } else {
         this.$bvModal.show('nav-integrity-compromised')
       }
+    },
+    /**
+     * @description write changed nav into store, emit saved event to trigger persistence
+     * @author cmc
+     * @since v1.3.0
+     */
+    navigationSave () {
+      this.$store.commit('courseChaptersSet', deepCopy(this.courseNavEdit.children))
+      this.edited = false
+      this.$store.commit('courseRoutesUpdate')
+      this.$emit('saved') // emit saved to trigger courseUpdate
     },
     /**
      * @function set preview variables to default
@@ -265,19 +314,21 @@ export default {
       this.preview = true
       this.previewId = pid
     },
-
-    navigationSave () {
-      this.$store.commit('courseChaptersSet', deepCopy(this.courseNavEdit.children))
-      this.edited = false
-      this.$store.commit('courseRoutesUpdate')
-      this.$root.$bvToast.toast(
-        this.y18n('successfulSave'), {
-          title: this.y18n('courseNavEdit.title'),
-          variant: 'success',
-          toaster: 'b-toaster-bottom-center'
-        }
-
-      )
+    /**
+     * @description change chapter name of referenced chapter object
+     * @author cmc
+     * @param chapter reference to object in `courseNavEdit`
+     * @param property property to change
+     * @param value new value for property
+     */
+    propertyChange (chapter, property, value) {
+      if (property !== 'followingContent') { // followingContent emit has no data
+        chapter[property] = value
+      }
+      if (property === 'chapterName') {
+        chapter.slug = slugify(value)
+      }
+      this.edited = true
     }
   }
 }

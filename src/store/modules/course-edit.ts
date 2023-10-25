@@ -1,6 +1,6 @@
 import http from 'axios'
 import { v4 as uuidv4 } from 'uuid'
-import { slugify } from '@/mixins/general/course-structure'
+import { slugify } from '@/mixins/general/slugs'
 import { LegacyContentBlock } from '@/mixins/types/course-structure'
 
 export default {
@@ -693,15 +693,12 @@ export default {
     },
 
     /**
-     * function courseUpdate: update course in database
-     *
-     * Auhtor: cmc
-     *
-     * Last Updated: August 9, 2022
-     * @param commit to commit mutations
-     * @param state state variables
+     * @description update course in database
+     * @author cmc
+     * Last Updated: October 19, 2023
+     * @param storeVariables commit, state, rootState for courseContent modules
      */
-    courseUpdate ({ commit, state }) {
+    courseUpdate ({ commit, state, rootState }) {
       // check properties and language
       commit('courseSimpleLanguageCheck')
       commit('coursePropertyCheck')
@@ -710,6 +707,8 @@ export default {
           `courses/${state.course.courseId}`,
           {
             ...state.course,
+            chapters: rootState.courseContent.courseChapters, // intermediate state before new backend
+            courseContent: rootState.courseContent.courseContent, // intermediate state before new backend
             lastChanged: Date.now() // TODO: remove this line after switching to new back end
           }
         )
@@ -789,7 +788,7 @@ export default {
       newNameData
         )
           .then(() => {
-            commit('courseListUpdate', state.course.courseId)
+            commit('courseListUpdate', { courseId: state.course.courseId, name: state.course.name })
             resolve('Updated Course name!')
           })
           .catch((err) => {

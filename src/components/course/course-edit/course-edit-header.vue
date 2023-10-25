@@ -84,7 +84,6 @@ Dependencies:
 
 import { mapGetters } from 'vuex'
 import { locale, routes } from '@/mixins'
-import { kebabToCamel } from '@/mixins/general/helpers'
 
 export default {
   name: 'CourseEditHeader',
@@ -107,20 +106,6 @@ export default {
      */
     checkEmpty () {
       return Object.keys(this.courseContent).length === 0
-    }
-  },
-
-  methods: {
-    /**
-     * Function typeName: returns name of content block in locale
-     *
-     * Author: core
-     *
-     * Last Updated: May 6, 2021
-     * @param {string} compName name of content block
-     */
-    typeName (compName) {
-      return this.i18n[kebabToCamel(compName) + '.name']
     }
   }
 
