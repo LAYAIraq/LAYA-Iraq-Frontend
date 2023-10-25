@@ -99,7 +99,7 @@
         >
           {{ y18n('type') }}
         </span>
-        {{ getName() }}
+        {{ typeName(value.type) }}
       </div>
       <div
         v-if="value.id !== courseEnd || value.type === 'button-navigation'"
@@ -153,17 +153,17 @@
   </div>
 </template>
 <script>
-import { locale } from '@/mixins'
+import { courseNav, locale } from '@/mixins'
 import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
 import { mapGetters } from 'vuex'
-import { deepCopy, kebabToCamel } from '@/mixins/general/helpers'
+import { deepCopy } from '@/mixins/general/helpers'
 
 export default {
   name: 'CourseNavItem',
   components: {
     CourseNavPropertyEdit
   },
-  mixins: [locale],
+  mixins: [courseNav, locale],
   props: {
     dragBubble: {
       type: Array,
@@ -234,25 +234,6 @@ export default {
         this.$emit('highlight', id)
       }
     },
-    /**
-     * @description return localized Description of Block type
-     * @since v1.3.0
-     * @author cmc
-     * @return {string} Localized name of block
-     */
-    getName () {
-      return this.y18n(kebabToCamel(this.value.type) + '.name')
-    },
-    /**
-     * @description emit event to propagate change to parent
-     * @author cmc
-     * @since v1.3.0
-     * @param property the property to change
-     * @param value change value for slug
-     */
-    // propagateChange (property, value) {
-    //   this.$emit('propagate-property-change', this.value, property, value)
-    // },
     /**
      * @description toggle collapsed state of item, emit event to parent
      * @author cmc

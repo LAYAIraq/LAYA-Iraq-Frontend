@@ -47,12 +47,12 @@
           :chapter-name="courseNavEdit.chapterName"
           :course-end="courseEnd ? courseEnd : ''"
           :main="true"
-          @chapter-coherent="coherentChaptersUpdate"
-          @deleted-chapter="deleteChapter"
+          @chapter-coherent="chaptersCoherentUpdate"
+          @deleted-chapter="chapterDelete"
           @duplicate-chapters="chaptersDuplicateUpdate"
           @edited="edited = true"
           @preview="previewSet"
-          @propagate-property-change="changeProperty"
+          @propagate-property-change="propertyChange"
         />
       </div>
       <div
@@ -61,7 +61,7 @@
       >
         <b-button
           secondary
-          @click="addChapter"
+          @click="chapterAdd"
         >
           {{ y18n('courseNavEdit.chapterAdd') }}
         </b-button>
@@ -141,6 +141,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import { v4 as uuidv4 } from 'uuid'
 import { locale, tooltipIcon } from '@/mixins'
 import CourseNavChapter from './course-nav-chapter.vue'
 import { deepCopy, stripKey } from '@/mixins/general/helpers'
@@ -218,11 +219,12 @@ export default {
      * @function Add chapter object to `courseNavEdit` data prop
      * @author cmc
      */
-    addChapter () {
+    chapterAdd () {
       this.courseNavEdit.children.push({
         chapterName: this.y18n('courseNavEdit.chapterNew'),
         slug: slugify(this.y18n('courseNavEdit.chapterNew')),
         isChapter: true,
+        id: uuidv4(),
         children: []
       })
     },
@@ -230,26 +232,9 @@ export default {
      * @description update chapter map if chapter was deleted
      * @param id deleted chapter's id
      */
-    deleteChapter (id) {
+    chapterDelete (id) {
       this.chaptersCoherent = stripKey(id, this.chaptersCoherent)
       this.chaptersDuplicate = stripKey(id, this.chaptersDuplicate)
-    },
-
-    /**
-     * @function change chapter name of referenced chapter object
-     * @author cmc
-     * @param chapter reference to object in `courseNavEdit`
-     * @param property property to change
-     * @param value new value for property
-     */
-    changeProperty (chapter, property, value) {
-      if (property !== 'followingContent') { // followingContent emit has no data
-        chapter[property] = value
-      }
-      if (property === 'chapterName') {
-        chapter.slug = slugify(value)
-      }
-      this.edited = true
     },
     /**
      * @description create courseNav from course chapters if none in store
@@ -271,20 +256,20 @@ export default {
       return chapters
     },
     /**
+     * @description update chaptersCoherent to monitor integrity of sub-chapters
+     * @param {string} id chapter id
+     * @param {boolean} val chapter is coherent
+     */
+    chaptersCoherentUpdate (id, val) {
+      this.chaptersCoherent[id] = val
+    },
+    /**
      * @description update chaptersDuplicate object to monitor chapter names
      * @param {string} id chapter id
      * @param {boolean} val chapter name duplicate on same level
      */
     chaptersDuplicateUpdate (id, val) {
       this.chaptersDuplicate[id] = val
-    },
-    /**
-     * @description update chaptersCoherent to monitor integrity of sub-chapters
-     * @param {string} id chapter id
-     * @param {boolean} val chapter is coherent
-     */
-    coherentChaptersUpdate (id, val) {
-      this.chaptersCoherent[id] = val
     },
     /**
      * @description check if chapter names are duplicate or chapters incoherent, show modal if yes
@@ -295,6 +280,17 @@ export default {
       } else {
         this.$bvModal.show('nav-integrity-compromised')
       }
+    },
+    /**
+     * @description write changed nav into store, emit saved event to trigger persistence
+     * @author cmc
+     * @since v1.3.0
+     */
+    navigationSave () {
+      this.$store.commit('courseChaptersSet', deepCopy(this.courseNavEdit.children))
+      this.edited = false
+      this.$store.commit('courseRoutesUpdate')
+      this.$emit('saved') // emit saved to trigger courseUpdate
     },
     /**
      * @function set preview variables to default
@@ -314,15 +310,20 @@ export default {
       this.previewId = pid
     },
     /**
-     * @description write changed nav into store, emit saved event to trigger persistence
+     * @description change chapter name of referenced chapter object
      * @author cmc
-     * @since v1.3.0
+     * @param chapter reference to object in `courseNavEdit`
+     * @param property property to change
+     * @param value new value for property
      */
-    navigationSave () {
-      this.$store.commit('courseChaptersSet', deepCopy(this.courseNavEdit.children))
-      this.edited = false
-      this.$store.commit('courseRoutesUpdate')
-      this.$emit('saved') // emit saved to trigger courseUpdate
+    propertyChange (chapter, property, value) {
+      if (property !== 'followingContent') { // followingContent emit has no data
+        chapter[property] = value
+      }
+      if (property === 'chapterName') {
+        chapter.slug = slugify(value)
+      }
+      this.edited = true
     }
   }
 }

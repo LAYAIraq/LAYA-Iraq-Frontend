@@ -48,7 +48,7 @@
     >
       <div
         v-for="(item, i) in chapter.children"
-        :key="`${id}-${i}`"
+        :key="`${chapter.id}-${i}`"
         class="chapter-child"
       >
         <course-nav-chapter
@@ -88,9 +88,9 @@
 import Draggable from 'vuedraggable'
 import CourseNavItem from '@/components/course/course-nav/course-nav-item.vue'
 import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
-import { locale } from '@/mixins'
+import { locale, courseNav } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
-import { chapterFollowSet } from '@/mixins/general/course-structure'
+import { chapterFollowSet } from '@/mixins/general/course-chapters'
 import { deepCopy } from '@/mixins/general/helpers'
 
 export default {
@@ -100,7 +100,7 @@ export default {
     CourseNavPropertyEdit,
     CourseNavItem
   },
-  mixins: [locale],
+  mixins: [courseNav, locale],
   props: {
     chapter: {
       type: Object,
@@ -193,18 +193,18 @@ export default {
       deep: true
     },
     coherentItem (val) {
-      this.coherenceEmit(this.id, val)
+      this.coherenceEmit(this.chapter.id, val)
     },
     duplicateChapterNames () {
-      this.$emit('duplicate-chapters', this.id, this.duplicateChapterNames.length > 0)
+      this.$emit('duplicate-chapters', this.chapter.id, this.duplicateChapterNames.length > 0)
     }
   },
   created () {
     this.chapter.children.forEach(child => { this.childrenVisibility[child.id] = false })
-    this.$emit('chapter-coherent', this.id, this.coherentItem)
+    this.$emit('chapter-coherent', this.chapter.id, this.coherentItem)
   },
   destroyed () {
-    this.$emit('deleted-chapter', this.id)
+    this.$emit('deleted-chapter', this.chapter.id)
   },
   methods: {
     blockHighlight (id) {
@@ -223,16 +223,15 @@ export default {
      * @description propagate removal of a chapter
      */
     chapterDelete () {
-      this.$emit('chapter-delete', this.chapterName, deepCopy(this.chapter.children), this.id)
+      this.$emit('chapter-delete', this.chapter.id, deepCopy(this.chapter.children))
     },
     /**
      * @description remove chapter by name, adding their children to chapter, propagate changes
-     * @param deletedChapterName name of deleted chapter
-     * @param newChildren children of deleted chapter to be added to chapter
      * @param deletedChapterId id of deleted chapter
+     * @param newChildren children of deleted chapter to be added to chapter
      */
-    chapterDeletedUpdate (deletedChapterName, newChildren, deletedChapterId) {
-      const deleteIndex = this.chapter.children.findIndex(e => e.chapterName === deletedChapterName)
+    chapterDeletedUpdate (deletedChapterId, newChildren) {
+      const deleteIndex = this.chapter.children.findIndex(e => e.id === deletedChapterId)
       const children = deepCopy(this.chapter.children)
       const croppedChildren = []
       children.forEach((el, i) => { // using Array.slice() did not yield the correct result
