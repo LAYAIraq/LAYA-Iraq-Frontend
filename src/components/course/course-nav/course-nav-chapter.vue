@@ -207,6 +207,10 @@ export default {
     this.$emit('deleted-chapter', this.chapter.id)
   },
   methods: {
+    /**
+     * @description emit highlighted content's id if not main chapter, else set it
+     * @param id highlighted content
+     */
     blockHighlight (id) {
       if (this.main) {
         this.highlightId = id
@@ -214,6 +218,9 @@ export default {
         this.$emit('highlight', id)
       }
     },
+    /**
+     * @description unset highlighted id if main chapter
+     */
     blockHighlightUnset () {
       if (this.main && this.highlightId) {
         this.highlightId = null
@@ -251,6 +258,11 @@ export default {
     childVisibilityChange (id, visibility) {
       this.childrenVisibility[id] = visibility
     },
+    /**
+     * @description emit coherence status of chapter
+     * @param {string} id chapter id
+     * @param {boolean} val chapter is coherent
+     */
     coherenceEmit (id, val) {
       this.$emit('chapter-coherent', id, val)
     },

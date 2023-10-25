@@ -1,3 +1,8 @@
+<!--
+  @file wrap course navigation editor
+  @author cmc
+  @since v1.3.0
+-->
 <template>
   <div
     id="course-nav-edit"
