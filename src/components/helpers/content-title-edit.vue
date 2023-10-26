@@ -19,14 +19,14 @@
         <div class="col-8">
           <input
             id="title"
-            v-model="title.text"
+            v-model="titleLocal.text"
             type="text"
             class="form-control"
             :placeholder="y18n('titlePlaceholder')"
-            @input="titleEmpty = false"
+            @input="logInput"
           >
           <p
-            v-if="titleEmpty || title.text === ''"
+            v-if="titleEmpty || titleLocal.text === ''"
             id="title-empty"
           >
             {{ y18n('contentTitleEdit.warning.titleEmpty') }}
@@ -41,7 +41,7 @@
             {{ y18n('showTitle') }}
             <input
               id="show-title-tick"
-              v-model="title.show"
+              v-model="titleLocal.show"
               type="checkbox"
             >
           </label>
@@ -63,7 +63,7 @@
         <div class="col-8">
           <input
             id="title-simple"
-            v-model="title.simple"
+            v-model="titleLocal.simple"
             type="text"
             class="form-control"
             :placeholder="y18n('simpleAlt')"
@@ -75,8 +75,9 @@
 </template>
 
 <script>
-
+import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
+import { deepCopy } from '@/mixins/general/helpers'
 
 export default {
   name: 'ContentTitleEdit',
@@ -85,9 +86,16 @@ export default {
     locale
   ],
 
+  props: {
+    title: {
+      type: Object,
+      required: true
+    }
+  },
+
   data () {
     return {
-      title: { },
+      titleLocal: deepCopy(this.title),
       titleEmpty: true
     }
   },

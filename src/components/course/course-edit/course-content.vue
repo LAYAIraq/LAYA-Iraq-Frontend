@@ -59,6 +59,18 @@
         </div>
       </div>
     </div>
+    <b-modal
+      id="empty-title"
+      :title="y18n('save.warning.emptyTitle.header')"
+      header-bg-variant="danger"
+      ok-disabled
+      :ok-title="y18n('save.warning.notPossible')"
+      ok-variant="danger"
+      static
+      centered
+    >
+      {{ y18n("save.warning.emptyTitle") }}
+    </b-modal>
   </div>
 </template>
 
@@ -193,17 +205,20 @@ export default {
         name: this.cid,
         ...deepCopy(this.stepData) // deep copy to get rid of store references
       }
-
-      // choose way depending on new or existing content
-      if (!this.editContent) {
-        this.$store.commit('courseContentAdd', updatedStep)
-        this.$store.commit('courseChapterAdd', contentBlockToNavItemTransform(updatedStep))
+      if (!this.stepData.title.text) {
+        this.$bvModal.show('empty-title')
       } else {
-        this.$store.commit('courseContentSet', { ...updatedStep, id: this.pathId })
+        // choose way depending on new or existing content
+        if (!this.editContent) {
+          this.$store.commit('courseContentAdd', updatedStep)
+          this.$store.commit('courseChapterAdd', contentBlockToNavItemTransform(updatedStep))
+        } else {
+          this.$store.commit('courseContentSet', { ...updatedStep, id: this.pathId })
+        }
+        // set courseUpdated to trigger watchers
+        this.$store.commit('courseUpdatedSet', true)
+        this.$emit('saved')
       }
-      // set courseUpdated to trigger watchers
-      this.$store.commit('courseUpdatedSet', true)
-      this.$emit('saved')
     }
   }
 
