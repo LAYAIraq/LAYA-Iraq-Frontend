@@ -13,11 +13,10 @@ import {
   courseContentIdGet,
   coursePathsGet,
   courseChaptersCollect,
-  courseDestructure,
-  legacyContentFollowTransform,
-  legacyContentStepsTransform
+  courseDestructure
 } from '@/mixins/general/course-structure'
 import { stripKey } from '@/mixins/general/helpers'
+import { legacyContentFollowTransform, legacyContentStepsTransform } from '@/mixins/general/legacy-content'
 import { v4 as uuidv4 } from 'uuid'
 import http, { AxiosResponse } from 'axios'
 import Vue from 'vue'

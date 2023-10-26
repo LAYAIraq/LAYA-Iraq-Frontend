@@ -8,7 +8,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   props: {
-    coursePath: {
+    coursePath: { // TODO: revise for repeated routes https://router.vuejs.org/guide/essentials/route-matching-syntax#Repeatable-params
       type: String,
       default () {
         return ''
@@ -21,9 +21,9 @@ export default {
       }
     },
     chapters: {
-      type: String,
+      type: Array,
       default () {
-        return ''
+        return []
       }
     },
     slug: {

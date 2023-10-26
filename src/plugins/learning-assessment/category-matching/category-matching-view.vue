@@ -198,7 +198,7 @@ export default {
      * Last Updated: unknown
      */
     done () {
-      this.onFinish[0]()
+      this.onFinish()
     },
 
     /**

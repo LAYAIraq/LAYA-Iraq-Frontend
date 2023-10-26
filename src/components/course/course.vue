@@ -25,8 +25,8 @@
           <component
             :is="contentToDisplay.name"
             :key="contentToDisplay.title.text"
+            :next-content="followContent"
             :view-data="contentToDisplay"
-            :on-finish="followContent"
           >
           </component>
         </div>
@@ -87,6 +87,7 @@ export default {
       'courseChapters',
       'courseChapterNames',
       'courseContent',
+      'courseContentFollowMap',
       'courseContentIdRouteMap',
       'courseContentRouteIdMap',
       'courseFlags',
@@ -134,7 +135,7 @@ export default {
      * @return {(function())|*|[(function(): *)]}
      */
     followContent () {
-      return this.followingContent(this.contentToDisplay)
+      return this.courseContentFollowMap[this.contentToDisplay.id]
     },
 
     /**
@@ -196,11 +197,11 @@ export default {
     // }
   },
 
-  updated () {
-    console.log(this.pathId)
-    console.log(this.courseContentIdRouteMap)
-    console.log(this.coursePath)
-  },
+  // updated () {
+  //   console.log(this.pathId)
+  //   console.log(this.courseContentIdRouteMap)
+  //   console.log(this.coursePath)
+  // },
 
   beforeDestroy () {
     /* if (this.enrollment.length > 0) this.enrollmentUpdate()
@@ -223,42 +224,9 @@ export default {
         this.courseSlug !== this.name || // course in store doesn't match the route params
         Object.keys(this.course).length === 0 // course in store has no properties
       ) {
-        console.log('Fetching Course...')
         this.courseFetch(this.name)
       }
       window.scrollTo(0, 0)
-    },
-
-    /**
-     * Function followingContent: returns follow set for content block
-     *
-     * Author: core
-     *
-     * Last Updated: November 14, 2022 by cmc
-     *
-     * @param contentBlock content block object
-     */
-    followingContent (contentBlock) {
-      if (!this.contentToDisplay) return [() => {}] // no follow set
-      // el is the content block to follow, return router push function
-      // if el is number, use courseContentIndexIdMap to get id
-      const routePushLookup = (el) => {
-        return () => this.$router.push({
-          params: {
-            name: this.name,
-            coursePath: typeof el === 'number' // if element is a number, it's an index
-              ? this.courseContentIdRouteMap[el] // get id from index, then route from id
-              : `${el}`
-          }
-        })
-      }
-      const k = typeof contentBlock.follow === 'object'
-        ? contentBlock.follow.map(el => // create a router.push call for each element in follow array
-          routePushLookup(el)
-        )
-        : [routePushLookup(contentBlock.follow)] // has to be array
-      console.log(k)
-      return k
     }
   }
 }

@@ -41,127 +41,134 @@ const contentInput = {
   id: 't3st1npu7'
 }
 
-describe('Category Matching create component', () => {
-  let wrapper
-  let getters
-  let state
-  beforeEach(() => {
-    state = {
-      courseSimple: true
-    }
-    getters = {
-      courseSimple: () => state.courseSimple,
-      profileLanguage: () => 'en'
-    }
-    const store = new Vuex.Store({
-      state,
-      getters
-    })
-    wrapper = mount(CategoryMatchingEdit, {
-      propsData: {
-        edit: false
-      },
-      directives: {
-        'b-tooltip': () => {}
-      },
-      // stubs: ['b-jumbotron'],
-      store,
-      localVue
-    })
-  })
-
-  it('shows a helper box when clicking the questionmark', async () => {
-    const questionmark = wrapper.find('#questionmark')
-    await questionmark.trigger('click')
-    const helpText = wrapper.find('#tooltipText')
-    expect(helpText.exists()).toBeTruthy()
-  })
-
-  it('allows simple alternatives for all input', async () => {
-    await localVue.nextTick()
-    const inputFields = wrapper.findAll('input')
-    const textareas = wrapper.findAll('textarea')
-    expect(inputFields.wrappers.filter(wrap => wrap.attributes('id').includes('simple')).length).toBe(5)
-    expect(textareas.wrappers.filter(wrap => wrap.attributes('id').includes('simple')).length).toBe(1)
-  })
-
-  it('allows adding categories and answers', async () => {
-    state.courseSimple = false
-    await localVue.nextTick()
-    const buttons = wrapper.findAll('.btn-primary')
-    expect(buttons.length).toBe(2)
-    let cats = wrapper.findAll('label').filter(label => label.attributes('for').includes('cat'))
-    expect(cats.length).toBe(2)
-    await buttons.wrappers[0].trigger('click')
-    cats = wrapper.findAll('label').filter(label => label.attributes('for').includes('cat'))
-    expect(cats.length).toBe(3)
-    let items = wrapper.findAll('label').filter(label => label.attributes('for').includes('item'))
-    expect(items.length).toBe(1)
-    await buttons.wrappers[1].trigger('click')
-    items = wrapper.findAll('label').filter(label => label.attributes('for').includes('item'))
-    expect(items.length).toBe(2)
-  })
-
-  it('allows deleting categories and items', async () => {
-    const deleteButtons = wrapper.findAll('.btn-danger').length
-    for (let i = 0; i < deleteButtons; i++) {
-      await wrapper.find('.btn-danger').trigger('click')
-    }
-    expect(wrapper.find('.btn-danger').exists()).toBeFalsy()
-  })
-})
+let wrapper
+let getters
+let state
 
 describe('Category Matching edit component', () => {
-  let wrapper
-  let getters
-  let state
-  beforeEach(() => {
-    getters = {
-      courseSimple: () => true,
-      courseContent: () => ({ test: contentInput }),
-      profileLanguage: () => 'en',
-      courseContentPathId: () => () => 'test',
-      pathId: () => 'test'
-    }
-    const store = new Vuex.Store({
-      state,
-      getters
+  describe('empty data (new component)', () => {
+    beforeEach(() => {
+      state = {
+        courseSimple: true
+      }
+      getters = {
+        courseSimple: () => state.courseSimple,
+        profileLanguage: () => 'en'
+      }
+      const store = new Vuex.Store({
+        state,
+        getters
+      })
+      wrapper = mount(CategoryMatchingEdit, {
+        propsData: {
+          edit: false
+        },
+        directives: {
+          'b-tooltip': () => {}
+        },
+        // stubs: ['b-jumbotron'],
+        store,
+        localVue
+      })
     })
-    wrapper = mount(CategoryMatchingEdit, {
-      propsData: {
-        edit: true
-      },
-      directives: {
-        'b-tooltip': () => {}
-      },
-      mocks: {
-        $route: {
-          params: {
-            coursePath: 'test'
-          }
-        }
-      },
-      store,
-      localVue
+
+    it('shows a helper box when clicking the questionmark', async () => {
+      const questionmark = wrapper.find('#questionmark')
+      await questionmark.trigger('click')
+      const helpText = wrapper.find('#tooltipText')
+      expect(helpText.exists()).toBeTruthy()
+    })
+
+    it('allows simple alternatives for all input', async () => {
+      await localVue.nextTick()
+      const inputFields = wrapper.findAll('input')
+      const textareas = wrapper.findAll('textarea')
+      expect(inputFields.wrappers.filter(wrap => wrap.attributes('id').includes('simple')).length).toBe(5)
+      expect(textareas.wrappers.filter(wrap => wrap.attributes('id').includes('simple')).length).toBe(1)
+    })
+
+    it('allows adding categories and answers', async () => {
+      state.courseSimple = false
+      await localVue.nextTick()
+      const buttons = wrapper.findAll('.btn-primary')
+      expect(buttons.length).toBe(2)
+      let cats = wrapper.findAll('label').filter(label => label.attributes('for').includes('cat'))
+      expect(cats.length).toBe(2)
+      await buttons.wrappers[0].trigger('click')
+      cats = wrapper.findAll('label').filter(label => label.attributes('for').includes('cat'))
+      expect(cats.length).toBe(3)
+      let items = wrapper.findAll('label').filter(label => label.attributes('for').includes('item'))
+      expect(items.length).toBe(1)
+      await buttons.wrappers[1].trigger('click')
+      items = wrapper.findAll('label').filter(label => label.attributes('for').includes('item'))
+      expect(items.length).toBe(2)
+    })
+
+    it('allows deleting categories and items', async () => {
+      const deleteButtons = wrapper.findAll('.btn-danger').length
+      for (let i = 0; i < deleteButtons; i++) {
+        await wrapper.find('.btn-danger').trigger('click')
+      }
+      expect(wrapper.find('.btn-danger').exists()).toBeFalsy()
     })
   })
 
-  it('loads data from store', async () => {
-    const data = (({ tooltipOn, ...o }) => o)(wrapper.vm.$data)
-    expect(data).toStrictEqual(contentInput)
+  describe('existing data (edit)', () => {
+    beforeEach(() => {
+      getters = {
+        courseSimple: () => true,
+        courseContent: () => ({ test: contentInput }),
+        courseLanguage: () => 'en',
+        profileLanguage: () => 'en',
+        courseContentPathId: () => () => 'test',
+        pathId: () => 'test'
+      }
+      const store = new Vuex.Store({
+        state,
+        getters
+      })
+      wrapper = mount(CategoryMatchingEdit, {
+        propsData: {
+          edit: true
+        },
+        directives: {
+          'b-tooltip': () => {
+          }
+        },
+        mocks: {
+          $route: {
+            params: {
+              coursePath: 'test'
+            }
+          }
+        },
+        store,
+        localVue
+      })
+    }
+    )
+
+    it('loads data from store', async () => {
+      const data = (({ tooltipOn, ...o }) => o)(wrapper.vm.$data)
+      expect(data).toStrictEqual(contentInput)
+    })
   })
 })
 
 describe('Category Matching View Component', () => {
-  let wrapper
-  let getters
-  let state
   let store
+  let onFinish
   beforeEach(() => {
     state = {
       courseSimple: false
     }
     getters = {
+      courseContentIdRouteMap: () => {
+        return {
+          test: 'test'
+        }
+      },
+      courseLanguage: () => 'en',
       courseSimple: () => state.courseSimple,
       courseUpdated: () => false,
       profileLanguage: () => 'en',
@@ -177,16 +184,20 @@ describe('Category Matching View Component', () => {
           params: {
             step: 1
           }
+        },
+        $router: {
+          push: jest.fn()
         }
       },
       propsData: {
         viewData: contentInput,
-        onFinish: [jest.fn()]
+        nextContent: 'test'
       },
       store,
       stubs: ['laya-audio-inline', 'laya-flag-icon'],
       localVue
     })
+    onFinish = jest.spyOn(wrapper.vm, 'onFinish')
   })
 
   it('loads and renders prop data correctly', async () => {
@@ -238,6 +249,7 @@ describe('Category Matching View Component', () => {
   it('calls next content button function', async () => {
     const button = wrapper.find('.btn-primary')
     await button.trigger('click')
-    expect(wrapper.vm.onFinish[0]).toHaveBeenCalled()
+    expect(onFinish).toHaveBeenCalled()
+    expect(wrapper.vm.$router.push).toHaveBeenCalledWith({ path: 'test' })
   })
 })

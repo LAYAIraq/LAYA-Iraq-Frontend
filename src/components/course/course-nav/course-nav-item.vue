@@ -86,16 +86,6 @@
         </span>
         {{ value.slug }}
       </div>
-      <!-- full path -->
-      <div class="d-flex">
-        <span
-          class="text-muted small"
-          :class="langIsAr? 'ml-2': 'mr-2'"
-        >
-          {{ y18n('courseNavEdit.fullPath') }}
-        </span>
-        {{ item.path }}
-      </div>
       <!-- type -->
       <div class="d-flex">
         <span

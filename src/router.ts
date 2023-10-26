@@ -81,7 +81,7 @@ export default new Router({
       component: CourseList
     },
     {
-      path: '/courses/:name/:coursePath?',
+      path: '/courses/:name/:chapters*',
       name: 'course',
       component: Course,
       props: true,
