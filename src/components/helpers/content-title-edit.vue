@@ -92,26 +92,29 @@ export default {
     }
   },
 
-  created () {
-    if (this.edit) {
-      this.fetchData()
-    } else {
-      this.taskTitlePopulate()
+  computed: {
+    ...mapGetters(['courseSimple'])
+  },
+  watch: {
+    titleLocal: {
+      handler () {
+        console.log('title changed!!!!')
+        this.titleSet()
+      },
+      deep: true
     }
   },
 
   methods: {
-    /**
-     * Function fetchData: fetch data from vuex and make data property
-     *
-     * Author: cmc
-     *
-     * Last Updated: March 20, 2021
-     */
-    fetchData () {
-      const preData = JSON.parse(JSON.stringify(this.courseContent[this.pathId]))
-      this.title = preData.title
+
+    logInput () {
+      console.log('input!!!!')
       this.titleEmpty = false
+    },
+
+    titleSet () {
+      console.log('show title ' + this.title)
+      this.$emit('set-title', this.titleLocal)
     }
   }
 }

@@ -9,7 +9,43 @@ Since: v1.0.0
   <div
     :class="langIsAr? 'text-right' : 'text-left'"
   >
-    <content-title-edit> </content-title-edit>
+    <div class="form-group row">
+      <h4 class="d-inline-block mr-auto">
+        {{ y18n('freeText.name') }}
+      </h4>
+      <i
+        id="questionmark"
+        v-b-tooltip.auto
+        class="fas fa-question-circle"
+        :title="y18n('showTip')"
+        aria-labelledby="tooltipText"
+        aria-live="polite"
+        @click="toggleTip"
+      ></i>
+    </div>
+
+    <b-jumbotron
+      v-if="tooltipOn"
+      id="tooltipText"
+      :header="y18n('freeText.name')"
+      :lead="y18n('tipHeadline')"
+    >
+      <hr class="my-4">
+      <p
+        v-for="str in y18n('freeText.tooltip').split(';')"
+        :key="str.length"
+      >
+        <!-- eslint-disable-next-line vue/no-v-html --> <!-- TODO: find a way to avoid v-html -->
+        <span v-html="replacePattern(str, /###([\w\s\-]+)###([A-Z0-9a-z\/.:#]+)###/, linkReplacement(true))"></span>
+      </p>
+    </b-jumbotron>
+
+    <!-- title -->
+    <content-title-edit
+      :title="title"
+      @set-title="title = $event"
+    >
+    </content-title-edit>
     <div
       class="free-text-edit bg-light"
       :class="langIsAr? 'text-right' : 'text-left'"
@@ -25,7 +61,7 @@ Since: v1.0.0
 <script>
 import { mapGetters } from 'vuex'
 import Quill from 'quill'
-import { locale, pluginEdit, routes } from '@/mixins'
+import { locale, pluginEdit, routes, tooltipIcon } from '@/mixins'
 import ContentTitleEdit from '@/components/helpers/content-title-edit'
 
 export default {
@@ -34,7 +70,8 @@ export default {
   mixins: [
     locale,
     pluginEdit,
-    routes
+    routes,
+    tooltipIcon
   ],
 
   data () {

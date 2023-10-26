@@ -96,48 +96,11 @@ Since: v1.0.0
       </div>
 
       <!-- title -->
-      <div class="form-group">
-        <div class="row">
-          <label
-            for="choices-title"
-            class="col-2 col-form-label"
-          >
-            {{ y18n('title') }}
-          </label>
-          <div class="col-10">
-            <input
-              id="choices-title"
-              v-model="title.text"
-              type="text"
-              class="form-control"
-              :placeholder="y18n('titlePlaceholder')"
-            >
-          </div>
-        </div>
-        <!-- simple title-->
-        <div
-          v-if="courseSimple"
-          class="row"
-        >
-          <label
-            for="choices-title-simple"
-            class="col-2 col-form-label"
-          >
-            <span class="sr-only">
-              {{ y18n('simpleAlt') }}
-            </span>
-          </label>
-          <div class="col-10">
-            <input
-              id="choices-title-simple"
-              v-model="title.simple"
-              type="text"
-              class="form-control"
-              :placeholder="y18n('simpleAlt')"
-            >
-          </div>
-        </div>
-      </div>
+      <content-title-edit
+        :title="title"
+        @set-title="title = $event"
+      >
+      </content-title-edit>
 
       <!-- task -->
       <div class="form-group">
@@ -362,10 +325,11 @@ import { mapGetters } from 'vuex'
 import { array, locale, pluginEdit, routes, tooltipIcon } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 import { deepCopy } from '@/mixins/general/helpers'
+import ContentTitleEdit from '@/components/helpers/content-title-edit'
 
 export default {
   name: 'ChoiceQuestionEdit',
-
+  components: { ContentTitleEdit },
   mixins: [
     array,
     locale,

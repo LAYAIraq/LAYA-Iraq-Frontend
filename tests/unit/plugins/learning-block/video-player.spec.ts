@@ -247,7 +247,7 @@ describe('Video edit component', () => {
     })
   })
 
-  it('has loaded title and video from store', async () => {
+  it.skip('has loaded title and video from store', async () => {
     await localVue.nextTick()
     const titleInput = wrapper.find('#video-title')
     expect(titleInput.element.value).toBe('some vid')

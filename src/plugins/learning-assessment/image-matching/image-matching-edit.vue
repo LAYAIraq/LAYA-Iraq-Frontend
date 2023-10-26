@@ -41,49 +41,12 @@
     <hr>
 
     <form>
-      <div class="form-group">
-        <!-- title regular -->
-        <div class="form-group row">
-          <label
-            for="relate-title"
-            class="col-2 col-form-label"
-          >
-            {{ y18n('title') }}
-          </label>
-          <div class="col-10">
-            <input
-              id="relate-title"
-              v-model="title.text"
-              type="text"
-              class="form-control"
-              :placeholder="y18n('titlePlaceholder')"
-            >
-          </div>
-        </div>
-        <!-- title simple -->
-        <div
-          v-if="courseSimple"
-          class="row"
-        >
-          <label
-            for="relate-title-simple"
-            class="col-2 col-form-label"
-          >
-            <span class="sr-only">
-              {{ y18n('simpleAlt') }}
-            </span>
-          </label>
-          <div class="col-8">
-            <input
-              id="relate-title-simple"
-              v-model="title.simple"
-              type="text"
-              class="form-control"
-              :placeholder="y18n('simpleAlt')"
-            >
-          </div>
-        </div>
-      </div>
+      <!-- title -->
+      <content-title-edit
+        :title="title"
+        @set-title="title = $event"
+      >
+      </content-title-edit>
 
       <div class="form-group">
         <!-- task regular -->
@@ -325,9 +288,11 @@
 import { array, locale, pluginEdit, tooltipIcon } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 import { deepCopy } from '@/mixins/general/helpers'
+import ContentTitleEdit from '@/components/helpers/content-title-edit'
 
 export default {
   name: 'ImageMatchingEdit',
+  components: { ContentTitleEdit },
 
   mixins: [
     array,

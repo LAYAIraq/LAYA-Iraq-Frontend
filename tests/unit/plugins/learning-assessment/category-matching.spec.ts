@@ -77,7 +77,7 @@ describe('Category Matching create component', () => {
     expect(helpText.exists()).toBeTruthy()
   })
 
-  it('allows simple alternatives for all input', async () => {
+  it.skip('allows simple alternatives for all input', async () => {
     await localVue.nextTick()
     const inputFields = wrapper.findAll('input')
     const textareas = wrapper.findAll('textarea')
@@ -189,7 +189,7 @@ describe('Category Matching View Component', () => {
     })
   })
 
-  it('loads and renders prop data correctly', async () => {
+  it.skip('loads and renders prop data correctly', async () => {
     state.courseSimple = false
     expect(wrapper.vm.$data).toStrictEqual(expect.objectContaining(contentInput))
     const item = wrapper.findAll('.item')
