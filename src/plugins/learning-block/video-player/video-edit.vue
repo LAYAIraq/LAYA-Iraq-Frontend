@@ -171,8 +171,9 @@ Dependencies:
         <!-- input fields -->
         <div
           v-for="(track, i) in captions.tracks"
+          :id="`caption-input-track-${i}`"
           :key="`track-${i}`"
-          class="row"
+          class="row input-track"
         >
           <!-- caption type -->
           <div class="col-sm-2">
@@ -187,7 +188,7 @@ Dependencies:
               :id="`type-select-${i}`"
               v-model="track.kind"
             >
-              <b-select-option value="null">
+              <b-select-option :value="null">
                 {{ y18n('videoPlayer.captions.chooseType') }}
               </b-select-option>
               <b-select-option

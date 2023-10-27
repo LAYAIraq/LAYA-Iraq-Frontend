@@ -23,10 +23,9 @@
             type="text"
             class="form-control"
             :placeholder="y18n('titlePlaceholder')"
-            @input="logInput"
           >
           <p
-            v-if="titleEmpty || titleLocal.text === ''"
+            v-if="titleEmpty"
             id="title-empty"
           >
             {{ y18n('contentTitleEdit.warning.titleEmpty') }}
@@ -95,18 +94,19 @@ export default {
 
   data () {
     return {
-      titleLocal: deepCopy(this.title),
-      titleEmpty: true
+      titleLocal: deepCopy(this.title)
     }
   },
 
   computed: {
-    ...mapGetters(['courseSimple'])
+    ...mapGetters(['courseSimple']),
+    titleEmpty () {
+      return !this.titleLocal.text
+    }
   },
   watch: {
     titleLocal: {
       handler () {
-        console.log('title changed!!!!')
         this.titleSet()
       },
       deep: true
@@ -114,14 +114,7 @@ export default {
   },
 
   methods: {
-
-    logInput () {
-      console.log('input!!!!')
-      this.titleEmpty = false
-    },
-
     titleSet () {
-      console.log('show title ' + this.title)
       this.$emit('set-title', this.titleLocal)
     }
   }
