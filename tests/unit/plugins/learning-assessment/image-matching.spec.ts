@@ -66,7 +66,7 @@ describe('Image Matching Create component', () => {
 
   it('has 8 input fields and 1 dropdown with 3 options', async () => {
     await localVue.nextTick()
-    expect(wrapper.findAll('input').length).toBe(7)
+    expect(wrapper.findAll('input').length).toBe(8)
     expect(wrapper.findAll('select').length).toBe(1)
     expect(wrapper.findAll('textarea').length).toBe(1)
     expect(wrapper.findAll('option').length).toBe(3)
@@ -76,7 +76,7 @@ describe('Image Matching Create component', () => {
     await localVue.nextTick()
     state.simple = true
     await localVue.nextTick()
-    expect(wrapper.findAll('input').length).toBe(11)
+    expect(wrapper.findAll('input').length).toBe(12)
     expect(wrapper.findAll('textarea').length).toBe(2)
   })
 

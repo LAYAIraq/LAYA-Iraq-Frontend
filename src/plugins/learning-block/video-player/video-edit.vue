@@ -45,66 +45,12 @@ Dependencies:
       </b-jumbotron>
 
       <hr>
-
-      <div class="form-group">
-        <div class="row">
-          <!-- title -->
-          <label
-            for="video-title"
-            class="col col-form-label"
-          >
-            {{ y18n('title') }}
-          </label>
-          <div class="form-group col-8">
-            <input
-              id="video-title"
-              v-model="title.text"
-              type="text"
-              class="form-control"
-              :placeholder="y18n('titlePlaceholder')"
-            >
-          </div>
-          <div
-            id="show-title-button"
-            class="form-group col"
-          >
-            <label
-              for="show-title-tick"
-              class="col col-form-label"
-            >
-              {{ y18n('showTitle') }}
-              <input
-                id="show-title-tick"
-                v-model="title.show"
-                type="checkbox"
-              >
-            </label>
-          </div>
-        </div>
-        <div
-          v-if="courseSimple"
-          class="row"
-        >
-          <!-- simple title -->
-          <label
-            for="video-title-simple"
-            class="col-2 col-form-label"
-          >
-            <span class="sr-only">
-              {{ y18n('simpleAlt') }}
-            </span>
-          </label>
-          <div class="form-group col-8">
-            <input
-              id="video-title-simple"
-              v-model="title.simple"
-              type="text"
-              class="form-control"
-              :placeholder="y18n('simpleAlt')"
-            >
-          </div>
-        </div>
-      </div>
+      <!-- title -->
+      <content-title-edit
+        :title="title"
+        @set-title="title = $event"
+      >
+      </content-title-edit>
 
       <!-- video url -->
       <div class="form-group row">
@@ -225,8 +171,9 @@ Dependencies:
         <!-- input fields -->
         <div
           v-for="(track, i) in captions.tracks"
+          :id="`caption-input-track-${i}`"
           :key="`track-${i}`"
-          class="row"
+          class="row input-track"
         >
           <!-- caption type -->
           <div class="col-sm-2">
@@ -241,7 +188,7 @@ Dependencies:
               :id="`type-select-${i}`"
               v-model="track.kind"
             >
-              <b-select-option value="null">
+              <b-select-option :value="null">
                 {{ y18n('videoPlayer.captions.chooseType') }}
               </b-select-option>
               <b-select-option
@@ -359,10 +306,11 @@ Dependencies:
 import { mapGetters } from 'vuex'
 import { locale, pluginEdit, routes, tooltipIcon } from '@/mixins'
 import { deepCopy } from '@/mixins/general/helpers'
+import ContentTitleEdit from '@/components/helpers/content-title-edit'
 
 export default {
   name: 'VideoEdit',
-
+  components: { ContentTitleEdit },
   mixins: [
     routes,
     pluginEdit,

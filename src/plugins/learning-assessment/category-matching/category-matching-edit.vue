@@ -43,46 +43,11 @@
 
     <form>
       <!-- title -->
-      <div class="form-group row">
-        <label
-          for="drag-drop-title"
-          class="col-2 col-form-label"
-        >
-          {{ y18n('title') }}
-        </label>
-        <div class="col-10">
-          <input
-            id="drag-drop-title"
-            v-model="title.text"
-            type="text"
-            class="form-control"
-            :placeholder="y18n('titlePlaceholder')"
-          >
-        </div>
-      </div>
-      <!-- simple language alt -->
-      <div
-        v-if="courseSimple"
-        class="form-group row"
+      <content-title-edit
+        :title="title"
+        @set-title="title = $event"
       >
-        <label
-          for="drag-drop-title-simple"
-          class="col-2 col-form-label"
-        >
-          <span class="sr-only">
-            {{ y18n('simpleAlt') }}
-          </span>
-        </label>
-        <div class="col-10">
-          <input
-            id="drag-drop-title-simple"
-            v-model="title.simple"
-            type="text"
-            class="form-control"
-            :placeholder="y18n('simpleAlt')"
-          >
-        </div>
-      </div>
+      </content-title-edit>
 
       <!-- task -->
       <div class="form-group row">
@@ -340,10 +305,11 @@ import { v4 as uuidv4 } from 'uuid'
 import { mapGetters } from 'vuex'
 import { deepCopy } from '@/mixins/general/helpers'
 import { array, locale, routes, pluginEdit, tooltipIcon } from '@/mixins'
+import ContentTitleEdit from '@/components/helpers/content-title-edit'
 
 export default {
   name: 'CategoryMatchingEdit',
-
+  components: { ContentTitleEdit },
   mixins: [
     array,
     locale,
