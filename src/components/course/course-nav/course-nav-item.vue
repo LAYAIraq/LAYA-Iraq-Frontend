@@ -44,7 +44,7 @@
       <course-nav-property-edit
         id="item-title"
         :form-placeholder="y18n('title')"
-        :property="item.title.text"
+        :property="{ propName: y18n('title'), value: item.title.text }"
         @changed="updateTitle"
       ></course-nav-property-edit>
     </div>
@@ -87,15 +87,15 @@
         {{ value.slug }}
       </div>
       <!-- full path -->
-      <div class="d-flex">
-        <span
-          class="text-muted small"
-          :class="langIsAr? 'ml-2': 'mr-2'"
-        >
-          {{ y18n('courseNavEdit.fullPath') }}
-        </span>
-        {{ item.path }}
-      </div>
+      <!--      <div class="d-flex">-->
+      <!--        <span-->
+      <!--          class="text-muted small"-->
+      <!--          :class="langIsAr? 'ml-2': 'mr-2'"-->
+      <!--        >-->
+      <!--          {{ y18n('courseNavEdit.fullPath') }}-->
+      <!--        </span>-->
+      <!--        {{ item.path }}-->
+      <!--      </div>-->
       <!-- type -->
       <div class="d-flex">
         <span
@@ -121,7 +121,7 @@
             class="fas fa-edit"
             :class="langIsAr ? 'mr-auto' : 'ml-auto'"
             role="button"
-            :title="y18n('courseWrapper.edit')"
+            :title="y18n('courseNavEdit.followEdit')"
             @click="$router.push({name: 'content-follow-edit', params: { contentId: value.id, follow: value.follow }})"
           ></i>
         </div>

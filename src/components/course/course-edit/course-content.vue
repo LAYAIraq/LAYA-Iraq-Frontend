@@ -214,7 +214,7 @@ export default {
         // choose way depending on new or existing content
         if (!this.editContent) {
           this.$store.commit('courseContentAdd', updatedStep)
-          this.$store.commit('courseChapterAdd', contentBlockToNavItemTransform(updatedStep))
+          this.$store.commit('courseChapterAdd', courseContentBlockToNavItemTransform(updatedStep))
         } else {
           this.$store.commit('courseContentSet', { ...updatedStep, id: this.pathId })
         }
