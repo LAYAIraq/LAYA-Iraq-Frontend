@@ -266,7 +266,9 @@ export default {
      * @param {boolean} val chapter is coherent
      */
     chaptersCoherentUpdate (id, val) {
-      this.chaptersCoherent[id] = val
+      if (id) { // avoid 'undefined' key in chaptersCoherent
+        this.chaptersCoherent[id] = val
+      }
     },
     /**
      * @description update chaptersDuplicate object to monitor chapter names
@@ -274,7 +276,9 @@ export default {
      * @param {boolean} val chapter name duplicate on same level
      */
     chaptersDuplicateUpdate (id, val) {
-      this.chaptersDuplicate[id] = val
+      if (id) { // avoid 'undefined' key in chaptersCoherent
+        this.chaptersDuplicate[id] = val
+      }
     },
     /**
      * @description check if chapter names are duplicate or chapters incoherent, show modal if yes
@@ -293,9 +297,9 @@ export default {
      */
     navigationSave () {
       this.$store.commit('courseChaptersSet', deepCopy(this.courseNavEdit.children))
-      this.edited = false
       this.$store.commit('courseRoutesUpdate')
       this.$emit('saved') // emit saved to trigger courseUpdate
+      this.$nextTick(() => { this.edited = false }) // make sure 'edited' is reset after saving
     },
     /**
      * @function set preview variables to default

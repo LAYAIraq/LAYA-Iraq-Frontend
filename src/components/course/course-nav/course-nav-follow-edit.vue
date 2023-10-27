@@ -7,7 +7,7 @@
 <template>
   <div class="container">
     <h2 class="row">
-      Edit Follow Set
+      {{ y18n('courseNavEdit.followEdit') }}
     </h2>
     <div
       v-for="(label, i) in buttonLabels"
@@ -21,15 +21,28 @@
         >
           {{ label }}
         </b-button>
+        <i
+          v-b-tooltip.top
+          class="fas fa-question-circle p-1"
+          :title="y18n('courseNavEdit.followEditToolTipButton')"
+        ></i>
       </div>
-      <div class="row">
+      <div
+        v-b-tooltip.bottom
+        class="row"
+        :title="replacePattern(y18n('courseNavEdit.followEditToolTipTags'), '<BL>', label)"
+      >
         <suggesting-input
           class="col"
           :domain="courseContent"
-          :keys="['title', 'name', 'id']"
+          :drop-down-button-text="y18n('courseNavEdit.followEditButtonText')"
+          :keys="['title', 'name']"
           :inline="false"
           :nested-key="'text'"
+          :no-results-text="y18n('courseNavEdit.followEditSearchNoResult')"
           :previous-selection="follow? follow[i]: null"
+          :search-label-text="y18n('courseNavEdit.followEditSearchLabel')"
+          :search-input-placeholder="y18n('courseNavEdit.followEditSearchPlaceholder')"
           :submit-button="false"
           @removed="followEdit(i, null)"
           @tags-selected="followEdit(i, $event)"
@@ -141,7 +154,7 @@ export default {
     saveFollow () {
       if (this.followSetComplete) {
         this.$store.commit('courseChapterUpdateFollow', { id: this.contentId, value: this.followSetNew })
-        this.$router.push('edit-nav')
+        this.$router.back()
       } else {
         this.$bvModal.show('follow-incomplete')
       }

@@ -143,8 +143,8 @@
               id="follow-list"
             >
               <li
-                v-for="e in followSet"
-                :key="e"
+                v-for="(e, i) in followSet"
+                :key="`follow-${i}`"
                 v-b-tooltip.right
                 :title="y18n('courseNavEdit.followHighlight')"
                 @mousedown="followHighlight($event,e)"

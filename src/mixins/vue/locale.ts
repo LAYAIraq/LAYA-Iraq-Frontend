@@ -36,7 +36,7 @@ export default {
     },
 
     /**
-     * coourseLangIsAr: checks if Arabic script language is set, for rtl shenanigans
+     * courseLangIsAr: checks if Arabic script language is set, for rtl shenanigans
      *
      * Author: nv
      *
@@ -44,7 +44,6 @@ export default {
      * @returns true if 'arabic' or 'kurdish' is set as courseLanguage
      */
     courseLangIsAr () {
-      console.log('courseLanguage in locale is ' + this.courseLanguage)
       return this.courseLanguage === 'arabic' || this.courseLanguage === 'kurdish'
     }
   },
@@ -85,7 +84,7 @@ export default {
      * Last Updated: October 23, 2023 by cmc
      * @param compName name of content block
      */
-    typeName (compName: string) {
+    typeName (compName: string): string {
       return this.i18n[kebabToCamel(compName) + '.name']
     },
 
@@ -98,7 +97,7 @@ export default {
      *  Last Updated: April 5, 2022
      * @param prop key of the i18n object to return
      */
-    y18n (prop: string) {
+    y18n (prop: string): string {
       return this.i18n[prop] // does key exist in selected locale?
         ? this.i18n[prop] // yes
         : i18n['en'][prop] ?? // does key exist in English?
