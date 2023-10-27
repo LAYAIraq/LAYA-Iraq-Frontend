@@ -104,6 +104,10 @@ export default {
       this.stateChange(false)
       this.$emit('changed', this.callback(this.newProperty))
     },
+    /**
+     * @description emit state-changed event with given value
+     * @param {boolean} val change of state
+     */
     stateChange (val) {
       this.edit = val
       this.$emit('state-changed', this.edit)

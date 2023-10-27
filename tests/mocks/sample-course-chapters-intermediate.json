@@ -1,0 +1,123 @@
+{
+  "abstract": null,
+  "authorId": 1,
+  "category": "Kurs",
+  "content": [],
+  "chapters": [
+    {
+      "chapterName": "video",
+      "isChapter": true,
+      "children": [
+        {
+          "id": "zw31",
+          "isChapter": false,
+          "slug": "video",
+          "type": "video",
+          "follow": "dr31"
+        },
+        {
+          "isChapter": false,
+          "follow": [
+            "zw31",
+            "dr31"
+          ],
+          "id": "e1ns",
+          "slug": "dialog-sample",
+          "type": "button-navigation"
+        }
+      ],
+      "slug": "video"
+    },
+    {
+      "chapterName": "Editor",
+      "id": "id-editor",
+      "isChapter": true,
+      "children": [{
+          "follow": "v13r",
+          "id": "dr31",
+          "isChapter": false,
+          "type": "free-text",
+          "slug": "wysiwyg"
+      }],
+      "slug": "editor"
+    },
+    {
+      "chapterName": "quiz",
+      "children": [
+        {
+          "isChapter": false,
+          "id": "v13r",
+          "slug": "sc-quiz",
+          "type": "choice-question",
+          "follow": "fu3nf"
+        },
+        {
+          "id": "fu3nf",
+          "isChapter": false,
+          "slug": "drag-drop",
+          "type": "category-matching"
+        }
+      ],
+      "slug": "quiz",
+      "isChapter": true,
+      "id": "id-2193"
+    }
+  ],
+  "courseContent": {
+    "e1ns": {
+      "id": "e1ns",
+      "name": "button-navigation",
+      "title": {
+        "text": "Dialog Sample",
+        "id": "ref01"
+      }
+    },
+    "zw31": {
+      "id": "zw31",
+      "name": "video",
+      "title": {
+        "text": "Video",
+        "id": "ref02"
+      }
+    },
+    "dr31": {
+      "id": "dr31",
+      "name": "free-text",
+      "title": {
+        "text": "WYSIWYG",
+        "id": "ref03"
+      }
+    },
+    "v13r": {
+      "id": "dr31",
+      "name": "choice-question",
+      "title": {
+        "text": "SC Quiz",
+        "id": "ref04"
+      },
+      "task": {
+        "text": "Please verify!",
+        "id": "ref06"
+      }
+    },
+    "fu3nf": {
+      "id": "fu3nf",
+      "name": "category-matching",
+      "title": {
+        "text": "Drag & Drop",
+        "id": "ref05"
+      }
+    }
+  },
+  "properties": {
+    "enrollment": true,
+    "simple": false,
+    "simpleLanguage": false,
+    "showSingleSubChapterTitleSlug": false
+  },
+  "files": [],
+  "locked": false,
+  "name": "Testkurs",
+  "courseId": "t3stkur5",
+  "storageId": "st0r31d"
+}

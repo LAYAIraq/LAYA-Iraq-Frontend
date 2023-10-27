@@ -127,11 +127,11 @@ describe('Course rename', () => {
 
   it('closes modal when input is valid and changes route', async () => {
     await button.trigger('click')
-    await wrapper.find('input').setValue('newName')
+    await wrapper.find('input').setValue('New Name')
     await renameButton.trigger('click')
-    expect(mutations.courseRename).toHaveBeenCalledWith(expect.any(Object), 'newName')
+    expect(mutations.courseRename).toHaveBeenCalledWith(expect.any(Object), 'New Name')
     expect(await actions.courseUpdateRename).toHaveBeenCalled()
     expect(wrapper.find('#author-rename-course-confirm').isVisible()).toBeFalsy()
-    expect(wrapper.vm.$router.replace).toHaveBeenCalledWith(expect.objectContaining({ name: 'course', params: { name: 'newName' } }))
+    expect(wrapper.vm.$router.replace).toHaveBeenCalledWith(expect.objectContaining({ name: 'course', params: { name: 'new-name' } }))
   })
 })

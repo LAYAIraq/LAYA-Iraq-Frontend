@@ -5,7 +5,14 @@
   Since: v1.3.0
 -->
 <template>
-  <div class="w-100 border rounded p-1">
+  <div
+    v-b-tooltip.auto
+    class="w-100 border rounded p-1"
+    :class="{
+      'border-primary': value.id === courseStart,
+    }"
+    :title="value.id === courseStart ? y18n('courseNavEdit.firstBlock') : null"
+  >
     <!-- Item header -->
     <div
       :id="`item-header-${item.id}`"
@@ -48,6 +55,7 @@
       class="collapsible px-3"
       :class="langIsAr? 'mr-3': 'ml-3'"
     >
+      <!-- preview -->
       <div class="d-flex">
         <span
           class="text-muted small btn-link"
@@ -58,6 +66,7 @@
           {{ y18n('courseNavEdit.preview') }}
         </span>
       </div>
+      <!-- id -->
       <div class="d-flex">
         <span
           class="text-muted small"
@@ -67,6 +76,7 @@
         </span>
         {{ item.id }}
       </div>
+      <!-- slug -->
       <div class="d-flex">
         <span
           class="text-muted small"
@@ -76,6 +86,7 @@
         </span>
         {{ value.slug }}
       </div>
+      <!-- full path -->
       <div class="d-flex">
         <span
           class="text-muted small"
@@ -85,6 +96,7 @@
         </span>
         {{ item.path }}
       </div>
+      <!-- type -->
       <div class="d-flex">
         <span
           class="text-muted small"
@@ -92,49 +104,72 @@
         >
           {{ y18n('type') }}
         </span>
-        {{ getName() }}
+        {{ typeName(value.type) }}
       </div>
+      <!-- follow -->
       <div
-        v-if="value.id !== courseEnd || value.type === 'button-navigation'"
+        v-if="(value.id !== courseEnd && followingContent) || value.type === 'button-navigation'"
         class="d-block"
       >
-        <div class="d-flex">
+        <div class="d-flex follow-content">
           <span class="text-muted small">
-            Follow
+            {{ y18n('courseNavEdit.follow') }}
           </span>
           <i
             v-if="value.type === 'button-navigation'"
             v-b-tooltip.top.ds500
             class="fas fa-edit"
             :class="langIsAr ? 'mr-auto' : 'ml-auto'"
+            role="button"
             :title="y18n('courseWrapper.edit')"
             @click="$router.push({name: 'content-follow-edit', params: { contentId: value.id, follow: value.follow }})"
           ></i>
         </div>
-        <course-nav-follow-set
-          :follow="followingContent"
-          :item="item"
-          @follow-update="v => propagateChange('follow', v)"
-          @highlight="p => $emit('highlight', p)"
-        ></course-nav-follow-set>
+        <div
+          class="d-flex"
+          @click="$bvModal.show('follow-edit')"
+        >
+          <div class="text-break">
+            <p
+              v-if="followSet.length === 1"
+              v-b-tooltip.right
+              :title="y18n('courseNavEdit.followHighlight')"
+              @mousedown="followHighlight($event, followingContent)"
+            >
+              {{ followingContent }}
+            </p>
+            <ul
+              v-else
+              id="follow-list"
+            >
+              <li
+                v-for="e in followSet"
+                :key="e"
+                v-b-tooltip.right
+                :title="y18n('courseNavEdit.followHighlight')"
+                @mousedown="followHighlight($event,e)"
+              >
+                {{ e }}
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { courseNavEmits, locale } from '@/mixins'
-import CourseNavFollowSet from '@/components/course/course-nav/course-nav-follow-set.vue'
+import { courseNav, locale } from '@/mixins'
 import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
 import { mapGetters } from 'vuex'
-import { deepCopy, kebabToCamel } from '@/mixins/general/helpers'
+import { deepCopy } from '@/mixins/general/helpers'
 
 export default {
   name: 'CourseNavItem',
   components: {
-    CourseNavFollowSet,
     CourseNavPropertyEdit
   },
-  mixins: [courseNavEmits, locale],
+  mixins: [courseNav, locale],
   props: {
     dragBubble: {
       type: Array,
@@ -169,7 +204,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['courseContent']),
+    ...mapGetters(['courseContent', 'courseStart']),
+    followSet () {
+      return this.followingContent
+        ? Array.isArray(this.followingContent) // either array or string
+          ? this.followingContent // return array as is
+          : [this.followingContent] // return string as single item in array
+        : null
+    },
     item () {
       return this.courseContent[this.value.id]
     }
@@ -188,23 +230,15 @@ export default {
   },
   methods: {
     /**
-     * @description return localized Description of Block type
-     * @since v1.3.0
-     * @author cmc
-     * @return {string} Localized name of block
-     */
-    getName () {
-      return this.y18n(kebabToCamel(this.value.type) + '.name')
-    },
-    /**
-     * @description emit event to propagate change to parent
+     * @description emit highlight event when shift is pressed
      * @author cmc
      * @since v1.3.0
-     * @param property the property to change
-     * @param value change value for slug
      */
-    propagateChange (property, value) {
-      this.$emit('propagate-property-change', this.value, property, value)
+    followHighlight (e, id) {
+      e.preventDefault()
+      if (e.shiftKey) {
+        this.$emit('highlight', id)
+      }
     },
     /**
      * @description toggle collapsed state of item, emit event to parent
@@ -250,6 +284,12 @@ export default {
   display: none;
 }
 .edit:hover>i {
+  display: inline-flex;
+}
+.follow-content>i {
+  display: none;
+}
+.follow-content:hover>i {
   display: inline-flex;
 }
 </style>

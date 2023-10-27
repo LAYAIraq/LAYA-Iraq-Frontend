@@ -90,8 +90,8 @@ export default {
       'courseContentIdRouteMap',
       'courseContentRouteIdMap',
       'courseFlags',
-      'courseNav',
       'courseRoutes',
+      'courseStart',
       'courseSlug',
       'enrollment',
       'isAdmin',
@@ -122,7 +122,7 @@ export default {
      */
     contentToDisplay () {
       if (!this.coursePath) { // course path is not set --> first content in course
-        return this.courseContent[this.courseNav.start]
+        return this.courseContent[this.courseStart]
       } else { // course path is set --> content with slug
         return this.courseContent[this.courseContentRouteIdMap[this.coursePath]] // path is no number -> route
       }

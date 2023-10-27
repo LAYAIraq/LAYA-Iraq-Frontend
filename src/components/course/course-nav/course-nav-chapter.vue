@@ -48,25 +48,28 @@
     >
       <div
         v-for="(item, i) in chapter.children"
-        :key="`${id}-${i}`"
+        :key="`${chapter.id}-${i}`"
         class="chapter-child"
       >
         <course-nav-chapter
           v-if="item.isChapter"
           :chapter="item"
           :chapter-name="item.chapterName"
-          :chapter-name-duplicate="duplicateChapterNames.includes(i)"
+          :chapter-name-duplicate="duplicateChapterNames.some(el => el === item.chapterName)"
           :course-end="courseEnd"
           :following-content="item.follow"
           :highlighted-block="main? highlightId : highlightedBlock"
+          @chapter-coherent="(c, val) => coherenceEmit(c, val)"
           @chapter-delete="chapterDeletedUpdate"
+          @deleted-chapter="$emit('deleted-chapter', $event)"
+          @duplicate-chapters="(did, bool) => $emit('duplicate-chapters', did, bool)"
           @highlight="blockHighlight"
           @preview="pid => previewEmit(pid)"
           @propagate-property-change="propagatePropertyChange"
         />
         <course-nav-item
           v-else-if="!collapsed"
-          :class="{ 'border-success': item.id === highlightId }"
+          :class="{ 'border-success': item.id === highlightedBlock }"
           :course-end="courseEnd"
           :drag-bubble="[!dragging && dragStartIndex === i, childrenVisibility[item.id]]"
           :drag-end="[!dragging && dragEndIndex === i, childrenVisibility[item.id]]"
@@ -82,13 +85,12 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
 import Draggable from 'vuedraggable'
 import CourseNavItem from '@/components/course/course-nav/course-nav-item.vue'
 import CourseNavPropertyEdit from '@/components/course/course-nav/course-nav-property-edit.vue'
-import { courseNavEmits, locale } from '@/mixins'
+import { locale, courseNav } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
-import { chapterFollowSet } from '@/mixins/general/course-structure'
+import { chapterFollowSet } from '@/mixins/general/course-chapters'
 import { deepCopy } from '@/mixins/general/helpers'
 
 export default {
@@ -98,7 +100,7 @@ export default {
     CourseNavPropertyEdit,
     CourseNavItem
   },
-  mixins: [courseNavEmits, locale],
+  mixins: [courseNav, locale],
   props: {
     chapter: {
       type: Object,
@@ -143,8 +145,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['courseNav']),
-
+    children () {
+      return this.chapter.children
+    },
     /**
      * @function check if all children are coherent, i.e. either all are chapters or all are items
      * @author cmc
@@ -162,7 +165,7 @@ export default {
     /**
      * @description return a list of indexes of children with duplicate chapter names
      * @author cmc
-     * @return {number[]} list of duplicate chapterNames indexes
+     * @return {string[]} list of duplicate chapterNames indexes
      */
     duplicateChapterNames () {
       const chapterNames = this.chapter.children.map(chapter => chapter.chapterName)
@@ -170,8 +173,8 @@ export default {
       chapterNames.forEach((name, i) => { // check if name is in chapterNames, if yes, add to duplicates
         if (name) {
           chapterNames.forEach((name2, j) => {
-            if (name === name2 && i !== j && !duplicates.includes(i)) {
-              duplicates.push(i)
+            if (name === name2 && i !== j && !duplicates.some(e => e === name)) {
+              duplicates.push(name)
             }
           })
         }
@@ -182,19 +185,32 @@ export default {
   watch: {
     chapter: {
       handler () {
-        // console.log('chapter changed')
         if (this.main) {
-          // console.log('changing following content....')
           this.followingContentSet()
+          this.$emit('edited')
         }
       },
       deep: true
+    },
+    coherentItem (val) {
+      this.coherenceEmit(this.chapter.id, val)
+    },
+    duplicateChapterNames () {
+      this.$emit('duplicate-chapters', this.chapter.id, this.duplicateChapterNames.length > 0)
     }
   },
   created () {
     this.chapter.children.forEach(child => { this.childrenVisibility[child.id] = false })
+    this.$emit('chapter-coherent', this.chapter.id, this.coherentItem)
+  },
+  destroyed () {
+    this.$emit('deleted-chapter', this.chapter.id)
   },
   methods: {
+    /**
+     * @description emit highlighted content's id if not main chapter, else set it
+     * @param id highlighted content
+     */
     blockHighlight (id) {
       if (this.main) {
         this.highlightId = id
@@ -202,6 +218,9 @@ export default {
         this.$emit('highlight', id)
       }
     },
+    /**
+     * @description unset highlighted id if main chapter
+     */
     blockHighlightUnset () {
       if (this.main && this.highlightId) {
         this.highlightId = null
@@ -211,15 +230,15 @@ export default {
      * @description propagate removal of a chapter
      */
     chapterDelete () {
-      this.$emit('chapter-delete', this.chapterName, deepCopy(this.chapter.children))
+      this.$emit('chapter-delete', this.chapter.id, deepCopy(this.chapter.children))
     },
     /**
      * @description remove chapter by name, adding their children to chapter, propagate changes
-     * @param deletedChapterName name of deleted chapter
+     * @param deletedChapterId id of deleted chapter
      * @param newChildren children of deleted chapter to be added to chapter
      */
-    chapterDeletedUpdate (deletedChapterName, newChildren) {
-      const deleteIndex = this.chapter.children.findIndex(e => e.chapterName === deletedChapterName)
+    chapterDeletedUpdate (deletedChapterId, newChildren) {
+      const deleteIndex = this.chapter.children.findIndex(e => e.id === deletedChapterId)
       const children = deepCopy(this.chapter.children)
       const croppedChildren = []
       children.forEach((el, i) => { // using Array.slice() did not yield the correct result
@@ -228,6 +247,7 @@ export default {
         }
       })
       this.propagatePropertyChange(this.chapter, 'children', [...croppedChildren, ...newChildren])
+      this.$emit('deleted-chapter', deletedChapterId)
     },
     /**
      * @function set visibility of child in childrenVisibility object
@@ -237,6 +257,14 @@ export default {
      */
     childVisibilityChange (id, visibility) {
       this.childrenVisibility[id] = visibility
+    },
+    /**
+     * @description emit coherence status of chapter
+     * @param {string} id chapter id
+     * @param {boolean} val chapter is coherent
+     */
+    coherenceEmit (id, val) {
+      this.$emit('chapter-coherent', id, val)
     },
     /**
      * @function handle event when drag starts, setting dragStartIndex and dragging to true

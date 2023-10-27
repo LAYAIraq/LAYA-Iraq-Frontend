@@ -7,6 +7,7 @@
 
 import { mapGetters } from 'vuex'
 import * as i18n from '../../assets/i18n'
+import { kebabToCamel } from '@/mixins/general/helpers'
 export default {
   computed: {
     ...mapGetters(['profileLanguage', 'courseLanguage']),
@@ -79,6 +80,16 @@ export default {
     },
 
     /**
+     * @description returns name of content block in locale
+     * @author core
+     * Last Updated: October 23, 2023 by cmc
+     * @param compName name of content block
+     */
+    typeName (compName: string) {
+      return this.i18n[kebabToCamel(compName) + '.name']
+    },
+
+    /**
      * function y18n(prop): returns i18n[prop] if it exists, the English equivalent
      *  if it doesn't, also falls back if key doesn't exist altogether
      *
@@ -90,9 +101,8 @@ export default {
     y18n (prop: string) {
       return this.i18n[prop] // does key exist in selected locale?
         ? this.i18n[prop] // yes
-        : i18n['en'][prop] // does key exist in English?
-          ? i18n['en'][prop] // yes
-          : 'This text is not available in any language. Please excuse the inconvenience.' // fallback
+        : i18n['en'][prop] ?? // does key exist in English?
+          'This text is not available in any language. Please excuse the inconvenience.' // fallback
     }
   }
 }

@@ -35,6 +35,143 @@ describe('store module course-content getters', () => {
       expect(getters.courseChapters(state)).toBeNull()
     })
   })
+
+  describe('courseChaptersCoherent', () => {
+    beforeEach(() => {
+      state = deepCopy(emptyState)
+    })
+    it('returns true when chapters are integer (flat)', () => {
+      state.courseChapters = [
+        { isChapter: false, slug: 'block-1' },
+        { isChapter: false, slug: 'block-2' }
+      ]
+      expect(getters.courseChaptersCoherent(state)).toBeTruthy()
+    })
+    it('returns true when chapters are integer (deep)', () => {
+      state.courseChapters = [
+        {
+          isChapter: true,
+          slug: 'coherent',
+          children: [
+            { isChapter: false, slug: 'block-1' },
+            { isChapter: false, slug: 'block-2' }
+          ]
+        },
+        {
+          isChapter: true,
+          slug: 'coherent-2',
+          children: [
+            { isChapter: false, slug: 'block-3' },
+            { isChapter: false, slug: 'block-4' }
+          ]
+        }
+      ]
+      expect(getters.courseChaptersCoherent(state)).toBeTruthy()
+    })
+    it('returns true when chapters are integer (nested)', () => {
+      state.courseChapters = [
+        {
+          isChapter: true,
+          slug: 'coherent',
+          children: [
+            {
+              isChapter: true,
+              slug: 'coherent',
+              children: [
+                { isChapter: false, slug: 'block-1' },
+                { isChapter: false, slug: 'block-2' }
+              ]
+            },
+            {
+              isChapter: true,
+              slug: 'coherent',
+              children: [
+                { isChapter: false, slug: 'block-3' },
+                { isChapter: false, slug: 'block-4' }
+              ]
+            }
+          ]
+        },
+        {
+          isChapter: true,
+          slug: 'coherent-2',
+          children: [
+            {
+              isChapter: true,
+              slug: 'coherent',
+              children: [
+                { isChapter: false, slug: 'block-5' },
+                { isChapter: false, slug: 'block-6' }
+              ]
+            },
+            {
+              isChapter: true,
+              slug: 'coherent',
+              children: [
+                { isChapter: false, slug: 'block-7' },
+                { isChapter: false, slug: 'block-8' }
+              ]
+            }
+          ]
+        }
+      ]
+      expect(getters.courseChaptersCoherent(state)).toBeTruthy()
+    })
+    it('returns false when chapters are not integer (flat)', () => {
+      state.courseChapters = [
+        { isChapter: false, slug: 'block-1' },
+        { isChapter: true, slug: 'block-2', children: [] }
+      ]
+      expect(getters.courseChaptersCoherent(state)).toBeFalsy()
+    })
+    it('returns false when chapters are not integer (deep)', () => {
+      state.courseChapters = [
+        {
+          isChapter: true,
+          slug: 'incoherent',
+          children: [
+            { isChapter: false, slug: 'block-1' },
+            { isChapter: true, slug: 'block-2', children: [] }
+          ]
+        },
+        {
+          isChapter: true,
+          slug: 'incoherent-2',
+          children: [
+            { isChapter: true, slug: 'block-3', children: [] },
+            { isChapter: false, slug: 'block-4' }
+          ]
+        }
+      ]
+      expect(getters.courseChaptersCoherent(state)).toBeFalsy()
+    })
+    it('returns false when chapters are not integer (actual use data)', () => {
+      state.courseChapters = [{ chapterName: 'New Chapter', slug: 'new-chapter', isChapter: true, children: [{ chapterName: 'New Chapter 4', slug: 'new-chapter-4', isChapter: true, children: [{ id: '3b7053f5', slug: 'dialog-sample', type: 'button-navigation', follow: ['c5829415', '6f610939'] }, { id: '2135dd5d', slug: 'wysiwyg', type: 'free-text', follow: '6f610939' }, { id: '6f610939', slug: 'drag-drop-sample', type: 'category-matching', follow: '811857fb' }, { id: '811857fb', slug: 'multiple-choice-test', type: 'choice-question', follow: 'c5829415' }, { id: 'c5829415', slug: 'video', type: 'video-player', follow: '3f4db7f4-6b22-4f47-9f98-7d8da58677ab' }] }, { id: '3f4db7f4-6b22-4f47-9f98-7d8da58677ab', isChapter: false, slug: 'dasds', type: 'video-player', follow: null }] }, { chapterName: 'New Chapter 2', slug: 'new-chapter-2', isChapter: true, children: [] }]
+      expect(getters.courseChaptersCoherent(state)).toBeFalsy()
+    })
+    it('returns false when chapter has no children (flat)', () => {
+      expect(getters.courseChaptersCoherent(state)).toBeFalsy()
+    })
+    it('returns false when chapter has no children (deep)', () => {
+      state.courseChapters = [
+        {
+          isChapter: true,
+          slug: 'incoherent',
+          children: []
+        },
+        {
+          isChapter: true,
+          slug: 'incoherent-2',
+          children: [
+            { isChapter: true, slug: 'block-3', children: [] },
+            { isChapter: false, slug: 'block-4' }
+          ]
+        }
+      ]
+      expect(getters.courseChaptersCoherent(state)).toBeFalsy()
+    })
+  })
+
   describe('courseChapterNames', () => {
     beforeAll(() => {
       state = deepCopy(emptyState)
@@ -71,6 +208,26 @@ describe('store module course-content getters', () => {
     it('returns null if courseContent is null', () => {
       state.courseContent = null
       expect(getters.courseContent(state)).toBeNull()
+    })
+  })
+
+  describe('courseContentFollowMap', () => {
+    beforeAll(() => {
+      state = deepCopy(emptyState)
+    })
+    it('returns empty object when there are no chapters', () => {
+      expect(getters.courseContentFollowMap(state)).toStrictEqual({})
+    })
+
+    it('returns correct object when courseChapters change', () => {
+      state.courseChapters = SampleCourseChapters.chapters
+      expect(getters.courseContentFollowMap(state)).toStrictEqual({
+        e1ns: ['zw31', 'dr31'],
+        zw31: 'dr31',
+        dr31: 'v13r',
+        v13r: 'fu3nf',
+        fu3nf: undefined
+      })
     })
   })
 
@@ -128,21 +285,6 @@ describe('store module course-content getters', () => {
 
     it('returns id if path is found', () => {
       expect(getters.courseContentPathId(state)('/test')).toBe('test')
-    })
-  })
-
-  describe('courseNav', () => {
-    it('returns empty object if no courseChapters', () => {
-      state.courseChapters = []
-      expect(getters.courseNav(state, getters)).toStrictEqual({ start: expect.any(Function), structure: [] })
-    })
-
-    it('returns object consisting of courseStart and courseChapters', () => {
-      state.courseChapters = SampleCourseChapters.chapters
-      expect(getters.courseNav(state, { courseStart: getters.courseStart(state) })).toStrictEqual({
-        start: 'e1ns',
-        structure: SampleCourseChapters.chapters
-      })
     })
   })
 

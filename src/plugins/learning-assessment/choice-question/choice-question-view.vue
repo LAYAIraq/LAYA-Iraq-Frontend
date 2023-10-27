@@ -57,7 +57,7 @@ Since: v1.0.0
       >
         <div>
           <input
-            v-if="variation === multiple"
+            v-if="variation === 'multiple'"
             :id="'mchoice-in-'+i"
             v-model="answers"
             class="position-absolute mt-2"

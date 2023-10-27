@@ -1,6 +1,6 @@
 <!--
-  Filename: course-nav-follow-set.vue
-  Use: This component is used to display the follow set of a course nav item.
+  Filename: course-nav-follow-edit.vue
+  Use: This component is used to display the follow edit view of a course nav item.
   Author: cmc
   Since: v1.3.0
 -->

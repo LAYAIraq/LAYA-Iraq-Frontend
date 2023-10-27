@@ -80,6 +80,7 @@ Dependencies:
 <script>
 import { locale } from '@/mixins'
 import { mapGetters } from 'vuex'
+import { slugify } from '@/mixins/general/slugs'
 
 export default {
   name: 'CourseRename',
@@ -173,15 +174,14 @@ export default {
       const newName = this.rename.trim()
       this.oldName = this.course.name
       this.$store.commit('courseRename', newName)
-      const renamed = this.$store.dispatch('courseUpdateRename')
-
-      renamed.then(() => {
-        this.$router.replace({
-          name: 'course',
-          params: { name: newName }
+      this.$store.dispatch('courseUpdateRename')
+        .then(() => {
+          this.$router.replace({
+            name: 'course',
+            params: { name: slugify(newName) }
+          })
+          this.$emit('renamed')
         })
-        this.$emit('renamed')
-      })
         .catch(err => {
           console.error(err)
         })
