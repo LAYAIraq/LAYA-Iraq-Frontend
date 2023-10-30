@@ -81,6 +81,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import SuggestingInput from '@/components/helpers/suggesting-input.vue'
 import { array, locale, routes } from '@/mixins'
 
@@ -106,6 +107,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['courseContent']),
     /**
      * @function return text of buttons if item is button navigation
      * @author cmc
@@ -113,7 +115,7 @@ export default {
      * @returns {string[]} labels of buttons
      */
     buttonLabels () {
-      return this.contentToDisplay.answers.map(el => el.text)
+      return this.courseContent[this.contentId].answers.map(el => el.text)
     },
     /**
      * @description return if follow set has been changed
