@@ -22,10 +22,11 @@ Since: v1.3.0
       ></flag-icon>
     </div>
     <div>
-      <vue-pdf-embed
-        :source="src"
+      <pdf-viewer
+        :path="path"
+        :file-name="src"
       >
-      </vue-pdf-embed>
+      </pdf-viewer>
     </div>
     <div class="row">
       <button
@@ -49,13 +50,13 @@ Since: v1.3.0
 import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
-import VuePdfEmbed from 'vue-pdf-embed/dist/vue2-pdf-embed'
+import PdfViewer from '@/components/helpers/pdf-viewer.vue'
 
 export default {
   name: 'PdfViewerView',
   components: {
     FlagIcon,
-    VuePdfEmbed
+    PdfViewer
   },
   mixins: [
     locale,
@@ -65,7 +66,7 @@ export default {
   data () {
     return {
       ...this.viewData,
-      src: '/home/dozhpiven/Downloads/transaktion.pdf'
+      path: 'lib/pdfjs-3.11.174-dist/web/viewer.html'
     }
   }
 }
