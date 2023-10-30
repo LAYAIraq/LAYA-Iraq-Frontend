@@ -7,10 +7,10 @@
 import {
   ContentBlock,
   CourseNavigationItem,
-  CourseNavigationItemBlock,
-  LegacyContentBlock
+  CourseNavigationItemBlock
 } from '@/mixins/types/course-structure'
 import { chapterSlugRoutingIssueAvoid } from '@/mixins/general/course-chapters'
+import { deepCopy } from '@/mixins/general/helpers'
 
 /**
  * @description traverses chapters, extracts object that has slugs as keys and chapterNames as values
@@ -93,24 +93,16 @@ export const courseContentIdsExtract = (structure: any, ids: any): void => {
 /**
  * @description traverse course nav object, return tuple: object with ids of content blocks and list of routes
  * @param courseChapters course structure object
- * @param subChapterSlug course property (trim subchapter slug when only one subchapter)
  * @returns [courseContent, courseRoutes] - courseContent: object with ids as
  *  keys, courseRoutes: list of tuples [route, id]
  */
 export const courseDestructure = (
-  courseChapters: CourseNavigationItem[],
-  subChapterSlug?: string
+  courseChapters: CourseNavigationItem[]
 ):
-  [
-    { [id: string]: {} },
-    any[]
-  ] => {
+  [object, object] => {
   const ids: { [id: string]: {} } = {}
   courseContentIdsExtract(courseChapters, ids)
   const routes = coursePathsGet(courseChapters)
-  if (subChapterSlug) {
-    courseSlugsTrim(routes, subChapterSlug)
-  }
   return [ids, routes]
 }
 
@@ -121,13 +113,9 @@ export const courseDestructure = (
  */
 export const coursePathsGet = (courseNav: CourseNavigationItem[]): { [id: string]: string[] } => {
   const routes = {} // instantiate here because of recursion
-  // const start = courseContentIdGet(courseNav, 'first')
-  // if (start) {
-  //   routes.push(['', start])
-  // }
-  courseRoutesCollect(courseNav, '', routes)
+  courseRoutesCollect(courseNav, [], routes)
   // return routes
-  return {}
+  return routes
 }
 
 /**
@@ -143,45 +131,15 @@ const courseRoutesCollect = (
 ) => {
   if (structure instanceof Array) { // structure is CourseNavigationItem[]
     structure.forEach((item) => {
-      courseRoutesCollect(item, currentPath, routes)
+      courseRoutesCollect(item, deepCopy(currentPath), routes)
       // routes.push([currentPath + '/' + item.slug ? item.slug : item.id, item.id]) // can have alternative path
     })
-  } else if (structure.isChapter) { // structure is CourseNavigationItemChapter
-    courseRoutesCollect(structure.children, currentPath.push(structure.slug), routes)
-  } else if (!Object.keys(routes).some(el => el === structure.id)) { // add path to routes if id is not already there
-    routes[structure.id] = currentPath.push(structure.slug)
-  }
-}
-
-/**
- * @description find chapters with only one item and remove slug
- * @author cmc
- * @since v1.3.0
- * @param routes list of routes
- * @param subChapterSlug slug to keep (chapter name or block title)
- */
-const courseSlugsTrim = (
-  routes: { [id: string]: string[] },
-  subChapterSlug: string
-): void => {
-  if (subChapterSlug === 'chapter' || subChapterSlug === 'block') {
-    Object.keys(routes).forEach((id: string, i) => {
-      if (routes[id].length >= 2) { // more than one member => subchapters
-        const subChapter = routes.filter(
-          e => e[0].includes(pathList.slice(0, -1).join('/'))
-        )// find all subchapters i.e. all paths with same prefix
-        // @ts-ignore
-        if (subChapter.length === 1) { // only one subchapter => remove slug from path
-          const pathList = route[0].split('/')
-          if (subChapterSlug === 'chapter') { // keep chapter slug
-            route[0] = pathList.slice(0, -1).join('/')
-          } else { // keep block slug
-            route[0] = pathList.length > 2
-              ? pathList.slice(0, -2).join('/') + '/' + pathList.slice(-1)
-              : '' + pathList.slice(-1)
-          }
-        }
-      }
-    })
+  } else {
+    currentPath.push(structure.slug)
+    if (structure.isChapter) { // structure is CourseNavigationItemChapter
+      courseRoutesCollect(structure.children, deepCopy(currentPath), routes)
+    } else if (!Object.keys(routes).some(el => el === structure.id)) { // add path to routes if id is not already there
+      routes[structure.id] = currentPath
+    }
   }
 }

@@ -1,6 +1,7 @@
 import courseContent from '@/store/modules/course-content'
 import SampleCourse from '../../mocks/sample-course-short.json'
 import SampleCourseChapters from '../../mocks/sample-course-chapters.json'
+import SampleCourseChaptersNested from '../../mocks/sample-course-chapters-nested.json'
 import { deepCopy } from '@/mixins/general/helpers'
 describe('store module course-content getters', () => {
   let state: any
@@ -269,22 +270,32 @@ describe('store module course-content getters', () => {
 
   describe('courseContentPathId', () => {
     beforeEach(() => {
-      state.courseRoutes = [['', 'test'], ['/test', 'test']]
+      state.courseChapters = SampleCourseChaptersNested.chapters
     })
-    it('returns null if path is undefined', () => {
-      expect(getters.courseContentPathId(state)(undefined)).toBe('test')
-    })
-
-    it('returns null if path is null', () => {
-      expect(getters.courseContentPathId(state)(null)).toBe('test')
+    it('returns first content id if path is undefined', () => {
+      expect(getters.courseContentPathId(state)(undefined)).toBe('v13r')
     })
 
-    it('returns null if path is not found', () => {
-      expect(getters.courseContentPathId(state)('/test2')).toBeNull()
+    it('returns first content id if path is null', () => {
+      expect(getters.courseContentPathId(state)(null)).toBe('v13r')
     })
 
-    it('returns id if path is found', () => {
-      expect(getters.courseContentPathId(state)('/test')).toBe('test')
+    it('returns null if path is not found (flat)', () => {
+      expect(getters.courseContentPathId(state)(['hilllllarious'])).toBeNull()
+    })
+    it('returns null if path is not found (nested)', () => {
+      expect(getters.courseContentPathId(state)(['feedback', 'test', 'test'])).toBeNull()
+    })
+
+    it('returns correct id of nested path', () => {
+      expect(getters.courseContentPathId(state)(['feedback', 'feedback'])).toBe('f33db4ck')
+    })
+    it('returns correct id of chapter', () => {
+      expect(getters.courseContentPathId(state)(['feedback'])).toBe('f33db4ck')
+    })
+    it('returns correct id of sub-chapter', () => {
+      expect(getters.courseContentPathId(state)(['main', 'quiz', 'scmc'])).toBe('v13r')
+      expect(getters.courseContentPathId(state)(['main', 'quiz', 'scmc', 'some-sub-chapter'])).toBe('53ch5')
     })
   })
 

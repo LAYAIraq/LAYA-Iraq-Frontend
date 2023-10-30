@@ -62,7 +62,7 @@ describe('store module course-content mutations', () => {
       })
 
       it('creates a courseRoutes array', () => {
-        expect(state.courseRoutes.length).toBeGreaterThan(0)
+        expect(Object.keys(state.courseRoutes).length).toBeGreaterThan(0)
       })
     })
     describe('new course structure', () => {
@@ -80,7 +80,7 @@ describe('store module course-content mutations', () => {
       })
 
       it('creates a courseRoutes array', () => {
-        expect(state.courseRoutes.length).toBe(5)
+        expect(Object.keys(state.courseRoutes).length).toBe(5)
       })
     })
   })
@@ -306,12 +306,11 @@ describe('store module course-content mutations', () => {
     it('sets courseRoutes to argument of courseRoutes mutation', () => {
       mutations.courseChaptersSet(state, SampleCourseChapters.chapters)
       mutations.courseRoutesUpdate(state)
-      expect(state.courseRoutes.length).toBe(5)
-      state.courseRoutes.forEach(([route, id], i: number) => {
+      expect(Object.keys(state.courseRoutes).length).toBe(5)
+      Object.keys(state.courseRoutes).forEach((id, i) => {
         if (i === 0) {
           expect(id).toBe('e1ns')
         }
-        expect(typeof route === 'string')
         expect(typeof id === 'string')
       })
     })
@@ -331,16 +330,7 @@ describe('store module course-content mutations', () => {
     })
 
     it('creates an entry in courseRoutes for each course block', () => {
-      expect(state.courseRoutes.length).toBeGreaterThanOrEqual(5)
-    })
-
-    it('sets start property in courseRoutes correctly', () => { // skipped b/c this is function in course-structure.ts
-      expect(state.courseRoutes).toContainEqual(['', 'e1ns'])
-    })
-
-    it('sets chapters with double title when showSingleSubChapterTitleSlug is true', () => {
-      mutations.courseStructureDestructure(state, { ...SampleCourseChapters, properties: { showSingleSubChapterTitleSlug: true } })
-      expect(state.courseRoutes).toContainEqual(['video/video', 'zw31'])
+      expect(Object.keys(state.courseRoutes).length).toBeGreaterThanOrEqual(5)
     })
   })
 })

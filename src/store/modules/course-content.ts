@@ -72,17 +72,31 @@ export default {
       return map
     },
     /**
-     * @description returns the id of a course block by its path
+     * @description returns the id of a course block by its path, defaulting to first content block of a chapter
      * @param state the state of the store
      * @param path the path of the course block
      * @returns the id of the course block
      */
-    courseContentPathId: (state: { courseRoutes: [[route: string, id: string]] }) => (path: string): string => {
+    courseContentPathId: (state: { courseChapters: CourseNavigationItem[] }) => (path: string[]): string => {
       if (path === undefined || path === null) {
-        path = ''
+        path = []
       }
-      const contentPath = state.courseRoutes.find(([route, _]) => route === path)
-      return contentPath ? contentPath[1] : null
+      let chapter = state.courseChapters
+      const chapterReference = (chapters: any, slug: string) => {
+        if (!chapters) {
+          return null
+        } else if (Array.isArray(chapters)) {
+          return chapters.find(chapter => chapter.slug === slug)
+        } else if (chapters.isChapter) {
+          return chapters.children.find((chapter: CourseNavigationItem) => chapter.slug === slug)
+        } else { // chapters is CourseBlock
+          return slug === chapters.slug ? chapters : null
+        }
+      }
+      path.forEach(chapterSlug => {
+        chapter = chapterReference(chapter, chapterSlug)
+      })
+      return courseContentIdGet(chapter, 'first')
     },
     courseRoutes: (state: { courseRoutes: any }) => state.courseRoutes,
     courseStart: (state: { courseChapters: CourseNavigationItem[] }) => courseContentIdGet(state.courseChapters, 'first')
@@ -99,14 +113,11 @@ export default {
       state: {
         courseContent: object,
         courseChapters: CourseNavigationItem[],
-        courseRoutes: any[]
+        courseRoutes: object
       },
       course: Course
     ) {
-      [state.courseContent, state.courseRoutes] = courseDestructure(
-        course.chapters,
-        course.properties ? course.properties.showSingleSubChapterTitleSlug : null
-      )
+      [state.courseContent, state.courseRoutes] = courseDestructure(course.chapters)
       state.courseChapters = course.chapters
     },
 
