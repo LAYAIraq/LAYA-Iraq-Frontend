@@ -15,7 +15,7 @@ export default {
   props: {
     fileName: {
       type: String,
-      default: 'Test-PDF.pdf'
+      default: 'Test_PDF.pdf'
     },
     path: {
       type: String,
