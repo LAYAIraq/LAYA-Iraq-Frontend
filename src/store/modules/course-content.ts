@@ -49,28 +49,6 @@ export default {
       chaptersExtractFollow(state.courseChapters, map)
       return map
     },
-    courseContentIdRouteMap: (state: { courseRoutes: any }) => {
-      const map = {}
-      for (const [route, id] of state.courseRoutes) {
-        if (!(map[id] === '')) {
-          map[id] = route
-        }
-      }
-      return map
-    },
-    courseContentRouteIdMap: (state: { courseRoutes: any }, getters: { courseStart: string }) => {
-      const map = {}
-      for (const [route, id] of state.courseRoutes) {
-        if (id === getters.courseStart) {
-          if (route === '') { // only add start route to map
-            map[route] = id
-          }
-        } else {
-          map[route] = id
-        }
-      }
-      return map
-    },
     /**
      * @description returns the id of a course block by its path, defaulting to first content block of a chapter
      * @param state the state of the store

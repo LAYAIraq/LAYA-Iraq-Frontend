@@ -53,7 +53,7 @@
                 name: 'course',
                 params: {
                   name: slugify(courseName),
-                  coursePath: subchapters.slice(0, i + 1).join('/')
+                  coursePath: subchapters.slice(0, i + 1)
                 }
               }"
             >
@@ -74,22 +74,18 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale } from '@/mixins'
+import { locale, routes } from '@/mixins'
 import { slugify, unslugify } from '@/mixins/general/slugs'
 
 export default {
   name: 'CourseHeader',
-  mixins: [locale],
+  mixins: [locale, routes],
   props: {
     contentTitle: {
       type: Object,
       required: true
     },
     courseName: {
-      type: String,
-      required: true
-    },
-    coursePath: {
       type: String,
       required: true
     }
@@ -103,7 +99,7 @@ export default {
      * @returns {[]} The subchapter slugs of the current coursePath
      */
     subchapters () {
-      return this.coursePath.split('/').slice(0, -1)
+      return this.pathChapters.slice(0, -1)
     }
   },
   methods: {

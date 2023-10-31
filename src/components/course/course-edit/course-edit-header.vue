@@ -54,15 +54,13 @@ Dependencies:
           >
 
             <b-dropdown-item
-              v-for="id in Object.keys(courseContentIdRouteMap)"
+              v-for="id in Object.keys(courseRoutes)"
               :key="id"
               :to="{
                 name: 'course',
                 params: {
                   name,
-                  coursePath: courseContentIdRouteMap[id] !== ''
-                    ? courseContentIdRouteMap[id]
-                    : null
+                  coursePath: courseRoutes[id]
                 }
               }"
               :class="langIsAr? 'text-right': 'text-left'"
@@ -94,7 +92,7 @@ export default {
   ],
 
   computed: {
-    ...mapGetters(['courseContent', 'courseContentIdRouteMap']),
+    ...mapGetters(['courseContent', 'courseRoutes']),
 
     /**
      * function checkEmpty(): returns true if no content in course

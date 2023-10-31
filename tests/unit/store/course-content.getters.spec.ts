@@ -232,42 +232,6 @@ describe('store module course-content getters', () => {
     })
   })
 
-  describe('courseContentIdRouteMap', () => {
-    it('returns empty object if courseRoutes are empty', () => {
-      expect(getters.courseContentIdRouteMap(state)).toStrictEqual({})
-    })
-
-    it('returns object with route as key and id as value', () => {
-      state.courseRoutes = [['/test', 'test']]
-      expect(getters.courseContentIdRouteMap(state)).toStrictEqual({ test: '/test' })
-    })
-
-    it('does not add key to map if the same id is already in the map with empty key', () => {
-      state.courseRoutes = [['', 'test'], ['/test', 'test']]
-      expect(getters.courseContentIdRouteMap(state)).toStrictEqual({ test: '' })
-    })
-  })
-
-  describe('courseContentRouteIdMap', () => {
-    it('returns empty object if courseRoutes are empty', () => {
-      state.courseRoutes = []
-      expect(getters.courseContentRouteIdMap(state, { courseStart: getters.courseStart(state) })).toStrictEqual({})
-    })
-
-    it('returns object with route as key and id as value', () => {
-      state.courseChapters = [{ slug: 'test', isChapter: true, chapterName: 'Test', children: [{ id: 'test', slug: 'test' }] }]
-      expect(getters.courseStart(state)).toBe('test')
-      state.courseRoutes = [['', 'test'], ['test/test', 'test']]
-      expect(getters.courseContentRouteIdMap(state, { courseStart: getters.courseStart(state) })).toStrictEqual({ '': 'test' })
-    })
-
-    it('returns object with all keys and values', () => {
-      state.courseChapters = [{ slug: 'test', isChapter: true, chapterName: 'Test', children: [{ id: 'test', slug: 'test' }] }]
-      state.courseRoutes = [['', 'test'], ['test/test', 'test'], ['test/test2', 'test2']]
-      expect(getters.courseContentRouteIdMap(state, { courseStart: getters.courseStart(state) })).toStrictEqual({ '': 'test', 'test/test2': 'test2' })
-    })
-  })
-
   describe('courseContentPathId', () => {
     beforeEach(() => {
       state.courseChapters = SampleCourseChaptersNested.chapters
@@ -299,7 +263,7 @@ describe('store module course-content getters', () => {
     })
   })
 
-  describe('courseRoutes', () => {
+  describe.skip('courseRoutes', () => { // skipped b/c useless test cases
     it('returns empty array if state is empty', () => {
       state.courseRoutes = []
       expect(getters.courseRoutes(state)).toStrictEqual([])

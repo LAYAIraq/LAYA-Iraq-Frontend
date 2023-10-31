@@ -88,8 +88,6 @@ export default {
       'courseChapterNames',
       'courseContent',
       'courseContentFollowMap',
-      'courseContentIdRouteMap',
-      'courseContentRouteIdMap',
       'courseFlags',
       'courseRoutes',
       'courseStart',
@@ -112,21 +110,6 @@ export default {
      */
     isCourseAuthor () {
       return (this.isAuthor && this.course.authorId === this.userId) || this.isAdmin
-    },
-
-    /**
-     * contentToDisplay: return current content object
-     *
-     * Author: cmc
-     *
-     * Last Updated: November 14, 2022 by cmc
-     */
-    contentToDisplay () {
-      if (!this.coursePath) { // course path is not set --> first content in course
-        return this.courseContent[this.courseStart]
-      } else { // course path is set --> content with slug
-        return this.courseContent[this.courseContentRouteIdMap[this.coursePath]] // path is no number -> route
-      }
     },
 
     /**
@@ -170,6 +153,11 @@ export default {
     //     this.$nextTick(() => this.$forceUpdate)
     //   }
     // },
+    coursePathFull (val) { // FIXME
+      if (!val) {
+        this.routeNormalize()
+      }
+    },
 
     /**
      * watcher courseFlags: update when courseFlags change
@@ -187,6 +175,7 @@ export default {
   created () {
     this.getCourse()
     this.enrollmentFetch()
+    this.routeNormalize()
     // this.flagsFetch()
     // this.fetchCourseStats()
   },
@@ -196,12 +185,6 @@ export default {
     //   this.$forceUpdate()
     // }
   },
-
-  // updated () {
-  //   console.log(this.pathId)
-  //   console.log(this.courseContentIdRouteMap)
-  //   console.log(this.coursePath)
-  // },
 
   beforeDestroy () {
     /* if (this.enrollment.length > 0) this.enrollmentUpdate()

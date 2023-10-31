@@ -4,7 +4,7 @@
  * @since v1.3.0
  */
 import { createLocalVue, mount } from '@vue/test-utils'
-import CourseDetailHeader from '@/components/course/course-header.vue'
+import CourseHeader from '@/components/course/course-header.vue'
 import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 
@@ -14,7 +14,7 @@ localVue.use(VueRouter)
 const router = new VueRouter({
   routes: [
     { name: 'course-list', path: '/courses' },
-    { name: 'course', path: '/courses/:name/:coursePath?' }
+    { name: 'course', path: '/courses/:name/:coursePath*' }
   ]
 })
 
@@ -46,7 +46,7 @@ describe('course detail header', () => {
   let wrapper
   describe('basic functionality', () => {
     beforeAll(() => {
-      wrapper = mount(CourseDetailHeader, {
+      wrapper = mount(CourseHeader, {
         localVue,
         store,
         router,
@@ -84,7 +84,7 @@ describe('course detail header', () => {
   describe('nested chapters (no chapterName lookup)', () => {
     beforeAll(() => {
       store.commit('setSimple', false)
-      wrapper = mount(CourseDetailHeader, {
+      wrapper = mount(CourseHeader, {
         localVue,
         store,
         router,
@@ -122,7 +122,7 @@ describe('course detail header', () => {
         'sub-chapter': 'Tedious Little Sub Chapter',
         'sub-sub-chapter': 'Unnecessary Sub Sub Chapter'
       }
-      wrapper = mount(CourseDetailHeader, {
+      wrapper = mount(CourseHeader, {
         localVue,
         store,
         router,
