@@ -157,7 +157,7 @@
 	"courseNavEdit.followEditSearchLabel": "Search Content Block",
 	"courseNavEdit.followEditSearchNoResult": "No Content Block found",
 	"courseNavEdit.followEditSearchPlaceholder": "Type ID, Title or Block type to find a Content Block",
-	"courseNavEdit.followEditToolTipButton": "Choose a Content Block below. That Block will shown when users click this button.",
+	"courseNavEdit.followEditToolTipButton": "Choose a Content Block below. That Block will show when users click this button.",
 	"courseNavEdit.followEditToolTipTags": "Content Block to show after click on button labeled '<BL>'",
 	"courseNavEdit.followHighlight": "Hold shift + click to see the following block",
 	"courseNavEdit.fullPath": "Full Path",

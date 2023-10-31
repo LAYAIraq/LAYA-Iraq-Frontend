@@ -28,7 +28,7 @@
         ></i>
       </div>
       <div
-        v-b-tooltip.bottom
+        v-b-tooltip.top
         class="row"
         :title="replacePattern(y18n('courseNavEdit.followEditToolTipTags'), '<BL>', label)"
       >
