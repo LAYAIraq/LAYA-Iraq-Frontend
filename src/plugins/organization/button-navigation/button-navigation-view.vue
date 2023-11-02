@@ -86,9 +86,25 @@ export default {
 
   computed: {
     ...mapGetters([
+      'courseContentFollowMap',
       'courseFlags',
+      'courseRoutes',
       'courseSimple'
-    ])
+    ]),
+    /**
+     * @description array of routing changes for buttons
+     * @author cmc
+     * @since v1.3.1
+     * @returns {*[]} array of route change functions, one for each button
+     */
+    onFinish () {
+      const routes = []
+      this.courseContentFollowMap[this.viewData.id] // list of ids for following content
+        .forEach(id => {
+          routes.push(() => this.$router.push({ params: { coursePath: this.courseRoutes[id] } }))
+        })
+      return routes
+    }
   }
 
 }
