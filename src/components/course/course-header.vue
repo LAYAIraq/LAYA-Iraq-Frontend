@@ -30,7 +30,6 @@
           <li :class="langIsAr? 'bci-ar': 'breadcrumb-item'">
             <router-link
               :to="{ name: 'course-list' }"
-              class="text-dark"
             >
               <i class="fas fa-house-user"></i> {{ y18n('courses.title') }}
             </router-link>
@@ -38,7 +37,6 @@
           <li :class="langIsAr? 'bci-ar': 'breadcrumb-item'">
             <router-link
               :to="{ name: 'course', params: { name: slugify(courseName) } }"
-              class="text-dark"
             >
               {{ courseName }}
             </router-link>
@@ -117,7 +115,11 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
+/* avoids having to put text-dark class to every router link */
+a {
+  color: #343a40 !important;
+}
 /* Styles for Arabic breadcrumb, mostly copied from Bootstrap */
 .bci-ar + .bci-ar {
   padding-right: .5rem;
