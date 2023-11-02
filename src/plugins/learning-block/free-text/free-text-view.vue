@@ -25,19 +25,10 @@ Since: v1.0.0
       </div>
       <div id="free-text-viewer"></div>
       <div class="row">
-        <button
-          type="button"
-          class="btn btn-primary mt-3 d-block"
-          :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-          @click="onFinish()"
-        >
-          {{ y18n('nextContent') }}
-          <i
-            :class="langIsAr?
-              'fas fa-arrow-left':
-              'fas fa-arrow-right'"
-          ></i>
-        </button>
+        <button-next-content
+          v-if="!lastContentBlock"
+          :cid="id"
+        ></button-next-content>
       </div>
     </div>
   </fieldset>
@@ -49,10 +40,11 @@ import Quill from 'quill'
 import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
+import ButtonNextContent from '@/components/helpers/button-next-content.vue'
 
 export default {
   name: 'FreeTextView',
-  components: { FlagIcon },
+  components: { ButtonNextContent, FlagIcon },
 
   mixins: [
     locale,

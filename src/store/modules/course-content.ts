@@ -76,6 +76,7 @@ export default {
       })
       return courseContentIdGet(chapter, 'first')
     },
+    courseEnd: (state: { courseChapters: CourseNavigationItem[] }) => courseContentIdGet(state.courseChapters, 'last'),
     courseRoutes: (state: { courseRoutes: any }) => state.courseRoutes,
     courseStart: (state: { courseChapters: CourseNavigationItem[] }) => courseContentIdGet(state.courseChapters, 'first')
   },

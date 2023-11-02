@@ -135,21 +135,10 @@
         >
           {{ y18n('check') }}
         </button>
-        <button
-          type="button"
-          class="btn btn-primary mt-3 btn-lg"
-          :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-          @click="done"
-        >
-          <span>
-            {{ y18n('nextContent') }}
-            <i
-              :class="langIsAr?
-                'fas fa-arrow-left' :
-                'fas fa-arrow-right'"
-            ></i>
-          </span>
-        </button>
+        <button-next-content
+          v-if="!lastContentBlock"
+          :cid="id"
+        ></button-next-content>
       </div>
 
       <div class="mt-3">
@@ -196,10 +185,11 @@ import '@/assets/styles/flaggables.css'
 import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 import { stripKey } from '@/mixins/general/helpers'
+import ButtonNextContent from '@/components/helpers/button-next-content.vue'
 
 export default {
   name: 'ImageMatchingView',
-  components: { FlagIcon, AudioButton },
+  components: { ButtonNextContent, FlagIcon, AudioButton },
 
   mixins: [
     locale,
@@ -266,17 +256,6 @@ export default {
     },
 
     /**
-     * Function done: execute first function from onFinish
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     */
-    done () {
-      this.onFinish[0]()
-    },
-
-    /**
      * Function check: Check if User's solution is correct
      *
      * Author: core
@@ -284,7 +263,7 @@ export default {
      * Last Updated: March 19, 2021
      */
     check () {
-      // map shuffeled answers to their actual equivalents by comparing the text of the options
+      // map shuffled answers to their actual equivalents by comparing the text of the options
       const realAnswer = this.solution.map(idx => this.relations.findIndex(val => val.text === this.options[idx]?.text))
 
       if (!this.solution.includes(-1)) {

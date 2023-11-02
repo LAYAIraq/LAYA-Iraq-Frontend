@@ -25,7 +25,6 @@
           <component
             :is="contentToDisplay.name"
             :key="contentToDisplay.title.text"
-            :next-content="followContent"
             :view-data="contentToDisplay"
           >
           </component>
@@ -110,15 +109,6 @@ export default {
      */
     isCourseAuthor () {
       return (this.isAuthor && this.course.authorId === this.userId) || this.isAdmin
-    },
-
-    /**
-     * @function return a route push for following content
-     * @author cmc
-     * @return {(function())|*|[(function(): *)]}
-     */
-    followContent () {
-      return this.courseContentFollowMap[this.contentToDisplay.id]
     },
 
     /**

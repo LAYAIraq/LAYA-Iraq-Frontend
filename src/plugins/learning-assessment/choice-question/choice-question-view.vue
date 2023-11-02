@@ -109,7 +109,7 @@ Since: v1.0.0
       {{maxTries-tries}}
     </div>
     -->
-    <div>
+    <div class="row pt-3">
       <button
         type="button"
         class="btn btn-link mt-3"
@@ -119,35 +119,31 @@ Since: v1.0.0
       >
         {{ y18n('check') }}
       </button>
-      <div aria-live="polite">
-        <div v-if="showSolutionsBool">
-          {{ i18n["choiceQuestion.showCorrect"] }}
-          <div
-            v-for="(showSolution, index) in showSolutions"
-            :key="index"
-          >
-            {{ showSolution }}
-          </div>
+      <button-next-content
+        v-if="!lastContentBlock"
+        :cid="id"
+      ></button-next-content>
+    </div>
+    <div
+      class="row pt-3"
+      aria-live="polite"
+    >
+      <div v-if="showSolutionsBool">
+        {{ i18n["choiceQuestion.showCorrect"] }}
+        <div
+          v-for="(showSolution, index) in showSolutions"
+          :key="index"
+        >
+          {{ showSolution }}
         </div>
       </div>
-      <button
-        type="button"
-        class="btn btn-primary mt-3"
-        :class="langIsAr? 'float-left': 'float-right'"
-        @click="onFinish[0]() || {}"
-      >
-        <span>
-          {{ y18n('nextContent') }}
-          <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
-        </span>
-      </button>
-      <span
-        :id="feedbackId"
-        class="ml-2"
-        aria-live="polite"
-      >
-        {{ feedback }}
-      </span>
+    </div>
+    <div
+      :id="feedbackId"
+      class="ml-2"
+      aria-live="polite"
+    >
+      {{ feedback }}
     </div>
   </fieldset>
 </template>
@@ -158,10 +154,11 @@ import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
 import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
+import ButtonNextContent from '@/components/helpers/button-next-content.vue'
 
 export default {
   name: 'ChoiceQuestionView',
-  components: { FlagIcon, AudioButton },
+  components: { ButtonNextContent, FlagIcon, AudioButton },
 
   mixins: [
     locale,
@@ -193,9 +190,7 @@ export default {
      * Last Updated: unknown
      */
     feedbackId () {
-      return `mchoice-feedback-${this._uid}`
-      // FIXME vm _uid is not supposed to be used as data
-      // source: https://github.com/vuejs/vue/issues/5886#issuecomment-308625735
+      return `mchoice-feedback-${this.id}`
     },
 
     /**

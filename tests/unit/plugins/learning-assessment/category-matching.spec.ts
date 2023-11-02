@@ -157,17 +157,12 @@ describe('Category Matching edit component', () => {
 
 describe('Category Matching View Component', () => {
   let store
-  let onFinish
   beforeEach(() => {
     state = {
       courseSimple: false
     }
     getters = {
-      courseContentIdRouteMap: () => {
-        return {
-          test: 'test'
-        }
-      },
+      courseEnd: () => 'test',
       courseLanguage: () => 'en',
       courseSimple: () => state.courseSimple,
       courseUpdated: () => false,
@@ -197,7 +192,6 @@ describe('Category Matching View Component', () => {
       stubs: ['laya-audio-inline', 'laya-flag-icon'],
       localVue
     })
-    onFinish = jest.spyOn(wrapper.vm, 'onFinish')
   })
 
   it('loads and renders prop data correctly', async () => {
@@ -244,12 +238,5 @@ describe('Category Matching View Component', () => {
     const solutions = wrapper.find('#solutions')
     expect(solutions.exists()).toBeTruthy()
     expect(solutions.findAll('div').length).toBe(2)
-  })
-
-  it('calls next content button function', async () => {
-    const button = wrapper.find('.btn-primary')
-    await button.trigger('click')
-    expect(onFinish).toHaveBeenCalled()
-    expect(wrapper.vm.$router.push).toHaveBeenCalledWith({ path: 'test' })
   })
 })
