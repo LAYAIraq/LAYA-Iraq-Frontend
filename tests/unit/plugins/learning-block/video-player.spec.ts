@@ -278,6 +278,7 @@ describe('Plyr view component', () => {
   //   console.log('kekw')
   // })
   const input = {
+    id: 'testvideo',
     host: 'upload',
     src: 'youtu.be/1hcSloy35hj',
     title: {
@@ -319,7 +320,7 @@ describe('Plyr view component', () => {
         viewData: input
       },
       store,
-      stubs: ['laya-flag-icon'],
+      stubs: ['button-next-content', 'flag-icon'],
       localVue
     })
   })
