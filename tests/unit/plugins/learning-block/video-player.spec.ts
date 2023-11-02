@@ -300,6 +300,8 @@ describe('Plyr view component', () => {
   beforeEach(() => {
     getters = {
       profileLanguage: () => 'en',
+      courseEnd: () => 'test',
+      courseLanguage: () => 'en',
       courseSimple: () => false
     }
     const store = new Vuex.Store({

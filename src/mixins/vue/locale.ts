@@ -44,7 +44,6 @@ export default {
      * @returns true if 'arabic' or 'kurdish' is set as courseLanguage
      */
     courseLangIsAr () {
-      console.log('courseLanguage in locale is ' + this.courseLanguage)
       return this.courseLanguage === 'arabic' || this.courseLanguage === 'kurdish'
     }
   },

@@ -1,4 +1,4 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { BootstrapVue } from 'bootstrap-vue' // uncomment if component uses Bootstrap
 import 'regenerator-runtime/runtime' // for async behavior in tests
@@ -42,8 +42,7 @@ describe('Image Matching Create component', () => {
       state,
       getters
     })
-    // @ts-ignore
-    wrapper = mount(ImageMatchingEdit, { // use mount if component uses bootstrap
+    wrapper = shallowMount(ImageMatchingEdit, {
       propsData: {
         edit: false
       },
@@ -51,16 +50,15 @@ describe('Image Matching Create component', () => {
         'b-tooltip': () => {}
       },
       store,
-      // stubs: ['router-link'], // uncomment if component has router links
       localVue
     })
   })
 
   it('shows a helper box when clicking the questionmark', async () => {
-    await localVue.nextTick()
     const questionmark = wrapper.find('#questionmark')
     await questionmark.trigger('click')
     const helpText = wrapper.find('#tooltipText')
+    expect(wrapper.vm.tooltipOn).toBeTruthy()
     expect(helpText.exists()).toBeTruthy()
   })
 
@@ -118,8 +116,7 @@ describe('Image Matching edit component', () => {
       state,
       getters
     })
-    // @ts-ignore
-    const wrapper = mount(ImageMatchingEdit, { // use mount if component uses bootstrap
+    const wrapper = shallowMount(ImageMatchingEdit, {
       propsData: {
         edit: false
       },
@@ -172,8 +169,7 @@ describe('Image Matching View component', () => {
       state,
       getters
     })
-    // @ts-ignore
-    wrapper = mount(ImageMatchingView, { // use mount if component uses bootstrap
+    wrapper = shallowMount(ImageMatchingView, { // use mount if component uses bootstrap
       mocks: {
         $route: {
           params: {
@@ -202,7 +198,7 @@ describe('Image Matching View component', () => {
     expect(options.length).toBe(3)
     const optionTexts = []
     options.wrappers.forEach(wrap => {
-      console.log(wrap.text())
+      // console.log(wrap.text())
       optionTexts.push(wrap.text())
     })
     expect(optionTexts).toContain('Solution 1')

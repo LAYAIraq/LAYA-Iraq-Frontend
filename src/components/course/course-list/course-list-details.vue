@@ -314,8 +314,8 @@ export default {
     this.getSubs()
     this.filteredList = [...this.courseList]
     this.getComplicitCourses()
-    console.log('authorname ' + this.course.authorName)
-    console.log(this.course)
+    // console.log('authorname ' + this.course.authorName)
+    // console.log(this.course)
   },
 
   methods: {
