@@ -516,7 +516,10 @@ export default {
       this.host = preData.host
       this.title = preData.title
       this.showTitle = preData.showTitle
-      this.captions = preData.captions
+      this.captions = preData.captions ?? {
+        default: null,
+        tracks: []
+      }
     },
     /**
      * function addCaption: add caption object to caption tracks array
