@@ -1,42 +1,55 @@
 <template>
   <div>
-    <iframe
-      height="300"
-      width="600"
-      :src="`${getFilePath}`"
-    ></iframe>
+    <div id="pageContainer">
+      <div
+        id="viewer"
+        class="pdfViewer"
+      ></div>
+    </div>
   </div>
 </template>
 
 <script>
 
+import pdfjsLib from 'pdfjs-dist/build/pdf'
+import { PDFViewer } from 'pdfjs-dist/web/pdf_viewer'
+// import 'pdfjs-dist/web/pdf_viewer.css'
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.0.943/build/pdf.worker.min.js'
+
 export default {
   name: 'PdfViewer',
   props: {
-    fileName: {
-      type: String,
-      default: 'Test_PDF.pdf'
-    },
     path: {
       type: String,
-      default: 'lib/pdfjs-3.11.174-dist/web/viewer.html'
+      default: ''
     }
   },
-  computed: {
-    getFilePath () {
-      if (this.fileName !== '') {
-        console.log(this.path + '?file=' + this.fileName)
-        return this.path + '?file=' + this.fileName
-      }
-      return this.path
+
+  mounted () {
+    this.getPDF()
+  },
+  methods: {
+    async getPdf () {
+      const container = document.getElementById('pageContainer')
+      const pdfViewer = new PDFViewer({
+        container: container
+      })
+      const loadingTask = pdfjsLib.getDocument('./pdf-sample.pdf')
+      const pdf = await loadingTask.promise
+      pdfViewer.setDocument(pdf)
     }
   }
 }
 </script>
-<style scoped>
-div {
-  width: 50%;
-  height: 79vh;
-  min-width: 400px;
+
+<style>
+#pageContainer {
+  margin: auto;
+  width: 80%;
+}
+
+div.page {
+  display: inline-block;
 }
 </style>
