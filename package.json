@@ -22,6 +22,7 @@
     "test:unit"
   ],
   "dependencies": {
+    "@mycure/vue-jitsi-meet": "^0.0.8",
     "axios": "^0.27.2",
     "bootstrap-vue": "^2.23.1",
     "cropperjs": "^1.5.12",

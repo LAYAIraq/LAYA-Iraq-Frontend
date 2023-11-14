@@ -84,13 +84,13 @@ describe('Header authorized', () => {
     })
   })
 
-  it('has 8 links', async () => {
+  it('has 9 links', async () => {
     const links = wrapper.findAll('a')
-    expect(links.length).toBe(8)
+    expect(links.length).toBe(9)
   })
 
   it('triggers logout and redirects when clicked', async () => {
-    const logoutAnchor = wrapper.findAll('a').wrappers[6] // logout is second to last
+    const logoutAnchor = wrapper.findAll('a').wrappers[7] // logout is second to last
     expect(logoutAnchor.text()).toBe('Logout')
     await logoutAnchor.trigger('click')
     expect(wrapper.vm.$ls.remove).toHaveBeenCalled()

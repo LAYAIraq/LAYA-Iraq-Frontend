@@ -10,6 +10,7 @@ import Router from 'vue-router'
 
 /* dynamic imports for lazy loading */
 const AdminPanel = () => import('@/components/user-views/admin-panel.vue')
+const CollabTools = () => import('@/components/collab-tools/collab-tools.vue')
 const Course = () => import('./components/course/course.vue')
 const CourseContent = () => import('./components/course/course-edit/course-content.vue')
 const CourseNav = () => import('./components/course/course-nav/course-nav.vue')
@@ -147,6 +148,11 @@ export default new Router({
       path: '/:catchAll(.*)',
       component: NotFound,
       name: 'not-found'
+    }, {
+      path: '/',
+      // redirect: '/login', experimental starting page
+      name: 'collab',
+      component: CollabTools
     }
   ]
 })
