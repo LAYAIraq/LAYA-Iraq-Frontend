@@ -53,7 +53,7 @@ Dependencies:
               class="fas fa-users"
               size="2x"
             ></i>
-            {{ y18n('header.collaboration') }}
+            {{ y18n('collaboration') }}
           </b-nav-item>
         </b-navbar-nav>
 

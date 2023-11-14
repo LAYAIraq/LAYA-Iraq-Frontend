@@ -77,6 +77,11 @@ export default new Router({
       component: Profile
     },
     {
+      path: '/collab',
+      name: 'collab',
+      component: CollabTools
+    },
+    {
       path: '/courses',
       name: 'course-list',
       component: CourseList
@@ -148,11 +153,6 @@ export default new Router({
       path: '/:catchAll(.*)',
       component: NotFound,
       name: 'not-found'
-    }, {
-      path: '/',
-      // redirect: '/login', experimental starting page
-      name: 'collab',
-      component: CollabTools
     }
   ]
 })

@@ -18,17 +18,17 @@
     </div>
     <div class="container-fluid mt-5 mb-5">
       <div class="row">
-        <div class="col">
-          <h3>
+        <div class="col-8 m-5">
+          <h5>
             {{ y18n('collaboration.description') }}
-          </h3>
+          </h5>
         </div>
       </div>
     </div>
     <div class="container-fluid mt-5 mb-5">
       <div class="row">
-        <div class="col">
-          <b-button size="large">
+        <div class="col ml-5">
+          <b-button>
             {{ y18n('collaboration.chat') }}
           </b-button>
         </div>
