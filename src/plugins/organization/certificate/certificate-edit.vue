@@ -41,50 +41,6 @@ Since: v1.3.0
 
     <form>
       <div class="form-group">
-        <div class="row">
-          <!-- additional information about course -->
-          <label
-            for="additional-information"
-            class="col-2 col-form-label"
-          >
-            {{ y18n('certificate.additionalInformation') }}
-          </label>
-          <div class="col-8">
-            <input
-              id="additional-information"
-              v-model="information.text"
-              type="text"
-              class="form-control"
-              :placeholder="y18n('certificate.optional')"
-              :aria-label="y18n('certificate.optional')"
-            >
-          </div>
-        </div>
-        <!-- simple additional information -->
-        <div
-          v-if="courseSimple"
-          class="row"
-        >
-          <label
-            for="additional-information-simple"
-            class="col-2 col-form-label"
-          >
-            <span class="sr-only">
-              {{ y18n('simpleAlt') }}
-            </span>
-          </label>
-          <div class="col-8">
-            <input
-              id="additional-information-simple"
-              v-model="information.simple"
-              type="text"
-              class="form-control"
-              :placeholder="y18n('simpleAlt')"
-            >
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
         <!-- signature -->
         <div class="row">
           <label
@@ -123,8 +79,7 @@ export default {
 
   data () {
     return {
-      signature: '',
-      information: {}
+      signature: ''
     }
   },
 
@@ -151,7 +106,6 @@ export default {
     fetchData () {
       // create deep copy of store object to manipulate in vue instance
       const preData = deepCopy(this.courseContent[this.pathId])
-      this.information = preData.information
       this.signature = preData.signature
     }
   }
