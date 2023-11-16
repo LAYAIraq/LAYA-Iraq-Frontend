@@ -15,10 +15,9 @@
           </h1>
         </div>
       </div>
-    </div>
-    <div class="container-fluid mt-5 mb-5">
+
       <div class="row">
-        <div class="col-8 m-5">
+        <div class="col-8 mx-auto mt-4">
           <h5>
             {{ y18n('collaboration.description') }}
           </h5>
@@ -26,13 +25,37 @@
       </div>
     </div>
     <div class="container-fluid mt-5 mb-5">
+      <div class="row header">
+        <div class="col-1 mx-auto">
+          <h4>{{ y18n('collaboration') }}</h4>
+        </div>
+        <div class="col-3 mx-auto">
+          <h4>{{ y18n('feedback.edit.desc') }}</h4>
+        </div>
+      </div>
+
       <div class="row">
-        <div class="col ml-5">
+        <div class="col-1 mt-3 mx-auto">
           <b-button>
             {{ y18n('collaboration.chat') }}
           </b-button>
         </div>
+        <div class="col-3 mt-3 mx-auto">
+          {{ y18n('collaboration.chat.tooltip') }}
+        </div>
       </div>
+      <hr>
+      <div class="row">
+        <div class="col-1 mx-auto">
+          <b-button>
+            {{ y18n('collaboration.whiteboard') }}
+          </b-button>
+        </div>
+        <div class="col-3 mx-auto">
+          {{ y18n('collaboration.whiteboard.tooltip') }}
+        </div>
+      </div>
+      <hr>
     </div>
   </div>
 </template>
@@ -48,3 +71,15 @@ export default {
   ]
 }
 </script>
+
+<style scoped>
+*:focus {
+  outline-offset: 5px;
+  outline: 2px dashed deepskyblue;
+}
+
+.header {
+  border-bottom: 2px solid black;
+}
+
+</style>
