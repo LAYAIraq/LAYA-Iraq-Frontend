@@ -21,7 +21,6 @@
         <div class="col">
           <vue-jitsi-meet
             ref="jitsiRef"
-            domain="meet.jit.si"
             :options="jitsiOptions"
           >
           </vue-jitsi-meet>
@@ -32,7 +31,9 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { JitsiMeet } from '@mycure/vue-jitsi-meet'
+import { v4 as uuidv4 } from 'uuid'
 import { locale } from '@/mixins'
 
 export default {
@@ -47,13 +48,15 @@ export default {
   ],
 
   computed: {
+    ...mapGetters(['profile']),
     jitsiOptions () {
       return {
-        roomName: 'some-room-name',
+        roomName: 'laya-iraq-chat/' + uuidv4() + '/',
+        domain: 'localhost:8080/',
         noSSL: false,
         userInfo: {
-          email: 'user@email.com',
-          displayName: ''
+          email: this.profile.email,
+          displayName: this.profile.username
         },
         configOverwrite: {
           enableNoisyMicDetection: false
@@ -69,6 +72,9 @@ export default {
   },
   methods: {
     onIFrameLoad () {
+      this.$refs.jitsiRef.addEventListener('participantJoined', this.onParticipantJoined)
+    },
+    onParticipantJoined (e) {
       // do stuff
     }
   }

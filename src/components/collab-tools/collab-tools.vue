@@ -36,7 +36,12 @@
 
       <div class="row">
         <div class="col-1 mt-3 mx-auto">
-          <b-button>
+          <b-button
+            block
+            variant="primary"
+            append
+            :to="{path: '/chat'}"
+          >
             {{ y18n('collaboration.chat') }}
           </b-button>
         </div>

@@ -10,6 +10,7 @@ import Router from 'vue-router'
 
 /* dynamic imports for lazy loading */
 const AdminPanel = () => import('@/components/user-views/admin-panel.vue')
+const Chat = () => import('@/components/collab-tools/chat.vue')
 const CollabTools = () => import('@/components/collab-tools/collab-tools.vue')
 const Course = () => import('./components/course/course.vue')
 const CourseContent = () => import('./components/course/course-edit/course-content.vue')
@@ -79,7 +80,15 @@ export default new Router({
     {
       path: '/collab',
       name: 'collab',
-      component: CollabTools
+      component: CollabTools,
+
+      children: [
+        {
+          path: '/chat',
+          name: 'chat',
+          component: Chat
+        }
+      ]
     },
     {
       path: '/courses',
