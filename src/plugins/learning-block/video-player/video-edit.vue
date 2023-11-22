@@ -1,6 +1,6 @@
 <!--
 Filename: video-edit.vue
-Use: View Plyr content block
+Use: Edit Plyr content block
 Creator: core
 Date: unknown
 Dependencies:
@@ -430,7 +430,7 @@ export default {
     },
 
     /**
-     * function validYtUrl: check if URL contains vimeo or consists of Numbers
+     * function validYtUrl: check if URL contains youtu or consists of Numbers
      *
      * Author: cmc
      *
