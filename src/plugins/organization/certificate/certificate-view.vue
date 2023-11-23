@@ -41,6 +41,8 @@ import { locale, pluginView } from '@/mixins'
 import { mapGetters } from 'vuex'
 import { jsPDF } from 'jspdf'
 
+const imgOg = require('@/assets/images/logo-iraq-m.png')
+
 export default {
   name: 'CertificateView',
 
@@ -88,25 +90,22 @@ export default {
 
       doc.save('certificate-' + courseName + '-' + studentName + '.pdf')
     },
-    convertBase64 (ogImg) {
-      const img = document.getElementById(ogImg)
-      const canvas = document.createElement('canvas')
-
-      canvas.height = img.height
-      canvas.width = img.width
-
-      const context = canvas.getContext('2d')
-      context.drawImage(img, 0, 0)
-
-      const dataURL = canvas.toDataURL('image/png', 1.0)
-      return dataURL
-    },
+    /**
+     * Function printAdditionalInformation: adds additional information like test scores - not in use right now
+     * Author: nv
+     * Since: v1.3.0
+     */
     printAdditionalInformation (doc) {
       doc.setFontSize(12)
-      // this.additionalInformation =
+      this.additionalInformation = ''
       doc.text(this.y18n('certificate.additionalInformation') + ':', 25, 240)
-      // doc.text(ths.additionalInformation, 25, 250)
+      doc.text(this.additionalInformation, 25, 250)
     },
+    /**
+     * Function printCourseDetails: adds information like course name and author and abstract
+     * Author: nv
+     * Since: v1.3.0
+     */
     printCourseDetails (doc, courseName) {
       const abstract = doc.splitTextToSize(this.course.abstract, 170)
       const author = this.course.authorName
@@ -122,6 +121,11 @@ export default {
       doc.text(this.y18n('abstract') + ':', 25, 180)
       doc.text(abstract, 25, 190)
     },
+    /**
+     * Function printFooter: adds date and signed by
+     * Author: nv
+     * Since: v1.3.0
+     */
     printFooter (doc) {
       const date = new Date()
       const author = this.course.authorName
@@ -130,30 +134,24 @@ export default {
       doc.text(this.y18n('certificate.digitallySigned') + ', ' + author, 25, 280)
       doc.text(date.toString(), 25, 290)
     },
+    /**
+     * Function printHeader: adds logo and headline
+     * Author: nv
+     * Since: v1.3.0
+     */
     printHeader (doc) {
-      // const img = this.convertBase64('../../assets/images/logo.svg')
-      // const img = '../../assets/images/logo-iraq.png'
-      // img.toBlob((blob) => {
-      //  const url = URL.createObjectURL(blob)
-      // doc.addImage(url, 'PNG', 70, 25, 60, 60)
-      // }, 'image/png')
-      const img = new Image()
-      img.src = '../src/assets/images/laya-logo-iraq.png'
-
-      console.log(img.src)
-
-      img.onload = () => {
-        doc.addImage(img, 'PNG', 70, 25, 60, 60)
-      }
-
-      // doc.addImage(img, 'PNG', 70, 25, 60, 60)
-
+      doc.addImage(imgOg, 'PNG', 77, 20, 55, 55)
       doc.setFont('helvetica', 'bold')
       doc.setFontSize(25)
       doc.text(this.y18n('certificate.name'), 105, 90, 'center')
       doc.setFont('helvetica', 'normal')
       doc.setFontSize(14)
     },
+    /**
+     * Function printStudentDetails: adds student name and university
+     * Author: nv
+     * Since: v1.3.0
+     */
     printStudentDetails (doc, studentName) {
       const studentInstitution = this.profile.institution
 
