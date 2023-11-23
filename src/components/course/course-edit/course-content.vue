@@ -63,11 +63,12 @@
 </template>
 
 <script>
+import CourseFiles from '@/components/course/course-edit/course-files.vue'
+import { courseContentBlockToNavItemTransform } from '@/mixins/general/course-structure'
+import { deepCopy, stripKey } from '@/mixins/general/helpers'
 import { locale, routes } from '@/mixins'
 import { mapGetters } from 'vuex'
-import CourseFiles from '@/components/course/course-edit/course-files.vue'
-import { deepCopy, stripKey } from '@/mixins/general/helpers'
-import { courseContentBlockToNavItemTransform } from '@/mixins/general/course-structure'
+import { slugify } from '@/mixins/general/slugs'
 import { v4 as uuidv4 } from 'uuid'
 
 export default {
@@ -201,6 +202,7 @@ export default {
       if (!this.editContent) {
         this.$store.commit('courseContentAdd', updatedStep)
         this.$store.commit('courseChapterAdd', courseContentBlockToNavItemTransform(updatedStep))
+        this.$router.replace({ name: 'course-content-edit', params: { coursePath: [slugify(this.stepData.title.text)] } })
       } else {
         this.$store.commit('courseContentSet', { ...updatedStep, id: this.pathId })
       }
