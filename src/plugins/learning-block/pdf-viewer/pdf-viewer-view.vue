@@ -1,5 +1,5 @@
 <!--
-Filename: pdf-text-view.vue
+Filename: pdf-viewer-view.vue
 Use: View pdf viewer content block
 Creator: nv
 Since: v1.3.0
@@ -21,12 +21,19 @@ Since: v1.3.0
         @flagged="title.flagged = true"
       ></flag-icon>
     </div>
-    <div>
+    <div class="pdf-viewer-style">
       <pdf-viewer
-        :path="path"
-        :file-name="src"
+        v-if="url !== null && url !== ''"
+        :url="url"
       >
       </pdf-viewer>
+    </div>
+    <div>
+      <b-button
+        @click="downloadPdf"
+      >
+        {{ y18n("pdf-viewer.download") }}
+      </b-button>
     </div>
     <div class="row">
       <button
@@ -65,9 +72,31 @@ export default {
 
   data () {
     return {
-      ...this.viewData,
-      path: 'lib/pdfjs-3.11.174-dist/web/viewer.html'
+      ...this.viewData
+    }
+  },
+  methods: {
+    downloadPdf () {
+      fetch(this.url)
+        .then(response => response.blob())
+        .then(blob => {
+          const objectUrl = window.URL.createObjectURL(blob)
+          const link = document.createElement('a')
+          link.href = objectUrl
+          link.download = this.url.split('/').pop()
+
+          document.body.appendChild(link)
+          link.click()
+          window.URL.revokeObjectURL(objectUrl)
+        })
     }
   }
 }
 </script>
+
+<style>
+.pdf-viewer-style {
+  height:500px;
+  overflow-y:auto;
+}
+</style>

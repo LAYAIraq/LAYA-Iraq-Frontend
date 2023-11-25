@@ -456,6 +456,7 @@
 	"passwordStrength2": "Okay",
 	"passwordStrength3": "Strong",
 	"passwordStrength4": "Very Strong",
+	"pdf-viewer.download": "Download PDF",
 	"pdf-viewer.invalidUrl": "The URL is invalid!",
 	"pdf-viewer.name": "PDF Viewer",
 	"pdf-viewer.placeholder": "PDF URL",

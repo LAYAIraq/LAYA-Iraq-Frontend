@@ -1,5 +1,5 @@
 <!--
-Filename: pdf-text-edit.vue
+Filename: pdf-viewer-edit.vue
 Use: Edit pdf viewer content block
 Creator: nv
 Since: v1.3.0
@@ -93,10 +93,10 @@ l"
         >
           {{ y18n('pdf-viewer.url') }}
         </label>
-        <div class="col">
+        <div class="col-8">
           <input
             id="pdf-id"
-            v-model="src"
+            v-model="url"
             type="text"
             class="form-control"
             :placeholder="y18n('pdf-viewer.placeholder')"
@@ -134,7 +134,7 @@ export default {
 
   data () {
     return {
-      src: '',
+      url: '',
       title: {
         text: '',
         id: '',
@@ -165,11 +165,11 @@ export default {
      * Since: v1.3.0 by nv
      */
     validUrl () {
-      if (this.src === '') return false
+      if (this.url === '') return false
       let url
       try {
         // eslint-disable-next-line prefer-const
-        url = new URL(this.src)
+        url = new URL(this.url)
       } catch (_) {
         return false
       }

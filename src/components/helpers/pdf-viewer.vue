@@ -1,55 +1,87 @@
+<!--
+Filename: pdf-viewer.vue
+Use: initializes pdf viewer
+Creator: nv
+Since: v1.3.0
+-->
+
 <template>
   <div>
-    <div id="pageContainer">
-      <div
-        id="viewer"
-        class="pdfViewer"
-      ></div>
-    </div>
   </div>
 </template>
 
 <script>
-
-import pdfjsLib from 'pdfjs-dist/build/pdf'
-import { PDFViewer } from 'pdfjs-dist/web/pdf_viewer'
-// import 'pdfjs-dist/web/pdf_viewer.css'
-
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.0.943/build/pdf.worker.min.js'
+import { getDocument, GlobalWorkerOptions as pdfworkerOpts } from 'pdfjs-dist/legacy/build/pdf'
+import { locale } from '@/mixins'
 
 export default {
   name: 'PdfViewer',
+
+  mixins: [
+    locale
+  ],
   props: {
-    path: {
+    url: {
       type: String,
-      default: ''
+      default: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf'
     }
   },
 
-  mounted () {
-    this.getPDF()
-  },
-  methods: {
-    async getPdf () {
-      const container = document.getElementById('pageContainer')
-      const pdfViewer = new PDFViewer({
-        container: container
-      })
-      const loadingTask = pdfjsLib.getDocument('./pdf-sample.pdf')
-      const pdf = await loadingTask.promise
-      pdfViewer.setDocument(pdf)
+  data () {
+    return {
+
     }
+  },
+
+  created () {
+  },
+
+  mounted () {
+    pdfworkerOpts.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.js'
+
+    console.log('pdfUrl ' + this.url)
+    const loadingTask = getDocument({
+      url: this.url
+    })
+    loadingTask.promise.then(pdf => {
+      console.log('PDF loaded')
+
+      // Render each page
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        pdf.getPage(pageNum).then(page => {
+          const scale = 1.5
+          const viewport = page.getViewport({ scale: scale })
+
+          // Prepare canvas for each page
+          const canvas = document.createElement('canvas')
+          const context = canvas.getContext('2d')
+          canvas.height = viewport.height
+          canvas.width = viewport.width
+
+          // Append canvas to the component
+          this.$el.appendChild(canvas)
+
+          // Render page into canvas
+          const renderContext = {
+            canvasContext: context,
+            viewport: viewport
+          }
+          page.render(renderContext).promise.then(() => {
+            console.log(`Page ${pageNum} rendered`)
+          })
+        })
+      }
+    }, reason => {
+      console.error(reason)
+    })
+  },
+
+  methods: {
+
   }
 }
 </script>
 
 <style>
-#pageContainer {
-  margin: auto;
-  width: 80%;
-}
 
-div.page {
-  display: inline-block;
-}
 </style>
