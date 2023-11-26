@@ -22,7 +22,6 @@
     "test:unit"
   ],
   "dependencies": {
-    "@mycure/vue-jitsi-meet": "^0.0.8",
     "axios": "^0.27.2",
     "bootstrap-vue": "^2.23.1",
     "cropperjs": "^1.5.12",
@@ -43,6 +42,7 @@
     "vue-upload-component": "^2.8.23",
     "vuedraggable": "^2.24.3",
     "vuex": "^3.6.2",
+    "whitebophir": "^1.0.22",
     "zxcvbn": "*"
   },
   "devDependencies": {

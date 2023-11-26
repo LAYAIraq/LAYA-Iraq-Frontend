@@ -29,6 +29,7 @@ const Profile = () => import('./components/user-views/profile.vue')
 const Register = () => import('./components/general/register.vue')
 const LandingPage = () => import('./components/general/landing-page.vue')
 const Verify = () => import('./components/helpers/verify.vue')
+const Whiteboard = () => import('@/components/collab-tools/whiteboard.vue')
 
 Vue.use(Router)
 export default new Router({
@@ -86,6 +87,11 @@ export default new Router({
       path: '/chat',
       name: 'chat',
       component: Chat
+    },
+    {
+      path: '/whiteboard',
+      name: 'whiteboard',
+      component: Whiteboard
     },
     {
       path: '/courses',

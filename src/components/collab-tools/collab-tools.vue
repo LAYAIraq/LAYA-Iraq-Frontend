@@ -52,7 +52,12 @@
       <hr>
       <div class="row">
         <div class="col-1 mx-auto">
-          <b-button>
+          <b-button
+            block
+            variant="primary"
+            append
+            :to="{path: '/whiteboard'}"
+          >
             {{ y18n('collaboration.whiteboard') }}
           </b-button>
         </div>

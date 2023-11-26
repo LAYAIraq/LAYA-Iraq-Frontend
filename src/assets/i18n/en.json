@@ -102,6 +102,8 @@
 	"collaboration.link": "Enter Link",
 	"collaboration.or": "or",
 	"collaboration.whiteboard": "Whiteboard",
+	"collaboration.whiteboard.createBoard": "Create new board",
+	"collaboration.whiteboard.enterBoard": "Enter existing board",
 	"collaboration.whiteboard.tooltip": "The collaborative whiteboard (based on XX) allows you to draw or write text with your cooperators onto a white canvas. You can send the link via email to your desired cooperation partners.",
 	"content": "Content",
 	"content.editContent": "Edit Content",

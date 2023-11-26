@@ -100,7 +100,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 import { locale } from '@/mixins'
 import Jitsi from '@/components/collab-tools/jitsi'
@@ -125,12 +124,6 @@ export default {
     }
   },
 
-  computed: {
-    ...mapGetters(['profile'])
-  },
-  mounted () {
-    console.log('this is the chat component')
-  },
   methods: {
 
     async linkCopy () {
