@@ -78,17 +78,14 @@ export default new Router({
       component: Profile
     },
     {
-      path: '/collab',
-      name: 'collab',
-      component: CollabTools,
-
-      children: [
-        {
-          path: '/chat',
-          name: 'chat',
-          component: Chat
-        }
-      ]
+      path: '/collaboration',
+      name: 'collaboration',
+      component: CollabTools
+    },
+    {
+      path: '/chat',
+      name: 'chat',
+      component: Chat
     },
     {
       path: '/courses',

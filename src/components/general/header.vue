@@ -48,7 +48,7 @@ Dependencies:
             {{ y18n('header.courses') }}
           </b-nav-item>
           <!-- <b-nav-item to="/mycourses">{{ y18n('mycourses.title') }}</b-nav-item> -->
-          <b-nav-item to="/collab">
+          <b-nav-item to="/collaboration">
             <i
               class="fas fa-users"
               size="2x"
