@@ -36,7 +36,7 @@
       v-if="boardExists === false"
       class="container-fluid"
     >
-      <div class="col-4">
+      <div class="col-15 centering">
         <b-button
           @click="boardCreate"
         >
@@ -44,11 +44,11 @@
         </b-button>
       </div>
 
-      <div class="col-4">
+      <div class="col-15 centering">
         {{ y18n('collaboration.or') }}
       </div>
 
-      <div class="col-4">
+      <div class="col-15 centering">
         <form>
           <input
             id="boardLink"
@@ -80,7 +80,7 @@
           </wbo>
         </div>
       </div>
-      <div class="col-5">
+      <div class="col-15 centering">
         <form>
           <input
             id="boardCopyLink"
@@ -160,6 +160,11 @@ export default {
 
 <style>
 iframe {
-  border: 0.5em solid blue;
+  border: 0.2em solid black;
 }
+.centering {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+ }
 </style>

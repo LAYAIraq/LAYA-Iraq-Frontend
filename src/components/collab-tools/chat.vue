@@ -33,9 +33,9 @@
     <!-- forms -->
     <div
       v-if="roomExists === false"
-      class="container-fluid"
+      class="container-fluid mt-5 mb-5"
     >
-      <div class="col-4">
+      <div class="col-15 centering">
         <b-button
           @click="roomCreate"
         >
@@ -43,11 +43,11 @@
         </b-button>
       </div>
 
-      <div class="col-4">
+      <div class="col-15 centering">
         {{ y18n('collaboration.or') }}
       </div>
 
-      <div class="col-4">
+      <div class="col-15 centering">
         <form>
           <input
             id="roomLink"
@@ -79,7 +79,7 @@
           </jitsi>
         </div>
       </div>
-      <div class="col-5">
+      <div class="col-15 centering">
         <form>
           <input
             id="roomCopyLink"
@@ -159,3 +159,11 @@ export default {
 }
 
 </script>
+
+<style>
+.centering {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
