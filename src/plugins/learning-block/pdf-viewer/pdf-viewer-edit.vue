@@ -15,7 +15,7 @@ Since: v1.3.0
         class="d-inline-block"
         :class="langIsAr? 'ml-auto' : 'mr-auto'"
       >
-        {{ y18n('pdf-viewer.name') }}
+        {{ y18n('pdfViewer.name') }}
       </h2>
       <i
         id="questionmark"
@@ -30,12 +30,12 @@ Since: v1.3.0
     <b-jumbotron
       v-if="tooltipOn"
       id="tooltipText"
-      :header="y18n('pdf-viewer.name')"
+      :header="y18n('pdfViewer.name')"
       :lead="y18n('tipHeadline')"
     >
       <hr class="my-4">
       <span>
-        {{ y18n('pdf-viewer.tooltip') }}
+        {{ y18n('pdfViewer.tooltip') }}
       </span>
     </b-jumbotron>
     <hr>
@@ -91,7 +91,7 @@ l"
           for="pdf-id"
           class="col-2 col-form-label"
         >
-          {{ y18n('pdf-viewer.url') }}
+          {{ y18n('pdfViewer.url') }}
         </label>
         <div class="col-8">
           <input
@@ -99,7 +99,7 @@ l"
             v-model="url"
             type="text"
             class="form-control"
-            :placeholder="y18n('pdf-viewer.placeholder')"
+            :placeholder="y18n('pdfViewer.placeholder')"
           >
         </div>
         <!-- URL warning -->
@@ -153,7 +153,7 @@ export default {
      */
     urlMsg () {
       if (!this.validUrl) {
-        return this.y18n('pdf-viewer.invalidUrl')
+        return this.y18n('pdfViewer.invalidUrl')
       } else {
         return null
       }

@@ -32,7 +32,7 @@ Since: v1.3.0
       <b-button
         @click="downloadPdf"
       >
-        {{ y18n("pdf-viewer.download") }}
+        {{ y18n("pdfViewer.download") }}
       </b-button>
     </div>
     <div class="row">
