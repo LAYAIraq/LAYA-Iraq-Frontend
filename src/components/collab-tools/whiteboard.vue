@@ -125,7 +125,11 @@ export default {
     }
   },
   methods: {
-
+    /**
+     * Function linkCopy: copies board link to the clipboard
+     * Author: nv
+     * Since: v1.3.0
+     */
     async linkCopy () {
       try {
         await navigator.clipboard.writeText(this.link)
@@ -134,6 +138,11 @@ export default {
         console.error('failed to copy', err)
       }
     },
+    /**
+     * Function boardCreate: sets boardExists to true and opens new board with random id boardName
+     * Author: nv
+     * Since: v1.3.0
+     */
     boardCreate () {
       this.boardName = uuidv4()
       console.log(this.boardName)
@@ -143,13 +152,18 @@ export default {
 
       this.boardEnter(this.link)
     },
-
+    /**
+     * Function boardEnter: extracts boardName and domain in order to enter exiting room
+     * Author: nv
+     * Since: v1.3.0
+     */
     boardEnter (link) {
       const linkArray = link.split('/')
       console.log(linkArray)
       if (linkArray.length === 5) {
         this.domain = linkArray[0] + '//' + linkArray[2]
         this.boardName = linkArray[4]
+        this.boardExists = true
       } else {
         this.$bvToast.show('error-toast')
       }

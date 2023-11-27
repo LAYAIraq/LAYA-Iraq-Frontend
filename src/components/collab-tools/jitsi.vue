@@ -47,6 +47,11 @@ export default {
     }
   },
   methods: {
+    /**
+     * Function loadJitsiScript: load jitsi api
+     * Author: nv
+     * Since: v1.3.0
+     */
     loadJitsiScript (callback) {
       const script = document.createElement('script')
       script.src = 'https://meet.jit.si/external_api.js'
@@ -54,6 +59,11 @@ export default {
       script.onload = callback
       document.head.appendChild(script)
     },
+    /**
+     * Function initializeJitsi: set options an open new JitsiMeetWindow
+     * Author: nv
+     * Since: v1.3.0
+     */
     initializeJitsi () {
       const options = {
         roomName: this.roomName,

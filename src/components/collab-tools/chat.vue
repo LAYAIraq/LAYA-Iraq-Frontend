@@ -125,7 +125,11 @@ export default {
   },
 
   methods: {
-
+    /**
+     * Function linkCopy: copy room link to clipboard
+     * Author: nv
+     * Since: v1.3.0
+     */
     async linkCopy () {
       try {
         await navigator.clipboard.writeText(this.link)
@@ -134,7 +138,11 @@ export default {
         console.error('failed to copy', err)
       }
     },
-
+    /**
+     * Function roomCreate: create new room with random id as roomName and enter
+     * Author: nv
+     * Since: v1.3.0
+     */
     roomCreate () {
       this.roomName = uuidv4()
       console.log(this.roomName)
@@ -144,13 +152,18 @@ export default {
 
       this.roomEnter(this.link)
     },
-
+    /**
+     * Function roomEnter: extract roomName and domain from link and enter existing room
+     * Author: nv
+     * Since: v1.3.0
+     */
     roomEnter (link) {
       const linkArray = link.split('/')
       console.log(linkArray)
       if (linkArray.length === 2) {
         this.domain = linkArray[0]
         this.roomName = linkArray[1]
+        this.roomExists = true
       } else {
         this.$bvToast.show('error-toast')
       }
