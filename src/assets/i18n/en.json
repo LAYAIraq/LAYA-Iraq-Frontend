@@ -104,7 +104,7 @@
 	"collaboration.whiteboard": "Whiteboard",
 	"collaboration.whiteboard.createBoard": "Create new board",
 	"collaboration.whiteboard.enterBoard": "Enter existing board",
-	"collaboration.whiteboard.tooltip": "The collaborative whiteboard (based on XX) allows you to draw or write text with your cooperators onto a white canvas. You can send the link via email to your desired cooperation partners.",
+	"collaboration.whiteboard.tooltip": "The collaborative whiteboard (based on WBO) allows you to draw or write text with your cooperators onto a white canvas. You can send the link via email to your desired cooperation partners.",
 	"content": "Content",
 	"content.editContent": "Edit Content",
 	"content.editContentTip": "You can modify the displayed content ( #{step} ).",

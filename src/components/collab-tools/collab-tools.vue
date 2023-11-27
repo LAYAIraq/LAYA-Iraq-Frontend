@@ -8,6 +8,7 @@
 <template>
   <div :class="langIsAr? 'text-right': 'text-left'">
     <div class="container-fluid mt-5 mb-5">
+      <!-- title -->
       <div class="row">
         <div class="col">
           <h1 class="text-center">
@@ -16,6 +17,7 @@
         </div>
       </div>
 
+      <!-- description -->
       <div class="row">
         <div class="col-8 mx-auto mt-4">
           <h5>
@@ -24,48 +26,51 @@
         </div>
       </div>
     </div>
-    <div class="container-fluid mt-5 mb-5">
-      <div class="row header">
-        <div class="col-1 mx-auto">
-          <h4>{{ y18n('collaboration') }}</h4>
-        </div>
-        <div class="col-3 mx-auto">
-          <h4>{{ y18n('feedback.edit.desc') }}</h4>
-        </div>
+    <!-- table of tools -->
+    <div class="container">
+      <div class="table-responsve">
+        <table class="table">
+          <thead>
+            <tr>
+              <th
+                scope="col"
+                class="name-column"
+              >
+                {{ y18n('collaboration') }}
+              </th>
+              <th
+                scope="col"
+                class="description-column"
+              >
+                {{ y18n('feedback.edit.desc') }}
+              </th>
+              <th
+                scope="col"
+                class="start-column"
+              >
+                {{ }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(item, index) in items"
+              :key="index"
+            >
+              <td>{{ (item.name) }}</td>
+              <td>{{ (item.description) }}</td>
+              <td>
+                <button
+                  class="btn btn-primary"
+                  @click="navigate(item.path)"
+                >
+                  {{ y18n('courseList.start') }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-
-      <div class="row">
-        <div class="col-1 mt-3 mx-auto">
-          <b-button
-            block
-            variant="primary"
-            append
-            :to="{path: '/chat'}"
-          >
-            {{ y18n('collaboration.chat') }}
-          </b-button>
-        </div>
-        <div class="col-3 mt-3 mx-auto">
-          {{ y18n('collaboration.chat.tooltip') }}
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-1 mx-auto">
-          <b-button
-            block
-            variant="primary"
-            append
-            :to="{path: '/whiteboard'}"
-          >
-            {{ y18n('collaboration.whiteboard') }}
-          </b-button>
-        </div>
-        <div class="col-3 mx-auto">
-          {{ y18n('collaboration.whiteboard.tooltip') }}
-        </div>
-      </div>
-      <hr>
     </div>
   </div>
 </template>
@@ -78,7 +83,24 @@ export default {
 
   mixins: [
     locale
-  ]
+  ],
+
+  data () {
+    return {
+      items: []
+    }
+  },
+  mounted () {
+    this.items = [
+      { name: this.y18n('collaboration.chat'), path: '/chat', description: this.y18n('collaboration.chat.tooltip') },
+      { name: this.y18n('collaboration.whiteboard'), path: '/whiteboard', description: this.y18n('collaboration.whiteboard.tooltip') }
+    ]
+  },
+  methods: {
+    navigate (path) {
+      this.$router.push(path)
+    }
+  }
 }
 </script>
 
@@ -92,4 +114,19 @@ export default {
   border-bottom: 2px solid black;
 }
 
+.name-column {
+  width: 20%;
+}
+.description-column {
+  width: 70%;
+}
+.start-column {
+  width: 10%;
+}
+@media (max-width: 768px) {
+  .table th, .table td {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+}
 </style>
