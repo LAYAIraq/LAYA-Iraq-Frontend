@@ -102,11 +102,20 @@ export default {
 <style>
 .pdf-viewer-style {
   height:500px;
+  width:100%;
   overflow-y:auto;
 }
 .centering {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+@media (max-width: 768px) {
+  .pdf-viewer-style {
+    height:400px;
+    width:100%;
+    overflow-y:auto;
+    overflow-x:auto;
+  }
 }
 </style>

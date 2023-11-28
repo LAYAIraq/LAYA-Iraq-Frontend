@@ -6,7 +6,7 @@ Since: v1.3.0
 -->
 
 <template>
-  <div class="centering">
+  <div>
   </div>
 </template>
 
@@ -74,18 +74,10 @@ export default {
     }, reason => {
       console.error(reason)
     })
-  },
-
-  methods: {
-
   }
+
 }
 </script>
 
 <style>
-.centering {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 </style>
