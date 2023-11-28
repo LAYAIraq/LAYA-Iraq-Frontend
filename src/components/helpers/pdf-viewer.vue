@@ -6,7 +6,7 @@ Since: v1.3.0
 -->
 
 <template>
-  <div>
+  <div class="centering">
   </div>
 </template>
 
@@ -83,5 +83,9 @@ export default {
 </script>
 
 <style>
-
+.centering {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 </style>

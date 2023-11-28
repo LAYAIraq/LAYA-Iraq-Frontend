@@ -28,7 +28,7 @@ Since: v1.3.0
       >
       </pdf-viewer>
     </div>
-    <div>
+    <div class="centering">
       <b-button
         @click="downloadPdf"
       >
@@ -76,6 +76,11 @@ export default {
     }
   },
   methods: {
+    /**
+     * Function downloadPdf: downloads the displayed pdf
+     * Author: nv
+     * Since: v1.3.0
+     */
     downloadPdf () {
       fetch(this.url)
         .then(response => response.blob())
@@ -98,5 +103,10 @@ export default {
 .pdf-viewer-style {
   height:500px;
   overflow-y:auto;
+}
+.centering {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
