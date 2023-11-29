@@ -15,9 +15,9 @@
         <div class="col">
           <div style="height: 2rem"></div>
 
-          <h1>Privacy Policy of Universität Vechta</h1>
+          <h1>Privacy Policy of the University of Vechta</h1>
 
-          <p>Universität Vechta operates the laya.uni-vechta.de website, which provides the SERVICE.</p>
+          <p>The University of Vechta has lead the development of LAYA Iraq and the University of Mosul provides laya.uomosul.edu.iq, which provides the SERVICE.</p>
 
           <p>This page is used to inform website visitors regarding our policies with the collection, use, and disclosure of Personal Information if anyone decided to use our Service, the LAYA Iraq - Learn as you are website.</p>
 
