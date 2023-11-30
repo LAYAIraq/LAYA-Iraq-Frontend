@@ -26,7 +26,68 @@
           </h2>
         </div>
       </div>
+      <div
+        v-if="filtered.length > 0"
+        class="container"
+      >
+        <table class="table">
+          <thead>
+            <tr>
+              <th
+                scope="col"
+                class="name-column"
+              >
+                {{ y18n('courseName') }}
+              </th>
+              <th
+                scope="col"
+                class="author-column"
+              >
+                {{ y18n('author') }}
+              </th>
+              <th
+                scope="col"
+                class="language-column"
+              >
+                {{ y18n('courseLanguage') }}
+              </th>
+              <th
+                scope="col"
+                class="properties-column"
+              >
+                {{ y18n('courseList.properties') }}
+              </th>
+              <th
+                scope="col"
+                class="start-column"
+              >
+                {{ }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(item, index) in items"
+              :key="index"
+            >
+              <td>{{ (item.name) }}</td>
+              <td>{{ (item.author) }}</td>
+              <td>{{ (item.language) }}</td>
+              <td>{{ (item.properties) }}</td>
+              <td>
+                <button
+                  class="btn btn-primary"
+                  @click="navigate(item.path)"
+                >
+                  {{ y18n('courseList.start') }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
+      <!-- old unofficial table -->
       <div
         v-if="filtered.length > 0"
         class="row header"
@@ -243,7 +304,8 @@ export default {
       filteredList: [],
       nonComplicitSettings: {},
       nonComplicitList: [],
-      selectedCourse: ''
+      selectedCourse: '',
+      items: []
     }
   },
 
@@ -374,6 +436,8 @@ export default {
         }
         if (complicit) {
           this.complicitCourses.add(course.courseId)
+          this.items = this.complicitCourses.add(course.courseId)
+          console.log(this.items)
         }
       }
     },
