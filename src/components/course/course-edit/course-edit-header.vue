@@ -18,15 +18,9 @@ Dependencies:
           size="sm"
           :class="langIsAr? 'float-right' : 'float-left'"
           active-class="active"
-          :to="{
-            name: 'course',
-            params: {
-              name,
-              coursePath: coursePath === '' ? undefined : coursePath
-            }
-          }"
+          :to="path"
           exact
-          @click.prevent="$emit('save')"
+          @click="$bvModal.show('save-changes-question')"
         >
           <!-- TODO: move click event to method -->
           <i
@@ -77,6 +71,23 @@ Dependencies:
         </span>
       </div>
     </div>
+    <b-modal
+      id="save-changes-question"
+      :title="y18n('save.changes')"
+      header-bg-variant="warning"
+      ok-variant="warning"
+      :ok-title="y18n('save')"
+      :cancel-title="y18n('cancel')"
+      centered
+      static
+      :aria-label="y18n('popupwarning')"
+      @ok="saveCourseChanges"
+      @cancel="cancelCourseChanges"
+    >
+      <p>
+        {{ y18n('save.changes.warning') }}
+      </p>
+    </b-modal>
   </div>
 </template>
 
@@ -93,6 +104,12 @@ export default {
     routes
   ],
 
+  data () {
+    return {
+      path: ''
+    }
+  },
+
   computed: {
     ...mapGetters(['courseContent', 'courseContentIdRouteMap']),
 
@@ -106,6 +123,25 @@ export default {
      */
     checkEmpty () {
       return Object.keys(this.courseContent).length === 0
+    }
+  },
+
+  methods: {
+    cancelCourseChanges () {
+      return this.setPath()
+    },
+    saveCourseChanges () {
+      this.$emit('save')
+      return this.setPath()
+    },
+    setPath () {
+      this.path = {
+        name: 'course',
+        params: {
+          name,
+          coursePath: this.coursePath === '' ? undefined : this.coursePath
+        }
+      }
     }
   }
 
