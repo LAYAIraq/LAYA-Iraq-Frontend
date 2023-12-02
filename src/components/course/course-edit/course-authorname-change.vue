@@ -43,6 +43,7 @@ Since: v1.3.0
           :class="'border border-danger'"
           :placeholder="y18n('changeAuthorName.new')"
           :aria-label="y18n('changeAuthorName.new')"
+          @keyup.enter="changeCourseAuthorName"
         >
       </p>
     </b-modal>

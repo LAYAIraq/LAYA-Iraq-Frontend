@@ -32,7 +32,7 @@ Since: v1.3.0
       centered
       static
       :aria-label="y18n('popupwarning')"
-      @ok="changeCourseabstract"
+      @ok="changeCourseAbstract"
     >
       <p>
         {{ y18n('changeAbstract') }}
@@ -43,6 +43,7 @@ Since: v1.3.0
           :class="'border border-danger'"
           :placeholder="y18n('changeAbstract.new')"
           :aria-label="y18n('changeAbstract.new')"
+          @keyup.enter="changeCourseAbstract"
         >
       </p>
     </b-modal>
@@ -83,7 +84,7 @@ export default {
      * Author: nv
      * Since: v1.3.0
      */
-    changeCourseabstract (e) {
+    changeCourseAbstract (e) {
       e.preventDefault()
       if (this.newAbstract !== this.course.abstract) {
         this.$nextTick(() => {
