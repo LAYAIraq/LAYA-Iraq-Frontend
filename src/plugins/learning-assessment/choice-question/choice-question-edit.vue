@@ -146,7 +146,7 @@ Since: v1.0.0
         </div>
       </div>
 
-      <!-- task audio -->
+      <!-- task audio
       <div class="form-group">
         <div class="row">
           <label
@@ -165,7 +165,8 @@ Since: v1.0.0
             >
           </div>
         </div>
-        <!-- task audio simple -->
+
+         task audio simple
         <div
           v-if="courseSimple"
           class="row"
@@ -188,8 +189,9 @@ Since: v1.0.0
             >
           </div>
         </div>
-      </div>
 
+      </div>
+      -->
       <p><b>{{ y18n('items') }}</b></p>
       <div
         v-for="(option, i) in options"
