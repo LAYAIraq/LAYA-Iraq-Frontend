@@ -86,7 +86,7 @@
         </div>
       </div>
 
-      <!-- task audio -->
+      <!-- task audio
       <div class="form-group row">
         <label
           for="drag-drop-task-audio"
@@ -105,7 +105,7 @@
         </div>
       </div>
 
-      <!-- task audio simple -->
+       task audio simple
       <div
         v-if="courseSimple"
         class="form-group row"
@@ -128,6 +128,7 @@
           >
         </div>
       </div>
+      -->
       <!-- Categories -->
       <p><b>{{ y18n('categoryMatching.cats') }}</b></p>
       <div

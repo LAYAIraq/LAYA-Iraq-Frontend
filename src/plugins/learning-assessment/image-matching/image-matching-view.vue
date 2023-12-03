@@ -21,6 +21,7 @@
         >
           <h4>
             {{ courseSimple? title.simple: title.text }}
+            <!--
             <audio-button
               v-if="taskAudio"
               :src="courseSimple?
@@ -28,6 +29,7 @@
                 taskAudio.simple"
             >
             </audio-button>
+            -->
           </h4>
         </div>
         <flag-icon
@@ -193,13 +195,16 @@
 import { mapGetters } from 'vuex'
 import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
-import AudioButton from '@/components/helpers/audio-button.vue'
+// import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 import { stripKey } from '@/mixins/general/helpers'
 
 export default {
   name: 'ImageMatchingView',
-  components: { FlagIcon, AudioButton },
+  components: {
+    FlagIcon
+  //  AudioButton
+  },
 
   mixins: [
     locale,
