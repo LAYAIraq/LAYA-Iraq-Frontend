@@ -119,15 +119,6 @@
       <div class="row pt-3">
         <button
           type="button"
-          class="btn btn-warning"
-          :disabled="freeze"
-          @click="reset"
-        >
-          {{ y18n('imageMatching.removeInput') }}
-        </button>
-
-        <button
-          type="button"
           class="btn btn-link"
           :class="langIsAr? 'float-right': 'float-left'"
           :disabled="freeze"
