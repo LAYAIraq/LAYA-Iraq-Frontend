@@ -7,8 +7,8 @@
     <template slot="button-content">
       <!-- <i class="fas fa-bell"></i>
       {{ y18n('notifications') }} -->
-      {{ y18n('notifications') }}
       <i class="fas fa-bell fa-lg"></i>
+      {{ y18n('notifications') }}
 
       <span
         v-if="notificationsUnreadNumber > 0"
