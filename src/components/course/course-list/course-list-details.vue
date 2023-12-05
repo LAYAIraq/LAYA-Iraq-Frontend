@@ -36,12 +36,11 @@
           responsive
           stacked="md"
           class="my-4"
-          :row-details="rowDetailsMethod"
         >
           <template #cell(name)="data">
+            {{ data.item.name }}
             <span
               v-if="data.item.author === userId"
-              :class="langIsAr ? 'author-icon-right': 'author-icon-left'"
             >
               <i
                 v-b-tooltip.bottom
@@ -49,7 +48,6 @@
                 :title="y18n('courseList.authorRights')"
               ></i>
             </span>
-            {{ data.item.name }}
           </template>
 
           <template #cell(authorName)="data">
@@ -87,10 +85,9 @@
 
           <template #cell(actions)="data">
             <b-button
-              :aria-controls="'collapse-details' + data.index"
-              @click="toggleDetails(data.index)"
+              @click="data.toggleDetails"
             >
-              {{ courseDetails[data.index] ? 'Hide Details' : 'Show Details' }}
+              {{ data.detailsShowing ? 'Hide Details' : 'Show Details' }}
             </b-button>
 
             <a
@@ -110,39 +107,34 @@
             </div>
           </template>
           <template #row-details="row">
-            <b-collapse
-              :id="'collapse-details-' + row.index"
-              :visible="courseDetails[row.index]"
+            <b-card
+              :header="y18n('abstract')"
+              header-class="collap-header"
+              body-class="collap-body"
             >
-              <b-card
-                :header="y18n('abstract')"
-                header-class="collap-header"
-                body-class="collap-body"
-              >
-                {{ null === row.item.abstract ? y18n('abstract.notListed') : row.item.abstract }}
-              </b-card>
+              {{ null === row.item.abstract ? y18n('abstract.notListed') : row.item.abstract }}
+            </b-card>
 
-              <b-card
-                :header="y18n('cat')"
-                header-class="collap-header"
-                body-class="collap-body"
-              >
-                {{ categoryList.some(cat => cat === row.item.category) ? y18n(`course.category.${row.item.category}`) : y18n('course.category.other') }}
-              </b-card>
+            <b-card
+              :header="y18n('cat')"
+              header-class="collap-header"
+              body-class="collap-body"
+            >
+              {{ categoryList.some(cat => cat === row.item.category) ? y18n(`course.category.${row.item.category}`) : y18n('course.category.other') }}
+            </b-card>
 
-              <b-card
-                :header="y18n('keywords')"
-                header-class="collap-header"
-                body-class="collap-body"
-              >
-                {{ null === row.item.keywords ? y18n('keywords.notListed') : row.item.keywords }}
-              </b-card>
-            </b-collapse>
+            <b-card
+              :header="y18n('keywords')"
+              header-class="collap-header"
+              body-class="collap-body"
+            >
+              {{ null === row.item.keywords ? y18n('keywords.notListed') : row.item.keywords }}
+            </b-card>
           </template>
         </b-table>
       </div>
 
-      <!-- old unofficial table -->
+      <!-- old unofficial table
       <div
         v-if="filtered.length > 0"
         class="row header"
@@ -278,7 +270,7 @@
             </b-card>
           </b-collapse>
         </div>
-      </div>
+      </div> -->
     </div>
     <b-modal
       id="noncomplicit-confirm"
@@ -432,7 +424,6 @@ export default {
   created () {
     this.filtered.forEach((item, index) => {
       this.$set(this.courseDetails, index, false)
-      console.log('courselistdetails' + this.courseDetails)
     })
 
     this.getSubs()
@@ -620,9 +611,6 @@ export default {
     toggleDetails (index) {
       // Toggle the details for the specified row
       this.$set(this.courseDetails, index, !this.courseDetails[index])
-    },
-    rowDetailsMethod (item, index) {
-      return this.courseDetails[index]
     }
   }
 }
