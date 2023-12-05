@@ -78,6 +78,7 @@
               id="role-filter-select"
               v-model="roleFilter"
               aria-describedby="role-filter-label"
+              @keydown.enter.native="setFilter(roleFilter)"
               @blur="setFilter(null)"
             >
               <b-select-option
