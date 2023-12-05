@@ -42,7 +42,6 @@
               v-model="emailFilter"
               aria-describedby="email-filter-label"
               @keypress.enter="setFilter(emailFilter)"
-              @blur="setFilter(null)"
             >
           </div>
         </div>
@@ -61,7 +60,6 @@
               v-model="usernameFilter"
               aria-describedby="name-filter-label"
               @keypress.enter="setFilter(usernameFilter)"
-              @blur="setFilter(null)"
             >
           </div>
         </div>
@@ -78,7 +76,6 @@
               id="role-filter-select"
               v-model="roleFilter"
               aria-describedby="role-filter-label"
-              @blur="setFilter(null)"
             >
               <b-select-option
                 value="null"
@@ -642,9 +639,9 @@ export default {
   watch: {
     // reset regexes when filter changes
     filter (val) {
-      if (val !== null) { // explicily because false is used to reset filter
-        this.regexes = val
-      }
+      // if (val !== null) { // explicily because false is used to reset filter
+      this.regexes = val
+      // }
     },
     // repage list if filters change
     filteredList () {
