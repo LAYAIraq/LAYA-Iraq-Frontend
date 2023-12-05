@@ -89,22 +89,36 @@
             >
               {{ data.detailsShowing ? 'Hide Details' : 'Show Details' }}
             </b-button>
-
-            <a
-              class="btn indicated-btn"
+            <div>
+            </div>
+            <b-button
+              class="start-button"
               @click="decideButtonAction(data.item)"
             >
-              <span v-if="isEnrolled(data.item)">{{ y18n('courseList.start') }} <i :class="langIsAr ? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i></span>
-              <span v-else>{{ y18n('courseList.subscribe') }} <i class="fas fa-file-signature"></i></span>
-            </a>
-            <div
-              v-if="complicitReady && !complicitCourses.has(data.item.courseId)"
-              v-b-tooltip.top
-              class="indicate-icon"
-              :title="y18n('courseList.notComplicit')"
-            >
-              <i class="fas fa-exclamation-circle"></i>
-            </div>
+              <div class="row">
+                <div
+                  v-if="complicitReady && !complicitCourses.has(data.item.courseId)"
+                  v-b-tooltip.top
+                  :title="y18n('courseList.notComplicit')"
+                  class="indicate-icon"
+                >
+                  <i class="fas fa-exclamation-circle"></i>
+                </div>
+
+                <div
+                  v-if="isEnrolled(data.item)"
+                  class="col"
+                >
+                  {{ y18n('courseList.start') }} <i :class="langIsAr ? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
+                </div>
+                <div
+                  v-else
+                  class="col"
+                >
+                  {{ y18n('courseList.subscribe') }} <i class="fas fa-file-signature"></i>
+                </div>
+              </div>
+            </b-button>
           </template>
           <template #row-details="row">
             <b-card
@@ -498,7 +512,6 @@ export default {
         if (complicit) {
           this.complicitCourses.add(course.courseId)
           this.items = this.complicitCourses.add(course.courseId)
-          console.log(this.items)
         }
       }
     },
@@ -658,11 +671,9 @@ export default {
 }
 
 .indicate-icon {
-  position: absolute;
-  top: -1px;
-  left: 5px;
   color: crimson;
-  font-size: 2rem;
+  font-size: 1.5rem;
+  margin: -5px;
 }
 
 i.icons-list {
@@ -695,6 +706,12 @@ i.icons-list {
 
 .collap-body {
   font-size: 16px;
+}
+
+.start-button {
+  width: 200px;
+  background-color: antiquewhite;
+  color: #1b1e21;
 }
 
 </style>
