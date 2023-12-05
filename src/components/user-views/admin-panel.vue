@@ -122,61 +122,41 @@
         </div>
       </div>
     </div>
-    <!-- user list -->
+
+    <!-- new user list -->
     <div class="container">
-      <!-- head -->
-      <div
-        id="user-list"
-        class="row font-weight-bold mb-3"
-      >
-        <div class="col-3">
-          {{ y18n('adminPanel.user') }}
-        </div>
-        <div class="col-2">
-          {{ y18n('adminPanel.role') }}
-        </div>
-        <div class="col-3">
-          {{ y18n('adminPanel.email') }}
-        </div>
-        <div class="col-1">
-          {{ y18n('adminPanel.emailVerified') }}
-        </div>
-        <div class="col-3">
-          {{ y18n('adminPanel.actions') }}
-        </div>
-      </div>
-      <!-- body -->
       <div v-if="pagedList.length !== 0">
-        <div
-          v-for="user in pagedList[pageSelected]"
-          :key="user.id"
-          class="row mb-2"
+        <b-table
+          :items="pagedList[pageSelected]"
+          :fields="fields"
+          responsive
+          stacked="md"
         >
-          <div class="col-3">
-            {{ user.username }}
-          </div>
-          <div class="col-2">
-            {{ capitalizeFirstLetter(user.role) }}
-          </div>
-          <div class="col-3 text-break">
-            {{ user.email }}
-          </div>
-          <div class="col-1">
-            {{ user.emailVerified }}
-          </div>
-          <!-- user management -->
-          <div
-            id="user-management-buttons"
-            class="col-3"
-          >
+          <template #cell(username)="data">
+            {{ data.item.username }}
+          </template>
+
+          <template #cell(role)="data">
+            {{ capitalizeFirstLetter(data.item.role) }}
+          </template>
+
+          <template #cell(email)="data">
+            {{ data.item.email }}
+          </template>
+
+          <template #cell(emailVerified)="data">
+            {{ data.item.emailVerified }}
+          </template>
+
+          <template #cell(actions)="row">
             <!-- promote user -->
             <b-button
               v-b-tooltip.top
               class="user-mgmt-btn"
-              :disabled="user.id === userId"
+              :disabled="row.item.id === userId"
               :class="langIsAr? 'ml-2': 'mr-2'"
               :title="y18n('adminPanel.promoteUser')"
-              @click="openModal(user.id, 'promote-user')"
+              @click="openModal(row.item.id, 'promote-user')"
             >
               <i class="fas fa-arrow-circle-up"></i>
               <span class="sr-only">
@@ -187,11 +167,11 @@
             <b-button
               v-b-tooltip.top
               class="user-mgmt-btn"
-              :disabled="user.id === userId"
+              :disabled="row.item.id === userId"
               :class="langIsAr? 'ml-2': 'mr-2'"
               :title="y18n('adminPanel.editEmail')"
               variant="info"
-              @click="openModal(user.id, 'edit-email')"
+              @click="openModal(row.item.id, 'edit-email')"
             >
               <i class="fas fa-pen"></i>
               <span class="sr-only">
@@ -202,11 +182,11 @@
             <b-button
               v-b-tooltip.top
               class="user-mgmt-btn"
-              :disabled="user.id === userId"
+              :disabled="row.item.id === userId"
               :class="langIsAr? 'ml-2': 'mr-2'"
               :title="y18n('adminPanel.resetPassword')"
               variant="warning"
-              @click="openModal(user.id, 'reset-password')"
+              @click="openModal(row.item.id, 'reset-password')"
             >
               <i class="fas fa-screwdriver"></i>
               <span class="sr-only">
@@ -217,19 +197,19 @@
             <b-button
               v-b-tooltip.top
               class="user-mgmt-btn"
-              :disabled="user.id === userId"
+              :disabled="row.item.id === userId"
               :class="langIsAr? 'ml-2': 'mr-2'"
               :title="y18n('adminPanel.deleteUser')"
               variant="danger"
-              @click="openModal(user.id, 'delete-user')"
+              @click="openModal(row.item.id, 'delete-user')"
             >
               <i class="fas fa-times-circle"></i>
               <span class="sr-only">
                 {{ y18n('adminPanel.deleteUser') }}
               </span>
             </b-button>
-          </div>
-        </div>
+          </template>
+        </b-table>
       </div>
       <!-- placeholder if no filter matches -->
       <div
@@ -238,7 +218,6 @@
       >
         {{ y18n('adminPanel.noMatch') }}
       </div>
-
       <!-- pages -->
       <div class="row mt-5 pt-3 pb-2 bg-dark text-light">
         <div class="col-3">
@@ -270,6 +249,7 @@
         </div>
       </div>
     </div>
+
     <!-- create user button -->
     <div class="row mt-3">
       <b-button
@@ -473,6 +453,8 @@ export default {
 
   data () {
     return {
+      fields: [],
+
       createUserEmail: '',
       createUserName: '',
       createUserRole: null,
@@ -654,6 +636,16 @@ export default {
     pageSize (val) {
       this.pagedList = val
     }
+  },
+
+  mounted () {
+    this.fields = [
+      { key: 'username', label: this.y18n('adminPanel.user') },
+      { key: 'role', label: this.y18n('adminPanel.role') },
+      { key: 'email', label: this.y18n('adminPanel.email') },
+      { key: 'emailVerified', label: this.y18n('adminPanel.emailVerified') },
+      { key: 'actions', label: this.y18n('adminPanel.actions') }
+    ]
   },
 
   created () {
