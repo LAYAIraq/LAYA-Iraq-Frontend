@@ -85,6 +85,7 @@
 
           <template #cell(actions)="data">
             <b-button
+              variant="primary"
               @click="data.toggleDetails"
             >
               {{ data.detailsShowing ? 'Hide Details' : 'Show Details' }}
@@ -93,6 +94,7 @@
             </div>
             <b-button
               class="start-button"
+              variant="success"
               @click="decideButtonAction(data.item)"
             >
               <div class="row">
@@ -147,144 +149,6 @@
           </template>
         </b-table>
       </div>
-
-      <!-- old unofficial table
-      <div
-        v-if="filtered.length > 0"
-        class="row header"
-      >
-        <div class="col">
-          <h2>{{ y18n('courseName') }}</h2>
-        </div>
-        <div class="col">
-          <h3>{{ y18n('author') }}</h3>
-        </div>
-        <div class="col">
-          <h3>{{ y18n('courseLanguage') }}</h3>
-        </div>
-        <div class="col-2">
-          <h4
-            class="sr-only"
-            aria-hidden="true"
-          >
-            {{ y18n('courseList.properties') }}
-          </h4>
-        </div>
-        <div class="col-3">
-          <b-button
-            v-b-toggle="'collapse-2'"
-            :class="langIsAr? 'float-left mr-auto' : 'float-right ml-auto'"
-          >
-            {{ y18n('expand') }}
-          </b-button>
-        </div>
-      </div>
-
-      <div
-        v-for="course in filtered"
-        :key="course.category+'-'+course.name"
-        class="row py-3 course"
-      >
-        <div class="col">
-          <span
-            v-if="course.author === userId"
-            :class="langIsAr? 'author-icon-right': 'author-icon-left'"
-          >
-            <i
-              v-b-tooltip.bottom
-              class="fas fa-user-graduate"
-              :title="y18n('courseList.authorRights')"
-            ></i>
-          </span>
-          {{ course.name }}
-        </div>
-
-        <div class="col">
-          {{ course.authorName === "" || course.authorName === null ? y18n('profile.language.notlisted') : course.authorName }}
-        </div>
-
-        <div class="col">
-          {{ languageList.some(lang => lang === course.language) ? y18n(`profile.language.${course.language}`) : y18n('profile.language.notlisted') }}
-        </div>
-
-        <div class="col-2">
-          <ul class="course-props">
-            <li
-              v-for="set in Object.entries(course.properties).filter(k => k[0] !== 'simple')"
-              v-show="set[1]"
-              :key="`setting-${set[0]}`"
-            >
-              <span
-                v-b-tooltip.top
-                :title="i18n[`courseList.properties.${set[0]}`]"
-              >
-                <i
-                  class="icons-list"
-                  :class="getIcon(set[0])"
-                  :aria-describedby="`label-desc-${set[0]}`"
-                ></i>
-                <span
-                  :id="`label-desc-${set[0]}`"
-                  class="sr-only"
-                >
-                  {{ i18n[`courseList.properties.${set[0]}`] }}
-                </span>
-              </span>
-            </li>
-          </ul>
-        </div>
-        <div class="col-3">
-          <a
-            class="btn indicated-btn"
-            @click="decideButtonAction(course)"
-          >
-            <span v-if="isEnrolled(course)">
-              {{ y18n('courseList.start') }}
-              <i :class="langIsAr? 'fas fa-arrow-left': 'fas fa-arrow-right'"></i>
-            </span>
-            <span v-else>
-              {{ y18n('courseList.subscribe') }}
-              <i class="fas fa-file-signature"></i>
-            </span>
-
-          </a>
-          <div
-            v-if="complicitReady && !complicitCourses.has(course.courseId)"
-            v-b-tooltip.top
-            class="indicate-icon"
-            :title="y18n('courseList.notComplicit')"
-          >
-            <i class="fas fa-exclamation-circle"></i>
-          </div>
-        </div>
-        <div class="container-fluid p-2">
-          <b-collapse id="collapse-2">
-            <b-card
-              :header="y18n('abstract')"
-              header-class="collap-header"
-              body-class="collap-body"
-            >
-              {{ null === course.abstract ? y18n('abstract.notListed') : course.abstract }}
-            </b-card>
-
-            <b-card
-              :header="y18n('cat')"
-              header-class="collap-header"
-              body-class="collap-body"
-            >
-              {{ categoryList.some(cat => cat === course.category) ? y18n(`course.category.${course.category}`) : y18n('course.category.other') }}
-            </b-card>
-
-            <b-card
-              :header="y18n('keywords')"
-              header-class="collap-header"
-              body-class="collap-body"
-            >
-              {{ null === course.keywords ? y18n('keywords.notListed') : course.keywords }}
-            </b-card>
-          </b-collapse>
-        </div>
-      </div> -->
     </div>
     <b-modal
       id="noncomplicit-confirm"
@@ -322,7 +186,10 @@
         >
           {{ y18n('courseList.notComplicit.settings') }}
         </b-button>
-        <b-button @click="hide">
+        <b-button
+          variant="primary"
+          @click="hide"
+        >
           {{ y18n('cancel') }}
         </b-button>
       </template>
@@ -671,11 +538,11 @@ export default {
 }
 
 .indicate-icon {
-  color: crimson;
+  color: red;
   font-size: 1.5rem;
   margin: -5px;
+  text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
 }
-
 i.icons-list {
   font-size: 1.75rem;
 }
@@ -710,8 +577,6 @@ i.icons-list {
 
 .start-button {
   width: 200px;
-  background-color: antiquewhite;
-  color: #1b1e21;
 }
 
 </style>
