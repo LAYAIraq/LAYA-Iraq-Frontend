@@ -182,7 +182,7 @@ Since: v1.0.0
                       <b-button
                         id="username-button"
                         block
-                        variant="secondary"
+                        variant="warning"
                         @click="$bvModal.show('change-username-form')"
                       >
                         {{ y18n('profile.usernameChange') }}
@@ -190,7 +190,7 @@ Since: v1.0.0
                       <b-modal
                         id="change-username-form"
                         :title="y18n('profile.usernameChange')"
-                        header-bg-variant="info"
+                        header-bg-variant="warning"
                         ok-variant="success"
                         :ok-title="y18n('save')"
                         :cancel-title="y18n('cancel')"
@@ -244,7 +244,7 @@ Since: v1.0.0
                       <b-button
                         id="email-button"
                         block
-                        variant="secondary"
+                        variant="warning"
                         @click="$bvModal.show('change-email-form')"
                       >
                         {{ y18n('profile.emailChange') }}
@@ -252,7 +252,7 @@ Since: v1.0.0
                       <b-modal
                         id="change-email-form"
                         :title="y18n('profile.emailChange')"
-                        header-bg-variant="info"
+                        header-bg-variant="warning"
                         ok-variant="success"
                         :ok-title="y18n('save')"
                         :cancel-title="y18n('cancel')"
@@ -356,7 +356,7 @@ Since: v1.0.0
                       <b-button
                         id="password-button"
                         block
-                        variant="secondary"
+                        variant="warning"
                         @click="$bvModal.show('change-password-form')"
                       >
                         {{ y18n('profile.passwordChange') }}
@@ -364,7 +364,7 @@ Since: v1.0.0
                       <b-modal
                         id="change-password-form"
                         :title="y18n('profile.password')"
-                        header-bg-variant="info"
+                        header-bg-variant="warning"
                         ok-variant="success"
                         :ok-title="y18n('save')"
                         :cancel-title="y18n('cancel')"
@@ -416,17 +416,17 @@ Since: v1.0.0
         <div class="col">
           <!-- Save Button -->
           <div class="form-group">
-            <button
+            <b-button
               id="save-profile"
               type="submit"
               :disabled="busy || !passwordInputOk"
-              class="btn btn-block btn-lg btn-outline-dark"
+              class="btn-block btn-lg btn-success"
               style="border-width: 2px"
               @click.prevent="submit"
             >
               <i class="fas fa-check"></i>
               {{ y18n('save') }}
-            </button>
+            </b-button>
           </div>
         </div>
       </div>
@@ -435,7 +435,7 @@ Since: v1.0.0
       <b-modal
         id="avatar-change-modal"
         :title="y18n('profile.avatar.change')"
-        header-bg-variant="info"
+        header-bg-variant="warning"
         ok-variant="success"
         centered
         static

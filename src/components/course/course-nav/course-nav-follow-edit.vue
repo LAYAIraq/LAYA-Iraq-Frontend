@@ -59,7 +59,6 @@
         {{ y18n('save') }}
       </b-button>
       <b-button
-        variant="warning"
         block
         @click="$router.push({ name: 'course-nav' })"
       >

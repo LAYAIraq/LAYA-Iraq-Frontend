@@ -170,7 +170,7 @@ Since: v1.0.0
       <div class="row">
         <button
           type="button"
-          class="btn btn-primary btn-sm"
+          class="btn btn-success btn-sm"
           :class="langIsAr? 'float-right': 'float-left'"
           @click="_itemAdd(answers, newItem())"
         >

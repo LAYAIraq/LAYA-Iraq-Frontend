@@ -32,8 +32,8 @@ Dependencies:
       id="author-copyCourse-confirm"
       :title="y18n('copyCourse')"
       header-bg-variant="warning"
-      ok-variant="warning"
-      :ok-title="y18n('copy.modal.ok')"
+      ok-variant="success"
+      :ok-title="y18n('save')"
       :cancel-title="y18n('cancel')"
       :aria-label="y18n('popupwarning')"
       centered

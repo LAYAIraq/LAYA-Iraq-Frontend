@@ -26,7 +26,7 @@ Since: v1.2.0
       id="author-change-category-confirm"
       :title="y18n('changeCategory')"
       header-bg-variant="warning"
-      ok-variant="warning"
+      ok-variant="success"
       :ok-title="y18n('save')"
       :cancel-title="y18n('cancel')"
       centered

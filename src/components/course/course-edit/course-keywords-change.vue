@@ -26,7 +26,7 @@ Since: v1.3.0
       id="author-change-keywords-confirm"
       :title="y18n('changeKeywords')"
       header-bg-variant="warning"
-      ok-variant="warning"
+      ok-variant="success"
       :ok-title="y18n('save')"
       :cancel-title="y18n('cancel')"
       centered

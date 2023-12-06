@@ -29,8 +29,8 @@ Dependencies:
       id="author-rename-course-confirm"
       :title="y18n('renameCourse')"
       header-bg-variant="warning"
-      ok-variant="warning"
-      :ok-title="y18n('rename.modal.ok')"
+      ok-variant="success"
+      :ok-title="y18n('save')"
       :cancel-title="y18n('cancel')"
       centered
       static

@@ -270,7 +270,7 @@
         <div class="col-10 offset-2">
           <button
             type="button"
-            class="btn btn-primary btn-sm"
+            class="btn btn-success btn-sm"
             @click="_itemAdd(categories)"
           >
             <i class="fas fa-plus"></i>{{ y18n('feedback.edit.addAnswer') }}

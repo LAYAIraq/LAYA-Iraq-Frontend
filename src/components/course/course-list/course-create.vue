@@ -151,7 +151,7 @@
         <div class="col-4">
           <button
             type="submit"
-            class="btn btn-block btn-primary"
+            class="btn btn-block btn-success"
             :disabled="!formValid"
             @click.prevent="duplicateCheck"
           >

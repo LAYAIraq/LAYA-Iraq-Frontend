@@ -29,7 +29,7 @@
           <b-button
             id="application-button"
             block
-            variant="secondary"
+            variant="success"
             @click="$bvModal.show('author-application-form')"
           >
             {{ y18n('profile.application.fillOut') }}
@@ -69,7 +69,7 @@
           <b-button
             id="edit-application-button"
             block
-            variant="secondary"
+            variant="warning"
             @click="$bvModal.show('author-application-form')"
           >
             {{ y18n('profile.application.edit') }}
@@ -77,7 +77,7 @@
           <b-button
             id="withdraw-application-button"
             block
-            variant="warning"
+            variant="danger"
             @click="$bvModal.show('application-withdraw-modal')"
           >
             {{ y18n('profile.application.withdraw') }}
@@ -90,8 +90,8 @@
     <b-modal
       id="application-withdraw-modal"
       :title="y18n('profile.application.withdraw')"
-      header-bg-variant="warning"
-      ok-variant="warning"
+      header-bg-variant="danger"
+      ok-variant="danger"
       :ok-title="y18n('profile.application.withdraw')"
       :cancel-title="y18n('cancel')"
       centered
@@ -105,7 +105,7 @@
     <b-modal
       id="author-application-form"
       :title="y18n('profile.application')"
-      header-bg-variant="info"
+      header-bg-variant="warning"
       ok-variant="success"
       :ok-title="y18n('profile.application.save')"
       :cancel-title="y18n('cancel')"

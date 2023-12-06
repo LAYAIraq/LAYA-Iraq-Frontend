@@ -26,7 +26,7 @@ Since: v1.3.0
       id="author-change-language-confirm"
       :title="y18n('changeCourseLanguage')"
       header-bg-variant="warning"
-      ok-variant="warning"
+      ok-variant="success"
       :ok-title="y18n('save')"
       :cancel-title="y18n('cancel')"
       centered

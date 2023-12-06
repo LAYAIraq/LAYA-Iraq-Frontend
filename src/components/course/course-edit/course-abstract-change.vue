@@ -26,7 +26,7 @@ Since: v1.3.0
       id="author-change-abstract-confirm"
       :title="y18n('changeAbstract')"
       header-bg-variant="warning"
-      ok-variant="warning"
+      ok-variant="success"
       :ok-title="y18n('save')"
       :cancel-title="y18n('cancel')"
       centered

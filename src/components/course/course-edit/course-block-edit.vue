@@ -15,7 +15,7 @@ Dependencies:
   >
     <div class="col">
       <b-button
-        variant="primary"
+        variant="warning"
         block
         append
         :to="{path: 'edit', params: {type: contentToDisplay.name}}"

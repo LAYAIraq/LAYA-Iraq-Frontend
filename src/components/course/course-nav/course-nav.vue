@@ -66,6 +66,7 @@
       >
         <b-button
           secondary
+          variant="success"
           @click="chapterAdd"
         >
           {{ y18n('courseNavEdit.chapterAdd') }}

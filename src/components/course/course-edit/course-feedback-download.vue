@@ -26,8 +26,8 @@ Dependencies:
     <b-modal
       id="download-feedback"
       :title="y18n('feedback.modal.title')"
-      header-bg-variant="warning"
-      ok-variant="warning"
+      header-bg-variant="success"
+      ok-variant="success"
       :ok-title="y18n('feedback.modal.ok')"
       :cancel-title="y18n('cancel')"
       static
