@@ -33,6 +33,7 @@ Dependencies:
       :title="y18n('copyCourse')"
       header-bg-variant="warning"
       ok-variant="success"
+      cancel-variant="primary"
       :ok-title="y18n('save')"
       :cancel-title="y18n('cancel')"
       :aria-label="y18n('popupwarning')"

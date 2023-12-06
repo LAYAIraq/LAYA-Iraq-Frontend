@@ -92,6 +92,7 @@
       :title="y18n('profile.application.withdraw')"
       header-bg-variant="danger"
       ok-variant="danger"
+      cancel-variant="primary"
       :ok-title="y18n('profile.application.withdraw')"
       :cancel-title="y18n('cancel')"
       centered
@@ -107,6 +108,7 @@
       :title="y18n('profile.application')"
       header-bg-variant="warning"
       ok-variant="success"
+      cancel-variant="primary"
       :ok-title="y18n('profile.application.save')"
       :cancel-title="y18n('cancel')"
       centered

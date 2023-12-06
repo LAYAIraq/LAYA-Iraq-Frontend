@@ -44,7 +44,7 @@ Since v1.0.0
           >
             <button
               type="button"
-              class="btn btn-info btn-lg"
+              class="btn btn-primary btn-lg"
               @click="onFinish[i]()"
             >
               {{ courseSimple? answer.simple : answer.text }}

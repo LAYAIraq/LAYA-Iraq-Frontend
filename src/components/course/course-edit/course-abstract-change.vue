@@ -27,6 +27,7 @@ Since: v1.3.0
       :title="y18n('changeAbstract')"
       header-bg-variant="warning"
       ok-variant="success"
+      cancel-variant="primary"
       :ok-title="y18n('save')"
       :cancel-title="y18n('cancel')"
       centered

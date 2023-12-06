@@ -192,6 +192,7 @@ Since: v1.0.0
                         :title="y18n('profile.usernameChange')"
                         header-bg-variant="warning"
                         ok-variant="success"
+                        cancel-variant="primary"
                         :ok-title="y18n('save')"
                         :cancel-title="y18n('cancel')"
                         centered
@@ -254,6 +255,7 @@ Since: v1.0.0
                         :title="y18n('profile.emailChange')"
                         header-bg-variant="warning"
                         ok-variant="success"
+                        cancel-variant="primary"
                         :ok-title="y18n('save')"
                         :cancel-title="y18n('cancel')"
                         centered
@@ -366,6 +368,7 @@ Since: v1.0.0
                         :title="y18n('profile.password')"
                         header-bg-variant="warning"
                         ok-variant="success"
+                        cancel-variant="primary"
                         :ok-title="y18n('save')"
                         :cancel-title="y18n('cancel')"
                         centered
@@ -437,6 +440,7 @@ Since: v1.0.0
         :title="y18n('profile.avatar.change')"
         header-bg-variant="warning"
         ok-variant="success"
+        cancel-variant="primary"
         centered
         static
         :ok-title="y18n('save')"

@@ -34,6 +34,7 @@ Dependencies:
       :title="y18n('deleteCourse')"
       header-bg-variant="danger"
       ok-variant="danger"
+      cancel-variant="primary"
       :ok-title="y18n('delete')"
       :cancel-title="y18n('cancel')"
       centered

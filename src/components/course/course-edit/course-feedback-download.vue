@@ -28,6 +28,7 @@ Dependencies:
       :title="y18n('feedback.modal.title')"
       header-bg-variant="success"
       ok-variant="success"
+      cancel-variant="primary"
       :ok-title="y18n('feedback.modal.ok')"
       :cancel-title="y18n('cancel')"
       static

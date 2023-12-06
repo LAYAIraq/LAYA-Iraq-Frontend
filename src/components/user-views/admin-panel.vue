@@ -289,6 +289,7 @@
         :title="y18n('adminPanel.promoteUser')"
         header-bg-variant="warning"
         ok-variant="warning"
+        cancel-variant="primary"
         :ok-title="y18n('adminPanel.promoteUser')"
         :cancel-title="y18n('cancel')"
         centered
@@ -316,6 +317,7 @@
         :title="y18n('adminPanel.editEmail')"
         header-bg-variant="warning"
         ok-variant="warning"
+        cancel-variant="primary"
         :ok-title="y18n('adminPanel.editEmail')"
         :cancel-title="y18n('cancel')"
         centered
@@ -343,6 +345,7 @@
         :title="y18n('adminPanel.resetPassword')"
         header-bg-variant="warning"
         ok-variant="warning"
+        cancel-variant="primary"
         :ok-title="y18n('adminPanel.resetPassword')"
         :cancel-title="y18n('cancel')"
         centered
@@ -358,6 +361,7 @@
         :title="y18n('adminPanel.deleteUser')"
         header-bg-variant="danger"
         ok-variant="danger"
+        cancel-variant="primary"
         :ok-title="y18n('adminPanel.deleteUser')"
         :cancel-title="y18n('cancel')"
         centered
@@ -373,6 +377,7 @@
         :title="y18n('adminPanel.createUser')"
         header-bg-variant="warning"
         ok-variant="warning"
+        cancel-variant="primary"
         :ok-title="y18n('adminPanel.createUser')"
         :cancel-title="y18n('cancel')"
         centered
