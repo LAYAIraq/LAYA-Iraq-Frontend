@@ -99,6 +99,7 @@
           <b-button
             v-b-tooltip.bottom
             :class="langIsAr? 'ml-2': 'mr-2'"
+            variant="warning"
             :title="y18n('adminPanel.filterList')"
             @click="setFilter(true)"
           >
@@ -110,11 +111,11 @@
           <b-button
             v-b-tooltip.bottom
             :class="langIsAr? 'ml-2': 'mr-2'"
-            variant="warning"
+            variant="danger"
             :title="y18n('adminPanel.resetFilters')"
             @click="setFilter(false)"
           >
-            <i class="far fa-times-circle"></i>
+            <i class="fas fa-times"></i>
             <span class="sr-only">
               {{ y18n('adminPanel.resetFilters') }}
             </span>
@@ -153,6 +154,7 @@
             <b-button
               v-b-tooltip.top
               class="user-mgmt-btn"
+              variant="warning"
               :disabled="row.item.id === userId"
               :class="langIsAr? 'ml-2': 'mr-2'"
               :title="y18n('adminPanel.promoteUser')"
@@ -170,7 +172,7 @@
               :disabled="row.item.id === userId"
               :class="langIsAr? 'ml-2': 'mr-2'"
               :title="y18n('adminPanel.editEmail')"
-              variant="info"
+              variant="warning"
               @click="openModal(row.item.id, 'edit-email')"
             >
               <i class="fas fa-pen"></i>
@@ -203,7 +205,7 @@
               variant="danger"
               @click="openModal(row.item.id, 'delete-user')"
             >
-              <i class="fas fa-times-circle"></i>
+              <i class="fas fa-times"></i>
               <span class="sr-only">
                 {{ y18n('adminPanel.deleteUser') }}
               </span>
@@ -253,7 +255,7 @@
     <!-- create user button -->
     <div class="row mt-3">
       <b-button
-        variant="warning"
+        variant="success"
         class="m-auto"
         @click="openModal(-1, 'create-user')"
       >
@@ -268,7 +270,8 @@
         id="promote-user"
         :title="y18n('adminPanel.promoteUser')"
         header-bg-variant="warning"
-        ok-variant="warning"
+        ok-variant="success"
+        cancel-variant="primary"
         :ok-title="y18n('adminPanel.promoteUser')"
         :cancel-title="y18n('cancel')"
         centered
@@ -295,7 +298,8 @@
         id="edit-email"
         :title="y18n('adminPanel.editEmail')"
         header-bg-variant="warning"
-        ok-variant="warning"
+        ok-variant="success"
+        cancel-variant="primary"
         :ok-title="y18n('adminPanel.editEmail')"
         :cancel-title="y18n('cancel')"
         centered
@@ -322,7 +326,8 @@
         id="reset-password"
         :title="y18n('adminPanel.resetPassword')"
         header-bg-variant="warning"
-        ok-variant="warning"
+        ok-variant="success"
+        cancel-variant="primary"
         :ok-title="y18n('adminPanel.resetPassword')"
         :cancel-title="y18n('cancel')"
         centered
@@ -338,6 +343,7 @@
         :title="y18n('adminPanel.deleteUser')"
         header-bg-variant="danger"
         ok-variant="danger"
+        cancel-variant="primary"
         :ok-title="y18n('adminPanel.deleteUser')"
         :cancel-title="y18n('cancel')"
         centered
@@ -352,7 +358,8 @@
         id="create-user"
         :title="y18n('adminPanel.createUser')"
         header-bg-variant="warning"
-        ok-variant="warning"
+        ok-variant="success"
+        cancel-variant="primary"
         :ok-title="y18n('adminPanel.createUser')"
         :cancel-title="y18n('cancel')"
         centered

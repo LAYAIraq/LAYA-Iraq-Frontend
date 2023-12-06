@@ -275,7 +275,7 @@ Dependencies:
               :title="y18n('delete')"
               @click.prevent="removeCaption(i)"
             >
-              <i class="fas fa-times-circle"></i>
+              <i class="fas fa-times"></i>
               <span class="sr-only">
                 {{ y18n('delete') }}
               </span>
