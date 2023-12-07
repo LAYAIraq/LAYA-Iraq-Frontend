@@ -119,7 +119,7 @@
       <div class="row pt-3">
         <button
           type="button"
-          class="btn btn-warning"
+          class="btn btn-primary"
           :disabled="freeze"
           @click="reset"
         >
@@ -128,7 +128,7 @@
 
         <button
           type="button"
-          class="btn btn-link"
+          class="btn btn-primary"
           :class="langIsAr? 'float-right': 'float-left'"
           :disabled="freeze"
           @click="check"

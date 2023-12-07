@@ -112,7 +112,7 @@ Since: v1.0.0
     <div>
       <button
         type="button"
-        class="btn btn-link mt-3"
+        class="btn btn-primary"
         :class="langIsAr? 'float-right': 'float-left'"
         :disabled="freeze"
         @click="diffSolution"

@@ -102,7 +102,7 @@
       <div class="row">
         <button
           type="button"
-          class="btn btn-link mt-3"
+          class="btn btn-primary"
           :class="langIsAr? 'float-right': 'float-left'"
           :disabled="checked"
           aria-labelledby="solutions"
