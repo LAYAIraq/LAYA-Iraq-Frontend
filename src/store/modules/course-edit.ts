@@ -664,6 +664,7 @@ export default {
                 console.error(err)
                 reject(err)
               })
+              .finally(() => commit('setBusy', false))
           })
           .catch(() => {
             // course name not found -> fallback to slug lookup TODO: remove this fallback after switching to new back end
@@ -687,8 +688,8 @@ export default {
                 console.error(err)
                 reject(err)
               })
+              .finally(() => commit('setBusy', false))
           })
-          .finally(() => commit('setBusy', false))
       })
     },
 

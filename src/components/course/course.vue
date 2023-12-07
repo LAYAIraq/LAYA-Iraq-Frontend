@@ -8,7 +8,6 @@
 <template>
   <div
     v-if="!storeBusy"
-    class="course"
   >
     <!-- content -->
     <div
@@ -44,6 +43,12 @@
       :name="name"
       :course-path="coursePath"
     ></CourseEdit>
+  </div>
+  <div
+    v-else
+    class="container mt-5 text-center"
+  >
+    <i class="fas fa-spinner fa-spin"></i> {{ y18n('busy') }}…
   </div>
 </template>
 
@@ -192,7 +197,7 @@ export default {
      * Last Updated: October 21, 2021
      */
     getCourse () {
-      if ( // TODO: view for loading course, reset when courseFetch resolves
+      if (
         !this.course.name || // course is undefined in store
         this.courseSlug !== this.name || // course in store doesn't match the route params
         Object.keys(this.course).length === 0 // course in store has no properties
