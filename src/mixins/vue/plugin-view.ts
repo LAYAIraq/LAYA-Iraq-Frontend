@@ -18,7 +18,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['courseEnd']),
+    ...mapGetters(['courseEnd', 'enrollment']),
     lastContentBlock () {
       return this.courseEnd === this.viewData.id
     }

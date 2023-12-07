@@ -108,7 +108,8 @@
           "isChapter": true,
           "chapterName": "Last Chapter",
           "slug": "last-chapter",
-          "children": [{
+          "children": [
+            {
             "id": "zw31",
             "isChapter": false,
             "follow": "dr31",

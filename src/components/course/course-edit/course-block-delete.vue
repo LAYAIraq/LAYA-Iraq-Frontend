@@ -71,9 +71,10 @@ export default {
      */
     delContent () {
       this.$store.commit('courseContentRemove', this.pathId)
+      this.$store.commit('courseChaptersContentRemove', this.pathId)
+      this.$store.commit('courseRoutesUpdate')
       this.$store.dispatch('courseUpdate')
     }
-
   }
 }
 </script>

@@ -29,6 +29,46 @@ export const chapterFollowSet = (chapter: CourseNavigationItem | any, nextChapte
 }
 
 /**
+ * @description recursive function to either delete a non-chapter or go deeper into nested array
+ * @author cmc
+ * @since v1.3.1
+ * @param chapter CourseNavigationItemChapter to explore
+ * @param contentId id of content to delete
+ */
+const chapterRemove = (chapter: CourseNavigationItemChapter, contentId: string): boolean => {
+  if (chapter.isChapter) { // base case: content in nested array
+    chapter.children.forEach((subChapter: CourseNavigationItemChapter, i) => {
+      if (subChapter.isChapter) {
+        chapterRemove(subChapter, contentId)
+      } else if (subChapter.id === contentId) {
+        chapter.children.splice(i, 1)
+      }
+    })
+  } else if (chapter.id === contentId) { // fallback if chapters array itself has content to remove
+    return true
+  }
+  return null
+}
+
+/**
+ * @description remove a content block in nested array of course chapters
+ * @author cmc
+ * @since v1.3.1
+ * @param chapters nested array of CourseNavigationItems
+ * @param contentId id of content to delete
+ */
+export const chaptersContentRemove = (chapters: CourseNavigationItem[], contentId: string): CourseNavigationItem[] => {
+  if (contentId) { // only explore when param is truthy
+    chapters.forEach((item: any, i) => {
+      if (chapterRemove(item, contentId)) {
+        chapters.splice(i, 1)
+      }
+    })
+  }
+  return chapters
+}
+
+/**
  * @description checks course chapters for coherence
  * @author cmc
  * @since v1.3.0

@@ -163,7 +163,6 @@ export default {
   },
 
   created () {
-    this.getCourse()
     this.enrollmentFetch()
     this.routeNormalize()
     // this.flagsFetch()
@@ -174,6 +173,7 @@ export default {
     // if (!this.contentToDisplay && !this.$router.params.type) {
     //   this.$forceUpdate()
     // }
+    this.getCourse()
   },
 
   beforeDestroy () {
@@ -192,7 +192,7 @@ export default {
      * Last Updated: October 21, 2021
      */
     getCourse () {
-      if (
+      if ( // TODO: view for loading course, reset when courseFetch resolves
         !this.course.name || // course is undefined in store
         this.courseSlug !== this.name || // course in store doesn't match the route params
         Object.keys(this.course).length === 0 // course in store has no properties

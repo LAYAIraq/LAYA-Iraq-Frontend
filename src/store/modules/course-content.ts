@@ -23,6 +23,7 @@ import Vue from 'vue'
 import {
   chaptersCheck,
   chaptersExtractFollow,
+  chaptersContentRemove,
   chapterSlugDuplicateAvoid,
   chapterSlugUpdate
 } from '@/mixins/general/course-chapters'
@@ -152,7 +153,7 @@ export default {
      * @param id
      */
     courseContentRemove (state: { courseContent: any }, id: string) {
-      state.courseContent = stripKey(state.courseContent, id)
+      state.courseContent = stripKey(id, state.courseContent)
     },
 
     /**
@@ -174,6 +175,15 @@ export default {
      */
     courseChapterAdd (state: { courseChapters: CourseNavigationItem[], courseStart: string }, chapter: CourseNavigationItem) {
       state.courseChapters.push(chapter)
+    },
+
+    /**
+     * @description removes content in courseChapters
+     * @param state store
+     * @param id chapter to remove
+     */
+    courseChaptersContentRemove (state: { courseChapters: CourseNavigationItem[] }, id: string) {
+      state.courseChapters = chaptersContentRemove(state.courseChapters, id)
     },
 
     /**
