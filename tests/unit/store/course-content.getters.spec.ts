@@ -11,7 +11,8 @@ describe('store module course-content getters', () => {
     courseChapters: [],
     courseChapterNames: {},
     courseRoutes: [],
-    courseStart: ''
+    courseStart: '',
+    courseEnd: ''
   }
   const getters = courseContent.getters
   const Course = { ...SampleCourse, properties: {}, lastChanged: Date.now() }
@@ -263,7 +264,7 @@ describe('store module course-content getters', () => {
     })
   })
 
-  describe.skip('courseRoutes', () => { // skipped b/c useless test cases
+  describe('courseRoutes', () => { // test cases for test coverage
     it('returns empty array if state is empty', () => {
       state.courseRoutes = []
       expect(getters.courseRoutes(state)).toStrictEqual([])
@@ -272,6 +273,13 @@ describe('store module course-content getters', () => {
     it('returns array consisting of courseRoutes', () => {
       state.courseRoutes = [['', 'test'], ['/test', 'test']]
       expect(getters.courseRoutes(state)).toStrictEqual([['', 'test'], ['/test', 'test']])
+    })
+  })
+
+  describe('courseEnd', () => {
+    it('returns correct end id', () => {
+      state.courseChapters = SampleCourseChaptersNested.chapters
+      expect(getters.courseEnd(state)).toBe('f33db4ck')
     })
   })
 })
