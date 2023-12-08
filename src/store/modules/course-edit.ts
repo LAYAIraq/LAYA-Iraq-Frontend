@@ -111,7 +111,7 @@ export default {
         }
       }
     }) {
-      return state.course.properties.simpleLanguage
+      return state.course.properties.simpleLanguage ?? false
     },
 
     /**

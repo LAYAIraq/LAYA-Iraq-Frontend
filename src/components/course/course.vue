@@ -23,6 +23,7 @@
           ></CourseHeader>
           <component
             :is="contentToDisplay.name"
+            id="course-content"
             :key="contentToDisplay.title.text"
             :view-data="contentToDisplay"
           >
@@ -77,9 +78,11 @@ export default {
     if (
       to.name === 'course' &&
       (from.name !== 'course-content' &&
-        from.name !== 'course-nav')
+        from.name !== 'course-nav') &&
+      !this.storeBusy &&
+      this.contentToDisplay
     ) {
-      document.getElementById('course-header').scrollIntoView()
+      document.getElementById('course-content').scrollIntoView()
     }
     next()
   },
