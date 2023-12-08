@@ -61,6 +61,11 @@ describe('Video edit component', () => {
       }),
       pathId: () => 'test',
       courseContentPathId: () => () => 'test',
+      courseRoutes: () => {
+        return {
+          test: ['test']
+        }
+      },
       courseSimple: () => true,
       profileLanguage: () => 'en'
     }
@@ -75,7 +80,7 @@ describe('Video edit component', () => {
       mocks: {
         $route: {
           params: {
-            coursePath: 'test'
+            coursePath: ['test']
           }
         }
       },

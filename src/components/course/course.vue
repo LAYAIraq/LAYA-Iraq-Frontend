@@ -151,11 +151,6 @@ export default {
     //     this.$nextTick(() => this.$forceUpdate)
     //   }
     // },
-    coursePathFull (val) { // FIXME
-      if (!val) {
-        this.routeNormalize()
-      }
-    },
 
     /**
      * watcher courseFlags: update when courseFlags change
@@ -172,7 +167,6 @@ export default {
 
   created () {
     this.enrollmentFetch()
-    this.routeNormalize()
     // this.flagsFetch()
     // this.fetchCourseStats()
   },

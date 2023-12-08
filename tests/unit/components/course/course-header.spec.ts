@@ -31,6 +31,13 @@ describe('course detail header', () => {
   const getters = {
     courseChapterNames: () => state.courseChapterNames,
     courseSimple: () => state.courseSimple,
+    courseContentPathId: () => () => 'test',
+    courseRoutes: () => {
+      return {
+        test: ['test'],
+        '': []
+      }
+    },
     profileLanguage: () => 'en'
   }
   const mutations = {

@@ -5,6 +5,7 @@
  * Since: v1.1.0
  */
 import { mapGetters } from 'vuex'
+import { slugify } from '@/mixins/general/slugs'
 
 export default {
   props: {
@@ -22,7 +23,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['courseContent', 'courseContentPathId', 'courseRoutes']),
+    ...mapGetters(['course', 'courseContent', 'courseContentPathId', 'courseRoutes', 'courseStart']),
     /**
      * contentToDisplay: return current content block
      *
@@ -61,15 +62,29 @@ export default {
       return this.courseContentPathId(this.pathChapters)
     }
   },
+  watch: {
+    pathChaptersFull (val: boolean) {
+      if (!val && this.pathChapters.length > 0) { // avoid re-evaluation when pathChapters is empty list
+        this.routeNormalize()
+      }
+    }
+  },
   methods: {
     /**
-     * @description replaces route with the full path (including sub-chapters) if it's just a fraction
+     * @description replaces route with the full path (including sub-chapters) unless it's the course start
      * @author cmc
      * @since v1.3.1
      */
     routeNormalize () {
-      if (!(this.pathChapters.length === this.courseRoutes[this.pathId].length) && this.pathId !== this.courseStart) {
-        this.$router.replace({ params: { name: this.name, coursePath: this.courseRoutes(this.pathId) } })
+      if (!this.pathChaptersFull) {
+        this.$router.replace({
+          params: {
+            name: slugify(this.course.name),
+            coursePath: this.pathId === this.courseStart
+              ? []
+              : this.courseRoutes[this.pathId]
+          }
+        })
       }
     }
   }

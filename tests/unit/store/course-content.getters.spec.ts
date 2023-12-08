@@ -245,6 +245,10 @@ describe('store module course-content getters', () => {
       expect(getters.courseContentPathId(state)(null)).toBe('v13r')
     })
 
+    it('returns first content id if path is empty array', () => {
+      expect(getters.courseContentPathId(state)([])).toBe('v13r')
+    })
+
     it('returns null if path is not found (flat)', () => {
       expect(getters.courseContentPathId(state)(['hilllllarious'])).toBeNull()
     })

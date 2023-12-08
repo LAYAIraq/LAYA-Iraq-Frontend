@@ -52,6 +52,12 @@ describe('Category Matching edit component', () => {
         courseSimple: true
       }
       getters = {
+        courseContentPathId: () => () => 'test',
+        courseRoutes: () => {
+          return {
+            test: ['test']
+          }
+        },
         courseSimple: () => state.courseSimple,
         profileLanguage: () => 'en'
       }
@@ -121,6 +127,11 @@ describe('Category Matching edit component', () => {
         courseLanguage: () => 'en',
         profileLanguage: () => 'en',
         courseContentPathId: () => () => 'test',
+        courseRoutes: () => {
+          return {
+            test: ['test']
+          }
+        },
         pathId: () => 'test'
       }
       const store = new Vuex.Store({
