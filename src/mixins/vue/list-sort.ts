@@ -51,12 +51,12 @@ export default {
      *
      * Last Updated: April 28, 2021
      *
-     * @param {array} _list some array
-     * @returns {array} array: Original list if no
+     * @param _list some array
+     * @returns Original list if no
      *  sort prop is set, sorted list if it is,
      *  null if input is undefined
      */
-    sortList (_list) {
+    sortList (_list: any[]) {
       const list = [..._list]
       const { sortBy, sortAsc } = this
       if (sortBy === '') {
@@ -77,9 +77,9 @@ export default {
      *
      * Last Updated: April 28, 2021
      *
-     * @param {string} prop the property to sort by
+     * @param prop the property to sort by
      */
-    sortByProp (prop) {
+    sortByProp (prop: string) {
       if (this.sortBy === prop) {
         this.toggleSortDir()
       } else {
@@ -94,9 +94,9 @@ export default {
      *
      * Last Updated: April 28, 2021
      *
-     * @param {string} prop property which is in column
+     * @param prop property which is in column
      */
-    sortIcon (prop) {
+    sortIcon (prop: string) {
       return {
         'fas fa-sort-up': this.sortBy === prop && !this.sortAsc,
         'fas fa-sort-down': this.sortBy === prop && this.sortAsc,
@@ -104,7 +104,12 @@ export default {
       }
     },
 
-    sortTooltip (prop) {
+    /**
+     * @description return localized tooltip depending on sort direction
+     * @author cmc
+     * @param prop sort direction string
+     */
+    sortTooltip (prop: string) {
       const propClass = this.sortIcon(prop)
       if (propClass['fas fa-sort-up']) {
         return this.tooltips['listSort.sortAsc']

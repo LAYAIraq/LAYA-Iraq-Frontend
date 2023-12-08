@@ -248,9 +248,8 @@ export default {
      * Author: cmc
      *
      * Last Updated: May 1, 2022
-     * @param state contains applicationList
-     * @param commit state mutations
-     * @param dispatch actions
+     * @param store internal properties
+     * @returns Promise
      */
     applicationsFetch ({ state, commit, dispatch }) {
       return new Promise((resolve, reject) => {
