@@ -119,7 +119,7 @@
       >
         <!-- text regular -->
         <label
-          class="col-form-label col-2"
+          class="col-form-label col-1"
           :for="'rel-text-' + i"
         >
           {{ y18n('text') }}
@@ -162,7 +162,7 @@
       </div>
 
       <div class="form-group row">
-        <div class="col-10 offset-2">
+        <div class="col-10 ">
           <button
             type="button"
             class="btn btn-primary btn-sm"
@@ -180,15 +180,16 @@
         :key="'pair-' + i"
         class="form-group row"
       >
-        <div
-          v-if="langIsAr"
-          class="col-2"
-        ></div>
-
+        <label
+          class="col-form-label col-1"
+          :for="'rel-text-' + i"
+        >
+          {{ y18n('image') }}
+        </label>
         <!-- image -->
         <div
           class="col"
-          :class="langIsAr? '' : 'offset-2'"
+          :class="langIsAr? '' : 'offset-1'"
         >
           <input
             :id="'pair-text-'+i"
@@ -269,7 +270,7 @@
         </div>
       </div>
       <div class="form-group row">
-        <div class="col-10 offset-2">
+        <div class="col-10">
           <button
             type="button"
             class="btn btn-primary btn-sm"
