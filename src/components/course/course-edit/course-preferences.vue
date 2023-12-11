@@ -150,6 +150,11 @@ export default {
     // console.log(JSON.stringify(this.course))
   },
 
+  beforeDestroy () {
+    this.simpleLanguage = false
+    this.enrollment = false
+  },
+
   methods: {
     /**
      * function changeSettings: call store to persist preferences
