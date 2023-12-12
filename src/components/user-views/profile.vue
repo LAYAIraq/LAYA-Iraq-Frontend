@@ -259,7 +259,14 @@ Since: v1.0.0
                           </div>
                         </div>
                         <b-button
+                          variant="primary"
+                          @click="usernamePop = false"
+                        >
+                          {{ y18n('cancel') }}
+                        </b-button>
+                        <b-button
                           variant="success"
+                          class="mx-3"
                           :disabled="usernameNew === username || usernameNew === ''"
                           @click="usernameChange"
                         >
@@ -359,7 +366,14 @@ Since: v1.0.0
                           </div>
                         </div>
                         <b-button
+                          variant="primary"
+                          @click="emailPop = false"
+                        >
+                          {{ y18n('cancel') }}
+                        </b-button>
+                        <b-button
                           variant="success"
+                          class="mx-3"
                           :disabled="emailRepeat !== emailNew || emailOld !== email"
                           @click="emailChange"
                         >
@@ -396,7 +410,14 @@ Since: v1.0.0
                           @compliantLength="newPwdOk"
                         ></PasswordInput>
                         <b-button
+                          variant="primary"
+                          @click="passwordPop = false"
+                        >
+                          {{ y18n('cancel') }}
+                        </b-button>
+                        <b-button
                           variant="success"
+                          class="mx-3"
                           @click="passwordChange"
                         >
                           {{ y18n('save') }}
