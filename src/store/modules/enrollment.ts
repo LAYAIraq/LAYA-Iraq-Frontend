@@ -267,6 +267,24 @@ export default {
             .catch(err => reject(err))
         })
         : Promise.reject(new Error('No enrollment found!'))
+    },
+
+    /**
+     */
+    getCourseEnrollments (
+      { commit, rootState },
+      courseId: string
+    ) {
+      return new Promise((resolve, reject) => {
+        http.get(`enrollments/getAllByCourseId?courseId=${courseId}`)
+          .then(({ data }) => {
+            console.log('Enrollment exists!')
+            resolve(data)
+          })
+          .catch(err => reject(err))
+          .finally(() => commit('setBusy', false))
+      }
+      )
     }
   }
 }

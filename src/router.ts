@@ -13,6 +13,7 @@ const AdminPanel = () => import('@/components/user-views/admin-panel.vue')
 const Course = () => import('./components/course/course.vue')
 const CourseContent = () => import('./components/course/course-edit/course-content.vue')
 const CourseNav = () => import('./components/course/course-nav/course-nav.vue')
+const CourseGrade = () => import('./components/course/course-grade/course-grade.vue')
 const CourseNavFollowEdit = () => import('./components/course/course-nav/course-nav-follow-edit.vue')
 const CourseList = () => import('./components/course/course-list/course-list.vue')
 const EditorPanel = () => import('@/components/user-views/editor-panel.vue')
@@ -103,6 +104,11 @@ export default new Router({
           path: 'edit-nav',
           name: 'course-nav',
           component: CourseNav
+        },
+        {
+          path: 'grade',
+          name: 'course-grade',
+          component: CourseGrade
         },
         {
           path: 'edit-follow?id=:contentId',

@@ -49,6 +49,8 @@
 
     <course-delete :name="name"></course-delete>
 
+    <course-grade :name="name"></course-grade>
+
     <!--<course-stats></course-stats>-->
 
     <course-preferences @settingsChanged="$emit('saveChanges')"></course-preferences>
@@ -71,6 +73,7 @@ import {
   CourseKeywordsChange,
   CourseAbstractChange,
   CourseDelete,
+  CourseGrade,
   CourseTypeEdit,
   CourseRename
 } from '@/components/course/course-edit'
@@ -92,6 +95,7 @@ export default {
     CourseKeywordsChange,
     CourseAbstractChange,
     CourseDelete,
+    CourseGrade,
     CourseTypeEdit,
     CourseRename
   },

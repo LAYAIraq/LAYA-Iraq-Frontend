@@ -76,7 +76,8 @@ export default {
       // console.log(this.$store.getters.course.courseId)
       // console.log(this.$store.getters) // funktionen zum callen
       // console.log(await this.$store.dispatch('enrollmentFetch', this.$store.getters.course.courseId)) //check for enrollement
-      // console.log(this.$store.state.enrollment) //getEnrolement
+      console.log('----++++++++++++++++')
+      console.log(this.$store.state.enrollment) //getEnrolement
       this.$store.state.enrollment['free-text'] = this.contents
       this.$store.dispatch('enrollmentUpdate')
       // console.log(this.enrollmentFetch())
