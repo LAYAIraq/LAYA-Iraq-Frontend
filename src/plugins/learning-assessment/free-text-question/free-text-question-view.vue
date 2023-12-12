@@ -78,7 +78,8 @@ export default {
       // console.log(await this.$store.dispatch('enrollmentFetch', this.$store.getters.course.courseId)) //check for enrollement
       console.log('----++++++++++++++++')
       console.log(this.$store.state.enrollment) //getEnrolement
-      this.$store.state.enrollment['free-text'] = this.contents
+      this.$store.commit('freetextAdd', this.contents)
+      // this.$forceUpdate()
       this.$store.dispatch('enrollmentUpdate')
       // console.log(this.enrollmentFetch())
       console.log('---------------------')

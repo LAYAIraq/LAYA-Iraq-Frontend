@@ -111,6 +111,17 @@ export default {
         state.enrollment.feedback = {}
       }
       state.enrollment.feedback[id] = stripKey('id', feedbackData)
+    },
+
+    freetextAdd (
+      state: {
+        enrollment: {
+          freetext: object
+        }
+      },
+      freetextData: object
+    ) {
+      state.enrollment.freetext = freetextData
     }
   },
 
