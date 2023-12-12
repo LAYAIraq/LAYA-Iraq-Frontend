@@ -10,6 +10,7 @@ export { default as ChoiceQuestion } from './learning-assessment/choice-question
 // export { default as LayaQuizSort } from './laya-la-sort'
 export { default as CategoryMatching } from './learning-assessment/category-matching'
 export { default as ImageMatching } from './learning-assessment/image-matching'
+export { default as FreeTextQuestion } from './learning-assessment/free-text-question'
 
 // Course Content Blocks
 // export { default as LayaAbleplayer } from './laya-lb-ableplayer'
