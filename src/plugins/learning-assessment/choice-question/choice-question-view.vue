@@ -35,16 +35,11 @@ Since: v1.0.0
     </div>
     <div
       :id="task.id"
-      class="flaggable row"
+      class="row"
     >
       <div class="col">
         {{ courseSimple? task.simple: task.text }}
       </div>
-      <flag-icon
-        v-if="!editPreview"
-        :ref-data="task"
-        @flagged="task.flagged = true"
-      ></flag-icon>
     </div>
 
     <!-- render options -->
@@ -53,7 +48,7 @@ Since: v1.0.0
         v-for="(option,i) in options"
         :id="option.id"
         :key="'mchoice-option-'+i"
-        class="flaggable form-check m-2 mb-3"
+        class="form-check m-2 mb-3"
       >
         <div>
           <input
@@ -93,12 +88,6 @@ Since: v1.0.0
         <i class="ml-2" :class="{'far fa-check-circle text-success': true}"></i>
         <i class="ml-2" :class="{'far fa-times-circle text-danger': true}"></i>
         -->
-        <flag-icon
-          v-if="!editPreview"
-          :ref-data="option"
-          :interactive="true"
-          @flagged="option.flagged = true"
-        ></flag-icon>
       </div>
     </div>
 
