@@ -74,7 +74,7 @@
             size="sm"
             @click="fileDeleteConfirm(data.item)"
           >
-            <i class="fas fa-trash"></i>
+            <i class="fas fa-times"></i>
           </b-button>
         </template>
       </b-table>

@@ -13,19 +13,21 @@ Dependencies:
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <form>
-      <div class="form-group row">
-        <h4 class="d-inline-block mr-auto">
-          {{ y18n('videoPlayer.name') }}
-        </h4>
-        <i
-          id="questionmark"
-          v-b-tooltip.auto
-          class="fas fa-question-circle"
-          :title="y18n('showTip')"
-          aria-labelledby="tooltipText"
-          aria-live="polite"
-          @click="toggleTip"
-        ></i>
+      <div class="row">
+        <div class="col">
+          <h4 class="d-inline-block mr-auto">
+            {{ y18n('videoPlayer.name') }}
+          </h4>
+          <i
+            id="questionmark"
+            v-b-tooltip.auto
+            class="fas fa-question-circle"
+            :title="y18n('showTip')"
+            aria-labelledby="tooltipText"
+            aria-live="polite"
+            @click="toggleTip"
+          ></i>
+        </div>
       </div>
 
       <b-jumbotron

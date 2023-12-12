@@ -10,20 +10,21 @@ Since: v1.0.0
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div class="row">
-      <h2 class="d-inline-block mr-auto">
-        {{ y18n('buttonNavigation.name') }}
-      </h2>
-
-      <i
-        id="questionmark"
-        v-b-tooltip.left
-        class="fas fa-question-circle"
-        :class="langIsAr? 'mr-auto' : 'ml-auto'"
-        :title="y18n('showTip')"
-        aria-labelledby="tooltipText"
-        aria-live="polite"
-        @click="toggleTip"
-      ></i>
+      <div class="col">
+        <h2 class="d-inline-block mr-auto">
+          {{ y18n('buttonNavigation.name') }}
+        </h2>
+        <i
+          id="questionmark"
+          v-b-tooltip.left
+          class="fas fa-question-circle"
+          :class="langIsAr? 'mr-auto' : 'ml-auto'"
+          :title="y18n('showTip')"
+          aria-labelledby="tooltipText"
+          aria-live="polite"
+          @click="toggleTip"
+        ></i>
+      </div>
     </div>
     <hr>
 
@@ -168,15 +169,17 @@ Since: v1.0.0
       </div>
 
       <div class="row">
-        <button
-          type="button"
-          class="btn btn-primary btn-sm"
-          :class="langIsAr? 'float-right': 'float-left'"
-          @click="_itemAdd(answers, newItem())"
-        >
-          <i class="fas fa-plus"></i>
-          {{ y18n('buttonNavigation.addAnswer') }}
-        </button>
+        <div class="col">
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            :class="langIsAr? 'float-right': 'float-left'"
+            @click="_itemAdd(answers, newItem())"
+          >
+            <i class="fas fa-plus"></i>
+            {{ y18n('buttonNavigation.addAnswer') }}
+          </button>
+        </div>
       </div>
     </form>
   </div>
