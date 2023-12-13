@@ -215,7 +215,9 @@ Dependencies:
               @click.prevent="removeCaption(row.index)"
             >
               <i class="fas fa-times"></i>
-              <span class="sr-only">{{ y18n('delete') }}</span>
+              <span class="sr-only">
+                {{ y18n('delete') }}
+              </span>
             </b-button>
           </template>
         </b-table>
