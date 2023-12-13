@@ -182,23 +182,44 @@ Since: v1.0.0
                       <b-button
                         id="username-button"
                         block
-                        variant="warning"
-                        @click="$bvModal.show('change-username-form')"
+                        variant="secondary"
+                        @click="usernamePop = true; passwordPop = false; emailPop = false"
                       >
                         {{ y18n('profile.usernameChange') }}
                       </b-button>
-                      <b-modal
-                        id="change-username-form"
-                        :title="y18n('profile.usernameChange')"
-                        header-bg-variant="warning"
-                        ok-variant="success"
-                        cancel-variant="primary"
-                        :ok-title="y18n('save')"
-                        :cancel-title="y18n('cancel')"
-                        centered
-                        static
-                        :ok-disabled="usernameNew === username || usernameNew === ''"
-                        @ok="usernameChange"
+                    </div>
+
+                    <!-- change email -->
+                    <div class="col">
+                      <b-button
+                        id="email-button"
+                        block
+                        variant="secondary"
+                        @click="emailPop = true; passwordPop = false; usernamePop = false"
+                      >
+                        {{ y18n('profile.emailChange') }}
+                      </b-button>
+                    </div>
+
+                    <!-- change password -->
+                    <div class="col">
+                      <b-button
+                        id="password-button"
+                        block
+                        variant="secondary"
+                        @click="passwordPop = true; emailPop = false; usernamePop = false"
+                      >
+                        {{ y18n('profile.passwordChange') }}
+                      </b-button>
+                    </div>
+                  </div>
+
+                  <form>
+                    <div class="col mt-3">
+                      <!-- username pop up -->
+                      <div
+                        v-if="usernamePop"
+                        class="col"
                       >
                         <!-- new username -->
                         <div class="form-group row">
@@ -237,31 +258,25 @@ Since: v1.0.0
                             </p>
                           </div>
                         </div>
-                      </b-modal>
-                    </div>
-
-                    <!-- change email -->
-                    <div class="col">
-                      <b-button
-                        id="email-button"
-                        block
-                        variant="warning"
-                        @click="$bvModal.show('change-email-form')"
-                      >
-                        {{ y18n('profile.emailChange') }}
-                      </b-button>
-                      <b-modal
-                        id="change-email-form"
-                        :title="y18n('profile.emailChange')"
-                        header-bg-variant="warning"
-                        ok-variant="success"
-                        cancel-variant="primary"
-                        :ok-title="y18n('save')"
-                        :cancel-title="y18n('cancel')"
-                        centered
-                        static
-                        :ok-disabled="emailRepeat !== emailNew || emailOld !== email"
-                        @ok="emailChange"
+                        <b-button
+                          variant="primary"
+                          @click="usernamePop = false"
+                        >
+                          {{ y18n('cancel') }}
+                        </b-button>
+                        <b-button
+                          variant="success"
+                          class="mx-3"
+                          :disabled="usernameNew === username || usernameNew === ''"
+                          @click="usernameChange"
+                        >
+                          {{ y18n('save') }}
+                        </b-button>
+                      </div>
+                      <!-- email pop up -->
+                      <div
+                        v-if="emailPop"
+                        class="col"
                       >
                         <!-- Old email -->
                         <div class="form-group row">
@@ -350,30 +365,25 @@ Since: v1.0.0
                             </p>
                           </div>
                         </div>
-                      </b-modal>
-                    </div>
-
-                    <!-- change password -->
-                    <div class="col">
-                      <b-button
-                        id="password-button"
-                        block
-                        variant="warning"
-                        @click="$bvModal.show('change-password-form')"
-                      >
-                        {{ y18n('profile.passwordChange') }}
-                      </b-button>
-                      <b-modal
-                        id="change-password-form"
-                        :title="y18n('profile.password')"
-                        header-bg-variant="warning"
-                        ok-variant="success"
-                        cancel-variant="primary"
-                        :ok-title="y18n('save')"
-                        :cancel-title="y18n('cancel')"
-                        centered
-                        static
-                        @ok="passwordChange"
+                        <b-button
+                          variant="primary"
+                          @click="emailPop = false"
+                        >
+                          {{ y18n('cancel') }}
+                        </b-button>
+                        <b-button
+                          variant="success"
+                          class="mx-3"
+                          :disabled="emailRepeat !== emailNew || emailOld !== email"
+                          @click="emailChange"
+                        >
+                          {{ y18n('save') }}
+                        </b-button>
+                      </div>
+                      <!-- password pop up -->
+                      <div
+                        v-if="passwordPop"
+                        class="col"
                       >
                         <!-- Old Password -->
                         <div class="form-group row">
@@ -399,9 +409,23 @@ Since: v1.0.0
                           :label-width="3"
                           @compliantLength="newPwdOk"
                         ></PasswordInput>
-                      </b-modal>
+                        <b-button
+                          variant="primary"
+                          @click="passwordPop = false"
+                        >
+                          {{ y18n('cancel') }}
+                        </b-button>
+                        <b-button
+                          variant="success"
+                          class="mx-3"
+                          @click="passwordChange"
+                        >
+                          {{ y18n('save') }}
+                        </b-button>
+                      </div>
                     </div>
-                  </div>
+                  </form>
+
                   <hr>
                 </form>
               </div>
@@ -534,7 +558,10 @@ export default {
       passwordOld: '',
       prefs: {},
       usernameNew: '',
-      usernameTaken: null
+      usernameTaken: null,
+      passwordPop: false,
+      emailPop: false,
+      usernamePop: false
     }
   },
 
@@ -710,10 +737,12 @@ export default {
           this.$store.dispatch('checkEmailTaken', this.emailNew)
             .then(() => {
               this.emailNewTaken = true
+              this.$bvToast.show('submit-failed')
             })
             .catch(() => {
               this.$store.commit('emailSet', this.emailNew)
               this.submit()
+              this.emailPop = false
             })
         } else {
           this.emailNewConform = true
@@ -730,12 +759,11 @@ export default {
         this.busy = true
         this.$store.dispatch('passwordUpdate', this.passwordOld)
           .then(() => {
-            this.$bvToast.show('profile-save-toast')
-            this.$bvModal.hide('change-password-form')
             this.passwordOld = ''
             this.$store.commit('passwordSet', '')
             this.$store.commit('passwordRepeatSet', '')
             this.submit()
+            this.passwordPop = false
           })
           .catch(err => {
             console.error(err)
@@ -777,8 +805,6 @@ export default {
       this.$store.dispatch('profileUpdate')
         .then(() => {
           this.$bvToast.show('profile-save-toast')
-          this.$bvModal.hide('change-username-form')
-          this.$bvModal.hide('change-email-form')
         })
         .catch(err => {
           console.error(err)
@@ -797,8 +823,10 @@ export default {
           if (!resp) {
             this.$store.commit('usernameSet', this.usernameNew)
             this.submit()
+            this.usernamePop = false
           } else {
             this.usernameTaken = true
+            this.$bvToast.show('submit-failed')
           }
         })
         .catch(err => { console.log(err) })
