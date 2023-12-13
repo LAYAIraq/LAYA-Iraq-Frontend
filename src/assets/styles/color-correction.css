@@ -15,3 +15,8 @@
     color:blue !important;
     background: lightyellow !important;
 }
+
+:focus {
+    outline: 2px solid #010150 !important;
+    outline-offset: 2px;
+}
