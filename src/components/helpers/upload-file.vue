@@ -13,7 +13,7 @@
     >
       <button
         type="button"
-        class="btn btn-primary btn-large"
+        class="btn btn-success btn-large"
         @click="addUpload = true"
       >
         <i class="fas fa-upload"></i>
@@ -87,7 +87,7 @@
                 {{ y18n('uploadFile.dropOr') }}
               </h4>
               <label
-                class="btn btn-lg btn-primary"
+                class="btn btn-lg btn-warning"
                 for="file"
               >
                 <i class="fas fa-plus"></i>
@@ -109,7 +109,7 @@
             <file-upload
               ref="upload"
               v-model="files"
-              class="btn btn-primary"
+              class="btn btn-warning"
               :custom-action="fileUpload"
               :post-action="uploadUrl"
               :headers="headers"
@@ -146,7 +146,7 @@
             </button>
             <button
               type="button"
-              class="btn btn-warning"
+              class="btn btn-danger"
               @click="addUpload = false"
             >
               <i class="fas fa-minus"></i>

@@ -33,7 +33,7 @@
       />
       <button
         v-b-tooltip.top
-        class="btn btn-sm btn-warning"
+        class="btn btn-sm"
         :title="y18n('cancel')"
       >
         <i class="fas fa-times"></i>

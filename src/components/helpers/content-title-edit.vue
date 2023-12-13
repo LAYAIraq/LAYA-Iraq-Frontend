@@ -67,6 +67,12 @@
             class="form-control"
             :placeholder="y18n('simpleAlt')"
           >
+          <p
+            v-if="missing"
+            id="missing-simple-language"
+          >
+            {{ y18n('simpleAlt.missing') }}
+          </p>
         </div>
       </div>
     </div>
@@ -102,6 +108,9 @@ export default {
     ...mapGetters(['courseSimple']),
     titleEmpty () {
       return !this.titleLocal.text
+    },
+    missing () {
+      return !this.titleLocal.simple
     }
   },
   watch: {

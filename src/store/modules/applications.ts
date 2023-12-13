@@ -325,7 +325,7 @@ export default {
     },
 
     /**
-     * function editorVotesFetch: retrieve exisiting votes for specified application
+     * function editorVotesFetch: retrieve existing votes for specified application
      *
      * Author: cmc
      *

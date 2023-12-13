@@ -46,47 +46,12 @@ Since: v1.0.0
         @set-title="title = $event"
       >
       </content-title-edit>
-      <div class="form-group">
-        <!-- task -->
-        <div class="row">
-          <label
-            for="dialog-question"
-            class="col-2 col-form-label"
-          >
-            {{ y18n('task') }}
-          </label>
-          <div class="col-10">
-            <textarea
-              id="dialog-question"
-              v-model="task.text"
-              class="w-100"
-              :placeholder="y18n('buttonNavigation.optional')"
-            ></textarea>
-          </div>
-        </div>
-        <!-- task simple -->
-        <div
-          v-if="courseSimple"
-          class="row"
-        >
-          <label
-            for="dialog-question-simple"
-            class="col-2 col-form-label"
-          >
-            <span class="sr-only">
-              {{ y18n('task') }}
-            </span>
-          </label>
-          <div class="col-10">
-            <textarea
-              id="dialog-question-simple"
-              v-model="task.simple"
-              class="w-100"
-              :placeholder="y18n('simpleAlt')"
-            ></textarea>
-          </div>
-        </div>
-      </div>
+      <!-- task -->
+      <content-task-edit
+        :task="task"
+        @set-task="task = $event"
+      >
+      </content-task-edit>
       <!-- TODO: TLI-303
       <div class="form-group row">
         <label
@@ -128,6 +93,7 @@ Since: v1.0.0
               v-model="answer.text"
               class="form-control"
               style="height: 6rem; font-size: 80%"
+              :placeholder="y18n('plugin.sampleOption')"
             ></textarea>
           </div>
           <!-- delete -->
@@ -164,19 +130,27 @@ Since: v1.0.0
               :placeholder="y18n('simpleAlt')"
             ></textarea>
           </div>
+          <p
+            v-if="isMissing(answer)"
+            id="'missing-simple-language-answer-' + i"
+          >
+            {{ y18n('simpleAlt.missing') }}
+          </p>
         </div>
       </div>
 
       <div class="row">
-        <button
-          type="button"
-          class="btn btn-primary btn-sm"
-          :class="langIsAr? 'float-right': 'float-left'"
-          @click="_itemAdd(answers, newItem())"
-        >
-          <i class="fas fa-plus"></i>
-          {{ y18n('buttonNavigation.addAnswer') }}
-        </button>
+        <div class="col">
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            :class="langIsAr? 'float-right': 'float-left'"
+            @click="_itemAdd(answers, newItem())"
+          >
+            <i class="fas fa-plus"></i>
+            {{ y18n('buttonNavigation.addAnswer') }}
+          </button>
+        </div>
       </div>
     </form>
   </div>
@@ -188,10 +162,11 @@ import { mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 import { deepCopy } from '@/mixins/general/helpers'
 import ContentTitleEdit from '@/components/helpers/content-title-edit'
+import ContentTaskEdit from '@/components/helpers/content-task-edit'
 
 export default {
   name: 'ButtonNavigationEdit',
-  components: { ContentTitleEdit },
+  components: { ContentTitleEdit, ContentTaskEdit },
 
   mixins: [
     array,
@@ -247,11 +222,19 @@ export default {
      */
     newItem () {
       return {
-        simple: this.y18n('simpleAlt'),
-        text: this.y18n('plugin.sampleOption'),
+        simple: '',
+        text: '',
         flagged: false,
         id: uuidv4()
       }
+    },
+    /**
+     * Function isMissing: Checks if simple language is filled in
+     * Author: nv
+     * Since: v1.3.0
+     */
+    isMissing (option) {
+      return !option.simple
     }
   }
 }

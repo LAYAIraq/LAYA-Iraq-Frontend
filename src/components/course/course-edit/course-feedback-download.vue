@@ -13,6 +13,7 @@ Dependencies:
     <div class="col">
       <b-button
         size="sm"
+        class="w-50"
         variant="success"
         :class="langIsAr? 'float-left' : 'float-right'"
         @click="$bvModal.show('download-feedback')"
@@ -26,8 +27,9 @@ Dependencies:
     <b-modal
       id="download-feedback"
       :title="y18n('feedback.modal.title')"
-      header-bg-variant="warning"
-      ok-variant="warning"
+      header-bg-variant="success"
+      ok-variant="success"
+      cancel-variant="primary"
       :ok-title="y18n('feedback.modal.ok')"
       :cancel-title="y18n('cancel')"
       static

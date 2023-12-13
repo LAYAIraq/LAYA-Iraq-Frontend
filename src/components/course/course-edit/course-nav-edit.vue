@@ -16,7 +16,7 @@ Dependencies:
     <div class="col">
       <b-button
         block
-        variant="primary"
+        variant="warning"
         append
         :to="{path: 'edit-nav'}"
       >

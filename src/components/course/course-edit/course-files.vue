@@ -147,6 +147,7 @@
       centered
       header-bg-variant="danger"
       ok-variant="danger"
+      cancel-variant="primary"
       @ok="fileDelete"
       @cancel="fileToDelete = null"
     >

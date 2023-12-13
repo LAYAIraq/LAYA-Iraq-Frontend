@@ -43,12 +43,14 @@
           <div class="col">
             <h2>
               {{ courseSimple? title.simple : title.text }}
+              <!--
               <audio-button
                 v-if="taskAudioExists"
                 :src="courseSimple?
                   taskAudio.simple :
                   taskAudio.regular"
               ></audio-button>
+              -->
             </h2>
           </div>
           <flag-icon
@@ -184,7 +186,7 @@ import { locale, pluginView, watchContent } from '@/mixins'
 import { mapGetters } from 'vuex'
 import '@/assets/styles/flaggables.css'
 import { StarRating } from 'vue-rate-it'
-import AudioButton from '@/components/helpers/audio-button.vue'
+// import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
 // import layaWsyisyg from '../misc/laya-html'
@@ -193,7 +195,7 @@ export default {
 
   components: {
     FlagIcon,
-    AudioButton,
+    //  AudioButton,
     StarRating
   },
 

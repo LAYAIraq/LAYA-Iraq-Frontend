@@ -299,6 +299,7 @@
 	"header.overview": "Go to Author Tools",
 	"header.profile": "Profile",
 	"header.register": "Register",
+	"image": "Image",
 	"imageMatching.caption": "This Component allows questions with an image.",
 	"imageMatching.defaultOption": "Choose",
 	"imageMatching.edit.audioPlaceholder": "Audio URL",
@@ -589,6 +590,7 @@
 	"showTip": "Show help text.",
 	"showTitle": "Show Title",
 	"simpleAlt": "Alternative in simple language",
+	"simpleAlt.missing": "Please add a simple language alternative!",
 	"startUpload": "Start upload",
 	"stats.modal.feedback": "Average feedback",
 	"stats.modal.flags": "set flags total",
@@ -669,6 +671,6 @@
 	"videoPlayer.wrongPlatform": "Wrong URL! Did you choose the correct platform?",
 	"videoPlayer.wrongURL": "Wrong URL! Please input a valid internet address (incl. 'https')!",
 	"videoPlayer.wrongVimeoId": "Wrong ID! Please input a valid Vimeo video ID (consists of numbers).",
-	"videoPlayer.wrongYoutubeId": "Wrong ID! Please input a valid YouTube video id (consists of 13 characters).",
+	"videoPlayer.wrongYoutubeId": "Wrong ID! Please input a valid YouTube video id (consists of Language13 characters).",
 	"videoPlayer.youtube": "Youtube"
 }
