@@ -140,15 +140,17 @@ Since: v1.0.0
       </div>
 
       <div class="row">
-        <button
-          type="button"
-          class="btn btn-primary btn-sm"
-          :class="langIsAr? 'float-right': 'float-left'"
-          @click="_itemAdd(answers, newItem())"
-        >
-          <i class="fas fa-plus"></i>
-          {{ y18n('buttonNavigation.addAnswer') }}
-        </button>
+        <div class="col">
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            :class="langIsAr? 'float-right': 'float-left'"
+            @click="_itemAdd(answers, newItem())"
+          >
+            <i class="fas fa-plus"></i>
+            {{ y18n('buttonNavigation.addAnswer') }}
+          </button>
+        </div>
       </div>
     </form>
   </div>
