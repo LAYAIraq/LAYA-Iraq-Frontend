@@ -13,6 +13,7 @@ Dependencies:
     <div class="col">
       <b-button
         size="sm"
+        class="w-50"
         variant="warning"
         :class="langIsAr? 'float-left' : 'float-right'"
         @click="$bvModal.show('author-rename-course-confirm')"
@@ -29,8 +30,9 @@ Dependencies:
       id="author-rename-course-confirm"
       :title="y18n('renameCourse')"
       header-bg-variant="warning"
-      ok-variant="warning"
-      :ok-title="y18n('rename.modal.ok')"
+      ok-variant="success"
+      cancel-variant="primary"
+      :ok-title="y18n('save')"
       :cancel-title="y18n('cancel')"
       centered
       static

@@ -270,7 +270,7 @@ Since: v1.0.0
       <button
         v-if="variation === single || variation === multiple"
         type="button"
-        class="btn btn-primary btn-sm"
+        class="btn btn-success btn-sm"
         @click="_itemAdd(options, newItem())"
       >
         <i class="fas fa-plus"></i>{{ y18n('itemAdd') }}

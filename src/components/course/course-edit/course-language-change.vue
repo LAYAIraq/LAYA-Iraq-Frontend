@@ -10,6 +10,7 @@ Since: v1.3.0
     <div class="col">
       <b-button
         size="sm"
+        class="w-50"
         variant="warning"
         :class="langIsAr? 'float-left' : 'float-right'"
         @click="$bvModal.show('author-change-language-confirm')"
@@ -26,7 +27,8 @@ Since: v1.3.0
       id="author-change-language-confirm"
       :title="y18n('changeCourseLanguage')"
       header-bg-variant="warning"
-      ok-variant="warning"
+      ok-variant="success"
+      cancel-variant="primary"
       :ok-title="y18n('save')"
       :cancel-title="y18n('cancel')"
       centered

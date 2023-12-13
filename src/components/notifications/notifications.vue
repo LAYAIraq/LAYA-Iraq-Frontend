@@ -19,7 +19,7 @@
         <div class="col-3">
           <button
             type="button"
-            class="btn btn-info"
+            class="btn btn-success"
             :class="langIsAr? 'float-left' : 'float-right'"
             @click="notificationsFetch"
           >
@@ -46,7 +46,7 @@
         <div class="col-sm-3 text-nowrap">
           <button
             type="button"
-            class="btn btn-info ml-1"
+            class="btn btn-warning ml-1"
             :class="langIsAr? 'float-left' : 'float-right'"
             :disabled="!unreadMessages"
             @click="notificationsMarkRead"
@@ -102,7 +102,7 @@
               <div class="col-sm-2">
                 <b-button
                   v-b-toggle="`collapse-${i}`"
-                  variant="dark"
+                  variant="success"
                   :class="langIsAr? 'float-left' : 'float-right'"
                 >
                   <small>
@@ -121,6 +121,7 @@
                 <button
                   :id="`collapse-${i}-btn`"
                   class="d-none"
+                  variant="warning"
                   @click="markAsRead(note)"
                 ></button>
                 <b-card class="mt-2 w-100">

@@ -137,7 +137,7 @@
         <div class="col-10 ">
           <button
             type="button"
-            class="btn btn-primary btn-sm"
+            class="btn btn-success btn-sm"
             @click="_itemAdd(relations, { text: '', simple: '' })"
           >
             <i class="fas fa-plus"></i>
@@ -251,7 +251,7 @@
         <div class="col-10">
           <button
             type="button"
-            class="btn btn-primary btn-sm"
+            class="btn btn-success btn-sm"
             @click="_itemAdd(pairs, newPair())"
           >
             <i class="fas fa-plus"></i>

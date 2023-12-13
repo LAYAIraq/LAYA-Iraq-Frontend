@@ -97,13 +97,14 @@
       </div>
     </div>
     <div class="row mt-3">
-      <b-button
-        variant="success"
-        @click="changeSettings"
-      >
-        <i class="fas fa-save"></i>
-        {{ y18n('coursePreferences.save') }}
-      </b-button>
+      <div class="col">
+        <b-button
+          variant="success"
+          @click="changeSettings"
+        >
+          {{ y18n('coursePreferences.save') }}
+        </b-button>
+      </div>
     </div>
     <b-toast
       id="save-success"
