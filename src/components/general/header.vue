@@ -74,12 +74,14 @@ Dependencies:
             v-if="isAdmin"
             to="/admin"
           >
+            <i class="fas fa-solid fa-screwdriver"></i>
             {{ y18n('adminPanel.title') }}
           </b-nav-item>
           <b-nav-item
             v-if="isEditor"
             to="/editor"
           >
+            <i class="fas fa-user-tie"></i>
             Editor Panel
           </b-nav-item>
           <header-notifications></header-notifications>

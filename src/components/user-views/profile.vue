@@ -427,7 +427,7 @@ Since: v1.0.0
               style="border-width: 2px"
               @click.prevent="submit"
             >
-              <i class="fas fa-check"></i>
+              <i class="fas fa-save"></i>
               {{ y18n('save') }}
             </b-button>
           </div>

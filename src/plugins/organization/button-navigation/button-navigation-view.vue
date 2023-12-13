@@ -39,12 +39,13 @@ Since v1.0.0
         <div class="answers d-flex flex-wrap justify-content-around">
           <div
             v-for="(answer,i) in answers"
+            ref="answerButton"
             :key="answer.id"
-            class="flaggable answer-item"
+            class="flaggable answer-item centering"
           >
             <button
               type="button"
-              class="btn btn-primary btn-lg"
+              class="btn btn-info btn-lg answer-item"
               @click="onFinish[i]()"
             >
               {{ courseSimple? answer.simple : answer.text }}
@@ -80,7 +81,8 @@ export default {
 
   data () {
     return {
-      ...this.viewData
+      ...this.viewData,
+      newButtonHeight: ''
     }
   },
 
@@ -131,7 +133,8 @@ export default {
   position: relative;
   font-size: 2rem;
   margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1rem;  word-wrap: break-word;
+
   padding: 5px;
   text-align: center;
   background-color: #ffffff;
@@ -142,8 +145,19 @@ export default {
 .answer-item {
   display: block;
   position: relative;
+  width: 400px;
+  height: auto;
+  word-break: break-word;
 }
 
+@media (max-width: 768px) {
+  .answer-item {
+    display: block;
+    position: relative;
+    width: 200px;
+    word-break: break-word;
+  }
+}
 .answers > button {
   border: 1px solid #222;
   margin-right: 1rem;
@@ -153,5 +167,10 @@ export default {
 }
 .answers > button:last-child {
   margin-right: 0;
+}
+.centering {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

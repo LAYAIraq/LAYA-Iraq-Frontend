@@ -103,50 +103,13 @@ Since: v1.0.0
       </content-title-edit>
 
       <!-- task -->
-      <div class="form-group">
-        <div class="row">
-          <label
-            for="choices-task"
-            class="col-2 col-form-label"
-          >
-            {{ y18n('task') }}
-          </label>
-          <div class="col-10">
-            <textarea
-              id="choices-task"
-              v-model="task.text"
-              class="w-100"
-              :placeholder="y18n('taskPlaceholder')"
-            >
-            </textarea>
-          </div>
-        </div>
-        <!-- task simple -->
-        <div
-          v-if="courseSimple"
-          class="row"
-        >
-          <label
-            for="choices-task-simple"
-            class="col-2 col-form-label"
-          >
-            <span class="sr-only">
-              {{ y18n('simpleAlt') }}
-            </span>
-          </label>
-          <div class="col-10">
-            <textarea
-              id="choices-task-simple"
-              v-model="task.simple"
-              class="w-100"
-              :placeholder="y18n('simpleAlt')"
-            >
-            </textarea>
-          </div>
-        </div>
-      </div>
+      <content-task-edit
+        :task="task"
+        @set-task="task = $event"
+      >
+      </content-task-edit>
 
-      <!-- task audio -->
+      <!-- task audio
       <div class="form-group">
         <div class="row">
           <label
@@ -165,7 +128,8 @@ Since: v1.0.0
             >
           </div>
         </div>
-        <!-- task audio simple -->
+
+         task audio simple
         <div
           v-if="courseSimple"
           class="row"
@@ -188,8 +152,9 @@ Since: v1.0.0
             >
           </div>
         </div>
-      </div>
 
+      </div>
+      -->
       <p><b>{{ y18n('items') }}</b></p>
       <div
         v-for="(option, i) in options"
@@ -211,6 +176,7 @@ Since: v1.0.0
               v-model="option.text"
               class="form-control"
               type="text"
+              :placeholder="y18n('plugin.sampleOption')"
             >
             <input
               v-else
@@ -265,14 +231,15 @@ Since: v1.0.0
           v-if="courseSimple"
           class="row"
         >
+          <!-- caption simple -->
           <label
             :for="'option-text-'+i"
             class="col-form-label col-2"
           >
-            <span class="sr-only">
-              {{ y18n('simpleAlt') }}
-            </span>
+            {{ y18n('simpleAlt') }}
+
           </label>
+
           <div class="col-7">
             <input
               v-if="variation === single || variation === multiple"
@@ -280,6 +247,7 @@ Since: v1.0.0
               v-model="options[i].simple"
               class="form-control"
               type="text"
+              :placeholder="y18n('simpleAlt')"
             >
             <input
               v-else
@@ -289,6 +257,12 @@ Since: v1.0.0
               type="text"
               readonly
             >
+            <p
+              v-if="isMissing(option)"
+              id="'missing-simple-language' + i"
+            >
+              {{ y18n('simpleAlt.missing') }}
+            </p>
           </div>
         </div>
       </div>
@@ -326,10 +300,11 @@ import { array, locale, pluginEdit, routes, tooltipIcon } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 import { deepCopy } from '@/mixins/general/helpers'
 import ContentTitleEdit from '@/components/helpers/content-title-edit'
+import ContentTaskEdit from '@/components/helpers/content-task-edit'
 
 export default {
   name: 'ChoiceQuestionEdit',
-  components: { ContentTitleEdit },
+  components: { ContentTitleEdit, ContentTaskEdit },
   mixins: [
     array,
     locale,
@@ -356,6 +331,7 @@ export default {
 
   computed: {
     ...mapGetters(['courseContent', 'courseSimple'])
+
   },
 
   watch: {
@@ -410,8 +386,8 @@ export default {
      */
     newItem () {
       return {
-        simple: this.y18n('simpleAlt'),
-        text: this.y18n('plugin.sampleOption'),
+        simple: '',
+        text: '',
         flagged: false,
         id: uuidv4()
       }
@@ -444,6 +420,14 @@ export default {
     switchToTF (e) {
       e.preventDefault()
       this.$bvModal.show('confirm-change-tf')
+    },
+    /**
+     * Function isMissing: Checks if simple language is filled in
+     * Author: nv
+     * Since: v1.3.0
+     */
+    isMissing (option) {
+      return !option.simple
     }
   }
 }
