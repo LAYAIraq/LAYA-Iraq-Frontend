@@ -541,7 +541,7 @@ export default {
   color: red;
   font-size: 1.5rem;
   margin: -5px;
-  text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
+  text-shadow: -2px 0 #fff, 0 2px #fff, 2px 0 #fff, 0 -2px #fff;
 }
 i.icons-list {
   font-size: 1.75rem;
