@@ -101,6 +101,7 @@
         variant="success"
         @click="changeSettings"
       >
+        <i class="fas fa-save"></i>
         {{ y18n('coursePreferences.save') }}
       </b-button>
     </div>
