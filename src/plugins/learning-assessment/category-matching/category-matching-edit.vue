@@ -50,41 +50,11 @@
       </content-title-edit>
 
       <!-- task -->
-      <div class="form-group row">
-        <span
-          class="col-2 col-form-label"
-        >
-          {{ y18n('task') }}
-        </span>
-        <div class="col-10">
-          <textarea
-            id="drag-drop-task"
-            v-model="task.text"
-            class="w-100"
-            :placeholder="y18n('taskPlaceholder')"
-          ></textarea>
-        </div>
-      </div>
-
-      <!-- task simple -->
-      <div
-        v-if="courseSimple"
-        class="form-group row"
+      <content-task-edit
+        :task="task"
+        @set-task="task = $event"
       >
-        <span
-          class="col-2 col-form-labelsr-only"
-        >
-          {{ y18n('simpleAlt') }}
-        </span>
-        <div class="col-10">
-          <textarea
-            id="drag-drop-task-simple"
-            v-model="task.simple"
-            class="w-100"
-            :placeholder="y18n('simpleAlt')"
-          ></textarea>
-        </div>
-      </div>
+      </content-task-edit>
 
       <!-- task audio -->
       <div class="form-group row">
@@ -147,6 +117,7 @@
               v-model="cat.text"
               class="form-control"
               type="text"
+              :placeholder="y18n('plugin.sampleOption')"
             >
           </div>
           <!-- delete -->
@@ -181,7 +152,14 @@
               v-model="cat.simple"
               class="form-control"
               type="text"
+              :placeholder="y18n('simpleAlt')"
             >
+            <p
+              v-if="isMissing(cat)"
+              id="'missing-simple-language-cat-' + i"
+            >
+              {{ y18n('simpleAlt.missing') }}
+            </p>
           </div>
         </div>
       </div>
@@ -223,6 +201,7 @@
               v-model="item.label"
               class="form-control"
               type="text"
+              :placeholder="y18n('plugin.sampleOption')"
             >
           </div>
 
@@ -280,7 +259,14 @@
               v-model="item.simple"
               class="form-control"
               type="text"
+              :placeholder="y18n('simpleAlt')"
             >
+            <p
+              v-if="isMissing(item)"
+              id="'missing-simple-language-item-' + i"
+            >
+              {{ y18n('simpleAlt.missing') }}
+            </p>
           </div>
         </div>
       </div>
@@ -306,10 +292,11 @@ import { mapGetters } from 'vuex'
 import { deepCopy } from '@/mixins/general/helpers'
 import { array, locale, routes, pluginEdit, tooltipIcon } from '@/mixins'
 import ContentTitleEdit from '@/components/helpers/content-title-edit'
+import ContentTaskEdit from '@/components/helpers/content-task-edit'
 
 export default {
   name: 'CategoryMatchingEdit',
-  components: { ContentTitleEdit },
+  components: { ContentTitleEdit, ContentTaskEdit },
   mixins: [
     array,
     locale,
@@ -354,8 +341,8 @@ export default {
       // fill item and category props with localized tokens
       if (this.categories.length === 0) {
         const tmpItem = {
-          label: this.y18n('categoryMatching.answer') + ' 1',
-          simple: 'simple language alternative',
+          label: '',
+          simple: '',
           category: -1,
           flagged: false,
           id: uuidv4()
@@ -364,8 +351,8 @@ export default {
 
         for (let i = 1; i < 3; i++) {
           this.categories.push({
-            text: this.y18n('cat') + ' ' + i,
-            simple: 'simple language alternative'
+            text: '',
+            simple: ''
           })
         }
       }
@@ -394,12 +381,20 @@ export default {
      */
     newItem () {
       return {
-        label: this.y18n('plugin.sampleOption'),
-        simple: 'simple language alternative',
+        label: '',
+        simple: '',
         category: -1,
         flagged: false,
         id: uuidv4()
       }
+    },
+    /**
+     * Function isMissing: Checks if simple language is filled in
+     * Author: nv
+     * Since: v1.3.0
+     */
+    isMissing (option) {
+      return !option.simple
     }
   }
 }
