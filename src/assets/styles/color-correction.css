@@ -21,15 +21,12 @@ input {
     border-radius: 4px;
 }
 
-input:focus {
-    border-color: rgba(0, 0, 0, 0.7) !important;
-}
 
 .form-control, .custom-select {
     border: 2px solid rgba(0, 0, 0, 0.5) !important;
     border-radius: 4px;
 }
 
-.form-control:focus, .custom-select:focus {
-    border-color: rgba(0, 0, 0, 0.7) !important;
+hr {
+    border-color: #000000 !important;
 }
