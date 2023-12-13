@@ -15,7 +15,7 @@
         <div class="col">
           <div style="height: 2rem"></div>
 
-          <h1>Privacy Policy of the University of Vechta</h1>
+          <h1>Privacy Policy of the University of Mosul</h1>
 
           <p>The University of Vechta has lead the development of LAYA Iraq and the University of Mosul provides laya.uomosul.edu.iq, which provides the SERVICE.</p>
 
