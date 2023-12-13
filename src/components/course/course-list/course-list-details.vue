@@ -86,6 +86,7 @@
           <template #cell(actions)="data">
             <b-button
               variant="primary"
+              class="show-button"
               @click="data.toggleDetails"
             >
               {{ data.detailsShowing ? 'Hide Details' : 'Show Details' }}
@@ -576,6 +577,10 @@ i.icons-list {
 }
 
 .start-button {
+  width: 200px;
+}
+
+.show-button {
   width: 200px;
 }
 
