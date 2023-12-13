@@ -159,11 +159,10 @@
           </div>
         </div>
 
-        <div class="row">
-          <button-next-content
-            v-if="!lastContentBlock"
+        <div class="row mt-3">
+          <navigation-buttons
             :cid="id"
-          ></button-next-content>
+          ></navigation-buttons>
         </div>
       </div>
     </div>
@@ -177,14 +176,14 @@ import '@/assets/styles/flaggables.css'
 import { StarRating } from 'vue-rate-it'
 import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
-import ButtonNextContent from '@/components/helpers/button-next-content.vue'
+import NavigationButtons from '@/components/helpers/navigation-buttons.vue'
 
 // import layaWsyisyg from '../misc/laya-html'
 export default {
   name: 'FeedbackView',
 
   components: {
-    ButtonNextContent,
+    NavigationButtons,
     FlagIcon,
     AudioButton,
     StarRating

@@ -4,21 +4,31 @@
   @since v1.3.1
 -->
 <template>
-  <button
-    type="button"
-    class="btn btn-primary mt-3"
-    :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-    @click="onFinish"
-  >
-    {{ y18n('nextContent') }}
-    <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
-  </button>
+  <div class="col">
+    <b-button
+      v-if="cid !== courseStart"
+      variant="primary"
+      @click="$router.back()"
+    >
+      <i :class="langIsAr? 'fas fa-arrow-right' : 'fas fa-arrow-left'"></i>
+      {{ y18n('previousContent') }}
+    </b-button>
+    <b-button
+      v-if="cid !== courseEnd"
+      variant="primary"
+      :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
+      @click="onFinish"
+    >
+      {{ y18n('nextContent') }}
+      <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
+    </b-button>
+  </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 export default {
-  name: 'ButtonNextContent',
+  name: 'NavigationButtons',
   mixins: [locale],
   props: {
     cid: {
@@ -27,7 +37,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['courseContentFollowMap', 'courseRoutes']),
+    ...mapGetters(['courseContentFollowMap', 'courseEnd', 'courseRoutes', 'courseStart']),
     /**
      * @function return a route push for following content
      * @author cmc

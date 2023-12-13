@@ -115,8 +115,7 @@
           </form>
         </div>
       </div>
-
-      <div class="row pt-3">
+      <div class="row mb-3">
         <button
           type="button"
           class="btn btn-warning"
@@ -125,7 +124,6 @@
         >
           {{ y18n('imageMatching.removeInput') }}
         </button>
-
         <button
           type="button"
           class="btn btn-link"
@@ -135,10 +133,11 @@
         >
           {{ y18n('check') }}
         </button>
-        <button-next-content
-          v-if="!lastContentBlock"
+      </div>
+      <div class="row pt-3">
+        <navigation-buttons
           :cid="id"
-        ></button-next-content>
+        ></navigation-buttons>
       </div>
 
       <div class="mt-3">
@@ -185,11 +184,11 @@ import '@/assets/styles/flaggables.css'
 import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 import { stripKey } from '@/mixins/general/helpers'
-import ButtonNextContent from '@/components/helpers/button-next-content.vue'
+import NavigationButtons from '@/components/helpers/navigation-buttons.vue'
 
 export default {
   name: 'ImageMatchingView',
-  components: { ButtonNextContent, FlagIcon, AudioButton },
+  components: { NavigationButtons, FlagIcon, AudioButton },
 
   mixins: [
     locale,

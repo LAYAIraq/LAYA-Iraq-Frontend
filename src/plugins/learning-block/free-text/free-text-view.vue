@@ -25,10 +25,9 @@ Since: v1.0.0
       </div>
       <div id="free-text-viewer"></div>
       <div class="row">
-        <button-next-content
-          v-if="!lastContentBlock"
+        <navigation-buttons
           :cid="id"
-        ></button-next-content>
+        ></navigation-buttons>
       </div>
     </div>
   </fieldset>
@@ -40,11 +39,11 @@ import Quill from 'quill'
 import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
-import ButtonNextContent from '@/components/helpers/button-next-content.vue'
+import NavigationButtons from '@/components/helpers/navigation-buttons.vue'
 
 export default {
   name: 'FreeTextView',
-  components: { ButtonNextContent, FlagIcon },
+  components: { NavigationButtons, FlagIcon },
 
   mixins: [
     locale,

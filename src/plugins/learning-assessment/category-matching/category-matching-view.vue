@@ -99,7 +99,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row mb-3">
         <button
           type="button"
           class="btn btn-link mt-3"
@@ -110,10 +110,11 @@
         >
           {{ y18n('check') }}
         </button>
-        <button-next-content
-          v-if="!lastContentBlock"
+      </div>
+      <div class="row">
+        <navigation-buttons
           :cid="id"
-        ></button-next-content>
+        ></navigation-buttons>
       </div>
       <div
         v-if="showSolutionsBool"
@@ -140,11 +141,11 @@ import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
 import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
-import ButtonNextContent from '@/components/helpers/button-next-content.vue'
+import NavigationButtons from '@/components/helpers/navigation-buttons.vue'
 
 export default {
   name: 'CategoryMatchingView',
-  components: { ButtonNextContent, AudioButton, FlagIcon },
+  components: { NavigationButtons, AudioButton, FlagIcon },
 
   mixins: [
     locale,
