@@ -14,7 +14,7 @@ Dependencies:
       <div class="col">
         <b-button
           v-if="$route.name !== 'course'"
-          variant="outline-secondary"
+          variant="primary"
           size="sm"
           :class="langIsAr? 'float-right' : 'float-left'"
           active-class="active"
@@ -47,7 +47,7 @@ Dependencies:
             id="cid-dd"
             :text="y18n('header.jumpTo')"
             size="sm"
-            variant="secondary"
+            variant="primary"
             no-flip
             :right="!langIsAr"
             :disabled="checkEmpty === true"

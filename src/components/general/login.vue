@@ -108,6 +108,7 @@
       :title="y18n('login.passwordReset')"
       header-bg-variant="warning"
       ok-variant="warning"
+      cancel-variant="primary"
       :ok-title="y18n('login.passwordReset')"
       :cancel-title="y18n('cancel')"
       :aria-label="y18n('popupwarning')"

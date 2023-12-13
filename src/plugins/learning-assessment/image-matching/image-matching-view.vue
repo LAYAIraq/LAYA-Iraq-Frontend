@@ -21,6 +21,7 @@
         >
           <h4>
             {{ courseSimple? title.simple: title.text }}
+            <!--
             <audio-button
               v-if="taskAudio"
               :src="courseSimple?
@@ -28,6 +29,7 @@
                 taskAudio.simple"
             >
             </audio-button>
+            -->
           </h4>
         </div>
         <flag-icon
@@ -119,15 +121,6 @@
       <div class="row pt-3">
         <button
           type="button"
-          class="btn btn-warning"
-          :disabled="freeze"
-          @click="reset"
-        >
-          {{ y18n('imageMatching.removeInput') }}
-        </button>
-
-        <button
-          type="button"
           class="btn btn-link"
           :class="langIsAr? 'float-right': 'float-left'"
           :disabled="freeze"
@@ -193,13 +186,16 @@
 import { mapGetters } from 'vuex'
 import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
-import AudioButton from '@/components/helpers/audio-button.vue'
+// import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 import { stripKey } from '@/mixins/general/helpers'
 
 export default {
   name: 'ImageMatchingView',
-  components: { FlagIcon, AudioButton },
+  components: {
+    FlagIcon
+  //  AudioButton
+  },
 
   mixins: [
     locale,

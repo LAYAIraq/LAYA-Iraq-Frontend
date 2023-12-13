@@ -443,17 +443,17 @@ Since: v1.0.0
         <div class="col">
           <!-- Save Button -->
           <div class="form-group">
-            <button
+            <b-button
               id="save-profile"
               type="submit"
               :disabled="busy || !passwordInputOk"
-              class="btn btn-block btn-lg btn-outline-dark"
+              class="btn-block btn-lg btn-success"
               style="border-width: 2px"
               @click.prevent="submit"
             >
-              <i class="fas fa-check"></i>
+              <i class="fas fa-save"></i>
               {{ y18n('save') }}
-            </button>
+            </b-button>
           </div>
         </div>
       </div>
@@ -462,8 +462,9 @@ Since: v1.0.0
       <b-modal
         id="avatar-change-modal"
         :title="y18n('profile.avatar.change')"
-        header-bg-variant="info"
+        header-bg-variant="warning"
         ok-variant="success"
+        cancel-variant="primary"
         centered
         static
         :ok-title="y18n('save')"

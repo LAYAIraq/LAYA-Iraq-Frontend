@@ -7,8 +7,8 @@
     <template slot="button-content">
       <!-- <i class="fas fa-bell"></i>
       {{ y18n('notifications') }} -->
-      {{ y18n('notifications') }}
       <i class="fas fa-bell fa-lg"></i>
+      {{ y18n('notifications') }}
 
       <span
         v-if="notificationsUnreadNumber > 0"
@@ -53,7 +53,7 @@
     <b-dropdown-item v-if="messagesPresent">
       <b-button
         class="w-100"
-        variant="info"
+        variant="warning"
         @click="notificationsMarkRead"
       >
         {{ y18n('markAllAsRead') }}
@@ -63,6 +63,7 @@
     <b-dropdown-item>
       <b-button
         class="w-100"
+        variant="success"
         @click="notificationsFetch"
       >
         {{ y18n('notifications.getNew') }}

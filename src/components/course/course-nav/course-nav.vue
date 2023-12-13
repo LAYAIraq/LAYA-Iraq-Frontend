@@ -66,6 +66,7 @@
       >
         <b-button
           secondary
+          variant="success"
           @click="chapterAdd"
         >
           {{ y18n('courseNavEdit.chapterAdd') }}
@@ -129,6 +130,7 @@
       centered
       :ok-title="y18n('courseNavEdit.integrityCheckOk')"
       ok-variant="danger"
+      cancel-variant="primary"
       @ok="navigationSave"
     >
       <p>{{ y18n('courseNavEdit.integrityCheckMessage') }}</p>
