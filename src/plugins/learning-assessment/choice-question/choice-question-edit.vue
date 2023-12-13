@@ -32,9 +32,13 @@ Since: v1.0.0
       :lead="y18n('tipHeadline')"
     >
       <hr class="my-4">
-      <span>
-        {{ y18n('choiceQuestion.tooltip') }}
-      </span>
+      <p
+        v-for="str in y18n('choiceQuestion.tooltip').split(';')"
+        :key="str.length"
+      >
+        <!-- eslint-disable-next-line vue/no-v-html --> <!-- TODO: find a way to avoid v-html -->
+        <span v-html="replacePattern(str, /###([\w\s\-]+)###([A-Z0-9a-z\/.:#]+)###/, linkReplacement(true))"></span>
+      </p>
     </b-jumbotron>
     <hr>
     <form>
