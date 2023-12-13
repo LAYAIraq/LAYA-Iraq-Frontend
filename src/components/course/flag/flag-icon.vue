@@ -17,7 +17,6 @@
         :title="refData.flagged
           ? y18n('flag.seeDiscussion')
           : y18n('flag.title')"
-        tabindex="0"
       >
         <router-link
           :to="{ name: 'flag', params: { id: refData.id } }"
