@@ -214,7 +214,7 @@ Dependencies:
               variant="danger"
               @click.prevent="removeCaption(row.index)"
             >
-              <i class="fas fa-times-circle"></i>
+              <i class="fas fa-times"></i>
               <span class="sr-only">{{ y18n('delete') }}</span>
             </b-button>
           </template>
