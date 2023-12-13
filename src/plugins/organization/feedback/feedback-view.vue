@@ -130,11 +130,23 @@
 
         <div class="row mt-5">
           <div class="col">
-            <star-rating
-              :rating="rating"
-              @rating-selected="e => rating = e"
+            <div
+              role="slider"
+              tabindex="0"
+              :aria-valuenow="rating"
+              :aria-valuemin="0"
+              :aria-valuemax="5"
+              :aria-label="'Rating: ' + rating + ' out of 5'"
+              @keydown="handleKeyDown"
+              @focus="handleFocus"
+              @blur="handleBlur"
             >
-            </star-rating>
+              <star-rating
+                :rating="rating"
+                @rating-selected="e => rating = e"
+              >
+              </star-rating>
+            </div>
             <div>
               {{ y18n('selected.rating') }}: {{ rating }}
             </div>
@@ -212,7 +224,8 @@ export default {
       freetext: '',
       answered: [],
       prevFeedback: '',
-      rating: 0
+      rating: 0,
+      focused: false
     }
   },
 
@@ -324,6 +337,20 @@ export default {
       !this.answered
         ? this.$bvToast.show('feedback-new')
         : this.$bvToast.show('feedback-updated')
+    },
+
+    handleKeyDown (event) {
+      if (event.key === 'ArrowRight' && this.rating < 5) {
+        this.rating++
+      } else if (event.key === 'ArrowLeft' && this.rating > 0) {
+        this.rating--
+      }
+    },
+    handleFocus () {
+      this.focused = true
+    },
+    handleBlur () {
+      this.focused = false
     }
   }
 }
@@ -348,4 +375,5 @@ export default {
   transform: translateX(-50%);
   z-index: 11002;
 }
+
 </style>
