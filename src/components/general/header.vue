@@ -12,140 +12,120 @@ Dependencies:
 -->
 
 <template>
-  <div
+  <header
     id="header"
     :class="langIsAr? 'text-right' : 'text-left'"
   >
-    <b-navbar
-      toggleable="lg"
-      type="light"
-      variant="light"
-    >
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-      <b-collapse
-        id="nav-collapse"
-        is-nav
+    <div>
+      <b-navbar
+        toggleable="lg"
+        type="light"
+        variant="light"
       >
-        <b-navbar-brand
-          id="header-logo"
-          to="/"
+        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+        <b-collapse
+          id="nav-collapse"
+          is-nav
         >
-          <img
-            style="height: inherit"
-            src="../../assets/images/logo-iraq-xs.png"
-            alt="Laya - Learn as you are"
+          <b-navbar-brand
+            id="header-logo"
+            to="/"
           >
-        </b-navbar-brand>
-
-        <!-- left links -->
-        <b-navbar-nav v-if="userOnline">
-          <b-nav-item to="/courses">
-            <i
-              class="fas fa-chalkboard-teacher"
-              size="2x"
-            ></i>
-            {{ y18n('header.courses') }}
-          </b-nav-item>
-          <!-- <b-nav-item to="/mycourses">{{ y18n('mycourses.title') }}</b-nav-item> -->
-        </b-navbar-nav>
-
-        <!-- right links unauthorized -->
-        <b-navbar-nav
-          v-if="!userOnline"
-          :class="marginClass()"
-        >
-          <b-nav-item to="/register">
-            <i class="fas fa-user-plus"></i>
-            {{ y18n('header.register') }}
-          </b-nav-item>
-          <b-nav-item to="/login">
-            <i class="fas fa-sign-in-alt"></i>
-            {{ y18n('login.title') }}
-          </b-nav-item>
-        </b-navbar-nav>
-
-        <!-- right links authorized -->
-        <b-navbar-nav
-          v-else
-          :class="marginClass()"
-        >
-          <b-nav-item
-            v-if="isAdmin"
-            to="/admin"
-          >
-            <i class="fas fa-solid fa-screwdriver"></i>
-            {{ y18n('adminPanel.title') }}
-          </b-nav-item>
-          <b-nav-item
-            v-if="isEditor"
-            to="/editor"
-          >
-            <i class="fas fa-user-tie"></i>
-            Editor Panel
-          </b-nav-item>
-          <header-notifications></header-notifications>
-          <b-nav-item to="/profile">
-            <i class="fas fa-user-alt"></i>
-            {{ y18n('header.profile') }}
-          </b-nav-item>
-          <b-nav-item @click="logout">
-            <i class="fas fa-sign-out-alt"></i>
-            {{ y18n('header.logout') }}
-          </b-nav-item>
-        </b-navbar-nav>
-
-        <b-navbar-nav v-if="langIsAr">
-          <b-nav-item-dropdown>
-            <template #button-content>
-              <img
-                :src="icons[profileLanguage]"
-                class="lang-icon"
-                :alt="profileLanguage"
-              >
-            </template>
-
-            <b-dropdown-item-btn
-              v-for="(svg, lang) in icons"
-              :key="lang"
-              @click="setLang(lang)"
+            <img
+              style="height: inherit"
+              src="../../assets/images/logo-iraq-xs.png"
+              alt="Laya - Learn as you are"
             >
-              <img
-                :src="svg"
-                :alt="lang"
-                class="lang-icon lang-icon-list"
-              >
-            </b-dropdown-item-btn>
-          </b-nav-item-dropdown>
-        </b-navbar-nav>
+          </b-navbar-brand>
 
-        <b-navbar-nav v-else>
-          <b-nav-item-dropdown right>
-            <template #button-content>
-              <img
-                :src="icons[profileLanguage]"
-                class="lang-icon"
-                :alt="y18n('langSelect')"
-              >
-            </template>
-
-            <b-dropdown-item-btn
-              v-for="(svg, lang) in icons"
-              :key="lang"
-              :aria-label="languageAria[lang]"
-              @click="setLang(lang)"
+          <!-- Combined Navbar Nav -->
+          <b-navbar-nav class="w-100 justify-content-between">
+            <!-- Left-aligned links (visible when user is online) -->
+            <b-nav-item
+              v-if="userOnline"
+              to="/courses"
             >
-              <img
-                :src="svg"
-                :alt="lang"
-                class="lang-icon lang-icon-list"
+              <i class="fas fa-chalkboard-teacher"></i>
+              {{ y18n('header.courses') }}
+            </b-nav-item>
+
+            <!-- Right-aligned links -->
+            <div class="d-flex">
+              <!-- Links for unauthorized users -->
+              <b-nav-item
+                v-if="!userOnline"
+                to="/register"
               >
-            </b-dropdown-item-btn>
-          </b-nav-item-dropdown>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
-  </div>
+                <i class="fas fa-user-plus"></i>
+                {{ y18n('header.register') }}
+              </b-nav-item>
+              <b-nav-item
+                v-if="!userOnline"
+                to="/login"
+              >
+                <i class="fas fa-sign-in-alt"></i>
+                {{ y18n('login.title') }}
+              </b-nav-item>
+
+              <!-- Links for authorized users -->
+              <b-nav-item
+                v-if="userOnline && isAdmin"
+                to="/admin"
+              >
+                <i class="fas fa-solid fa-screwdriver"></i>
+                {{ y18n('adminPanel.title') }}
+              </b-nav-item>
+              <b-nav-item
+                v-if="userOnline && isEditor"
+                to="/editor"
+              >
+                <i class="fas fa-user-tie"></i>
+                Editor Panel
+              </b-nav-item>
+              <header-notifications v-if="userOnline"></header-notifications>
+              <b-nav-item
+                v-if="userOnline"
+                to="/profile"
+              >
+                <i class="fas fa-user-alt"></i>
+                {{ y18n('header.profile') }}
+              </b-nav-item>
+              <b-nav-item
+                v-if="userOnline"
+                @click="logout"
+              >
+                <i class="fas fa-sign-out-alt"></i>
+                {{ y18n('header.logout') }}
+              </b-nav-item>
+
+              <!-- Language Dropdown -->
+              <b-nav-item-dropdown :right="!langIsAr">
+                <template #button-content>
+                  <img
+                    :src="icons[profileLanguage]"
+                    class="lang-icon"
+                    :alt="y18n('langSelect')"
+                  >
+                </template>
+                <b-dropdown-item-btn
+                  v-for="(svg, lang) in icons"
+                  :key="lang"
+                  @click="setLang(lang)"
+                >
+                  <img
+                    :src="svg"
+                    :alt="lang"
+                    class="lang-icon lang-icon-list"
+                  >
+                </b-dropdown-item-btn>
+              </b-nav-item-dropdown>
+            </div>
+          </b-navbar-nav>
+        </b-collapse>
+      </b-navbar>
+    </div>
+  </header>
 </template>
 
 <script>
