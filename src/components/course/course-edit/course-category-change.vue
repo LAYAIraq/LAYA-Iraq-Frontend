@@ -36,40 +36,24 @@ Since: v1.2.0
       :aria-label="y18n('popupwarning')"
       @ok="changeCourseCategory"
     >
-      <p>
-        {{ y18n('changeCategory') }}
-        <b-form-select
-          v-model="newCategory"
-          :aria-label="y18n('changeCategory.new')"
-        >
-          <b-form-select-option
-            v-for="opt in categoryChoose"
-            :key="opt"
-            :value="opt"
+      <form>
+        <p>
+          {{ y18n('changeCategory') }}
+          <b-form-select
+            v-model="newCategory"
+            :aria-label="y18n('changeCategory.new')"
+            @keydown.enter.native="changeCourseCategory"
           >
-            {{ y18n(`course.category.${opt}`) }}
-          </b-form-select-option>
-        </b-form-select>
-        <!--
-        <input
-          v-model="newCategory"
-          type="text"
-          class="form-control"
-          :class="badInput ? 'border border-danger': ''"
-          :placeholder="y18n('changeCategory.new')"
-          :aria-label="y18n('changeCategory.new')"
-          @blur="newCategory = newCategory.trim()"
-        >
-      </p>
-      <p
-        v-if="badInput"
-        id="input-warning"
-      >
-        <i class="fas fa-exclamation-triangle"></i>
-        {{ inputWarning }}
-      </p>
-      -->
-      </p>
+            <b-form-select-option
+              v-for="opt in categoryChoose"
+              :key="opt"
+              :value="opt"
+            >
+              {{ y18n(`course.category.${opt}`) }}
+            </b-form-select-option>
+          </b-form-select>
+        </p>
+      </form>
     </b-modal>
     <div
       id="openPopup"

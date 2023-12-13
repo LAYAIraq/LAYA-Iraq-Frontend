@@ -45,6 +45,7 @@ Since: v1.3.0
           :class="'border border-danger'"
           :placeholder="y18n('changeKeywords.new')"
           :aria-label="y18n('changeKeywords.new')"
+          @keyup.enter="changeCourseKeywords"
         >
       </p>
     </b-modal>

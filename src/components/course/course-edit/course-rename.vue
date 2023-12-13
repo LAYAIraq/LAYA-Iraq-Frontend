@@ -49,6 +49,7 @@ Dependencies:
           :class="{ 'border-danger': !renameOk }"
           :placeholder="y18n('placeholder')"
           :aria-label="y18n('placeholder')"
+          @keyup.enter="handleOk"
         >
       </p>
       <p

@@ -36,21 +36,24 @@ Since: v1.3.0
       :aria-label="y18n('popupwarning')"
       @ok="changeCourseLanguage"
     >
-      <p>
-        {{ y18n('changeCourseLanguage') }}
-        <b-form-select
-          v-model="newLanguage"
-          :aria-label="y18n('changeCourseLanguage.new')"
-        >
-          <b-form-select-option
-            v-for="opt in languageChoose"
-            :key="opt"
-            :value="opt"
+      <form>
+        <p>
+          {{ y18n('changeCourseLanguage') }}
+          <b-form-select
+            v-model="newLanguage"
+            :aria-label="y18n('changeCourseLanguage.new')"
+            @keydown.enter.native="changeCourseLanguage"
           >
-            {{ y18n(`profile.language.${opt}`) }}
-          </b-form-select-option>
-        </b-form-select>
-      </p>
+            <b-form-select-option
+              v-for="opt in languageChoose"
+              :key="opt"
+              :value="opt"
+            >
+              {{ y18n(`profile.language.${opt}`) }}
+            </b-form-select-option>
+          </b-form-select>
+        </p>
+      </form>
     </b-modal>
     <div
       id="openPopup"
