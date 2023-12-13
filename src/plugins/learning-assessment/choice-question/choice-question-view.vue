@@ -18,6 +18,7 @@ Since: v1.0.0
       <div class="col">
         <h2 class="pb-3">
           {{ courseSimple? title.simple : title.text }}
+          <!--
           <audio-button
             v-if="taskAudioExists"
             :src="courseSimple?
@@ -25,6 +26,7 @@ Since: v1.0.0
               taskAudio.simple"
           >
           </audio-button>
+          -->
         </h2>
       </div>
       <flag-icon
@@ -156,12 +158,15 @@ Since: v1.0.0
 import { mapGetters } from 'vuex'
 import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
-import AudioButton from '@/components/helpers/audio-button.vue'
+// import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
 export default {
   name: 'ChoiceQuestionView',
-  components: { FlagIcon, AudioButton },
+  components: {
+    FlagIcon
+  //  AudioButton
+  },
 
   mixins: [
     locale,

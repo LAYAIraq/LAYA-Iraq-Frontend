@@ -56,7 +56,7 @@
       >
       </content-task-edit>
 
-      <!-- task audio -->
+      <!-- task audio
       <div class="form-group row">
         <label
           for="feedback-task-audio"
@@ -75,7 +75,7 @@
         </div>
       </div>
 
-      <!-- task audio simple -->
+      task audio simple
       <div
         v-if="courseSimple"
         class="form-group row"
@@ -98,7 +98,7 @@
           >
         </div>
       </div>
-
+      -->
       <!-- Answers -->
       <p><b>{{ y18n('feedback.edit.questions') }}</b></p>
       <div

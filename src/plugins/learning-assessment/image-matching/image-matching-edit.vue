@@ -55,7 +55,7 @@
       >
       </content-task-edit>
 
-      <!-- task audio -->
+      <!-- task audio
       <div class="form-group row">
         <label
           for="relate-task-audio"
@@ -73,6 +73,7 @@
           >
         </div>
       </div>
+      -->
 
       <p><b>{{ y18n('imageMatching.edit.solutions') }}</b></p>
 

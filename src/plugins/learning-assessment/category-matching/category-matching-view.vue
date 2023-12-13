@@ -18,12 +18,14 @@
         <div class="col">
           <h2>
             {{ courseSimple? title.simple : title.text }}
+            <!--
             <audio-button
               v-if="taskAudioExists"
               :src="courseSimple?
                 taskAudio.simple :
                 taskAudio.text"
             ></audio-button>
+            -->
           </h2>
         </div>
         <flag-icon
@@ -143,12 +145,15 @@
 import { mapGetters } from 'vuex'
 import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
-import AudioButton from '@/components/helpers/audio-button.vue'
+// import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
 export default {
   name: 'CategoryMatchingView',
-  components: { AudioButton, FlagIcon },
+  components: {
+    // AudioButton,
+    FlagIcon
+  },
 
   mixins: [
     locale,
