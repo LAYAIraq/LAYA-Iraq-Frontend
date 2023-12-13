@@ -41,7 +41,6 @@
         :fields="fields"
         responsive
         stacked="sm"
-        @sort-changed="onSortChanged"
       >
         <!-- Type Column -->
         <template #cell(type)="data">
