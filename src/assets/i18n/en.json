@@ -299,6 +299,7 @@
 	"header.overview": "Go to Author Tools",
 	"header.profile": "Profile",
 	"header.register": "Register",
+	"image": "Image",
 	"imageMatching.caption": "This Component allows questions with an image.",
 	"imageMatching.defaultOption": "Choose",
 	"imageMatching.edit.audioPlaceholder": "Audio URL",
