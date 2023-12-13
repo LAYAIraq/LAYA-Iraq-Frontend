@@ -20,6 +20,7 @@ Dependencies:
       toggleable="lg"
       type="light"
       variant="light"
+      class="custom-navbar"
     >
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -319,6 +320,13 @@ export default {
 
 .lang-icon-list {
   margin: 5px;
+}
+.custom-navbar {
+}
+.custom-navbar .navbar-brand,
+.custom-navbar .nav-link,
+.custom-navbar .navbar-text {
+  color: black !important;
 }
 
 </style>
