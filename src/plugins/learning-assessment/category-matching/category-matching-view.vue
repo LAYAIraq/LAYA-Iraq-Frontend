@@ -28,11 +28,13 @@
             -->
           </h2>
         </div>
-        <flag-icon
-          v-if="!editPreview"
-          :ref-data="title"
-          @flagged="title.flagged = true"
-        ></flag-icon>
+        <a>
+          <flag-icon
+            v-if="!editPreview"
+            :ref-data="title"
+            @flagged="title.flagged = true"
+          ></flag-icon>
+        </a>
       </div>
 
       <div

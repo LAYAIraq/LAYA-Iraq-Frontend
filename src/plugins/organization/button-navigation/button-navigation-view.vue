@@ -21,11 +21,13 @@ Since v1.0.0
             {{ courseSimple? title.simple: title.text }}
           </h2>
         </div>
-        <flag-icon
-          v-if="!editPreview"
-          :ref-data="title"
-          @flagged="title.flagged = true"
-        ></flag-icon>
+        <a>
+          <flag-icon
+            v-if="!editPreview"
+            :ref-data="title"
+            @flagged="title.flagged = true"
+          ></flag-icon>
+        </a>
       </div>
       <!-- TODO: dynamic CSS for background image -->
       <div class="button-navigation-text">
