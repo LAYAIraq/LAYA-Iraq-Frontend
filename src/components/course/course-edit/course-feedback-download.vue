@@ -13,6 +13,7 @@ Dependencies:
     <div class="col">
       <b-button
         size="sm"
+        class="w-50"
         variant="success"
         :class="langIsAr? 'float-left' : 'float-right'"
         @click="$bvModal.show('download-feedback')"
