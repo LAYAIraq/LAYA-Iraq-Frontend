@@ -14,7 +14,6 @@
         <img
           class="mx-auto"
           src="../../../assets/images/kurse.svg"
-          :alt="y18n('courses.brain')"
         >
       </div>
 

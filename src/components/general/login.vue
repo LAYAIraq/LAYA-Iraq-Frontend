@@ -19,7 +19,6 @@
           <div class="h-2rem"></div>
           <img
             src="../../assets/images/anmelden.svg"
-            alt="Login"
             class="d-block m-auto w-50"
           >
           <h1 class="text-center">

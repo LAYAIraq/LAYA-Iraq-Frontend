@@ -13,7 +13,6 @@
           <div style="height: 2rem"></div>
           <img
             src="../../assets/images/anmelden.svg"
-            alt="Login"
             class="w-50"
           >
           <h1 class="text-center">
