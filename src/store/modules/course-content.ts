@@ -7,7 +7,8 @@
 import {
   ContentBlock,
   Course,
-  CourseNavigationItem
+  CourseNavigationItem,
+  CourseNavigationItemBlock
 } from '@/mixins/types/course-structure'
 import {
   courseContentIdGet,
@@ -15,7 +16,7 @@ import {
   courseChaptersCollect,
   courseDestructure
 } from '@/mixins/general/course-structure'
-import { stripKey } from '@/mixins/general/helpers'
+import { arrayElementsEqual, stripKey } from '@/mixins/general/helpers'
 import { legacyContentFollowTransform, legacyContentStepsTransform } from '@/mixins/general/legacy-content'
 import { v4 as uuidv4 } from 'uuid'
 import http, { AxiosResponse } from 'axios'
@@ -191,27 +192,43 @@ export default {
      * @param state contains courseChapters
      * @param data id and value for updated follow
      */
-    courseChapterUpdateFollow (state: { courseChapters: CourseNavigationItem[]}, data: { id: string, value: string[] }) {
-      // @description update follow if id is is arr, go deeper if not
+    courseChapterUpdateFollow (state: { courseChapters: CourseNavigationItem[] }, data: { id: string, value: string | string[] }) {
+      // @description update follow to given value; if not button navigation, set followManual to true
+      const updateFollow = (el: CourseNavigationItemBlock, val: string | string[]) => {
+        Vue.set(el, 'follow', val)
+        if (el.type !== 'button-navigation') {
+          el.followManual = true
+        }
+      }
+      // @description update follow if id is in arr, go deeper if not
       const updateOrDeeper = (arr: any) => {
         if (Array.isArray(arr)) {
           arr.forEach((el: any) => {
             if (el.isChapter) {
               updateOrDeeper(el.children)
             } else if (el.id === data.id) {
-              Vue.set(el, 'follow', data.value)
+              updateFollow(el, data.value)
             }
           })
         } else {
           if (arr.isChapter) {
             updateOrDeeper(arr.children)
           } else if (arr.id === data.id) {
-            Vue.set(arr, 'follow', data.value)
+            updateFollow(arr, data.value)
           }
         }
       }
       if (data.value) {
-        state.courseChapters.forEach((c: any) => updateOrDeeper(c))
+        const followMap = {}
+        chaptersExtractFollow(state.courseChapters, followMap)
+        const oldFollow = followMap[data.id] // old value for follow
+        const followUpdated = typeof oldFollow === 'string' // check if passed value differs
+          ? data.value !== oldFollow
+          // @ts-ignore
+          : !arrayElementsEqual(oldFollow, data.value) // data.value is array in this branch
+        if (followUpdated) {
+          state.courseChapters.forEach((c: any) => updateOrDeeper(c))
+        }
       }
     },
 

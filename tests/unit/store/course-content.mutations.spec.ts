@@ -140,6 +140,55 @@ describe('store module course-content mutations', () => {
       expect(a.follow).toStrictEqual(['abc', 'def'])
     })
 
+    it('changes follow value of button navigation', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'e1ns', value: ['abc', 'def'] })
+      const a = state.courseChapters[0].children[1].children[0]
+      expect(a.follow).toStrictEqual(['abc', 'def'])
+    })
+
+    it('does not change value of button navigation when null passed', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'e1ns', value: null })
+      const a = state.courseChapters[0].children[1].children[0]
+      expect(a.follow).toStrictEqual(['zw31', 'dr31'])
+    })
+
+    it('does not change value of button navigation when undefined passed', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'e1ns', value: undefined })
+      const a = state.courseChapters[0].children[1].children[0]
+      expect(a.follow).toStrictEqual(['zw31', 'dr31'])
+    })
+
+    it('changes follow value of other type', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'f33db4ck', value: 'test' })
+      const a = state.courseChapters[1].children[0]
+      expect(a.follow).toBe('test')
+      expect(a.followManual).toBeTruthy()
+    })
+
+    it('does not change value of other type when null passed', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'f33db4ck', value: null })
+      const a = state.courseChapters[1].children[0]
+      expect(a.follow).toStrictEqual('v13r')
+    })
+
+    it('does not change value of other type when undefined passed', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'f33db4ck', value: undefined })
+      const a = state.courseChapters[1].children[0]
+      expect(a.follow).toStrictEqual('v13r')
+    })
+
+    it('does not change value of other type when empty string passed', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'f33db4ck', value: '' })
+      const a = state.courseChapters[1].children[0]
+      expect(a.follow).toStrictEqual('v13r')
+    })
+
+    it('does not change value of other type when value is the same', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'f33db4ck', value: 'v13r' })
+      const a = state.courseChapters[1].children[0]
+      expect(a.follow).toStrictEqual('v13r')
+    })
+
     it('changes follow value of shallow array', () => {
       state.courseChapters = [{ id: 'eins', follow: 'zwei' }, { id: 'zwei', follow: 'null' }]
       mutations.courseChapterUpdateFollow(state, { id: 'zwei', value: ['eins', 'zwei'] })

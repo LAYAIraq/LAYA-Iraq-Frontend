@@ -98,7 +98,6 @@
       </div>
       <!-- follow -->
       <div
-        v-if="(value.id !== courseEnd && followingContent) || value.type === 'button-navigation'"
         class="d-block"
       >
         <div class="d-flex follow-content">
@@ -106,7 +105,6 @@
             {{ y18n('courseNavEdit.follow') }}
           </span>
           <i
-            v-if="value.type === 'button-navigation'"
             v-b-tooltip.top.ds500
             class="fas fa-edit"
             :class="langIsAr ? 'mr-auto' : 'ml-auto'"
@@ -119,7 +117,10 @@
           class="d-flex"
           @click="$bvModal.show('follow-edit')"
         >
-          <div class="text-break">
+          <div
+            v-if="followSet"
+            class="text-break w-100"
+          >
             <p
               v-if="followSet.length === 1"
               v-b-tooltip.right
@@ -127,6 +128,16 @@
               @mousedown="followHighlight($event, followingContent)"
             >
               {{ followingContent }}
+              <span
+                v-if="value.followManual"
+                :class="langIsAr? 'mr-auto' : 'ml-auto'"
+              >
+                <i
+                  v-b-tooltip.bottom
+                  class="fas fa-pen"
+                  :title="y18n('courseNavEdit.followEditTip')"
+                ></i>
+              </span>
             </p>
             <ul
               v-else
@@ -142,6 +153,15 @@
                 {{ e }}
               </li>
             </ul>
+          </div>
+          <div v-else>
+            <i
+              v-if="value.type === 'button-navigation' || value.id !== courseEnd"
+              v-b-tooltip.bottom
+              class="fas fa-exclamation-circle"
+              :title="y18n('courseNavEdit.followWarning')"
+            ></i>
+            {{ y18n('courseNavEdit.followNone') }}
           </div>
         </div>
       </div>

@@ -22,9 +22,9 @@ export const chapterFollowSet = (chapter: CourseNavigationItem | any, nextChapte
       : chapter.children[i + 1]
     if (item.isChapter) {
       chapterFollowSet(item, followingChapter)
-    } else if (item.type !== 'button-navigation') {
+    } else if (item.type !== 'button-navigation' && !item.followManual) {
       item.follow = courseContentIdGet(followingChapter, 'first')
-    } // else: button-navigation => no new follow
+    } // else: button-navigation or follow set manually => no new follow
   })
 }
 

@@ -33,6 +33,25 @@ export default {
 }
 
 /**
+ * @description check if arrays have the same elements in the same order
+ * @param a first array
+ * @param b second array
+ * @return true if elements are the same
+ */
+export const arrayElementsEqual = (a: any[], b: any[]) => {
+  if (!a || !b || a.length !== b.length) {
+    return false
+  }
+  let equal = true
+  a.forEach((val, i) => {
+    if (val !== b[i]) {
+      equal = false
+    }
+  })
+  return equal
+}
+
+/**
  * @description strips key from object, return new object w/o key
  * @param key - the key to strip
  * @param obj - object containing `key`

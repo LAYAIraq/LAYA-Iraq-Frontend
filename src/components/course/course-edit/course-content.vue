@@ -46,6 +46,13 @@
               </span>
             </button>
             <button
+              class="btn btn-primary"
+              @click="$router.push({ name: 'content-follow-edit', params: { coursePath, contentId: pathId, follow: courseContentFollowMap[pathId] } })"
+            >
+              <i class="fas fa-edit"></i>
+              {{ y18n('courseNavEdit.followEdit') }}
+            </button>
+            <button
               type="button"
               class="btn btn-primary"
               @click="save"
@@ -105,7 +112,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['courseContent']),
+    ...mapGetters(['courseContent', 'courseContentFollowMap']),
 
     /**
      * cid: returns the type of content

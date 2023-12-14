@@ -6,22 +6,47 @@
 -->
 <template>
   <div class="container">
-    <h2 class="row">
-      Edit Follow Set
+    <h2 class="row p-3">
+      {{ y18n('courseNavEdit.followEdit') }}
+      <span v-if="!componentIsButtonNavigation">
+        : {{ contentToDisplay.title.text }}
+      </span>
     </h2>
     <div
-      v-for="(label, i) in buttonLabels"
-      :key="label"
+      v-if="componentIsButtonNavigation"
+    >
+      <div
+        v-for="(label, i) in buttonLabels"
+        :key="label"
+        class="m-2"
+      >
+        <div class="row">
+          <b-button
+            size="lg"
+            variant="info"
+          >
+            {{ label }}
+          </b-button>
+        </div>
+        <div class="row">
+          <suggesting-input
+            class="col"
+            :domain="courseContent"
+            :keys="['title', 'name', 'id']"
+            :inline="false"
+            :nested-key="'text'"
+            :previous-selection="follow? follow[i]: null"
+            :submit-button="false"
+            @removed="followEdit(null, i)"
+            @tags-selected="followEdit($event, i)"
+          ></suggesting-input>
+        </div>
+      </div>
+    </div>
+    <div
+      v-else
       class="m-2"
     >
-      <div class="row">
-        <b-button
-          size="lg"
-          variant="info"
-        >
-          {{ label }}
-        </b-button>
-      </div>
       <div class="row">
         <suggesting-input
           class="col"
@@ -29,10 +54,10 @@
           :keys="['title', 'name', 'id']"
           :inline="false"
           :nested-key="'text'"
-          :previous-selection="follow? follow[i]: null"
+          :previous-selection="follow"
           :submit-button="false"
-          @removed="followEdit(i, null)"
-          @tags-selected="followEdit(i, $event)"
+          @removed="followEdit(null)"
+          @tags-selected="followEdit($event)"
         ></suggesting-input>
       </div>
     </div>
@@ -48,7 +73,7 @@
       <b-button
         variant="warning"
         block
-        @click="$router.push({ name: 'course-nav' })"
+        @click="$router.back()"
       >
         {{ y18n('cancel') }}
       </b-button>
@@ -61,7 +86,7 @@
       header-bg-variant="warning"
       static
       centered
-      @ok="$router.push({ name: 'course-nav' })"
+      @ok="$router.back()"
     >
       {{ y18n('courseNavEdit.incompleteFollow.msg') }}
     </b-modal>
@@ -83,13 +108,13 @@ export default {
       required: true
     },
     follow: {
-      type: Array,
+      type: [Array, String],
       default: () => null
     }
   },
   data () {
     return {
-      followSetNew: this.follow.slice()
+      followSetNew: this.follow ? this.follow.slice() : null
     }
   },
   computed: {
@@ -100,28 +125,30 @@ export default {
      * @returns {string[]} labels of buttons
      */
     buttonLabels () {
-      return this.contentToDisplay.answers.map(el => el.text)
+      return this.componentIsButtonNavigation
+        ? this.contentToDisplay.answers.map(el => el.text)
+        : null
     },
     /**
-     * @description return if follow set has been changed
+     * @description return if component for follow change is button navigation
      * @return {boolean}
      */
-    followSetChange () {
-      for (const i in this.follow) { // forEach does not work correctly
-        if (this.follow[i] !== this.followSetNew[i]) {
-          return true
-        }
-      }
-      return false
+    componentIsButtonNavigation () {
+      return this.contentToDisplay.name === 'button-navigation'
+    },
+    contentToDisplay () {
+      return this.courseContent[this.contentId]
     },
     /**
      * @description returns true if follow set is complete, i.e. has no null values
      * @return {boolean}
      */
     followSetComplete () {
-      return this.followSetNew.some(el => !el)
-        ? false
-        : this.followSetNew.length === this.buttonLabels.length
+      return this.componentIsButtonNavigation
+        ? this.followSetNew.some(el => !el) // followSetNew is array
+          ? false
+          : this.followSetNew.length === this.buttonLabels.length
+        : this.followSetNew // followSetNew is string or null
     }
   },
   methods: {
@@ -130,8 +157,12 @@ export default {
      * @param idx index of array
      * @param val new value at index
      */
-    followEdit (idx, val) {
-      this.followSetNew.splice(idx, 1, val)
+    followEdit (val, idx) {
+      if (idx) {
+        this.followSetNew.splice(idx, 1, val)
+      } else {
+        this.followSetNew = val
+      }
     },
     /**
      * @function check if follow set is complete, then store it
@@ -141,7 +172,7 @@ export default {
     saveFollow () {
       if (this.followSetComplete) {
         this.$store.commit('courseChapterUpdateFollow', { id: this.contentId, value: this.followSetNew })
-        this.$router.push('edit-nav')
+        this.$router.back()
       } else {
         this.$bvModal.show('follow-incomplete')
       }
