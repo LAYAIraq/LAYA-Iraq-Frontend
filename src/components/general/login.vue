@@ -60,7 +60,10 @@
             @click.prevent="submit"
           >
             {{ y18n('login.title') }}
-            <i class="fas fa-sign-in-alt"></i>
+            <i
+              class="fas fa-sign-in-alt"
+              aria-hidden="true"
+            ></i>
           </button>
 
           <!-- busy note -->
@@ -96,7 +99,10 @@
             {{ y18n('login.registerHint1') }}
             <br>
             <router-link :to="{ name: 'register'}">
-              <i class="fas fa-user-plus"></i>
+              <i
+                class="fas fa-user-plus"
+                aria-hidden="true"
+              ></i>
               {{ y18n('login.registerHint2') }}
             </router-link>
           </div>

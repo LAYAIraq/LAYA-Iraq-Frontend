@@ -140,6 +140,7 @@
               :class="langIsAr?
                 'fas fa-arrow-left' :
                 'fas fa-arrow-right'"
+              aria-hidden="true"
             ></i>
           </span>
         </button>

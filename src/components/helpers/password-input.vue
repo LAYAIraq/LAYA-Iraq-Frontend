@@ -12,6 +12,7 @@
             v-b-tooltip.auto
             class="fas fa-key"
             :title="newInput? y18n('profile.newPassword'): y18n('passwordPH')"
+            aria-hidden="true"
           ></i>
         </span>
         <span v-else>
@@ -56,6 +57,7 @@
             v-b-tooltip.auto
             class="fas fa-redo-alt"
             :title="y18n('password2PH')"
+            aria-hidden="true"
           ></i>
         </span>
         <span v-else>
@@ -87,6 +89,7 @@
             v-b-tooltip.auto
             class="fas fa-lightbulb"
             :title="y18n('profile.passwordSuggestion')"
+            aria-hidden="true"
           ></i>
         </span>
         <span v-else>
@@ -120,6 +123,7 @@
             v-b-tooltip.auto
             class="fas fa-exclamation-triangle"
             :title="y18n('password.error')"
+            aria-hidden="true"
           ></i>
         </span>
         <span v-else>

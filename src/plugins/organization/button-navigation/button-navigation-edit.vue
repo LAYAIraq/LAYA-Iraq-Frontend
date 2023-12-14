@@ -108,7 +108,10 @@ Since: v1.0.0
               :aria-label="y18n('deleteField')"
               @click="_itemDelete(answers, i)"
             >
-              <i class="fas fa-times"></i>
+              <i
+                class="fas fa-times"
+                aria-hidden="true"
+              ></i>
             </button>
           </div>
         </div>
@@ -151,7 +154,10 @@ Since: v1.0.0
             :class="langIsAr? 'float-right': 'float-left'"
             @click="_itemAdd(answers, newItem())"
           >
-            <i class="fas fa-plus"></i>
+            <i
+              class="fas fa-plus"
+              aria-hidden="true"
+            ></i>
             {{ y18n('buttonNavigation.addAnswer') }}
           </button>
         </div>

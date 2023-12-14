@@ -91,10 +91,6 @@ Since: v1.0.0
           ></i>
         </div>
 
-        <!--
-        <i class="ml-2" :class="{'far fa-check-circle text-success': true}"></i>
-        <i class="ml-2" :class="{'far fa-times-circle text-danger': true}"></i>
-        -->
         <flag-icon
           v-if="!editPreview"
           :ref-data="option"
@@ -140,7 +136,10 @@ Since: v1.0.0
       >
         <span>
           {{ y18n('nextContent') }}
-          <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
+          <i
+            :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"
+            aria-hidden="true"
+          ></i>
         </span>
       </button>
       <span

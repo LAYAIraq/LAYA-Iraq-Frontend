@@ -46,6 +46,7 @@
                 v-b-tooltip.bottom
                 class="fas fa-user-graduate"
                 :title="y18n('courseList.authorRights')"
+                :aria-label="y18n('courseList.authorRights')"
               ></i>
             </span>
           </template>
@@ -72,7 +73,7 @@
                   <i
                     class="icons-list"
                     :class="getIcon(set[0])"
-                    :aria-describedby="`label-desc-${set[0]}`"
+                    :aria-labelledby="`label-desc-${set[0]}`"
                   ></i>
                   <span
                     :id="`label-desc-${set[0]}`"
@@ -103,6 +104,7 @@
                   v-if="complicitReady && !complicitCourses.has(data.item.courseId)"
                   v-b-tooltip.top
                   :title="y18n('courseList.notComplicit')"
+                  :aria-label="y18n('courseList.notComplicit')"
                   class="indicate-icon"
                 >
                   <i class="fas fa-exclamation-circle"></i>
@@ -112,13 +114,19 @@
                   v-if="isEnrolled(data.item)"
                   class="col"
                 >
-                  {{ y18n('courseList.start') }} <i :class="langIsAr ? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
+                  {{ y18n('courseList.start') }} <i
+                    :class="langIsAr ? 'fas fa-arrow-left' : 'fas fa-arrow-right'"
+                    aria-hidden="true"
+                  ></i>
                 </div>
                 <div
                   v-else
                   class="col"
                 >
-                  {{ y18n('courseList.subscribe') }} <i class="fas fa-file-signature"></i>
+                  {{ y18n('courseList.subscribe') }} <i
+                    class="fas fa-file-signature"
+                    aria-hidden="true"
+                  ></i>
                 </div>
               </div>
             </b-button>

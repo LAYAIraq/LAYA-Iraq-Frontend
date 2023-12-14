@@ -23,7 +23,10 @@
           <!-- name -->
           <div class="form-group row">
             <div class="col-1 col-form-label">
-              <i class="fas fa-signature"></i>
+              <i
+                class="fas fa-signature"
+                aria-hidden="true"
+              ></i>
             </div>
             <div class="col">
               <input
@@ -97,7 +100,10 @@
           <!-- email -->
           <div class="form-group row">
             <div class="col-1 col-form-label">
-              <i class="fas fa-at"></i>
+              <i
+                class="fas fa-at"
+                aria-hidden="true"
+              ></i>
             </div>
             <div class="col">
               <input
@@ -175,7 +181,10 @@
               @click.prevent="submit"
             >
               {{ y18n('register.submit') }}
-              <i class="fas fa-user-plus"></i>
+              <i
+                class="fas fa-user-plus"
+                aria-hidden="true"
+              ></i>
             </button>
           </h2>
 

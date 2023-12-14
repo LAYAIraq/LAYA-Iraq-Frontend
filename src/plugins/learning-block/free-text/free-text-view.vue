@@ -36,6 +36,7 @@ Since: v1.0.0
             :class="langIsAr?
               'fas fa-arrow-left':
               'fas fa-arrow-right'"
+            aria-hidden="true"
           ></i>
         </button>
       </div>
