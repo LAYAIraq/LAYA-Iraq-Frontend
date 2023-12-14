@@ -13,7 +13,7 @@
           <div style="height: 2rem"></div>
           <img
             src="../../assets/images/anmelden.svg"
-            alt="Login"
+            alt="Register"
             class="w-50"
           >
           <h1 class="text-center">
@@ -22,15 +22,20 @@
 
           <!-- name -->
           <div class="form-group row">
-            <div class="col-1 col-form-label">
-              <i class="fas fa-signature"></i>
+            <div class="col-5">
+              <div class="row">
+                <label>
+                  <i class="fas fa-signature"></i>
+                  {{ y18n('usernamePH') }}
+                </label>
+              </div>
             </div>
             <div class="col">
               <input
                 id="name-input"
                 v-model="name"
-                :placeholder="y18n('namePH')"
-                :aria-label="y18n('namePH')"
+                :placeholder="y18n('usernamePH')"
+                :aria-label="y18n('usernamePH')"
                 type="text"
                 :disabled="submitOk"
                 class="form-control"
@@ -96,8 +101,13 @@
 
           <!-- email -->
           <div class="form-group row">
-            <div class="col-1 col-form-label">
-              <i class="fas fa-at"></i>
+            <div class="col-5">
+              <div class="row">
+                <label>
+                  <i class="fas fa-at"></i>
+                  {{ y18n('emailPH') }}
+                </label>
+              </div>
             </div>
             <div class="col">
               <input

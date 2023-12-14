@@ -2,24 +2,23 @@
   <div class="pwd-input">
     <!-- Password -->
     <div class="form-group row">
-      <span
-        id="pwd-label"
-        :class="`col-${labelWidth}`"
-        class="col-form-label"
-      >
-        <span v-if="labelIconsOnly">
-          <i
-            v-b-tooltip.auto
-            class="fas fa-key"
-            :title="newInput? y18n('profile.newPassword'): y18n('passwordPH')"
-          ></i>
+      <div class="col-5">
+        <span
+          id="pwd-label"
+          :class="`col-${labelWidth}`"
+        >
+          <div
+            class="row"
+            style="position:relative; top:-20px;"
+          >
+            <label>
+              <i class="fas fa-key"></i>
+              {{ newInput? y18n('profile.newPassword'): y18n('passwordPH') }}
+            </label>
+          </div>
         </span>
-        <span v-else>
-          {{ newInput? y18n('profile.newPassword'): y18n('passwordPH') }}
-        </span>
-
-      </span>
-      <div class="col">
+      </div>
+      <div class="col-7">
         <password
           v-model="pwdSet"
           class="pwd-input"
@@ -45,24 +44,26 @@
 
     <!-- repeat password -->
     <div class="form-group row">
-      <label
-        id="repeat-label"
-        for="repeatPwd"
-        :class="`col-${labelWidth}`"
-        class="col-form-label"
-      >
-        <span v-if="labelIconsOnly">
-          <i
-            v-b-tooltip.auto
-            class="fas fa-redo-alt"
-            :title="y18n('password2PH')"
-          ></i>
+      <div class="col-5">
+        <span
+          id="repeat-label"
+          for="repeatPwd"
+          :class="`col-${labelWidth}`"
+          class="col-form-label"
+        >
+          <div
+            class="row"
+            style="position:relative; top:-20px;"
+          >
+            <label>
+              <i class="fas fa-redo-alt"></i>
+              {{ y18n('password2PH') }}
+            </label>
+          </div>
         </span>
-        <span v-else>
-          {{ y18n('password2PH') }}
-        </span>
-      </label>
-      <div :class="`col-${inputWidth}`">
+      </div>
+
+      <div class="col-7">
         <input
           id="repeatPwd"
           v-model="pwdRepeat"
