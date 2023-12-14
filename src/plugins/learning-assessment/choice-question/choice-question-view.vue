@@ -166,6 +166,8 @@ export default {
   ],
 
   data () {
+    console.log(` ...this.viewData: ${this.viewData}`)
+    console.log(this.viewData)
     return {
       answers: [],
       checked: [],

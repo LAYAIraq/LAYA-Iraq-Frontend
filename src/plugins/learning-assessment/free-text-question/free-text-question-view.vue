@@ -69,15 +69,15 @@ export default {
     /**
      */
     async commit () {
-      console.log(`this.contents -- ${JSON.stringify(this.contents)}`) //content des freitexts
-      // console.log(this.contents) //content object des freitexts
+      console.log(`this.contents -- ${JSON.stringify(this.contents)}`) // content des freitexts
+      // console.log(this.contents) // content object des freitexts
       console.log('---------------------')
       // console.log(this.courseContent[this.pathId]) // dieses Assignment
       // console.log(this.$store.getters.course.courseId)
       // console.log(this.$store.getters) // funktionen zum callen
       // console.log(await this.$store.dispatch('enrollmentFetch', this.$store.getters.course.courseId)) //check for enrollement
       console.log('----++++++++++++++++')
-      console.log(this.$store.state.enrollment) //getEnrolement
+      console.log(this.$store.state.enrollment) // getEnrolement
       this.$store.commit('freetextAdd', this.contents)
       // this.$forceUpdate()
       this.$store.dispatch('enrollmentUpdate')
@@ -126,7 +126,6 @@ export default {
         console.log(this.contents)
         this.$forceUpdate()
       })
-      console.log('ssssssssssssss')
       if (this.$store.state.enrollment['free-text']) {
         quill.setContents(this.$store.state.enrollment['free-text'])
       }

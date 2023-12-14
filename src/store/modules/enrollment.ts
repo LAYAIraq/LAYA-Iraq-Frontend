@@ -10,9 +10,11 @@ import { stripKey } from '@/mixins/general/helpers'
 export default {
   state: {
     enrollment: {
-      feedback: {}
+      feedback: {},
+      freetext: {}
     },
-    userEnrolled: false
+    userEnrolled: false,
+    enrollmentList: []
   },
 
   getters: {
@@ -56,6 +58,13 @@ export default {
      */
     userEnrolled (state: { userEnrolled: boolean }) {
       return state.userEnrolled
+    },
+
+    /**
+     * Author: akokay
+     */
+    enrollmentList: (state) => {
+      return state.enrollmentList
     }
   },
 
@@ -112,7 +121,9 @@ export default {
       }
       state.enrollment.feedback[id] = stripKey('id', feedbackData)
     },
-
+    /**
+     * Author: akokay
+     */
     freetextAdd (
       state: {
         enrollment: {
@@ -122,6 +133,18 @@ export default {
       freetextData: object
     ) {
       state.enrollment.freetext = freetextData
+    },
+    /**
+     * Author: akokay
+     */
+    enrollmentsAdd (
+      state: { enrollmentList: Array<object> },
+      enrollmentsObject: { subs: Array<object> }
+    ) {
+      console.log('enrollmentsAdd')
+      console.log(...enrollmentsObject.subs)
+      // state.enrollmentList.push(...enrollmentsObject.subs)
+      state.enrollmentList = enrollmentsObject.subs
     }
   },
 
@@ -289,8 +312,9 @@ export default {
       return new Promise((resolve, reject) => {
         http.get(`enrollments/getAllByCourseId?courseId=${courseId}`)
           .then(({ data }) => {
-            console.log('Enrollment exists!')
-            resolve(data)
+            // console.log('Enrollment exists!')
+            commit('enrollmentsAdd', data)
+            resolve('Enrollment exists!')
           })
           .catch(err => reject(err))
           .finally(() => commit('setBusy', false))

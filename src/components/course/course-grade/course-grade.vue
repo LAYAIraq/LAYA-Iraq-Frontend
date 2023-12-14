@@ -8,19 +8,34 @@
 <template>
   <div>
     <p>Ttsd</p>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <course-grade-details></course-grade-details>
+        </div> <!-- col -->
+      </div> <!-- row -->
+    </div> <!-- container -->
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { locale } from '@/mixins'
+// import http from 'axios'
+import CourseGradeDetails from '@/components/course/course-grade/course-grade-details.vue'
 
 export default {
   name: 'CourseGrade',
 
+  components: {
+    CourseGradeDetails // not lazily loaded b/c always visible
+  },
+
   async created () {
-    console.log('liste!!!')
-    console.log(this)
-    console.log(this.$store.getters) // check for enrollement
-    console.log(await this.$store.dispatch('getCourseEnrollments', this.$store.getters.course.courseId))
+    // console.log('liste!!!')
+    // console.log(this)
+    // console.log(this.$store.getters) // check for enrollement
+    // console.log(await this.$store.dispatch('getCourseEnrollments', this.$store.getters.course.courseId))
   }
 }
 </script>
