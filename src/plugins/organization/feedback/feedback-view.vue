@@ -83,9 +83,9 @@
               :key="item.id"
               class="flaggable item mb-5"
             >
-              <h3 class="text-center item-label">
+              <label class="text-center item-label">
                 {{ courseSimple? item.simple : item.label }}
-              </h3>
+              </label>
 
               <div class="d-flex justify-content-between">
                 <b
