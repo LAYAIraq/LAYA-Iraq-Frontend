@@ -71,14 +71,14 @@ Dependencies:
           :class="marginClass()"
         >
           <b-nav-item
-            v-if="isAdmin"
+            v-if="isAdmin || isSuperAdmin"
             to="/admin"
           >
             <i class="fas fa-solid fa-screwdriver"></i>
             {{ y18n('adminPanel.title') }}
           </b-nav-item>
           <b-nav-item
-            v-if="isEditor"
+            v-if="isEditor || isAdmin || isSuperAdmin"
             to="/editor"
           >
             <i class="fas fa-user-tie"></i>
@@ -175,6 +175,7 @@ export default {
   computed: {
     ...mapGetters([
       'isAdmin',
+      'isSuperAdmin',
       'isEditor',
       'profileLanguage',
       'userId',
