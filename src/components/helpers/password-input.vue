@@ -4,7 +4,7 @@
     <div class="form-group row">
       <div class="col-5">
         <span
-          id="pwd-label"
+          id="password-label"
           :class="`col-${labelWidth}`"
         >
           <div
