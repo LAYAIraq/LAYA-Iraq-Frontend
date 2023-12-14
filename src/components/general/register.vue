@@ -57,7 +57,7 @@
                 v-if="nameTaken"
                 id="name-taken-err"
                 class="text-center"
-                :aria-hidden="!nameTaken"
+                :aria-label="!nameTaken"
               >
                 <strong>
                   {{ y18n('nameTaken') }}
@@ -67,7 +67,7 @@
                 v-else-if="wrongNameCharacters.length === 0"
                 id="name-empty-err"
                 class="col text-center"
-                :aria-hidden="nameTaken"
+                :aria-label="nameTaken"
               >
                 <strong>
                   {{ y18n('nameErrEmpty') }}
@@ -77,7 +77,7 @@
                 v-else
                 id="name-err"
                 class="text-center"
-                :aria-hidden="nameTaken"
+                :aria-label="nameTaken"
               >
                 <strong>
                   {{ y18n('nameErr') }} <br>
@@ -129,7 +129,7 @@
             <div
               v-if="errEmail"
               id="email-err"
-              :aria-hidden="!emailTaken"
+              :aria-label="!emailTaken"
               class="col text-center"
             >
               <i class="fas fa-exclamation-triangle"></i>

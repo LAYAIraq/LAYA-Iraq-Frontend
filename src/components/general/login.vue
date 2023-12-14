@@ -78,7 +78,7 @@
             <div
               v-if="submitFailed"
               id="login-error"
-              :aria-hidden="submitFailed? 'false' : 'true'"
+              :aria-label="submitFailed? 'false' : 'true'"
               class="font-weight-bold text-center mt-3"
             >
               <i class="fas fa-exclamation-triangle"></i>
