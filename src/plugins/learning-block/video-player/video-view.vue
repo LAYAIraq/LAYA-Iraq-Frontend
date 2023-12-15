@@ -21,11 +21,13 @@ Dependencies:
         class="flaggable row"
       >
         <h2>{{ courseSimple? title.simple : title.text }}</h2>
-        <flag-icon
-          v-if="!editPreview"
-          :ref-data="title"
-          @flagged="title.flagged = true"
-        ></flag-icon>
+        <a>
+          <flag-icon
+            v-if="!editPreview"
+            :ref-data="title"
+            @flagged="title.flagged = true"
+          ></flag-icon>
+        </a>
       </div>
 
       <div>

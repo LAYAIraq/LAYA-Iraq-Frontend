@@ -21,6 +21,7 @@ Dependencies:
         toggleable="lg"
         type="light"
         variant="light"
+        class="custom-navbar"
       >
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -35,7 +36,7 @@ Dependencies:
             <img
               style="height: inherit"
               src="../../assets/images/logo-iraq-xs.png"
-              alt="Laya - Learn as you are"
+              alt="Logo Laya Iraq - Learn as you are"
             >
           </b-navbar-brand>
 
@@ -46,9 +47,15 @@ Dependencies:
               v-if="userOnline"
               to="/courses"
             >
-              <i class="fas fa-chalkboard-teacher"></i>
+              <i
+                class="fas fa-chalkboard-teacher"
+                aria-hidden="true"
+              ></i>
               {{ y18n('header.courses') }}
             </b-nav-item>
+            <li v-else>
+              <!-- dummy to keep header layout intact when user is not logged on -->
+            </li>
 
             <!-- Right-aligned links -->
             <div class="d-flex">
@@ -57,14 +64,20 @@ Dependencies:
                 v-if="!userOnline"
                 to="/register"
               >
-                <i class="fas fa-user-plus"></i>
+                <i
+                  class="fas fa-user-plus"
+                  aria-hidden="true"
+                ></i>
                 {{ y18n('header.register') }}
               </b-nav-item>
               <b-nav-item
                 v-if="!userOnline"
                 to="/login"
               >
-                <i class="fas fa-sign-in-alt"></i>
+                <i
+                  class="fas fa-sign-in-alt"
+                  aria-hidden="true"
+                ></i>
                 {{ y18n('login.title') }}
               </b-nav-item>
 
@@ -73,14 +86,20 @@ Dependencies:
                 v-if="userOnline && isAdmin"
                 to="/admin"
               >
-                <i class="fas fa-solid fa-screwdriver"></i>
+                <i
+                  class="fas fa-solid fa-screwdriver"
+                  aria-hidden="true"
+                ></i>
                 {{ y18n('adminPanel.title') }}
               </b-nav-item>
               <b-nav-item
                 v-if="userOnline && isEditor"
                 to="/editor"
               >
-                <i class="fas fa-user-tie"></i>
+                <i
+                  class="fas fa-user-tie"
+                  aria-hidden="true"
+                ></i>
                 Editor Panel
               </b-nav-item>
               <header-notifications v-if="userOnline"></header-notifications>
@@ -88,14 +107,20 @@ Dependencies:
                 v-if="userOnline"
                 to="/profile"
               >
-                <i class="fas fa-user-alt"></i>
+                <i
+                  class="fas fa-user-alt"
+                  aria-hidden="true"
+                ></i>
                 {{ y18n('header.profile') }}
               </b-nav-item>
               <b-nav-item
                 v-if="userOnline"
                 @click="logout"
               >
-                <i class="fas fa-sign-out-alt"></i>
+                <i
+                  class="fas fa-sign-out-alt"
+                  aria-hidden="true"
+                ></i>
                 {{ y18n('header.logout') }}
               </b-nav-item>
 
@@ -155,6 +180,7 @@ export default {
   computed: {
     ...mapGetters([
       'isAdmin',
+      'isSuperAdmin',
       'isEditor',
       'profileLanguage',
       'userId',
@@ -299,6 +325,13 @@ export default {
 
 .lang-icon-list {
   margin: 5px;
+}
+.custom-navbar {
+}
+.custom-navbar .navbar-brand,
+.custom-navbar .nav-link,
+.custom-navbar .navbar-text {
+  color: black !important;
 }
 
 </style>

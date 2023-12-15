@@ -14,34 +14,36 @@ Since v1.0.0
       <div
         v-if="title.show"
         :id="title.id"
-        class="row flaggable "
+        class="row flaggable"
       >
         <div class="col">
           <h2>
             {{ courseSimple? title.simple: title.text }}
           </h2>
         </div>
+        <a>
+          <flag-icon
+            v-if="!editPreview"
+            :ref-data="title"
+            @flagged="title.flagged = true"
+          ></flag-icon>
+        </a>
       </div>
       <!-- TODO: dynamic CSS for background image -->
       <div class="button-navigation-text">
         <div
           v-if="task"
           :id="task.id"
-          class="flaggable question"
+          class="question"
         >
           {{ courseSimple? task.simple: task.text }}
-          <flag-icon
-            v-if="!editPreview"
-            :ref-data="task"
-            @flagged="task.flagged = true"
-          ></flag-icon>
         </div>
         <div class="answers d-flex flex-wrap justify-content-around">
           <div
             v-for="(answer,i) in answers"
             ref="answerButton"
             :key="answer.id"
-            class="flaggable answer-item centering"
+            class="answer-item"
           >
             <button
               type="button"
@@ -50,12 +52,6 @@ Since v1.0.0
             >
               {{ courseSimple? answer.simple : answer.text }}
             </button>
-            <flag-icon
-              v-if="!editPreview"
-              :ref-data="answer"
-              :interactive="true"
-              @flagged="answer.flagged = true"
-            ></flag-icon>
           </div>
         </div>
       </div>

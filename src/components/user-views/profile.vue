@@ -389,7 +389,7 @@ Since: v1.0.0
                           <!-- Old Password -->
                           <div class="form-group row">
                             <label
-                              for="oldPwd"
+                              for="passwordOld"
                               class="col-sm-3 col-form-label"
                             >{{ y18n('profile.oldPassword') }}</label>
                             <div class="col-sm-9">

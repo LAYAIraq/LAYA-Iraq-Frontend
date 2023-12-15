@@ -29,24 +29,21 @@ Since: v1.0.0
           -->
         </h2>
       </div>
-      <flag-icon
-        v-if="!editPreview"
-        :ref-data="title"
-        @flagged="title.flagged = true"
-      ></flag-icon>
+      <a>
+        <flag-icon
+          v-if="!editPreview"
+          :ref-data="title"
+          @flagged="title.flagged = true"
+        ></flag-icon>
+      </a>
     </div>
     <div
       :id="task.id"
-      class="flaggable row"
+      class="row"
     >
       <div class="col">
         {{ courseSimple? task.simple: task.text }}
       </div>
-      <flag-icon
-        v-if="!editPreview"
-        :ref-data="task"
-        @flagged="task.flagged = true"
-      ></flag-icon>
     </div>
 
     <!-- render options -->
@@ -55,7 +52,7 @@ Since: v1.0.0
         v-for="(option,i) in options"
         :id="option.id"
         :key="'mchoice-option-'+i"
-        class="flaggable form-check m-2 mb-3"
+        class="form-check m-2 mb-3"
       >
         <div>
           <input
@@ -90,17 +87,6 @@ Since: v1.0.0
             :class="eval[i]"
           ></i>
         </div>
-
-        <!--
-        <i class="ml-2" :class="{'far fa-check-circle text-success': true}"></i>
-        <i class="ml-2" :class="{'far fa-times-circle text-danger': true}"></i>
-        -->
-        <flag-icon
-          v-if="!editPreview"
-          :ref-data="option"
-          :interactive="true"
-          @flagged="option.flagged = true"
-        ></flag-icon>
       </div>
     </div>
 
@@ -140,7 +126,10 @@ Since: v1.0.0
       >
         <span>
           {{ y18n('nextContent') }}
-          <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
+          <i
+            :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"
+            aria-hidden="true"
+          ></i>
         </span>
       </button>
       <span

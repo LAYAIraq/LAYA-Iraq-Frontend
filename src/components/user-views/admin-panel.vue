@@ -492,22 +492,23 @@ export default {
   computed: {
     ...mapGetters([
       'isAdmin',
+      'isSuperAdmin',
       'userId',
       'users'
     ]),
 
     /**
-     * function assignableRoles: return roles barring admin to
-     *  prevent having multiple admins accidentally
+     * function assignableRoles: return roles barring superadmin to
+     *  prevent having multiple superadmins accidentally
      *
      * Author: cmc
      *
      * Last Updated: December 3, 2021
-     * @returns {object} roles without admin
+     * @returns {object} roles without superadmin
      */
     assignableRoles () {
       // eslint-disable-next-line
-      return (({ ADMIN, ...o}) => o) (roles)
+      return (({ SUPERADMIN, ...o}) => o) (roles)
     },
 
     /**
@@ -806,7 +807,7 @@ export default {
      * Last Updated: November 11, 2021
      */
     relocateNonAdmin () {
-      if (!this.isAdmin) this.$router.push('/')
+      if (!this.isAdmin && !this.isSuperAdmin) this.$router.push('/')
     },
 
     /**

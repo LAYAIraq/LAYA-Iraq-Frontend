@@ -5,9 +5,10 @@
     variant="light"
   >
     <template slot="button-content">
-      <!-- <i class="fas fa-bell"></i>
-      {{ y18n('notifications') }} -->
-      <i class="fas fa-bell fa-lg"></i>
+      <i
+        class="fas fa-bell fa-lg"
+        aria-hidden="true"
+      ></i>
       {{ y18n('notifications') }}
 
       <span

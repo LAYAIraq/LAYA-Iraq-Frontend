@@ -32,15 +32,17 @@
             -->
           </h4>
         </div>
-        <flag-icon
-          v-if="!editPreview"
-          :ref-data="title"
-          @flagged="title.flagged = true"
-        ></flag-icon>
+        <a>
+          <flag-icon
+            v-if="!editPreview"
+            :ref-data="title"
+            @flagged="title.flagged = true"
+          ></flag-icon>
+        </a>
       </div>
       <div
         :id="task.id"
-        class="flaggable row"
+        class="row"
       >
         <div
           id="task"
@@ -48,11 +50,6 @@
         >
           <p>{{ courseSimple? task.simple: task.text }}</p>
         </div>
-        <flag-icon
-          v-if="!editPreview"
-          :ref-data="task"
-          @flagged="task.flagged = true"
-        ></flag-icon>
       </div>
 
       <hr>
@@ -63,10 +60,10 @@
               v-for="(pair,i) in pairs"
               :id="pair.id"
               :key="pair.id"
-              class="form-group row flaggable"
+              class="form-group row"
             >
               <label
-                :for="pair.label+i"
+                :for="'item-'+i"
                 class="col-sm-6 col-form-label answer-text"
               >
                 <img
@@ -107,12 +104,6 @@
                   <i :class="eval[i]"></i>
                 </div>
               </div>
-              <flag-icon
-                v-if="!editPreview"
-                :ref-data="pair"
-                :interactive="true"
-                @flagged="pair.flagged = true"
-              ></flag-icon>
             </div>
           </form>
         </div>
@@ -140,6 +131,7 @@
               :class="langIsAr?
                 'fas fa-arrow-left' :
                 'fas fa-arrow-right'"
+              aria-hidden="true"
             ></i>
           </span>
         </button>

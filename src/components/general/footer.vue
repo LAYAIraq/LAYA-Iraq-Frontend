@@ -50,7 +50,7 @@ Dependencies: @/mixins/locale.vue
         <div class="col-3 col-lg-3">
           <img
             src="../../assets/images/logo-iraq-m.png"
-            alt="Laya - Learn as you are"
+            alt="Logo Laya Iraq - Learn as you are"
             class="w-100"
           >
         </div>
