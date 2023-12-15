@@ -26,30 +26,52 @@
             {{ y18n('login.title') }}
           </h1>
 
-          <div
-            :class="{error: errEmail}"
-          >
-            <input
-              id="email-input"
-              v-model.trim="email"
-              :placeholder="y18n('emailPH')"
-              type="text"
-              autocomplete="on"
-              :aria-label="y18n('emailPH')"
+          <div class="row">
+            <div class="col-5">
+              <div class="row">
+                <label>
+                  <i class="fas fa-at"></i>
+                  {{ y18n('emailPH') }}
+                </label>
+              </div>
+            </div>
+            <div
+              class="col-4"
+              :class="{error: errEmail}"
             >
+              <input
+                id="email-input"
+                v-model.trim="email"
+                :placeholder="y18n('emailPH')"
+                type="text"
+                autocomplete="on"
+                :aria-label="y18n('emailPH')"
+              >
+            </div>
           </div>
 
-          <div
-            :class="{error: errPwd}"
-          >
-            <input
-              id="pwd-input"
-              v-model.trim="pwd"
-              :placeholder="y18n('passwordPH')"
-              type="password"
-              autocomplete="on"
-              :aria-label="y18n('passwordPH')"
+          <div class="row">
+            <div class="col-5">
+              <div class="row">
+                <label>
+                  <i class="fas fa-key"></i>
+                  {{ y18n('passwordPH') }}
+                </label>
+              </div>
+            </div>
+            <div
+              class="col-4"
+              :class="{error: errPwd}"
             >
+              <input
+                id="pwd-input"
+                v-model.trim="pwd"
+                :placeholder="y18n('passwordPH')"
+                type="password"
+                autocomplete="on"
+                :aria-label="y18n('passwordPH')"
+              >
+            </div>
           </div>
 
           <div class="h-2rem"></div>
