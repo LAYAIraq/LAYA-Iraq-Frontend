@@ -10,6 +10,7 @@ Since: v1.3.0
     <div class="col">
       <b-button
         size="sm"
+        class="w-50"
         variant="warning"
         :class="langIsAr? 'float-left' : 'float-right'"
         @click="$bvModal.show('author-change-authorname-confirm')"
@@ -26,7 +27,8 @@ Since: v1.3.0
       id="author-change-authorname-confirm"
       :title="y18n('changeAuthorName')"
       header-bg-variant="warning"
-      ok-variant="warning"
+      ok-variant="success"
+      cancel-variant="primary"
       :ok-title="y18n('save')"
       :cancel-title="y18n('cancel')"
       centered
@@ -43,6 +45,7 @@ Since: v1.3.0
           :class="'border border-danger'"
           :placeholder="y18n('changeAuthorName.new')"
           :aria-label="y18n('changeAuthorName.new')"
+          @keyup.enter="changeCourseAuthorName"
         >
       </p>
     </b-modal>

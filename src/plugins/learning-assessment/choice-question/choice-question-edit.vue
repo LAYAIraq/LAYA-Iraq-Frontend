@@ -32,9 +32,13 @@ Since: v1.0.0
       :lead="y18n('tipHeadline')"
     >
       <hr class="my-4">
-      <span>
-        {{ y18n('choiceQuestion.tooltip') }}
-      </span>
+      <p
+        v-for="str in y18n('choiceQuestion.tooltip').split(';')"
+        :key="str.length"
+      >
+        <!-- eslint-disable-next-line vue/no-v-html --> <!-- TODO: find a way to avoid v-html -->
+        <span v-html="replacePattern(str, /###([\w\s\-]+)###([A-Z0-9a-z\/.:#]+)###/, linkReplacement(true))"></span>
+      </p>
     </b-jumbotron>
     <hr>
     <form>
@@ -103,50 +107,13 @@ Since: v1.0.0
       </content-title-edit>
 
       <!-- task -->
-      <div class="form-group">
-        <div class="row">
-          <label
-            for="choices-task"
-            class="col-2 col-form-label"
-          >
-            {{ y18n('task') }}
-          </label>
-          <div class="col-10">
-            <textarea
-              id="choices-task"
-              v-model="task.text"
-              class="w-100"
-              :placeholder="y18n('taskPlaceholder')"
-            >
-            </textarea>
-          </div>
-        </div>
-        <!-- task simple -->
-        <div
-          v-if="courseSimple"
-          class="row"
-        >
-          <label
-            for="choices-task-simple"
-            class="col-2 col-form-label"
-          >
-            <span class="sr-only">
-              {{ y18n('simpleAlt') }}
-            </span>
-          </label>
-          <div class="col-10">
-            <textarea
-              id="choices-task-simple"
-              v-model="task.simple"
-              class="w-100"
-              :placeholder="y18n('simpleAlt')"
-            >
-            </textarea>
-          </div>
-        </div>
-      </div>
+      <content-task-edit
+        :task="task"
+        @set-task="task = $event"
+      >
+      </content-task-edit>
 
-      <!-- task audio -->
+      <!-- task audio
       <div class="form-group">
         <div class="row">
           <label
@@ -165,7 +132,8 @@ Since: v1.0.0
             >
           </div>
         </div>
-        <!-- task audio simple -->
+
+         task audio simple
         <div
           v-if="courseSimple"
           class="row"
@@ -188,8 +156,9 @@ Since: v1.0.0
             >
           </div>
         </div>
-      </div>
 
+      </div>
+      -->
       <p><b>{{ y18n('items') }}</b></p>
       <div
         v-for="(option, i) in options"
@@ -211,6 +180,7 @@ Since: v1.0.0
               v-model="option.text"
               class="form-control"
               type="text"
+              :placeholder="y18n('plugin.sampleOption')"
             >
             <input
               v-else
@@ -257,7 +227,10 @@ Since: v1.0.0
               :aria-label="y18n('deleteField')"
               @click="_itemDelete(options, i)"
             >
-              <i class="fas fa-times"></i>
+              <i
+                class="fas fa-times"
+                aria-hidden="true"
+              ></i>
             </button>
           </div>
         </div>
@@ -265,14 +238,15 @@ Since: v1.0.0
           v-if="courseSimple"
           class="row"
         >
+          <!-- caption simple -->
           <label
             :for="'option-text-'+i"
             class="col-form-label col-2"
           >
-            <span class="sr-only">
-              {{ y18n('simpleAlt') }}
-            </span>
+            {{ y18n('simpleAlt') }}
+
           </label>
+
           <div class="col-7">
             <input
               v-if="variation === single || variation === multiple"
@@ -280,6 +254,7 @@ Since: v1.0.0
               v-model="options[i].simple"
               class="form-control"
               type="text"
+              :placeholder="y18n('simpleAlt')"
             >
             <input
               v-else
@@ -289,6 +264,12 @@ Since: v1.0.0
               type="text"
               readonly
             >
+            <p
+              v-if="isMissing(option)"
+              id="'missing-simple-language' + i"
+            >
+              {{ y18n('simpleAlt.missing') }}
+            </p>
           </div>
         </div>
       </div>
@@ -296,10 +277,13 @@ Since: v1.0.0
       <button
         v-if="variation === single || variation === multiple"
         type="button"
-        class="btn btn-primary btn-sm"
+        class="btn btn-success btn-sm"
         @click="_itemAdd(options, newItem())"
       >
-        <i class="fas fa-plus"></i>{{ y18n('itemAdd') }}
+        <i
+          class="fas fa-plus"
+          aria-hidden="true"
+        ></i>{{ y18n('itemAdd') }}
       </button>
     </form>
     <b-modal
@@ -326,10 +310,11 @@ import { array, locale, pluginEdit, routes, tooltipIcon } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 import { deepCopy } from '@/mixins/general/helpers'
 import ContentTitleEdit from '@/components/helpers/content-title-edit'
+import ContentTaskEdit from '@/components/helpers/content-task-edit'
 
 export default {
   name: 'ChoiceQuestionEdit',
-  components: { ContentTitleEdit },
+  components: { ContentTitleEdit, ContentTaskEdit },
   mixins: [
     array,
     locale,
@@ -356,6 +341,7 @@ export default {
 
   computed: {
     ...mapGetters(['courseContent', 'courseSimple'])
+
   },
 
   watch: {
@@ -410,8 +396,8 @@ export default {
      */
     newItem () {
       return {
-        simple: this.y18n('simpleAlt'),
-        text: this.y18n('plugin.sampleOption'),
+        simple: '',
+        text: '',
         flagged: false,
         id: uuidv4()
       }
@@ -444,6 +430,14 @@ export default {
     switchToTF (e) {
       e.preventDefault()
       this.$bvModal.show('confirm-change-tf')
+    },
+    /**
+     * Function isMissing: Checks if simple language is filled in
+     * Author: nv
+     * Since: v1.3.0
+     */
+    isMissing (option) {
+      return !option.simple
     }
   }
 }

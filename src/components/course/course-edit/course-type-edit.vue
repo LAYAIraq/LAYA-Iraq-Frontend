@@ -32,8 +32,9 @@ Dependencies:
       id="author-changeContentType-confirm"
       :title="y18n('type.changeType')"
       header-bg-variant="warning"
-      ok-variant="warning"
-      :ok-title="y18n('type.modal.ok')"
+      ok-variant="success"
+      cancel-variant="primary"
+      :ok-title="y18n('save')"
       :cancel-title="y18n('cancel')"
       centered
       @ok="changeContentType"

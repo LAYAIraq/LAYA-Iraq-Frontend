@@ -30,9 +30,13 @@
           :lead="y18n('tipHeadline')"
         >
           <hr>
-          <span>
-            {{ y18n('uploadFile.tooltip') }}
-          </span>
+          <p
+            v-for="str in y18n('uploadFile.tooltip').split(';')"
+            :key="str.length"
+          >
+            <!-- eslint-disable-next-line vue/no-v-html --> <!-- TODO: find a way to avoid v-html -->
+            <span v-html="replacePattern(str, /###([\w\s\-]+)###([A-Z0-9a-z\/.:#]+)###/, linkReplacement(true))"></span>
+          </p>
         </b-jumbotron>
       </div>
 
@@ -93,6 +97,7 @@
       centered
       header-bg-variant="danger"
       ok-variant="danger"
+      cancel-variant="primary"
       @ok="fileDelete"
       @cancel="fileToDelete = null"
     >

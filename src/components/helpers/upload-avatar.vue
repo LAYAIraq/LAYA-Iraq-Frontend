@@ -34,7 +34,7 @@
             extensions="gif,jpg,jpeg,png,webp"
             accept="image/png,image/gif,image/jpeg,image/webp"
             name="file"
-            class="btn btn-primary"
+            class="btn btn-success"
             :post-action="postAvatar"
             :headers="headers"
             :drop="!edit"
@@ -64,14 +64,14 @@
         <div class="text-center p-4">
           <button
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-primary"
             @click.prevent="$refs.upload.clear"
           >
             {{ y18n('cancel') }}
           </button>
           <button
             type="submit"
-            class="btn btn-primary"
+            class="btn btn-success"
             @click.prevent="editSave"
           >
             {{ y18n('save') }}

@@ -29,7 +29,7 @@
       <div>
         <b-button
           type="submit"
-          variant="info"
+          variant="success"
           :disabled="!passwordOk"
           @click.prevent="resetPassword"
         >

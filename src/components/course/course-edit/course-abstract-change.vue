@@ -10,6 +10,7 @@ Since: v1.3.0
     <div class="col">
       <b-button
         size="sm"
+        class="w-50"
         variant="warning"
         :class="langIsAr? 'float-left' : 'float-right'"
         @click="$bvModal.show('author-change-abstract-confirm')"
@@ -26,13 +27,14 @@ Since: v1.3.0
       id="author-change-abstract-confirm"
       :title="y18n('changeAbstract')"
       header-bg-variant="warning"
-      ok-variant="warning"
+      ok-variant="success"
+      cancel-variant="primary"
       :ok-title="y18n('save')"
       :cancel-title="y18n('cancel')"
       centered
       static
       :aria-label="y18n('popupwarning')"
-      @ok="changeCourseabstract"
+      @ok="changeCourseAbstract"
     >
       <p>
         {{ y18n('changeAbstract') }}
@@ -43,6 +45,7 @@ Since: v1.3.0
           :class="'border border-danger'"
           :placeholder="y18n('changeAbstract.new')"
           :aria-label="y18n('changeAbstract.new')"
+          @keyup.enter="changeCourseAbstract"
         >
       </p>
     </b-modal>
@@ -83,7 +86,7 @@ export default {
      * Author: nv
      * Since: v1.3.0
      */
-    changeCourseabstract (e) {
+    changeCourseAbstract (e) {
       e.preventDefault()
       if (this.newAbstract !== this.course.abstract) {
         this.$nextTick(() => {
