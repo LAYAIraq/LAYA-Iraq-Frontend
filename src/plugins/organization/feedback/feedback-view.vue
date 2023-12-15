@@ -53,25 +53,22 @@
               -->
             </h2>
           </div>
-          <flag-icon
-            v-if="!editPreview"
-            :ref-data="title"
-            @flagged="title.flagged = true"
-          ></flag-icon>
+          <a>
+            <flag-icon
+              v-if="!editPreview"
+              :ref-data="title"
+              @flagged="title.flagged = true"
+            ></flag-icon>
+          </a>
         </div>
 
         <div
           :id="task.id"
-          class="flaggable row"
+          class="row"
         >
           <div class="col">
             <p>{{ courseSimple? task.simple : task.text }}</p>
           </div>
-          <flag-icon
-            v-if="!editPreview"
-            :ref-data="task"
-            @flagged="task.flagged = true"
-          ></flag-icon>
         </div>
         <hr>
 
@@ -81,7 +78,7 @@
               v-for="(item, i) in items"
               :id="item.id"
               :key="item.id"
-              class="flaggable item mb-5"
+              class="item mb-5"
             >
               <label class="text-center item-label">
                 {{ courseSimple? item.simple : item.label }}
@@ -106,12 +103,6 @@
                 :aria-valuetext="categories[choice[i]]"
                 :aria-label="y18n('feedback.label.slider')"
               >
-              <flag-icon
-                v-if="!editPreview"
-                :ref-data="item"
-                :interactive="true"
-                @flagged="item.flagged = true"
-              ></flag-icon>
             </div>
           </div>
         </div>
