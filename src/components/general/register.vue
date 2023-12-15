@@ -13,7 +13,6 @@
           <div style="height: 2rem"></div>
           <img
             src="../../assets/images/anmelden.svg"
-            alt="Login"
             class="w-50"
           >
           <h1 class="text-center">
@@ -22,15 +21,23 @@
 
           <!-- name -->
           <div class="form-group row">
-            <div class="col-1 col-form-label">
-              <i class="fas fa-signature"></i>
+            <div class="col-5">
+              <div class="row">
+                <label>
+                  <i 
+                    class="fas fa-signature"
+                    aria-hidden="true"
+                  ></i>
+                  {{ y18n('usernamePH') }}
+                </label>
+              </div>
             </div>
             <div class="col">
               <input
                 id="name-input"
                 v-model="name"
-                :placeholder="y18n('namePH')"
-                :aria-label="y18n('namePH')"
+                :placeholder="y18n('usernamePH')"
+                :aria-label="y18n('usernamePH')"
                 type="text"
                 :disabled="submitOk"
                 class="form-control"
@@ -54,7 +61,7 @@
                 v-if="nameTaken"
                 id="name-taken-err"
                 class="text-center"
-                :aria-hidden="!nameTaken"
+                :aria-label="!nameTaken"
               >
                 <strong>
                   {{ y18n('nameTaken') }}
@@ -64,7 +71,7 @@
                 v-else-if="wrongNameCharacters.length === 0"
                 id="name-empty-err"
                 class="col text-center"
-                :aria-hidden="nameTaken"
+                :aria-label="nameTaken"
               >
                 <strong>
                   {{ y18n('nameErrEmpty') }}
@@ -74,7 +81,7 @@
                 v-else
                 id="name-err"
                 class="text-center"
-                :aria-hidden="nameTaken"
+                :aria-label="nameTaken"
               >
                 <strong>
                   {{ y18n('nameErr') }} <br>
@@ -96,8 +103,16 @@
 
           <!-- email -->
           <div class="form-group row">
-            <div class="col-1 col-form-label">
-              <i class="fas fa-at"></i>
+            <div class="col-5">
+              <div class="row">
+                <label>
+                  <i 
+                    class="fas fa-at"
+                    aria-hidden="true"
+                  ></i>
+                  {{ y18n('emailPH') }}
+                </label>
+              </div>
             </div>
             <div class="col">
               <input
@@ -123,7 +138,7 @@
             <div
               v-if="errEmail"
               id="email-err"
-              :aria-hidden="!emailTaken"
+              :aria-label="!emailTaken"
               class="col text-center"
             >
               <i class="fas fa-exclamation-triangle"></i>
@@ -175,7 +190,10 @@
               @click.prevent="submit"
             >
               {{ y18n('register.submit') }}
-              <i class="fas fa-user-plus"></i>
+              <i
+                class="fas fa-user-plus"
+                aria-hidden="true"
+              ></i>
             </button>
           </h2>
 

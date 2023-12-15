@@ -32,7 +32,7 @@
           <div class="d-flex justify-content-between">
             <button
               type="button"
-              class="btn btn-secondary"
+              class="btn btn-primary"
               :class="{ active: preview }"
               @click="preview = !preview"
             >
@@ -65,6 +65,7 @@
       header-bg-variant="danger"
       :ok-title="y18n('save.warning.notPossible')"
       ok-variant="danger"
+      cancel-variant="primary"
       static
       centered
     >

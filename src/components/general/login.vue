@@ -19,37 +19,58 @@
           <div class="h-2rem"></div>
           <img
             src="../../assets/images/anmelden.svg"
-            alt="Login"
             class="d-block m-auto w-50"
           >
           <h1 class="text-center">
             {{ y18n('login.title') }}
           </h1>
 
-          <div
-            :class="{error: errEmail}"
-          >
-            <input
-              id="email-input"
-              v-model.trim="email"
-              :placeholder="y18n('emailPH')"
-              type="text"
-              autocomplete="on"
-              :aria-label="y18n('emailPH')"
+          <div class="row">
+            <div class="col-5">
+              <div class="row">
+                <label>
+                  <i class="fas fa-at"></i>
+                  {{ y18n('emailPH') }}
+                </label>
+              </div>
+            </div>
+            <div
+              class="col-4"
+              :class="{error: errEmail}"
             >
+              <input
+                id="email-input"
+                v-model.trim="email"
+                :placeholder="y18n('emailPH')"
+                type="text"
+                autocomplete="on"
+                :aria-label="y18n('emailPH')"
+              >
+            </div>
           </div>
 
-          <div
-            :class="{error: errPwd}"
-          >
-            <input
-              id="pwd-input"
-              v-model.trim="pwd"
-              :placeholder="y18n('passwordPH')"
-              type="password"
-              autocomplete="on"
-              :aria-label="y18n('passwordPH')"
+          <div class="row">
+            <div class="col-5">
+              <div class="row">
+                <label>
+                  <i class="fas fa-key"></i>
+                  {{ y18n('passwordPH') }}
+                </label>
+              </div>
+            </div>
+            <div
+              class="col-4"
+              :class="{error: errPwd}"
             >
+              <input
+                id="pwd-input"
+                v-model.trim="pwd"
+                :placeholder="y18n('passwordPH')"
+                type="password"
+                autocomplete="on"
+                :aria-label="y18n('passwordPH')"
+              >
+            </div>
           </div>
 
           <div class="h-2rem"></div>
@@ -60,7 +81,10 @@
             @click.prevent="submit"
           >
             {{ y18n('login.title') }}
-            <i class="fas fa-sign-in-alt"></i>
+            <i
+              class="fas fa-sign-in-alt"
+              aria-hidden="true"
+            ></i>
           </button>
 
           <!-- busy note -->
@@ -75,7 +99,7 @@
             <div
               v-if="submitFailed"
               id="login-error"
-              :aria-hidden="submitFailed? 'false' : 'true'"
+              :aria-label="submitFailed? 'false' : 'true'"
               class="font-weight-bold text-center mt-3"
             >
               <i class="fas fa-exclamation-triangle"></i>
@@ -96,7 +120,10 @@
             {{ y18n('login.registerHint1') }}
             <br>
             <router-link :to="{ name: 'register'}">
-              <i class="fas fa-user-plus"></i>
+              <i
+                class="fas fa-user-plus"
+                aria-hidden="true"
+              ></i>
               {{ y18n('login.registerHint2') }}
             </router-link>
           </div>
@@ -108,6 +135,7 @@
       :title="y18n('login.passwordReset')"
       header-bg-variant="warning"
       ok-variant="warning"
+      cancel-variant="primary"
       :ok-title="y18n('login.passwordReset')"
       :cancel-title="y18n('cancel')"
       :aria-label="y18n('popupwarning')"

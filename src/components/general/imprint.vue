@@ -26,9 +26,19 @@
           </p>
           <p>
             LAYA Iraq has been further developed by Professor Frederike Bartels
-            and Professor Marie-Christine Vierbuchen and their team in the DAAD-funded
-            project "Improving Inclusive Teacher Education in Iraq" for use at Iraqi
-            universities<a href="#research-project">³</a>.
+            and Professor Marie-Christine Vierbuchen and their teams in the DAAD-funded
+            projects "Improving Inclusive Teacher Education in Iraq" (2019-2021)<a href="#research-project-1">³</a>,
+            "Digital and Inclusive - Innovative Teacher Training for Primary School Teachers in Iraq" (2022-2023)
+            <a href="#research-project-2">⁴</a> and "Special Educational Needs (in Regular Schools) - Train the Teacher
+            Trainer" (2022-2023)<a href="#research-project-3">⁵</a> for use at Iraqi universities.
+          </p>
+
+          <p>
+            This learning platform has been developed in cooperation with the University of Dohuk, University of Garmian,
+            and University of Zakho in the Kurdistan region of Iraq as well as the University of Kufa and University of
+            Mosul in Iraq.
+
+            We appreciate the help of the project participants as well as the university responsibles!
           </p>
 
           <p>
@@ -69,11 +79,37 @@
           <p>
             ³
             <a
-              id="research-project"
+              id="research-project-1"
               href="https://www.uni-vechta.de/erziehungswissenschaften/team/standard-titel-1/improving-inclusive-teacher-education-in-iraq"
             >
               https://www.uni-vechta.de/erziehungswissenschaften/team/standard-titel-1/improving-inclusive-teacher-education-in-iraq
             </a>
+          </p>
+          <p>
+            ⁴
+            <a
+              id="research-project-2"
+              href="https://www.uni-vechta.de/erziehungswissenschaften/team/bartels-frederike/projekte/leila"
+            >
+              https://www.uni-vechta.de/erziehungswissenschaften/team/bartels-frederike/projekte/leila
+            </a>
+          </p>
+          <p>
+            ⁵
+            <a
+              id="research-project-3"
+              href="https://www.uni-flensburg.de/sl/forschung-projekte-entwicklung/projekte-aktuell/professorin-dr-marie-christine-vierbuchen/sen-t3"
+            >
+              https://www.uni-flensburg.de/sl/forschung-projekte-entwicklung/projekte-aktuell/professorin-dr-marie-christine-vierbuchen/sen-t3
+            </a>
+          </p>
+          <p>
+            <img
+              src="../../assets/images/daad_logo_suppl_de+en_h_basic_rgb.png"
+              alt="Logo of DAAD"
+              width="300px"
+            >
+            Funded by the German Academic Exchange Service (DAAD).
           </p>
         </div>
       </div>

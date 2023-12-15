@@ -50,7 +50,7 @@
         </div>
         <div class="col">
           <b-button
-            variant="secondary"
+            variant="primary"
             @click="prepareViewModal(i)"
           >
             {{ y18n('editorPanel.view') }}
@@ -90,7 +90,7 @@
           <!--          </span>-->
           <span v-else>
             <b-button
-              variant="secondary"
+              variant="warning"
               disabled
             >
               {{ y18n('editorPanel.awaiting') }}
@@ -136,7 +136,9 @@
     <b-modal
       id="view-application"
       :title="y18n('editorPanel.view')"
-      header-bg-variant="primary"
+      header-bg-variant="warning"
+      ok-variant="success"
+      cancel-variant="primary"
       centered
       static
       @ok="voteOnApplication"
@@ -214,7 +216,10 @@
         >
           {{ y18n('editorPanel.revoke') }}
         </b-button>
-        <b-button @click="hide">
+        <b-button
+          variant="primary"
+          @click="hide"
+        >
           {{ y18n('cancel') }}
         </b-button>
       </template>
@@ -247,6 +252,8 @@ export default {
       'applicationList',
       'editorVotes',
       'isEditor',
+      'isAdmin',
+      'isSuperAdmin',
       // 'editorNumber', // currently not used
       'userId'
     ]),
@@ -312,7 +319,7 @@ export default {
   },
 
   created () {
-    if (!this.isEditor) {
+    if (!this.isEditor && !this.isAdmin && !this.isSuperAdmin) {
       this.$router.replace('/') // reroute non-editors
     }
     this.applicationsFetch() // get applications

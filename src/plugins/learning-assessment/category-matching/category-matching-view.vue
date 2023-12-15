@@ -55,7 +55,7 @@
             :key="item.id"
             class="item mb-5"
           >
-            <h3 class="text-center item-label">
+            <label class="text-center item-label">
               {{ courseSimple? item.simple : item.label }}
               <i
                 v-if="checked"
@@ -66,7 +66,7 @@
                 }"
               >
               </i>
-            </h3>
+            </label>
 
             <div class="d-flex justify-content-between">
               <b
@@ -94,7 +94,7 @@
       <div class="row">
         <button
           type="button"
-          class="btn btn-link mt-3"
+          class="btn btn-primary"
           :class="langIsAr? 'float-right': 'float-left'"
           :disabled="checked"
           aria-labelledby="solutions"
@@ -109,7 +109,10 @@
           @click="done"
         >
           {{ y18n('nextContent') }}
-          <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
+          <i
+            :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"
+            aria-hidden="true"
+          ></i>
         </button>
       </div>
       <div

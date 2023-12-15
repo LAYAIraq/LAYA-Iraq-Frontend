@@ -26,123 +26,118 @@
           </h2>
         </div>
       </div>
-
       <div
         v-if="filtered.length > 0"
-        class="row header"
+        class="container"
       >
-        <div class="col">
-          <h2>{{ y18n('courseName') }}</h2>
-        </div>
-        <div class="col">
-          <h3>{{ y18n('author') }}</h3>
-        </div>
-        <div class="col">
-          <h3>{{ y18n('courseLanguage') }}</h3>
-        </div>
-        <div class="col-2">
-          <h4
-            class="sr-only"
-            aria-hidden="true"
-          >
-            {{ y18n('courseList.properties') }}
-          </h4>
-        </div>
-        <div class="col-3">
-          <b-button
-            v-b-toggle="'collapse-2'"
-            :class="langIsAr? 'float-left mr-auto' : 'float-right ml-auto'"
-          >
-            {{ y18n('expand') }}
-          </b-button>
-        </div>
-      </div>
-
-      <div
-        v-for="course in filtered"
-        :key="course.category+'-'+course.name"
-        class="row py-3 course"
-      >
-        <div class="col">
-          <span
-            v-if="course.author === userId"
-            :class="langIsAr? 'author-icon-right': 'author-icon-left'"
-          >
-            <i
-              v-b-tooltip.bottom
-              class="fas fa-user-graduate"
-              :title="y18n('courseList.authorRights')"
-            ></i>
-          </span>
-          {{ course.name }}
-        </div>
-
-        <div class="col">
-          {{ course.authorName === "" || course.authorName === null ? y18n('profile.language.notlisted') : course.authorName }}
-        </div>
-
-        <div class="col">
-          {{ languageList.some(lang => lang === course.language) ? y18n(`profile.language.${course.language}`) : y18n('profile.language.notlisted') }}
-        </div>
-
-        <div class="col-2">
-          <ul class="course-props">
-            <li
-              v-for="set in Object.entries(course.properties).filter(k => k[0] !== 'simple')"
-              v-show="set[1]"
-              :key="`setting-${set[0]}`"
+        <b-table
+          :items="filtered"
+          :fields="fields"
+          responsive
+          stacked="md"
+          class="my-4"
+        >
+          <template #cell(name)="data">
+            {{ data.item.name }}
+            <span
+              v-if="data.item.author === userId"
             >
-              <span
-                v-b-tooltip.top
-                :title="i18n[`courseList.properties.${set[0]}`]"
-              >
-                <i
-                  class="icons-list"
-                  :class="getIcon(set[0])"
-                  :aria-describedby="`label-desc-${set[0]}`"
-                ></i>
-                <span
-                  :id="`label-desc-${set[0]}`"
-                  class="sr-only"
-                >
-                  {{ i18n[`courseList.properties.${set[0]}`] }}
-                </span>
-              </span>
-            </li>
-          </ul>
-        </div>
-        <div class="col-3">
-          <a
-            class="btn indicated-btn"
-            @click="decideButtonAction(course)"
-          >
-            <span v-if="isEnrolled(course)">
-              {{ y18n('courseList.start') }}
-              <i :class="langIsAr? 'fas fa-arrow-left': 'fas fa-arrow-right'"></i>
+              <i
+                v-b-tooltip.bottom
+                class="fas fa-user-graduate"
+                :title="y18n('courseList.authorRights')"
+                :aria-label="y18n('courseList.authorRights')"
+              ></i>
             </span>
-            <span v-else>
-              {{ y18n('courseList.subscribe') }}
-              <i class="fas fa-file-signature"></i>
-            </span>
+          </template>
 
-          </a>
-          <div
-            v-if="complicitReady && !complicitCourses.has(course.courseId)"
-            v-b-tooltip.top
-            class="indicate-icon"
-            :title="y18n('courseList.notComplicit')"
-          >
-            <i class="fas fa-exclamation-circle"></i>
-          </div>
-        </div>
-        <div class="container-fluid p-2">
-          <b-collapse id="collapse-2">
+          <template #cell(authorName)="data">
+            {{ data.item.authorName === "" || data.item.authorName === null ? y18n('profile.language.notlisted') : data.item.authorName }}
+          </template>
+
+          <template #cell(language)="data">
+            {{ languageList.some(lang => lang === data.item.language) ? y18n(`profile.language.${data.item.language}`) : y18n('profile.language.notlisted') }}
+          </template>
+
+          <template #cell(properties)="data">
+            <ul class="course-props">
+              <li
+                v-for="set in Object.entries(data.item.properties).filter(k => k[0] !== 'simple')"
+                v-show="set[1]"
+                :key="`setting-${set[0]}`"
+              >
+                <span
+                  v-b-tooltip.top
+                  :title="i18n[`courseList.properties.${set[0]}`]"
+                >
+                  <i
+                    class="icons-list"
+                    :class="getIcon(set[0])"
+                    :aria-labelledby="`label-desc-${set[0]}`"
+                  ></i>
+                  <span
+                    :id="`label-desc-${set[0]}`"
+                    class="sr-only"
+                  >{{ i18n[`courseList.properties.${set[0]}`] }}</span>
+                </span>
+              </li>
+            </ul>
+          </template>
+
+          <template #cell(actions)="data">
+            <b-button
+              variant="primary"
+              class="show-button"
+              @click="data.toggleDetails"
+            >
+              {{ data.detailsShowing ? 'Hide Details' : 'Show Details' }}
+            </b-button>
+            <div>
+            </div>
+            <b-button
+              class="start-button"
+              variant="success"
+              @click="decideButtonAction(data.item)"
+            >
+              <div class="row">
+                <div
+                  v-if="complicitReady && !complicitCourses.has(data.item.courseId)"
+                  v-b-tooltip.top
+                  :title="y18n('courseList.notComplicit')"
+                  :aria-label="y18n('courseList.notComplicit')"
+                  class="indicate-icon"
+                >
+                  <i class="fas fa-exclamation-circle"></i>
+                </div>
+
+                <div
+                  v-if="isEnrolled(data.item)"
+                  class="col"
+                >
+                  {{ y18n('courseList.start') }} <i
+                    :class="langIsAr ? 'fas fa-arrow-left' : 'fas fa-arrow-right'"
+                    aria-hidden="true"
+                  ></i>
+                </div>
+                <div
+                  v-else
+                  class="col"
+                >
+                  {{ y18n('courseList.subscribe') }} <i
+                    class="fas fa-file-signature"
+                    aria-hidden="true"
+                  ></i>
+                </div>
+              </div>
+            </b-button>
+          </template>
+          <template #row-details="row">
             <b-card
               :header="y18n('abstract')"
               header-class="collap-header"
               body-class="collap-body"
             >
-              {{ null === course.abstract ? y18n('abstract.notListed') : course.abstract }}
+              {{ null === row.item.abstract ? y18n('abstract.notListed') : row.item.abstract }}
             </b-card>
 
             <b-card
@@ -150,7 +145,7 @@
               header-class="collap-header"
               body-class="collap-body"
             >
-              {{ categoryList.some(cat => cat === course.category) ? y18n(`course.category.${course.category}`) : y18n('course.category.other') }}
+              {{ categoryList.some(cat => cat === row.item.category) ? y18n(`course.category.${row.item.category}`) : y18n('course.category.other') }}
             </b-card>
 
             <b-card
@@ -158,10 +153,10 @@
               header-class="collap-header"
               body-class="collap-body"
             >
-              {{ null === course.keywords ? y18n('keywords.notListed') : course.keywords }}
+              {{ null === row.item.keywords ? y18n('keywords.notListed') : row.item.keywords }}
             </b-card>
-          </b-collapse>
-        </div>
+          </template>
+        </b-table>
       </div>
     </div>
     <b-modal
@@ -200,7 +195,10 @@
         >
           {{ y18n('courseList.notComplicit.settings') }}
         </b-button>
-        <b-button @click="hide">
+        <b-button
+          variant="primary"
+          @click="hide"
+        >
           {{ y18n('cancel') }}
         </b-button>
       </template>
@@ -235,6 +233,8 @@ export default {
 
   data () {
     return {
+      fields: [],
+      courseDetails: {},
       authorName: '',
       buttonAction: null,
       complicitCourses: null,
@@ -243,7 +243,8 @@ export default {
       filteredList: [],
       nonComplicitSettings: {},
       nonComplicitList: [],
-      selectedCourse: ''
+      selectedCourse: '',
+      items: []
     }
   },
 
@@ -311,11 +312,23 @@ export default {
   },
 
   created () {
+    this.filtered.forEach((item, index) => {
+      this.$set(this.courseDetails, index, false)
+    })
+
     this.getSubs()
     this.filteredList = [...this.courseList]
     this.getComplicitCourses()
-    console.log('authorname ' + this.course.authorName)
-    console.log(this.course)
+  },
+
+  mounted () {
+    this.fields = [
+      { key: 'name', label: this.y18n('courseName') },
+      { key: 'authorName', label: this.y18n('author') },
+      { key: 'language', label: this.y18n('courseLanguage') },
+      { key: 'properties', label: this.y18n('courseList.properties') },
+      { key: 'actions', label: '' }
+    ]
   },
 
   methods: {
@@ -374,6 +387,7 @@ export default {
         }
         if (complicit) {
           this.complicitCourses.add(course.courseId)
+          this.items = this.complicitCourses.add(course.courseId)
         }
       }
     },
@@ -482,6 +496,10 @@ export default {
       // create enrollment in database
       this.$store.dispatch('enrollmentCreate', newEnrollment)
         .then(courseId => this.enrolledIn.push(courseId))
+    },
+    toggleDetails (index) {
+      // Toggle the details for the specified row
+      this.$set(this.courseDetails, index, !this.courseDetails[index])
     }
   }
 }
@@ -529,13 +547,11 @@ export default {
 }
 
 .indicate-icon {
-  position: absolute;
-  top: -1px;
-  left: 5px;
-  color: crimson;
-  font-size: 2rem;
+  color: red;
+  font-size: 1.5rem;
+  margin: -5px;
+  text-shadow: -2px 0 #fff, 0 2px #fff, 2px 0 #fff, 0 -2px #fff;
 }
-
 i.icons-list {
   font-size: 1.75rem;
 }
@@ -566,6 +582,14 @@ i.icons-list {
 
 .collap-body {
   font-size: 16px;
+}
+
+.start-button {
+  width: 200px;
+}
+
+.show-button {
+  width: 200px;
 }
 
 </style>

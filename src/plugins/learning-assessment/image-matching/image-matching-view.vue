@@ -63,7 +63,7 @@
               class="form-group row"
             >
               <label
-                :for="pair.label+i"
+                :for="'item-'+i"
                 class="col-sm-6 col-form-label answer-text"
               >
                 <img
@@ -112,15 +112,6 @@
       <div class="row pt-3">
         <button
           type="button"
-          class="btn btn-warning"
-          :disabled="freeze"
-          @click="reset"
-        >
-          {{ y18n('imageMatching.removeInput') }}
-        </button>
-
-        <button
-          type="button"
           class="btn btn-link"
           :class="langIsAr? 'float-right': 'float-left'"
           :disabled="freeze"
@@ -140,6 +131,7 @@
               :class="langIsAr?
                 'fas fa-arrow-left' :
                 'fas fa-arrow-right'"
+              aria-hidden="true"
             ></i>
           </span>
         </button>

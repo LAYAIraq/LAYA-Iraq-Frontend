@@ -87,11 +87,6 @@ Since: v1.0.0
             :class="eval[i]"
           ></i>
         </div>
-
-        <!--
-        <i class="ml-2" :class="{'far fa-check-circle text-success': true}"></i>
-        <i class="ml-2" :class="{'far fa-times-circle text-danger': true}"></i>
-        -->
       </div>
     </div>
 
@@ -105,7 +100,7 @@ Since: v1.0.0
     <div>
       <button
         type="button"
-        class="btn btn-link mt-3"
+        class="btn btn-primary"
         :class="langIsAr? 'float-right': 'float-left'"
         :disabled="freeze"
         @click="diffSolution"
@@ -131,7 +126,10 @@ Since: v1.0.0
       >
         <span>
           {{ y18n('nextContent') }}
-          <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
+          <i
+            :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"
+            aria-hidden="true"
+          ></i>
         </span>
       </button>
       <span

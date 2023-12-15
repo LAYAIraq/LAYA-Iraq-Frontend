@@ -6,6 +6,7 @@
  */
 
 export default {
+  SUPERADMIN: 'superadmin',
   ADMIN: 'admin',
   EDITOR: 'editor',
   AUTHOR: 'author',

@@ -13,10 +13,8 @@ export default {
 
     /**
      * tooltips(): filters i18n file for needed tooltip keys
-     *
      * Author: cmc
-     *
-     * Last Updated: May 5, 2021
+     * Since: v1.1.0
      */
     tooltips () {
       // needed keys
@@ -46,38 +44,31 @@ export default {
   methods: {
     /**
      * Function sort: sort list
-     *
      * Author: cmc
-     *
-     * Last Updated: April 28, 2021
-     *
-     * @param {array} _list some array
-     * @returns {array} array: Original list if no
-     *  sort prop is set, sorted list if it is,
-     *  null if input is undefined
-     */
+     * Since: v1.1.0
+     **/
     sortList (_list) {
       const list = [..._list]
       const { sortBy, sortAsc } = this
       if (sortBy === '') {
         return _list || null
       } else {
-        if (sortAsc) {
-          return list.sort((a, b) => a[sortBy] - b[sortBy])
-        } else {
-          return list.sort((a, b) => b[sortBy] - a[sortBy])
-        }
+        return list.sort((a, b) => {
+          if (typeof a[sortBy] === 'string' && typeof b[sortBy] === 'string') {
+            return sortAsc ? a[sortBy].localeCompare(b[sortBy]) : b[sortBy].localeCompare(a[sortBy])
+          } else if (typeof a[sortBy] === 'number' && typeof b[sortBy] === 'number') {
+            return sortAsc ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy]
+          } else {
+            return 0
+          }
+        })
       }
     },
 
     /**
      * Function sortByProp: sort list by given property
-     *
      * Author: cmc
-     *
-     * Last Updated: April 28, 2021
-     *
-     * @param {string} prop the property to sort by
+     * Since: v.1.1.0
      */
     sortByProp (prop) {
       if (this.sortBy === prop) {
@@ -89,12 +80,8 @@ export default {
 
     /**
      * sortIcon: return icon css class depending on how names are sorted
-     *
      * Author: cmc
-     *
-     * Last Updated: April 28, 2021
-     *
-     * @param {string} prop property which is in column
+     * Since: v1.1.0
      */
     sortIcon (prop) {
       return {
@@ -103,7 +90,11 @@ export default {
         'fas fa-sort': this.sortBy !== prop
       }
     },
-
+    /**
+     * sortTooltip: returns tooltips for icons depending on how names are sorted
+     * Author: cmc
+     * Since: v1.1.0
+     */
     sortTooltip (prop) {
       const propClass = this.sortIcon(prop)
       if (propClass['fas fa-sort-up']) {
@@ -115,10 +106,8 @@ export default {
 
     /**
      * Function toggleSortDir: toggle sort direction
-     *
      * Author: cmc
-     *
-     * Last Updated: April 28, 2021
+     * Since: v1.1.0
      */
     toggleSortDir () {
       this.sortAsc = !this.sortAsc

@@ -151,11 +151,14 @@
         <div class="col-4">
           <button
             type="submit"
-            class="btn btn-block btn-primary"
+            class="btn btn-block btn-success"
             :disabled="!formValid"
             @click.prevent="duplicateCheck"
           >
-            <i class="fas fa-check"></i>
+            <i
+              class="fas fa-save"
+              aria-hidden="true"
+            ></i>
             {{ y18n('save') }}
           </button>
         </div>

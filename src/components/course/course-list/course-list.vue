@@ -14,7 +14,6 @@
         <img
           class="mx-auto"
           src="../../../assets/images/kurse.svg"
-          :alt="y18n('courses.brain')"
         >
       </div>
 
@@ -40,7 +39,10 @@
               :placeholder="y18n('searchPH')"
               :aria-label="y18n('searchPH.label')"
             >
-            <i class="icon fas fa-search"></i>
+            <i
+              class="icon fas fa-search"
+              aria-hidden="true"
+            ></i>
           </div>
         </div>
       </div>
