@@ -88,7 +88,9 @@
       centered
       @ok="$router.back()"
     >
-      {{ y18n('courseNavEdit.incompleteFollow.msg') }}
+      {{ componentIsButtonNavigation
+        ? y18n('courseNavEdit.incompleteFollow.msg.buttons')
+        : y18n('courseNavEdit.incompleteFollow.msg.std') }}
     </b-modal>
   </div>
 </template>
