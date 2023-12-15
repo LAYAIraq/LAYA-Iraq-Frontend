@@ -144,9 +144,13 @@ export default {
           freetextGrade: number
         }
       },
-      freetextData: object
+      data: {enrollment: {
+          freetext: object,
+          freetextGrade: number
+        },
+      grade:number}
     ) {
-      state.enrollment.freetextGrade = 0
+      data.enrollment.freetextGrade = data.grade
     },
     /**
      * Author: akokay
@@ -299,12 +303,12 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: January 27, 2022
+     * Last Updated: December 15, 2023
      *
      * @param param0 state variables
      */
-    enrollmentUpdate ({ state }) {
-      const enrol = state.enrollment
+    enrollmentUpdate ({ state }, other:{id:string}) {
+      const enrol = other ? state.enrollment : other
       return enrol
         ? new Promise((resolve, reject) => {
           http.patch(

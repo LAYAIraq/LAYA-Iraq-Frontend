@@ -8,9 +8,10 @@
         <div :id="'user-' + index"></div>
         <div :id="'quill-' + index" class="quill-content"></div><br>
         {{ item.freetext }}<br>
+        <input v-model="item.inputValue" type="number" :placeholder="'Input ' + (index + 1)" />
         <button
           type="button"
-          @click="addGrade(10)"
+          @click="addGrade(item.inputValue,index)"
         >Grade
         </button>
         <hr v-if="index !== enrollmentList.length - 1" />
@@ -44,12 +45,17 @@ export default {
   watch: {
     enrollmentList: {
       handler (newVal, oldVal) {
-        if (newVal.length > 0 && this.enrollmentList) {
+        if (newVal.length > oldVal.length && this.enrollmentList && this.enrollmentList.length > 0) {
           this.initializeQuillEditors()
         }
-      },
-      immediate: true, // Triggers the handler immediately on component mount
-      deep: true // Watches changes deeply in the enrollmentList array
+      }
+    },
+    users: {
+      handler (newVal, oldVal) {
+        if (newVal.length > 0 && this.enrollmentList && this.users.length > 0) {
+          this.initializeUsers()
+        }
+      }
     }
   },
 
@@ -77,16 +83,19 @@ export default {
 
   methods: {
 
-    addGrade (grade) {
+    addGrade (grade, item) {
+      console.log(item)
       console.log(`add Grade ${grade}`)
       console.log(this.$store.state)
       console.log(this.$store.state.enrollement)
+      // await this.$store.commit('freetextGradeAdd', { enrollment: this.enrollmentList[index], grade: 42 })
+      // const res = await this.$store.dispatch('enrollmentUpdate', this.enrollmentList[index])
       // this.$store.commit('freetextGradeAdd', grade)
     },
 
     async initializeQuillEditors () {
       await this.$nextTick()
-      console.log('tried to load')
+      console.log('tried to load enrollmentList')
       if (this.enrollmentList) {
         this.enrollmentList.forEach((item, index) => {
           console.log(`#quill-${index}`)
@@ -102,16 +111,36 @@ export default {
 
     async initializeUsers () {
       await this.$nextTick()
+      console.log('tried to load users')
       if (this.enrollmentList && this.users) {
-        this.enrollmentList.forEach((item, index) => {
-          const user = this.getUserById(item.studentId)
+        for (let index = 0; index < this.enrollmentList.length; index++) {
+          const user = this.getUserById(this.enrollmentList[index].studentId)
           const divElement = document.getElementById(`user-${index}`)
+          const res = await this.$store.dispatch('enrollmentUpdate', this.enrollmentList[index])
+          // await this.$store.dispatch('getCourseEnrollments', this.$store.getters.course.courseId)
+          console.log('das rtes')
+          console.log(`${this.enrollmentList[index].freetextGrade} - ${user.username}`)
+          console.log(this.enrollmentList[index])
+          console.log(res)
           if (divElement) {
-            divElement.innerHTML = `Text written to div! ${user.username}`
+            divElement.innerHTML = `${this.enrollmentList[index].freetextGrade}- ${user.username}`
           } else {
             console.error('Element with id "myDiv" not found.')
           }
-        })
+        }
+        // this.enrollmentList.forEach((item, index) => {
+        //   const user = this.getUserById(item.studentId)
+        //   const divElement = document.getElementById(`user-${index}`)
+        //   await this.$store.dispatch('enrollmentUpdate', this.enrollmentList[index])
+        //   this.$store.dispatch('getCourseEnrollments', this.$store.getters.course.courseId)
+        //   console.log(`${this.enrollmentList[index].freetextGrade} - ${user.username}`)
+        //   console.log(this.enrollmentList[index])
+        //   if (divElement) {
+        //     divElement.innerHTML = `- ${user.username}`
+        //   } else {
+        //     console.error('Element with id "myDiv" not found.')
+        //   }
+        // })
       }
     },
 
