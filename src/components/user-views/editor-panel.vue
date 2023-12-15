@@ -252,6 +252,8 @@ export default {
       'applicationList',
       'editorVotes',
       'isEditor',
+      'isAdmin',
+      'isSuperAdmin',
       // 'editorNumber', // currently not used
       'userId'
     ]),
@@ -317,7 +319,7 @@ export default {
   },
 
   created () {
-    if (!this.isEditor) {
+    if (!this.isEditor && !this.isAdmin && !this.isSuperAdmin) {
       this.$router.replace('/') // reroute non-editors
     }
     this.applicationsFetch() // get applications

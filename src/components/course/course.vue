@@ -94,7 +94,7 @@ export default {
       'courseStart',
       'courseSlug',
       'enrollment',
-      'isAdmin',
+      'isSuperAdmin',
       'isAuthor',
       'storeBusy',
       'userEnrolled',
@@ -110,7 +110,7 @@ export default {
      * @returns {boolean} true if logged user is admin or author of the course
      */
     isCourseAuthor () {
-      return (this.isAuthor && this.course.authorId === this.userId) || this.isAdmin
+      return (this.isAuthor && this.course.authorId === this.userId) || this.isSuperAdmin
     },
 
     /**

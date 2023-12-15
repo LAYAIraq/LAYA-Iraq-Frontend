@@ -38,20 +38,30 @@ export default {
      * @returns true if role is author or admin
      */
     isAuthor (state: { role: string }) {
-      return state.role === roles.AUTHOR || state.role === roles.EDITOR || state.role === roles.ADMIN
+      return state.role === roles.AUTHOR || state.role === roles.EDITOR || state.role === roles.ADMIN || state.role === roles.SUPERADMIN
     },
 
     /**
-     * getter isEditor: return true if user is in admin role
+     * getter isEditor: return true if user is in editor role
      *
      * Author: cmc
      *
      * Last Updated: April 19, 2022
      * @param state holds role string
-     * @returns {boolean} true if user is admin
+     * @returns {boolean} true if user is editor
      */
     isEditor (state: { role: string }) {
       return state.role === roles.EDITOR
+    },
+
+    /**
+     * getter isSuperAdmin: return true if user is in super admin role
+     *
+     * Author: nv
+     *Since: v1.3.0
+     */
+    isSuperAdmin (state: { role: string }) {
+      return state.role === roles.SUPERADMIN
     }
   },
 

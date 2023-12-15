@@ -78,7 +78,7 @@ Dependencies:
           :class="marginClass()"
         >
           <b-nav-item
-            v-if="isAdmin"
+            v-if="isAdmin || isSuperAdmin"
             to="/admin"
           >
             <i
@@ -88,7 +88,7 @@ Dependencies:
             {{ y18n('adminPanel.title') }}
           </b-nav-item>
           <b-nav-item
-            v-if="isEditor"
+            v-if="isEditor || isAdmin || isSuperAdmin"
             to="/editor"
           >
             <i
@@ -194,6 +194,7 @@ export default {
   computed: {
     ...mapGetters([
       'isAdmin',
+      'isSuperAdmin',
       'isEditor',
       'profileLanguage',
       'userId',
