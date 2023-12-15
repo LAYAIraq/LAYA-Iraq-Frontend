@@ -83,9 +83,9 @@
               :key="item.id"
               class="flaggable item mb-5"
             >
-              <h3 class="text-center item-label">
+              <label class="text-center item-label">
                 {{ courseSimple? item.simple : item.label }}
-              </h3>
+              </label>
 
               <div class="d-flex justify-content-between">
                 <b
@@ -155,7 +155,10 @@
               class="btn btn-outline-success btn-block"
               @click="storeFeedback"
             >
-              <i class="fas fa-check"></i>
+              <i
+                class="fas fa-save"
+                aria-hidden="true"
+              ></i>
               {{ y18n('save') }}
             </button>
           </div>
@@ -173,6 +176,7 @@
               :class="langIsAr?
                 'fas fa-arrow-left':
                 'fas fa-arrow-right'"
+              aria-hidden="true"
             ></i>
           </button>
         </div>

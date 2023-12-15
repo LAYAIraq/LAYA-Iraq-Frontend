@@ -59,7 +59,7 @@
             :key="item.id"
             class="flaggable item mb-5"
           >
-            <h3 class="text-center item-label">
+            <label class="text-center item-label">
               {{ courseSimple? item.simple : item.label }}
               <i
                 v-if="checked"
@@ -70,7 +70,7 @@
                 }"
               >
               </i>
-            </h3>
+            </label>
 
             <div class="d-flex justify-content-between">
               <b
@@ -119,7 +119,10 @@
           @click="done"
         >
           {{ y18n('nextContent') }}
-          <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
+          <i
+            :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"
+            aria-hidden="true"
+          ></i>
         </button>
       </div>
       <div

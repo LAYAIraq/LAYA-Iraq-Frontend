@@ -44,6 +44,7 @@ Dependencies:
             <i
               class="fas fa-chalkboard-teacher"
               size="2x"
+              aria-hidden="true"
             ></i>
             {{ y18n('header.courses') }}
           </b-nav-item>
@@ -56,11 +57,17 @@ Dependencies:
           :class="marginClass()"
         >
           <b-nav-item to="/register">
-            <i class="fas fa-user-plus"></i>
+            <i
+              class="fas fa-user-plus"
+              aria-hidden="true"
+            ></i>
             {{ y18n('header.register') }}
           </b-nav-item>
           <b-nav-item to="/login">
-            <i class="fas fa-sign-in-alt"></i>
+            <i
+              class="fas fa-sign-in-alt"
+              aria-hidden="true"
+            ></i>
             {{ y18n('login.title') }}
           </b-nav-item>
         </b-navbar-nav>
@@ -74,23 +81,35 @@ Dependencies:
             v-if="isAdmin"
             to="/admin"
           >
-            <i class="fas fa-solid fa-screwdriver"></i>
+            <i
+              class="fas fa-solid fa-screwdriver"
+              aria-hidden="true"
+            ></i>
             {{ y18n('adminPanel.title') }}
           </b-nav-item>
           <b-nav-item
             v-if="isEditor"
             to="/editor"
           >
-            <i class="fas fa-user-tie"></i>
+            <i
+              class="fas fa-user-tie"
+              aria-hidden="true"
+            ></i>
             Editor Panel
           </b-nav-item>
           <header-notifications></header-notifications>
           <b-nav-item to="/profile">
-            <i class="fas fa-user-alt"></i>
+            <i
+              class="fas fa-user-alt"
+              aria-hidden="true"
+            ></i>
             {{ y18n('header.profile') }}
           </b-nav-item>
           <b-nav-item @click="logout">
-            <i class="fas fa-sign-out-alt"></i>
+            <i
+              class="fas fa-sign-out-alt"
+              aria-hidden="true"
+            ></i>
             {{ y18n('header.logout') }}
           </b-nav-item>
         </b-navbar-nav>

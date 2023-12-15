@@ -16,7 +16,10 @@
         class="btn btn-success btn-large"
         @click="addUpload = true"
       >
-        <i class="fas fa-upload"></i>
+        <i
+          class="fas fa-upload"
+          aria-hidden="true"
+        ></i>
         {{ y18n('addUpload') }}
       </button>
     </div>
@@ -67,11 +70,13 @@
                   v-b-tooltip.right
                   type="button"
                   class="btn btn-danger btn-sm"
+                  :aria-label="y18n('uploadFile.removeUpload')"
                   :title="y18n('uploadFile.removeUpload')"
                   @click="_removeFile(i)"
                 >
                   <i
                     class="fas fa-times"
+                    aria-hidden="true"
                   >
                   </i>
                 </button>
@@ -90,7 +95,10 @@
                 class="btn btn-lg btn-warning"
                 for="file"
               >
-                <i class="fas fa-plus"></i>
+                <i
+                  class="fas fa-plus"
+                  aria-hidden="true"
+                ></i>
                 {{ y18n('uploadFile.selectFiles') }}
               </label>
             </div>
@@ -117,7 +125,10 @@
               :drop="true"
               :drop-directory="true"
             >
-              <i class="fas fa-plus"></i>
+              <i
+                class="fas fa-plus"
+                aria-hidden="true"
+              ></i>
               {{ y18n('uploadFile.selectFiles') }}
             </file-upload>
             <button
@@ -149,7 +160,10 @@
               class="btn btn-danger"
               @click="addUpload = false"
             >
-              <i class="fas fa-minus"></i>
+              <i
+                class="fas fa-minus"
+                aria-hidden="true"
+              ></i>
               {{ y18n('uploadFile.hideUploader') }}
             </button>
           </b-button-group>

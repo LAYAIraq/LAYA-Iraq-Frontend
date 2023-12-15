@@ -227,7 +227,10 @@ Since: v1.0.0
               :aria-label="y18n('deleteField')"
               @click="_itemDelete(options, i)"
             >
-              <i class="fas fa-times"></i>
+              <i
+                class="fas fa-times"
+                aria-hidden="true"
+              ></i>
             </button>
           </div>
         </div>
@@ -277,7 +280,10 @@ Since: v1.0.0
         class="btn btn-success btn-sm"
         @click="_itemAdd(options, newItem())"
       >
-        <i class="fas fa-plus"></i>{{ y18n('itemAdd') }}
+        <i
+          class="fas fa-plus"
+          aria-hidden="true"
+        ></i>{{ y18n('itemAdd') }}
       </button>
     </form>
     <b-modal

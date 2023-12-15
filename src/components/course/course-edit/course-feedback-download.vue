@@ -18,7 +18,10 @@ Dependencies:
         :class="langIsAr? 'float-left' : 'float-right'"
         @click="$bvModal.show('download-feedback')"
       >
-        <i class="fas fa-info-circle"></i> {{ y18n('feedback.downloadFeedback') }}
+        <i
+          class="fas fa-info-circle"
+          aria-hidden="true"
+        ></i> {{ y18n('feedback.downloadFeedback') }}
       </b-button>
     </div>
     <div class="col text-dark">

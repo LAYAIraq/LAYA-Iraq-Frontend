@@ -66,7 +66,7 @@
               class="form-group row flaggable"
             >
               <label
-                :for="pair.label+i"
+                :for="'item-'+i"
                 class="col-sm-6 col-form-label answer-text"
               >
                 <img
@@ -140,6 +140,7 @@
               :class="langIsAr?
                 'fas fa-arrow-left' :
                 'fas fa-arrow-right'"
+              aria-hidden="true"
             ></i>
           </span>
         </button>
