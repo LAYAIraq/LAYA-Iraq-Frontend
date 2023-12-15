@@ -10,21 +10,24 @@ Since: v1.3.0
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div class="row">
-      <h2 class="d-inline-block mr-auto">
-        {{ y18n('certificate.name') }}
-      </h2>
+      <div class="col">
+        <h2 class="d-inline-block mr-auto">
+          {{ y18n('certificate.name') }}
+        </h2>
 
-      <i
-        id="questionmark"
-        v-b-tooltip.left
-        class="fas fa-question-circle"
-        :class="langIsAr? 'mr-auto' : 'ml-auto'"
-        :title="y18n('showTip')"
-        aria-labelledby="tooltipText"
-        aria-live="polite"
-        @click="toggleTip"
-      ></i>
+        <i
+          id="questionmark"
+          v-b-tooltip.left
+          class="fas fa-question-circle"
+          :class="langIsAr? 'mr-auto' : 'ml-auto'"
+          :title="y18n('showTip')"
+          aria-labelledby="tooltipText"
+          aria-live="polite"
+          @click="toggleTip"
+        ></i>
+      </div>
     </div>
+
     <hr>
 
     <b-jumbotron
@@ -41,7 +44,7 @@ Since: v1.3.0
 
     <form>
       <div class="form-group">
-        <!-- signature -->
+        <!-- signature
         <div class="row">
           <label
             for="signature"
@@ -58,6 +61,7 @@ Since: v1.3.0
             ></textarea>
           </div>
         </div>
+        -->
       </div>
     </form>
   </div>

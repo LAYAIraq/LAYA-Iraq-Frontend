@@ -1,8 +1,8 @@
 <!--
 Filename: certificate-view.vue
 Use: View certificate content block
-Author: core
-Since v1.0.0
+Author: nv
+Since v1.3.0
 -->
 
 <template>
