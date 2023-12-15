@@ -34,7 +34,7 @@ Dependencies:
           <img
             style="height: inherit"
             src="../../assets/images/logo-iraq-xs.png"
-            alt="Laya - Learn as you are"
+            alt="Logo Laya Iraq - Learn as you are"
           >
         </b-navbar-brand>
 
