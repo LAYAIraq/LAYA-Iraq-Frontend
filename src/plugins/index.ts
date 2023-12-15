@@ -18,4 +18,5 @@ export { default as VideoPlayer } from './learning-block/video-player'
 
 // Course Organization Blocks
 export { default as ButtonNavigation } from './organization/button-navigation'
+export { default as Certificate } from './organization/certificate'
 export { default as Feedback } from './organization/feedback'
