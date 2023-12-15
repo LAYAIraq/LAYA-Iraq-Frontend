@@ -11,7 +11,7 @@
         <input v-model="item.inputValue" type="number" :placeholder="'Input ' + (index + 1)" />
         <button
           type="button"
-          @click="addGrade(item.inputValue,index)"
+          @click="addGrade(item.inputValue, item)"
         >Grade
         </button>
         <hr v-if="index !== enrollmentList.length - 1" />
@@ -45,14 +45,21 @@ export default {
   watch: {
     enrollmentList: {
       handler (newVal, oldVal) {
-        if (newVal.length > oldVal.length && this.enrollmentList && this.enrollmentList.length > 0) {
+        console.log('enrollmentList watch')
+        console.log(newVal !== oldVal, this.enrollmentList, this.enrollmentList.length > 0)
+        if (newVal.length !== oldVal.length && this.enrollmentList && this.enrollmentList.length > 0) {
+          console.log('llllllllllllllllllllllll')
           this.initializeQuillEditors()
         }
-      }
+      },
+      deep: true
     },
     users: {
       handler (newVal, oldVal) {
-        if (newVal.length > 0 && this.enrollmentList && this.users.length > 0) {
+        console.log('users watch')
+        console.log(newVal.length > 0, this.enrollmentList, this.enrollmentList.length > 0, this.users.length > 0)
+        if (newVal.length > 0 && this.enrollmentList && this.enrollmentList.length > 0 && this.users.length > 0) {
+          console.log('++++++++++++++')
           this.initializeUsers()
         }
       }
@@ -86,10 +93,9 @@ export default {
     addGrade (grade, item) {
       console.log(item)
       console.log(`add Grade ${grade}`)
-      console.log(this.$store.state)
-      console.log(this.$store.state.enrollement)
-      // await this.$store.commit('freetextGradeAdd', { enrollment: this.enrollmentList[index], grade: 42 })
-      // const res = await this.$store.dispatch('enrollmentUpdate', this.enrollmentList[index])
+      this.$store.commit('freetextGradeAdd', { enrollment: item, grade: grade })
+      this.$store.dispatch('enrollmentUpdate', item)
+      this.initializeUsers()
       // this.$store.commit('freetextGradeAdd', grade)
     },
 
@@ -97,6 +103,9 @@ export default {
       await this.$nextTick()
       console.log('tried to load enrollmentList')
       if (this.enrollmentList) {
+        if (this.quillInstances) {
+          this.destroyQuillInstances()
+        }
         this.enrollmentList.forEach((item, index) => {
           console.log(`#quill-${index}`)
           const quill = new Quill(`#quill-${index}`, {
@@ -109,6 +118,16 @@ export default {
       }
     },
 
+    destroyQuillInstances () {
+      this.quillInstances.forEach(quill => {
+        quill.off()
+        quill.disable()
+        quill.container.remove()
+        quill = null
+      })
+      this.quillInstances = []
+    },
+
     async initializeUsers () {
       await this.$nextTick()
       console.log('tried to load users')
@@ -116,12 +135,7 @@ export default {
         for (let index = 0; index < this.enrollmentList.length; index++) {
           const user = this.getUserById(this.enrollmentList[index].studentId)
           const divElement = document.getElementById(`user-${index}`)
-          const res = await this.$store.dispatch('enrollmentUpdate', this.enrollmentList[index])
           // await this.$store.dispatch('getCourseEnrollments', this.$store.getters.course.courseId)
-          console.log('das rtes')
-          console.log(`${this.enrollmentList[index].freetextGrade} - ${user.username}`)
-          console.log(this.enrollmentList[index])
-          console.log(res)
           if (divElement) {
             divElement.innerHTML = `${this.enrollmentList[index].freetextGrade}- ${user.username}`
           } else {

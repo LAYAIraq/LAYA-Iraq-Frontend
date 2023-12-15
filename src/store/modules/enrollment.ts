@@ -308,7 +308,8 @@ export default {
      * @param param0 state variables
      */
     enrollmentUpdate ({ state }, other:{id:string}) {
-      const enrol = other ? state.enrollment : other
+      const enrol = other || state.enrollment
+      console.log(`Grade: ${enrol.freetextGrade}`)
       return enrol
         ? new Promise((resolve, reject) => {
           http.patch(
