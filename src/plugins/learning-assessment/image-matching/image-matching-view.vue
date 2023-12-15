@@ -66,7 +66,7 @@
               class="form-group row flaggable"
             >
               <label
-                :for="pair.label+i"
+                :for="'item-'+i"
                 class="col-sm-6 col-form-label answer-text"
               >
                 <img
