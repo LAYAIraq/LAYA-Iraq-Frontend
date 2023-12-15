@@ -52,7 +52,7 @@ export default {
   },
 
   created () {
-    document.title = 'LAYA - Learn As You Are'
+    document.title = 'LAYA Iraq - Learn As You Are'
     this.restoreAuth()
     this.relocateUnauthorized()
   },

@@ -9,65 +9,45 @@ Since: v1.0.0
   <div
     :class="langIsAr? 'text-right' : 'text-left'"
   >
-    <form>
-      <div class="form-group">
-        <div class="row">
-          <!-- title -->
-          <label
-            for="free-text-title"
-            class="col-2 col-form-label"
-          >
-            {{ y18n('title') }}
-          </label>
-          <div class="col-8">
-            <input
-              id="free-text-title"
-              v-model="title.text"
-              type="text"
-              class="form-control"
-              :placeholder="y18n('titlePlaceholder')"
-            >
-          </div>
-          <!-- show title button -->
-          <div class="form-group col">
-            <label
-              for="show-title-tick"
-              class="col-form-label"
-            >
-              {{ y18n('showTitle') }}
-              <input
-                id="show-title-tick"
-                v-model="title.show"
-                type="checkbox"
-              >
-            </label>
-          </div>
-        </div>
-        <div
-          v-if="courseSimple"
-          class="row"
-        >
-          <!-- simple title -->
-          <label
-            for="free-text-title-simple"
-            class="col-2 col-form-label"
-          >
-            <span class="sr-only">
-              {{ y18n('simpleAlt') }}
-            </span>
-          </label>
-          <div class="col-8">
-            <input
-              id="free-text-title-simple"
-              v-model="title.simple"
-              type="text"
-              class="form-control"
-              :placeholder="y18n('simpleAlt')"
-            >
-          </div>
-        </div>
+    <div class="row">
+      <div class="col">
+        <h4 class="d-inline-block mr-auto">
+          {{ y18n('freeText.name') }}
+        </h4>
+        <i
+          id="questionmark"
+          v-b-tooltip.auto
+          class="fas fa-question-circle"
+          :title="y18n('showTip')"
+          aria-labelledby="tooltipText"
+          aria-live="polite"
+          @click="toggleTip"
+        ></i>
       </div>
-    </form>
+    </div>
+
+    <b-jumbotron
+      v-if="tooltipOn"
+      id="tooltipText"
+      :header="y18n('freeText.name')"
+      :lead="y18n('tipHeadline')"
+    >
+      <hr class="my-4">
+      <p
+        v-for="str in y18n('freeText.tooltip').split(';')"
+        :key="str.length"
+      >
+        <!-- eslint-disable-next-line vue/no-v-html --> <!-- TODO: find a way to avoid v-html -->
+        <span v-html="replacePattern(str, /###([\w\s\-]+)###([A-Z0-9a-z\/.:#]+)###/, linkReplacement(true))"></span>
+      </p>
+    </b-jumbotron>
+
+    <!-- title -->
+    <content-title-edit
+      :title="title"
+      @set-title="title = $event"
+    >
+    </content-title-edit>
     <div
       class="free-text-edit bg-light"
       :class="langIsAr? 'text-right' : 'text-left'"
@@ -83,15 +63,17 @@ Since: v1.0.0
 <script>
 import { mapGetters } from 'vuex'
 import Quill from 'quill'
-import { locale, pluginEdit, routes } from '@/mixins'
+import { locale, pluginEdit, routes, tooltipIcon } from '@/mixins'
+import ContentTitleEdit from '@/components/helpers/content-title-edit'
 
 export default {
   name: 'FreeTextEdit',
-
+  components: { ContentTitleEdit },
   mixins: [
     locale,
     pluginEdit,
-    routes
+    routes,
+    tooltipIcon
   ],
 
   data () {

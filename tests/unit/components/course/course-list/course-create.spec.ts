@@ -99,7 +99,7 @@ describe('Course create', () => {
     await nameInput.setValue('New')
     await catInput.setValue('individual')
     await button.trigger('click')
-    expect(vm.$router.push).toHaveBeenCalledWith('/courses/New/1')
+    expect(vm.$router.push).toHaveBeenCalledWith('/courses/new')
   })
 
   // commented out until enrollment is reactivated

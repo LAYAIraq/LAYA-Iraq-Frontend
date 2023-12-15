@@ -6,15 +6,19 @@
   "chapters": [
     {
       "chapterName": "main",
+      "id": "id127374",
       "children": [
         {
           "chapterName": "quiz",
+          "id": "id51283",
           "children": [
             {
               "chapterName": "scmc",
+              "id": "id21763363",
               "isChapter": true,
               "children": [
                 {
+                  "id": "id21839",
                   "isChapter": true,
                   "chapterName": "Choice-Quizzes",
                   "slug": "choice-quizzes",
@@ -33,6 +37,7 @@
                   ]
                 },
                 {
+                  "id": "id17236138",
                   "isChapter": true,
                   "slug": "some-sub-chapter",
                   "chapterName": "Some - Sub–Chapter",
@@ -47,8 +52,10 @@
             },
             {
               "chapterName": "other",
+              "id": "id16373",
               "children": [
                 {
+                  "id": "id712371",
                   "isChapter": true,
                   "chapterName": "Drag & Drop",
                   "children":
@@ -62,6 +69,7 @@
                   "slug": "drag-drop"
                 },
                 {
+                  "id": "id17237319",
                   "isChapter": true,
                   "chapterName": "Relate",
                   "slug": "relate",
@@ -117,8 +125,8 @@
       "isChapter": true,
       "slug": "main"
     },
-
     {
+      "id": "id986",
       "isChapter": true,
       "chapterName": "Feedback",
       "slug": "feedback",

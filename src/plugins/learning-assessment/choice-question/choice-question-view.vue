@@ -18,6 +18,7 @@ Since: v1.0.0
       <div class="col">
         <h2 class="pb-3">
           {{ courseSimple? title.simple : title.text }}
+          <!--
           <audio-button
             v-if="taskAudioExists"
             :src="courseSimple?
@@ -25,26 +26,24 @@ Since: v1.0.0
               taskAudio.simple"
           >
           </audio-button>
+          -->
         </h2>
       </div>
-      <flag-icon
-        v-if="!editPreview"
-        :ref-data="title"
-        @flagged="title.flagged = true"
-      ></flag-icon>
+      <a>
+        <flag-icon
+          v-if="!editPreview"
+          :ref-data="title"
+          @flagged="title.flagged = true"
+        ></flag-icon>
+      </a>
     </div>
     <div
       :id="task.id"
-      class="flaggable row"
+      class="row"
     >
       <div class="col">
         {{ courseSimple? task.simple: task.text }}
       </div>
-      <flag-icon
-        v-if="!editPreview"
-        :ref-data="task"
-        @flagged="task.flagged = true"
-      ></flag-icon>
     </div>
 
     <!-- render options -->
@@ -53,11 +52,11 @@ Since: v1.0.0
         v-for="(option,i) in options"
         :id="option.id"
         :key="'mchoice-option-'+i"
-        class="flaggable form-check m-2 mb-3"
+        class="form-check m-2 mb-3"
       >
         <div>
           <input
-            v-if="variation === multiple"
+            v-if="variation === 'multiple'"
             :id="'mchoice-in-'+i"
             v-model="answers"
             class="position-absolute mt-2"
@@ -88,17 +87,6 @@ Since: v1.0.0
             :class="eval[i]"
           ></i>
         </div>
-
-        <!--
-        <i class="ml-2" :class="{'far fa-check-circle text-success': true}"></i>
-        <i class="ml-2" :class="{'far fa-times-circle text-danger': true}"></i>
-        -->
-        <flag-icon
-          v-if="!editPreview"
-          :ref-data="option"
-          :interactive="true"
-          @flagged="option.flagged = true"
-        ></flag-icon>
       </div>
     </div>
 
@@ -112,7 +100,7 @@ Since: v1.0.0
     <div>
       <button
         type="button"
-        class="btn btn-link mt-3"
+        class="btn btn-primary"
         :class="langIsAr? 'float-right': 'float-left'"
         :disabled="freeze"
         @click="diffSolution"
@@ -138,7 +126,10 @@ Since: v1.0.0
       >
         <span>
           {{ y18n('nextContent') }}
-          <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
+          <i
+            :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"
+            aria-hidden="true"
+          ></i>
         </span>
       </button>
       <span
@@ -156,12 +147,15 @@ Since: v1.0.0
 import { mapGetters } from 'vuex'
 import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
-import AudioButton from '@/components/helpers/audio-button.vue'
+// import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 
 export default {
   name: 'ChoiceQuestionView',
-  components: { FlagIcon, AudioButton },
+  components: {
+    FlagIcon
+  //  AudioButton
+  },
 
   mixins: [
     locale,

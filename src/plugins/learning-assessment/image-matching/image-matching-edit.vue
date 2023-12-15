@@ -34,101 +34,32 @@
       :lead="y18n('tipHeadline')"
     >
       <hr class="my-4">
-      <span>
-        {{ y18n('imageMatching.tooltip') }}
-      </span>
+      <p
+        v-for="str in y18n('imageMatching.tooltip').split(';')"
+        :key="str.length"
+      >
+        <!-- eslint-disable-next-line vue/no-v-html --> <!-- TODO: find a way to avoid v-html -->
+        <span v-html="replacePattern(str, /###([\w\s\-]+)###([A-Z0-9a-z\/.:#]+)###/, linkReplacement(true))"></span>
+      </p>
     </b-jumbotron>
     <hr>
 
     <form>
-      <div class="form-group">
-        <!-- title regular -->
-        <div class="form-group row">
-          <label
-            for="relate-title"
-            class="col-2 col-form-label"
-          >
-            {{ y18n('title') }}
-          </label>
-          <div class="col-10">
-            <input
-              id="relate-title"
-              v-model="title.text"
-              type="text"
-              class="form-control"
-              :placeholder="y18n('titlePlaceholder')"
-            >
-          </div>
-        </div>
-        <!-- title simple -->
-        <div
-          v-if="courseSimple"
-          class="row"
-        >
-          <label
-            for="relate-title-simple"
-            class="col-2 col-form-label"
-          >
-            <span class="sr-only">
-              {{ y18n('simpleAlt') }}
-            </span>
-          </label>
-          <div class="col-8">
-            <input
-              id="relate-title-simple"
-              v-model="title.simple"
-              type="text"
-              class="form-control"
-              :placeholder="y18n('simpleAlt')"
-            >
-          </div>
-        </div>
-      </div>
+      <!-- title -->
+      <content-title-edit
+        :title="title"
+        @set-title="title = $event"
+      >
+      </content-title-edit>
 
-      <div class="form-group">
-        <!-- task regular -->
-        <div class="form-group row">
-          <label
-            for="relate-task"
-            class="col-2 col-form-label"
-          >
-            {{ y18n('task') }}
-          </label>
-          <div class="col-10">
-            <textarea
-              id="relate-task"
-              v-model="task.text"
-              class="w-100"
-              :placeholder="y18n('taskPlaceholder')"
-            >
-          </textarea>
-          </div>
-        </div>
-        <!-- task simple -->
-        <div
-          v-if="courseSimple"
-          class="row"
-        >
-          <label
-            for="relate-task-simple"
-            class="col-2 col-form-label"
-          >
-            <span class="sr-only">
-              {{ y18n('task') }}
-            </span>
-          </label>
-          <div class="col-10">
-            <textarea
-              id="relate-task-simple"
-              v-model="task.simple"
-              class="w-100"
-              :placeholder="y18n('simpleAlt')"
-            ></textarea>
-          </div>
-        </div>
-      </div>
+      <!-- task -->
+      <content-task-edit
+        :task="task"
+        @set-task="task = $event"
+      >
+      </content-task-edit>
 
-      <!-- task audio -->
+      <!-- task audio
       <div class="form-group row">
         <label
           for="relate-task-audio"
@@ -146,6 +77,7 @@
           >
         </div>
       </div>
+      -->
 
       <p><b>{{ y18n('imageMatching.edit.solutions') }}</b></p>
 
@@ -156,7 +88,7 @@
       >
         <!-- text regular -->
         <label
-          class="col-form-label col-2"
+          class="col-form-label col-1"
           :for="'rel-text-' + i"
         >
           {{ y18n('text') }}
@@ -168,6 +100,7 @@
               v-model="rel.text"
               class="form-control"
               type="text"
+              :placeholder="y18n('plugin.sampleOption')"
             >
           </div>
           <!-- text simple -->
@@ -182,6 +115,12 @@
                 type="text"
                 :placeholder="y18n('simpleAlt')"
               >
+              <p
+                v-if="isMissing(rel)"
+                id="'missing-simple-language-rel-' + i"
+              >
+                {{ y18n('simpleAlt.missing') }}
+              </p>
             </div>
           </div>
         </div>
@@ -191,21 +130,28 @@
           <button
             type="button"
             class="btn btn-danger btn-sm"
+            :aria-label="y18n('deleteField')"
             @click="_itemDelete(relations, i)"
           >
-            <i class="fas fa-times"></i>
+            <i
+              class="fas fa-times"
+              aria-hidden="true"
+            ></i>
           </button>
         </div>
       </div>
 
       <div class="form-group row">
-        <div class="col-10 offset-2">
+        <div class="col-10 ">
           <button
             type="button"
-            class="btn btn-primary btn-sm"
+            class="btn btn-success btn-sm"
             @click="_itemAdd(relations, { text: '', simple: '' })"
           >
-            <i class="fas fa-plus"></i>
+            <i
+              class="fas fa-plus"
+              aria-hidden="true"
+            ></i>
             {{ y18n('imageMatching.edit.solutionAdd') }}
           </button>
         </div>
@@ -217,15 +163,16 @@
         :key="'pair-' + i"
         class="form-group row"
       >
-        <div
-          v-if="langIsAr"
-          class="col-2"
-        ></div>
-
+        <label
+          class="col-form-label col-1"
+          :for="'rel-text-' + i"
+        >
+          {{ y18n('image') }}
+        </label>
         <!-- image -->
         <div
           class="col"
-          :class="langIsAr? '' : 'offset-2'"
+          :class="langIsAr? '' : 'offset-1'"
         >
           <input
             :id="'pair-text-'+i"
@@ -252,11 +199,17 @@
           >
             <input
               :id="'pair-label-simple-'+i"
-              v-model="pair.labelSimple"
+              v-model="pair.simple"
               class="form-control"
               type="text"
               :placeholder="y18n('simpleAlt')"
             >
+            <p
+              v-if="isMissing(pair)"
+              id="'missing-simple-language-alt-text-' + i"
+            >
+              {{ y18n('simpleAlt.missing') }}
+            </p>
           </div>
         </div>
 
@@ -298,21 +251,28 @@
         <div class="col-auto align-self-center">
           <button
             type="button"
+            :aria-label="y18n('deleteField')"
             class="btn btn-danger btn-sm"
             @click="_itemDelete(pairs, i)"
           >
-            <i class="fas fa-times"></i>
+            <i
+              class="fas fa-times"
+              aria-hidden="true"
+            ></i>
           </button>
         </div>
       </div>
       <div class="form-group row">
-        <div class="col-10 offset-2">
+        <div class="col-10">
           <button
             type="button"
-            class="btn btn-primary btn-sm"
+            class="btn btn-success btn-sm"
             @click="_itemAdd(pairs, newPair())"
           >
-            <i class="fas fa-plus"></i>
+            <i
+              class="fas fa-plus"
+              aria-hidden="true"
+            ></i>
             {{ y18n('itemAdd') }}
           </button>
         </div>
@@ -325,9 +285,12 @@
 import { array, locale, pluginEdit, tooltipIcon } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 import { deepCopy } from '@/mixins/general/helpers'
+import ContentTitleEdit from '@/components/helpers/content-title-edit'
+import ContentTaskEdit from '@/components/helpers/content-task-edit'
 
 export default {
   name: 'ImageMatchingEdit',
+  components: { ContentTitleEdit, ContentTaskEdit },
 
   mixins: [
     array,
@@ -383,8 +346,8 @@ export default {
     fillForm () {
       for (let i = 1; i < 3; i++) {
         const tmp = {
-          text: this.y18n('imageMatching.edit.solution') + ' ' + i,
-          simple: this.y18n('simpleAlt')
+          text: '',
+          simple: ''
         }
         this.relations.push(tmp)
       }
@@ -396,6 +359,14 @@ export default {
      */
     newPair () {
       return { img: '', audio: '', relation: -1, label: '', labelSimple: '', flagged: false, id: uuidv4() }
+    },
+    /**
+     * Function isMissing: Checks if simple language is filled in
+     * Author: nv
+     * Since: v1.3.0
+     */
+    isMissing (option) {
+      return !option.simple
     }
   }
 }

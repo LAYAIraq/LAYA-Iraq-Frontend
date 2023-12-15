@@ -69,9 +69,9 @@ export const filterObject = (keys: string[], obj: object, nestedKey?: string) =>
  * @description deep copy an object, intended for use with vuex references
  * @author cmc
  * @param obj - object to copy
- * @return {any} - deep copy of obj
+ * @return deep copy of obj
  */
-export const deepCopy = (obj: object) => {
+export const deepCopy = (obj: object): object => {
   return JSON.parse(JSON.stringify(obj))
 }
 

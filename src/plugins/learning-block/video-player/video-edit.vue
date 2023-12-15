@@ -1,6 +1,6 @@
 <!--
 Filename: video-edit.vue
-Use: View Plyr content block
+Use: Edit Plyr content block
 Creator: core
 Date: unknown
 Dependencies:
@@ -13,19 +13,21 @@ Dependencies:
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <form>
-      <div class="form-group row">
-        <h4 class="d-inline-block mr-auto">
-          {{ y18n('videoPlayer.name') }}
-        </h4>
-        <i
-          id="questionmark"
-          v-b-tooltip.auto
-          class="fas fa-question-circle"
-          :title="y18n('showTip')"
-          aria-labelledby="tooltipText"
-          aria-live="polite"
-          @click="toggleTip"
-        ></i>
+      <div class="row">
+        <div class="col">
+          <h4 class="d-inline-block mr-auto">
+            {{ y18n('videoPlayer.name') }}
+          </h4>
+          <i
+            id="questionmark"
+            v-b-tooltip.auto
+            class="fas fa-question-circle"
+            :title="y18n('showTip')"
+            aria-labelledby="tooltipText"
+            aria-live="polite"
+            @click="toggleTip"
+          ></i>
+        </div>
       </div>
 
       <b-jumbotron
@@ -45,66 +47,12 @@ Dependencies:
       </b-jumbotron>
 
       <hr>
-
-      <div class="form-group">
-        <div class="row">
-          <!-- title -->
-          <label
-            for="video-title"
-            class="col col-form-label"
-          >
-            {{ y18n('title') }}
-          </label>
-          <div class="form-group col-8">
-            <input
-              id="video-title"
-              v-model="title.text"
-              type="text"
-              class="form-control"
-              :placeholder="y18n('titlePlaceholder')"
-            >
-          </div>
-          <div
-            id="show-title-button"
-            class="form-group col"
-          >
-            <label
-              for="show-title-tick"
-              class="col col-form-label"
-            >
-              {{ y18n('showTitle') }}
-              <input
-                id="show-title-tick"
-                v-model="title.show"
-                type="checkbox"
-              >
-            </label>
-          </div>
-        </div>
-        <div
-          v-if="courseSimple"
-          class="row"
-        >
-          <!-- simple title -->
-          <label
-            for="video-title-simple"
-            class="col-2 col-form-label"
-          >
-            <span class="sr-only">
-              {{ y18n('simpleAlt') }}
-            </span>
-          </label>
-          <div class="form-group col-8">
-            <input
-              id="video-title-simple"
-              v-model="title.simple"
-              type="text"
-              class="form-control"
-              :placeholder="y18n('simpleAlt')"
-            >
-          </div>
-        </div>
-      </div>
+      <!-- title -->
+      <content-title-edit
+        :title="title"
+        @set-title="title = $event"
+      >
+      </content-title-edit>
 
       <!-- video url -->
       <div class="form-group row">
@@ -200,48 +148,17 @@ Dependencies:
         <h4 class="mb-4 mt-4">
           {{ y18n('captionTypes.captions') }}
         </h4>
-        <!-- table header -->
-        <div
-          id="caption-input-header"
-          class="row mb-3"
+
+        <b-table
+          :items="captions.tracks"
+          :fields="fields"
+          responsive
+          stacked="sm"
         >
-          <div class="col-sm-2">
-            {{ y18n('type') }}
-          </div>
-          <div class="col-sm-2">
-            {{ y18n('videoPlayer.captions.label') }}
-          </div>
-          <div class="col-sm-2">
-            {{ y18n('videoPlayer.captions.lang') }}
-          </div>
-          <div class="col-sm-2">
-            {{ y18n('videoPlayer.captions.src') }}
-          </div>
-          <div class="col-sm-2">
-            {{ y18n('videoPlayer.captions.default') }}
-          </div>
-          <div class="col-1"></div> <!-- placeholder for alignment -->
-        </div>
-        <!-- input fields -->
-        <div
-          v-for="(track, i) in captions.tracks"
-          :key="`track-${i}`"
-          class="row"
-        >
-          <!-- caption type -->
-          <div class="col-sm-2">
-            <label
-              id="caption-type"
-              class="form-check-label sr-only"
-              :for="`type-select-${i}`"
-            >
-              {{ y18n('type') }}
-            </label>
-            <b-select
-              :id="`type-select-${i}`"
-              v-model="track.kind"
-            >
-              <b-select-option value="null">
+          <!-- Type Column -->
+          <template #cell(type)="row">
+            <b-select v-model="row.item.kind">
+              <b-select-option :value="null">
                 {{ y18n('videoPlayer.captions.chooseType') }}
               </b-select-option>
               <b-select-option
@@ -252,104 +169,71 @@ Dependencies:
                 {{ y18n(`captionTypes.${type}`) }}
               </b-select-option>
             </b-select>
-          </div>
-          <!-- caption label -->
-          <div class="col-sm-2">
-            <label
-              :id="caption-label"
-              :for="`label-input-${i}`"
-              class="form-check-label sr-only"
-            >
-              {{ y18n('videoPlayer.captions.label') }}
-            </label>
+          </template>
+
+          <!-- Label Column -->
+          <template #cell(label)="row">
             <input
-              :id="`label-input-${i}`"
-              v-model="track.label"
+              v-model="row.item.label"
               class="form-control"
               type="text"
               :placeholder="y18n('videoPlayer.captions.label')"
             >
-          </div>
-          <!-- caption language -->
-          <div class="col-sm-2">
-            <label
-              :for="`srclang-input-${i}`"
-              class="form-check-label sr-only"
-            >
-              {{ y18n('videoPlayer.captions.lang') }}
-            </label>
+          </template>
+
+          <!-- Language Column -->
+          <template #cell(lang)="row">
             <input
-              :id="`srclang-input-${i}`"
-              v-model="track.srclang"
+              v-model="row.item.srclang"
               class="form-control"
               type="text"
               :placeholder="y18n('videoPlayer.captions.lang')"
             >
-          </div>
-          <!-- caption source -->
-          <div class="col-sm-2">
-            <label
-              :for="`src-input-${i}`"
-              class="form-check-label sr-only"
-            >
-              {{ y18n('videoPlayer.captions.src') }}
-            </label>
+          </template>
+
+          <!-- Source Column -->
+          <template #cell(src)="row">
             <input
-              :id="`src-input-${i}`"
-              v-model="track.src"
+              v-model="row.item.src"
               class="form-control"
               type="text"
               :placeholder="y18n('videoPlayer.captions.src')"
             >
-          </div>
-          <!-- caption default -->
-          <div class="col-sm-2">
-            <label
-              :for="`default-check-${i}`"
-              class="col-form-label sr-only"
-            >
-              {{ y18n('videoPlayer.captions.default') }}
-            </label>
+          </template>
+
+          <!-- Default Column -->
+          <template #cell(default)="row">
             <input
-              :id="`default-check-${i}`"
-              class="ml-auto mr-auto"
               type="radio"
-              :checked="captions.default === i"
-              @click="makeDefault(i)"
+              :checked="captions.default === row.index"
+              @click="makeDefault(row.index)"
             >
-          </div>
-          <!-- delete button -->
-          <div class="col-1">
+          </template>
+
+          <!-- Actions Column -->
+          <template #cell(actions)="row">
             <b-button
-              :id="`delete-button-${i}`"
-              v-b-tooltip.auto
-              class="m-auto"
               variant="danger"
-              :title="y18n('delete')"
-              @click.prevent="removeCaption(i)"
+              @click.prevent="removeCaption(row.index)"
             >
-              <i class="fas fa-times-circle"></i>
+              <i class="fas fa-times"></i>
               <span class="sr-only">
                 {{ y18n('delete') }}
               </span>
             </b-button>
-          </div>
-        </div>
-        <!-- table footer -->
-        <div
-          id="caption-input-footer"
-          class="row mt-3"
+          </template>
+        </b-table>
+
+        <!-- Add Caption Button -->
+        <b-button
+          id="add-caption"
+          variant="success"
+          class="mt-3"
+          @click.prevent="addCaption"
         >
-          <b-button
-            id="add-caption"
-            variant="success"
-            class="m-auto"
-            @click.prevent="addCaption"
-          >
-            <i class="fas fa-plus-circle"></i>
-            {{ y18n('videoPlayer.captions.add') }}
-          </b-button>
-        </div>
+          <i class="fas fa-plus-circle"></i>
+          {{ y18n('videoPlayer.captions.add') }}
+        </b-button>
       </div>
     </form>
   </div>
@@ -359,10 +243,11 @@ Dependencies:
 import { mapGetters } from 'vuex'
 import { locale, pluginEdit, routes, tooltipIcon } from '@/mixins'
 import { deepCopy } from '@/mixins/general/helpers'
+import ContentTitleEdit from '@/components/helpers/content-title-edit'
 
 export default {
   name: 'VideoEdit',
-
+  components: { ContentTitleEdit },
   mixins: [
     routes,
     pluginEdit,
@@ -387,7 +272,8 @@ export default {
       captions: {
         default: null,
         tracks: []
-      }
+      },
+      fields: []
     }
   },
 
@@ -482,7 +368,7 @@ export default {
     },
 
     /**
-     * function validYtUrl: check if URL contains vimeo or consists of Numbers
+     * function validYtUrl: check if URL contains youtu or consists of Numbers
      *
      * Author: cmc
      *
@@ -499,6 +385,14 @@ export default {
     if (this.edit) {
       this.fetchData()
     }
+    this.fields = [
+      { key: 'type', label: this.y18n('type') },
+      { key: 'label', label: this.y18n('videoPlayer.captions.label') },
+      { key: 'lang', label: this.y18n('videoPlayer.captions.lang') },
+      { key: 'src', label: this.y18n('videoPlayer.captions.src') },
+      { key: 'default', label: this.y18n('videoPlayer.captions.default') },
+      { key: 'actions', label: '' }
+    ]
   },
 
   methods: {

@@ -15,17 +15,20 @@ Dependencies:
   >
     <div class="col">
       <b-button
-        variant="primary"
+        variant="warning"
         block
         append
         :to="{path: 'edit', params: {type: contentToDisplay.name}}"
       >
-        <i class="fas fa-edit"></i> {{ y18n('content.editContent') }}
+        <i
+          class="fas fa-edit"
+          aria-hidden="true"
+        ></i> {{ y18n('content.editContent') }}
       </b-button>
     </div>
 
     <div class="col text-dark">
-      {{ y18n('content.editContentTip').replace('{step}', step) }}
+      {{ y18n('content.editContentTip').replace('{step}', blockInfo) }}
     </div>
   </div>
 </template>
@@ -39,7 +42,14 @@ export default {
   mixins: [
     locale,
     routes
-  ]
+  ],
+
+  computed: {
+    blockInfo () {
+      return this.y18n('title') + ': ' + this.contentToDisplay.title.text + ', ' +
+        this.y18n('type') + ': ' + this.typeName(this.contentToDisplay.name)
+    }
+  }
 
 }
 </script>

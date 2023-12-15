@@ -77,7 +77,7 @@
               {{ searchResultRender(option) }}
             </b-dropdown-item-button>
             <b-dropdown-text v-if="searchResult.length === 0">
-              {{ noTagsText }}
+              {{ noResultsText }}
             </b-dropdown-text>
           </b-dropdown>
           <b-button
@@ -129,11 +129,6 @@ export default {
       type: String,
       default: () => 'No results found'
     },
-    // text if no results are found
-    noTagsText: {
-      type: String,
-      default: () => 'No tags'
-    },
     // already selected input
     previousSelection: {
       type: [String, Array],
@@ -149,7 +144,7 @@ export default {
       type: String,
       default: () => 'Search for tags'
     },
-    // wether or not to render a button for submitting
+    // whether or not to render a button for submitting
     submitButton: {
       type: Boolean,
       default: () => true
@@ -293,7 +288,6 @@ export default {
      * @param addTag adding function
      */
     optionSelect ({ option, addTag }) {
-      console.log(option, addTag)
       addTag(option.elementId)
       this.searchTerm = ''
     },

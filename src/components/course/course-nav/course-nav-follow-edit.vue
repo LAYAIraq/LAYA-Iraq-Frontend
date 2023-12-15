@@ -1,13 +1,13 @@
 <!--
-  Filename: course-nav-follow-set.vue
-  Use: This component is used to display the follow set of a course nav item.
+  Filename: course-nav-follow-edit.vue
+  Use: This component is used to display the follow edit view of a course nav item.
   Author: cmc
   Since: v1.3.0
 -->
 <template>
   <div class="container">
     <h2 class="row">
-      Edit Follow Set
+      {{ y18n('courseNavEdit.followEdit') }}
     </h2>
     <div
       v-for="(label, i) in buttonLabels"
@@ -21,15 +21,28 @@
         >
           {{ label }}
         </b-button>
+        <i
+          v-b-tooltip.top
+          class="fas fa-question-circle p-1"
+          :title="y18n('courseNavEdit.followEditToolTipButton')"
+        ></i>
       </div>
-      <div class="row">
+      <div
+        v-b-tooltip.top
+        class="row"
+        :title="replacePattern(y18n('courseNavEdit.followEditToolTipTags'), '<BL>', label)"
+      >
         <suggesting-input
           class="col"
           :domain="courseContent"
-          :keys="['title', 'name', 'id']"
+          :drop-down-button-text="y18n('courseNavEdit.followEditButtonText')"
+          :keys="['title', 'name']"
           :inline="false"
           :nested-key="'text'"
+          :no-results-text="y18n('courseNavEdit.followEditSearchNoResult')"
           :previous-selection="follow? follow[i]: null"
+          :search-label-text="y18n('courseNavEdit.followEditSearchLabel')"
+          :search-input-placeholder="y18n('courseNavEdit.followEditSearchPlaceholder')"
           :submit-button="false"
           @removed="followEdit(i, null)"
           @tags-selected="followEdit(i, $event)"
@@ -46,7 +59,6 @@
         {{ y18n('save') }}
       </b-button>
       <b-button
-        variant="warning"
         block
         @click="$router.push({ name: 'course-nav' })"
       >
@@ -68,6 +80,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import SuggestingInput from '@/components/helpers/suggesting-input.vue'
 import { array, locale, routes } from '@/mixins'
 
@@ -93,6 +106,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['courseContent']),
     /**
      * @function return text of buttons if item is button navigation
      * @author cmc
@@ -100,7 +114,7 @@ export default {
      * @returns {string[]} labels of buttons
      */
     buttonLabels () {
-      return this.contentToDisplay.answers.map(el => el.text)
+      return this.courseContent[this.contentId].answers.map(el => el.text)
     },
     /**
      * @description return if follow set has been changed
@@ -141,7 +155,7 @@ export default {
     saveFollow () {
       if (this.followSetComplete) {
         this.$store.commit('courseChapterUpdateFollow', { id: this.contentId, value: this.followSetNew })
-        this.$router.push('edit-nav')
+        this.$router.back()
       } else {
         this.$bvModal.show('follow-incomplete')
       }
