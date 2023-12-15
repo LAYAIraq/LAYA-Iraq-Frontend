@@ -155,7 +155,10 @@
             :disabled="!formValid"
             @click.prevent="duplicateCheck"
           >
-            <i class="fas fa-save"></i>
+            <i
+              class="fas fa-save"
+              aria-hidden="true"
+            ></i>
             {{ y18n('save') }}
           </button>
         </div>

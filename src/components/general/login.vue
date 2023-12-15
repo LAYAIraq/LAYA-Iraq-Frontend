@@ -82,7 +82,10 @@
             @click.prevent="submit"
           >
             {{ y18n('login.title') }}
-            <i class="fas fa-sign-in-alt"></i>
+            <i
+              class="fas fa-sign-in-alt"
+              aria-hidden="true"
+            ></i>
           </button>
 
           <!-- busy note -->
@@ -97,7 +100,7 @@
             <div
               v-if="submitFailed"
               id="login-error"
-              :aria-hidden="submitFailed? 'false' : 'true'"
+              :aria-label="submitFailed? 'false' : 'true'"
               class="font-weight-bold text-center mt-3"
             >
               <i class="fas fa-exclamation-triangle"></i>
@@ -118,7 +121,10 @@
             {{ y18n('login.registerHint1') }}
             <br>
             <router-link :to="{ name: 'register'}">
-              <i class="fas fa-user-plus"></i>
+              <i
+                class="fas fa-user-plus"
+                aria-hidden="true"
+              ></i>
               {{ y18n('login.registerHint2') }}
             </router-link>
           </div>

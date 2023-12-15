@@ -18,7 +18,10 @@ Dependencies:
         :class="langIsAr? 'float-left' : 'float-right'"
         @click="$bvModal.show('author-rename-course-confirm')"
       >
-        <i class="fas fa-exclamation-circle"></i> {{ y18n('renameCourse') }}
+        <i
+          class="fas fa-exclamation-circle"
+          aria-hidden="true"
+        ></i> {{ y18n('renameCourse') }}
       </b-button>
     </div>
 

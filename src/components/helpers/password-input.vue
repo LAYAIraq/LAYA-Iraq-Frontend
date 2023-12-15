@@ -12,7 +12,10 @@
             style="position:relative; top:-20px;"
           >
             <label>
-              <i class="fas fa-key"></i>
+              <i 
+                class="fas fa-key"
+                aria-hidden="true"
+              ></i>
               {{ newInput? y18n('profile.newPassword'): y18n('passwordPH') }}
             </label>
           </div>
@@ -56,7 +59,10 @@
             style="position:relative; top:-20px;"
           >
             <label>
-              <i class="fas fa-redo-alt"></i>
+              <i 
+                class="fas fa-redo-alt"
+                aria-hidden="true"
+              ></i>
               {{ y18n('password2PH') }}
             </label>
           </div>
@@ -88,6 +94,7 @@
             v-b-tooltip.auto
             class="fas fa-lightbulb"
             :title="y18n('profile.passwordSuggestion')"
+            aria-hidden="true"
           ></i>
         </span>
         <span v-else>
@@ -121,6 +128,7 @@
             v-b-tooltip.auto
             class="fas fa-exclamation-triangle"
             :title="y18n('password.error')"
+            aria-hidden="true"
           ></i>
         </span>
         <span v-else>
