@@ -7,514 +7,516 @@ Since: v1.0.0
 
 <!--suppress JSAnnotator -->
 <template>
-  <div>
+  <main>
     <div>
-      <div class="container-fluid">
-        <div class="row">
-          <!-- profile header -->
-          <div class="bg-dark w-100 pt-5 pb-3">
-            <!-- avatar -->
-            <div class="d-block mx-auto avatar rounded-circle">
+      <div>
+        <div class="container-fluid">
+          <div class="row">
+            <!-- profile header -->
+            <div class="bg-dark w-100 pt-5 pb-3">
+              <!-- avatar -->
+              <div class="d-block mx-auto avatar rounded-circle">
+                <img
+                  v-if="avatarURL"
+                  v-auth-image="avatarURL"
+                  :class="langIsAr? 'rounded-circle avatar-display ar' : 'rounded-circle avatar-display'"
+                >
+                <i
+                  v-else
+                  class="fas fa-chalkboard-teacher display-3 pt-3 pl-2"
+                ></i>
+                <b-badge
+                  v-b-tooltip.bottom
+                  pill
+                  variant="warning"
+                  class="edit-badge"
+                  :title="y18n('profile.editAvatar')"
+                  @click="avatarChange"
+                >
+                  <i class="fas fa-edit"></i>
+                </b-badge>
+              </div>
+              <!--
               <img
-                v-if="avatarURL"
-                v-auth-image="avatarURL"
-                :class="langIsAr? 'rounded-circle avatar-display ar' : 'rounded-circle avatar-display'"
+                v-if="avatar !== ''"
+                :src="avatarURL"
+                alt="Avatar"
+                class="d-block rounded-circle mx-auto avatar"
               >
-              <i
+              <img
                 v-else
-                class="fas fa-chalkboard-teacher display-3 pt-3 pl-2"
-              ></i>
-              <b-badge
-                v-b-tooltip.bottom
-                pill
-                variant="warning"
-                class="edit-badge"
-                :title="y18n('profile.editAvatar')"
-                @click="avatarChange"
+                src="../../assets/images/anmelden.svg"
+                alt="Avatar"
+                class="d-block rounded-circle mx-auto avatar"
               >
-                <i class="fas fa-edit"></i>
-              </b-badge>
+  -->
+              <h1 class="text-center text-light">
+                {{ username }}
+              </h1>
             </div>
-            <!--
-            <img
-              v-if="avatar !== ''"
-              :src="avatarURL"
-              alt="Avatar"
-              class="d-block rounded-circle mx-auto avatar"
-            >
-            <img
-              v-else
-              src="../../assets/images/anmelden.svg"
-              alt="Avatar"
-              class="d-block rounded-circle mx-auto avatar"
-            >
--->
-            <h1 class="text-center text-light">
-              {{ username }}
-            </h1>
           </div>
+          <!-- row -->
         </div>
-        <!-- row -->
-      </div>
-      <!-- container -->
+        <!-- container -->
 
-      <div class="container">
-        <div class="row">
-          <form
-            class="w-100"
-            style="margin-top: 1rem"
-          >
-            <h3 :class="langIsAr? 'text-right' : 'text-left'">
-              {{ y18n('profile.title') }}
-            </h3>
-            <hr>
+        <div class="container">
+          <div class="row">
+            <form
+              class="w-100"
+              style="margin-top: 1rem"
+            >
+              <h3 :class="langIsAr? 'text-right' : 'text-left'">
+                {{ y18n('profile.title') }}
+              </h3>
+              <hr>
 
-            <!-- Username -->
-            <div class="form-group row">
-              <label
-                for="username"
-                class="col-sm-3 col-form-label"
-              >{{ y18n('usernamePH') }}</label>
-              <div class="col-sm-9">
-                <input
-                  id="username"
-                  v-model="username"
-                  type="text"
-                  class="form-control"
-                  readonly
-                  tabindex="-1"
-                >
-              </div>
-            </div>
-
-            <!-- Email -->
-            <div class="form-group row">
-              <label
-                for="email"
-                class="col-sm-3 col-form-label"
-              >{{ y18n('emailPH') }}</label>
-              <div class="col-sm-9">
-                <input
-                  id="email"
-                  v-model="email"
-                  type="text"
-                  class="form-control"
-                  readonly
-                  tabindex="-1"
-                >
-              </div>
-            </div>
-
-            <!-- Full Name -->
-            <div class="form-group row">
-              <label
-                for="fullname"
-                class="col-sm-3 col-form-label"
-              >{{ y18n('namePH') }}</label>
-              <div class="col-sm-9">
-                <input
-                  id="fullname"
-                  v-model="fullName"
-                  type="text"
-                  class="form-control"
-                  autocomplete="on"
-                >
-              </div>
-            </div>
-
-            <!-- Institution -->
-            <div class="form-group row">
-              <label
-                for="institution"
-                class="col-sm-3 col-form-label"
-              >{{ y18n('institutionPH') }}</label>
-              <div class="col-sm-9">
-                <b-form-select
-                  v-model="institution"
-                >
-                  <b-form-select-option
-                    v-for="opt in institutionChoose"
-                    :key="opt"
-                    :value="opt"
+              <!-- Username -->
+              <div class="form-group row">
+                <label
+                  for="username"
+                  class="col-sm-3 col-form-label"
+                >{{ y18n('usernamePH') }}</label>
+                <div class="col-sm-9">
+                  <input
+                    id="username"
+                    v-model="username"
+                    type="text"
+                    class="form-control"
+                    readonly
+                    tabindex="-1"
                   >
-                    {{ y18n(`profile.institution.${opt}`) }}
-                  </b-form-select-option>
-                </b-form-select>
+                </div>
               </div>
-            </div>
 
-            <!-- Occupation -->
-            <div class="form-group row">
-              <label
-                for="occupation"
-                class="col-sm-3 col-form-label"
-              >{{ y18n('occupationPH') }}</label>
-              <div class="col-sm-9">
-                <b-form-select
-                  v-model="occupation"
-                >
-                  <b-form-select-option
-                    v-for="opt in occupationChoose"
-                    :key="opt"
-                    :value="opt"
+              <!-- Email -->
+              <div class="form-group row">
+                <label
+                  for="email"
+                  class="col-sm-3 col-form-label"
+                >{{ y18n('emailPH') }}</label>
+                <div class="col-sm-9">
+                  <input
+                    id="email"
+                    v-model="email"
+                    type="text"
+                    class="form-control"
+                    readonly
+                    tabindex="-1"
                   >
-                    {{ y18n(`profile.occupation.${opt}`) }}
-                  </b-form-select-option>
-                </b-form-select>
+                </div>
               </div>
-            </div>
 
-            <hr>
+              <!-- Full Name -->
+              <div class="form-group row">
+                <label
+                  for="fullname"
+                  class="col-sm-3 col-form-label"
+                >{{ y18n('namePH') }}</label>
+                <div class="col-sm-9">
+                  <input
+                    id="fullname"
+                    v-model="fullName"
+                    type="text"
+                    class="form-control"
+                    autocomplete="on"
+                  >
+                </div>
+              </div>
 
-            <div class="container">
-              <div class="row">
-                <form
-                  class="w-100"
-                  style="margin-top: 1rem"
-                >
-                  <h3 :class="langIsAr? 'text-right' : 'text-left'">
-                    {{ y18n('profile.change') }}
-                  </h3>
-                  <hr>
-                  <div class="row row-cols-3">
-                    <!-- change username -->
-                    <div class="col">
-                      <b-button
-                        id="username-button"
-                        block
-                        variant="secondary"
-                        @click="usernamePop = true; passwordPop = false; emailPop = false"
-                      >
-                        {{ y18n('profile.usernameChange') }}
-                      </b-button>
+              <!-- Institution -->
+              <div class="form-group row">
+                <label
+                  for="institution"
+                  class="col-sm-3 col-form-label"
+                >{{ y18n('institutionPH') }}</label>
+                <div class="col-sm-9">
+                  <b-form-select
+                    v-model="institution"
+                  >
+                    <b-form-select-option
+                      v-for="opt in institutionChoose"
+                      :key="opt"
+                      :value="opt"
+                    >
+                      {{ y18n(`profile.institution.${opt}`) }}
+                    </b-form-select-option>
+                  </b-form-select>
+                </div>
+              </div>
+
+              <!-- Occupation -->
+              <div class="form-group row">
+                <label
+                  for="occupation"
+                  class="col-sm-3 col-form-label"
+                >{{ y18n('occupationPH') }}</label>
+                <div class="col-sm-9">
+                  <b-form-select
+                    v-model="occupation"
+                  >
+                    <b-form-select-option
+                      v-for="opt in occupationChoose"
+                      :key="opt"
+                      :value="opt"
+                    >
+                      {{ y18n(`profile.occupation.${opt}`) }}
+                    </b-form-select-option>
+                  </b-form-select>
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="container">
+                <div class="row">
+                  <form
+                    class="w-100"
+                    style="margin-top: 1rem"
+                  >
+                    <h3 :class="langIsAr? 'text-right' : 'text-left'">
+                      {{ y18n('profile.change') }}
+                    </h3>
+                    <hr>
+                    <div class="row row-cols-3">
+                      <!-- change username -->
+                      <div class="col">
+                        <b-button
+                          id="username-button"
+                          block
+                          variant="secondary"
+                          @click="usernamePop = true; passwordPop = false; emailPop = false"
+                        >
+                          {{ y18n('profile.usernameChange') }}
+                        </b-button>
+                      </div>
+
+                      <!-- change email -->
+                      <div class="col">
+                        <b-button
+                          id="email-button"
+                          block
+                          variant="secondary"
+                          @click="emailPop = true; passwordPop = false; usernamePop = false"
+                        >
+                          {{ y18n('profile.emailChange') }}
+                        </b-button>
+                      </div>
+
+                      <!-- change password -->
+                      <div class="col">
+                        <b-button
+                          id="password-button"
+                          block
+                          variant="secondary"
+                          @click="passwordPop = true; emailPop = false; usernamePop = false"
+                        >
+                          {{ y18n('profile.passwordChange') }}
+                        </b-button>
+                      </div>
                     </div>
 
-                    <!-- change email -->
-                    <div class="col">
-                      <b-button
-                        id="email-button"
-                        block
-                        variant="secondary"
-                        @click="emailPop = true; passwordPop = false; usernamePop = false"
-                      >
-                        {{ y18n('profile.emailChange') }}
-                      </b-button>
-                    </div>
-
-                    <!-- change password -->
-                    <div class="col">
-                      <b-button
-                        id="password-button"
-                        block
-                        variant="secondary"
-                        @click="passwordPop = true; emailPop = false; usernamePop = false"
-                      >
-                        {{ y18n('profile.passwordChange') }}
-                      </b-button>
-                    </div>
-                  </div>
-
-                  <form>
-                    <div class="col mt-3">
-                      <!-- username pop up -->
-                      <div
-                        v-if="usernamePop"
-                        class="col"
-                      >
-                        <!-- new username -->
-                        <div class="form-group row">
-                          <label
-                            for="newUsername"
-                            class="col-sm-3 col-form-label"
-                          >{{ y18n('profile.usernameNew') }}</label>
-                          <div class="col-sm-9">
-                            <p>
+                    <form>
+                      <div class="col mt-3">
+                        <!-- username pop up -->
+                        <div
+                          v-if="usernamePop"
+                          class="col"
+                        >
+                          <!-- new username -->
+                          <div class="form-group row">
+                            <label
+                              for="newUsername"
+                              class="col-sm-3 col-form-label"
+                            >{{ y18n('profile.usernameNew') }}</label>
+                            <div class="col-sm-9">
+                              <p>
+                                <input
+                                  id="newUsername"
+                                  v-model="usernameNew"
+                                  type="text"
+                                  class="form-control"
+                                  :placeholder="y18n('profile.usernameNew')"
+                                  autocomplete="on"
+                                >
+                              </p>
+                              <p
+                                v-if="usernameTaken"
+                                id="username-taken"
+                              >
+                                {{ y18n('profile.usernameTaken') }}
+                              </p>
+                              <p
+                                v-if="usernameNew === ''"
+                                id="username-empty"
+                              >
+                                {{ y18n('profile.usernameEmpty') }}
+                              </p>
+                              <p
+                                v-if="usernameNew === username"
+                                id="username-same"
+                              >
+                                {{ y18n('profile.usernameSame') }}
+                              </p>
+                            </div>
+                          </div>
+                          <b-button
+                            variant="primary"
+                            @click="usernamePop = false"
+                          >
+                            {{ y18n('cancel') }}
+                          </b-button>
+                          <b-button
+                            variant="success"
+                            class="mx-3"
+                            :disabled="usernameNew === username || usernameNew === ''"
+                            @click="usernameChange"
+                          >
+                            {{ y18n('save') }}
+                          </b-button>
+                        </div>
+                        <!-- email pop up -->
+                        <div
+                          v-if="emailPop"
+                          class="col"
+                        >
+                          <!-- Old email -->
+                          <div class="form-group row">
+                            <label
+                              for="oldEmail"
+                              class="col-sm-3 col-form-label"
+                            >{{ y18n('profile.emailOld') }}</label>
+                            <div class="col-sm-9">
                               <input
-                                id="newUsername"
-                                v-model="usernameNew"
+                                id="oldEmail"
+                                v-model="emailOld"
                                 type="text"
                                 class="form-control"
-                                :placeholder="y18n('profile.usernameNew')"
+                                :placeholder="y18n('profile.emailOld')"
                                 autocomplete="on"
                               >
-                            </p>
-                            <p
-                              v-if="usernameTaken"
-                              id="username-taken"
-                            >
-                              {{ y18n('profile.usernameTaken') }}
-                            </p>
-                            <p
-                              v-if="usernameNew === ''"
-                              id="username-empty"
-                            >
-                              {{ y18n('profile.usernameEmpty') }}
-                            </p>
-                            <p
-                              v-if="usernameNew === username"
-                              id="username-same"
-                            >
-                              {{ y18n('profile.usernameSame') }}
-                            </p>
+                              <p
+                                v-if="emailOld !== email"
+                                id="email-old-incorrect"
+                              >
+                                {{ y18n('profile.emailOldIncorrect') }}
+                              </p>
+                              <p
+                                v-if="emailOld === ''"
+                                id="email-old-empty"
+                              >
+                                {{ y18n('profile.emailEmpty') }}
+                              </p>
+                            </div>
                           </div>
+                          <!-- new email -->
+                          <div class="form-group row">
+                            <label
+                              for="newEmail"
+                              class="col-sm-3 col-form-label"
+                            >{{ y18n('profile.emailNew') }}</label>
+                            <div class="col-sm-9">
+                              <input
+                                id="newEmail"
+                                v-model="emailNew"
+                                type="text"
+                                class="form-control"
+                                :placeholder="y18n('profile.emailNew')"
+                                autocomplete="on"
+                              >
+                              <p
+                                v-if="emailNewTaken"
+                                id="email-new-taken"
+                              >
+                                {{ y18n('profile.emailNewTaken') }}
+                              </p>
+                              <p
+                                v-if="emailNewConform"
+                                id="email-new-not-conform"
+                              >
+                                {{ y18n('profile.emailNewNotConform') }}
+                              </p>
+                              <p
+                                v-if="emailNew === ''"
+                                id="email-new-empty"
+                              >
+                                {{ y18n('profile.emailEmpty') }}
+                              </p>
+                            </div>
+                          </div>
+                          <!-- repeat email -->
+                          <div class="form-group row">
+                            <label
+                              for="repeatEmail"
+                              class="col-sm-3 col-form-label"
+                            >{{ y18n('profile.emailRepeat') }}</label>
+                            <div class="col-sm-9">
+                              <input
+                                id="repeatEmail"
+                                v-model="emailRepeat"
+                                type="text"
+                                class="form-control"
+                                :placeholder="y18n('profile.emailRepeat')"
+                                autocomplete="on"
+                              >
+                              <p
+                                v-if="emailRepeat !== emailNew"
+                                id="email-compare-incorrect"
+                              >
+                                {{ y18n('profile.emailCompareIncorrect') }}
+                              </p>
+                            </div>
+                          </div>
+                          <b-button
+                            variant="primary"
+                            @click="emailPop = false"
+                          >
+                            {{ y18n('cancel') }}
+                          </b-button>
+                          <b-button
+                            variant="success"
+                            class="mx-3"
+                            :disabled="emailRepeat !== emailNew || emailOld !== email"
+                            @click="emailChange"
+                          >
+                            {{ y18n('save') }}
+                          </b-button>
                         </div>
-                        <b-button
-                          variant="primary"
-                          @click="usernamePop = false"
+                        <!-- password pop up -->
+                        <div
+                          v-if="passwordPop"
+                          class="col"
                         >
-                          {{ y18n('cancel') }}
-                        </b-button>
-                        <b-button
-                          variant="success"
-                          class="mx-3"
-                          :disabled="usernameNew === username || usernameNew === ''"
-                          @click="usernameChange"
-                        >
-                          {{ y18n('save') }}
-                        </b-button>
+                          <!-- Old Password -->
+                          <div class="form-group row">
+                            <label
+                              for="passwordOld"
+                              class="col-sm-3 col-form-label"
+                            >{{ y18n('profile.oldPassword') }}</label>
+                            <div class="col-sm-9">
+                              <input
+                                id="passwordOld"
+                                v-model="passwordOld"
+                                type="password"
+                                class="form-control"
+                                :placeholder="y18n('profile.oldPassword')"
+                                autocomplete="on"
+                              >
+                            </div>
+                          </div>
+                          <!-- new password -->
+                          <PasswordInput
+                            class="pwd-input"
+                            :label-icons-only="false"
+                            :label-width="3"
+                            @compliantLength="newPwdOk"
+                          ></PasswordInput>
+                          <b-button
+                            variant="primary"
+                            @click="passwordPop = false"
+                          >
+                            {{ y18n('cancel') }}
+                          </b-button>
+                          <b-button
+                            variant="success"
+                            class="mx-3"
+                            @click="passwordChange"
+                          >
+                            {{ y18n('save') }}
+                          </b-button>
+                        </div>
                       </div>
-                      <!-- email pop up -->
-                      <div
-                        v-if="emailPop"
-                        class="col"
-                      >
-                        <!-- Old email -->
-                        <div class="form-group row">
-                          <label
-                            for="oldEmail"
-                            class="col-sm-3 col-form-label"
-                          >{{ y18n('profile.emailOld') }}</label>
-                          <div class="col-sm-9">
-                            <input
-                              id="oldEmail"
-                              v-model="emailOld"
-                              type="text"
-                              class="form-control"
-                              :placeholder="y18n('profile.emailOld')"
-                              autocomplete="on"
-                            >
-                            <p
-                              v-if="emailOld !== email"
-                              id="email-old-incorrect"
-                            >
-                              {{ y18n('profile.emailOldIncorrect') }}
-                            </p>
-                            <p
-                              v-if="emailOld === ''"
-                              id="email-old-empty"
-                            >
-                              {{ y18n('profile.emailEmpty') }}
-                            </p>
-                          </div>
-                        </div>
-                        <!-- new email -->
-                        <div class="form-group row">
-                          <label
-                            for="newEmail"
-                            class="col-sm-3 col-form-label"
-                          >{{ y18n('profile.emailNew') }}</label>
-                          <div class="col-sm-9">
-                            <input
-                              id="newEmail"
-                              v-model="emailNew"
-                              type="text"
-                              class="form-control"
-                              :placeholder="y18n('profile.emailNew')"
-                              autocomplete="on"
-                            >
-                            <p
-                              v-if="emailNewTaken"
-                              id="email-new-taken"
-                            >
-                              {{ y18n('profile.emailNewTaken') }}
-                            </p>
-                            <p
-                              v-if="emailNewConform"
-                              id="email-new-not-conform"
-                            >
-                              {{ y18n('profile.emailNewNotConform') }}
-                            </p>
-                            <p
-                              v-if="emailNew === ''"
-                              id="email-new-empty"
-                            >
-                              {{ y18n('profile.emailEmpty') }}
-                            </p>
-                          </div>
-                        </div>
-                        <!-- repeat email -->
-                        <div class="form-group row">
-                          <label
-                            for="repeatEmail"
-                            class="col-sm-3 col-form-label"
-                          >{{ y18n('profile.emailRepeat') }}</label>
-                          <div class="col-sm-9">
-                            <input
-                              id="repeatEmail"
-                              v-model="emailRepeat"
-                              type="text"
-                              class="form-control"
-                              :placeholder="y18n('profile.emailRepeat')"
-                              autocomplete="on"
-                            >
-                            <p
-                              v-if="emailRepeat !== emailNew"
-                              id="email-compare-incorrect"
-                            >
-                              {{ y18n('profile.emailCompareIncorrect') }}
-                            </p>
-                          </div>
-                        </div>
-                        <b-button
-                          variant="primary"
-                          @click="emailPop = false"
-                        >
-                          {{ y18n('cancel') }}
-                        </b-button>
-                        <b-button
-                          variant="success"
-                          class="mx-3"
-                          :disabled="emailRepeat !== emailNew || emailOld !== email"
-                          @click="emailChange"
-                        >
-                          {{ y18n('save') }}
-                        </b-button>
-                      </div>
-                      <!-- password pop up -->
-                      <div
-                        v-if="passwordPop"
-                        class="col"
-                      >
-                        <!-- Old Password -->
-                        <div class="form-group row">
-                          <label
-                            for="passwordOld"
-                            class="col-sm-3 col-form-label"
-                          >{{ y18n('profile.oldPassword') }}</label>
-                          <div class="col-sm-9">
-                            <input
-                              id="passwordOld"
-                              v-model="passwordOld"
-                              type="password"
-                              class="form-control"
-                              :placeholder="y18n('profile.oldPassword')"
-                              autocomplete="on"
-                            >
-                          </div>
-                        </div>
-                        <!-- new password -->
-                        <PasswordInput
-                          class="pwd-input"
-                          :label-icons-only="false"
-                          :label-width="3"
-                          @compliantLength="newPwdOk"
-                        ></PasswordInput>
-                        <b-button
-                          variant="primary"
-                          @click="passwordPop = false"
-                        >
-                          {{ y18n('cancel') }}
-                        </b-button>
-                        <b-button
-                          variant="success"
-                          class="mx-3"
-                          @click="passwordChange"
-                        >
-                          {{ y18n('save') }}
-                        </b-button>
-                      </div>
-                    </div>
+                    </form>
+
+                    <hr>
                   </form>
-
-                  <hr>
-                </form>
+                </div>
               </div>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <accessibility-settings @prefsChanged="p => prefs = p">
-      </accessibility-settings>
-
-      <author-application> </author-application>
-
-      <div class="container">
-        <div class="col">
-          <!-- Save Button -->
-          <div class="form-group">
-            <b-button
-              id="save-profile"
-              type="submit"
-              :disabled="busy || !passwordInputOk"
-              class="btn-block btn-lg btn-success"
-              style="border-width: 2px"
-              @click.prevent="submit"
-            >
-              <i class="fas fa-save"></i>
-              {{ y18n('save') }}
-            </b-button>
+            </form>
           </div>
         </div>
-      </div>
 
-      <!-- avatar modal -->
-      <b-modal
-        id="avatar-change-modal"
-        :title="y18n('profile.avatar.change')"
-        header-bg-variant="warning"
-        ok-variant="success"
-        cancel-variant="primary"
-        centered
-        static
-        :ok-title="y18n('save')"
-        :cancel-title="y18n('cancel')"
-        @ok="submit"
-      >
-        <!-- avatar upload -->
+        <accessibility-settings @prefsChanged="p => prefs = p">
+        </accessibility-settings>
+
+        <author-application> </author-application>
+
         <div class="container">
           <div class="col">
-            <div class="col">
-              <upload-avatar
-                :old-avatar="avatarURL"
-                @uploaded="a => $store.commit('avatarSet', a)"
-              ></upload-avatar>
+            <!-- Save Button -->
+            <div class="form-group">
+              <b-button
+                id="save-profile"
+                type="submit"
+                :disabled="busy || !passwordInputOk"
+                class="btn-block btn-lg btn-success"
+                style="border-width: 2px"
+                @click.prevent="submit"
+              >
+                <i class="fas fa-save"></i>
+                {{ y18n('save') }}
+              </b-button>
             </div>
           </div>
         </div>
-      </b-modal>
-      <b-toast
-        id="submit-failed"
-        variant="danger"
-        :title="y18n('savingFailed')"
-        class="author-toast"
-        auto-hide-delay="1500"
-        static
-      >
-        {{ y18n('profile.submitFail') }}
-      </b-toast>
-      <b-toast
-        id="submit-ok"
-        variant="success"
-        :title="y18n('uploadFileList.success')"
-        class="author-toast"
-        auto-hide-delay="1500"
-        static
-      >
-        {{ y18n('profile.submitOk') }}
-      </b-toast>
-      <b-toast
-        id="profile-save-toast"
-        :title="y18n('profile.submitOk')"
-        static
-        variant="success"
-        auto-hide-delay="1500"
-        class="profile-toast"
-      >
-        {{ y18n('successfulSave') }}
-      </b-toast>
+
+        <!-- avatar modal -->
+        <b-modal
+          id="avatar-change-modal"
+          :title="y18n('profile.avatar.change')"
+          header-bg-variant="warning"
+          ok-variant="success"
+          cancel-variant="primary"
+          centered
+          static
+          :ok-title="y18n('save')"
+          :cancel-title="y18n('cancel')"
+          @ok="submit"
+        >
+          <!-- avatar upload -->
+          <div class="container">
+            <div class="col">
+              <div class="col">
+                <upload-avatar
+                  :old-avatar="avatarURL"
+                  @uploaded="a => $store.commit('avatarSet', a)"
+                ></upload-avatar>
+              </div>
+            </div>
+          </div>
+        </b-modal>
+        <b-toast
+          id="submit-failed"
+          variant="danger"
+          :title="y18n('savingFailed')"
+          class="author-toast"
+          auto-hide-delay="1500"
+          static
+        >
+          {{ y18n('profile.submitFail') }}
+        </b-toast>
+        <b-toast
+          id="submit-ok"
+          variant="success"
+          :title="y18n('uploadFileList.success')"
+          class="author-toast"
+          auto-hide-delay="1500"
+          static
+        >
+          {{ y18n('profile.submitOk') }}
+        </b-toast>
+        <b-toast
+          id="profile-save-toast"
+          :title="y18n('profile.submitOk')"
+          static
+          variant="success"
+          auto-hide-delay="1500"
+          class="profile-toast"
+        >
+          {{ y18n('successfulSave') }}
+        </b-toast>
+      </div>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>

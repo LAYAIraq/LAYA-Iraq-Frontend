@@ -6,75 +6,78 @@
 -->
 
 <template>
-  <div class="course-list">
-    <div class="container">
-      <div style="height: 2rem"></div>
+  <main>
+    <div class="course-list">
+      <div class="container">
+        <div style="height: 2rem"></div>
 
-      <div class="row">
-        <img
-          class="mx-auto"
-          src="../../../assets/images/kurse.svg"
-        >
-      </div>
+        <div class="row">
+          <img
+            class="mx-auto"
+            src="../../../assets/images/kurse.svg"
+            alt=""
+          >
+        </div>
 
-      <div style="height: 2rem"></div>
+        <div style="height: 2rem"></div>
 
-      <div class="row">
-        <div class="col">
-          <h1 class="text-center">
-            <strong>{{ y18n('courses.title') }}</strong>
-          </h1>
+        <div class="row">
+          <div class="col">
+            <h1 class="text-center">
+              <strong>{{ y18n('courses.title') }}</strong>
+            </h1>
+          </div>
+        </div>
+
+        <div style="height: 2rem"></div>
+
+        <div class="row">
+          <div class="col">
+            <div class="search-bar">
+              <input
+                id="search-bar"
+                v-model="search"
+                type="text"
+                :placeholder="y18n('searchPH')"
+                :aria-label="y18n('searchPH.label')"
+              >
+              <i
+                class="icon fas fa-search"
+                aria-hidden="true"
+              ></i>
+            </div>
+          </div>
         </div>
       </div>
 
       <div style="height: 2rem"></div>
 
-      <div class="row">
-        <div class="col">
-          <div class="search-bar">
-            <input
-              id="search-bar"
-              v-model="search"
-              type="text"
-              :placeholder="y18n('searchPH')"
-              :aria-label="y18n('searchPH.label')"
-            >
-            <i
-              class="icon fas fa-search"
-              aria-hidden="true"
-            ></i>
+      <div class="bg-grey py-5">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <course-list-details :filter="search">
+              </course-list-details>
+            </div> <!-- col -->
+          </div> <!-- row -->
+        </div> <!-- container -->
+      </div>
+
+      <!-- author view -->
+      <div
+        v-if="isAuthor"
+        class="bg-author py-3 mt-5"
+      >
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <course-create></course-create>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
-    <div style="height: 2rem"></div>
-
-    <div class="bg-grey py-5">
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <course-list-details :filter="search">
-            </course-list-details>
-          </div> <!-- col -->
-        </div> <!-- row -->
-      </div> <!-- container -->
-    </div>
-
-    <!-- author view -->
-    <div
-      v-if="isAuthor"
-      class="bg-author py-3 mt-5"
-    >
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <course-create></course-create>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  </main>
 </template>
 
 <script>

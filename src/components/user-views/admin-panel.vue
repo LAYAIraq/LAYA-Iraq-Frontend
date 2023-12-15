@@ -6,415 +6,280 @@
   Since: v1.1.0
 -->
 <template>
-  <div :class="langIsAr? 'text-right': 'text-left'">
-    <div class="container-fluid mt-5 mb-5">
-      <div class="row">
-        <div class="col">
-          <h1 class="text-center">
-            {{ y18n('adminPanel.title') }}
-          </h1>
+  <main>
+    <div :class="langIsAr? 'text-right': 'text-left'">
+      <div class="container-fluid mt-5 mb-5">
+        <div class="row">
+          <div class="col">
+            <h1 class="text-center">
+              {{ y18n('adminPanel.title') }}
+            </h1>
+          </div>
         </div>
       </div>
-    </div>
-    <!-- filter options -->
-    <div class="container">
-      <div
-        id="filter-criteria"
-        class="row mb-5 pt-3 pb-4 bg-dark text-light"
-      >
-        <div class="col-2">
-          <strong>
-            {{ y18n('adminPanel.filterList') }}
-          </strong>
-        </div>
-        <div class="col">
-          {{ y18n('adminPanel.email') }}
-          <label
-            id="email-filter-label"
-            for="email-filter-input"
-            class="sr-only"
-          >
-            {{ y18n('adminPanel.filterListByEmail') }}
-          </label>
-          <div class="input-group">
-            <input
-              id="email-filter-input"
-              v-model="emailFilter"
-              aria-describedby="email-filter-label"
-              @keypress.enter="setFilter(emailFilter)"
-            >
-          </div>
-        </div>
-        <div class="col">
-          {{ y18n('namePH') }}
-          <label
-            id="name-filter-label"
-            for="name-filter-input"
-            class="sr-only"
-          >
-            {{ y18n('adminPanel.filterListByName') }}
-          </label>
-          <div class="input-group">
-            <input
-              id="name-filter-input"
-              v-model="usernameFilter"
-              aria-describedby="name-filter-label"
-              @keypress.enter="setFilter(usernameFilter)"
-            >
-          </div>
-        </div>
-        <div class="col">
-          {{ y18n('adminPanel.role') }}
-          <span
-            id="role-filter-label"
-            class="sr-only"
-          >
-            {{ y18n('adminPanel.filterListByRole') }}
-          </span>
-          <div class="input-group">
-            <b-select
-              id="role-filter-select"
-              v-model="roleFilter"
-              aria-describedby="role-filter-label"
-              @keydown.enter.native="setFilter(roleFilter)"
-            >
-              <b-select-option
-                value="null"
-              >
-                {{ y18n('adminPanel.chooseRole') }}
-              </b-select-option>
-              <b-select-option
-                v-for="(role, i) in Object.values(roles)"
-                :key="i"
-                :value="role"
-              >
-                {{ capitalizeFirstLetter(role) }}
-              </b-select-option>
-            </b-select>
-          </div>
-        </div>
-        <div class="col pt-4">
-          <b-button
-            v-b-tooltip.bottom
-            :class="langIsAr? 'ml-2': 'mr-2'"
-            variant="warning"
-            :title="y18n('adminPanel.filterList')"
-            @click="setFilter(true)"
-          >
-            <i class="fas fa-filter"></i>
-            <span class="sr-only">
-              {{ y18n('adminPanel.filterList') }}
-            </span>
-          </b-button>
-          <b-button
-            v-b-tooltip.bottom
-            :class="langIsAr? 'ml-2': 'mr-2'"
-            variant="danger"
-            :title="y18n('adminPanel.resetFilters')"
-            @click="setFilter(false)"
-          >
-            <i class="fas fa-times"></i>
-            <span class="sr-only">
-              {{ y18n('adminPanel.resetFilters') }}
-            </span>
-          </b-button>
-        </div>
-      </div>
-    </div>
-
-    <!-- new user list -->
-    <div class="container">
-      <div v-if="pagedList.length !== 0">
-        <b-table
-          :items="pagedList[pageSelected]"
-          :fields="fields"
-          responsive
-          stacked="md"
+      <!-- filter options -->
+      <div class="container">
+        <div
+          id="filter-criteria"
+          class="row mb-5 pt-3 pb-4 bg-dark text-light"
         >
-          <template #cell(username)="data">
-            {{ data.item.username }}
-          </template>
-
-          <template #cell(role)="data">
-            {{ capitalizeFirstLetter(data.item.role) }}
-          </template>
-
-          <template #cell(email)="data">
-            {{ data.item.email }}
-          </template>
-
-          <template #cell(emailVerified)="data">
-            {{ data.item.emailVerified }}
-          </template>
-
-          <template #cell(actions)="row">
-            <!-- promote user -->
-            <b-button
-              v-b-tooltip.top
-              class="user-mgmt-btn"
-              variant="warning"
-              :disabled="row.item.id === userId"
-              :class="langIsAr? 'ml-2': 'mr-2'"
-              :title="y18n('adminPanel.promoteUser')"
-              @click="openModal(row.item.id, 'promote-user')"
+          <div class="col-2">
+            <strong>
+              {{ y18n('adminPanel.filterList') }}
+            </strong>
+          </div>
+          <div class="col">
+            {{ y18n('adminPanel.email') }}
+            <label
+              id="email-filter-label"
+              for="email-filter-input"
+              class="sr-only"
             >
-              <i class="fas fa-arrow-circle-up"></i>
+              {{ y18n('adminPanel.filterListByEmail') }}
+            </label>
+            <div class="input-group">
+              <input
+                id="email-filter-input"
+                v-model="emailFilter"
+                aria-describedby="email-filter-label"
+                @keypress.enter="setFilter(emailFilter)"
+              >
+            </div>
+          </div>
+          <div class="col">
+            {{ y18n('namePH') }}
+            <label
+              id="name-filter-label"
+              for="name-filter-input"
+              class="sr-only"
+            >
+              {{ y18n('adminPanel.filterListByName') }}
+            </label>
+            <div class="input-group">
+              <input
+                id="name-filter-input"
+                v-model="usernameFilter"
+                aria-describedby="name-filter-label"
+                @keypress.enter="setFilter(usernameFilter)"
+              >
+            </div>
+          </div>
+          <div class="col">
+            {{ y18n('adminPanel.role') }}
+            <span
+              id="role-filter-label"
+              class="sr-only"
+            >
+              {{ y18n('adminPanel.filterListByRole') }}
+            </span>
+            <div class="input-group">
+              <b-select
+                id="role-filter-select"
+                v-model="roleFilter"
+                aria-describedby="role-filter-label"
+                @keydown.enter.native="setFilter(roleFilter)"
+              >
+                <b-select-option
+                  value="null"
+                >
+                  {{ y18n('adminPanel.chooseRole') }}
+                </b-select-option>
+                <b-select-option
+                  v-for="(role, i) in Object.values(roles)"
+                  :key="i"
+                  :value="role"
+                >
+                  {{ capitalizeFirstLetter(role) }}
+                </b-select-option>
+              </b-select>
+            </div>
+          </div>
+          <div class="col pt-4">
+            <b-button
+              v-b-tooltip.bottom
+              :class="langIsAr? 'ml-2': 'mr-2'"
+              variant="warning"
+              :title="y18n('adminPanel.filterList')"
+              @click="setFilter(true)"
+            >
+              <i class="fas fa-filter"></i>
               <span class="sr-only">
-                {{ y18n('adminPanel.promoteUser') }}
+                {{ y18n('adminPanel.filterList') }}
               </span>
             </b-button>
-            <!-- edit email -->
             <b-button
-              v-b-tooltip.top
-              class="user-mgmt-btn"
-              :disabled="row.item.id === userId"
+              v-b-tooltip.bottom
               :class="langIsAr? 'ml-2': 'mr-2'"
-              :title="y18n('adminPanel.editEmail')"
-              variant="warning"
-              @click="openModal(row.item.id, 'edit-email')"
-            >
-              <i class="fas fa-pen"></i>
-              <span class="sr-only">
-                {{ y18n('adminPanel.editEmail') }}
-              </span>
-            </b-button>
-            <!-- reset password -->
-            <b-button
-              v-b-tooltip.top
-              class="user-mgmt-btn"
-              :disabled="row.item.id === userId"
-              :class="langIsAr? 'ml-2': 'mr-2'"
-              :title="y18n('adminPanel.resetPassword')"
-              variant="warning"
-              @click="openModal(row.item.id, 'reset-password')"
-            >
-              <i class="fas fa-screwdriver"></i>
-              <span class="sr-only">
-                {{ y18n('adminPanel.resetPassword') }}
-              </span>
-            </b-button>
-            <!-- delete user -->
-            <b-button
-              v-b-tooltip.top
-              class="user-mgmt-btn"
-              :disabled="row.item.id === userId"
-              :class="langIsAr? 'ml-2': 'mr-2'"
-              :title="y18n('adminPanel.deleteUser')"
               variant="danger"
-              @click="openModal(row.item.id, 'delete-user')"
+              :title="y18n('adminPanel.resetFilters')"
+              @click="setFilter(false)"
             >
               <i class="fas fa-times"></i>
               <span class="sr-only">
-                {{ y18n('adminPanel.deleteUser') }}
+                {{ y18n('adminPanel.resetFilters') }}
               </span>
             </b-button>
-          </template>
-        </b-table>
-      </div>
-      <!-- placeholder if no filter matches -->
-      <div
-        v-else
-        class="text-center"
-      >
-        {{ y18n('adminPanel.noMatch') }}
-      </div>
-      <!-- pages -->
-      <div class="row mt-5 pt-3 pb-2 bg-dark text-light">
-        <div class="col-3">
-          {{ y18n('adminPanel.itemsPerPage') }}
+          </div>
         </div>
-        <div class="col-2">
-          <b-select
-            v-model="pageSize"
-            :options="pageOptions"
+      </div>
+
+      <!-- new user list -->
+      <div class="container">
+        <div v-if="pagedList.length !== 0">
+          <b-table
+            :items="pagedList[pageSelected]"
+            :fields="fields"
+            responsive
+            stacked="md"
           >
-          </b-select>
-        </div>
-        <div class="col">
-          <ul class="pages m-auto">
-            <li
-              v-for="i in pagedList.length"
-              :key="i"
-            >
+            <template #cell(username)="data">
+              {{ data.item.username }}
+            </template>
+
+            <template #cell(role)="data">
+              {{ capitalizeFirstLetter(data.item.role) }}
+            </template>
+
+            <template #cell(email)="data">
+              {{ data.item.email }}
+            </template>
+
+            <template #cell(emailVerified)="data">
+              {{ data.item.emailVerified }}
+            </template>
+
+            <template #cell(actions)="row">
+              <!-- promote user -->
               <b-button
-                :variant="pageSelected !== i-1? 'outline-primary': 'primary'"
+                v-b-tooltip.top
+                class="user-mgmt-btn"
+                variant="warning"
+                :disabled="row.item.id === userId"
                 :class="langIsAr? 'ml-2': 'mr-2'"
-                class="mb-1"
-                @click="pageSelected = i-1"
+                :title="y18n('adminPanel.promoteUser')"
+                @click="openModal(row.item.id, 'promote-user')"
               >
-                {{ i }}
+                <i class="fas fa-arrow-circle-up"></i>
+                <span class="sr-only">
+                  {{ y18n('adminPanel.promoteUser') }}
+                </span>
               </b-button>
-            </li>
-          </ul>
+              <!-- edit email -->
+              <b-button
+                v-b-tooltip.top
+                class="user-mgmt-btn"
+                :disabled="row.item.id === userId"
+                :class="langIsAr? 'ml-2': 'mr-2'"
+                :title="y18n('adminPanel.editEmail')"
+                variant="warning"
+                @click="openModal(row.item.id, 'edit-email')"
+              >
+                <i class="fas fa-pen"></i>
+                <span class="sr-only">
+                  {{ y18n('adminPanel.editEmail') }}
+                </span>
+              </b-button>
+              <!-- reset password -->
+              <b-button
+                v-b-tooltip.top
+                class="user-mgmt-btn"
+                :disabled="row.item.id === userId"
+                :class="langIsAr? 'ml-2': 'mr-2'"
+                :title="y18n('adminPanel.resetPassword')"
+                variant="warning"
+                @click="openModal(row.item.id, 'reset-password')"
+              >
+                <i class="fas fa-screwdriver"></i>
+                <span class="sr-only">
+                  {{ y18n('adminPanel.resetPassword') }}
+                </span>
+              </b-button>
+              <!-- delete user -->
+              <b-button
+                v-b-tooltip.top
+                class="user-mgmt-btn"
+                :disabled="row.item.id === userId"
+                :class="langIsAr? 'ml-2': 'mr-2'"
+                :title="y18n('adminPanel.deleteUser')"
+                variant="danger"
+                @click="openModal(row.item.id, 'delete-user')"
+              >
+                <i class="fas fa-times"></i>
+                <span class="sr-only">
+                  {{ y18n('adminPanel.deleteUser') }}
+                </span>
+              </b-button>
+            </template>
+          </b-table>
+        </div>
+        <!-- placeholder if no filter matches -->
+        <div
+          v-else
+          class="text-center"
+        >
+          {{ y18n('adminPanel.noMatch') }}
+        </div>
+        <!-- pages -->
+        <div class="row mt-5 pt-3 pb-2 bg-dark text-light">
+          <div class="col-3">
+            {{ y18n('adminPanel.itemsPerPage') }}
+          </div>
+          <div class="col-2">
+            <b-select
+              v-model="pageSize"
+              :options="pageOptions"
+            >
+            </b-select>
+          </div>
+          <div class="col">
+            <ul class="pages m-auto">
+              <li
+                v-for="i in pagedList.length"
+                :key="i"
+              >
+                <b-button
+                  :variant="pageSelected !== i-1? 'outline-primary': 'primary'"
+                  :class="langIsAr? 'ml-2': 'mr-2'"
+                  class="mb-1"
+                  @click="pageSelected = i-1"
+                >
+                  {{ i }}
+                </b-button>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- create user button -->
-    <div class="row mt-3">
-      <b-button
-        variant="success"
-        class="m-auto"
-        @click="openModal(-1, 'create-user')"
-      >
-        <i class="fas fa-plus-circle"></i>
-        {{ y18n('adminPanel.createUser') }}
-      </b-button>
-    </div>
-    <!-- wrap modals -->
-    <div id="modals">
-      <!-- change role modal -->
-      <b-modal
-        id="promote-user"
-        :title="y18n('adminPanel.promoteUser')"
-        header-bg-variant="warning"
-        ok-variant="success"
-        cancel-variant="primary"
-        :ok-title="y18n('adminPanel.promoteUser')"
-        :cancel-title="y18n('cancel')"
-        centered
-        @ok="changeUserRole"
-      >
-        <p>
-          {{ y18n('adminPanel.modal.promoteUser') }}
-        </p>
-        <b-select v-model="changeRole">
-          <b-select-option value="null">
-            {{ y18n('adminPanel.chooseRole') }}
-          </b-select-option>
-          <b-select-option
-            v-for="role in Object.values(assignableRoles)"
-            :key="role"
-            :value="role"
-          >
-            {{ capitalizeFirstLetter(role) }}
-          </b-select-option>
-        </b-select>
-      </b-modal>
-      <!-- edit email modal -->
-      <b-modal
-        id="edit-email"
-        :title="y18n('adminPanel.editEmail')"
-        header-bg-variant="warning"
-        ok-variant="success"
-        cancel-variant="primary"
-        :ok-title="y18n('adminPanel.editEmail')"
-        :cancel-title="y18n('cancel')"
-        centered
-        @ok="editUserEmail"
-      >
-        <p>
-          {{ y18n('adminPanel.modal.editEmail') }}
-        </p>
-        <label
-          for="email-change-input"
-          class="sr-only"
+      <!-- create user button -->
+      <div class="row mt-3">
+        <b-button
+          variant="success"
+          class="m-auto"
+          @click="openModal(-1, 'create-user')"
         >
-          {{ y18n('adminPanel.modal.newEmail') }}
-        </label>
-        <input
-          id="email-change-input"
-          v-model="changeEmail"
-          type="text"
-          :placeholder="y18n('adminPanel.modal.newEmail')"
+          <i class="fas fa-plus-circle"></i>
+          {{ y18n('adminPanel.createUser') }}
+        </b-button>
+      </div>
+      <!-- wrap modals -->
+      <div id="modals">
+        <!-- change role modal -->
+        <b-modal
+          id="promote-user"
+          :title="y18n('adminPanel.promoteUser')"
+          header-bg-variant="warning"
+          ok-variant="success"
+          cancel-variant="primary"
+          :ok-title="y18n('adminPanel.promoteUser')"
+          :cancel-title="y18n('cancel')"
+          centered
+          @ok="changeUserRole"
         >
-      </b-modal>
-      <!-- reset password modal -->
-      <b-modal
-        id="reset-password"
-        :title="y18n('adminPanel.resetPassword')"
-        header-bg-variant="warning"
-        ok-variant="success"
-        cancel-variant="primary"
-        :ok-title="y18n('adminPanel.resetPassword')"
-        :cancel-title="y18n('cancel')"
-        centered
-        @ok="resetUserPassword"
-      >
-        <p>
-          {{ y18n('adminPanel.modal.resetPassword') }}
-        </p>
-      </b-modal>
-      <!-- delete user modal -->
-      <b-modal
-        id="delete-user"
-        :title="y18n('adminPanel.deleteUser')"
-        header-bg-variant="danger"
-        ok-variant="danger"
-        cancel-variant="primary"
-        :ok-title="y18n('adminPanel.deleteUser')"
-        :cancel-title="y18n('cancel')"
-        centered
-        @ok="deleteUser"
-      >
-        <p>
-          {{ y18n('adminPanel.modal.deleteUser') }}
-        </p>
-      </b-modal>
-      <!-- create user modal -->
-      <b-modal
-        id="create-user"
-        :title="y18n('adminPanel.createUser')"
-        header-bg-variant="warning"
-        ok-variant="success"
-        cancel-variant="primary"
-        :ok-title="y18n('adminPanel.createUser')"
-        :cancel-title="y18n('cancel')"
-        centered
-        @ok="handleCreateUser"
-      >
-        <p>
-          {{ y18n('adminPanel.modal.createUser') }}
-        </p>
-
-        <p>
-          <label
-            for="create-user-name"
-            :class="langIsAr? 'ml-auto': 'mr-auto'"
-          >
-            {{ y18n('namePH') }}
-          </label>
-          <input
-            id="create-user-name"
-            v-model="createUserName"
-            :class="{
-              'mr-2': langIsAr,
-              'ml-2': !langIsAr,
-              'highlight-border': emptyCreateInput
-            }"
-            :placeholder="y18n('namePH')"
-          >
-        </p>
-        <p>
-          <label
-            for="create-user-email"
-            :class="langIsAr? 'ml-auto': 'mr-auto'"
-          >
-            {{ y18n('adminPanel.email') }}
-          </label>
-
-          <input
-            id="create-user-email"
-            v-model="createUserEmail"
-            :class="{
-              'mr-2': langIsAr,
-              'ml-2': !langIsAr,
-              'highlight-border': emptyCreateInput || noEmailFormat
-            }"
-            :placeholder="y18n('adminPanel.email')"
-          >
-        </p>
-        <p>
-          <label
-            id="user-create-role"
-            :class="langIsAr? 'ml-auto': 'mr-auto'"
-          >
-            {{ y18n('adminPanel.role') }}
-          </label>
-          <b-select
-            v-model="createUserRole"
-            aria-describedby="user-create-role"
-          >
+          <p>
+            {{ y18n('adminPanel.modal.promoteUser') }}
+          </p>
+          <b-select v-model="changeRole">
             <b-select-option value="null">
               {{ y18n('adminPanel.chooseRole') }}
             </b-select-option>
@@ -426,22 +291,159 @@
               {{ capitalizeFirstLetter(role) }}
             </b-select-option>
           </b-select>
-        </p>
-        <p v-if="emptyCreateInput">
-          {{ y18n('courseNavEdit.table.missingInfo') }}
-        </p>
-        <p v-if="noEmailFormat">
-          {{ y18n('emailErr') }}
-        </p>
-        <p v-if="duplicateProperty">
-          {{ duplicateErrMsg }}
-        </p>
-        <p v-if="noRoleChosen">
-          {{ y18n('adminPanel.modal.chooseRole') }}
-        </p>
-      </b-modal>
+        </b-modal>
+        <!-- edit email modal -->
+        <b-modal
+          id="edit-email"
+          :title="y18n('adminPanel.editEmail')"
+          header-bg-variant="warning"
+          ok-variant="success"
+          cancel-variant="primary"
+          :ok-title="y18n('adminPanel.editEmail')"
+          :cancel-title="y18n('cancel')"
+          centered
+          @ok="editUserEmail"
+        >
+          <p>
+            {{ y18n('adminPanel.modal.editEmail') }}
+          </p>
+          <label
+            for="email-change-input"
+            class="sr-only"
+          >
+            {{ y18n('adminPanel.modal.newEmail') }}
+          </label>
+          <input
+            id="email-change-input"
+            v-model="changeEmail"
+            type="text"
+            :placeholder="y18n('adminPanel.modal.newEmail')"
+          >
+        </b-modal>
+        <!-- reset password modal -->
+        <b-modal
+          id="reset-password"
+          :title="y18n('adminPanel.resetPassword')"
+          header-bg-variant="warning"
+          ok-variant="success"
+          cancel-variant="primary"
+          :ok-title="y18n('adminPanel.resetPassword')"
+          :cancel-title="y18n('cancel')"
+          centered
+          @ok="resetUserPassword"
+        >
+          <p>
+            {{ y18n('adminPanel.modal.resetPassword') }}
+          </p>
+        </b-modal>
+        <!-- delete user modal -->
+        <b-modal
+          id="delete-user"
+          :title="y18n('adminPanel.deleteUser')"
+          header-bg-variant="danger"
+          ok-variant="danger"
+          cancel-variant="primary"
+          :ok-title="y18n('adminPanel.deleteUser')"
+          :cancel-title="y18n('cancel')"
+          centered
+          @ok="deleteUser"
+        >
+          <p>
+            {{ y18n('adminPanel.modal.deleteUser') }}
+          </p>
+        </b-modal>
+        <!-- create user modal -->
+        <b-modal
+          id="create-user"
+          :title="y18n('adminPanel.createUser')"
+          header-bg-variant="warning"
+          ok-variant="success"
+          cancel-variant="primary"
+          :ok-title="y18n('adminPanel.createUser')"
+          :cancel-title="y18n('cancel')"
+          centered
+          @ok="handleCreateUser"
+        >
+          <p>
+            {{ y18n('adminPanel.modal.createUser') }}
+          </p>
+
+          <p>
+            <label
+              for="create-user-name"
+              :class="langIsAr? 'ml-auto': 'mr-auto'"
+            >
+              {{ y18n('namePH') }}
+            </label>
+            <input
+              id="create-user-name"
+              v-model="createUserName"
+              :class="{
+                'mr-2': langIsAr,
+                'ml-2': !langIsAr,
+                'highlight-border': emptyCreateInput
+              }"
+              :placeholder="y18n('namePH')"
+            >
+          </p>
+          <p>
+            <label
+              for="create-user-email"
+              :class="langIsAr? 'ml-auto': 'mr-auto'"
+            >
+              {{ y18n('adminPanel.email') }}
+            </label>
+
+            <input
+              id="create-user-email"
+              v-model="createUserEmail"
+              :class="{
+                'mr-2': langIsAr,
+                'ml-2': !langIsAr,
+                'highlight-border': emptyCreateInput || noEmailFormat
+              }"
+              :placeholder="y18n('adminPanel.email')"
+            >
+          </p>
+          <p>
+            <label
+              id="user-create-role"
+              :class="langIsAr? 'ml-auto': 'mr-auto'"
+            >
+              {{ y18n('adminPanel.role') }}
+            </label>
+            <b-select
+              v-model="createUserRole"
+              aria-describedby="user-create-role"
+            >
+              <b-select-option value="null">
+                {{ y18n('adminPanel.chooseRole') }}
+              </b-select-option>
+              <b-select-option
+                v-for="role in Object.values(assignableRoles)"
+                :key="role"
+                :value="role"
+              >
+                {{ capitalizeFirstLetter(role) }}
+              </b-select-option>
+            </b-select>
+          </p>
+          <p v-if="emptyCreateInput">
+            {{ y18n('courseNavEdit.table.missingInfo') }}
+          </p>
+          <p v-if="noEmailFormat">
+            {{ y18n('emailErr') }}
+          </p>
+          <p v-if="duplicateProperty">
+            {{ duplicateErrMsg }}
+          </p>
+          <p v-if="noRoleChosen">
+            {{ y18n('adminPanel.modal.chooseRole') }}
+          </p>
+        </b-modal>
+      </div>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>

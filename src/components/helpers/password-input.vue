@@ -12,7 +12,7 @@
             style="position:relative; top:-20px;"
           >
             <label>
-              <i 
+              <i
                 class="fas fa-key"
                 aria-hidden="true"
               ></i>
@@ -59,7 +59,7 @@
             style="position:relative; top:-20px;"
           >
             <label>
-              <i 
+              <i
                 class="fas fa-redo-alt"
                 aria-hidden="true"
               ></i>
