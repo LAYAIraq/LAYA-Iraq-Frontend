@@ -137,6 +137,20 @@ export default {
     /**
      * Author: akokay
      */
+    freetextGradeAdd (
+      state: {
+        enrollment: {
+          freetext: object,
+          freetextGrade: number
+        }
+      },
+      freetextData: object
+    ) {
+      state.enrollment.freetextGrade = 0
+    },
+    /**
+     * Author: akokay
+     */
     enrollmentsAdd (
       state: { enrollmentList: Array<object> },
       enrollmentsObject: { subs: Array<object> }

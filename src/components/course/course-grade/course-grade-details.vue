@@ -5,9 +5,14 @@
       <hr>
       <div v-for="(item, index) in enrollmentList" :key="index">
         {{ item.studentId }}<br>
-        {{ getUserById(item.studentId).username }}<br>
+        <div :id="'user-' + index"></div>
         <div :id="'quill-' + index" class="quill-content"></div><br>
         {{ item.freetext }}<br>
+        <button
+          type="button"
+          @click="addGrade(10)"
+        >Grade
+        </button>
         <hr v-if="index !== enrollmentList.length - 1" />
       </div>
     </div>
@@ -51,6 +56,7 @@ export default {
   mounted () {
     this.$nextTick(() => {
       this.initializeQuillEditors()
+      this.initializeUsers()
     })
   },
 
@@ -71,6 +77,13 @@ export default {
 
   methods: {
 
+    addGrade (grade) {
+      console.log(`add Grade ${grade}`)
+      console.log(this.$store.state)
+      console.log(this.$store.state.enrollement)
+      // this.$store.commit('freetextGradeAdd', grade)
+    },
+
     async initializeQuillEditors () {
       await this.$nextTick()
       console.log('tried to load')
@@ -83,6 +96,21 @@ export default {
           })
           quill.setContents(item.freetext)
           this.quillInstances.push(quill)
+        })
+      }
+    },
+
+    async initializeUsers () {
+      await this.$nextTick()
+      if (this.enrollmentList && this.users) {
+        this.enrollmentList.forEach((item, index) => {
+          const user = this.getUserById(item.studentId)
+          const divElement = document.getElementById(`user-${index}`)
+          if (divElement) {
+            divElement.innerHTML = `Text written to div! ${user.username}`
+          } else {
+            console.error('Element with id "myDiv" not found.')
+          }
         })
       }
     },
