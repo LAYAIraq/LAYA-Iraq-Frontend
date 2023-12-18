@@ -13,6 +13,7 @@ export default {
   state: {
     avatar: '',
     email: '',
+    phone: '',
     fullName: '',
     institution: '',
     language: 'en',
@@ -84,6 +85,18 @@ export default {
       email: string
     ) {
       state.email = email.toLowerCase()
+    },
+    /**
+     * Function phoneSet: set phone number
+     *
+     * Author: nv
+     *Since: v1.3.0
+     */
+    phoneSet (
+      state: { phone: string },
+      phone: string
+    ) {
+      state.phone = phone
     },
     /**
      * Function fullNameSet: set full name
@@ -195,6 +208,7 @@ export default {
       state: {
         username: string,
         email: string,
+        phone: string,
         language: string,
         avatar: string,
         occupation: string,
@@ -204,6 +218,7 @@ export default {
       settings: {
         username: string,
         email: string,
+        phone: string,
         language: string,
         avatar: string,
         occupation: string,
@@ -267,6 +282,7 @@ export default {
           avatar: state.avatar,
           fullName: state.fullName,
           email: state.email.toLowerCase(),
+          phone: state.phone,
           username: state.username,
           institution: state.institution,
           occupation: state.occupation,

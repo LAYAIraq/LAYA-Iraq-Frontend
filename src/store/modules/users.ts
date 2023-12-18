@@ -52,6 +52,23 @@ export default {
     },
 
     /**
+     * function userPhoneChange: change user's phone in state
+     *
+     * Author: nv
+     *Since: v.1.3.0
+     */
+    userPhoneChange (
+      state,
+      { user, phone }: {
+        user: {
+          phone: string,
+        },
+        phone: string
+      }) {
+      user.phone = phone
+    },
+
+    /**
      * function userRoleChange: change user's role in state
      *
      * Author: cmc
@@ -133,6 +150,38 @@ export default {
     },
 
     /**
+     * function userUpdatePhone: change user's phone
+     *
+     * Author: nv
+     *
+     * Since: v1.3.0
+     */
+    userUpdatePhone (
+      { commit, state }: {
+        commit: Function,
+        state: {
+          users: Array<{
+            id: number
+          }>
+        }
+      },
+      { id, phone }: {
+        id: number,
+        phone: string
+      }) {
+      const user = state.users.find(el => el.id === id)
+      if (user) {
+        commit('userPhoneChange', { user, phone })
+        http.patch(
+          `accounts/${id}`,
+          { phone: phone }
+        )
+          // .then(() => console.log('user email changed!'))
+          .catch(err => console.error(err))
+      }
+    },
+
+    /**
      * function userUpdateRole: change user's role
      *
      * Author: cmc
@@ -188,14 +237,16 @@ export default {
       { commit }: {
         commit: Function,
       },
-      { username, email, role }: {
+      { username, email, phone, role }: {
         username: string,
         email: string,
+        phone: string,
         role: string
       }) {
       http.post('accounts/create', {
         username: username,
         email: email,
+        phone: phone,
         role: role
       })
         .then(resp => {

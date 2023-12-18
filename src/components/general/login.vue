@@ -55,6 +55,30 @@
               <div class="col-5">
                 <div class="row">
                   <label>
+                    <i class="fas fa-phone"></i>
+                    {{ y18n('phoneNumberPH') }}
+                  </label>
+                </div>
+              </div>
+              <div
+                class="col-4"
+                :class="{error: errPhone}"
+              >
+                <input
+                  id="phone-input"
+                  v-model.trim="phone"
+                  :placeholder="y18n('phoneNumberPH')"
+                  type="text"
+                  autocomplete="on"
+                  :aria-label="y18n('phoneNumberPH')"
+                >
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-5">
+                <div class="row">
+                  <label>
                     <i class="fas fa-key"></i>
                     {{ y18n('passwordPH') }}
                   </label>
@@ -166,6 +190,7 @@ export default {
     return {
       /* form */
       email: '',
+      phone: '',
       pwd: '',
       /* temp */
       busy: false,
@@ -185,6 +210,17 @@ export default {
      */
     errEmail () {
       return this.email.length === 0
+    },
+
+    /**
+     * errPhone: return true of no phone input
+     *
+     * Author: nv
+     *
+     * Since: v1.3.0
+     */
+    errPhone () {
+      return this.phone.length === 0
     },
 
     /**
@@ -271,6 +307,7 @@ export default {
 
       this.$store.dispatch('sendCredentials', {
         email: $data.email,
+        phone: $data.phone,
         password: $data.pwd
       })
         .then(({ id, userId }) => {

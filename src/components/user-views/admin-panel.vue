@@ -47,6 +47,24 @@
             </div>
           </div>
           <div class="col">
+            {{ y18n('phoneNumberPH') }}
+            <label
+              id="phone-filter-label"
+              for="phone-filter-input"
+              class="sr-only"
+            >
+              {{ y18n('adminPanel.filterListByPhone') }}
+            </label>
+            <div class="input-group">
+              <input
+                id="phone-filter-input"
+                v-model="phoneFilter"
+                aria-describedby="phone-filter-label"
+                @keypress.enter="setFilter(phoneFilter)"
+              >
+            </div>
+          </div>
+          <div class="col">
             {{ y18n('namePH') }}
             <label
               id="name-filter-label"
@@ -64,7 +82,10 @@
               >
             </div>
           </div>
-          <div class="col">
+          <div
+            class="col-2"
+          ></div>
+          <div class="col-3">
             {{ y18n('adminPanel.role') }}
             <span
               id="role-filter-label"
@@ -94,7 +115,7 @@
               </b-select>
             </div>
           </div>
-          <div class="col pt-4">
+          <div class="col pt-4 ml-5">
             <b-button
               v-b-tooltip.bottom
               :class="langIsAr? 'ml-2': 'mr-2'"
@@ -144,6 +165,10 @@
               {{ data.item.email }}
             </template>
 
+            <template #cell(phone)="data">
+              {{ data.item.phone }}
+            </template>
+
             <template #cell(emailVerified)="data">
               {{ data.item.emailVerified }}
             </template>
@@ -177,6 +202,21 @@
                 <i class="fas fa-pen"></i>
                 <span class="sr-only">
                   {{ y18n('adminPanel.editEmail') }}
+                </span>
+              </b-button>
+              <!-- edit phone -->
+              <b-button
+                v-b-tooltip.top
+                class="user-mgmt-btn"
+                :disabled="row.item.id === userId"
+                :class="langIsAr? 'ml-2': 'mr-2'"
+                :title="y18n('adminPanel.editPhone')"
+                variant="warning"
+                @click="openModal(row.item.id, 'edit-phone')"
+              >
+                <i class="fas fa-phone"></i>
+                <span class="sr-only">
+                  {{ y18n('adminPanel.editPhone') }}
                 </span>
               </b-button>
               <!-- reset password -->
@@ -320,6 +360,34 @@
             :placeholder="y18n('adminPanel.modal.newEmail')"
           >
         </b-modal>
+        <!-- edit phone modal -->
+        <b-modal
+          id="edit-phone"
+          :title="y18n('adminPanel.editPhone')"
+          header-bg-variant="warning"
+          ok-variant="success"
+          cancel-variant="primary"
+          :ok-title="y18n('adminPanel.editPhone')"
+          :cancel-title="y18n('cancel')"
+          centered
+          @ok="editUserPhone"
+        >
+          <p>
+            {{ y18n('adminPanel.modal.editPhone') }}
+          </p>
+          <label
+            for="phone-change-input"
+            class="sr-only"
+          >
+            {{ y18n('adminPanel.modal.newPhone') }}
+          </label>
+          <input
+            id="phone-change-input"
+            v-model="changePhone"
+            type="text"
+            :placeholder="y18n('adminPanel.modal.newPhone')"
+          >
+        </b-modal>
         <!-- reset password modal -->
         <b-modal
           id="reset-password"
@@ -407,6 +475,25 @@
           </p>
           <p>
             <label
+              for="create-user-phone"
+              :class="langIsAr? 'ml-auto': 'mr-auto'"
+            >
+              {{ y18n('phoneNumberPH') }}
+            </label>
+
+            <input
+              id="create-user-phone"
+              v-model="createUserPhone"
+              :class="{
+                'mr-2': langIsAr,
+                'ml-2': !langIsAr,
+                'highlight-border': emptyCreateInput || noEmailFormat
+              }"
+              :placeholder="y18n('phoneNumberPH')"
+            >
+          </p>
+          <p>
+            <label
               id="user-create-role"
               :class="langIsAr? 'ml-auto': 'mr-auto'"
             >
@@ -463,13 +550,16 @@ export default {
       fields: [],
 
       createUserEmail: '',
+      createUserPhone: '',
       createUserName: '',
       createUserRole: null,
       changeEmail: '',
+      changePhone: '',
       changeRole: null,
       changingUserId: null,
       duplicateProperty: null,
       emailFilter: '',
+      phoneFilter: '',
       emptyCreateInput: false,
       filter: null,
       listPages: [],
@@ -613,6 +703,9 @@ export default {
           if (this.emailFilter !== '') {
             regexes.push(['email', new RegExp(this.emailFilter, 'i')])
           }
+          if (this.phoneFilter !== '') {
+            regexes.push(['phone', new RegExp(this.phoneFilter, 'i')])
+          }
           if (this.roleFilter) {
             regexes.push(['role', new RegExp(this.roleFilter, 'i')])
           }
@@ -651,6 +744,7 @@ export default {
       { key: 'username', label: this.y18n('adminPanel.user') },
       { key: 'role', label: this.y18n('adminPanel.role') },
       { key: 'email', label: this.y18n('adminPanel.email') },
+      { key: 'phone', label: this.y18n('phoneNumberPH') },
       { key: 'emailVerified', label: this.y18n('adminPanel.emailVerified') },
       { key: 'actions', label: this.y18n('adminPanel.actions') }
     ]
@@ -718,6 +812,7 @@ export default {
       this.$store.dispatch('userCreate', {
         username: this.createUserName,
         email: this.createUserEmail.toLowerCase(),
+        phone: this.createUserPhone,
         role: this.createUserRole || 'student' // create student when no role chosen
       })
         .then(() => this.$bvModal.hide('create-user'))
@@ -750,6 +845,18 @@ export default {
         email: this.changeEmail
       })
     },
+    /**
+     * function editUserPhone: change user's phone number
+     *
+     * Author: nv
+     *Since: v1.3.0
+     */
+    editUserPhone () {
+      this.$store.dispatch('userUpdatePhone', {
+        id: this.changingUserId,
+        email: this.changePhone
+      })
+    },
 
     /**
      * function getUserList: fetch user list if not present in store
@@ -775,7 +882,7 @@ export default {
      */
     handleCreateUser (e) {
       e.preventDefault()
-      if (this.createUserName !== '' && this.createUserEmail !== '') {
+      if (this.createUserName !== '' && (this.createUserEmail !== '' || this.createUserPhone !== '')) {
         this.emptyCreateInput = false
         if (!this.noEmailFormat) {
           this.createUser()

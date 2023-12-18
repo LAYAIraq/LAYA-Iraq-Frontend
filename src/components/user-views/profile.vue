@@ -106,6 +106,24 @@ Since: v1.0.0
                 </div>
               </div>
 
+              <!-- Phone number -->
+              <div class="form-group row">
+                <label
+                  for="phone"
+                  class="col-sm-3 col-form-label"
+                >{{ y18n('phoneNumberPH') }}</label>
+                <div class="col-sm-9">
+                  <input
+                    id="phone"
+                    v-model="phone"
+                    type="text"
+                    class="form-control"
+                    readonly
+                    tabindex="-1"
+                  >
+                </div>
+              </div>
+
               <!-- Full Name -->
               <div class="form-group row">
                 <label
@@ -179,36 +197,48 @@ Since: v1.0.0
                     <hr>
                     <div class="row row-cols-3">
                       <!-- change username -->
-                      <div class="col">
+                      <div class="col-3">
                         <b-button
                           id="username-button"
                           block
                           variant="secondary"
-                          @click="usernamePop = true; passwordPop = false; emailPop = false"
+                          @click="usernamePop = true; passwordPop = false; emailPop = false; phonePop = false;"
                         >
                           {{ y18n('profile.usernameChange') }}
                         </b-button>
                       </div>
 
                       <!-- change email -->
-                      <div class="col">
+                      <div class="col-3">
                         <b-button
                           id="email-button"
                           block
                           variant="secondary"
-                          @click="emailPop = true; passwordPop = false; usernamePop = false"
+                          @click="emailPop = true; passwordPop = false; usernamePop = false; phonePop = false;"
                         >
                           {{ y18n('profile.emailChange') }}
                         </b-button>
                       </div>
 
+                      <!-- change phone -->
+                      <div class="col-3">
+                        <b-button
+                          id="phone-button"
+                          block
+                          variant="secondary"
+                          @click="phonePop = true; passwordPop = false; usernamePop = false; emailPop = false;"
+                        >
+                          {{ y18n('profile.phoneChange') }}
+                        </b-button>
+                      </div>
+
                       <!-- change password -->
-                      <div class="col">
+                      <div class="col-3">
                         <b-button
                           id="password-button"
                           block
                           variant="secondary"
-                          @click="passwordPop = true; emailPop = false; usernamePop = false"
+                          @click="passwordPop = true; emailPop = false; usernamePop = false, phonePop = false;"
                         >
                           {{ y18n('profile.passwordChange') }}
                         </b-button>
@@ -381,6 +411,109 @@ Since: v1.0.0
                             {{ y18n('save') }}
                           </b-button>
                         </div>
+
+                        <!-- phone pop up -->
+                        <div
+                          v-if="phonePop"
+                          class="col"
+                        >
+                          <!-- Old phone -->
+                          <div class="form-group row">
+                            <label
+                              for="oldPhone"
+                              class="col-sm-3 col-form-label"
+                            >{{ y18n('profile.phoneOld') }}</label>
+                            <div class="col-sm-9">
+                              <input
+                                id="oldPhone"
+                                v-model="phoneOld"
+                                type="text"
+                                class="form-control"
+                                :placeholder="y18n('profile.phoneOld')"
+                                autocomplete="on"
+                              >
+                              <p
+                                v-if="phoneOld !== phone"
+                                id="phone-old-incorrect"
+                              >
+                                {{ y18n('profile.phoneOldIncorrect') }}
+                              </p>
+                              <p
+                                v-if="phoneOld === ''"
+                                id="phone-old-empty"
+                              >
+                                {{ y18n('profile.phoneEmpty') }}
+                              </p>
+                            </div>
+                          </div>
+                          <!-- new phone -->
+                          <div class="form-group row">
+                            <label
+                              for="newPhone"
+                              class="col-sm-3 col-form-label"
+                            >{{ y18n('profile.phoneNew') }}</label>
+                            <div class="col-sm-9">
+                              <input
+                                id="newPhone"
+                                v-model="phoneNew"
+                                type="text"
+                                class="form-control"
+                                :placeholder="y18n('profile.phoneNew')"
+                                autocomplete="on"
+                              >
+                              <p
+                                v-if="phoneNewTaken"
+                                id="phone-new-taken"
+                              >
+                                {{ y18n('profile.phoneNewTaken') }}
+                              </p>
+                              <p
+                                v-if="phoneNew === ''"
+                                id="phone-new-empty"
+                              >
+                                {{ y18n('profile.phoneEmpty') }}
+                              </p>
+                            </div>
+                          </div>
+                          <!-- repeat phone -->
+                          <div class="form-group row">
+                            <label
+                              for="repeatPhone"
+                              class="col-sm-3 col-form-label"
+                            >{{ y18n('profile.phoneRepeat') }}</label>
+                            <div class="col-sm-9">
+                              <input
+                                id="repeatPhone"
+                                v-model="phoneRepeat"
+                                type="text"
+                                class="form-control"
+                                :placeholder="y18n('profile.phoneRepeat')"
+                                autocomplete="on"
+                              >
+                              <p
+                                v-if="phoneRepeat !== phoneNew"
+                                id="email-compare-incorrect"
+                              >
+                                {{ y18n('profile.phoneCompareIncorrect') }}
+                              </p>
+                            </div>
+                          </div>
+                          <b-button
+                            variant="primary"
+                            @click="phonePop = false"
+                          >
+                            {{ y18n('cancel') }}
+                          </b-button>
+                          <b-button
+                            variant="success"
+                            class="mx-3"
+                            :disabled="phoneRepeat !== phoneNew || phoneOld !== phone"
+                            @click="phoneChange"
+                          >
+                            {{ y18n('save') }}
+                          </b-button>
+                        </div>
+
                         <!-- password pop up -->
                         <div
                           v-if="passwordPop"
@@ -556,6 +689,11 @@ export default {
       emailNewTaken: null,
       emailOld: '',
       emailRepeat: '',
+      phone: '',
+      phoneNew: '',
+      phoneNewTaken: null,
+      phoneOld: '',
+      phoneRepeat: '',
       passwordMessage: '',
       passwordOld: '',
       prefs: {},
@@ -563,7 +701,8 @@ export default {
       usernameTaken: null,
       passwordPop: false,
       emailPop: false,
-      usernamePop: false
+      usernamePop: false,
+      phonePop: false
     }
   },
 
@@ -687,6 +826,11 @@ export default {
         this.emailNewConform = false
       }
     },
+    phoneNew () { // reset email taken if email input changes
+      if (this.phoneTaken) {
+        this.phoneTaken = false
+      }
+    },
     usernameNew () { // reset username taken if username input changes
       if (this.usernameTaken) {
         this.usernameTaken = false
@@ -705,12 +849,14 @@ export default {
   methods: {
     ...mapActions([
       'checkEmailTaken',
+      'checkPhoneTaken',
       'checkNameTaken',
       'passwordUpdate',
       'profileUpdate'
     ]),
     ...mapMutations([
       'emailSet',
+      'phoneSet',
       'fullNameSet',
       'institutionSet',
       'occupationSet',
@@ -751,6 +897,29 @@ export default {
         }
       }
     },
+
+    /**
+     * @function change phone number if requirements are fulfilled
+     * @author nv
+     * @since v1.3.0
+     */
+    phoneChange (e) {
+      e.preventDefault()
+      if (this.phoneOld === this.phone &&
+        this.phoneNew === this.phoneRepeat) {
+        this.$store.dispatch('checkPhoneTaken', this.phoneNew)
+          .then(() => {
+            this.phoneNewTaken = true
+            this.$bvToast.show('submit-failed')
+          })
+          .catch(() => {
+            this.$store.commit('phoneSet', this.phoneNew)
+            this.submit()
+            this.phonePop = false
+          })
+      }
+    },
+
     /**
      * @function change password if requirements are fulfilled
      * @author cmc

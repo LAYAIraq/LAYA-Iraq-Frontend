@@ -161,6 +161,53 @@
               </div>
             </div>
 
+            <!-- phone -->
+            <div class="form-group row">
+              <div class="col-5">
+                <div class="row">
+                  <label>
+                    <i
+                      class="fas fa-phone"
+                      aria-hidden="true"
+                    ></i>
+                    {{ y18n('phoneNumberPH') }}
+                  </label>
+                </div>
+              </div>
+              <div class="col">
+                <input
+                  id="phone-input"
+                  v-model="phone"
+                  :placeholder="y18n('phoneNumberPH')"
+                  :aria-label="y18n('phoneNumberPH')"
+                  type="text"
+                  :disabled="submitOk"
+                  class="form-control"
+                  :class="errPhone? 'wrong-input' : ''"
+                  aria-describedby="phone-err"
+                  @blur="isPhoneTaken"
+                >
+              </div>
+            </div>
+
+            <!-- phone hint-->
+            <div
+              class="form-group row text-center"
+              :class="{'d-none': !errPhone}"
+            >
+              <div
+                v-if="errPhone"
+                id="phone-err"
+                :aria-hidden="!phoneTaken"
+                class="col text-center"
+              >
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>
+                  {{ phoneTaken ? y18n('phoneTaken') : y18n('phoneErr') }} <br>
+                </strong>
+              </div>
+            </div>
+
             <!--- pwd input component test -->
             <password-input
               class="pwd-input"
@@ -264,6 +311,7 @@ export default {
       /* form model */
       name: '',
       email: '',
+      phone: '',
       profileImg: null,
 
       /* helpers for input checking */
@@ -274,6 +322,7 @@ export default {
       nameInputStarted: false,
       wrongNameCharacters: [],
       emailTaken: false,
+      phoneTaken: false,
       missingEmailCharacters: []
     }
   },
@@ -308,6 +357,18 @@ export default {
     },
 
     /**
+     * errPhone: form validation for phone
+     *
+     * Author: nv
+     *
+     * Since: v1.3.0
+     */
+    errPhone () {
+      if (this.phone === '') return false
+      return this.phoneTaken
+    },
+
+    /**
      * noInput: return true if no input is set
      *
      * Author: cmc
@@ -317,6 +378,7 @@ export default {
     noInput () {
       return (this.name === '' &&
         this.email === '' &&
+        this.phone === '' &&
         this.passwordRepeat === '' &&
         this.passwordSet === '')
     },
@@ -329,7 +391,7 @@ export default {
      * Last Updated: January 17, 2021
      */
     errForm () {
-      return this.errName || this.errEmail || this.noInput || !this.passwordOk
+      return this.errName || this.errEmail || this.errPhone || this.noInput || !this.passwordOk
     }
   },
 
@@ -428,6 +490,22 @@ export default {
     },
 
     /**
+     * Function isPhoneTaken: return if given phone is already taken
+     *
+     * Author: nv
+     *Since: v1.3.0
+     */
+    isPhoneTaken () {
+      if (this.phone.length === 0) {
+        this.phoneTaken = false
+        return
+      }
+      this.$store.dispatch('checkPhoneTaken', this.phone)
+        .then(() => { this.phoneTaken = true })
+        .catch(() => { this.phoneTaken = false })
+    },
+
+    /**
      * Function submit: collect requests for changes, then shoot them
      *
      * Author: core
@@ -435,7 +513,7 @@ export default {
      * Last Updated: unknown
      */
     submit () {
-      if (this.errForm || this.nameTaken || this.emailTaken) {
+      if (this.errForm || this.nameTaken || this.emailTaken || this.phoneTaken) {
         console.log('Not Submitting')
         return
       }
@@ -449,6 +527,7 @@ export default {
       // let requests = [
       this.$store.dispatch('registerUser', {
         email: this.email,
+        phone: this.phone,
         username: this.name,
         password: this.password,
         // avatar: avatarFileName,
