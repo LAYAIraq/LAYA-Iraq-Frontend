@@ -10,7 +10,10 @@
       variant="primary"
       @click="$router.back()"
     >
-      <i :class="langIsAr? 'fas fa-arrow-right' : 'fas fa-arrow-left'"></i>
+      <i
+        :class="langIsAr? 'fas fa-arrow-right' : 'fas fa-arrow-left'"
+        aria-hidden="true"
+      ></i>
       {{ y18n('previousContent') }}
     </b-button>
     <b-button
@@ -20,7 +23,10 @@
       @click="onFinish"
     >
       {{ y18n('nextContent') }}
-      <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
+      <i
+        aria-hidden="true"
+        :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"
+      ></i>
     </b-button>
   </div>
 </template>

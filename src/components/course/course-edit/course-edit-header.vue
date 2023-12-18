@@ -13,7 +13,7 @@ Dependencies:
     <div class="row">
       <div class="col">
         <b-button
-          v-if="$route.name !== 'course'"
+          v-if="$route.name !== 'course' && $route.name !== 'content-follow-edit'"
           variant="outline-secondary"
           size="sm"
           :class="langIsAr? 'float-right' : 'float-left'"

@@ -46,6 +46,7 @@
               </span>
             </button>
             <button
+              v-if="editContent"
               class="btn btn-primary"
               @click="$router.push({ name: 'content-follow-edit', params: { coursePath, contentId: pathId, follow: courseContentFollowMap[pathId] } })"
             >
