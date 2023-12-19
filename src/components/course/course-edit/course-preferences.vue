@@ -153,6 +153,7 @@ export default {
   beforeDestroy () {
     this.simpleLanguage = false
     this.enrollment = false
+    this.simple = false
   },
 
   methods: {
