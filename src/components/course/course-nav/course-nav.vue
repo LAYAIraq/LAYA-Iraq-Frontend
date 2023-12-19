@@ -65,7 +65,7 @@
         class="row"
       >
         <b-button
-          secondary
+          variant="success"
           @click="chapterAdd"
         >
           {{ y18n('courseNavEdit.chapterAdd') }}
@@ -293,8 +293,8 @@ export default {
      */
     navigationSave () {
       this.$store.commit('courseChaptersSet', deepCopy(this.courseNavEdit.children))
-      this.edited = false
       this.$store.commit('courseRoutesUpdate')
+      this.$nextTick(() => { this.edited = false })
       this.$emit('saved') // emit saved to trigger courseUpdate
     },
     /**

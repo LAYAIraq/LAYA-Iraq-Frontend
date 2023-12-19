@@ -325,6 +325,7 @@
 import { array, locale, pluginEdit, tooltipIcon } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 import { deepCopy } from '@/mixins/general/helpers'
+import routes from '@/mixins/vue/routes'
 
 export default {
   name: 'ImageMatchingEdit',
@@ -333,6 +334,7 @@ export default {
     array,
     locale,
     pluginEdit,
+    routes,
     tooltipIcon
   ],
 

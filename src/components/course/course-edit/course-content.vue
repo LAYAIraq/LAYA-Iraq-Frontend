@@ -210,9 +210,11 @@ export default {
       if (!this.editContent) {
         this.$store.commit('courseContentAdd', updatedStep)
         this.$store.commit('courseChapterAdd', courseContentBlockToNavItemTransform(updatedStep))
+        // TODO: avoid duplicate slugs
         this.$router.replace({ name: 'course-content-edit', params: { coursePath: [slugify(this.stepData.title.text)] } })
       } else {
         this.$store.commit('courseContentSet', { ...updatedStep, id: this.pathId })
+        // TODO: add to chapters, set following, set routes
       }
       // set courseUpdated to trigger watchers
       this.$store.commit('courseUpdatedSet', true)

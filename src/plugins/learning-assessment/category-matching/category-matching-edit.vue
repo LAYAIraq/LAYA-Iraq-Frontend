@@ -354,7 +354,7 @@ export default {
 
   data () {
     return {
-      id: '',
+      id: uuidv4(),
       title: {},
       task: {},
       taskAudio: {},

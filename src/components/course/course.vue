@@ -31,7 +31,16 @@
         </div>
       </div>
     </div>
-    <div v-else>
+    <div
+      v-else-if="coursePath.length > 0"
+      class="text-center"
+    >
+      {{ y18n('courseDetail.removedContent') }}
+    </div>
+    <div
+      v-else
+      class="text-center"
+    >
       <!--            <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">-->
       {{ y18n('courseDetail.content') }}
       <!--            </h2>-->

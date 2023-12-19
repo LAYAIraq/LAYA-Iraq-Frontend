@@ -122,7 +122,7 @@
             class="text-break w-100"
           >
             <p
-              v-if="followSet.length === 1"
+              v-if="value.type !== 'button-navigation'"
               v-b-tooltip.right
               :title="y18n('courseNavEdit.followHighlight')"
               @mousedown="followHighlight($event, followingContent)"
