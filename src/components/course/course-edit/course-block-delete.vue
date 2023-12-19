@@ -74,7 +74,6 @@ export default {
       this.$store.commit('courseChaptersContentRemove', this.pathId)
       this.$store.commit('courseRoutesUpdate')
       this.$store.dispatch('courseUpdate')
-      // TODO: replace route
     }
   }
 }

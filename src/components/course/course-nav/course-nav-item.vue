@@ -144,13 +144,13 @@
               id="follow-list"
             >
               <li
-                v-for="e in followSet"
-                :key="e"
+                v-for="(el, i) in followSet"
+                :key="`follow-item-${i}`"
                 v-b-tooltip.right
                 :title="y18n('courseNavEdit.followHighlight')"
-                @mousedown="followHighlight($event,e)"
+                @mousedown="followHighlight($event,el)"
               >
-                {{ e }}
+                {{ el }}
               </li>
             </ul>
           </div>

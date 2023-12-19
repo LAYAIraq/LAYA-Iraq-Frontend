@@ -448,9 +448,4 @@ export default {
 legend {
   font-size: 1rem;
 }
-
-#questionmark {
-  float: end;
-  cursor: pointer;
-}
 </style>
