@@ -205,7 +205,8 @@ export default {
       /* temp */
       busy: false,
       errMsg: '',
-      submitFailed: false
+      submitFailed: false,
+      verifiedAccount: false
     }
   },
 
@@ -321,9 +322,15 @@ export default {
         password: $data.pwd
       })
         .then(({ id, userId }) => {
-          $ls.set('auth', { id: id, userId: userId }, 604800000) // expiration 7 days
-          /* move to view */
-          $router.push('/courses')
+          if (!this.verifiedAccount) {
+            $ls.set('auth', { id: id, userId: userId }, 259200000) // expiration 3 days
+            /* move to view */
+            $router.push('/verify')
+          } else {
+            $ls.set('auth', { id: id, userId: userId }, 604800000) // expiration 7 days
+            /* move to view */
+            $router.push('/courses')
+          }
         })
         .catch(err => {
           console.log(err)

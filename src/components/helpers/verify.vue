@@ -5,27 +5,52 @@
   Since: v1.1.0
 -->
 <template>
-  <div class="container text-center p-5">
-    <div v-if="success">
-      {{ y18n('verify.success') }}
-    </div>
-    <div v-else-if="fail">
-      <p>{{ y18n('verify.fail') }}</p>
-      <p>
-        <router-link to="/">
-          {{ y18n('verify.backHome') }}
-        </router-link>
-      </p>
-    </div>
-    <div v-else-if="busy">
-      <i class="fas fa-spinner fa-spin"></i>
-      {{ y18n('verify.ongoing') }}
+  <div
+    class="container text-center p-5"
+    :class="langIsAr? 'text-right' : 'text-left'"
+  >
+    <div class="container-fluid">
+      <h1> {{ y18n('verify.header') }} </h1>
+      <div v-if="!verified">
+        <p>
+          {{ y18n('verify.description') }}
+        </p>
+        <p>
+          <b-button
+            variant="success"
+            @click="verifyUser"
+          >
+            {{ y18n('verify.button') }}
+          </b-button>
+        </p>
+      </div>
+      <div
+        v-else
+        class="container-fluid"
+      >
+        <div v-if="success">
+          {{ y18n('verify.success') }}
+        </div>
+        <div v-else-if="fail">
+          <p>{{ y18n('verify.fail') }}</p>
+          <p>
+            <router-link to="/">
+              {{ y18n('verify.backHome') }}
+            </router-link>
+          </p>
+        </div>
+        <div v-else-if="busy">
+          <i class="fas fa-spinner fa-spin"></i>
+          {{ y18n('verify.ongoing') }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { locale } from '@/mixins'
+
 export default {
   name: 'Verify',
   mixins: [
@@ -35,7 +60,8 @@ export default {
     return {
       busy: false,
       fail: false,
-      success: false
+      success: false,
+      verified: false
     }
   },
   created () {
@@ -48,6 +74,7 @@ export default {
      * @since v1.3.0
      */
     verifyUser () {
+      this.verified = true
       this.busy = true
       const { uid, token } = this.$route.query
       this.$store.dispatch('accountVerify', { uid, token })

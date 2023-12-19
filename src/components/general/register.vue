@@ -387,8 +387,8 @@ export default {
      */
     noInput () {
       return (this.name === '' &&
-        this.email === '' &&
-        this.phone === '' &&
+        (this.email === '' ||
+        this.phone === '') &&
         this.passwordRepeat === '' &&
         this.passwordSet === '')
     },
