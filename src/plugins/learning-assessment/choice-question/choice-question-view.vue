@@ -82,10 +82,13 @@ Since: v1.0.0
           >
             {{ courseSimple? option.simple: option.text }}
           </label>
-          <i
-            class="ml-2"
-            :class="eval[i]"
-          ></i>
+          <div :class="courseLangIsAr? 'float-right mr-3 mt-2': 'float-left ml-3 mt-2'">
+            <i
+              class="ml-2"
+              :class="eval[i]"
+            >
+            </i>
+          </div>
         </div>
       </div>
     </div>
@@ -98,21 +101,27 @@ Since: v1.0.0
     </div>
     -->
     <div>
-      <button
-        type="button"
-        class="btn btn-primary"
-        :class="langIsAr? 'float-right': 'float-left'"
-        :disabled="freeze"
-        @click="diffSolution"
+      <div class="col-2">
+        <button
+          type="button"
+           class="btn btn-primary"
+          :class="langIsAr? 'float-right': 'float-left'"
+          :disabled="freeze"
+          @click="diffSolution"
+        >
+          {{ y18n('check') }}
+        </button>
+      </div>
+      <div
+        aria-live="polite"
+        class="col-2"
       >
-        {{ y18n('check') }}
-      </button>
-      <div aria-live="polite">
         <div v-if="showSolutionsBool">
           {{ i18n["choiceQuestion.showCorrect"] }}
           <div
             v-for="(showSolution, index) in showSolutions"
             :key="index"
+            class="ml-4"
           >
             {{ showSolution }}
           </div>

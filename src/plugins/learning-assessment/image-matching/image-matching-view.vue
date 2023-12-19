@@ -289,8 +289,10 @@ export default {
         this.showSolutionsBool = true
         this.$forceUpdate()
       } else {
-        this.allAnswersChosen = true
-        this.$bvModal.show('missing-answer-warning')
+        for (let i = 0; i < this.pairs.length; ++i) {
+          this.eval[i] = { 'fa fa-times fa-2x text-danger': true }
+        }
+        this.showSolutionsBool = true
       }
     }
   }
