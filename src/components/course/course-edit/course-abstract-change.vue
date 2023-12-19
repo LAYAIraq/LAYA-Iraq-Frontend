@@ -92,7 +92,7 @@ export default {
         this.$nextTick(() => {
           this.$bvModal.hide('author-change-abstract-confirm')
         })
-        this.$store.commit('courseAbstractChange')
+        this.$store.commit('courseAbstractChange', this.newAbstract)
         this.$store.dispatch('courseUpdate')
           .then(() => {
             this.$store.dispatch('courseListFetch')

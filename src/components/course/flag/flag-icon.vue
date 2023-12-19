@@ -17,7 +17,6 @@
         :title="refData.flagged
           ? y18n('flag.seeDiscussion')
           : y18n('flag.title')"
-        tabindex="0"
       >
         <router-link
           :to="{ name: 'flag', params: { id: refData.id } }"
@@ -64,6 +63,7 @@ export default {
     font-size: 1rem;
     text-align: center;
     z-index: 0;
+
     /*max-height: 100px;*/
   }
 
@@ -71,14 +71,7 @@ export default {
     z-index: -1;
   }
 
-  .flag-container:hover {
-    background-color: rgba(108, 117, 125, 0.25);
-    border-radius: 5px;
-    width: 100%;
-    height: 100%;
-  }
-
-  .flag-container:hover .flag-icon {
+  .flag-container .flag-icon {
     margin-left: calc(100% - 25px);
     display: block !important;
   }

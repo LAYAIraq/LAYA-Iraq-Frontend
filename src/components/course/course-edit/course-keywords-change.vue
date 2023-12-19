@@ -93,7 +93,7 @@ export default {
         this.$nextTick(() => {
           this.$bvModal.hide('author-change-keywords-confirm')
         })
-        this.$store.commit('courseKeywordsChange')
+        this.$store.commit('courseKeywordsChange', this.newKeywords)
         this.$store.dispatch('courseUpdate')
           .then(() => {
             this.$store.dispatch('courseListFetch')

@@ -23,7 +23,10 @@
             :class="langIsAr? 'float-left' : 'float-right'"
             @click="notificationsFetch"
           >
-            <i class="fas fa-download"></i>
+            <i
+              class="fas fa-download"
+              aria-hidden="true"
+            ></i>
             {{ y18n('notifications.getNew') }}
           </button>
         </div>
@@ -36,11 +39,17 @@
     >
       <div class="row font-weight-bold mb-2">
         <div class="col">
-          <i class="far fa-envelope"></i>
+          <i
+            class="far fa-envelope"
+            aria-hidden="true"
+          ></i>
           {{ y18n('message') }}
         </div>
         <div class="col-sm-2">
-          <i class="fas fa-clock"></i>
+          <i
+            class="fas fa-clock"
+            aria-hidden="true"
+          ></i>
           {{ y18n('timestamp') }}
         </div>
         <div class="col-sm-3 text-nowrap">
@@ -51,7 +60,10 @@
             :disabled="!unreadMessages"
             @click="notificationsMarkRead"
           >
-            <i class="fas fa-eye"></i>
+            <i
+              class="fas fa-eye"
+              aria-hidden="true"
+            ></i>
             {{ y18n('markAllAsRead') }}
           </button>
         </div>
@@ -87,6 +99,7 @@
                     'fas fa-envelope-open': note.read,
                     'fas fa-envelope': !note.read
                   }"
+                  aria-hidden="true"
                 ></i>
                 {{ y18n(`notifications.${note.type}.title`) }}
               </div>

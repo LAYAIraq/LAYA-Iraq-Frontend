@@ -10,20 +10,21 @@ Since: v1.0.0
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <div class="row">
-      <h2 class="d-inline-block mr-auto">
-        {{ y18n('buttonNavigation.name') }}
-      </h2>
-
-      <i
-        id="questionmark"
-        v-b-tooltip.left
-        class="fas fa-question-circle"
-        :class="langIsAr? 'mr-auto' : 'ml-auto'"
-        :title="y18n('showTip')"
-        aria-labelledby="tooltipText"
-        aria-live="polite"
-        @click="toggleTip"
-      ></i>
+      <div class="col">
+        <h2 class="d-inline-block mr-auto">
+          {{ y18n('buttonNavigation.name') }}
+        </h2>
+        <i
+          id="questionmark"
+          v-b-tooltip.left
+          class="fas fa-question-circle"
+          :class="langIsAr? 'mr-auto' : 'ml-auto'"
+          :title="y18n('showTip')"
+          aria-labelledby="tooltipText"
+          aria-live="polite"
+          @click="toggleTip"
+        ></i>
+      </div>
     </div>
     <hr>
 
@@ -108,7 +109,10 @@ Since: v1.0.0
               :aria-label="y18n('deleteField')"
               @click="_itemDelete(answers, i)"
             >
-              <i class="fas fa-times"></i>
+              <i
+                class="fas fa-times"
+                aria-hidden="true"
+              ></i>
             </button>
           </div>
         </div>
@@ -151,7 +155,10 @@ Since: v1.0.0
             :class="langIsAr? 'float-right': 'float-left'"
             @click="_itemAdd(answers, newItem())"
           >
-            <i class="fas fa-plus"></i>
+            <i
+              class="fas fa-plus"
+              aria-hidden="true"
+            ></i>
             {{ y18n('buttonNavigation.addAnswer') }}
           </button>
         </div>

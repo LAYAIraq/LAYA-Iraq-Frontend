@@ -133,7 +133,10 @@
               :aria-label="y18n('deleteField')"
               @click="_itemDelete(categories, i)"
             >
-              <i class="fas fa-times"></i>
+              <i
+                class="fas fa-times"
+                aria-hidden="true"
+              ></i>
             </button>
           </div>
         </div>
@@ -177,7 +180,10 @@
             class="btn btn-success btn-sm"
             @click="_itemAdd(categories)"
           >
-            <i class="fas fa-plus"></i>
+            <i
+              class="fas fa-plus"
+              aria-hidden="true"
+            ></i>
             {{ y18n('categoryMatching.catAdd') }}
           </button>
         </div>
@@ -240,7 +246,10 @@
               :aria-label="y18n('deleteField')"
               @click="_itemDelete(items, i)"
             >
-              <i class="fas fa-times"></i>
+              <i
+                class="fas fa-times"
+                aria-hidden="true"
+              ></i>
             </button>
           </div>
         </div>
@@ -282,7 +291,10 @@
             class="btn btn-success btn-sm"
             @click="_itemAdd(items, newItem())"
           >
-            <i class="fas fa-plus"></i>
+            <i
+              class="fas fa-plus"
+              aria-hidden="true"
+            ></i>
             {{ y18n('itemAdd') }}
           </button>
         </div>
