@@ -116,6 +116,15 @@ export default {
       state.courseContent[content.id] = content
     },
     /**
+     * @description clear state.courseContent, used for clearing state when loading new courses
+     * @since v1.3.2
+     * @author cmc
+     * @param state contains courseContent object
+     */
+    courseContentClear (state: { courseContent: any }) {
+      state.courseContent = {}
+    },
+    /**
      * @description update content block by replacing it with given parameter
      * @param state store variables
      * @param block new content block data
@@ -124,8 +133,9 @@ export default {
       courseChapters: any[],
       courseContent: { [id: string]: ContentBlock }
     }, block: ContentBlock) {
-      state.courseContent[block.id] = block
+      Vue.set(state.courseContent, block.id, block) // ensure reactivity in "go to content" dropdown in course-edit-header.vue
       chapterSlugUpdate(state.courseChapters, block.id, block.title.text, block.name)
+      chapterSlugDuplicateAvoid(state.courseChapters)
     },
 
     /**
@@ -176,6 +186,7 @@ export default {
      */
     courseChapterAdd (state: { courseChapters: CourseNavigationItem[], courseStart: string }, chapter: CourseNavigationItem) {
       state.courseChapters.push(chapter)
+      chapterSlugDuplicateAvoid(state.courseChapters)
     },
 
     /**
@@ -279,6 +290,17 @@ export default {
   },
 
   actions: {
+    /**
+     * @description clear traces of course in store, useful when creating new course
+     * @since v1.3.2
+     * @author cmc
+     * @param commit store commit function
+     */
+    courseClear ({ commit }) {
+      commit('courseContentClear')
+      commit('courseChaptersSet', [])
+      commit('courseRoutesUpdate')
+    },
     /**
      * @description gets a course content from back end and calls
      *  setCourseContent mutation

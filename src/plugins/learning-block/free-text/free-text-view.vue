@@ -23,7 +23,7 @@ Since: v1.0.0
           @flagged="title.flagged = true"
         ></flag-icon>
       </div>
-      <div id="free-text-viewer"></div>
+      <div :id="editPreview? 'free-text-preview': 'free-text-viewer'"></div>
       <div class="row">
         <navigation-buttons
           :cid="id"
@@ -68,7 +68,8 @@ export default {
      * Last Updated: March 20, 2021
      */
     fetchContent () {
-      const quill = new Quill('#free-text-viewer', {
+      const targetId = this.editPreview ? '#free-text-preview' : '#free-text-viewer' // avoid duplicate quill id when content is shown and previewed
+      const quill = new Quill(targetId, {
         theme: 'snow',
         readOnly: true
       })

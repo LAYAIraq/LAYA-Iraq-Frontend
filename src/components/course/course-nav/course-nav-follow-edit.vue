@@ -71,7 +71,7 @@
         {{ y18n('save') }}
       </b-button>
       <b-button
-        variant="warning"
+        variant="primary"
         block
         @click="$router.back()"
       >
@@ -97,6 +97,7 @@
 <script>
 import SuggestingInput from '@/components/helpers/suggesting-input.vue'
 import { array, locale, routes } from '@/mixins'
+import { deepCopy } from '@/mixins/general/helpers'
 
 export default {
   name: 'CourseNavFollowEdit',
@@ -116,7 +117,7 @@ export default {
   },
   data () {
     return {
-      followSetNew: this.follow ? this.follow.slice() : null
+      followSetNew: null
     }
   },
   computed: {
@@ -153,6 +154,15 @@ export default {
         : this.followSetNew // followSetNew is string or null
     }
   },
+  created () {
+    this.followSetNew = this.componentIsButtonNavigation
+      ? Array.isArray(this.follow)
+        ? deepCopy(this.follow)
+        : this.follow
+          ? [this.follow]
+          : []
+      : this.follow ?? null
+  },
   methods: {
     /**
      * @description modify followSetNew array so reactivity is intact
@@ -160,7 +170,7 @@ export default {
      * @param val new value at index
      */
     followEdit (val, idx) {
-      if (idx) {
+      if (idx || typeof idx === 'number') {
         this.followSetNew.splice(idx, 1, val)
       } else {
         this.followSetNew = val
@@ -174,6 +184,13 @@ export default {
     saveFollow () {
       if (this.followSetComplete) {
         this.$store.commit('courseChapterUpdateFollow', { id: this.contentId, value: this.followSetNew })
+        this.$root.$bvToast.toast(
+          this.y18n('profile.application.saved'),
+          {
+            title: this.y18n('courseNavEdit.followEdit'),
+            toaster: 'b-toaster-bottom-center',
+            variant: 'success'
+          })
         this.$router.back()
       } else {
         this.$bvModal.show('follow-incomplete')

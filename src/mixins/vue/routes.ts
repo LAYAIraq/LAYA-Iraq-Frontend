@@ -50,7 +50,9 @@ export default {
      * @returns if path is the full path for the pathId
      */
     pathChaptersFull () {
-      return this.pathChapters.length === this.courseRoutes[this.pathId].length
+      return this.courseRoutes && this.courseRoutes[this.pathId]
+        ? this.pathChapters.length === this.courseRoutes[this.pathId].length
+        : null
     },
     /**
      * @description return id for content block with current path

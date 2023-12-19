@@ -7,7 +7,6 @@
 
 export default {
   methods: {
-
     /**
      * Function courseFetch(): get course from database and put in store,
      *  start other functions if successful
@@ -16,7 +15,7 @@ export default {
      *
      * Last Updated: October 21, 2021
      */
-    courseFetch (name) {
+    courseFetch (name: string) {
       const courseName = name || this.$route.params.name // use argument if given, otherwise use router params
       this.$store.dispatch('courseFetch', courseName)
         .then(() => {

@@ -132,7 +132,7 @@
 	"courseNavEdit.helpText2": "Du kannst die Reihenfolge jedoch ändern, indem du die Kursblöcke in die gewünschte Reihenfolge bringst.",
 	"courseNavEdit.helpText3": "Für eine größere Tiefe und einfachere Kursführung kannst du Kapitel zum Kurs hinzufügen. Kapitel können entweder aus Kursblöcken oder Unterkapiteln bestehen. Innerhalb von Kapiteln werden Kursblöcke in linearer Abfolge angezeigt.",
 	"courseNavEdit.helpText4": "Um verschiedene Wege durch deinen Kurs zu erzeugen, nutze die Button-Navigation. Du kannst jedem Button ein eigenes Ziel zuweisen. So werden Sprünge durch den Kurs möglich.",
-	"courseNavEdit.helpText5": "Der erste Contentblck im Kurs ist hervorgehoben. Du kannst Details jedes Blocks anzeigen, indem du auf den Pfeil klickst. Um den darauffolgenden Contentblock hervorgehoben zu bekommen, halte SHIFT gedrückt und klicke die entsprechende ID.",
+	"courseNavEdit.helpText5": "Der erste Contentblock im Kurs ist hervorgehoben. Du kannst Details jedes Blocks anzeigen, indem du auf den Pfeil klickst. Um den darauffolgenden Contentblock hervorgehoben zu bekommen, halte SHIFT gedrückt und klicke die entsprechende ID.",
 	"courseNavEdit.id": "ID",
 	"courseNavEdit.incompleteFollow.msg.std": "Du hast keinen Nachfolger bestimmt! Das führt dazu, dass Nutzende an diesem Block nicht weiterkommen. Möchtest du trotzdem fortfahren?",
 	"courseNavEdit.incompleteFollow.msg.buttons": "Du hast nicht für alle Elemente Nachfolger bestimmt! Das führt dazu, dass einige Buttons keine Funktion haben. Möchtest du trotzdem fortfahren?",

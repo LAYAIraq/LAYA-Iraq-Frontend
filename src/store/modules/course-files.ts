@@ -93,7 +93,9 @@ export default {
         }
         http.all(requests)
           .then(
-            http.spread(() => console.log('FILES REMOVED'))
+            http.spread(() => {
+              // console.log('FILES REMOVED')
+            })
           )
           .catch(err => {
             // console.error(err)

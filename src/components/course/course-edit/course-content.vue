@@ -46,6 +46,7 @@
               </span>
             </button>
             <button
+              v-if="editContent"
               class="btn btn-primary"
               @click="$router.push({ name: 'content-follow-edit', params: { coursePath, contentId: pathId, follow: courseContentFollowMap[pathId] } })"
             >
@@ -209,9 +210,11 @@ export default {
       if (!this.editContent) {
         this.$store.commit('courseContentAdd', updatedStep)
         this.$store.commit('courseChapterAdd', courseContentBlockToNavItemTransform(updatedStep))
+        this.$store.commit('courseRoutesUpdate')
         this.$router.replace({ name: 'course-content-edit', params: { coursePath: [slugify(this.stepData.title.text)] } })
       } else {
         this.$store.commit('courseContentSet', { ...updatedStep, id: this.pathId })
+        this.$store.commit('courseRoutesUpdate')
       }
       // set courseUpdated to trigger watchers
       this.$store.commit('courseUpdatedSet', true)
