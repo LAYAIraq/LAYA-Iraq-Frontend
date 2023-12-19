@@ -6,6 +6,28 @@
 -->
 <template>
   <div class="container text-center pt-5">
+    <div class="row">
+      <div class="col-5">
+        <div class="row">
+          <label>
+            <i class="fas fa-signature"></i>
+            {{ y18n('usernamePH') }}
+          </label>
+        </div>
+      </div>
+      <div
+        class="col-4"
+      >
+        <input
+          id="username-input"
+          :placeholder="y18n('uernamePH')"
+          type="text"
+          autocomplete="on"
+          :aria-label="y18n('usernamePH')"
+        >
+      </div>
+    </div>
+
     <!-- password change input -->
     <div
       v-if="!resetSuccess"
