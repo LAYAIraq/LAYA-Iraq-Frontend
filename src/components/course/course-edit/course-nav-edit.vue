@@ -16,11 +16,14 @@ Dependencies:
     <div class="col">
       <b-button
         block
-        variant="primary"
+        variant="warning"
         append
         :to="{path: 'edit-nav'}"
       >
-        <i class="fas fa-project-diagram"></i> {{ y18n('courseNavEdit.editNav') }}
+        <i
+          class="fas fa-project-diagram"
+          aria-hidden="true"
+        ></i> {{ y18n('courseNavEdit.editNav') }}
       </b-button>
     </div>
 

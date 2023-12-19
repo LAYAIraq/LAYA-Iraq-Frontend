@@ -15,12 +15,15 @@ Dependencies:
   >
     <div class="col">
       <b-button
-        variant="primary"
+        variant="warning"
         block
         append
         :to="{path: 'edit', params: {type: contentToDisplay.name}}"
       >
-        <i class="fas fa-edit"></i> {{ y18n('content.editContent') }}
+        <i
+          class="fas fa-edit"
+          aria-hidden="true"
+        ></i> {{ y18n('content.editContent') }}
       </b-button>
     </div>
 

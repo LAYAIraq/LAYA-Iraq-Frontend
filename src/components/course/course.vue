@@ -6,46 +6,48 @@
 -->
 
 <template>
-  <div
-    v-if="!storeBusy"
-    class="course"
-  >
-    <!-- content -->
+  <main>
     <div
-      v-if="contentToDisplay && viewPermit"
-      class="container content"
+      v-if="!storeBusy"
+      class="course"
     >
-      <div class="row">
-        <div class="col">
-          <CourseHeader
-            :content-title="contentToDisplay.title"
-            :course-name="course.name"
-            :course-path="coursePath"
-          ></CourseHeader>
-          <component
-            :is="contentToDisplay.name"
-            :key="contentToDisplay.title.text"
-            :view-data="contentToDisplay"
-            :on-finish="followContent"
-          >
-          </component>
+      <!-- content -->
+      <div
+        v-if="contentToDisplay && viewPermit"
+        class="container content"
+      >
+        <div class="row">
+          <div class="col">
+            <CourseHeader
+              :content-title="contentToDisplay.title"
+              :course-name="course.name"
+              :course-path="coursePath"
+            ></CourseHeader>
+            <component
+              :is="contentToDisplay.name"
+              :key="contentToDisplay.title.text"
+              :view-data="contentToDisplay"
+              :on-finish="followContent"
+            >
+            </component>
+          </div>
         </div>
       </div>
+      <div v-else>
+        <!--            <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">-->
+        {{ y18n('courseDetail.content') }}
+        <!--            </h2>-->
+        <!--            <h2 v-else class="mt-5 text-center text-muted">-->
+        <!--              {{ y18n('courseDetail.noPermit') }}-->
+        <!--            </h2>-->
+      </div>
+      <CourseEdit
+        v-if="isCourseAuthor"
+        :name="name"
+        :course-path="coursePath"
+      ></CourseEdit>
     </div>
-    <div v-else>
-      <!--            <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">-->
-      {{ y18n('courseDetail.content') }}
-      <!--            </h2>-->
-      <!--            <h2 v-else class="mt-5 text-center text-muted">-->
-      <!--              {{ y18n('courseDetail.noPermit') }}-->
-      <!--            </h2>-->
-    </div>
-    <CourseEdit
-      v-if="isCourseAuthor"
-      :name="name"
-      :course-path="coursePath"
-    ></CourseEdit>
-  </div>
+  </main>
 </template>
 
 <script>
@@ -94,7 +96,7 @@ export default {
       'courseStart',
       'courseSlug',
       'enrollment',
-      'isAdmin',
+      'isSuperAdmin',
       'isAuthor',
       'storeBusy',
       'userEnrolled',
@@ -110,7 +112,7 @@ export default {
      * @returns {boolean} true if logged user is admin or author of the course
      */
     isCourseAuthor () {
-      return (this.isAuthor && this.course.authorId === this.userId) || this.isAdmin
+      return (this.isAuthor && this.course.authorId === this.userId) || this.isSuperAdmin
     },
 
     /**

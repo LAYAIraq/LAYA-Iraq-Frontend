@@ -13,7 +13,7 @@ Dependencies:
     <div class="col">
       <b-dropdown
         id="new-content-dd"
-        variant="primary"
+        variant="success"
         class="w-100"
         :class="langIsAr? 'text-right' : ''"
         menu-class="drop-wrap"

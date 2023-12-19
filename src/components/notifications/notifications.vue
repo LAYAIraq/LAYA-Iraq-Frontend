@@ -19,11 +19,14 @@
         <div class="col-3">
           <button
             type="button"
-            class="btn btn-info"
+            class="btn btn-success"
             :class="langIsAr? 'float-left' : 'float-right'"
             @click="notificationsFetch"
           >
-            <i class="fas fa-download"></i>
+            <i
+              class="fas fa-download"
+              aria-hidden="true"
+            ></i>
             {{ y18n('notifications.getNew') }}
           </button>
         </div>
@@ -36,22 +39,31 @@
     >
       <div class="row font-weight-bold mb-2">
         <div class="col">
-          <i class="far fa-envelope"></i>
+          <i
+            class="far fa-envelope"
+            aria-hidden="true"
+          ></i>
           {{ y18n('message') }}
         </div>
         <div class="col-sm-2">
-          <i class="fas fa-clock"></i>
+          <i
+            class="fas fa-clock"
+            aria-hidden="true"
+          ></i>
           {{ y18n('timestamp') }}
         </div>
         <div class="col-sm-3 text-nowrap">
           <button
             type="button"
-            class="btn btn-info ml-1"
+            class="btn btn-warning ml-1"
             :class="langIsAr? 'float-left' : 'float-right'"
             :disabled="!unreadMessages"
             @click="notificationsMarkRead"
           >
-            <i class="fas fa-eye"></i>
+            <i
+              class="fas fa-eye"
+              aria-hidden="true"
+            ></i>
             {{ y18n('markAllAsRead') }}
           </button>
         </div>
@@ -87,6 +99,7 @@
                     'fas fa-envelope-open': note.read,
                     'fas fa-envelope': !note.read
                   }"
+                  aria-hidden="true"
                 ></i>
                 {{ y18n(`notifications.${note.type}.title`) }}
               </div>
@@ -102,7 +115,7 @@
               <div class="col-sm-2">
                 <b-button
                   v-b-toggle="`collapse-${i}`"
-                  variant="dark"
+                  variant="success"
                   :class="langIsAr? 'float-left' : 'float-right'"
                 >
                   <small>
@@ -121,6 +134,7 @@
                 <button
                   :id="`collapse-${i}-btn`"
                   class="d-none"
+                  variant="warning"
                   @click="markAsRead(note)"
                 ></button>
                 <b-card class="mt-2 w-100">
