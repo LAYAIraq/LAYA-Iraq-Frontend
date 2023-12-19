@@ -17,7 +17,7 @@
       {{ y18n('previousContent') }}
     </b-button>
     <b-button
-      v-if="cid !== courseEnd"
+      v-if="buttonNextShow"
       variant="primary"
       :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
       @click="onFinish"
@@ -40,10 +40,23 @@ export default {
     cid: {
       type: String,
       required: true
+    },
+    buttonNav: {
+      type: Boolean,
+      default: () => false
     }
   },
   computed: {
     ...mapGetters(['courseContentFollowMap', 'courseEnd', 'courseRoutes', 'courseStart']),
+    /**
+     * @description whether or not to show "next content" button
+     * @return {boolean} true if block is not a button navigation and not last in course
+     */
+    buttonNextShow () {
+      return this.buttonNav
+        ? false
+        : this.cid !== this.courseEnd
+    },
     /**
      * @function return a route push for following content
      * @author cmc

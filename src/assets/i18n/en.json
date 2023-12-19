@@ -120,6 +120,7 @@
 	"courseCreate.modal.titleHint": "That course name already exists! Do you want to choose a new name?",
 	"courseDetail.bToast.text": "Successfully Saved!",
 	"courseDetail.content": "There is no content yet",
+	"courseDetail.removedContent": "You have removed this content block. Please navigate to a different course block!",
 	"courseDetail.noPermit": "You are not allowed to see this content!",
 	"courseLanguage": "Course Language",
 	"courseList.authorRights": "You have author rights for this course.",

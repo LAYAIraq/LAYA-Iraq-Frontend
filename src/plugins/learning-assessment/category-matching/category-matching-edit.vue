@@ -354,7 +354,7 @@ export default {
 
   data () {
     return {
-      id: '',
+      id: uuidv4(),
       title: {},
       task: {},
       taskAudio: {},
@@ -447,10 +447,5 @@ export default {
 
 legend {
   font-size: 1rem;
-}
-
-#questionmark {
-  float: end;
-  cursor: pointer;
 }
 </style>

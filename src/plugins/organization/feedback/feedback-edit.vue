@@ -341,7 +341,7 @@ export default {
       taskAudio: '',
       items: [],
       categories: [],
-      id: ''
+      id: uuidv4()
     }
   },
 

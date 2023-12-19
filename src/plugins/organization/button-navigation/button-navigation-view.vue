@@ -6,60 +6,64 @@ Since v1.0.0
 -->
 
 <template>
-  <fieldset
+  <div
     class="button-navigation-view"
     :class="courseLangIsAr? 'text-right' : 'text-left'"
   >
-    <div>
-      <div
-        v-if="title.show"
-        :id="title.id"
-        class="row flaggable "
-      >
-        <div class="col">
-          <h2>
-            {{ courseSimple? title.simple: title.text }}
-          </h2>
-        </div>
+    <div
+      v-if="title.show"
+      :id="title.id"
+      class="row flaggable "
+    >
+      <div class="col">
+        <h2>
+          {{ courseSimple? title.simple: title.text }}
+        </h2>
       </div>
-      <!-- TODO: dynamic CSS for background image -->
-      <div class="button-navigation-text">
+    </div>
+    <!-- TODO: dynamic CSS for background image -->
+    <div class="button-navigation-text">
+      <div
+        v-if="task"
+        :id="task.id"
+        class="flaggable question"
+      >
+        {{ courseSimple? task.simple: task.text }}
+        <flag-icon
+          v-if="!editPreview"
+          :ref-data="task"
+          @flagged="task.flagged = true"
+        ></flag-icon>
+      </div>
+      <div class="answers d-flex flex-wrap justify-content-around">
         <div
-          v-if="task"
-          :id="task.id"
-          class="flaggable question"
+          v-for="(answer,i) in answers"
+          :key="answer.id"
+          class="flaggable answer-item"
         >
-          {{ courseSimple? task.simple: task.text }}
+          <button
+            type="button"
+            class="btn btn-info btn-lg"
+            @click="onFinish[i]()"
+          >
+            {{ courseSimple? answer.simple : answer.text }}
+          </button>
           <flag-icon
             v-if="!editPreview"
-            :ref-data="task"
-            @flagged="task.flagged = true"
+            :ref-data="answer"
+            :interactive="true"
+            @flagged="answer.flagged = true"
           ></flag-icon>
-        </div>
-        <div class="answers d-flex flex-wrap justify-content-around">
-          <div
-            v-for="(answer,i) in answers"
-            :key="answer.id"
-            class="flaggable answer-item"
-          >
-            <button
-              type="button"
-              class="btn btn-info btn-lg"
-              @click="onFinish[i]()"
-            >
-              {{ courseSimple? answer.simple : answer.text }}
-            </button>
-            <flag-icon
-              v-if="!editPreview"
-              :ref-data="answer"
-              :interactive="true"
-              @flagged="answer.flagged = true"
-            ></flag-icon>
-          </div>
         </div>
       </div>
     </div>
-  </fieldset>
+    <div class="row">
+      <navigation-buttons
+        :cid="id"
+        :button-nav="true"
+      ></navigation-buttons>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -68,10 +72,11 @@ import { locale, pluginView } from '@/mixins'
 import { mapGetters } from 'vuex'
 import '@/assets/styles/flaggables.css'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
+import NavigationButtons from '@/components/helpers/navigation-buttons.vue'
 
 export default {
   name: 'ButtonNavigationView',
-  components: { FlagIcon },
+  components: { NavigationButtons, FlagIcon },
 
   mixins: [
     locale,
