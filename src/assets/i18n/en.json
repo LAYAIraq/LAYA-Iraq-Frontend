@@ -432,6 +432,7 @@
 	"notifications.studentNewFlagAnswer.text": "You have a new answer to your question in Course <CID>.",
 	"notifications.studentNewFlagAnswer.title": "New clarification",
 	"occupationPH": "Occupation",
+	"or": "or",
 	"password.error": "Error",
 	"password.errorMsg": "Something went wrong!",
 	"password.errors": "Errors",

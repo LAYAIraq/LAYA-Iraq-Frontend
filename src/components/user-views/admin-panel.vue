@@ -475,6 +475,13 @@
           </p>
           <p>
             <label
+              for="or"
+            >
+              {{ y18n('or') }}
+            </label>
+          </p>
+          <p>
+            <label
               for="create-user-phone"
               :class="langIsAr? 'ml-auto': 'mr-auto'"
             >

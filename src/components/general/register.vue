@@ -161,6 +161,16 @@
               </div>
             </div>
 
+            <div class="col-4 mt-1">
+              <p>
+                <label
+                  for="or"
+                >
+                  {{ y18n('or') }}
+                </label>
+              </p>
+            </div>
+
             <!-- phone -->
             <div class="form-group row">
               <div class="col-5">

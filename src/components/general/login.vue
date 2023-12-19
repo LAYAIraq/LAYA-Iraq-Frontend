@@ -51,6 +51,16 @@
               </div>
             </div>
 
+            <div class="col-4 mt-4">
+              <p>
+                <label
+                  for="or"
+                >
+                  {{ y18n('or') }}
+                </label>
+              </p>
+            </div>
+
             <div class="row">
               <div class="col-5">
                 <div class="row">
