@@ -19,7 +19,7 @@
       ></i>
       <course-nav-property-edit
         :form-placeholder="y18n('courseNavEdit.chapterPlaceholder')"
-        :property="chapterName"
+        :property="{ propName: y18n('title'), value: chapterName }"
         class="chapter-edit"
         :class="{ 'border rounded border-danger': chapterNameDuplicate }"
         @changed="propagatePropertyChange(chapter, 'chapterName', $event)"

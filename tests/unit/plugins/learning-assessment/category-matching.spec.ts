@@ -85,7 +85,7 @@ describe('Category Matching edit component', () => {
       expect(helpText.exists()).toBeTruthy()
     })
 
-    it('allows simple alternatives for all input', async () => {
+    it.skip('allows simple alternatives for all input', async () => { // has moved to different component
       await localVue.nextTick()
       const inputFields = wrapper.findAll('input')
       const textareas = wrapper.findAll('textarea')
@@ -96,7 +96,7 @@ describe('Category Matching edit component', () => {
     it('allows adding categories and answers', async () => {
       state.courseSimple = false
       await localVue.nextTick()
-      const buttons = wrapper.findAll('.btn-primary')
+      const buttons = wrapper.findAll('.btn-success')
       expect(buttons.length).toBe(2)
       let cats = wrapper.findAll('label').filter(label => label.attributes('for').includes('cat'))
       expect(cats.length).toBe(2)
@@ -217,7 +217,7 @@ describe('Category Matching View Component', () => {
     const labels = item.at(0).findAll('b')
     expect(labels.at(0).text()).toBe('Cat 1')
     expect(labels.at(1).text()).toBe('Cat 2')
-    expect(item.at(0).find('h3').text()).toBe('Item')
+    expect(item.at(0).find('label').text()).toBe('Item')
     expect(wrapper.find('h2').text()).toBe('Title')
     expect(wrapper.find('p').text()).toBe('Task')
   })
@@ -229,7 +229,7 @@ describe('Category Matching View Component', () => {
     const button = wrapper.find('button')
     expect(button.text()).toBe('Check Solution')
     await button.trigger('click')
-    expect(wrapper.find('h3').find('i').classes()).toStrictEqual(expect.arrayContaining(['text-danger']))
+    expect(wrapper.find('label').find('i').classes()).toStrictEqual(expect.arrayContaining(['text-danger']))
   })
 
   it('marks the correct check (correct answer)', async () => {
@@ -239,7 +239,7 @@ describe('Category Matching View Component', () => {
     const button = wrapper.find('button')
     expect(button.text()).toBe('Check Solution')
     await button.trigger('click')
-    expect(wrapper.find('h3').find('i').classes()).toStrictEqual(expect.arrayContaining(['text-success']))
+    expect(wrapper.find('label').find('i').classes()).toStrictEqual(expect.arrayContaining(['text-success']))
   })
 
   it('shows the list of correct answers after clicking check', async () => {

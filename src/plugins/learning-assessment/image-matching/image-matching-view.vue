@@ -21,6 +21,7 @@
         >
           <h4>
             {{ courseSimple? title.simple: title.text }}
+            <!--
             <audio-button
               v-if="taskAudio"
               :src="courseSimple?
@@ -28,17 +29,20 @@
                 taskAudio.simple"
             >
             </audio-button>
+            -->
           </h4>
         </div>
-        <flag-icon
-          v-if="!editPreview"
-          :ref-data="title"
-          @flagged="title.flagged = true"
-        ></flag-icon>
+        <a>
+          <flag-icon
+            v-if="!editPreview"
+            :ref-data="title"
+            @flagged="title.flagged = true"
+          ></flag-icon>
+        </a>
       </div>
       <div
         :id="task.id"
-        class="flaggable row"
+        class="row"
       >
         <div
           id="task"
@@ -46,11 +50,6 @@
         >
           <p>{{ courseSimple? task.simple: task.text }}</p>
         </div>
-        <flag-icon
-          v-if="!editPreview"
-          :ref-data="task"
-          @flagged="task.flagged = true"
-        ></flag-icon>
       </div>
 
       <hr>
@@ -61,10 +60,10 @@
               v-for="(pair,i) in pairs"
               :id="pair.id"
               :key="pair.id"
-              class="form-group row flaggable"
+              class="form-group row"
             >
               <label
-                :for="pair.label+i"
+                :for="'item-'+i"
                 class="col-sm-6 col-form-label answer-text"
               >
                 <img
@@ -105,25 +104,12 @@
                   <i :class="eval[i]"></i>
                 </div>
               </div>
-              <flag-icon
-                v-if="!editPreview"
-                :ref-data="pair"
-                :interactive="true"
-                @flagged="pair.flagged = true"
-              ></flag-icon>
             </div>
           </form>
         </div>
       </div>
-      <div class="row mb-3">
-        <button
-          type="button"
-          class="btn btn-warning"
-          :disabled="freeze"
-          @click="reset"
-        >
-          {{ y18n('imageMatching.removeInput') }}
-        </button>
+
+      <div class="row pt-3">
         <button
           type="button"
           class="btn btn-link"
@@ -181,14 +167,14 @@
 import { mapGetters } from 'vuex'
 import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
-import AudioButton from '@/components/helpers/audio-button.vue'
+// import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 import { stripKey } from '@/mixins/general/helpers'
 import NavigationButtons from '@/components/helpers/navigation-buttons.vue'
 
 export default {
   name: 'ImageMatchingView',
-  components: { NavigationButtons, FlagIcon, AudioButton },
+  components: { NavigationButtons, FlagIcon },
 
   mixins: [
     locale,
@@ -279,8 +265,10 @@ export default {
         this.showSolutionsBool = true
         this.$forceUpdate()
       } else {
-        this.allAnswersChosen = true
-        this.$bvModal.show('missing-answer-warning')
+        for (let i = 0; i < this.pairs.length; ++i) {
+          this.eval[i] = { 'fa fa-times fa-2x text-danger': true }
+        }
+        this.showSolutionsBool = true
       }
     }
   }

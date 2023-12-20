@@ -6,60 +6,63 @@
 -->
 
 <template>
-  <div
-    v-if="!storeBusy"
-  >
-    <!-- content -->
+  <main>
     <div
-      v-if="contentToDisplay && viewPermit"
-      class="container content"
+      v-if="!storeBusy"
+      class="course"
     >
-      <div class="row">
-        <div class="col">
-          <CourseHeader
-            :content-title="contentToDisplay.title"
-            :course-name="course.name"
-            :course-path="coursePath"
-          ></CourseHeader>
-          <component
-            :is="contentToDisplay.name"
-            id="course-content"
-            :key="contentToDisplay.title.text"
-            :view-data="contentToDisplay"
-          >
-          </component>
+      <!-- content -->
+      <div
+        v-if="contentToDisplay && viewPermit"
+        class="container content"
+      >
+        <div class="row">
+          <div class="col">
+            <CourseHeader
+              :content-title="contentToDisplay.title"
+              :course-name="course.name"
+              :course-path="coursePath"
+            ></CourseHeader>
+            <component
+              :is="contentToDisplay.name"
+              id="course-content"
+              :key="contentToDisplay.title.text"
+              :view-data="contentToDisplay"
+            >
+            </component>
+          </div>
         </div>
       </div>
-    </div>
-    <div
-      v-else-if="coursePath.length > 0"
-      class="text-center"
-    >
-      {{ y18n('courseDetail.removedContent') }}
+      <div
+        v-else-if="coursePath.length > 0"
+        class="text-center"
+      >
+        {{ y18n('courseDetail.removedContent') }}
+      </div>
+      <div
+        v-else
+        class="text-center"
+      >
+        <!--            <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">-->
+        {{ y18n('courseDetail.content') }}
+        <!--            </h2>-->
+        <!--            <h2 v-else class="mt-5 text-center text-muted">-->
+        <!--              {{ y18n('courseDetail.noPermit') }}-->
+        <!--            </h2>-->
+      </div>
+      <CourseEdit
+        v-if="isCourseAuthor"
+        :name="name"
+        :course-path="coursePath"
+      ></CourseEdit>
     </div>
     <div
       v-else
-      class="text-center"
+      class="container mt-5 text-center"
     >
-      <!--            <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">-->
-      {{ y18n('courseDetail.content') }}
-      <!--            </h2>-->
-      <!--            <h2 v-else class="mt-5 text-center text-muted">-->
-      <!--              {{ y18n('courseDetail.noPermit') }}-->
-      <!--            </h2>-->
+      <i class="fas fa-spinner fa-spin"></i> {{ y18n('busy') }}…
     </div>
-    <CourseEdit
-      v-if="isCourseAuthor"
-      :name="name"
-      :course-path="coursePath"
-    ></CourseEdit>
-  </div>
-  <div
-    v-else
-    class="container mt-5 text-center"
-  >
-    <i class="fas fa-spinner fa-spin"></i> {{ y18n('busy') }}…
-  </div>
+  </main>
 </template>
 
 <script>
@@ -109,7 +112,7 @@ export default {
       'courseStart',
       'courseSlug',
       'enrollment',
-      'isAdmin',
+      'isSuperAdmin',
       'isAuthor',
       'storeBusy',
       'userEnrolled',
@@ -125,7 +128,7 @@ export default {
      * @returns {boolean} true if logged user is admin or author of the course
      */
     isCourseAuthor () {
-      return (this.isAuthor && this.course.authorId === this.userId) || this.isAdmin
+      return (this.isAuthor && this.course.authorId === this.userId) || this.isSuperAdmin
     },
 
     /**

@@ -13,10 +13,8 @@ export default {
 
     /**
      * tooltips(): filters i18n file for needed tooltip keys
-     *
      * Author: cmc
-     *
-     * Last Updated: May 5, 2021
+     * Since: v1.1.0
      */
     tooltips () {
       // needed keys
@@ -49,7 +47,7 @@ export default {
      *
      * Author: cmc
      *
-     * Last Updated: April 28, 2021
+     * Since: v1.1.0
      *
      * @param _list some array
      * @returns Original list if no
@@ -62,11 +60,15 @@ export default {
       if (sortBy === '') {
         return _list || null
       } else {
-        if (sortAsc) {
-          return list.sort((a, b) => a[sortBy] - b[sortBy])
-        } else {
-          return list.sort((a, b) => b[sortBy] - a[sortBy])
-        }
+        return list.sort((a, b) => {
+          if (typeof a[sortBy] === 'string' && typeof b[sortBy] === 'string') {
+            return sortAsc ? a[sortBy].localeCompare(b[sortBy]) : b[sortBy].localeCompare(a[sortBy])
+          } else if (typeof a[sortBy] === 'number' && typeof b[sortBy] === 'number') {
+            return sortAsc ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy]
+          } else {
+            return 0
+          }
+        })
       }
     },
 
@@ -120,10 +122,8 @@ export default {
 
     /**
      * Function toggleSortDir: toggle sort direction
-     *
      * Author: cmc
-     *
-     * Last Updated: April 28, 2021
+     * Since: v1.1.0
      */
     toggleSortDir () {
       this.sortAsc = !this.sortAsc

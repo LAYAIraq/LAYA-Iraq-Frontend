@@ -16,7 +16,7 @@
         v-b-tooltip.top.ds500
         class="fas fa-edit"
         :class="langIsAr ? 'mr-auto' : 'ml-auto'"
-        :title="y18n('courseWrapper.edit')"
+        :title="y18n('courseWrapper.edit') + ' ' + property.propName"
       ></i>
     </div>
     <b-form
@@ -69,14 +69,14 @@ export default {
       default: () => 'Placeholder'
     },
     property: {
-      type: String,
+      type: Object, // needs to have signature { propName: string, value: string }
       required: true
     }
   },
   data () {
     return {
       edit: false,
-      newProperty: ''
+      newProperty: this.property.value
     }
   },
   computed: {
@@ -84,16 +84,16 @@ export default {
       return this.$parent.id
     },
     propertyDisplay () {
-      return this.display(this.property)
+      return this.display(this.property.value)
     }
   },
   watch: {
-    property (val) {
-      this.newProperty = val
+    property: {
+      handler (val) {
+        this.newProperty = val.value
+      },
+      deep: true
     }
-  },
-  created () {
-    this.newProperty = this.property
   },
   methods: {
     /**

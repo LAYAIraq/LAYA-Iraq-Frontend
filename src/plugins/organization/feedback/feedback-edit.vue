@@ -35,95 +35,32 @@
       :lead="y18n('tipHeadline')"
     >
       <hr class="my-4">
-      <span>
-        {{ y18n('feedback.tooltip') }}
-      </span>
+      <p
+        v-for="str in y18n('feedback.tooltip').split(';')"
+        :key="str.length"
+      >
+        <!-- eslint-disable-next-line vue/no-v-html --> <!-- TODO: find a way to avoid v-html -->
+        <span v-html="replacePattern(str, /###([\w\s\-]+)###([A-Z0-9a-z\/.:#]+)###/, linkReplacement(true))"></span>
+      </p>
     </b-jumbotron>
     <hr>
 
     <form>
       <!-- title -->
-      <div class="form-group row">
-        <label
-          for="feedback-title"
-          class="col-2 col-form-label"
-        >
-          {{ y18n('title') }}
-        </label>
-        <div class="col-10">
-          <input
-            id="feedback-title"
-            v-model="title.text"
-            type="text"
-            class="form-control"
-            :placeholder="y18n('titlePlaceholder')"
-          >
-        </div>
-      </div>
-
-      <!-- simple language alt -->
-      <div
-        v-if="courseSimple"
-        class="form-group row"
+      <content-title-edit
+        :title="title"
+        @set-title="title = $event"
       >
-        <label
-          for="feedback-title-simple"
-          class="col-2 col-form-label"
-        >
-          <span class="sr-only">
-            {{ y18n('simpleAlt') }}
-          </span>
-        </label>
-        <div class="col-10">
-          <input
-            id="feedback-title-simple"
-            v-model="title.simple"
-            type="text"
-            class="form-control"
-            :placeholder="y18n('simpleAlt')"
-          >
-        </div>
-      </div>
+      </content-title-edit>
 
       <!-- task -->
-      <div class="form-group row">
-        <span
-          class="col-2 col-form-label"
-        >
-          {{ y18n('feedback.edit.desc') }}
-        </span>
-        <div class="col-10">
-          <textarea
-            id="feedback-task"
-            v-model="task.text"
-            class="w-100"
-            :placeholder="y18n('taskPlaceholder')"
-          >
-          </textarea>
-        </div>
-      </div>
-
-      <!-- task simple -->
-      <div
-        v-if="courseSimple"
-        class="form-group row"
+      <content-task-edit
+        :task="task"
+        @set-task="task = $event"
       >
-        <span
-          class="col-2 col-form-labelsr-only"
-        >
-          {{ y18n('simpleAlt') }}
-        </span>
-        <div class="col-10">
-          <textarea
-            id="feedback-task-simple"
-            v-model="task.simple"
-            class="w-100"
-            :placeholder="y18n('simpleAlt')"
-          ></textarea>
-        </div>
-      </div>
+      </content-task-edit>
 
-      <!-- task audio -->
+      <!-- task audio
       <div class="form-group row">
         <label
           for="feedback-task-audio"
@@ -142,7 +79,7 @@
         </div>
       </div>
 
-      <!-- task audio simple -->
+      task audio simple
       <div
         v-if="courseSimple"
         class="form-group row"
@@ -165,7 +102,7 @@
           >
         </div>
       </div>
-
+      -->
       <!-- Answers -->
       <p><b>{{ y18n('feedback.edit.questions') }}</b></p>
       <div
@@ -187,6 +124,7 @@
               v-model="item.label"
               class="form-control"
               type="text"
+              :placeholder="y18n('plugin.sampleOption')"
             >
           </div>
 
@@ -198,7 +136,10 @@
               :aria-label="y18n('deleteField')"
               @click="_itemDelete(items, i)"
             >
-              <i class="fas fa-times"></i>
+              <i
+                class="fas fa-times"
+                aria-hidden="true"
+              ></i>
             </button>
           </div>
         </div>
@@ -221,7 +162,14 @@
               v-model="item.simple"
               class="form-control"
               type="text"
+              :placeholder="y18n('simpleAlt')"
             >
+            <p
+              v-if="isMissing(item)"
+              id="'missing-simple-language-item-' + i"
+            >
+              {{ y18n('simpleAlt.missing') }}
+            </p>
           </div>
         </div>
       </div>
@@ -230,10 +178,13 @@
         <div class="col-10 offset-2">
           <button
             type="button"
-            class="btn btn-primary btn-sm"
+            class="btn btn-success btn-sm"
             @click="_itemAdd(items, newItem())"
           >
-            <i class="fas fa-plus"></i>{{ y18n('feedback.edit.addQuestion') }}
+            <i
+              class="fas fa-plus"
+              aria-hidden="true"
+            ></i>{{ y18n('feedback.edit.addQuestion') }}
           </button>
         </div>
       </div>
@@ -263,6 +214,7 @@
               v-model="cat.text"
               class="form-control"
               type="text"
+              :placeholder="y18n('plugin.sampleOption')"
             >
           </div>
 
@@ -274,7 +226,10 @@
               :aria-label="y18n('deleteField')"
               @click="_itemDelete(categories, i)"
             >
-              <i class="fas fa-times"></i>
+              <i
+                class="fas fa-times"
+                aria-hidden="true"
+              ></i>
             </button>
           </div>
         </div>
@@ -297,7 +252,14 @@
               v-model="cat.simple"
               class="form-control"
               type="text"
+              :placeholder="y18n('simpleAlt')"
             >
+            <p
+              v-if="isMissing(cat)"
+              id="'missing-simple-language-cat-' + i"
+            >
+              {{ y18n('simpleAlt.missing') }}
+            </p>
           </div>
         </div>
       </div>
@@ -306,10 +268,13 @@
         <div class="col-10 offset-2">
           <button
             type="button"
-            class="btn btn-primary btn-sm"
+            class="btn btn-success btn-sm"
             @click="_itemAdd(categories)"
           >
-            <i class="fas fa-plus"></i>{{ y18n('feedback.edit.addAnswer') }}
+            <i
+              class="fas fa-plus"
+              aria-hidden="true"
+            ></i>{{ y18n('feedback.edit.addAnswer') }}
           </button>
         </div>
       </div>
@@ -322,10 +287,12 @@ import { mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 import { deepCopy } from '@/mixins/general/helpers'
 import { array, locale, routes, pluginEdit, tooltipIcon } from '@/mixins'
+import ContentTitleEdit from '@/components/helpers/content-title-edit'
+import ContentTaskEdit from '@/components/helpers/content-task-edit'
 
 export default {
   name: 'FeedbackEdit',
-
+  components: { ContentTitleEdit, ContentTaskEdit },
   mixins: [
     array,
     locale,
@@ -385,8 +352,8 @@ export default {
     fillForm () {
       if (this.categories.length === 0) {
         const tmpItem = {
-          label: this.y18n('feedback.edit.questions') + ' 1',
-          simple: this.y18n('simpleAlt') + ' 1',
+          label: '',
+          simple: '',
           category: -1,
           flagged: false,
           id: uuidv4()
@@ -395,8 +362,8 @@ export default {
 
         for (let i = 1; i < 3; i++) {
           this.categories.push({
-            text: this.y18n('feedback.edit.answers') + ' ' + i,
-            simple: this.y18n('simpleAlt') + ' ' + i
+            text: '',
+            simple: ''
           })
         }
       }
@@ -407,6 +374,14 @@ export default {
      */
     newItem () {
       return { label: '', category: -1, flagged: false, id: uuidv4() }
+    },
+    /**
+     * Function isMissing: Checks if simple language is filled in
+     * Author: nv
+     * Since: v1.3.0
+     */
+    isMissing (option) {
+      return !option.simple
     }
   }
 }

@@ -19,6 +19,7 @@ Dependencies:
     >
       <b-button
         size="sm"
+        class="w-50"
         variant="danger"
         :class="langIsAr? 'float-left' : 'float-right'"
         @click="$bvModal.show('author-delContent-confirm')"

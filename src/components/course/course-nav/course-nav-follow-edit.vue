@@ -27,15 +27,28 @@
           >
             {{ label }}
           </b-button>
+          <i
+            v-b-tooltip.top
+            class="fas fa-question-circle p-1"
+            :title="y18n('courseNavEdit.followEditToolTipButton')"
+          ></i>
         </div>
-        <div class="row">
+        <div
+          v-b-tooltip.top
+          class="row"
+          :title="replacePattern(y18n('courseNavEdit.followEditToolTipTags'), '<BL>', label)"
+        >
           <suggesting-input
             class="col"
             :domain="courseContent"
+            :drop-down-button-text="y18n('courseNavEdit.followEditButtonText')"
             :keys="['title', 'name', 'id']"
             :inline="false"
             :nested-key="'text'"
+            :no-results-text="y18n('courseNavEdit.followEditSearchNoResult')"
             :previous-selection="follow? follow[i]: null"
+            :search-label-text="y18n('courseNavEdit.followEditSearchLabel')"
+            :search-input-placeholder="y18n('courseNavEdit.followEditSearchPlaceholder')"
             :submit-button="false"
             @removed="followEdit(null, i)"
             @tags-selected="followEdit($event, i)"
@@ -95,6 +108,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import SuggestingInput from '@/components/helpers/suggesting-input.vue'
 import { array, locale, routes } from '@/mixins'
 import { deepCopy } from '@/mixins/general/helpers'
@@ -121,6 +135,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['courseContent']),
     /**
      * @function return text of buttons if item is button navigation
      * @author cmc

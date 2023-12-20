@@ -66,7 +66,7 @@ describe('Course rename', () => {
     expect(wrapper.exists()).toBeTruthy()
     modalButtons = wrapper.findAll('button')
     modalButtons.wrappers.forEach(wrap => {
-      if (wrap.text() === 'Rename') {
+      if (wrap.text() === 'Save') {
         renameButton = wrap
       }
       if (wrap.text() === 'Rename Course') {

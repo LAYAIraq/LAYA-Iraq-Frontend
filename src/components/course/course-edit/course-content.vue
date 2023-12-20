@@ -32,7 +32,7 @@
           <div class="d-flex justify-content-between">
             <button
               type="button"
-              class="btn btn-secondary"
+              class="btn btn-primary"
               :class="{ active: preview }"
               @click="preview = !preview"
             >
@@ -67,6 +67,18 @@
         </div>
       </div>
     </div>
+    <b-modal
+      id="empty-title"
+      :title="y18n('save.warning.emptyTitle.header')"
+      header-bg-variant="danger"
+      :ok-title="y18n('save.warning.notPossible')"
+      ok-variant="danger"
+      cancel-variant="primary"
+      static
+      centered
+    >
+      {{ y18n("save.warning.emptyTitle") }}
+    </b-modal>
   </div>
 </template>
 
@@ -202,23 +214,29 @@ export default {
      */
     save () {
       const updatedStep = {
-        name: this.cid,
+        type: this.cid,
         ...deepCopy(this.stepData) // deep copy to get rid of store references
       }
-
-      // choose way depending on new or existing content
-      if (!this.editContent) {
-        this.$store.commit('courseContentAdd', updatedStep)
-        this.$store.commit('courseChapterAdd', courseContentBlockToNavItemTransform(updatedStep))
-        this.$store.commit('courseRoutesUpdate')
-        this.$router.replace({ name: 'course-content-edit', params: { coursePath: [slugify(this.stepData.title.text)] } })
+      if (!this.stepData.title.text) {
+        this.$bvModal.show('empty-title')
       } else {
-        this.$store.commit('courseContentSet', { ...updatedStep, id: this.pathId })
-        this.$store.commit('courseRoutesUpdate')
+        // choose way depending on new or existing content
+        if (!this.editContent) {
+          this.$store.commit('courseContentAdd', updatedStep)
+          this.$store.commit('courseChapterAdd', courseContentBlockToNavItemTransform(updatedStep))
+          this.$store.commit('courseRoutesUpdate')
+          this.$router.replace({
+            name: 'course-content-edit',
+            params: { coursePath: [slugify(this.stepData.title.text)] }
+          })
+        } else {
+          this.$store.commit('courseContentSet', { ...updatedStep, id: this.pathId })
+          this.$store.commit('courseRoutesUpdate')
+        }
+        // set courseUpdated to trigger watchers
+        this.$store.commit('courseUpdatedSet', true)
+        this.$emit('saved')
       }
-      // set courseUpdated to trigger watchers
-      this.$store.commit('courseUpdatedSet', true)
-      this.$emit('saved')
     }
   }
 

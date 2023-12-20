@@ -14,6 +14,7 @@ Dependencies:
       <b-button
         id="delete-button"
         size="sm"
+        class="w-50"
         variant="danger"
         :class="langIsAr? 'float-left' : 'float-right'"
         @click="$bvModal.show('author-del-course-confirm')"
@@ -34,6 +35,7 @@ Dependencies:
       :title="y18n('deleteCourse')"
       header-bg-variant="danger"
       ok-variant="danger"
+      cancel-variant="primary"
       :ok-title="y18n('delete')"
       :cancel-title="y18n('cancel')"
       centered

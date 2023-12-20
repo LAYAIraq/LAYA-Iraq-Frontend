@@ -20,7 +20,7 @@ export default {
      */
     checkEmailTaken ({ state }, email: string) {
       return new Promise((resolve, reject) => {
-        http.get(`accounts/email/${email}`)
+        http.get(`accounts/email/${email.toLowerCase()}`)
           .then(({ data }) => {
             resolve(data)
           })
@@ -62,7 +62,7 @@ export default {
     }) {
       return new Promise((resolve, reject) => {
         http.post('accounts/student', {
-          email: data.email,
+          email: data.email.toLowerCase(),
           username: data.username,
           password: data.password,
           language: data.lang
