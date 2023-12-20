@@ -39,13 +39,11 @@ export default {
   mounted () {
     pdfworkerOpts.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.js'
 
-    console.log('pdfUrl ' + this.url)
+    // console.log('pdfUrl ' + this.url)
     const loadingTask = getDocument({
       url: this.url
     })
     loadingTask.promise.then(pdf => {
-      console.log('PDF loaded')
-
       // Render each page
       for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
         pdf.getPage(pageNum).then(page => {
@@ -67,7 +65,7 @@ export default {
             viewport: viewport
           }
           page.render(renderContext).promise.then(() => {
-            console.log(`Page ${pageNum} rendered`)
+            // console.log(`Page ${pageNum} rendered`)
           })
         })
       }

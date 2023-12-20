@@ -36,19 +36,7 @@ Since: v1.3.0
       </b-button>
     </div>
     <div class="row">
-      <button
-        type="button"
-        class="btn btn-primary mt-3 d-block"
-        :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-        @click="onFinish[0]() || {}"
-      >
-        {{ y18n('nextContent') }}
-        <i
-          :class="langIsAr?
-            'fas fa-arrow-left':
-            'fas fa-arrow-right'"
-        ></i>
-      </button>
+      <navigation-buttons :cid="id"></navigation-buttons>
     </div>
   </div>
 </template>
@@ -58,11 +46,13 @@ import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 import PdfViewer from '@/components/helpers/pdf-viewer.vue'
+import NavigationButtons from '@/components/helpers/navigation-buttons.vue'
 
 export default {
   name: 'PdfViewerView',
   components: {
     FlagIcon,
+    NavigationButtons,
     PdfViewer
   },
   mixins: [
@@ -89,7 +79,6 @@ export default {
           const link = document.createElement('a')
           link.href = objectUrl
           link.download = this.url.split('/').pop()
-
           document.body.appendChild(link)
           link.click()
           window.URL.revokeObjectURL(objectUrl)
