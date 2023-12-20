@@ -1,6 +1,6 @@
 import http from 'axios'
 import { v4 as uuidv4 } from 'uuid'
-import { slugify } from '@/mixins/general/course-structure'
+import { slugify } from '@/mixins/general/slugs'
 import { LegacyContentBlock } from '@/mixins/types/course-structure'
 
 export default {
@@ -111,7 +111,7 @@ export default {
         }
       }
     }) {
-      return state.course.properties.simpleLanguage
+      return state.course.properties.simpleLanguage ?? false
     },
 
     /**
@@ -414,7 +414,7 @@ export default {
      * @param state state variables
      * @param data course properties
      */
-    courseCreate (state, data: {
+    courseCreate ({ dispatch }, data: {
       name: string,
       language: string,
       authorName: string,
@@ -444,6 +444,7 @@ export default {
               properties: { enrollment: data.enrollment }
             })
               .then(() => {
+                dispatch('courseClear')
                 resolve('Course successfully created')
               })
               .catch((err) => {
@@ -470,7 +471,7 @@ export default {
       { commit, state, rootState },
       newName: string
     ) {
-      console.log('Original Course Files:', state.course.files)
+      // console.log('Original Course Files:', state.course.files)
       // console.log(rootState)
       // create new course object
       const newId = uuidv4()
@@ -645,7 +646,6 @@ export default {
       if (getters.storeBusy) return null
       return new Promise((resolve, reject) => {
         commit('setBusy', true)
-        console.log(name)
         // get course ID from name
         http.get(`courses/getCourseId?courseName=${name}`)
           .then(({ data }) => {
@@ -664,14 +664,15 @@ export default {
                 console.error(err)
                 reject(err)
               })
+              .finally(() => commit('setBusy', false))
           })
           .catch(() => {
             // course name not found -> fallback to slug lookup TODO: remove this fallback after switching to new back end
             // console.error(err)
             http.get('courses')
               .then(({ data }) => {
-                console.log('slug lookup')
-                console.log(data)
+                // console.log('slug lookup')
+                // console.log(data)
                 const course = data.find((course: any) => slugify(course.name) === name)
                 if (course) {
                   commit('courseSet', course)
@@ -687,21 +688,18 @@ export default {
                 console.error(err)
                 reject(err)
               })
+              .finally(() => commit('setBusy', false))
           })
-          .finally(() => commit('setBusy', false))
       })
     },
 
     /**
-     * function courseUpdate: update course in database
-     *
-     * Auhtor: cmc
-     *
-     * Last Updated: August 9, 2022
-     * @param commit to commit mutations
-     * @param state state variables
+     * @description update course in database
+     * @author cmc
+     * Last Updated: October 19, 2023
+     * @param storeVariables commit, state, rootState for courseContent modules
      */
-    courseUpdate ({ commit, state }) {
+    courseUpdate ({ commit, state, rootState }) {
       // check properties and language
       commit('courseSimpleLanguageCheck')
       commit('coursePropertyCheck')
@@ -710,6 +708,8 @@ export default {
           `courses/${state.course.courseId}`,
           {
             ...state.course,
+            chapters: rootState.courseContent.courseChapters, // intermediate state before new backend
+            courseContent: rootState.courseContent.courseContent, // intermediate state before new backend
             lastChanged: Date.now() // TODO: remove this line after switching to new back end
           }
         )
@@ -743,7 +743,7 @@ export default {
       const langData = {
         language: state.course.language
       }
-      console.log('update course language in course.ts')
+      // console.log('update course language in course.ts')
       return new Promise((resolve, reject) => {
         http.patch(
         `/courses/${state.course.courseId}`, langData
@@ -789,7 +789,7 @@ export default {
       newNameData
         )
           .then(() => {
-            commit('courseListUpdate', state.course.courseId)
+            commit('courseListUpdate', { courseId: state.course.courseId, name: state.course.name })
             resolve('Updated Course name!')
           })
           .catch((err) => {

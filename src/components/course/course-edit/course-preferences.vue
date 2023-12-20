@@ -97,13 +97,25 @@
       </div>
     </div>
     <div class="row mt-3">
-      <b-button
-        variant="success"
-        @click="changeSettings"
-      >
-        {{ y18n('coursePreferences.save') }}
-      </b-button>
+      <div class="col">
+        <b-button
+          variant="success"
+          @click="changeSettings"
+        >
+          {{ y18n('coursePreferences.save') }}
+        </b-button>
+      </div>
     </div>
+    <b-toast
+      id="save-success"
+      :title="y18n('save')"
+      static
+      variant="success"
+      auto-hide-delay="1500"
+      class="save-toast"
+    >
+      {{ y18n('successfulSave') }}
+    </b-toast>
   </div>
 </template>
 
@@ -150,6 +162,12 @@ export default {
     // console.log(JSON.stringify(this.course))
   },
 
+  beforeDestroy () {
+    this.simpleLanguage = false
+    this.enrollment = false
+    this.simple = false
+  },
+
   methods: {
     /**
      * function changeSettings: call store to persist preferences
@@ -165,6 +183,7 @@ export default {
       const prefs = (({$laya, ...o}) => o) (this.$data) // strip $laya from data property
       this.$store.commit('coursePropertiesChange', prefs)
       this.$store.commit('courseListPropertiesUpdate', { course, prefs })
+      this.$bvToast.show('save-success')
       this.$emit('settingsChanged')
     },
 

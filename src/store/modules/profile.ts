@@ -83,7 +83,7 @@ export default {
       state: { email: string },
       email: string
     ) {
-      state.email = email
+      state.email = email.toLowerCase()
     },
     /**
      * Function fullNameSet: set full name
@@ -266,7 +266,7 @@ export default {
         {
           avatar: state.avatar,
           fullName: state.fullName,
-          email: state.email,
+          email: state.email.toLowerCase(),
           username: state.username,
           institution: state.institution,
           occupation: state.occupation,

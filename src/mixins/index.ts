@@ -1,5 +1,5 @@
 export { default as array } from './vue/array'
-export { default as courseNavEmits } from './vue/course-nav-emits'
+export { default as courseNav } from './vue/course-nav'
 export { default as files } from './vue/files'
 export { default as listSort } from './vue/list-sort'
 export { default as locale } from './vue/locale'

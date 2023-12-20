@@ -30,7 +30,6 @@
           <li :class="langIsAr? 'bci-ar': 'breadcrumb-item'">
             <router-link
               :to="{ name: 'course-list' }"
-              class="text-dark"
             >
               <i class="fas fa-house-user"></i> {{ y18n('courses.title') }}
             </router-link>
@@ -38,7 +37,6 @@
           <li :class="langIsAr? 'bci-ar': 'breadcrumb-item'">
             <router-link
               :to="{ name: 'course', params: { name: slugify(courseName) } }"
-              class="text-dark"
             >
               {{ courseName }}
             </router-link>
@@ -53,7 +51,7 @@
                 name: 'course',
                 params: {
                   name: slugify(courseName),
-                  coursePath: subchapters.slice(0, i + 1).join('/')
+                  coursePath: subchapters.slice(0, i + 1)
                 }
               }"
             >
@@ -74,22 +72,18 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { locale } from '@/mixins'
-import { slugify, unslugify } from '@/mixins/general/course-structure'
+import { locale, routes } from '@/mixins'
+import { slugify, unslugify } from '@/mixins/general/slugs'
 
 export default {
   name: 'CourseHeader',
-  mixins: [locale],
+  mixins: [locale, routes],
   props: {
     contentTitle: {
       type: Object,
       required: true
     },
     courseName: {
-      type: String,
-      required: true
-    },
-    coursePath: {
       type: String,
       required: true
     }
@@ -103,7 +97,7 @@ export default {
      * @returns {[]} The subchapter slugs of the current coursePath
      */
     subchapters () {
-      return this.coursePath.split('/').slice(0, -1)
+      return this.pathChapters.slice(0, -1)
     }
   },
   methods: {
@@ -121,7 +115,11 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
+/* avoids having to put text-dark class to every router link */
+a {
+  color: #343a40 !important;
+}
 /* Styles for Arabic breadcrumb, mostly copied from Bootstrap */
 .bci-ar + .bci-ar {
   padding-right: .5rem;

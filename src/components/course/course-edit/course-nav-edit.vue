@@ -16,23 +16,27 @@ Dependencies:
     <div class="col">
       <b-button
         block
-        variant="primary"
+        variant="warning"
         append
         :to="{path: 'edit-nav'}"
       >
-        <i class="fas fa-project-diagram"></i> {{ y18n('nav.editNav') }}
+        <i
+          class="fas fa-project-diagram"
+          aria-hidden="true"
+        ></i> {{ y18n('courseNavEdit.editNav') }}
       </b-button>
     </div>
 
     <div class="col text-dark">
       <span
-        v-if="courseNavIncomplete()"
+        v-if="!courseChaptersCoherent"
         class="bg-warning mr-1 rounded"
         style="padding: 2px 5px"
+        :title="y18n('courseNavEdit.editNavIncompleteTooltip')"
       >
-        <i class="fas fa-exclamation-triangle"></i> {{ y18n('nav.editNavIncomplete') }}
+        <i class="fas fa-exclamation-triangle"></i> {{ y18n('courseNavEdit.editNavIncomplete') }}
       </span>
-      {{ y18n('nav.editNavTip').replace('{steps}', Object.keys(courseContent).length ) }}
+      {{ y18n('courseNavEdit.editNavTip').replace('{steps}', Object.keys(courseContent).length ) }}
     </div>
   </div>
 </template>
@@ -49,20 +53,7 @@ export default {
   ],
 
   computed: {
-    ...mapGetters(['courseContent'])
-  },
-
-  methods: {
-    /**
-     * Function courseNavIncomplete: check if all contents have nextStep set
-     *
-     * Author: cmc
-     *
-     * Last Updated: October 27, 2020
-     */
-    courseNavIncomplete () { // TODO update with new courseContent structure
-      return false
-    }
+    ...mapGetters(['courseContent', 'courseChaptersCoherent'])
   }
 }
 </script>

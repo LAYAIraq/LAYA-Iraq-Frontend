@@ -25,7 +25,13 @@ describe('Course delete block', () => {
           }
         }
       },
-      courseContentPathId: () => () => 'test'
+      courseContentPathId: () => () => 'test',
+      courseRoutes: () => {
+        return {
+          test: ['test'],
+          '': []
+        }
+      }
     }
     actions = {
       courseUpdate: jest.fn(() => {
@@ -33,7 +39,9 @@ describe('Course delete block', () => {
       })
     }
     mutations = {
-      courseContentRemove: jest.fn()
+      courseChaptersContentRemove: jest.fn(),
+      courseContentRemove: jest.fn(),
+      courseRoutesUpdate: jest.fn()
     }
     const store = new Vuex.Store({
       getters,

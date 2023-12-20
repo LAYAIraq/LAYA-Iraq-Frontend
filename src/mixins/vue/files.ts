@@ -43,7 +43,7 @@ export default {
      *
      * Last Updated: April 28, 2021
      */
-    fileIcon (type) {
+    fileIcon (type: string) {
       // List of official MIME Types: http://www.iana.org/assignments/media-types/media-types.xhtml
       const iconClasses = {
         // Media
@@ -90,10 +90,10 @@ export default {
      * Author: cmc
      *
      * Last Updated: April 1, 2021
-     * @param {number} size size of a file
+     * @param size size of a file
      * @returns a string making the size human-readable
      */
-    fileSize (size) {
+    fileSize (size: number) {
       if (size > 1024 * 1024) {
         const mbsize = Math.round(size / 1024 / 1024 * 10) / 10
         return `${mbsize} MBytes`
@@ -114,7 +114,7 @@ export default {
      *
      * @param {string} type mime type of http request
      */
-    fileTypeString (type) {
+    fileTypeString (type: string) {
       const fileClasses = {
         // Media
         image: 'image',
