@@ -4,22 +4,20 @@
  * Creator: cmc
  * Since: v1.1.0
  */
+import { mapGetters } from 'vuex'
 
 export default {
   props: {
-    onFinish: {
-      type: [Function, Array],
-      default () {
-        return () => {}
-      }
-    },
     viewData: {
       type: Object,
-      default () { return null }
+      required: true
     },
     editPreview: {
       type: Boolean,
       default: false
     }
+  },
+  computed: {
+    ...mapGetters(['courseEnd', 'courseSimple', 'enrollment'])
   }
 }

@@ -13,11 +13,15 @@ Dependencies:
     <div class="col">
       <b-button
         size="sm"
+        class="w-50"
         variant="warning"
         :class="langIsAr? 'float-left' : 'float-right'"
         @click="$bvModal.show('author-rename-course-confirm')"
       >
-        <i class="fas fa-exclamation-circle"></i> {{ y18n('renameCourse') }}
+        <i
+          class="fas fa-exclamation-circle"
+          aria-hidden="true"
+        ></i> {{ y18n('renameCourse') }}
       </b-button>
     </div>
 
@@ -29,8 +33,9 @@ Dependencies:
       id="author-rename-course-confirm"
       :title="y18n('renameCourse')"
       header-bg-variant="warning"
-      ok-variant="warning"
-      :ok-title="y18n('rename.modal.ok')"
+      ok-variant="success"
+      cancel-variant="primary"
+      :ok-title="y18n('save')"
       :cancel-title="y18n('cancel')"
       centered
       static
@@ -47,6 +52,7 @@ Dependencies:
           :class="{ 'border-danger': !renameOk }"
           :placeholder="y18n('placeholder')"
           :aria-label="y18n('placeholder')"
+          @keyup.enter="handleOk"
         >
       </p>
       <p
@@ -80,6 +86,7 @@ Dependencies:
 <script>
 import { locale } from '@/mixins'
 import { mapGetters } from 'vuex'
+import { slugify } from '@/mixins/general/slugs'
 
 export default {
   name: 'CourseRename',
@@ -173,15 +180,14 @@ export default {
       const newName = this.rename.trim()
       this.oldName = this.course.name
       this.$store.commit('courseRename', newName)
-      const renamed = this.$store.dispatch('courseUpdateRename')
-
-      renamed.then(() => {
-        this.$router.replace({
-          name: 'course',
-          params: { name: newName }
+      this.$store.dispatch('courseUpdateRename')
+        .then(() => {
+          this.$router.replace({
+            name: 'course',
+            params: { name: slugify(newName) }
+          })
+          this.$emit('renamed')
         })
-        this.$emit('renamed')
-      })
         .catch(err => {
           console.error(err)
         })

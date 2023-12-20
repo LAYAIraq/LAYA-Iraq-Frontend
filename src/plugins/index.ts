@@ -15,7 +15,9 @@ export { default as ImageMatching } from './learning-assessment/image-matching'
 // export { default as LayaAbleplayer } from './laya-lb-ableplayer'
 export { default as FreeText } from './learning-block/free-text'
 export { default as VideoPlayer } from './learning-block/video-player'
+export { default as PdfViewer } from './learning-block/pdf-viewer'
 
 // Course Organization Blocks
 export { default as ButtonNavigation } from './organization/button-navigation'
+export { default as Certificate } from './organization/certificate'
 export { default as Feedback } from './organization/feedback'

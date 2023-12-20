@@ -43,33 +43,32 @@
           <div class="col">
             <h2>
               {{ courseSimple? title.simple : title.text }}
+              <!--
               <audio-button
                 v-if="taskAudioExists"
                 :src="courseSimple?
                   taskAudio.simple :
                   taskAudio.regular"
               ></audio-button>
+              -->
             </h2>
           </div>
-          <flag-icon
-            v-if="!editPreview"
-            :ref-data="title"
-            @flagged="title.flagged = true"
-          ></flag-icon>
+          <a>
+            <flag-icon
+              v-if="!editPreview"
+              :ref-data="title"
+              @flagged="title.flagged = true"
+            ></flag-icon>
+          </a>
         </div>
 
         <div
           :id="task.id"
-          class="flaggable row"
+          class="row"
         >
           <div class="col">
             <p>{{ courseSimple? task.simple : task.text }}</p>
           </div>
-          <flag-icon
-            v-if="!editPreview"
-            :ref-data="task"
-            @flagged="task.flagged = true"
-          ></flag-icon>
         </div>
         <hr>
 
@@ -79,11 +78,11 @@
               v-for="(item, i) in items"
               :id="item.id"
               :key="item.id"
-              class="flaggable item mb-5"
+              class="item mb-5"
             >
-              <h3 class="text-center item-label">
+              <label class="text-center item-label">
                 {{ courseSimple? item.simple : item.label }}
-              </h3>
+              </label>
 
               <div class="d-flex justify-content-between">
                 <b
@@ -104,12 +103,6 @@
                 :aria-valuetext="categories[choice[i]]"
                 :aria-label="y18n('feedback.label.slider')"
               >
-              <flag-icon
-                v-if="!editPreview"
-                :ref-data="item"
-                :interactive="true"
-                @flagged="item.flagged = true"
-              ></flag-icon>
             </div>
           </div>
         </div>
@@ -153,26 +146,19 @@
               class="btn btn-outline-success btn-block"
               @click="storeFeedback"
             >
-              <i class="fas fa-check"></i>
+              <i
+                class="fas fa-save"
+                aria-hidden="true"
+              ></i>
               {{ y18n('save') }}
             </button>
           </div>
         </div>
 
-        <div class="row">
-          <button
-            type="button"
-            class="btn btn-primary mt-3 ml"
-            :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-            @click="done"
-          >
-            {{ y18n('nextContent') }}
-            <i
-              :class="langIsAr?
-                'fas fa-arrow-left':
-                'fas fa-arrow-right'"
-            ></i>
-          </button>
+        <div class="row mt-3">
+          <navigation-buttons
+            :cid="id"
+          ></navigation-buttons>
         </div>
       </div>
     </div>
@@ -184,16 +170,18 @@ import { locale, pluginView, watchContent } from '@/mixins'
 import { mapGetters } from 'vuex'
 import '@/assets/styles/flaggables.css'
 import { StarRating } from 'vue-rate-it'
-import AudioButton from '@/components/helpers/audio-button.vue'
+// import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
+import NavigationButtons from '@/components/helpers/navigation-buttons.vue'
 
 // import layaWsyisyg from '../misc/laya-html'
 export default {
   name: 'FeedbackView',
 
   components: {
+    NavigationButtons,
     FlagIcon,
-    AudioButton,
+    //  AudioButton,
     StarRating
   },
 
@@ -277,17 +265,6 @@ export default {
           this.rating = this.prevFeedback.rating
         }
       }
-    },
-
-    /**
-     * Function done: execute function from onFinish[0]
-     *
-     * Creator: cmc
-     *
-     * LastUpdated: unknown
-     */
-    done () {
-      this.onFinish[0]()
     },
 
     /**

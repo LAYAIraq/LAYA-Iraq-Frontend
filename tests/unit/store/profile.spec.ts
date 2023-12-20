@@ -45,7 +45,7 @@ describe('profile store module', () => {
       it('will be overwritten when set before', () => {
         expect(state.email).toBe('testname')
         store.commit('emailSet', 'newName')
-        expect(state.email).toBe('newName')
+        expect(state.email).toBe('newname')
       })
       it('can be set to empty string', () => {
         store.commit('emailSet', '')

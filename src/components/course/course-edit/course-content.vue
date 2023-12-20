@@ -32,7 +32,7 @@
           <div class="d-flex justify-content-between">
             <button
               type="button"
-              class="btn btn-secondary"
+              class="btn btn-primary"
               :class="{ active: preview }"
               @click="preview = !preview"
             >
@@ -44,6 +44,14 @@
                 <i class="fas fa-eye"></i>
                 {{ y18n('courseWrapper.preview') }}
               </span>
+            </button>
+            <button
+              v-if="editContent"
+              class="btn btn-primary"
+              @click="$router.push({ name: 'content-follow-edit', params: { coursePath, contentId: pathId, follow: courseContentFollowMap[pathId] } })"
+            >
+              <i class="fas fa-edit"></i>
+              {{ y18n('courseNavEdit.followEdit') }}
             </button>
             <button
               type="button"
@@ -59,15 +67,29 @@
         </div>
       </div>
     </div>
+    <b-modal
+      id="empty-title"
+      :title="y18n('save.warning.emptyTitle.header')"
+      header-bg-variant="danger"
+      :ok-title="y18n('save.warning.notPossible')"
+      ok-variant="danger"
+      cancel-variant="primary"
+      static
+      centered
+    >
+      {{ y18n("save.warning.emptyTitle") }}
+    </b-modal>
   </div>
 </template>
 
 <script>
+import CourseFiles from '@/components/course/course-edit/course-files.vue'
+import { courseContentBlockToNavItemTransform } from '@/mixins/general/course-structure'
+import { deepCopy, stripKey } from '@/mixins/general/helpers'
 import { locale, routes } from '@/mixins'
 import { mapGetters } from 'vuex'
-import CourseFiles from '@/components/course/course-edit/course-files.vue'
-import { deepCopy, stripKey } from '@/mixins/general/helpers'
-import { contentBlockToNavItemTransform } from '@/mixins/general/course-structure'
+import { slugify } from '@/mixins/general/slugs'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'CourseContent',
@@ -103,7 +125,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['courseContent']),
+    ...mapGetters(['courseContent', 'courseContentFollowMap']),
 
     /**
      * cid: returns the type of content
@@ -147,7 +169,9 @@ export default {
      * Last Updated: January 20, 2021
      */
     stepData () {
-      const input = {}
+      const input = {
+        id: uuidv4()
+      }
       for (const prop in this.$refs.edit.$data) {
         if (!/^[$_]/.test(prop)) {
           input[prop] = this.$refs.edit.$data[prop]
@@ -193,17 +217,26 @@ export default {
         name: this.cid,
         ...deepCopy(this.stepData) // deep copy to get rid of store references
       }
-
-      // choose way depending on new or existing content
-      if (!this.editContent) {
-        this.$store.commit('courseContentAdd', updatedStep)
-        this.$store.commit('courseChapterAdd', contentBlockToNavItemTransform(updatedStep))
+      if (!this.stepData.title.text) {
+        this.$bvModal.show('empty-title')
       } else {
-        this.$store.commit('courseContentSet', { ...updatedStep, id: this.pathId })
+        // choose way depending on new or existing content
+        if (!this.editContent) {
+          this.$store.commit('courseContentAdd', updatedStep)
+          this.$store.commit('courseChapterAdd', courseContentBlockToNavItemTransform(updatedStep))
+          this.$store.commit('courseRoutesUpdate')
+          this.$router.replace({
+            name: 'course-content-edit',
+            params: { coursePath: [slugify(this.stepData.title.text)] }
+          })
+        } else {
+          this.$store.commit('courseContentSet', { ...updatedStep, id: this.pathId })
+          this.$store.commit('courseRoutesUpdate')
+        }
+        // set courseUpdated to trigger watchers
+        this.$store.commit('courseUpdatedSet', true)
+        this.$emit('saved')
       }
-      // set courseUpdated to trigger watchers
-      this.$store.commit('courseUpdatedSet', true)
-      this.$emit('saved')
     }
   }
 

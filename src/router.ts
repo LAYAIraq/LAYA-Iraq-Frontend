@@ -99,7 +99,7 @@ export default new Router({
       component: CourseList
     },
     {
-      path: '/courses/:name/:coursePath?',
+      path: '/courses/:name/:coursePath*',
       name: 'course',
       component: Course,
       props: true,

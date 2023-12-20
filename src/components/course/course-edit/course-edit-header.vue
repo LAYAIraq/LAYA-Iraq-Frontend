@@ -13,8 +13,8 @@ Dependencies:
     <div class="row">
       <div class="col">
         <b-button
-          v-if="$route.name !== 'course'"
-          variant="outline-secondary"
+          v-if="$route.name !== 'course' && $route.name !== 'content-follow-edit'"
+          variant="primary"
           size="sm"
           :class="langIsAr? 'float-right' : 'float-left'"
           active-class="active"
@@ -47,22 +47,20 @@ Dependencies:
             id="cid-dd"
             :text="y18n('header.jumpTo')"
             size="sm"
-            variant="secondary"
+            variant="primary"
             no-flip
             :right="!langIsAr"
-            :disabled="checkEmpty === true"
+            :disabled="!contentToDisplay"
           >
 
             <b-dropdown-item
-              v-for="id in Object.keys(courseContentIdRouteMap)"
+              v-for="id in Object.keys(courseRoutes)"
               :key="id"
               :to="{
                 name: 'course',
                 params: {
                   name,
-                  coursePath: courseContentIdRouteMap[id] !== ''
-                    ? courseContentIdRouteMap[id]
-                    : null
+                  coursePath: courseRoutes[id]
                 }
               }"
               :class="langIsAr? 'text-right': 'text-left'"
@@ -84,7 +82,6 @@ Dependencies:
 
 import { mapGetters } from 'vuex'
 import { locale, routes } from '@/mixins'
-import { kebabToCamel } from '@/mixins/general/helpers'
 
 export default {
   name: 'CourseEditHeader',
@@ -95,34 +92,7 @@ export default {
   ],
 
   computed: {
-    ...mapGetters(['courseContent', 'courseContentIdRouteMap']),
-
-    /**
-     * function checkEmpty(): returns true if no content in course
-     *
-     * Author: cmc
-     *
-     * Last Updated: November 9, 2021
-     * @returns {boolean} true if no content in course
-     */
-    checkEmpty () {
-      return Object.keys(this.courseContent).length === 0
-    }
-  },
-
-  methods: {
-    /**
-     * Function typeName: returns name of content block in locale
-     *
-     * Author: core
-     *
-     * Last Updated: May 6, 2021
-     * @param {string} compName name of content block
-     */
-    typeName (compName) {
-      return this.i18n[kebabToCamel(compName) + '.name']
-    }
+    ...mapGetters(['courseContent', 'courseRoutes'])
   }
-
 }
 </script>

@@ -10,6 +10,7 @@ Since: v1.3.0
     <div class="col">
       <b-button
         size="sm"
+        class="w-50"
         variant="warning"
         :class="langIsAr? 'float-left' : 'float-right'"
         @click="$bvModal.show('author-change-language-confirm')"
@@ -26,7 +27,8 @@ Since: v1.3.0
       id="author-change-language-confirm"
       :title="y18n('changeCourseLanguage')"
       header-bg-variant="warning"
-      ok-variant="warning"
+      ok-variant="success"
+      cancel-variant="primary"
       :ok-title="y18n('save')"
       :cancel-title="y18n('cancel')"
       centered
@@ -34,21 +36,24 @@ Since: v1.3.0
       :aria-label="y18n('popupwarning')"
       @ok="changeCourseLanguage"
     >
-      <p>
-        {{ y18n('changeCourseLanguage') }}
-        <b-form-select
-          v-model="newLanguage"
-          :aria-label="y18n('changeCourseLanguage.new')"
-        >
-          <b-form-select-option
-            v-for="opt in languageChoose"
-            :key="opt"
-            :value="opt"
+      <form>
+        <p>
+          {{ y18n('changeCourseLanguage') }}
+          <b-form-select
+            v-model="newLanguage"
+            :aria-label="y18n('changeCourseLanguage.new')"
+            @keydown.enter.native="changeCourseLanguage"
           >
-            {{ y18n(`profile.language.${opt}`) }}
-          </b-form-select-option>
-        </b-form-select>
-      </p>
+            <b-form-select-option
+              v-for="opt in languageChoose"
+              :key="opt"
+              :value="opt"
+            >
+              {{ y18n(`profile.language.${opt}`) }}
+            </b-form-select-option>
+          </b-form-select>
+        </p>
+      </form>
     </b-modal>
     <div
       id="openPopup"

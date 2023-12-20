@@ -94,7 +94,6 @@
           <textarea
             id="new-course-abstract"
             v-model="newCourse.abstract"
-            type="text"
             class="form-control"
             :placeholder="y18n('abstract')"
             rows="5"
@@ -152,11 +151,14 @@
         <div class="col-4">
           <button
             type="submit"
-            class="btn btn-block btn-primary"
+            class="btn btn-block btn-success"
             :disabled="!formValid"
             @click.prevent="duplicateCheck"
           >
-            <i class="fas fa-check"></i>
+            <i
+              class="fas fa-save"
+              aria-hidden="true"
+            ></i>
             {{ y18n('save') }}
           </button>
         </div>
@@ -170,6 +172,7 @@ import { mapGetters } from 'vuex'
 import { locale } from '@/mixins'
 import courseCategories from '@/options/course-categories.ts'
 import languages from '@/options/languages.ts'
+import { slugify } from '@/mixins/general/slugs'
 
 export default {
   name: 'CourseCreate',
@@ -312,7 +315,7 @@ export default {
                 userId: userId
               })
             }
-            this.$router.push(`/courses/${newCourse.name}/1`)
+            this.$router.push(`/courses/${slugify(newCourse.name)}`)
           })
           .catch(err => {
             console.log(err)

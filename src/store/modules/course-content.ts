@@ -1,37 +1,39 @@
 /**
- * @fileOverview Vuex module for course content, esp. course navigation
+ * @file Vuex module for course content, esp. course navigation
  * @author cmc
  * @since 1.3.0
  * @dependencies none
  */
-// @ts-ignore
 import {
   ContentBlock,
   Course,
   CourseNavigationItem,
-  LegacyContentBlock,
-  LegacyContentInput,
-  LegacyCourse, CourseNavigationItemBlock
+  CourseNavigationItemBlock
 } from '@/mixins/types/course-structure'
 import {
-  contentIdGet,
+  courseContentIdGet,
   coursePathsGet,
-  courseStructureChapterNames,
-  courseStructureDescent,
-  legacyContentFollowTransform,
-  legacyContentStepsTransform,
-  slugify
+  courseChaptersCollect,
+  courseDestructure
 } from '@/mixins/general/course-structure'
-import { stripKey } from '@/mixins/general/helpers'
+import { arrayElementsEqual, stripKey } from '@/mixins/general/helpers'
+import { legacyContentFollowTransform, legacyContentStepsTransform } from '@/mixins/general/legacy-content'
 import { v4 as uuidv4 } from 'uuid'
 import http, { AxiosResponse } from 'axios'
 import Vue from 'vue'
+import {
+  chaptersCheck,
+  chaptersExtractFollow,
+  chaptersContentRemove,
+  chapterSlugDuplicateAvoid,
+  chapterSlugUpdate
+} from '@/mixins/general/course-chapters'
+import { slugify } from '@/mixins/general/slugs'
 
 export default {
 
   state: {
     courseContent: {},
-    courseContentFollowMap: {},
     courseChapters: [],
     courseChapterNames: {},
     courseRoutes: []
@@ -39,54 +41,46 @@ export default {
 
   getters: {
     courseChapters: (state: { courseChapters: object[] }) => state.courseChapters,
-    courseChapterNames: (state: { courseChapters: CourseNavigationItem[] }) => courseStructureChapterNames(state.courseChapters),
+    courseChaptersCoherent: (state: { courseChapters: CourseNavigationItem[] }) => chaptersCheck(
+      { id: 'm41n', isChapter: true, chapterName: 'main', children: state.courseChapters, slug: 'main' }
+    ),
+    courseChapterNames: (state: { courseChapters: CourseNavigationItem[] }) => courseChaptersCollect(state.courseChapters),
     courseContent: (state: { courseContent: { [id: string]: CourseNavigationItem } }) => state.courseContent,
-    courseContentIdRouteMap: (state: { courseRoutes: any }) => {
+    courseContentFollowMap: (state: { courseChapters: CourseNavigationItem[] }): object => {
       const map = {}
-      for (const [route, id] of state.courseRoutes) {
-        if (!(map[id] === '')) {
-          map[id] = route
-        }
-      }
-      return map
-    },
-    courseContentRouteIdMap: (state: { courseRoutes: any }, getters: { courseStart: string }) => {
-      const map = {}
-      for (const [route, id] of state.courseRoutes) {
-        if (id === getters.courseStart) {
-          if (route === '') { // only add start route to map
-            map[route] = id
-          }
-        } else {
-          map[route] = id
-        }
-      }
+      chaptersExtractFollow(state.courseChapters, map)
       return map
     },
     /**
-     * @description returns the id of a course block by its path
+     * @description returns the id of a course block by its path, defaulting to first content block of a chapter
      * @param state the state of the store
      * @param path the path of the course block
      * @returns the id of the course block
      */
-    courseContentPathId: (state: { courseRoutes: [[route: string, id: string]] }) => (path: string): string => {
-      // console.log('finding id for path', path)
+    courseContentPathId: (state: { courseChapters: CourseNavigationItem[] }) => (path: string[]): string => {
       if (path === undefined || path === null) {
-        path = ''
+        path = []
       }
-      const contentPath = state.courseRoutes.find(([route, _]) => route === path)
-      // const res = contentPath ? contentPath[1] : null
-      // console.log('found content path', res)
-      return contentPath ? contentPath[1] : null
-    },
-    courseNav: (state: { courseStart: string, courseChapters: object[] }, getters: { courseStart: any }) => {
-      return {
-        start: getters.courseStart,
-        structure: state.courseChapters
+      let chapter = state.courseChapters
+      const chapterReference = (chapters: any, slug: string) => {
+        if (!chapters) {
+          return null
+        } else if (Array.isArray(chapters)) {
+          return chapters.find(chapter => chapter.slug === slug)
+        } else if (chapters.isChapter) {
+          return chapters.children.find((chapter: CourseNavigationItem) => chapter.slug === slug)
+        } else { // chapters is CourseBlock
+          return slug === chapters.slug ? chapters : null
+        }
       }
+      path.forEach(chapterSlug => {
+        chapter = chapterReference(chapter, chapterSlug)
+      })
+      return courseContentIdGet(chapter, 'first')
     },
+    courseEnd: (state: { courseChapters: CourseNavigationItem[] }) => courseContentIdGet(state.courseChapters, 'last'),
     courseRoutes: (state: { courseRoutes: any }) => state.courseRoutes,
-    courseStart: (state: { courseChapters: CourseNavigationItem[] }) => contentIdGet(state.courseChapters, 'first')
+    courseStart: (state: { courseChapters: CourseNavigationItem[] }) => courseContentIdGet(state.courseChapters, 'first')
   },
 
   mutations: {
@@ -98,84 +92,161 @@ export default {
      */
     courseStructureDestructure (
       state: {
-        courseContent: { },
-        courseIds: { [id: string]: number },
-        courseStart: string,
+        courseContent: object,
         courseChapters: CourseNavigationItem[],
-        courseRoutes: any
+        courseRoutes: object
       },
       course: Course
     ) {
-      [state.courseContent, state.courseRoutes] = courseStructureDescent(
-        course.chapters,
-        course.properties ? course.properties.showSingleSubChapterTitleSlug : null
-      )
+      [state.courseContent, state.courseRoutes] = courseDestructure(course.chapters)
       state.courseChapters = course.chapters
     },
 
-    courseContentAdd (state: { courseContent: { [id: string]: ContentBlock }, courseChapters: any[] }, content: any) {
-      const id = uuidv4().split('-')[0]
-      const newContent = { ...content, id }
-      state.courseContent[id] = newContent
-      state.courseChapters.push(newContent)
+    /**
+     * @description add new content block to state
+     * @param state state variables
+     * @param content new content block
+     */
+    courseContentAdd (
+      state: {
+        courseContent: { [id: string]: ContentBlock },
+        courseChapters: any[]
+      },
+      content: ContentBlock) {
+      state.courseContent[content.id] = content
     },
-
-    courseContentSet (state: { courseContent: { [id: string]: ContentBlock } }, block: ContentBlock) {
-      state.courseContent[block.id] = block
+    /**
+     * @description clear state.courseContent, used for clearing state when loading new courses
+     * @since v1.3.2
+     * @author cmc
+     * @param state contains courseContent object
+     */
+    courseContentClear (state: { courseContent: any }) {
+      state.courseContent = {}
+    },
+    /**
+     * @description update content block by replacing it with given parameter
+     * @param state store variables
+     * @param block new content block data
+     */
+    courseContentSet (state: {
+      courseChapters: any[],
+      courseContent: { [id: string]: ContentBlock }
+    }, block: ContentBlock) {
+      Vue.set(state.courseContent, block.id, block) // ensure reactivity in "go to content" dropdown in course-edit-header.vue
+      chapterSlugUpdate(state.courseChapters, block.id, block.title.text, block.name)
+      chapterSlugDuplicateAvoid(state.courseChapters)
     },
 
     /**
      * @description update property of courseContent item - used for reactivity in frontend
      * @author cmc
      * @param state holds courseContent object
-     * @param id identifier of content block to change
-     * @param property identifier of property to change
-     * @param value new value for property
+     * @param data id and property to change as well as changed value
      */
     courseContentSetProperty (
-      state: { courseContent: { [id: string]: ContentBlock } }, { id, property, value }: { id: string, property: string, value: any }) {
+      state: {
+        courseChapters: any[],
+        courseContent: { [id: string]: ContentBlock }
+      },
+      { id, property, value }: { id: string, property: string, value: any }) {
       if (state.courseContent[id] && property && value) { // only update if content block exists and property and value are defined
         Vue.set(state.courseContent[id], property, value)
+        if (property === 'title') { // trigger slug changes for corresponding navItem
+          chapterSlugUpdate(state.courseChapters, id, value.text, state.courseContent[id].type)
+        }
       }
     },
 
+    /**
+     * @description remove content block by given id
+     * @param state
+     * @param id
+     */
     courseContentRemove (state: { courseContent: any }, id: string) {
-      state.courseContent = stripKey(state.courseContent, id)
+      state.courseContent = stripKey(id, state.courseContent)
     },
 
+    /**
+     * @description set courseChapters in state
+     * @param state store variables
+     * @param chapters course navigation
+     */
     courseChaptersSet (state: { courseChapters: CourseNavigationItem[] }, chapters: CourseNavigationItem[]) {
       if (chapters) {
+        chapterSlugDuplicateAvoid(chapters) // remove duplicate slugs if there are any
         Vue.set(state, 'courseChapters', chapters)
       }
     },
 
-    courseChapterAdd (state: { courseChapters: CourseNavigationItem[], courseStart: string }, chapter: CourseNavigationItemBlock) {
+    /**
+     * @description adds chapter to courseChapters
+     * @param state store
+     * @param chapter chapter to add
+     */
+    courseChapterAdd (state: { courseChapters: CourseNavigationItem[], courseStart: string }, chapter: CourseNavigationItem) {
       state.courseChapters.push(chapter)
+      chapterSlugDuplicateAvoid(state.courseChapters)
     },
 
-    courseChapterUpdateFollow (state: { courseChapters: CourseNavigationItem[]}, data: { id: string, value: string[] }) {
+    /**
+     * @description removes content in courseChapters
+     * @param state store
+     * @param id chapter to remove
+     */
+    courseChaptersContentRemove (state: { courseChapters: CourseNavigationItem[] }, id: string) {
+      state.courseChapters = chaptersContentRemove(state.courseChapters, id)
+    },
+
+    /**
+     * @description recursively update follow properties
+     * @param state contains courseChapters
+     * @param data id and value for updated follow
+     */
+    courseChapterUpdateFollow (state: { courseChapters: CourseNavigationItem[] }, data: { id: string, value: string | string[] }) {
+      // @description update follow to given value; if not button navigation, set followManual to true
+      const updateFollow = (el: CourseNavigationItemBlock, val: string | string[]) => {
+        Vue.set(el, 'follow', val)
+        if (el.type !== 'button-navigation') {
+          el.followManual = true
+        }
+      }
+      // @description update follow if id is in arr, go deeper if not
       const updateOrDeeper = (arr: any) => {
         if (Array.isArray(arr)) {
           arr.forEach((el: any) => {
             if (el.isChapter) {
               updateOrDeeper(el.children)
             } else if (el.id === data.id) {
-              Vue.set(el, 'follow', data.value)
+              updateFollow(el, data.value)
             }
           })
         } else {
           if (arr.isChapter) {
             updateOrDeeper(arr.children)
           } else if (arr.id === data.id) {
-            Vue.set(arr, 'follow', data.value)
+            updateFollow(arr, data.value)
           }
         }
       }
       if (data.value) {
-        state.courseChapters.forEach((c: any) => updateOrDeeper(c))
+        const followMap = {}
+        chaptersExtractFollow(state.courseChapters, followMap)
+        const oldFollow = followMap[data.id] // old value for follow
+        const followUpdated = typeof oldFollow === 'string' // check if passed value differs
+          ? data.value !== oldFollow
+          // @ts-ignore
+          : !arrayElementsEqual(oldFollow, data.value) // data.value is array in this branch
+        if (followUpdated) {
+          state.courseChapters.forEach((c: any) => updateOrDeeper(c))
+        }
       }
     },
 
+    /**
+     * @description update course routes to maintain correct mapping
+     * @param state contains courseChapters, courseRoutes
+     */
     courseRoutesUpdate (state: { courseChapters: any, courseRoutes: any }) {
       Vue.set(state, 'courseRoutes', coursePathsGet(state.courseChapters))
     },
@@ -193,32 +264,43 @@ export default {
         courseStart: any,
         courseChapters: any
       },
-      course: LegacyCourse
+      course: any
     ) {
       state.courseChapters = []
       state.courseContent = {}
-      state.courseContentFollowMap = {}
-      for (const block of course.content) {
-        const blockId = uuidv4().split('-')[0] // legacy content blocks have no id
-        state.courseContent[blockId] = { ...block.input, name: block.name, id: blockId } // this is analogous to the new course structure
-        state.courseContentFollowMap[blockId] = [] // index of block in content array for legacy content
-        state.courseChapters.push({
-          id: blockId,
-          slug: slugify(block.input.title.text),
-          type: block.name,
-          follow: legacyContentStepsTransform(block)
-        })
+      if (!course.chapters && !course.courseContent) { // actual old course that have not been touched with new system
+        for (const block of course.content) {
+          const blockId = uuidv4().split('-')[0] // legacy content blocks have no id
+          state.courseContent[blockId] = { ...block.input, name: block.name, id: blockId } // this is analogous to the new course structure
+          state.courseChapters.push({
+            id: blockId,
+            slug: slugify(block.input.title.text),
+            type: block.name,
+            follow: legacyContentStepsTransform(block)
+          })
+        }
+        legacyContentFollowTransform(state.courseChapters)
+      } else { // chapters and courseContent are defined, just set them to store
+        state.courseContent = course.courseContent
+        state.courseChapters = course.chapters
       }
-      legacyContentFollowTransform(state.courseChapters)
-      state.courseChapters.forEach((chapter: CourseNavigationItemBlock) => {
-        state.courseContentFollowMap[chapter.id] = chapter.follow
-      })
-      // traverse course content and create routes
+      // traverse course chapters and create routes
       state.courseRoutes = coursePathsGet(state.courseChapters)
     }
   },
 
   actions: {
+    /**
+     * @description clear traces of course in store, useful when creating new course
+     * @since v1.3.2
+     * @author cmc
+     * @param commit store commit function
+     */
+    courseClear ({ commit }) {
+      commit('courseContentClear')
+      commit('courseChaptersSet', [])
+      commit('courseRoutesUpdate')
+    },
     /**
      * @description gets a course content from back end and calls
      *  setCourseContent mutation

@@ -69,7 +69,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['courseContent'])
+    ...mapGetters(['course', 'courseContent'])
   },
 
   watch: {

@@ -16,7 +16,7 @@
         v-b-tooltip.top.ds500
         class="fas fa-edit"
         :class="langIsAr ? 'mr-auto' : 'ml-auto'"
-        :title="y18n('courseWrapper.edit')"
+        :title="y18n('courseWrapper.edit') + ' ' + property.propName"
       ></i>
     </div>
     <b-form
@@ -33,10 +33,10 @@
       />
       <button
         v-b-tooltip.top
-        class="btn btn-sm btn-warning"
+        class="btn btn-sm btn-primary"
         :title="y18n('cancel')"
       >
-        <i class="fas fa-times"></i>
+        <i class="fas fa-times-circle"></i>
       </button>
       <b-button
         v-b-tooltip.top
@@ -69,14 +69,14 @@ export default {
       default: () => 'Placeholder'
     },
     property: {
-      type: String,
+      type: Object, // needs to have signature { propName: string, value: string }
       required: true
     }
   },
   data () {
     return {
       edit: false,
-      newProperty: ''
+      newProperty: this.property.value
     }
   },
   computed: {
@@ -84,16 +84,16 @@ export default {
       return this.$parent.id
     },
     propertyDisplay () {
-      return this.display(this.property)
+      return this.display(this.property.value)
     }
   },
   watch: {
-    property (val) {
-      this.newProperty = val
+    property: {
+      handler (val) {
+        this.newProperty = val.value
+      },
+      deep: true
     }
-  },
-  created () {
-    this.newProperty = this.property
   },
   methods: {
     /**
@@ -104,6 +104,10 @@ export default {
       this.stateChange(false)
       this.$emit('changed', this.callback(this.newProperty))
     },
+    /**
+     * @description emit state-changed event with given value
+     * @param {boolean} val change of state
+     */
     stateChange (val) {
       this.edit = val
       this.$emit('state-changed', this.edit)
