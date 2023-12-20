@@ -44,6 +44,19 @@ describe('course chapters mixin', () => {
       ])
     })
 
+    it('sets follow correctly when there are manually set follows', () => {
+      courseChapters.children[1]['followManual'] = true
+      courseChapters.children.reverse()
+      chapterFollowSet(courseChapters, null)
+      expect(courseChapters.children).toStrictEqual([
+        { id: 'fu3nf', isChapter: false, slug: 'drag-drop-sample', follow: 'v13r' },
+        { id: 'v13r', isChapter: false, slug: 'multiple-choice-test', follow: 'dr31' },
+        { id: 'dr31', isChapter: false, slug: 'wysiwyg', follow: 'zw31' },
+        { id: 'zw31', isChapter: false, slug: 'video', follow: 'dr31', followManual: true },
+        { id: 'e1n5', isChapter: false, slug: 'dialog-sample', type: 'button-navigation', follow: ['zw31', 'dr31'] }
+      ])
+    })
+
     it('sets follow correctly in nested chapters', () => {
       courseChapters = {
         isChapter: true,
@@ -72,6 +85,39 @@ describe('course chapters mixin', () => {
         },
         { id: 'c', isChapter: false, follow: 'd' },
         { id: 'd', isChapter: false, follow: null }
+      ])
+    })
+
+    it('sets follow correctly in nested chapters with manual follows', () => {
+      courseChapters = {
+        isChapter: true,
+        children: [
+          {
+            id: 'b',
+            isChapter: true,
+            children: [
+              { id: 'e', isChapter: false, follow: 'f', followManual: true },
+              { id: 'f', isChapter: false, follow: 'c' }
+            ]
+          },
+          { id: 'c', isChapter: false, follow: 'd', followManual: true },
+          { id: 'd', isChapter: false, follow: null }
+        ]
+      }
+      courseChapters.children[0].children.reverse()
+      courseChapters.children.reverse()
+      chapterFollowSet(courseChapters, null)
+      expect(courseChapters.children).toStrictEqual([
+        { id: 'd', isChapter: false, follow: 'c' },
+        { id: 'c', isChapter: false, follow: 'd', followManual: true },
+        {
+          id: 'b',
+          isChapter: true,
+          children: [
+            { id: 'f', isChapter: false, follow: 'e' },
+            { id: 'e', isChapter: false, follow: 'f', followManual: true }
+          ]
+        }
       ])
     })
   })

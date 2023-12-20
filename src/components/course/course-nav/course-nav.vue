@@ -65,7 +65,7 @@
         class="row"
       >
         <b-button
-          secondary
+          variant="success"
           @click="chapterAdd"
         >
           {{ y18n('courseNavEdit.chapterAdd') }}
@@ -129,6 +129,7 @@
       centered
       :ok-title="y18n('courseNavEdit.integrityCheckOk')"
       ok-variant="danger"
+      cancel-variant="primary"
       @ok="navigationSave"
     >
       <p>{{ y18n('courseNavEdit.integrityCheckMessage') }}</p>
@@ -298,6 +299,7 @@ export default {
     navigationSave () {
       this.$store.commit('courseChaptersSet', deepCopy(this.courseNavEdit.children))
       this.$store.commit('courseRoutesUpdate')
+      this.$nextTick(() => { this.edited = false })
       this.$emit('saved') // emit saved to trigger courseUpdate
       this.$nextTick(() => { this.edited = false }) // make sure 'edited' is reset after saving
     },

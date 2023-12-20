@@ -19,6 +19,7 @@ Dependencies:
     >
       <b-button
         size="sm"
+        class="w-50"
         variant="danger"
         :class="langIsAr? 'float-left' : 'float-right'"
         @click="$bvModal.show('author-delContent-confirm')"
@@ -71,9 +72,10 @@ export default {
      */
     delContent () {
       this.$store.commit('courseContentRemove', this.pathId)
+      this.$store.commit('courseChaptersContentRemove', this.pathId)
+      this.$store.commit('courseRoutesUpdate')
       this.$store.dispatch('courseUpdate')
     }
-
   }
 }
 </script>

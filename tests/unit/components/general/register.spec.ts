@@ -9,6 +9,7 @@ localVue.use(Vuex)
 describe('register component', () => {
   const getters = {
     profileLanguage: () => 'en',
+    password: () => 'secret',
     passwordRepeat: () => 'secret'
   }
   const actions = {

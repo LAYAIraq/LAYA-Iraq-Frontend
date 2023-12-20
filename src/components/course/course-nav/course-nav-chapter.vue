@@ -202,6 +202,9 @@ export default {
   created () {
     this.chapter.children.forEach(child => { this.childrenVisibility[child.id] = false })
     this.$emit('chapter-coherent', this.chapter.id, this.coherentItem)
+    if (this.main) {
+      chapterFollowSet(this.chapter, null)
+    }
   },
   destroyed () {
     this.$emit('deleted-chapter', this.chapter.id)

@@ -6,218 +6,239 @@
 -->
 
 <template>
-  <div class="register">
-    <div class="container">
-      <div class="row">
-        <form class="d-flex flex-column align-items-center">
-          <div style="height: 2rem"></div>
-          <img
-            src="../../assets/images/anmelden.svg"
-            alt="Login"
-            class="w-50"
-          >
-          <h1 class="text-center">
-            {{ y18n('register.title') }}
-          </h1>
+  <main>
+    <div class="register">
+      <div class="container">
+        <div class="row">
+          <form class="d-flex flex-column align-items-center">
+            <div style="height: 2rem"></div>
+            <img
+              src="../../assets/images/anmelden.svg"
+              alt=""
+              class="w-50"
+            >
+            <h1 class="text-center">
+              {{ y18n('register.title') }}
+            </h1>
 
-          <!-- name -->
-          <div class="form-group row">
-            <div class="col-1 col-form-label">
-              <i class="fas fa-signature"></i>
-            </div>
-            <div class="col">
-              <input
-                id="name-input"
-                v-model="name"
-                :placeholder="y18n('namePH')"
-                :aria-label="y18n('namePH')"
-                type="text"
-                :disabled="submitOk"
-                class="form-control"
-                :class="errName? 'wrong-input' : ''"
-                aria-describedby="name-err"
-                @blur="isNameTaken"
-              >
-            </div>
-          </div>
-
-          <div
-            v-if="errName"
-            class="form-group row"
-          >
-            <div class="d-flex m-auto">
-              <i
-                class="fas fa-exclamation-triangle"
-                :class="langIsAr? 'mr-3' : 'ml-3'"
-              ></i>
-              <div
-                v-if="nameTaken"
-                id="name-taken-err"
-                class="text-center"
-                :aria-hidden="!nameTaken"
-              >
-                <strong>
-                  {{ y18n('nameTaken') }}
-                </strong>
+            <!-- name -->
+            <div class="form-group row">
+              <div class="col-5">
+                <div class="row">
+                  <label>
+                    <i
+                      class="fas fa-signature"
+                      aria-hidden="true"
+                    ></i>
+                    {{ y18n('usernamePH') }}
+                  </label>
+                </div>
               </div>
+              <div class="col">
+                <input
+                  id="name-input"
+                  v-model="name"
+                  :placeholder="y18n('usernamePH')"
+                  :aria-label="y18n('usernamePH')"
+                  type="text"
+                  :disabled="submitOk"
+                  class="form-control"
+                  :class="errName? 'wrong-input' : ''"
+                  aria-describedby="name-err"
+                  @blur="isNameTaken"
+                >
+              </div>
+            </div>
+
+            <div
+              v-if="errName"
+              class="form-group row"
+            >
+              <div class="d-flex m-auto">
+                <i
+                  class="fas fa-exclamation-triangle"
+                  :class="langIsAr? 'mr-3' : 'ml-3'"
+                ></i>
+                <div
+                  v-if="nameTaken"
+                  id="name-taken-err"
+                  class="text-center"
+                  :aria-label="!nameTaken"
+                >
+                  <strong>
+                    {{ y18n('nameTaken') }}
+                  </strong>
+                </div>
+                <div
+                  v-else-if="wrongNameCharacters.length === 0"
+                  id="name-empty-err"
+                  class="col text-center"
+                  :aria-label="nameTaken"
+                >
+                  <strong>
+                    {{ y18n('nameErrEmpty') }}
+                  </strong>
+                </div>
+                <div
+                  v-else
+                  id="name-err"
+                  class="text-center"
+                  :aria-label="nameTaken"
+                >
+                  <strong>
+                    {{ y18n('nameErr') }} <br>
+                    {{ y18n('forbiddenChars') }}:
+                  </strong>
+                  <ul class="list-unstyled">
+                    <li
+                      v-for="char in wrongNameCharacters"
+                      :key="char"
+                      class="d-inline-block"
+                      :class="langIsAr? 'ml-3' : 'mr-3'"
+                    >
+                      {{ char.replace(' ', y18n('noWhiteSpace')) }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- email -->
+            <div class="form-group row">
+              <div class="col-5">
+                <div class="row">
+                  <label>
+                    <i
+                      class="fas fa-at"
+                      aria-hidden="true"
+                    ></i>
+                    {{ y18n('emailPH') }}
+                  </label>
+                </div>
+              </div>
+              <div class="col">
+                <input
+                  id="email-input"
+                  v-model="email"
+                  :placeholder="y18n('emailPH')"
+                  :aria-label="y18n('emailPH')"
+                  type="text"
+                  :disabled="submitOk"
+                  class="form-control"
+                  :class="errEmail? 'wrong-input' : ''"
+                  aria-describedby="email-err"
+                  @blur="isEmailTaken"
+                >
+              </div>
+            </div>
+
+            <!-- email hint-->
+            <div
+              class="form-group row text-center"
+              :class="{'d-none': !errEmail}"
+            >
               <div
-                v-else-if="wrongNameCharacters.length === 0"
-                id="name-empty-err"
+                v-if="errEmail"
+                id="email-err"
+                :aria-label="!emailTaken"
                 class="col text-center"
-                :aria-hidden="nameTaken"
               >
+                <i class="fas fa-exclamation-triangle"></i>
                 <strong>
-                  {{ y18n('nameErrEmpty') }}
-                </strong>
-              </div>
-              <div
-                v-else
-                id="name-err"
-                class="text-center"
-                :aria-hidden="nameTaken"
-              >
-                <strong>
-                  {{ y18n('nameErr') }} <br>
-                  {{ y18n('forbiddenChars') }}:
+                  {{ emailTaken ? y18n('emailTaken') : y18n('emailErr') }} <br>
+                  {{ missingEmailCharacters.length > 0? y18n('emailErr.missingChars') : '' }}:
                 </strong>
                 <ul class="list-unstyled">
                   <li
-                    v-for="char in wrongNameCharacters"
+                    v-for="char in missingEmailCharacters"
                     :key="char"
                     class="d-inline-block"
                     :class="langIsAr? 'ml-3' : 'mr-3'"
                   >
-                    {{ char.replace(' ', y18n('noWhiteSpace')) }}
+                    {{ char }}
                   </li>
                 </ul>
               </div>
             </div>
-          </div>
 
-          <!-- email -->
-          <div class="form-group row">
-            <div class="col-1 col-form-label">
-              <i class="fas fa-at"></i>
-            </div>
-            <div class="col">
-              <input
-                id="email-input"
-                v-model="email"
-                :placeholder="y18n('emailPH')"
-                :aria-label="y18n('emailPH')"
-                type="text"
-                :disabled="submitOk"
-                class="form-control"
-                :class="errEmail? 'wrong-input' : ''"
-                aria-describedby="email-err"
-                @blur="isEmailTaken"
+            <!--- pwd input component test -->
+            <password-input
+              class="pwd-input"
+              :label-icons-only="true"
+              :label-width="1"
+              @compliantLength="newPwdOk"
+            ></password-input>
+
+            <!-- profile pic -->
+
+            <!-- <div style="height: 2rem"></div>
+            <div class="position-relative">
+              <div class="position-absolute">{{ y18n('profilePic') }}</div>
+
+              <ly-input-img v-model="profileImg"
+                            style="width: 7rem"
+                            class="m-auto">
+                <img src="../assets/hochladen.svg" alt="Profilbild wählen">
+              </ly-input-img>
+            </div> -->
+
+            <!-- submit -->
+            <!-- <div style="height: 4rem"></div> -->
+            <h2 :class="{'d-none': busy || submitOk}">
+              <button
+                :disabled="errForm"
+                class="btn btn-lg btn-block btn-outline-dark"
+                style="border: 2px solid black"
+                @click.prevent="submit"
               >
-            </div>
-          </div>
+                {{ y18n('register.submit') }}
+                <i
+                  class="fas fa-user-plus"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </h2>
 
-          <!-- email hint-->
-          <div
-            class="form-group row text-center"
-            :class="{'d-none': !errEmail}"
-          >
-            <div
-              v-if="errEmail"
-              id="email-err"
-              :aria-hidden="!emailTaken"
-              class="col text-center"
+            <!-- still form errors -->
+            <h3
+              id="form-err"
+              class="text-center"
+              :class="{'d-none': !errForm}"
             >
-              <i class="fas fa-exclamation-triangle"></i>
-              <strong>
-                {{ emailTaken ? y18n('emailTaken') : y18n('emailErr') }} <br>
-                {{ missingEmailCharacters.length > 0? y18n('emailErr.missingChars') : '' }}:
-              </strong>
-              <ul class="list-unstyled">
-                <li
-                  v-for="char in missingEmailCharacters"
-                  :key="char"
-                  class="d-inline-block"
-                  :class="langIsAr? 'ml-3' : 'mr-3'"
-                >
-                  {{ char }}
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <!--- pwd input component test -->
-          <password-input
-            class="pwd-input"
-            :label-icons-only="true"
-            :label-width="1"
-            @compliantLength="newPwdOk"
-          ></password-input>
-
-          <!-- profile pic -->
-
-          <!-- <div style="height: 2rem"></div>
-          <div class="position-relative">
-            <div class="position-absolute">{{ y18n('profilePic') }}</div>
-
-            <ly-input-img v-model="profileImg"
-                          style="width: 7rem"
-                          class="m-auto">
-              <img src="../assets/hochladen.svg" alt="Profilbild wählen">
-            </ly-input-img>
-          </div> -->
-
-          <!-- submit -->
-          <!-- <div style="height: 4rem"></div> -->
-          <h2 :class="{'d-none': busy || submitOk}">
-            <button
-              :disabled="errForm"
-              class="btn btn-lg btn-block btn-outline-dark"
-              style="border: 2px solid black"
-              @click.prevent="submit"
+              {{ y18n('register.formErr') }}
+            </h3>
+            <!-- busy note -->
+            <h3
+              class="text-center"
+              :class="{'d-none': !busy}"
             >
-              {{ y18n('register.submit') }}
-              <i class="fas fa-user-plus"></i>
-            </button>
-          </h2>
-
-          <!-- still form errors -->
-          <h3
-            id="form-err"
-            class="text-center"
-            :class="{'d-none': !errForm}"
-          >
-            {{ y18n('register.formErr') }}
-          </h3>
-          <!-- busy note -->
-          <h3
-            class="text-center"
-            :class="{'d-none': !busy}"
-          >
-            {{ y18n('busy') }} <i class="fas fa-spinner fa-spin"></i>
-          </h3>
-          <!-- submit ok: goto login -->
-          <h3
-            class="text-center"
-            :class="{'d-none': !submitOk}"
-          >
-            <router-link to="/login">
-              <div>
-                <u>{{ y18n('register.success') }}</u>
-                <img
-                  src="../../assets/images/fertig.svg"
-                  :alt="y18n('uploadFile.success')"
-                  style="width: 3rem"
-                >
-              </div>
-            </router-link>
-          </h3>
-          <!-- submit not ok -->
-          <h3 class="text-center">
-            {{ errmsg }}
-          </h3>
-        </form>
+              {{ y18n('busy') }} <i class="fas fa-spinner fa-spin"></i>
+            </h3>
+            <!-- submit ok: goto login -->
+            <h3
+              class="text-center"
+              :class="{'d-none': !submitOk}"
+            >
+              <router-link to="/login">
+                <div>
+                  <u>{{ y18n('register.success') }}</u>
+                  <img
+                    src="../../assets/images/fertig.svg"
+                    :alt="y18n('uploadFile.success')"
+                    style="width: 3rem"
+                  >
+                </div>
+              </router-link>
+            </h3>
+            <!-- submit not ok -->
+            <h3 class="text-center">
+              {{ errmsg }}
+            </h3>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>
@@ -415,7 +436,7 @@ export default {
      */
     submit () {
       if (this.errForm || this.nameTaken || this.emailTaken) {
-        console.log('Not Submitting')
+        // console.log('Not Submitting')
         return
       }
 

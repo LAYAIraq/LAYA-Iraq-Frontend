@@ -5,22 +5,24 @@
   Since: v1.1.0
 -->
 <template>
-  <div class="flag">
-    <div class="container">
-      <flag-question v-if="!flag"></flag-question>
-      <flag-answer v-else></flag-answer>
-      <div
-        class="row mt-3"
-      >
-        <b-button
-          :class="langIsAr? 'ml-auto': 'mr-auto'"
-          @click="$router.push({ name: 'course' })"
+  <main>
+    <div class="flag">
+      <div class="container">
+        <flag-question v-if="!flag"></flag-question>
+        <flag-answer v-else></flag-answer>
+        <div
+          class="row mt-3"
         >
-          {{ y18n('backToCourse') }}
-        </b-button>
+          <b-button
+            :class="langIsAr? 'ml-auto': 'mr-auto'"
+            @click="$router.back()"
+          >
+            {{ y18n('backToCourse') }}
+          </b-button>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>

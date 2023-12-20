@@ -98,6 +98,7 @@
               ],
               "id": "e1ns",
               "slug": "dialog-sample",
+              "type": "button-navigation",
               "isChapter": false
             }
           ],
@@ -108,7 +109,8 @@
           "isChapter": true,
           "chapterName": "Last Chapter",
           "slug": "last-chapter",
-          "children": [{
+          "children": [
+            {
             "id": "zw31",
             "isChapter": false,
             "follow": "dr31",
@@ -134,7 +136,9 @@
         {
           "id": "f33db4ck",
           "isChapter": false,
-          "slug": "feedback"
+          "slug": "feedback",
+          "type": "feedback",
+          "follow": "v13r"
         }
       ]
     }

@@ -111,7 +111,7 @@ export default {
         }
       }
     }) {
-      return state.course.properties.simpleLanguage
+      return state.course.properties.simpleLanguage ?? false
     },
 
     /**
@@ -414,7 +414,7 @@ export default {
      * @param state state variables
      * @param data course properties
      */
-    courseCreate (state, data: {
+    courseCreate ({ dispatch }, data: {
       name: string,
       language: string,
       authorName: string,
@@ -444,6 +444,7 @@ export default {
               properties: { enrollment: data.enrollment }
             })
               .then(() => {
+                dispatch('courseClear')
                 resolve('Course successfully created')
               })
               .catch((err) => {
@@ -470,7 +471,7 @@ export default {
       { commit, state, rootState },
       newName: string
     ) {
-      console.log('Original Course Files:', state.course.files)
+      // console.log('Original Course Files:', state.course.files)
       // console.log(rootState)
       // create new course object
       const newId = uuidv4()
@@ -645,7 +646,6 @@ export default {
       if (getters.storeBusy) return null
       return new Promise((resolve, reject) => {
         commit('setBusy', true)
-        console.log(name)
         // get course ID from name
         http.get(`courses/getCourseId?courseName=${name}`)
           .then(({ data }) => {
@@ -664,14 +664,15 @@ export default {
                 console.error(err)
                 reject(err)
               })
+              .finally(() => commit('setBusy', false))
           })
           .catch(() => {
             // course name not found -> fallback to slug lookup TODO: remove this fallback after switching to new back end
             // console.error(err)
             http.get('courses')
               .then(({ data }) => {
-                console.log('slug lookup')
-                console.log(data)
+                // console.log('slug lookup')
+                // console.log(data)
                 const course = data.find((course: any) => slugify(course.name) === name)
                 if (course) {
                   commit('courseSet', course)
@@ -687,8 +688,8 @@ export default {
                 console.error(err)
                 reject(err)
               })
+              .finally(() => commit('setBusy', false))
           })
-          .finally(() => commit('setBusy', false))
       })
     },
 
@@ -742,7 +743,7 @@ export default {
       const langData = {
         language: state.course.language
       }
-      console.log('update course language in course.ts')
+      // console.log('update course language in course.ts')
       return new Promise((resolve, reject) => {
         http.patch(
         `/courses/${state.course.courseId}`, langData
