@@ -1,6 +1,7 @@
 import courseContent from '@/store/modules/course-content'
 import SampleCourse from '../../mocks/sample-course-short.json'
 import SampleCourseChapters from '../../mocks/sample-course-chapters.json'
+import SampleCourseChaptersFlat from '../../mocks/sample-course-chapters-flat.json'
 import SampleCourseChaptersIntermediate from '../../mocks/sample-course-chapters-intermediate.json'
 import SampleCourseChaptersNested from '../../mocks/sample-course-chapters-nested.json'
 import { deepCopy } from '@/mixins/general/helpers'
@@ -62,7 +63,7 @@ describe('store module course-content mutations', () => {
       })
 
       it('creates a courseRoutes array', () => {
-        expect(state.courseRoutes.length).toBeGreaterThan(0)
+        expect(Object.keys(state.courseRoutes).length).toBeGreaterThan(0)
       })
     })
     describe('new course structure', () => {
@@ -80,7 +81,7 @@ describe('store module course-content mutations', () => {
       })
 
       it('creates a courseRoutes array', () => {
-        expect(state.courseRoutes.length).toBe(5)
+        expect(Object.keys(state.courseRoutes).length).toBe(5)
       })
     })
   })
@@ -114,7 +115,7 @@ describe('store module course-content mutations', () => {
   describe('courseChapterFollowUpdate', () => {
     beforeEach(() => {
       state = deepCopy(emptyState)
-      state.courseChapters = SampleCourseChaptersNested.chapters
+      state.courseChapters = deepCopy(SampleCourseChaptersNested.chapters)
     })
 
     it('does nothing when not passing anything', () => {
@@ -137,6 +138,55 @@ describe('store module course-content mutations', () => {
       mutations.courseChapterUpdateFollow(state, { id: 'v13r', value: ['abc', 'def'] })
       const a = state.courseChapters[0].children[0].children[0].children[0].children[0]
       expect(a.follow).toStrictEqual(['abc', 'def'])
+    })
+
+    it('changes follow value of button navigation', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'e1ns', value: ['abc', 'def'] })
+      const a = state.courseChapters[0].children[1].children[0]
+      expect(a.follow).toStrictEqual(['abc', 'def'])
+    })
+
+    it('does not change value of button navigation when null passed', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'e1ns', value: null })
+      const a = state.courseChapters[0].children[1].children[0]
+      expect(a.follow).toStrictEqual(['zw31', 'dr31'])
+    })
+
+    it('does not change value of button navigation when undefined passed', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'e1ns', value: undefined })
+      const a = state.courseChapters[0].children[1].children[0]
+      expect(a.follow).toStrictEqual(['zw31', 'dr31'])
+    })
+
+    it('changes follow value of other type', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'f33db4ck', value: 'test' })
+      const a = state.courseChapters[1].children[0]
+      expect(a.follow).toBe('test')
+      expect(a.followManual).toBeTruthy()
+    })
+
+    it('does not change value of other type when null passed', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'f33db4ck', value: null })
+      const a = state.courseChapters[1].children[0]
+      expect(a.follow).toStrictEqual('v13r')
+    })
+
+    it('does not change value of other type when undefined passed', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'f33db4ck', value: undefined })
+      const a = state.courseChapters[1].children[0]
+      expect(a.follow).toStrictEqual('v13r')
+    })
+
+    it('does not change value of other type when empty string passed', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'f33db4ck', value: '' })
+      const a = state.courseChapters[1].children[0]
+      expect(a.follow).toStrictEqual('v13r')
+    })
+
+    it('does not change value of other type when value is the same', () => {
+      mutations.courseChapterUpdateFollow(state, { id: 'f33db4ck', value: 'v13r' })
+      const a = state.courseChapters[1].children[0]
+      expect(a.follow).toStrictEqual('v13r')
     })
 
     it('changes follow value of shallow array', () => {
@@ -187,6 +237,12 @@ describe('store module course-content mutations', () => {
         courseContent: {
           test: {
             id: 'test'
+          },
+          test2: {
+            id: 'test2'
+          },
+          test3: {
+            id: 'test3'
           }
         }
       }
@@ -195,6 +251,9 @@ describe('store module course-content mutations', () => {
     it('removes a block from courseContent', () => {
       mutations.courseContentRemove(state, 'test')
       expect(state.courseContent.test).toBeUndefined()
+      expect(typeof state.courseContent).toBe('object')
+      expect(Array.isArray(state.courseContent)).toBeFalsy()
+      expect(Object.keys(state.courseContent).length).toBe(2)
     })
   })
 
@@ -306,12 +365,11 @@ describe('store module course-content mutations', () => {
     it('sets courseRoutes to argument of courseRoutes mutation', () => {
       mutations.courseChaptersSet(state, SampleCourseChapters.chapters)
       mutations.courseRoutesUpdate(state)
-      expect(state.courseRoutes.length).toBe(5)
-      state.courseRoutes.forEach(([route, id], i: number) => {
+      expect(Object.keys(state.courseRoutes).length).toBe(5)
+      Object.keys(state.courseRoutes).forEach((id, i) => {
         if (i === 0) {
           expect(id).toBe('e1ns')
         }
-        expect(typeof route === 'string')
         expect(typeof id === 'string')
       })
     })
@@ -331,16 +389,54 @@ describe('store module course-content mutations', () => {
     })
 
     it('creates an entry in courseRoutes for each course block', () => {
-      expect(state.courseRoutes.length).toBeGreaterThanOrEqual(5)
+      expect(Object.keys(state.courseRoutes).length).toBeGreaterThanOrEqual(5)
     })
+  })
 
-    it('sets start property in courseRoutes correctly', () => { // skipped b/c this is function in course-structure.ts
-      expect(state.courseRoutes).toContainEqual(['', 'e1ns'])
+  // this needs to be at the end of the test file, otherwise tests fail
+  describe('courseChaptersContentRemove', () => {
+    describe('no actions needed', () => {
+      beforeAll(() => {
+        state = deepCopy(emptyState)
+        mutations.courseChaptersSet(state, SampleCourseChapters.chapters)
+      })
+      it('contentId is not defined', () => {
+        mutations.courseChaptersContentRemove(state, null)
+        expect(state.courseChapters).toStrictEqual(SampleCourseChapters.chapters)
+      })
+      it('contentId is empty string', () => {
+        mutations.courseChaptersContentRemove(state, '')
+        expect(state.courseChapters).toStrictEqual(SampleCourseChapters.chapters)
+      })
+      it('contentId is not in chapters', () => {
+        mutations.courseChaptersContentRemove(state, 'kjahdoh1878nna')
+        expect(state.courseChapters).toStrictEqual(SampleCourseChapters.chapters)
+      })
     })
-
-    it('sets chapters with double title when showSingleSubChapterTitleSlug is true', () => {
-      mutations.courseStructureDestructure(state, { ...SampleCourseChapters, properties: { showSingleSubChapterTitleSlug: true } })
-      expect(state.courseRoutes).toContainEqual(['video/video', 'zw31'])
+    describe('action needed', () => {
+      beforeEach(() => {
+        state = deepCopy(emptyState)
+      })
+      it('removes content when chapters is flat array', () => {
+        mutations.courseChaptersSet(state, SampleCourseChaptersFlat.chapters)
+        mutations.courseChaptersContentRemove(state, 'v13r')
+        expect(state.courseChapters.length).toBe(4)
+        expect(state.courseChapters.find(el => el.id === 'v13r')).toBeFalsy()
+      })
+      it('removes content when chapters is nested array (one layer)', () => {
+        mutations.courseChaptersSet(state, SampleCourseChapters.chapters)
+        mutations.courseChaptersContentRemove(state, 'v13r')
+        expect(state.courseChapters.length).toBe(3)
+        expect(state.courseChapters[2].children.length).toBe(1)
+        expect(state.courseChapters[2].children.find(el => el.id === 'v13r')).toBeFalsy()
+      })
+      it('removes content when chapters is nested array (multiple layers)', () => {
+        mutations.courseChaptersSet(state, SampleCourseChaptersNested.chapters)
+        mutations.courseChaptersContentRemove(state, 'v13r')
+        expect(state.courseChapters.length).toBe(2)
+        expect(state.courseChapters[0].children[0].children[0].children[0].children.length).toBe(1)
+        expect(state.courseChapters[0].children[0].children[0].children[0].children.find(el => el.id === 'v13r')).toBeFalsy()
+      })
     })
   })
 })

@@ -25,22 +25,11 @@ Since: v1.0.0
           ></flag-icon>
         </a>
       </div>
-      <div id="free-text-viewer"></div>
+      <div :id="editPreview? 'free-text-preview': 'free-text-viewer'"></div>
       <div class="row">
-        <button
-          type="button"
-          class="btn btn-primary mt-3 d-block"
-          :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-          @click="onFinish[0]() || {}"
-        >
-          {{ y18n('nextContent') }}
-          <i
-            :class="langIsAr?
-              'fas fa-arrow-left':
-              'fas fa-arrow-right'"
-            aria-hidden="true"
-          ></i>
-        </button>
+        <navigation-buttons
+          :cid="id"
+        ></navigation-buttons>
       </div>
     </div>
   </fieldset>
@@ -52,10 +41,11 @@ import Quill from 'quill'
 import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
+import NavigationButtons from '@/components/helpers/navigation-buttons.vue'
 
 export default {
   name: 'FreeTextView',
-  components: { FlagIcon },
+  components: { NavigationButtons, FlagIcon },
 
   mixins: [
     locale,
@@ -80,7 +70,8 @@ export default {
      * Last Updated: March 20, 2021
      */
     fetchContent () {
-      const quill = new Quill('#free-text-viewer', {
+      const targetId = this.editPreview ? '#free-text-preview' : '#free-text-viewer' // avoid duplicate quill id when content is shown and previewed
+      const quill = new Quill(targetId, {
         theme: 'snow',
         readOnly: true
       })

@@ -410,7 +410,10 @@ export default {
       this.host = preData.host
       this.title = preData.title
       this.showTitle = preData.showTitle
-      this.captions = preData.captions
+      this.captions = preData.captions ?? {
+        default: null,
+        tracks: []
+      }
     },
     /**
      * function addCaption: add caption object to caption tracks array
@@ -468,10 +471,6 @@ export default {
 </script>
 
 <style scoped>
-  #questionmark {
-  float: end;
-  cursor: pointer;
-  }
   .helptext {
     border: 1px green;
     padding: 5px;

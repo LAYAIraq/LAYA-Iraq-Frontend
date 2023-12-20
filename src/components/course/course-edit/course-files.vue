@@ -255,10 +255,6 @@ export default {
 </script>
 
 <style scoped>
-#questionmark {
-  float: end;
-  cursor: pointer;
-}
 
 span.sort-list {
   cursor: pointer;

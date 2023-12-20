@@ -13,7 +13,7 @@ Dependencies:
     <div class="row">
       <div class="col">
         <b-button
-          v-if="$route.name !== 'course'"
+          v-if="$route.name !== 'course' && $route.name !== 'content-follow-edit'"
           variant="primary"
           size="sm"
           :class="langIsAr? 'float-right' : 'float-left'"
@@ -50,19 +50,17 @@ Dependencies:
             variant="primary"
             no-flip
             :right="!langIsAr"
-            :disabled="checkEmpty === true"
+            :disabled="!contentToDisplay"
           >
 
             <b-dropdown-item
-              v-for="id in Object.keys(courseContentIdRouteMap)"
+              v-for="id in Object.keys(courseRoutes)"
               :key="id"
               :to="{
                 name: 'course',
                 params: {
                   name,
-                  coursePath: courseContentIdRouteMap[id] !== ''
-                    ? courseContentIdRouteMap[id]
-                    : null
+                  coursePath: courseRoutes[id]
                 }
               }"
               :class="langIsAr? 'text-right': 'text-left'"
@@ -94,20 +92,7 @@ export default {
   ],
 
   computed: {
-    ...mapGetters(['courseContent', 'courseContentIdRouteMap']),
-
-    /**
-     * function checkEmpty(): returns true if no content in course
-     *
-     * Author: cmc
-     *
-     * Last Updated: November 9, 2021
-     * @returns {boolean} true if no content in course
-     */
-    checkEmpty () {
-      return Object.keys(this.courseContent).length === 0
-    }
+    ...mapGetters(['courseContent', 'courseRoutes'])
   }
-
 }
 </script>

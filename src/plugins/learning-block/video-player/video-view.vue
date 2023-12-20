@@ -61,23 +61,10 @@ Dependencies:
       <!--          @flagged="videoFlag.flagged = true"-->
       <!--      ></flag-icon>-->
       </div>
-
       <div class="row">
-        <button
-          type="button"
-          class="btn btn-primary btn-lg mt-3 d-block"
-          :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-          @click="onFinish[0]() || {}"
-        >
-          <span>
-            {{ y18n('nextContent') }}
-            <i
-              :class="langIsAr?
-                'fas fa-arrow-left' :
-                'fas fa-arrow-right'"
-            ></i>
-          </span>
-        </button>
+        <navigation-buttons
+          :cid="id"
+        ></navigation-buttons>
       </div>
     </div>
   </fieldset>
@@ -90,10 +77,11 @@ import 'plyr/dist/plyr.css'
 import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
+import NavigationButtons from '@/components/helpers/navigation-buttons.vue'
 
 export default {
   name: 'VideoView',
-  components: { FlagIcon },
+  components: { NavigationButtons, FlagIcon },
 
   mixins: [
     locale,

@@ -436,7 +436,7 @@ export default {
      */
     submit () {
       if (this.errForm || this.nameTaken || this.emailTaken) {
-        console.log('Not Submitting')
+        // console.log('Not Submitting')
         return
       }
 

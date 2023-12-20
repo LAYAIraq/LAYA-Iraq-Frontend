@@ -40,7 +40,8 @@ export interface CourseNavigationItemChapter extends CourseNavigationItem {
  */
 export interface CourseNavigationItemBlock extends CourseNavigationItem {
   type: string,
-  follow: FollowingContent
+  follow: FollowingContent,
+  followManual?: boolean
 }
 
 /**

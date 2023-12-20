@@ -15,7 +15,7 @@
         >
           <b-button
             :class="langIsAr? 'ml-auto': 'mr-auto'"
-            @click="$router.push({ name: 'course' })"
+            @click="$router.back()"
           >
             {{ y18n('backToCourse') }}
           </b-button>

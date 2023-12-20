@@ -1,6 +1,7 @@
 import courseContent from '@/store/modules/course-content'
 import SampleCourse from '../../mocks/sample-course-short.json'
 import SampleCourseChapters from '../../mocks/sample-course-chapters.json'
+import SampleCourseChaptersNested from '../../mocks/sample-course-chapters-nested.json'
 import { deepCopy } from '@/mixins/general/helpers'
 describe('store module course-content getters', () => {
   let state: any
@@ -10,7 +11,8 @@ describe('store module course-content getters', () => {
     courseChapters: [],
     courseChapterNames: {},
     courseRoutes: [],
-    courseStart: ''
+    courseStart: '',
+    courseEnd: ''
   }
   const getters = courseContent.getters
   const Course = { ...SampleCourse, properties: {}, lastChanged: Date.now() }
@@ -231,64 +233,42 @@ describe('store module course-content getters', () => {
     })
   })
 
-  describe('courseContentIdRouteMap', () => {
-    it('returns empty object if courseRoutes are empty', () => {
-      expect(getters.courseContentIdRouteMap(state)).toStrictEqual({})
-    })
-
-    it('returns object with route as key and id as value', () => {
-      state.courseRoutes = [['/test', 'test']]
-      expect(getters.courseContentIdRouteMap(state)).toStrictEqual({ test: '/test' })
-    })
-
-    it('does not add key to map if the same id is already in the map with empty key', () => {
-      state.courseRoutes = [['', 'test'], ['/test', 'test']]
-      expect(getters.courseContentIdRouteMap(state)).toStrictEqual({ test: '' })
-    })
-  })
-
-  describe('courseContentRouteIdMap', () => {
-    it('returns empty object if courseRoutes are empty', () => {
-      state.courseRoutes = []
-      expect(getters.courseContentRouteIdMap(state, { courseStart: getters.courseStart(state) })).toStrictEqual({})
-    })
-
-    it('returns object with route as key and id as value', () => {
-      state.courseChapters = [{ slug: 'test', isChapter: true, chapterName: 'Test', children: [{ id: 'test', slug: 'test' }] }]
-      expect(getters.courseStart(state)).toBe('test')
-      state.courseRoutes = [['', 'test'], ['test/test', 'test']]
-      expect(getters.courseContentRouteIdMap(state, { courseStart: getters.courseStart(state) })).toStrictEqual({ '': 'test' })
-    })
-
-    it('returns object with all keys and values', () => {
-      state.courseChapters = [{ slug: 'test', isChapter: true, chapterName: 'Test', children: [{ id: 'test', slug: 'test' }] }]
-      state.courseRoutes = [['', 'test'], ['test/test', 'test'], ['test/test2', 'test2']]
-      expect(getters.courseContentRouteIdMap(state, { courseStart: getters.courseStart(state) })).toStrictEqual({ '': 'test', 'test/test2': 'test2' })
-    })
-  })
-
   describe('courseContentPathId', () => {
     beforeEach(() => {
-      state.courseRoutes = [['', 'test'], ['/test', 'test']]
+      state.courseChapters = SampleCourseChaptersNested.chapters
     })
-    it('returns null if path is undefined', () => {
-      expect(getters.courseContentPathId(state)(undefined)).toBe('test')
-    })
-
-    it('returns null if path is null', () => {
-      expect(getters.courseContentPathId(state)(null)).toBe('test')
+    it('returns first content id if path is undefined', () => {
+      expect(getters.courseContentPathId(state)(undefined)).toBe('v13r')
     })
 
-    it('returns null if path is not found', () => {
-      expect(getters.courseContentPathId(state)('/test2')).toBeNull()
+    it('returns first content id if path is null', () => {
+      expect(getters.courseContentPathId(state)(null)).toBe('v13r')
     })
 
-    it('returns id if path is found', () => {
-      expect(getters.courseContentPathId(state)('/test')).toBe('test')
+    it('returns first content id if path is empty array', () => {
+      expect(getters.courseContentPathId(state)([])).toBe('v13r')
+    })
+
+    it('returns null if path is not found (flat)', () => {
+      expect(getters.courseContentPathId(state)(['hilllllarious'])).toBeNull()
+    })
+    it('returns null if path is not found (nested)', () => {
+      expect(getters.courseContentPathId(state)(['feedback', 'test', 'test'])).toBeNull()
+    })
+
+    it('returns correct id of nested path', () => {
+      expect(getters.courseContentPathId(state)(['feedback', 'feedback'])).toBe('f33db4ck')
+    })
+    it('returns correct id of chapter', () => {
+      expect(getters.courseContentPathId(state)(['feedback'])).toBe('f33db4ck')
+    })
+    it('returns correct id of sub-chapter', () => {
+      expect(getters.courseContentPathId(state)(['main', 'quiz', 'scmc'])).toBe('v13r')
+      expect(getters.courseContentPathId(state)(['main', 'quiz', 'scmc', 'some-sub-chapter'])).toBe('53ch5')
     })
   })
 
-  describe('courseRoutes', () => {
+  describe('courseRoutes', () => { // test cases for test coverage
     it('returns empty array if state is empty', () => {
       state.courseRoutes = []
       expect(getters.courseRoutes(state)).toStrictEqual([])
@@ -297,6 +277,13 @@ describe('store module course-content getters', () => {
     it('returns array consisting of courseRoutes', () => {
       state.courseRoutes = [['', 'test'], ['/test', 'test']]
       expect(getters.courseRoutes(state)).toStrictEqual([['', 'test'], ['/test', 'test']])
+    })
+  })
+
+  describe('courseEnd', () => {
+    it('returns correct end id', () => {
+      state.courseChapters = SampleCourseChaptersNested.chapters
+      expect(getters.courseEnd(state)).toBe('f33db4ck')
     })
   })
 })

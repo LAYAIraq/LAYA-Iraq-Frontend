@@ -155,21 +155,10 @@
           </div>
         </div>
 
-        <div class="row">
-          <button
-            type="button"
-            class="btn btn-primary mt-3 ml"
-            :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-            @click="done"
-          >
-            {{ y18n('nextContent') }}
-            <i
-              :class="langIsAr?
-                'fas fa-arrow-left':
-                'fas fa-arrow-right'"
-              aria-hidden="true"
-            ></i>
-          </button>
+        <div class="row mt-3">
+          <navigation-buttons
+            :cid="id"
+          ></navigation-buttons>
         </div>
       </div>
     </div>
@@ -183,12 +172,14 @@ import '@/assets/styles/flaggables.css'
 import { StarRating } from 'vue-rate-it'
 // import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
+import NavigationButtons from '@/components/helpers/navigation-buttons.vue'
 
 // import layaWsyisyg from '../misc/laya-html'
 export default {
   name: 'FeedbackView',
 
   components: {
+    NavigationButtons,
     FlagIcon,
     //  AudioButton,
     StarRating
@@ -274,17 +265,6 @@ export default {
           this.rating = this.prevFeedback.rating
         }
       }
-    },
-
-    /**
-     * Function done: execute function from onFinish[0]
-     *
-     * Creator: cmc
-     *
-     * LastUpdated: unknown
-     */
-    done () {
-      this.onFinish[0]()
     },
 
     /**

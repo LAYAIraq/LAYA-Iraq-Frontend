@@ -285,6 +285,7 @@
 import { array, locale, pluginEdit, tooltipIcon } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 import { deepCopy } from '@/mixins/general/helpers'
+import routes from '@/mixins/vue/routes'
 import ContentTitleEdit from '@/components/helpers/content-title-edit'
 import ContentTaskEdit from '@/components/helpers/content-task-edit'
 
@@ -296,6 +297,7 @@ export default {
     array,
     locale,
     pluginEdit,
+    routes,
     tooltipIcon
   ],
 
@@ -384,9 +386,5 @@ export default {
 
 legend {
   font-size: 1rem;
-}
-
-#questionmark {
-  float: end;
 }
 </style>

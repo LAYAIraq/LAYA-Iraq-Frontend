@@ -126,7 +126,7 @@ describe('editor panel', () => {
 
   it('shows modal containing correct values when clicking "view application"',
     async () => {
-      await wrapper.find('.btn-secondary').trigger('click')
+      await wrapper.find('.btn-primary').trigger('click')
       const {
         applicationText,
         areaOfExpertise,
@@ -168,7 +168,7 @@ describe('editor panel', () => {
     } else {
       store.commit('editorVoteAdd', { applicationId: 1, editorId: 42, vote: true })
     }
-    const modalButton = wrapper.find('.btn-secondary')
+    const modalButton = wrapper.find('.btn-primary')
     await modalButton.trigger('click')
     const modal = wrapper.find('#view-application')
     const approveButton = modal.find('.btn-success')
@@ -196,7 +196,7 @@ describe('editor panel', () => {
     } else {
       store.commit('editorVoteAdd', { applicationId: 1, editorId: 42, vote: false })
     }
-    const modalButton = wrapper.find('.btn-secondary')
+    const modalButton = wrapper.find('.btn-primary')
     await modalButton.trigger('click')
     const modal = wrapper.find('#view-application')
     const approveButton = modal.find('.btn-success')

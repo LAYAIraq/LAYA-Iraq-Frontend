@@ -91,7 +91,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row mb-3">
         <button
           type="button"
           class="btn btn-primary"
@@ -102,18 +102,11 @@
         >
           {{ y18n('check') }}
         </button>
-        <button
-          type="button"
-          class="btn btn-primary mt-3"
-          :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-          @click="done"
-        >
-          {{ y18n('nextContent') }}
-          <i
-            :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"
-            aria-hidden="true"
-          ></i>
-        </button>
+      </div>
+      <div class="row">
+        <navigation-buttons
+          :cid="id"
+        ></navigation-buttons>
       </div>
       <div
         v-if="showSolutionsBool"
@@ -138,15 +131,12 @@
 import { mapGetters } from 'vuex'
 import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
-// import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
+import NavigationButtons from '@/components/helpers/navigation-buttons.vue'
 
 export default {
   name: 'CategoryMatchingView',
-  components: {
-    // AudioButton,
-    FlagIcon
-  },
+  components: { NavigationButtons, FlagIcon },
 
   mixins: [
     locale,
@@ -188,17 +178,6 @@ export default {
   },
 
   methods: {
-    /**
-     * Function done: execute function from onFinish[0]
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     */
-    done () {
-      this.onFinish[0]()
-    },
-
     /**
      * Function check: check if given answers are correct
      *

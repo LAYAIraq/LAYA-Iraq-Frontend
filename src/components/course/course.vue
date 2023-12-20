@@ -25,15 +25,24 @@
             ></CourseHeader>
             <component
               :is="contentToDisplay.name"
+              id="course-content"
               :key="contentToDisplay.title.text"
               :view-data="contentToDisplay"
-              :on-finish="followContent"
             >
             </component>
           </div>
         </div>
       </div>
-      <div v-else>
+      <div
+        v-else-if="coursePath.length > 0"
+        class="text-center"
+      >
+        {{ y18n('courseDetail.removedContent') }}
+      </div>
+      <div
+        v-else
+        class="text-center"
+      >
         <!--            <h2 v-if="!contentToDisplay" class="mt-5 text-center text-muted">-->
         {{ y18n('courseDetail.content') }}
         <!--            </h2>-->
@@ -46,6 +55,12 @@
         :name="name"
         :course-path="coursePath"
       ></CourseEdit>
+    </div>
+    <div
+      v-else
+      class="container mt-5 text-center"
+    >
+      <i class="fas fa-spinner fa-spin"></i> {{ y18n('busy') }}…
     </div>
   </main>
 </template>
@@ -75,9 +90,11 @@ export default {
     if (
       to.name === 'course' &&
       (from.name !== 'course-content' &&
-        from.name !== 'course-nav')
+        from.name !== 'course-nav') &&
+      !this.storeBusy &&
+      this.contentToDisplay
     ) {
-      document.getElementById('course-header').scrollIntoView()
+      document.getElementById('course-content').scrollIntoView()
     }
     next()
   },
@@ -89,8 +106,7 @@ export default {
       'courseChapters',
       'courseChapterNames',
       'courseContent',
-      'courseContentIdRouteMap',
-      'courseContentRouteIdMap',
+      'courseContentFollowMap',
       'courseFlags',
       'courseRoutes',
       'courseStart',
@@ -113,30 +129,6 @@ export default {
      */
     isCourseAuthor () {
       return (this.isAuthor && this.course.authorId === this.userId) || this.isSuperAdmin
-    },
-
-    /**
-     * contentToDisplay: return current content object
-     *
-     * Author: cmc
-     *
-     * Last Updated: November 14, 2022 by cmc
-     */
-    contentToDisplay () {
-      if (!this.coursePath) { // course path is not set --> first content in course
-        return this.courseContent[this.courseStart]
-      } else { // course path is set --> content with slug
-        return this.courseContent[this.courseContentRouteIdMap[this.coursePath]] // path is no number -> route
-      }
-    },
-
-    /**
-     * @function return a route push for following content
-     * @author cmc
-     * @return {(function())|*|[(function(): *)]}
-     */
-    followContent () {
-      return this.followingContent(this.contentToDisplay)
     },
 
     /**
@@ -186,7 +178,6 @@ export default {
   },
 
   created () {
-    this.getCourse()
     this.enrollmentFetch()
     // this.flagsFetch()
     // this.fetchCourseStats()
@@ -196,12 +187,7 @@ export default {
     // if (!this.contentToDisplay && !this.$router.params.type) {
     //   this.$forceUpdate()
     // }
-  },
-
-  updated () {
-    console.log(this.pathId)
-    console.log(this.courseContentIdRouteMap)
-    console.log(this.coursePath)
+    this.getCourse()
   },
 
   beforeDestroy () {
@@ -225,42 +211,9 @@ export default {
         this.courseSlug !== this.name || // course in store doesn't match the route params
         Object.keys(this.course).length === 0 // course in store has no properties
       ) {
-        console.log('Fetching Course...')
         this.courseFetch(this.name)
       }
       window.scrollTo(0, 0)
-    },
-
-    /**
-     * Function followingContent: returns follow set for content block
-     *
-     * Author: core
-     *
-     * Last Updated: November 14, 2022 by cmc
-     *
-     * @param contentBlock content block object
-     */
-    followingContent (contentBlock) {
-      if (!this.contentToDisplay) return [() => {}] // no follow set
-      // el is the content block to follow, return router push function
-      // if el is number, use courseContentIndexIdMap to get id
-      const routePushLookup = (el) => {
-        return () => this.$router.push({
-          params: {
-            name: this.name,
-            coursePath: typeof el === 'number' // if element is a number, it's an index
-              ? this.courseContentIdRouteMap[el] // get id from index, then route from id
-              : `${el}`
-          }
-        })
-      }
-      const k = typeof contentBlock.follow === 'object'
-        ? contentBlock.follow.map(el => // create a router.push call for each element in follow array
-          routePushLookup(el)
-        )
-        : [routePushLookup(contentBlock.follow)] // has to be array
-      console.log(k)
-      return k
     }
   }
 }
