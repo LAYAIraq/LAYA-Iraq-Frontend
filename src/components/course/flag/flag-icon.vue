@@ -50,6 +50,7 @@ export default {
 
   methods: {
     getOtherClass () {
+      console.log('courselanguage is ar ' + this.courseLangIsAr)
       if (this.interactive && this.courseLangIsAr) {
         return 'flag-container-ar interactive'
       } else if (this.interactive && !this.courseLangIsAr) {

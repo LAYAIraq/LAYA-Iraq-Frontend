@@ -41,7 +41,7 @@
         >
           <hr>
           <div
-            :class="courseLangIsAr? 'text-right' : 'text-left'"
+            style="width:100%"
           >
             <h1 class="pb-3">
               {{ courseSimple? title.simple : title.text }}
