@@ -1,6 +1,7 @@
 # Changes
 ## v1.3.2
 - various fixes for routing issues
+- various design fixes
 
 ## v1.3.1
 - updated routing in courses
@@ -9,6 +10,11 @@
 - updated structure of course navigation
 - introduced breadcrumb
 
+## v1.2.5
+- small fixes in course creation / editing
+- added feedback block for users to give feedback on courses
+- added True/False option in SCMC quiz component
+- improved screen reader support
 
 ## v1.2.4
 - fixed wrong display of solutions in assessments
