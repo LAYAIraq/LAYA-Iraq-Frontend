@@ -8,6 +8,7 @@
     <b-button
       v-if="cid !== courseStart"
       variant="primary"
+      :class="langIsAr? 'float-right ml-auto': 'float-left mr-auto'"
       @click="$router.back()"
     >
       <i
