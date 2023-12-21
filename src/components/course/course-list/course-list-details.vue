@@ -90,7 +90,7 @@
               class="show-button"
               @click="data.toggleDetails"
             >
-              {{ data.detailsShowing ? 'Hide Details' : 'Show Details' }}
+              {{ data.detailsShowing ? y18n('hideDetails') : y18n('showDetails') }}
             </b-button>
             <div>
             </div>
