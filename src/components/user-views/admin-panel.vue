@@ -154,7 +154,7 @@
                 v-b-tooltip.top
                 class="user-mgmt-btn"
                 variant="warning"
-                :disabled="row.item.id === userId"
+                :disabled="row.item.id === userId || row.item.role === 'superadmin'"
                 :class="langIsAr? 'ml-2': 'mr-2'"
                 :title="y18n('adminPanel.promoteUser')"
                 @click="openModal(row.item.id, 'promote-user')"
@@ -168,7 +168,7 @@
               <b-button
                 v-b-tooltip.top
                 class="user-mgmt-btn"
-                :disabled="row.item.id === userId"
+                :disabled="row.item.id === userId || row.item.role === 'superadmin'"
                 :class="langIsAr? 'ml-2': 'mr-2'"
                 :title="y18n('adminPanel.editEmail')"
                 variant="warning"
@@ -183,7 +183,7 @@
               <b-button
                 v-b-tooltip.top
                 class="user-mgmt-btn"
-                :disabled="row.item.id === userId"
+                :disabled="row.item.id === userId || row.item.role === 'superadmin'"
                 :class="langIsAr? 'ml-2': 'mr-2'"
                 :title="y18n('adminPanel.resetPassword')"
                 variant="warning"
@@ -198,7 +198,7 @@
               <b-button
                 v-b-tooltip.top
                 class="user-mgmt-btn"
-                :disabled="row.item.id === userId"
+                :disabled="row.item.id === userId || row.item.role === 'superadmin'"
                 :class="langIsAr? 'ml-2': 'mr-2'"
                 :title="y18n('adminPanel.deleteUser')"
                 variant="danger"

@@ -59,6 +59,7 @@
         <div class="form-group row">
           <b-button
             for="set-flag-question"
+            variant="success"
             type="submit"
           >
             {{ y18n('flag.setQuestion') }}

@@ -39,19 +39,24 @@ Since: v1.2.0
       <form>
         <p>
           {{ y18n('changeCategory') }}
-          <b-form-select
+          <b-select
             v-model="newCategory"
             :aria-label="y18n('changeCategory.new')"
             @keydown.enter.native="changeCourseCategory"
           >
-            <b-form-select-option
+            <b-select-option
+              value="null"
+            >
+              {{ y18n('cat') }}
+            </b-select-option>
+            <b-select-option
               v-for="opt in categoryChoose"
               :key="opt"
               :value="opt"
             >
               {{ y18n(`course.category.${opt}`) }}
-            </b-form-select-option>
-          </b-form-select>
+            </b-select-option>
+          </b-select>
         </p>
       </form>
     </b-modal>
@@ -79,7 +84,7 @@ export default {
   data () {
     return {
       badInput: null,
-      newCategory: ''
+      newCategory: null
     }
   },
 

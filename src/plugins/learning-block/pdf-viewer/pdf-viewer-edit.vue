@@ -41,50 +41,12 @@ Since: v1.3.0
     <hr>
 
     <form>
-      <div class="form-group">
-        <div class="row">
-          <!-- title -->
-          <label
-            for="pdf-viewer-title"
-            class="col-2 col-form-label"
-          >
-            {{ y18n('title') }}
-          </label>
-          <div class="col-10">
-            <input
-              id="pdf-viewer-title"
-              v-model="title.text"
-              type="text"
-              class="form-control"
-              :placeholder="y18n('titlePlaceholder')"
-            >
-          </div>
-        </div>
-        <div
-          v-if="courseSimple"
-          class="row"
-        >
-          <!-- simple title -->
-          <label
-            for="pdf-viewer-title-simple"
-            class="col-2 col-form-label'
-l"
-          >
-            <span class="sr-only">
-              {{ y18n('simpleAlt') }}
-            </span>
-          </label>
-          <div class="col-8">
-            <input
-              id="pdf-viewer-title-simple"
-              v-model="title.simple"
-              type="text"
-              class="form-control"
-              :placeholder="y18n('simpleAlt')"
-            >
-          </div>
-        </div>
-      </div>
+      <!-- title -->
+      <content-title-edit
+        :title="title"
+        @set-title="title = $event"
+      >
+      </content-title-edit>
       <!-- pdf url -->
       <div class="form-group row">
         <label
@@ -121,9 +83,12 @@ l"
 import { mapGetters } from 'vuex'
 import { locale, pluginEdit, routes, tooltipIcon } from '@/mixins'
 import { deepCopy } from '@/mixins/general/helpers'
+import ContentTitleEdit from '@/components/helpers/content-title-edit'
 
 export default {
   name: 'PdfViewerEdit',
+
+  components: { ContentTitleEdit },
 
   mixins: [
     locale,

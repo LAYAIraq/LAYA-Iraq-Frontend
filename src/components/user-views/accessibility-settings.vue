@@ -12,9 +12,9 @@
           class="w-100"
           style="margin-top: 1rem"
         >
-          <h3 :class="langIsAr? 'text-right' : 'text-left'">
+          <h2 :class="langIsAr? 'text-right' : 'text-left'">
             {{ y18n('profile.accessibility') }}
-          </h3>
+          </h2>
           <hr>
           <!-- Default Media Forms -->
           <div class="form-group row">
@@ -119,7 +119,7 @@
               class="col-sm-9 d-inline-flex justify-content-between align-items-center"
             >
               <div class="input-inline">
-                <label>
+                <label :class="langIsAr? 'text-right' : 'text-left'">
                   {{ y18n('profile.font') }}
                   <b-form-select
                     v-model="prefsFont.chosen"
@@ -139,7 +139,7 @@
               </div>
               <!-- Font Size -->
               <div>
-                <label>
+                <label :class="langIsAr? 'text-right' : 'text-left'">
                   {{ y18n('profile.fontSize') }}
                   <b-form-input
                     v-model="prefsFont.sizeChosen"

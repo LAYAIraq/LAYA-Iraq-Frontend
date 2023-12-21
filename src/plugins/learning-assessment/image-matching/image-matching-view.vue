@@ -13,13 +13,12 @@
     <div class="container">
       <div
         :id="title.id"
-        class="flaggable row mb-3"
+        :class="courseLangIsAr? 'flaggable-ar row' : 'flaggable-en row'"
       >
         <div
-          id="title"
-          class="col"
+          style="width:100%"
         >
-          <h4>
+          <h1 class="pb-3">
             {{ courseSimple? title.simple: title.text }}
             <!--
             <audio-button
@@ -30,7 +29,7 @@
             >
             </audio-button>
             -->
-          </h4>
+          </h1>
         </div>
         <a>
           <flag-icon
@@ -42,7 +41,7 @@
       </div>
       <div
         :id="task.id"
-        class="row"
+        class="row task-label"
       >
         <div
           id="task"
@@ -71,12 +70,14 @@
                   v-auth-image="pair.img"
                   :alt="courseSimple? pair.labelSimple: pair.label"
                 >
+                <!--
                 <audio-button
                   v-if="pair.audio"
                   :class="courseLangIsAr? 'mr-2' : 'ml-2'"
                   :src="pair.audio"
                 >
                 </audio-button>
+                -->
                 {{ courseSimple? pair.labelSimple: pair.label }}
               </label>
               <div class="col-sm-6">
@@ -109,55 +110,56 @@
         </div>
       </div>
 
-      <div class="row pt-3">
-        <button
-          type="button"
-          class="btn btn-link"
-          :class="langIsAr? 'float-right': 'float-left'"
-          :disabled="freeze"
-          @click="check"
-        >
-          {{ y18n('check') }}
-        </button>
+      <div class="langIsAr ? mr-3 : ml-3">
+        <div class="row mb-3">
+          <button
+            type="button"
+            class="btn btn-primary"
+            :class="langIsAr? 'float-right': 'float-left'"
+            :disabled="freeze"
+            @click="check"
+          >
+            {{ y18n('check') }}
+          </button>
+        </div>
+        <div class="mt-3">
+          <div class="row">
+            <div
+              v-if="showSolutionsBool"
+              id="solutions"
+            >
+              {{ i18n["choiceQuestion.showCorrect"] }}
+              <div
+                v-for="(pair, index) in pairs"
+                :key="index"
+              >
+                {{ courseSimple? pair.labelSimple: pair.label }}:
+                {{ courseSimple? relations[pair.relation].simple : relations[pair.relation].text }},
+              </div>
+            </div>
+          </div>
+          <div>
+            <div v-if="allAnswersChosen">
+              {{ y18n('imageMatching.missingAnswerWarning') }}
+            </div>
+            <b-modal
+              id="missing-answer-warning"
+              :title="y18n('password.error')"
+              ok-variant="warning"
+              header-bg-variant="warning"
+              ok-only
+              centered
+              static
+            >
+              {{ y18n('imageMatching.missingAnswerWarning') }}
+            </b-modal>
+          </div>
+        </div>
       </div>
-      <div class="row pt-3">
+      <div class="row mt-3">
         <navigation-buttons
           :cid="id"
         ></navigation-buttons>
-      </div>
-
-      <div class="mt-3">
-        <div class="row">
-          <div
-            v-if="showSolutionsBool"
-            id="solutions"
-          >
-            {{ i18n["choiceQuestion.showCorrect"] }}
-            <div
-              v-for="(pair, index) in pairs"
-              :key="index"
-            >
-              {{ courseSimple? pair.labelSimple: pair.label }}:
-              {{ courseSimple? relations[pair.relation].simple : relations[pair.relation].text }},
-            </div>
-          </div>
-        </div>
-        <div>
-          <div v-if="allAnswersChosen">
-            {{ y18n('imageMatching.missingAnswerWarning') }}
-          </div>
-          <b-modal
-            id="missing-answer-warning"
-            :title="y18n('password.error')"
-            ok-variant="warning"
-            header-bg-variant="warning"
-            ok-only
-            centered
-            static
-          >
-            {{ y18n('imageMatching.missingAnswerWarning') }}
-          </b-modal>
-        </div>
       </div>
     </div>
   </div>
@@ -294,6 +296,10 @@ img {
 }
 .form-group.row:nth-child(2) {
   background-color: #ebece7;
+}
+
+.task-label {
+  font-size: 18pt;
 }
 
 </style>

@@ -16,11 +16,16 @@ Dependencies:
   >
     <div>
       <div
-        v-if="title.show"
         :id="title.id"
-        class="flaggable row"
+        :class="courseLangIsAr? 'flaggable-ar row' : 'flaggable-en row'"
       >
-        <h2>{{ courseSimple? title.simple : title.text }}</h2>
+        <div
+          style="width:100%"
+        >
+          <h1 class="pb-3">
+            {{ courseSimple? title.simple : title.text }}
+          </h1>
+        </div>
         <a>
           <flag-icon
             v-if="!editPreview"
@@ -61,7 +66,7 @@ Dependencies:
       <!--          @flagged="videoFlag.flagged = true"-->
       <!--      ></flag-icon>-->
       </div>
-      <div class="row">
+      <div class="row mt-3">
         <navigation-buttons
           :cid="id"
         ></navigation-buttons>

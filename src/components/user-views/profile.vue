@@ -65,9 +65,9 @@ Since: v1.0.0
               class="w-100"
               style="margin-top: 1rem"
             >
-              <h3 :class="langIsAr? 'text-right' : 'text-left'">
+              <h2 :class="langIsAr? 'text-right' : 'text-left'">
                 {{ y18n('profile.title') }}
-              </h3>
+              </h2>
               <hr>
 
               <!-- Username -->
@@ -173,9 +173,9 @@ Since: v1.0.0
                     class="w-100"
                     style="margin-top: 1rem"
                   >
-                    <h3 :class="langIsAr? 'text-right' : 'text-left'">
+                    <h2 :class="langIsAr? 'text-right' : 'text-left'">
                       {{ y18n('profile.change') }}
-                    </h3>
+                    </h2>
                     <hr>
                     <div class="row row-cols-3">
                       <!-- change username -->

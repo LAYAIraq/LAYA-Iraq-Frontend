@@ -37,11 +37,13 @@
       <div class="container">
         <div
           :id="title.id"
-          class="flaggable row mb-3"
+          :class="courseLangIsAr? 'flaggable-ar row' : 'flaggable-en row'"
         >
           <hr>
-          <div class="col">
-            <h2>
+          <div
+            style="width:100%"
+          >
+            <h1 class="pb-3">
               {{ courseSimple? title.simple : title.text }}
               <!--
               <audio-button
@@ -51,7 +53,7 @@
                   taskAudio.regular"
               ></audio-button>
               -->
-            </h2>
+            </h1>
           </div>
           <a>
             <flag-icon
@@ -66,7 +68,7 @@
           :id="task.id"
           class="row"
         >
-          <div class="col">
+          <div class="col task-label">
             <p>{{ courseSimple? task.simple : task.text }}</p>
           </div>
         </div>
@@ -80,7 +82,7 @@
               :key="item.id"
               class="item mb-5"
             >
-              <label class="text-center item-label">
+              <label class="centering item-label">
                 {{ courseSimple? item.simple : item.label }}
               </label>
 
@@ -143,7 +145,7 @@
           <div class="col">
             <button
               type="button"
-              class="btn btn-outline-success btn-block"
+              class="btn btn-success btn-block"
               @click="storeFeedback"
             >
               <i
@@ -322,5 +324,8 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   z-index: 11002;
+}
+.task-label {
+  font-size: 18pt;
 }
 </style>
