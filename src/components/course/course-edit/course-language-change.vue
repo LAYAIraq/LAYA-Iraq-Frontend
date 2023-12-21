@@ -39,19 +39,24 @@ Since: v1.3.0
       <form>
         <p>
           {{ y18n('changeCourseLanguage') }}
-          <b-form-select
+          <b-select
             v-model="newLanguage"
             :aria-label="y18n('changeCourseLanguage.new')"
             @keydown.enter.native="changeCourseLanguage"
           >
-            <b-form-select-option
+            <b-select-option
+              value="null"
+            >
+              {{ y18n('courseLanguage') }}
+            </b-select-option>
+            <b-select-option
               v-for="opt in languageChoose"
               :key="opt"
               :value="opt"
             >
               {{ y18n(`profile.language.${opt}`) }}
-            </b-form-select-option>
-          </b-form-select>
+            </b-select-option>
+          </b-select>
         </p>
       </form>
     </b-modal>
@@ -78,7 +83,7 @@ export default {
 
   data () {
     return {
-      newLanguage: ''
+      newLanguage: null
     }
   },
 
