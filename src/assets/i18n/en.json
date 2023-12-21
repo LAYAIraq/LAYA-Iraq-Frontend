@@ -599,6 +599,8 @@
 	"root.subtitle": "the inclusive learning platform",
 	"root.title": "Welcome to LAYA Iraq",
 	"save": "Save",
+	"save.changes": "Save changes?",
+	"save.changes.warning": "Do you want to save the changes you made to your course?",
 	"save.warning.emptyTitle": "Please add a title to your component!",
 	"save.warning.emptyTitle.header": "Missing Title",
 	"save.warning.notPossible": "No Saving Possible",
