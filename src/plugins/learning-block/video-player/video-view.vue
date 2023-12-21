@@ -16,11 +16,17 @@ Dependencies:
   >
     <div>
       <div
-        v-if="title.show"
         :id="title.id"
-        class="flaggable row"
+        :class="courseLangIsAr? 'flaggable-ar row' : 'flaggable-en row'"
       >
-        <h2>{{ courseSimple? title.simple : title.text }}</h2>
+        <div
+          class="col"
+          :class="courseLangIsAr? 'text-right' : 'text-left'"
+        >
+          <h1 class="pb-3">
+            {{ courseSimple? title.simple : title.text }}
+          </h1>
+        </div>
         <a>
           <flag-icon
             v-if="!editPreview"

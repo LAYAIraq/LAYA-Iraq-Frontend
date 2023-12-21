@@ -5,21 +5,31 @@ Creator: nv
 Since: v1.3.0
 -->
 <template>
-  <div
+  <fieldset
     class="pdf-viewer-view"
-    :class="langIsAr? 'text-right' : 'text-left'"
+    :class="courseLangIsAr? 'text-right' : 'text-left'"
   >
+    <!-- render title -->
     <div
-      v-if="title.show"
       :id="title.id"
-      class="flaggable row"
+      :class="courseLangIsAr? 'flaggable-ar row' : 'flaggable-en row'"
     >
-      <h2>{{ courseSimple? title.simple : title.text }}</h2>
-      <flag-icon
-        v-if="!editPreview"
-        :ref-data="title"
-        @flagged="title.flagged = true"
-      ></flag-icon>
+      <div
+        class="col"
+        :class="courseLangIsAr? 'text-right' : 'text-left'"
+      >
+        <h1 class="pb-3">
+          {{ courseSimple? title.simple : title.text }}
+        </h1>
+      </div>
+
+      <a>
+        <flag-icon
+          v-if="!editPreview"
+          :ref-data="title"
+          @flagged="title.flagged = true"
+        ></flag-icon>
+      </a>
     </div>
     <div class="pdf-viewer-style">
       <pdf-viewer
@@ -35,10 +45,11 @@ Since: v1.3.0
         {{ y18n("pdfViewer.download") }}
       </b-button>
     </div>
-    <div class="row">
+
+    <div class="row pt-3">
       <navigation-buttons :cid="id"></navigation-buttons>
     </div>
-  </div>
+  </fieldset>
 </template>
 
 <script>

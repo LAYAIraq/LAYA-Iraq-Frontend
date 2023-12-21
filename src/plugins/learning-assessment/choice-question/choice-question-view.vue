@@ -6,17 +6,20 @@ Since: v1.0.0
 -->
 
 <template>
-  <fieldset
+  <div
     class="choice-question-view"
     :class="courseLangIsAr? 'text-right' : 'text-left'"
   >
-    <!-- render task -->
+    <!-- render title -->
     <div
       :id="title.id"
-      class="flaggable row"
+      :class="courseLangIsAr? 'flaggable-ar row' : 'flaggable-en row'"
     >
-      <div class="col">
-        <h2 class="pb-3">
+      <div
+        class="col"
+        :class="courseLangIsAr? 'text-right' : 'text-left'"
+      >
+        <h1 class="pb-3">
           {{ courseSimple? title.simple : title.text }}
           <!--
           <audio-button
@@ -27,7 +30,7 @@ Since: v1.0.0
           >
           </audio-button>
           -->
-        </h2>
+        </h1>
       </div>
       <a>
         <flag-icon
@@ -37,11 +40,13 @@ Since: v1.0.0
         ></flag-icon>
       </a>
     </div>
+
+    <!-- render task -->
     <div
       :id="task.id"
       class="row"
     >
-      <div class="col">
+      <div class="col task-label">
         {{ courseSimple? task.simple: task.text }}
       </div>
     </div>
@@ -100,37 +105,41 @@ Since: v1.0.0
       {{maxTries-tries}}
     </div>
     -->
-    <div class="row mb-3">
-      <button
-        type="button"
-        class="btn btn-primary"
-        :class="langIsAr? 'float-right': 'float-left'"
-        :disabled="freeze"
-        @click="diffSolution"
+    <div class="langIsAr ? mr-3 : ml-3">
+      <div class="row mb-3">
+        <button
+          type="button"
+          class="btn btn-primary"
+          :class="langIsAr? 'float-right': 'float-left'"
+          :disabled="freeze"
+          @click="diffSolution"
+        >
+          {{ y18n('check') }}
+        </button>
+      </div>
+      <div
+        class="row pt-3"
+        aria-live="polite"
       >
-        {{ y18n('check') }}
-      </button>
+        <div v-if="showSolutionsBool">
+          {{ i18n["choiceQuestion.showCorrect"] }}
+          <div
+            v-for="(showSolution, index) in showSolutions"
+            :key="index"
+            class="ml-4"
+          >
+            {{ showSolution }}
+          </div>
+        </div>
+      </div>
     </div>
+
     <div class="row pt-3">
       <navigation-buttons
         :cid="id"
       ></navigation-buttons>
     </div>
-    <div
-      class="row pt-3"
-      aria-live="polite"
-    >
-      <div v-if="showSolutionsBool">
-        {{ i18n["choiceQuestion.showCorrect"] }}
-        <div
-          v-for="(showSolution, index) in showSolutions"
-          :key="index"
-          class="ml-4"
-        >
-          {{ showSolution }}
-        </div>
-      </div>
-    </div>
+
     <div
       :id="feedbackId"
       class="ml-2"
@@ -138,7 +147,7 @@ Since: v1.0.0
     >
       {{ feedback }}
     </div>
-  </fieldset>
+  </div>
 </template>
 
 <script>
@@ -173,7 +182,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['courseSimple']),
+    ...mapGetters(['content', 'courseSimple']),
 
     /**
      * feedbackId: creates an identifier string
@@ -370,4 +379,9 @@ input[type='radio'] {
   width: 15px;
   vertical-align: middle;
 }
+
+.task-label {
+  font-size: 18pt;
+}
+
 </style>

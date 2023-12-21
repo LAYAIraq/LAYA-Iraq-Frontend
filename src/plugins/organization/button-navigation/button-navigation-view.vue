@@ -11,14 +11,16 @@ Since v1.0.0
     :class="courseLangIsAr? 'text-right' : 'text-left'"
   >
     <div
-      v-if="title.show"
       :id="title.id"
-      class="row flaggable "
+      :class="courseLangIsAr? 'flaggable-ar row' : 'flaggable-en row'"
     >
-      <div class="col">
-        <h2>
+      <div
+        class="col"
+        :class="courseLangIsAr? 'text-right' : 'text-left'"
+      >
+        <h1 class="pb-3">
           {{ courseSimple? title.simple: title.text }}
-        </h2>
+        </h1>
       </div>
       <a>
         <flag-icon

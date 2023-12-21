@@ -10,13 +10,17 @@ Since: v1.0.0
     class="free-text-view"
     :class="courseLangIsAr? 'text-right' : 'text-left'"
   >
-    <div>
+    <div
+      :id="title.id"
+      :class="courseLangIsAr? 'flaggable-ar row' : 'flaggable-en row'"
+    >
       <div
-        v-if="title.show"
-        :id="title.id"
-        class="flaggable row"
+        class="col"
+        :class="courseLangIsAr? 'text-right' : 'text-left'"
       >
-        <h2>{{ courseSimple? title.simple : title.text }}</h2>
+        <h1 class="pb-3">
+          {{ courseSimple? title.simple : title.text }}
+        </h1>
         <a>
           <flag-icon
             v-if="!editPreview"
@@ -25,12 +29,12 @@ Since: v1.0.0
           ></flag-icon>
         </a>
       </div>
-      <div :id="editPreview? 'free-text-preview': 'free-text-viewer'"></div>
-      <div class="row">
-        <navigation-buttons
-          :cid="id"
-        ></navigation-buttons>
-      </div>
+    </div>
+    <div :id="editPreview? 'free-text-preview': 'free-text-viewer'"></div>
+    <div class="row">
+      <navigation-buttons
+        :cid="id"
+      ></navigation-buttons>
     </div>
   </fieldset>
 </template>

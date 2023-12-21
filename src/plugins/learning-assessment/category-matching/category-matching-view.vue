@@ -10,15 +10,18 @@
     class="category-matching-view"
     :class="courseLangIsAr? 'text-right' : 'text-left'"
   >
-    <div class="container">
+    <!-- render title -->
+    <div
+      :id="title.id"
+      :class="courseLangIsAr? 'flaggable-ar row' : 'flaggable-en row'"
+    >
       <div
-        :id="title.id"
-        class="flaggable row mb-3"
+        class="col"
+        :class="courseLangIsAr? 'text-right' : 'text-left'"
       >
-        <div class="col">
-          <h2>
-            {{ courseSimple? title.simple : title.text }}
-            <!--
+        <h1 class="pb-3">
+          {{ courseSimple? title.simple : title.text }}
+          <!--
             <audio-button
               v-if="taskAudioExists"
               :src="courseSimple?
@@ -26,71 +29,75 @@
                 taskAudio.text"
             ></audio-button>
             -->
-          </h2>
-        </div>
-        <a>
-          <flag-icon
-            v-if="!editPreview"
-            :ref-data="title"
-            @flagged="title.flagged = true"
-          ></flag-icon>
-        </a>
+        </h1>
       </div>
+      <a>
+        <flag-icon
+          v-if="!editPreview"
+          :ref-data="title"
+          @flagged="title.flagged = true"
+        ></flag-icon>
+      </a>
+    </div>
 
-      <div
-        :id="task.id"
-        class="row"
-      >
-        <div class="col">
-          <p>{{ courseSimple? task.simple : task.text }}</p>
-        </div>
+    <div
+      :id="task.id"
+      class="row"
+    >
+      <div class="col task-label">
+        <p>{{ courseSimple? task.simple : task.text }}</p>
       </div>
-      <hr>
+    </div>
+    <hr>
 
-      <div class="row">
-        <div class="col">
-          <div
-            v-for="(item,i) in items"
-            :id="item.id"
-            :key="item.id"
-            class="item mb-5"
+    <div class="row">
+      <div class="col">
+        <div
+          v-for="(item,i) in items"
+          :id="item.id"
+          :key="item.id"
+          class="mb-3 item"
+        >
+          <label
+            class="centering item-label"
           >
-            <label class="text-center item-label">
-              {{ courseSimple? item.simple : item.label }}
-              <i
-                v-if="checked"
-                class="fas"
-                :class="{
-                  'fa-check text-success': eval[i],
-                  'fa-times text-danger': !eval[i]
-                }"
-              >
-              </i>
-            </label>
-
-            <div class="d-flex justify-content-between">
-              <b
-                v-for="cat in categories"
-                :key="cat.text"
-              >
-                {{ courseSimple? cat.simple : cat.text }}
-              </b>
-            </div>
-            <input
-              v-model.number="solution[i]"
-              type="range"
-              class="custom-range"
-              :class="courseLangIsAr? 'mr-3': 'ml-3'"
-              min="0"
-              :max="categories.length-1"
-              :disabled="checked"
-              :aria-valuenow="solution[i]"
-              :aria-valuetext="courseSimple? categories[solution[i]].simple: categories[solution[i]].text"
-              :aria-label="y18n('categoryMatching.label.slider')"
+            {{ courseSimple? item.simple : item.label }}
+            <i
+              v-if="checked"
+              class="fas"
+              :class="{
+                'fa-check text-success': eval[i],
+                'fa-times text-danger': !eval[i]
+              }"
             >
+            </i>
+          </label>
+
+          <div class="d-flex justify-content-between">
+            <b
+              v-for="cat in categories"
+              :key="cat.text"
+            >
+              {{ courseSimple? cat.simple : cat.text }}
+            </b>
           </div>
+          <input
+            v-model.number="solution[i]"
+            type="range"
+            class="custom-range"
+            :class="courseLangIsAr? '': ''"
+            min="0"
+            :max="categories.length-1"
+            :disabled="checked"
+            :aria-valuenow="solution[i]"
+            :aria-valuetext="courseSimple? categories[solution[i]].simple: categories[solution[i]].text"
+            :aria-label="y18n('categoryMatching.label.slider')"
+          >
         </div>
       </div>
+    </div>
+
+    <div class="langIsAr ? mr-3 : ml-3">
       <div class="row mb-3">
         <button
           type="button"
@@ -102,11 +109,6 @@
         >
           {{ y18n('check') }}
         </button>
-      </div>
-      <div class="row">
-        <navigation-buttons
-          :cid="id"
-        ></navigation-buttons>
       </div>
       <div
         v-if="showSolutionsBool"
@@ -123,6 +125,12 @@
           }}
         </div>
       </div>
+    </div>
+
+    <div class="row">
+      <navigation-buttons
+        :cid="id"
+      ></navigation-buttons>
     </div>
   </fieldset>
 </template>
@@ -220,5 +228,12 @@ export default {
 }
 .item:last-child {
   margin-bottom: 0;
+}
+.item-label {
+  font-size: 18pt;
+}
+
+.task-label {
+  font-size: 18pt;
 }
 </style>

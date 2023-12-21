@@ -11,21 +11,25 @@ Since v1.3.0
   >
     <div>
       <div
-        class="row flaggable "
+        :class="courseLangIsAr? 'text-right' : 'text-left'"
       >
-        <div class="col">
-          <h2>
+        <div
+          class="col"
+          :class="courseLangIsAr? 'text-right' : 'text-left'"
+        >
+          <h1 class="pb-3">
             {{ y18n("certificate.name") }}
-          </h2>
+          </h1>
         </div>
       </div>
-      <div>
-        <!-- add pdf viewer -->
-
+      <div class="col">
+        <label id="thanks">
+          {{ y18n('certificate.thanks') }}
+        </label>
         <b-button
           size="sm"
           variant="success"
-          :class="courseLangIsAr? 'float-left' : 'float-right'"
+          :class="courseLangIsAr? 'float-right' : 'float-left'"
           @click="certificateBuild"
         >
           <i class="fas fa-info-circle"></i> {{ y18n('certificate.name') }}
