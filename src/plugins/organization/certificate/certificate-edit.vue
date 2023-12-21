@@ -11,9 +11,9 @@ Since: v1.3.0
   >
     <div class="row">
       <div class="col">
-        <h2 class="d-inline-block mr-auto">
+        <h1 class="d-inline-block mr-auto">
           {{ y18n('certificate.name') }}
-        </h2>
+        </h1>
 
         <i
           id="questionmark"
