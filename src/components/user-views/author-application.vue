@@ -8,7 +8,7 @@
 <template>
   <div>
     <div class="container">
-      <!-- buttons -->
+      <!-- author application -->
       <div
         v-if="!isAuthor"
         id="author-application"
@@ -29,7 +29,7 @@
           <b-button
             id="application-button"
             block
-            variant="success"
+            variant="secondary"
             @click="$bvModal.show('author-application-form')"
           >
             {{ y18n('profile.application.fillOut') }}
@@ -69,7 +69,7 @@
           <b-button
             id="edit-application-button"
             block
-            variant="warning"
+            variant="secondary"
             @click="$bvModal.show('author-application-form')"
           >
             {{ y18n('profile.application.edit') }}
@@ -77,43 +77,27 @@
           <b-button
             id="withdraw-application-button"
             block
-            variant="danger"
+            variant="warning"
             @click="$bvModal.show('application-withdraw-modal')"
           >
             {{ y18n('profile.application.withdraw') }}
           </b-button>
         </div>
       </div>
+
       <hr>
     </div>
     <!-- modals -->
     <b-modal
-      id="application-withdraw-modal"
-      :title="y18n('profile.application.withdraw')"
-      header-bg-variant="danger"
-      ok-variant="danger"
-      cancel-variant="primary"
-      :ok-title="y18n('profile.application.withdraw')"
-      :cancel-title="y18n('cancel')"
-      centered
-      static
-      @ok="applicationWithdraw"
-    >
-      <p>
-        {{ y18n('profile.application.withdrawConfirm') }}
-      </p>
-    </b-modal>
-    <b-modal
       id="author-application-form"
       :title="y18n('profile.application')"
-      header-bg-variant="warning"
+      header-bg-variant="info"
       ok-variant="success"
-      cancel-variant="primary"
       :ok-title="y18n('profile.application.save')"
       :cancel-title="y18n('cancel')"
       centered
       static
-      @ok="applicationSave"
+      @ok="saveApplication"
     >
       <div class="form-group p-2">
         <div class="form-group row">
@@ -124,10 +108,10 @@
             {{ y18n('profile.application.fullName') }}
           </label>
           <input
-            v-model="fullName"
+            id="applicant-name"
+            v-model="textField.fullName"
             class="form-control"
             type="text"
-            readonly
           >
         </div>
         <div class="form-group row">
@@ -139,10 +123,9 @@
           </label>
           <input
             id="applicant-institution"
-            v-model="institution"
+            v-model="textField.institution"
             class="form-control"
             type="text"
-            readonly
           >
         </div>
         <div class="form-group row">
@@ -180,6 +163,21 @@
         </div>
       </div>
     </b-modal>
+    <b-modal
+      id="application-withdraw-modal"
+      :title="y18n('profile.application.withdraw')"
+      header-bg-variant="warning"
+      ok-variant="warning"
+      :ok-title="y18n('profile.application.withdraw')"
+      :cancel-title="y18n('cancel')"
+      centered
+      static
+      @ok="withdrawApplication"
+    >
+      <p>
+        {{ y18n('profile.application.withdrawConfirm') }}
+      </p>
+    </b-modal>
   </div>
 </template>
 
@@ -192,19 +190,24 @@ export default {
     [locale],
   data () {
     return {
-      applicationEdited: -1, // increments once when data is loaded from store
-      applicationNew: false,
       formInput: {
         applicationText: '',
         areaOfExpertise: ''
+      },
+      applicationEdited: -1, // increments once when data is loaded from store
+      applicationNew: false,
+      textField: {
+        institution: '',
+        fullName: ''
       }
     }
   },
   computed: {
     ...mapGetters([
       'isAuthor',
+      'userApplication',
       'profile',
-      'userApplication'
+      'userId'
     ]),
     fullName: {
       get () {
@@ -236,24 +239,31 @@ export default {
     }
   },
   beforeDestroy () {
-    this.applicationSubmit()
-    this.$store.commit('applicationListClear')
+    // save changes in profile
+    this.submitApplication()
+    this.$store.commit('clearApplicationList')
   },
+
   created () {
-    this.applicationUserSet()
+    this.textField.institution = this.institution
+    this.textField.fullName = this.fullName
+    this.setUserApplication()
+    window.addEventListener('beforeunload', () => {
+      this.$destroy()
+    })
   },
+
   methods: {
     ...mapActions([
-      'userApplicationCreate',
-      'userApplicationDecide',
-      'userApplicationFetch',
-      'userApplicationUpdate'
+      'getApplicationUser',
+      'sendApplication',
+      'sendApplicationDecision',
+      'updateApplication'
     ]),
     ...mapMutations([
-      'applicationAdd',
-      'applicationDecide',
-      'applicationEdit',
-      'applicationListClear'
+      'addApplication',
+      'decideOnApplication',
+      'editApplication'
     ]),
     /**
      * functionSaveApplication: save edits to application in store
@@ -262,27 +272,27 @@ export default {
      *
      * Last Updated: May 4, 2022
      */
-    applicationSave () {
+    saveApplication () {
       const {
         applicationText,
         areaOfExpertise
       } = this.formInput
       // noinspection JSCheckFunctionSignatures
       if (this.applicationNew) {
-        this.applicationAdd({
+        this.addApplication({
           applicationText: applicationText,
           areaOfExpertise: areaOfExpertise,
-          fullName: this.profile.fullName,
-          institution: this.profile.institution,
+          fullName: this.textField.fullName,
+          institution: this.textField.institution,
           applicantId: this.userId
         })
       } else if (this.applicationEdited > 0) {
-        this.applicationEdit({
+        this.editApplication({
           id: this.userApplication.id,
           applicationText: applicationText,
           areaOfExpertise: areaOfExpertise,
-          fullName: this.profile.fullName,
-          institution: this.profile.institution
+          fullName: this.textField.fullName,
+          institution: this.textField.institution
         })
       }
       this.$bvToast.toast(this.y18n('profile.application.saved'), {
@@ -291,36 +301,38 @@ export default {
         variant: 'success'
       })
     },
-    /**
-     * function applicationSubmit: depending on if application existed before,
-     *  update existing or send new application, to be called onDestoy
-     *
-     *  Author: cmc
-     *
-     *  Last Updated: May 4, 2022
-     */
-    applicationSubmit () {
-      if (this.applicationNew && this.applicationEdited >= 0) {
-        this.userApplicationCreate()
-      } else if (!this.applicationNew && this.applicationEdited > 0) {
-        this.userApplicationUpdate(this.userApplication)
+
+    submitApplication () {
+      if (this.applicationNew) {
+        this.sendApplication(this.userApplication)
       } else {
-        console.warn('unexpected case!')
+        this.updateApplication(this.userApplication)
       }
     },
+
     /**
-     * function applicationUserSet: set mutable application parts, fetch
+     * function withdrawApplication: withdraw application, save in store
+     *
+     * Author: cmc
+     *
+     * Last Updated: May 6, 2022
+     */
+    withdrawApplication () {
+      this.decideOnApplication({ applicationId: this.userApplication.id, decision: 'withdrawn' })
+      this.sendApplicationDecision()
+    },
+    /**
+     * function setUserApplication: set mutable application parts, fetch
      *  application if none present
      *
      *  Author: cmc
      *
      *  Last Updated: May 6, 2022
      */
-    applicationUserSet () {
+    setUserApplication () {
       if (!this.userApplication) {
-        this.userApplicationFetch(this.userId)
+        this.getApplicationUser(this.userId)
           .then(resp => {
-            console.log(resp)
             if (!resp) { // application doesn't exist
               this.applicationNew = true
             }
@@ -328,22 +340,12 @@ export default {
           .catch(err => console.error(err))
       } else { // userApplication already in store, set values for render
         this.formInput.applicationText = this.userApplication.applicationText
-        this.formInput.institution = this.userApplication.institution
+        this.textField.institution = this.userApplication.institution
         this.formInput.areaOfExpertise = this.userApplication.areaOfExpertise
-        this.formInput.fullName = this.userApplication.fullName
+        this.textField.fullName = this.userApplication.fullName
       }
-    },
-    /**
-     * function applicationWithdraw: withdraw application, save in store
-     *
-     * Author: cmc
-     *
-     * Last Updated: May 6, 2022
-     */
-    applicationWithdraw () {
-      this.applicationDecide({ applicationId: this.userApplication.id, decision: 'withdrawn' })
-      this.userApplicationDecide()
     }
+
   }
 }
 </script>

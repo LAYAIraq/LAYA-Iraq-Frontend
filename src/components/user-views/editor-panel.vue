@@ -272,7 +272,7 @@ export default {
     acceptThreshold  () {
       return 3
       // complex computation commented out for now
-      // return Math.ceil((this.editorNumber * 0.25))
+      // return Math.ceil((this.numberOfEditors * 0.25))
     },
 
     /**
@@ -324,19 +324,19 @@ export default {
     if (!this.isEditor && !this.isAdmin && !this.isSuperAdmin) {
       this.$router.replace('/') // reroute non-editors
     }
-    this.applicationsFetch() // get applications
-    // this.$store.dispatch('editorNumberFetch') // currently not needed
+    this.getApplications() // get applications
+    // this.$store.dispatch('getNumberOfEditors') // currently not needed
     this.decisions = this.$ls.get('decisions', {}) // get decisions from local store
   },
 
   beforeDestroy () {
-    this.editorVoteUpdateAll() // persist votes in backend
+    this.saveVotes() // persist votes in backend
     this.$ls.set('decisions', this.decisions, 60 * 60 * 1000) // write decisions to local store
   },
 
   methods: {
-    ...mapActions(['applicationsFetch', 'editorVoteUpdateAll']),
-    ...mapMutations(['editorVoteAdd', 'editorVoteChange']),
+    ...mapActions(['getApplications', 'saveVotes']),
+    ...mapMutations(['addEditorVote', 'changeVote']),
 
     /**
      * function prepareViewModal: deep copy values from store for render
@@ -366,7 +366,7 @@ export default {
       // change vote in cache
       this.decisions[this.currentApplication.id] = false
       // change vote in store
-      this.editorVoteChange({
+      this.changeVote({
         application: this.currentApplication,
         editorId: this.userId,
         vote: false
@@ -408,13 +408,13 @@ export default {
       this.decisions[this.currentApplication.id] = true
       // change vote in store
       if (!this.existingVote) {
-        this.editorVoteAdd({
+        this.addEditorVote({
           ...voteData,
           applicationId: this.currentApplication.id,
           changed: true
         })
       } else {
-        this.editorVoteChange({
+        this.changeVote({
           ...voteData,
           application: this.currentApplication
         })
