@@ -44,6 +44,12 @@ Since: v1.3.0
 
     <form>
       <div class="form-group">
+        <!-- title -->
+        <content-title-edit
+          :title="title"
+          @set-title="title = $event"
+        >
+        </content-title-edit>
         <!-- signature
         <div class="row">
           <label
@@ -68,22 +74,27 @@ Since: v1.3.0
 </template>
 
 <script>
-import { locale, pluginEdit, tooltipIcon } from '@/mixins'
+import { locale, pluginEdit, routes, tooltipIcon } from '@/mixins'
 import { mapGetters } from 'vuex'
 import { deepCopy } from '@/mixins/general/helpers'
+import ContentTitleEdit from '@/components/helpers/content-title-edit'
 
 export default {
   name: 'CertificateEdit',
 
+  components: { ContentTitleEdit },
+
   mixins: [
     locale,
     pluginEdit,
-    tooltipIcon
+    tooltipIcon,
+    routes
   ],
 
   data () {
     return {
-      signature: ''
+      signature: '',
+      title: { }
     }
   },
 
@@ -111,6 +122,7 @@ export default {
       // create deep copy of store object to manipulate in vue instance
       const preData = deepCopy(this.courseContent[this.pathId])
       this.signature = preData.signature
+      this.title = preData.title
     }
   }
 }

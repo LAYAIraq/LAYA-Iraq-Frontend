@@ -15,7 +15,6 @@ Since: v1.3.0
       :class="courseLangIsAr? 'flaggable-ar row' : 'flaggable-en row'"
     >
       <div
-        class="col"
         :class="courseLangIsAr? 'text-right' : 'text-left'"
       >
         <h1 class="pb-3">
@@ -46,8 +45,10 @@ Since: v1.3.0
       </b-button>
     </div>
 
-    <div class="row pt-3">
-      <navigation-buttons :cid="id"></navigation-buttons>
+    <div class="row mt-3">
+      <navigation-buttons
+        :cid="id"
+      ></navigation-buttons>
     </div>
   </fieldset>
 </template>

@@ -7,10 +7,18 @@
  * Dependencies: none
  */
 
-.flaggable {
+.flaggable-en {
   position: relative; /* to make flag icon work */
   z-index: 10; /* for interactive elements */
   padding: 30px !important; /* for usability */
+  right: 1rem;
+}
+
+.flaggable-ar {
+  position: relative; /* to make flag icon work */
+  z-index: 10; /* for interactive elements */
+  padding: 30px !important; /* for usability */
+  left: 2rem;
 }
 
 .flaggable.flat {

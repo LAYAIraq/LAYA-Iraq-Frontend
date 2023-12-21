@@ -16,7 +16,6 @@
         :class="courseLangIsAr? 'flaggable-ar row' : 'flaggable-en row'"
       >
         <div
-          class="col"
           :class="courseLangIsAr? 'text-right' : 'text-left'"
         >
           <h1 class="pb-3">
@@ -157,7 +156,7 @@
           </div>
         </div>
       </div>
-      <div class="row pt-3">
+      <div class="row mt-3">
         <navigation-buttons
           :cid="id"
         ></navigation-buttons>

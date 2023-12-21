@@ -6,26 +6,28 @@ Since v1.3.0
 -->
 
 <template>
-  <fieldset
+  <div
     class="certificate-view"
+    :class="courseLangIsAr? 'text-right' : 'text-left'"
   >
-    <div>
+    <div
+      :id="title.id"
+      :class="courseLangIsAr? 'text-right' : 'text-left'"
+    >
       <div
         :class="courseLangIsAr? 'text-right' : 'text-left'"
       >
-        <div
-          class="col"
-          :class="courseLangIsAr? 'text-right' : 'text-left'"
-        >
-          <h1 class="pb-3">
-            {{ y18n("certificate.name") }}
-          </h1>
-        </div>
+        <h1 class="pb-3">
+          {{ courseSimple? title.simple: title.text }}
+        </h1>
       </div>
+    </div>
+
+    <div class="row ml-1">
+      <label id="thanks">
+        {{ y18n('certificate.thanks') }}
+      </label>
       <div class="col">
-        <label id="thanks">
-          {{ y18n('certificate.thanks') }}
-        </label>
         <b-button
           size="sm"
           variant="success"
@@ -36,7 +38,13 @@ Since v1.3.0
         </b-button>
       </div>
     </div>
-  </fieldset>
+
+    <div class="row mt-3">
+      <navigation-buttons
+        :cid="id"
+      ></navigation-buttons>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -44,11 +52,14 @@ Since v1.3.0
 import { locale, pluginView } from '@/mixins'
 import { mapGetters } from 'vuex'
 import { jsPDF } from 'jspdf'
+import NavigationButtons from '@/components/helpers/navigation-buttons'
 
 const imgOg = require('@/assets/images/logo-iraq-m.png')
 
 export default {
   name: 'CertificateView',
+
+  components: { NavigationButtons },
 
   mixins: [
     locale,

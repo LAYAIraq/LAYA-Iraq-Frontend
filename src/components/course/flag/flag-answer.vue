@@ -42,6 +42,7 @@
           rows="5"
         ></textarea>
         <b-button
+          variant="success"
           @click="saveQuestion"
           @keydown.enter="saveQuestion"
         >
@@ -155,6 +156,7 @@
           <div class="form-group row">
             <div class="col">
               <b-button
+                variant="success"
                 @click="saveAnswer(answer)"
                 @keydown.enter="saveAnswer(answer)"
               >
@@ -163,6 +165,7 @@
               </b-button>
               <b-button
                 :class="langIsAr? 'mr-2': 'ml-2'"
+                variant="primary"
                 @click="editAnswer =''"
                 @keydown.enter="editAnswer =''"
               >
@@ -325,6 +328,7 @@
             <div class="col">
               <b-button
                 type="submit"
+                variant="success"
                 :class="langIsAr? 'ml-auto': 'mr-auto'"
                 :disabled="answerSent || noNewAnswer"
               >

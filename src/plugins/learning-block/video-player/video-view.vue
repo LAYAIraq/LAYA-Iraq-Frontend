@@ -20,7 +20,6 @@ Dependencies:
         :class="courseLangIsAr? 'flaggable-ar row' : 'flaggable-en row'"
       >
         <div
-          class="col"
           :class="courseLangIsAr? 'text-right' : 'text-left'"
         >
           <h1 class="pb-3">
@@ -67,7 +66,7 @@ Dependencies:
       <!--          @flagged="videoFlag.flagged = true"-->
       <!--      ></flag-icon>-->
       </div>
-      <div class="row">
+      <div class="row mt-3">
         <navigation-buttons
           :cid="id"
         ></navigation-buttons>

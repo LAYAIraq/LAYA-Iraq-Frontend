@@ -41,7 +41,6 @@
         >
           <hr>
           <div
-            class="col"
             :class="courseLangIsAr? 'text-right' : 'text-left'"
           >
             <h1 class="pb-3">

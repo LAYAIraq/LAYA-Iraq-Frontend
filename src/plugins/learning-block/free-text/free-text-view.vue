@@ -15,7 +15,6 @@ Since: v1.0.0
       :class="courseLangIsAr? 'flaggable-ar row' : 'flaggable-en row'"
     >
       <div
-        class="col"
         :class="courseLangIsAr? 'text-right' : 'text-left'"
       >
         <h1 class="pb-3">
@@ -31,7 +30,7 @@ Since: v1.0.0
       </div>
     </div>
     <div :id="editPreview? 'free-text-preview': 'free-text-viewer'"></div>
-    <div class="row">
+    <div class="row mt-3">
       <navigation-buttons
         :cid="id"
       ></navigation-buttons>
