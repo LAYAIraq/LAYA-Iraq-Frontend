@@ -16,16 +16,23 @@ Dependencies:
   >
     <div>
       <div
-        v-if="title.show"
         :id="title.id"
-        class="flaggable row"
+        :class="courseLangIsAr? 'flaggable-ar row' : 'flaggable-en row'"
       >
-        <h2>{{ courseSimple? title.simple : title.text }}</h2>
-        <flag-icon
-          v-if="!editPreview"
-          :ref-data="title"
-          @flagged="title.flagged = true"
-        ></flag-icon>
+        <div
+          style="width:100%"
+        >
+          <h1 class="pb-3">
+            {{ courseSimple? title.simple : title.text }}
+          </h1>
+        </div>
+        <a>
+          <flag-icon
+            v-if="!editPreview"
+            :ref-data="title"
+            @flagged="title.flagged = true"
+          ></flag-icon>
+        </a>
       </div>
 
       <div>
@@ -59,23 +66,10 @@ Dependencies:
       <!--          @flagged="videoFlag.flagged = true"-->
       <!--      ></flag-icon>-->
       </div>
-
-      <div class="row">
-        <button
-          type="button"
-          class="btn btn-primary btn-lg mt-3 d-block"
-          :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-          @click="onFinish[0]() || {}"
-        >
-          <span>
-            {{ y18n('nextContent') }}
-            <i
-              :class="langIsAr?
-                'fas fa-arrow-left' :
-                'fas fa-arrow-right'"
-            ></i>
-          </span>
-        </button>
+      <div class="row mt-3">
+        <navigation-buttons
+          :cid="id"
+        ></navigation-buttons>
       </div>
     </div>
   </fieldset>
@@ -88,10 +82,11 @@ import 'plyr/dist/plyr.css'
 import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
+import NavigationButtons from '@/components/helpers/navigation-buttons.vue'
 
 export default {
   name: 'VideoView',
-  components: { FlagIcon },
+  components: { NavigationButtons, FlagIcon },
 
   mixins: [
     locale,

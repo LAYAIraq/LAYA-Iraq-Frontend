@@ -10,15 +10,17 @@
     class="category-matching-view"
     :class="courseLangIsAr? 'text-right' : 'text-left'"
   >
-    <div class="container">
+    <!-- render title -->
+    <div
+      :id="title.id"
+      :class="courseLangIsAr? 'flaggable-ar row' : 'flaggable-en row'"
+    >
       <div
-        :id="title.id"
-        class="flaggable row mb-3"
+        style="width:100%"
       >
-        <div class="col">
-          <h2>
-            {{ courseSimple? title.simple : title.text }}
-            <!--
+        <h1 class="pb-3">
+          {{ courseSimple? title.simple : title.text }}
+          <!--
             <audio-button
               v-if="taskAudioExists"
               :src="courseSimple?
@@ -26,82 +28,76 @@
                 taskAudio.text"
             ></audio-button>
             -->
-          </h2>
-        </div>
+        </h1>
+      </div>
+      <a>
         <flag-icon
           v-if="!editPreview"
           :ref-data="title"
           @flagged="title.flagged = true"
         ></flag-icon>
+      </a>
+    </div>
+
+    <div
+      :id="task.id"
+      class="row"
+    >
+      <div class="col task-label">
+        <p>{{ courseSimple? task.simple : task.text }}</p>
       </div>
+    </div>
+    <hr>
 
-      <div
-        :id="task.id"
-        class="flaggable row"
-      >
-        <div class="col">
-          <p>{{ courseSimple? task.simple : task.text }}</p>
-        </div>
-        <flag-icon
-          v-if="!editPreview"
-          :ref-data="task"
-
-          @flagged="task.flagged = true"
-        ></flag-icon>
-      </div>
-      <hr>
-
-      <div class="row">
-        <div class="col">
-          <div
-            v-for="(item,i) in items"
-            :id="item.id"
-            :key="item.id"
-            class="flaggable item mb-5"
+    <div class="row">
+      <div class="col">
+        <div
+          v-for="(item,i) in items"
+          :id="item.id"
+          :key="item.id"
+          class="mb-3 item"
+        >
+          <label
+            class="centering item-label"
           >
-            <h3 class="text-center item-label">
-              {{ courseSimple? item.simple : item.label }}
-              <i
-                v-if="checked"
-                class="fas"
-                :class="{
-                  'fa-check text-success': eval[i],
-                  'fa-times text-danger': !eval[i]
-                }"
-              >
-              </i>
-            </h3>
-
-            <div class="d-flex justify-content-between">
-              <b
-                v-for="cat in categories"
-                :key="cat.text"
-              >
-                {{ courseSimple? cat.simple : cat.text }}
-              </b>
-            </div>
-            <input
-              v-model.number="solution[i]"
-              type="range"
-              class="custom-range"
-              :class="courseLangIsAr? 'mr-3': 'ml-3'"
-              min="0"
-              :max="categories.length-1"
-              :disabled="checked"
-              :aria-valuenow="solution[i]"
-              :aria-valuetext="courseSimple? categories[solution[i]].simple: categories[solution[i]].text"
-              :aria-label="y18n('categoryMatching.label.slider')"
+            {{ courseSimple? item.simple : item.label }}
+            <i
+              v-if="checked"
+              class="fas"
+              :class="{
+                'fa-check text-success': eval[i],
+                'fa-times text-danger': !eval[i]
+              }"
             >
-            <flag-icon
-              v-if="!editPreview"
-              :ref-data="item"
-              :interactive="true"
-              @flagged="item.flagged = true"
-            ></flag-icon>
+            </i>
+          </label>
+
+          <div class="d-flex justify-content-between">
+            <b
+              v-for="cat in categories"
+              :key="cat.text"
+            >
+              {{ courseSimple? cat.simple : cat.text }}
+            </b>
           </div>
+          <input
+            v-model.number="solution[i]"
+            type="range"
+            class="custom-range"
+            :class="courseLangIsAr? '': ''"
+            min="0"
+            :max="categories.length-1"
+            :disabled="checked"
+            :aria-valuenow="solution[i]"
+            :aria-valuetext="courseSimple? categories[solution[i]].simple: categories[solution[i]].text"
+            :aria-label="y18n('categoryMatching.label.slider')"
+          >
         </div>
       </div>
-      <div class="row">
+    </div>
+
+    <div class="langIsAr ? mr-3 : ml-3">
+      <div class="row mb-3">
         <button
           type="button"
           class="btn btn-primary"
@@ -111,15 +107,6 @@
           @click="check"
         >
           {{ y18n('check') }}
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary mt-3"
-          :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-          @click="done"
-        >
-          {{ y18n('nextContent') }}
-          <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
         </button>
       </div>
       <div
@@ -138,6 +125,12 @@
         </div>
       </div>
     </div>
+
+    <div class="row mt-3">
+      <navigation-buttons
+        :cid="id"
+      ></navigation-buttons>
+    </div>
   </fieldset>
 </template>
 
@@ -145,15 +138,12 @@
 import { mapGetters } from 'vuex'
 import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
-// import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
+import NavigationButtons from '@/components/helpers/navigation-buttons.vue'
 
 export default {
   name: 'CategoryMatchingView',
-  components: {
-    // AudioButton,
-    FlagIcon
-  },
+  components: { NavigationButtons, FlagIcon },
 
   mixins: [
     locale,
@@ -196,17 +186,6 @@ export default {
 
   methods: {
     /**
-     * Function done: execute function from onFinish[0]
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     */
-    done () {
-      this.onFinish[0]()
-    },
-
-    /**
      * Function check: check if given answers are correct
      *
      * Author: core
@@ -248,5 +227,12 @@ export default {
 }
 .item:last-child {
   margin-bottom: 0;
+}
+.item-label {
+  font-size: 18pt;
+}
+
+.task-label {
+  font-size: 18pt;
 }
 </style>

@@ -130,9 +130,13 @@
           <button
             type="button"
             class="btn btn-danger btn-sm"
+            :aria-label="y18n('deleteField')"
             @click="_itemDelete(relations, i)"
           >
-            <i class="fas fa-times"></i>
+            <i
+              class="fas fa-times"
+              aria-hidden="true"
+            ></i>
           </button>
         </div>
       </div>
@@ -144,7 +148,10 @@
             class="btn btn-success btn-sm"
             @click="_itemAdd(relations, { text: '', simple: '' })"
           >
-            <i class="fas fa-plus"></i>
+            <i
+              class="fas fa-plus"
+              aria-hidden="true"
+            ></i>
             {{ y18n('imageMatching.edit.solutionAdd') }}
           </button>
         </div>
@@ -244,10 +251,14 @@
         <div class="col-auto align-self-center">
           <button
             type="button"
+            :aria-label="y18n('deleteField')"
             class="btn btn-danger btn-sm"
             @click="_itemDelete(pairs, i)"
           >
-            <i class="fas fa-times"></i>
+            <i
+              class="fas fa-times"
+              aria-hidden="true"
+            ></i>
           </button>
         </div>
       </div>
@@ -258,7 +269,10 @@
             class="btn btn-success btn-sm"
             @click="_itemAdd(pairs, newPair())"
           >
-            <i class="fas fa-plus"></i>
+            <i
+              class="fas fa-plus"
+              aria-hidden="true"
+            ></i>
             {{ y18n('itemAdd') }}
           </button>
         </div>
@@ -271,6 +285,7 @@
 import { array, locale, pluginEdit, tooltipIcon } from '@/mixins'
 import { v4 as uuidv4 } from 'uuid'
 import { deepCopy } from '@/mixins/general/helpers'
+import routes from '@/mixins/vue/routes'
 import ContentTitleEdit from '@/components/helpers/content-title-edit'
 import ContentTaskEdit from '@/components/helpers/content-task-edit'
 
@@ -282,6 +297,7 @@ export default {
     array,
     locale,
     pluginEdit,
+    routes,
     tooltipIcon
   ],
 
@@ -370,9 +386,5 @@ export default {
 
 legend {
   font-size: 1rem;
-}
-
-#questionmark {
-  float: end;
 }
 </style>

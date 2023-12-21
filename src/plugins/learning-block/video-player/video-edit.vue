@@ -13,19 +13,21 @@ Dependencies:
     :class="langIsAr? 'text-right' : 'text-left'"
   >
     <form>
-      <div class="form-group row">
-        <h4 class="d-inline-block mr-auto">
-          {{ y18n('videoPlayer.name') }}
-        </h4>
-        <i
-          id="questionmark"
-          v-b-tooltip.auto
-          class="fas fa-question-circle"
-          :title="y18n('showTip')"
-          aria-labelledby="tooltipText"
-          aria-live="polite"
-          @click="toggleTip"
-        ></i>
+      <div class="row">
+        <div class="col">
+          <h4 class="d-inline-block mr-auto">
+            {{ y18n('videoPlayer.name') }}
+          </h4>
+          <i
+            id="questionmark"
+            v-b-tooltip.auto
+            class="fas fa-question-circle"
+            :title="y18n('showTip')"
+            aria-labelledby="tooltipText"
+            aria-live="polite"
+            @click="toggleTip"
+          ></i>
+        </div>
       </div>
 
       <b-jumbotron
@@ -408,7 +410,10 @@ export default {
       this.host = preData.host
       this.title = preData.title
       this.showTitle = preData.showTitle
-      this.captions = preData.captions
+      this.captions = preData.captions ?? {
+        default: null,
+        tracks: []
+      }
     },
     /**
      * function addCaption: add caption object to caption tracks array
@@ -466,10 +471,6 @@ export default {
 </script>
 
 <style scoped>
-  #questionmark {
-  float: end;
-  cursor: pointer;
-  }
   .helptext {
     border: 1px green;
     padding: 5px;

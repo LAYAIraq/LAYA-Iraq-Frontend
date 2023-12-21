@@ -6,17 +6,19 @@ Since: v1.0.0
 -->
 
 <template>
-  <fieldset
+  <div
     class="choice-question-view"
     :class="courseLangIsAr? 'text-right' : 'text-left'"
   >
-    <!-- render task -->
+    <!-- render title -->
     <div
       :id="title.id"
-      class="flaggable row"
+      :class="courseLangIsAr? 'flaggable-ar row' : 'flaggable-en row'"
     >
-      <div class="col">
-        <h2 class="pb-3">
+      <div
+        style="width:100%"
+      >
+        <h1 class="pb-3">
           {{ courseSimple? title.simple : title.text }}
           <!--
           <audio-button
@@ -27,26 +29,25 @@ Since: v1.0.0
           >
           </audio-button>
           -->
-        </h2>
+        </h1>
       </div>
-      <flag-icon
-        v-if="!editPreview"
-        :ref-data="title"
-        @flagged="title.flagged = true"
-      ></flag-icon>
+      <a>
+        <flag-icon
+          v-if="!editPreview"
+          :ref-data="title"
+          @flagged="title.flagged = true"
+        ></flag-icon>
+      </a>
     </div>
+
+    <!-- render task -->
     <div
       :id="task.id"
-      class="flaggable row"
+      class="row"
     >
-      <div class="col">
+      <div class="col task-label">
         {{ courseSimple? task.simple: task.text }}
       </div>
-      <flag-icon
-        v-if="!editPreview"
-        :ref-data="task"
-        @flagged="task.flagged = true"
-      ></flag-icon>
     </div>
 
     <!-- render options -->
@@ -55,7 +56,7 @@ Since: v1.0.0
         v-for="(option,i) in options"
         :id="option.id"
         :key="'mchoice-option-'+i"
-        class="flaggable form-check m-2 mb-3"
+        class="form-check m-2 mb-3"
       >
         <div>
           <input
@@ -85,22 +86,14 @@ Since: v1.0.0
           >
             {{ courseSimple? option.simple: option.text }}
           </label>
-          <i
-            class="ml-2"
-            :class="eval[i]"
-          ></i>
+          <div :class="courseLangIsAr? 'float-right mr-3 mt-2': 'float-left ml-3 mt-2'">
+            <i
+              class="ml-2"
+              :class="eval[i]"
+            >
+            </i>
+          </div>
         </div>
-
-        <!--
-        <i class="ml-2" :class="{'far fa-check-circle text-success': true}"></i>
-        <i class="ml-2" :class="{'far fa-times-circle text-danger': true}"></i>
-        -->
-        <flag-icon
-          v-if="!editPreview"
-          :ref-data="option"
-          :interactive="true"
-          @flagged="option.flagged = true"
-        ></flag-icon>
       </div>
     </div>
 
@@ -111,47 +104,49 @@ Since: v1.0.0
       {{maxTries-tries}}
     </div>
     -->
-    <div>
-      <button
-        type="button"
-        class="btn btn-primary"
-        :class="langIsAr? 'float-right': 'float-left'"
-        :disabled="freeze"
-        @click="diffSolution"
+    <div class="langIsAr ? mr-3 : ml-3">
+      <div class="row mb-3">
+        <button
+          type="button"
+          class="btn btn-primary"
+          :class="langIsAr? 'float-right': 'float-left'"
+          :disabled="freeze"
+          @click="diffSolution"
+        >
+          {{ y18n('check') }}
+        </button>
+      </div>
+      <div
+        class="row pt-3"
+        aria-live="polite"
       >
-        {{ y18n('check') }}
-      </button>
-      <div aria-live="polite">
         <div v-if="showSolutionsBool">
           {{ i18n["choiceQuestion.showCorrect"] }}
           <div
             v-for="(showSolution, index) in showSolutions"
             :key="index"
+            class="ml-4"
           >
             {{ showSolution }}
           </div>
         </div>
       </div>
-      <button
-        type="button"
-        class="btn btn-primary mt-3"
-        :class="langIsAr? 'float-left': 'float-right'"
-        @click="onFinish[0]() || {}"
-      >
-        <span>
-          {{ y18n('nextContent') }}
-          <i :class="langIsAr? 'fas fa-arrow-left' : 'fas fa-arrow-right'"></i>
-        </span>
-      </button>
-      <span
-        :id="feedbackId"
-        class="ml-2"
-        aria-live="polite"
-      >
-        {{ feedback }}
-      </span>
     </div>
-  </fieldset>
+
+    <div class="row pt-3">
+      <navigation-buttons
+        :cid="id"
+      ></navigation-buttons>
+    </div>
+
+    <div
+      :id="feedbackId"
+      class="ml-2"
+      aria-live="polite"
+    >
+      {{ feedback }}
+    </div>
+  </div>
 </template>
 
 <script>
@@ -160,13 +155,11 @@ import { locale, pluginView } from '@/mixins'
 import '@/assets/styles/flaggables.css'
 // import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
+import NavigationButtons from '@/components/helpers/navigation-buttons.vue'
 
 export default {
   name: 'ChoiceQuestionView',
-  components: {
-    FlagIcon
-  //  AudioButton
-  },
+  components: { NavigationButtons, FlagIcon },
 
   mixins: [
     locale,
@@ -188,7 +181,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['courseSimple']),
+    ...mapGetters(['content', 'courseSimple']),
 
     /**
      * feedbackId: creates an identifier string
@@ -198,9 +191,7 @@ export default {
      * Last Updated: unknown
      */
     feedbackId () {
-      return `mchoice-feedback-${this._uid}`
-      // FIXME vm _uid is not supposed to be used as data
-      // source: https://github.com/vuejs/vue/issues/5886#issuecomment-308625735
+      return `mchoice-feedback-${this.id}`
     },
 
     /**
@@ -387,4 +378,9 @@ input[type='radio'] {
   width: 15px;
   vertical-align: middle;
 }
+
+.task-label {
+  font-size: 18pt;
+}
+
 </style>

@@ -37,6 +37,7 @@ Dependencies:
       :title="y18n('deleteContent')"
       header-bg-variant="danger"
       ok-variant="danger"
+      cancel-variant="primary"
       :ok-title="y18n('delete')"
       :cancel-title="y18n('cancel')"
       centered
@@ -72,9 +73,10 @@ export default {
      */
     delContent () {
       this.$store.commit('courseContentRemove', this.pathId)
+      this.$store.commit('courseChaptersContentRemove', this.pathId)
+      this.$store.commit('courseRoutesUpdate')
       this.$store.dispatch('courseUpdate')
     }
-
   }
 }
 </script>

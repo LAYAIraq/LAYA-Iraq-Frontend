@@ -1,4 +1,4 @@
-import { filterObject, kebabToCamel, camelToRender } from '@/mixins/general/helpers'
+import { filterObject, kebabToCamel, camelToRender, arrayElementsEqual } from '@/mixins/general/helpers'
 
 describe('helpers.ts', () => {
   describe('filterObject', () => {
@@ -57,6 +57,38 @@ describe('helpers.ts', () => {
     })
     it('should work with numbers', () => {
       expect(camelToRender('testNumber1')).toEqual('Test Number 1')
+    })
+  })
+  describe('arrayElementsEqual', () => {
+    it('returns true if arrays have equal elements', () => {
+      const a = ['a', 'b', 'c']
+      const b = ['a', 'b', 'c']
+      expect(arrayElementsEqual(a, b)).toBeTruthy()
+    })
+    it('returns false if arrays have equal elements in different order', () => {
+      const a = ['a', 'b', 'c']
+      const b = ['c', 'b', 'a']
+      expect(arrayElementsEqual(a, b)).toBeFalsy()
+    })
+    it('returns false if arrays have different length', () => {
+      const a = ['a', 'b', 'c']
+      const b = ['a', 'b', 'c', 'd']
+      expect(arrayElementsEqual(a, b)).toBeFalsy()
+    })
+    it('returns false if arrays have different value types', () => {
+      const a = [1, 2, 3]
+      const b = ['1', '2', '3']
+      expect(arrayElementsEqual(a, b)).toBeFalsy()
+    })
+    it('returns false when first element is not array', () => {
+      const a = null
+      const b = []
+      expect(arrayElementsEqual(a, b)).toBe(false)
+    })
+    it('returns false when second element is not array', () => {
+      const b = null
+      const a = []
+      expect(arrayElementsEqual(a, b)).toBe(false)
     })
   })
 })

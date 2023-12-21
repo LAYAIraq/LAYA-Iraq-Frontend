@@ -136,7 +136,10 @@
               :aria-label="y18n('deleteField')"
               @click="_itemDelete(items, i)"
             >
-              <i class="fas fa-times"></i>
+              <i
+                class="fas fa-times"
+                aria-hidden="true"
+              ></i>
             </button>
           </div>
         </div>
@@ -178,7 +181,10 @@
             class="btn btn-success btn-sm"
             @click="_itemAdd(items, newItem())"
           >
-            <i class="fas fa-plus"></i>{{ y18n('feedback.edit.addQuestion') }}
+            <i
+              class="fas fa-plus"
+              aria-hidden="true"
+            ></i>{{ y18n('feedback.edit.addQuestion') }}
           </button>
         </div>
       </div>
@@ -220,7 +226,10 @@
               :aria-label="y18n('deleteField')"
               @click="_itemDelete(categories, i)"
             >
-              <i class="fas fa-times"></i>
+              <i
+                class="fas fa-times"
+                aria-hidden="true"
+              ></i>
             </button>
           </div>
         </div>
@@ -262,7 +271,10 @@
             class="btn btn-success btn-sm"
             @click="_itemAdd(categories)"
           >
-            <i class="fas fa-plus"></i>{{ y18n('feedback.edit.addAnswer') }}
+            <i
+              class="fas fa-plus"
+              aria-hidden="true"
+            ></i>{{ y18n('feedback.edit.addAnswer') }}
           </button>
         </div>
       </div>
@@ -296,7 +308,7 @@ export default {
       taskAudio: '',
       items: [],
       categories: [],
-      id: ''
+      id: uuidv4()
     }
   },
 

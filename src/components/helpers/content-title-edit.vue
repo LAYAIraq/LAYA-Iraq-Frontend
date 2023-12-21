@@ -31,20 +31,6 @@
             {{ y18n('contentTitleEdit.warning.titleEmpty') }}
           </p>
         </div>
-        <!-- show title button -->
-        <div class="form-group col">
-          <label
-            for="show-title-tick"
-            class="col-form-label"
-          >
-            {{ y18n('showTitle') }}
-            <input
-              id="show-title-tick"
-              v-model="titleLocal.show"
-              type="checkbox"
-            >
-          </label>
-        </div>
       </div>
       <div
         v-if="courseSimple"

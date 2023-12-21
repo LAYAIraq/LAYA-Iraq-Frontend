@@ -39,19 +39,24 @@
           {{ y18n('cat') }}
         </label>
         <div class="col">
-          <b-form-select
+          <b-select
             id="new-course-category"
             v-model="newCourse.category"
             :aria-label="y18n('cat')"
           >
-            <b-form-select-option
+            <b-select-option
+              value="null"
+            >
+              {{ y18n('cat') }}
+            </b-select-option>
+            <b-select-option
               v-for="opt in categoryChoose"
               :key="opt"
               :value="opt"
             >
               {{ y18n(`course.category.${opt}`) }}
-            </b-form-select-option>
-          </b-form-select>
+            </b-select-option>
+          </b-select>
           <!--
           <input
             id="new-course-category"
@@ -109,18 +114,23 @@
           {{ y18n('courseLanguage') }}
         </label>
         <div class="col">
-          <b-form-select
+          <b-select
             v-model="newCourse.language"
             :aria-label="y18n('courseLanguage')"
           >
-            <b-form-select-option
+            <b-select-option
+              value="null"
+            >
+              {{ y18n('courseLanguage') }}
+            </b-select-option>
+            <b-select-option
               v-for="opt in languageChoose"
               :key="opt"
               :value="opt"
             >
               {{ y18n(`profile.language.${opt}`) }}
-            </b-form-select-option>
-          </b-form-select>
+            </b-select-option>
+          </b-select>
         </div>
       </div>
       <div class="form-group row">
@@ -155,7 +165,10 @@
             :disabled="!formValid"
             @click.prevent="duplicateCheck"
           >
-            <i class="fas fa-save"></i>
+            <i
+              class="fas fa-save"
+              aria-hidden="true"
+            ></i>
             {{ y18n('save') }}
           </button>
         </div>
@@ -183,8 +196,8 @@ export default {
       duplicateNameCategory: false,
       msg: '',
       newCourse: {
-        category: '',
-        language: '',
+        category: null,
+        language: null,
         authorName: '',
         name: '',
         keywords: '',

@@ -13,13 +13,12 @@
     <div class="container">
       <div
         :id="title.id"
-        class="flaggable row mb-3"
+        :class="courseLangIsAr? 'flaggable-ar row' : 'flaggable-en row'"
       >
         <div
-          id="title"
-          class="col"
+          style="width:100%"
         >
-          <h4>
+          <h1 class="pb-3">
             {{ courseSimple? title.simple: title.text }}
             <!--
             <audio-button
@@ -30,17 +29,19 @@
             >
             </audio-button>
             -->
-          </h4>
+          </h1>
         </div>
-        <flag-icon
-          v-if="!editPreview"
-          :ref-data="title"
-          @flagged="title.flagged = true"
-        ></flag-icon>
+        <a>
+          <flag-icon
+            v-if="!editPreview"
+            :ref-data="title"
+            @flagged="title.flagged = true"
+          ></flag-icon>
+        </a>
       </div>
       <div
         :id="task.id"
-        class="flaggable row"
+        class="row task-label"
       >
         <div
           id="task"
@@ -48,11 +49,6 @@
         >
           <p>{{ courseSimple? task.simple: task.text }}</p>
         </div>
-        <flag-icon
-          v-if="!editPreview"
-          :ref-data="task"
-          @flagged="task.flagged = true"
-        ></flag-icon>
       </div>
 
       <hr>
@@ -63,10 +59,10 @@
               v-for="(pair,i) in pairs"
               :id="pair.id"
               :key="pair.id"
-              class="form-group row flaggable"
+              class="form-group row"
             >
               <label
-                :for="pair.label+i"
+                :for="'item-'+i"
                 class="col-sm-6 col-form-label answer-text"
               >
                 <img
@@ -74,12 +70,14 @@
                   v-auth-image="pair.img"
                   :alt="courseSimple? pair.labelSimple: pair.label"
                 >
+                <!--
                 <audio-button
                   v-if="pair.audio"
                   :class="courseLangIsAr? 'mr-2' : 'ml-2'"
                   :src="pair.audio"
                 >
                 </audio-button>
+                -->
                 {{ courseSimple? pair.labelSimple: pair.label }}
               </label>
               <div class="col-sm-6">
@@ -107,76 +105,61 @@
                   <i :class="eval[i]"></i>
                 </div>
               </div>
-              <flag-icon
-                v-if="!editPreview"
-                :ref-data="pair"
-                :interactive="true"
-                @flagged="pair.flagged = true"
-              ></flag-icon>
             </div>
           </form>
         </div>
       </div>
 
-      <div class="row pt-3">
-        <button
-          type="button"
-          class="btn btn-link"
-          :class="langIsAr? 'float-right': 'float-left'"
-          :disabled="freeze"
-          @click="check"
-        >
-          {{ y18n('check') }}
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary mt-3 btn-lg"
-          :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-          @click="done"
-        >
-          <span>
-            {{ y18n('nextContent') }}
-            <i
-              :class="langIsAr?
-                'fas fa-arrow-left' :
-                'fas fa-arrow-right'"
-            ></i>
-          </span>
-        </button>
-      </div>
-
-      <div class="mt-3">
-        <div class="row">
-          <div
-            v-if="showSolutionsBool"
-            id="solutions"
+      <div class="langIsAr ? mr-3 : ml-3">
+        <div class="row mb-3">
+          <button
+            type="button"
+            class="btn btn-primary"
+            :class="langIsAr? 'float-right': 'float-left'"
+            :disabled="freeze"
+            @click="check"
           >
-            {{ i18n["choiceQuestion.showCorrect"] }}
+            {{ y18n('check') }}
+          </button>
+        </div>
+        <div class="mt-3">
+          <div class="row">
             <div
-              v-for="(pair, index) in pairs"
-              :key="index"
+              v-if="showSolutionsBool"
+              id="solutions"
             >
-              {{ courseSimple? pair.labelSimple: pair.label }}:
-              {{ courseSimple? relations[pair.relation].simple : relations[pair.relation].text }},
+              {{ i18n["choiceQuestion.showCorrect"] }}
+              <div
+                v-for="(pair, index) in pairs"
+                :key="index"
+              >
+                {{ courseSimple? pair.labelSimple: pair.label }}:
+                {{ courseSimple? relations[pair.relation].simple : relations[pair.relation].text }},
+              </div>
             </div>
           </div>
-        </div>
-        <div>
-          <div v-if="allAnswersChosen">
-            {{ y18n('imageMatching.missingAnswerWarning') }}
+          <div>
+            <div v-if="allAnswersChosen">
+              {{ y18n('imageMatching.missingAnswerWarning') }}
+            </div>
+            <b-modal
+              id="missing-answer-warning"
+              :title="y18n('password.error')"
+              ok-variant="warning"
+              header-bg-variant="warning"
+              ok-only
+              centered
+              static
+            >
+              {{ y18n('imageMatching.missingAnswerWarning') }}
+            </b-modal>
           </div>
-          <b-modal
-            id="missing-answer-warning"
-            :title="y18n('password.error')"
-            ok-variant="warning"
-            header-bg-variant="warning"
-            ok-only
-            centered
-            static
-          >
-            {{ y18n('imageMatching.missingAnswerWarning') }}
-          </b-modal>
         </div>
+      </div>
+      <div class="row mt-3">
+        <navigation-buttons
+          :cid="id"
+        ></navigation-buttons>
       </div>
     </div>
   </div>
@@ -189,13 +172,11 @@ import '@/assets/styles/flaggables.css'
 // import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
 import { stripKey } from '@/mixins/general/helpers'
+import NavigationButtons from '@/components/helpers/navigation-buttons.vue'
 
 export default {
   name: 'ImageMatchingView',
-  components: {
-    FlagIcon
-  //  AudioButton
-  },
+  components: { NavigationButtons, FlagIcon },
 
   mixins: [
     locale,
@@ -262,17 +243,6 @@ export default {
     },
 
     /**
-     * Function done: execute first function from onFinish
-     *
-     * Author: core
-     *
-     * Last Updated: unknown
-     */
-    done () {
-      this.onFinish[0]()
-    },
-
-    /**
      * Function check: Check if User's solution is correct
      *
      * Author: core
@@ -280,7 +250,7 @@ export default {
      * Last Updated: March 19, 2021
      */
     check () {
-      // map shuffeled answers to their actual equivalents by comparing the text of the options
+      // map shuffled answers to their actual equivalents by comparing the text of the options
       const realAnswer = this.solution.map(idx => this.relations.findIndex(val => val.text === this.options[idx]?.text))
 
       if (!this.solution.includes(-1)) {
@@ -297,8 +267,10 @@ export default {
         this.showSolutionsBool = true
         this.$forceUpdate()
       } else {
-        this.allAnswersChosen = true
-        this.$bvModal.show('missing-answer-warning')
+        for (let i = 0; i < this.pairs.length; ++i) {
+          this.eval[i] = { 'fa fa-times fa-2x text-danger': true }
+        }
+        this.showSolutionsBool = true
       }
     }
   }
@@ -324,6 +296,10 @@ img {
 }
 .form-group.row:nth-child(2) {
   background-color: #ebece7;
+}
+
+.task-label {
+  font-size: 18pt;
 }
 
 </style>

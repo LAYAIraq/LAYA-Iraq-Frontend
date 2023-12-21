@@ -46,6 +46,14 @@
               </span>
             </button>
             <button
+              v-if="editContent"
+              class="btn btn-primary"
+              @click="$router.push({ name: 'content-follow-edit', params: { coursePath, contentId: pathId, follow: courseContentFollowMap[pathId] } })"
+            >
+              <i class="fas fa-edit"></i>
+              {{ y18n('courseNavEdit.followEdit') }}
+            </button>
+            <button
               type="button"
               class="btn btn-primary"
               @click="save"
@@ -75,11 +83,12 @@
 </template>
 
 <script>
+import CourseFiles from '@/components/course/course-edit/course-files.vue'
+import { courseContentBlockToNavItemTransform } from '@/mixins/general/course-structure'
+import { deepCopy, stripKey } from '@/mixins/general/helpers'
 import { locale, routes } from '@/mixins'
 import { mapGetters } from 'vuex'
-import CourseFiles from '@/components/course/course-edit/course-files.vue'
-import { deepCopy, stripKey } from '@/mixins/general/helpers'
-import { courseContentBlockToNavItemTransform } from '@/mixins/general/course-structure'
+import { slugify } from '@/mixins/general/slugs'
 import { v4 as uuidv4 } from 'uuid'
 
 export default {
@@ -116,7 +125,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['courseContent']),
+    ...mapGetters(['courseContent', 'courseContentFollowMap']),
 
     /**
      * cid: returns the type of content
@@ -208,7 +217,6 @@ export default {
         name: this.cid,
         ...deepCopy(this.stepData) // deep copy to get rid of store references
       }
-
       if (!this.stepData.title.text) {
         this.$bvModal.show('empty-title')
       } else {
@@ -216,8 +224,14 @@ export default {
         if (!this.editContent) {
           this.$store.commit('courseContentAdd', updatedStep)
           this.$store.commit('courseChapterAdd', courseContentBlockToNavItemTransform(updatedStep))
+          this.$store.commit('courseRoutesUpdate')
+          this.$router.replace({
+            name: 'course-content-edit',
+            params: { coursePath: [slugify(this.stepData.title.text)] }
+          })
         } else {
           this.$store.commit('courseContentSet', { ...updatedStep, id: this.pathId })
+          this.$store.commit('courseRoutesUpdate')
         }
         // set courseUpdated to trigger watchers
         this.$store.commit('courseUpdatedSet', true)

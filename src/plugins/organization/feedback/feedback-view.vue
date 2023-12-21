@@ -37,11 +37,13 @@
       <div class="container">
         <div
           :id="title.id"
-          class="flaggable row mb-3"
+          :class="courseLangIsAr? 'flaggable-ar row' : 'flaggable-en row'"
         >
           <hr>
-          <div class="col">
-            <h2>
+          <div
+            style="width:100%"
+          >
+            <h1 class="pb-3">
               {{ courseSimple? title.simple : title.text }}
               <!--
               <audio-button
@@ -51,27 +53,24 @@
                   taskAudio.regular"
               ></audio-button>
               -->
-            </h2>
+            </h1>
           </div>
-          <flag-icon
-            v-if="!editPreview"
-            :ref-data="title"
-            @flagged="title.flagged = true"
-          ></flag-icon>
+          <a>
+            <flag-icon
+              v-if="!editPreview"
+              :ref-data="title"
+              @flagged="title.flagged = true"
+            ></flag-icon>
+          </a>
         </div>
 
         <div
           :id="task.id"
-          class="flaggable row"
+          class="row"
         >
-          <div class="col">
+          <div class="col task-label">
             <p>{{ courseSimple? task.simple : task.text }}</p>
           </div>
-          <flag-icon
-            v-if="!editPreview"
-            :ref-data="task"
-            @flagged="task.flagged = true"
-          ></flag-icon>
         </div>
         <hr>
 
@@ -81,11 +80,11 @@
               v-for="(item, i) in items"
               :id="item.id"
               :key="item.id"
-              class="flaggable item mb-5"
+              class="item mb-5"
             >
-              <h3 class="text-center item-label">
+              <label class="centering item-label">
                 {{ courseSimple? item.simple : item.label }}
-              </h3>
+              </label>
 
               <div class="d-flex justify-content-between">
                 <b
@@ -106,12 +105,6 @@
                 :aria-valuetext="categories[choice[i]]"
                 :aria-label="y18n('feedback.label.slider')"
               >
-              <flag-icon
-                v-if="!editPreview"
-                :ref-data="item"
-                :interactive="true"
-                @flagged="item.flagged = true"
-              ></flag-icon>
             </div>
           </div>
         </div>
@@ -152,29 +145,22 @@
           <div class="col">
             <button
               type="button"
-              class="btn btn-outline-success btn-block"
+              class="btn btn-success btn-block"
               @click="storeFeedback"
             >
-              <i class="fas fa-check"></i>
+              <i
+                class="fas fa-save"
+                aria-hidden="true"
+              ></i>
               {{ y18n('save') }}
             </button>
           </div>
         </div>
 
-        <div class="row">
-          <button
-            type="button"
-            class="btn btn-primary mt-3 ml"
-            :class="langIsAr? 'float-left mr-auto': 'float-right ml-auto'"
-            @click="done"
-          >
-            {{ y18n('nextContent') }}
-            <i
-              :class="langIsAr?
-                'fas fa-arrow-left':
-                'fas fa-arrow-right'"
-            ></i>
-          </button>
+        <div class="row mt-3">
+          <navigation-buttons
+            :cid="id"
+          ></navigation-buttons>
         </div>
       </div>
     </div>
@@ -188,12 +174,14 @@ import '@/assets/styles/flaggables.css'
 import { StarRating } from 'vue-rate-it'
 // import AudioButton from '@/components/helpers/audio-button.vue'
 import FlagIcon from '@/components/course/flag/flag-icon.vue'
+import NavigationButtons from '@/components/helpers/navigation-buttons.vue'
 
 // import layaWsyisyg from '../misc/laya-html'
 export default {
   name: 'FeedbackView',
 
   components: {
+    NavigationButtons,
     FlagIcon,
     //  AudioButton,
     StarRating
@@ -282,17 +270,6 @@ export default {
     },
 
     /**
-     * Function done: execute function from onFinish[0]
-     *
-     * Creator: cmc
-     *
-     * LastUpdated: unknown
-     */
-    done () {
-      this.onFinish[0]()
-    },
-
-    /**
      * function bundleFeedback: bundle input in Object to persist
      *
      * Author: pj
@@ -347,5 +324,8 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   z-index: 11002;
+}
+.task-label {
+  font-size: 18pt;
 }
 </style>

@@ -39,106 +39,52 @@
           </p>
         </b-jumbotron>
       </div>
-      <!-- List header -->
 
-      <div class="row">
-        <div class="col-2">
-          <span
-            v-b-tooltip.top
-            :title="sortTooltip('type')"
-            class="sort-list"
-            @click="sortByProp('type')"
-          >
-            <i :class="sortIcon('type')"></i>
-            {{ y18n('uploadFile.fileType') }}
-          </span>
-        </div>
-        <div class="col-5">
-          <span
-            v-b-tooltip.top
-            :title="sortTooltip('originalFilename')"
-            class="sort-list"
-            @click="sortByProp('originalFilename')"
-          >
-            <i :class="sortIcon('originalFilename')"></i>
-            {{ y18n('uploadFile.fileName') }}
-          </span>
-        </div>
-        <div class="col-2">
-          <span
-            v-b-tooltip.top
-            :title="sortTooltip('size')"
-            class="sort-list"
-            @click="sortByProp('size')"
-          >
-            <i :class="sortIcon('size')"></i>
-            {{ y18n('uploadFile.fileSize') }}
-          </span>
-        </div>
-        <div class="col-1">
-          {{ y18n('uploadFile.url') }}
-        </div>
-        <div class="col">
-          {{ y18n('uploadFile.deleteFile') }}
-        </div>
-      </div>
-      <hr>
-
-      <!-- List of files -->
-      <ul
-        v-if="sortedFiles.length>0"
-        class="explorer"
+      <b-table
+        :items="sortedFiles"
+        :fields="fields"
+        responsive
+        stacked="sm"
       >
-        <li
-          v-for="file of sortedFiles"
-          :key="file.name"
-        >
-          <div class="row">
-            <div class="col-2">
-              <i
-                v-b-tooltip.left
-                :class="fileIcon(file.type)"
-                :title="y18n('uploadFile.fileType')"
-              ></i>
-              {{ fileTypeString(file.type) }}
-            </div>
+        <!-- Type Column -->
+        <template #cell(type)="data">
+          <i :class="fileIcon(data.item.type)"></i>
+          {{ fileTypeString(data.item.type) }}
+        </template>
 
-            <div class="col-5">
-              {{ file.originalFilename }}
-            </div>
+        <!-- Filename Column -->
+        <template #cell(originalFilename)="data">
+          {{ data.item.originalFilename }}
+        </template>
 
-            <div class="col-2 size">
-              {{ fileSize(file.size) }}
-            </div>
+        <!-- File Size Column -->
+        <template #cell(size)="data">
+          {{ fileSize(data.item.size) }}
+        </template>
 
-            <div class="col-1">
-              <i
-                v-b-tooltip.right
-                class="fas fa-copy copy"
-                :title="y18n('uploadFile.urlCopy')"
-                @click="urlCopy(urlGet(file.name))"
-              ></i>
-            </div>
+        <!-- URL Column -->
+        <template #cell(url)="data">
+          <i
+            class="fas fa-copy copy"
+            @click="urlCopy(urlGet(data.item.name))"
+          ></i>
+        </template>
 
-            <div class="col align-self-center">
-              <button
-                v-b-tooltip.top
-                type="button"
-                class="btn btn-danger btn-sm"
-                :title="y18n('uploadFile.deleteFile')"
-                @click="fileDeleteConfirm(file)"
-              >
-                <i
-                  class="fas fa-trash"
-                ></i>
-              </button>
-            </div>
-          </div>
-        </li>
-      </ul>
+        <!-- Actions Column -->
+        <template #cell(actions)="data">
+          <b-button
+            variant="danger"
+            size="sm"
+            @click="fileDeleteConfirm(data.item)"
+          >
+            <i class="fas fa-times"></i>
+          </b-button>
+        </template>
+      </b-table>
+
       <div
-        v-else
-        class="row"
+        v-if="sortedFiles.length === 0"
+        class="col-7"
       >
         {{ y18n('uploadFile.noFiles') }}
       </div>
@@ -186,7 +132,8 @@ export default {
       files: [],
       fileToDelete: null,
       uploaded: false,
-      uploadedFiles: []
+      uploadedFiles: [],
+      fields: []
     }
   },
 
@@ -210,6 +157,16 @@ export default {
     step () {
       return this.$route.params.step
     }
+  },
+
+  created () {
+    this.fields = [
+      { key: 'type', sortable: true, label: this.y18n('uploadFile.fileType') },
+      { key: 'originalFilename', sortable: true, label: this.y18n('uploadFile.fileName') },
+      { key: 'size', sortable: true, label: this.y18n('uploadFile.fileSize') },
+      { key: 'url', label: this.y18n('uploadFile.url') },
+      { key: 'actions', label: this.y18n('uploadFile.deleteFile') }
+    ]
   },
 
   beforeDestroy () {
@@ -298,10 +255,6 @@ export default {
 </script>
 
 <style scoped>
-#questionmark {
-  float: end;
-  cursor: pointer;
-}
 
 span.sort-list {
   cursor: pointer;
