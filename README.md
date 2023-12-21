@@ -1,9 +1,8 @@
-# laya-vechta-frontend
+# laya-iraq-frontend
 
-This is the repository for LAYA. Here, we continue developing new features for the inclusive learning platform.
+This repository contains the Vue.js Frontend of LAYA Iraq. Here, we continue developing new features for the inclusive learning platform LAYA.
 
-This repository also provides containers for deploying LAYA to production.
-
+This repository also provides a Docker container for deploying LAYA to production.
 ## Deploying the project
 
 There are two ways to deploy LAYA:
@@ -11,9 +10,9 @@ There are two ways to deploy LAYA:
 - deploying to a server directly 
 - deploying in a Docker container
 
-In both cases, you can set the backend URL on which the [LAYA Backend](https://gitlab.informatik.hu-berlin.de/laya/vechta/laya-vechta-backend) runs. By default, it is set to `/api` on the same location. Make sure to have your server set up to accept HTTP requests at this address.
+In both cases, you can set the backend URL on which the [LAYA Iraq Backend](https://github.com/LAYAIraq/LAYA-Iraq-Backend) runs. By default, it is set to `/api` on the same location. Make sure to have your server set up to accept HTTP requests at this address.
 
-If you want to set an individual URL, you need to add a `.env` file in the root folder of the project. It takes three arguments:
+If you want to set an individual URL, you need to add a `.env` file in the root folder of the project. It takes the following arguments:
 
 - `VUE_APP_BACKEND_HOST`: the host where the back end is running. Omit to default to 
   same location as the front end
@@ -23,21 +22,31 @@ If you want to set an individual URL, you need to add a `.env` file in the root 
   500000000
 
 ### Server
-In order to deploy to a server, you need to have node installed (version 16). Clone the repository and run `npm install`. Set the environment file if your back end is running anywhere else than `/api`.
+In order to deploy to a server, you need to have node installed (version 16). Clone the repository and run `npm install`. Set the environment file if your backend is running anywhere else than `/api`.
 
 The run `npm run build`. The project will be built in the `dist` directory. You can 
 then copy the content of that directory to the root directory of your 
 web server.
 
+Overview: Steps to follow
+
+1. Install node
+2. Clone repositories Frontend and Backend
+3. Follow the set up of the Backend
+4. In the cloned Frontend repository, run 'npm install'
+5. (Optional) Set .env file if Backend does not run in '/api'
+6. Run 'npm run build'
+7. Copy contents of ’/dist' to the root directory of web server
+
 ### Docker
 
-You need Docker to build the Docker image. Set the environment variables for the back end URL if neccessary. Then run `docker build -t laya-frontend .` to build the Docker container locally.
+If you choose to deploy with Docker, you need Docker to build the Docker image. Set the environment variables for the back end URL if neccessary. Then run `docker build -t laya-frontend .` to build the Docker container locally.
 
-In order to run the Container on your server, run `docker run -td -p 8000:80 laya-frontend` on your server. `8000` is the port at which your host will serve LAYA. You can modify it for your needs. For an SSL secured connection, you will need to set up a reverse proxy.
+Start your Backend server before the next step. In order to run the Container on your server, run `docker run -td -p 8000:80 laya-frontend` on your server. `8000` is the port at which your host will serve LAYA. You can modify it for your needs. For an SSL secured connection, you will need to set up a reverse proxy.
 
 ## Developers
 
-### Basic Setup
+### Basic Setup (withou Docker)
 #### Project setup
 ```
 npm install
@@ -69,7 +78,7 @@ npm run lint:fix
 As much as developers like to think about certain implementation details, 
 we want to test behavior for users of LAYA. Therefore, tests should be designed
 with the actual component in mind. However, many of the conditional renders
-we use in LAYA might need to be tested by used the component state. We would
+we use in LAYA might need to be tested by using the component state. We would
 therefore encourage writing tests that use the component's internal state 
 over not writing a test.
 
@@ -143,7 +152,7 @@ We place our unit tests in `./tests/unit`. They should have `.spec.ts` extension
 to be recognized by `vue-test-utils`. In order to run the tests, you can either run 
 `npm run test` or `npm run test:unit` (they are synonymous) to run all test suites.
 If you want to run just selected tests, you can use `npm run test:only THIS` where 
-`THIS` is a regular expression. Spaces work like pipes (OR). Use this to
+`THIS` is a regular expression. Spaces work like pipes (and therefore represent OR). Use this to
 match the file name before `.spec.ts` to only run those matching files.
 
 Example: `npm run test:only course flag` runs all test suites that contain `course`
