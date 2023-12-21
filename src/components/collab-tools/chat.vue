@@ -120,7 +120,7 @@ export default {
       roomExists: false,
       link: '',
       roomName: '',
-      domain: 'jitsi1.geeksec.de'
+      domain: process.env.VUE_APP_CHAT
     }
   },
 

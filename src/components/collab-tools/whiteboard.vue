@@ -118,7 +118,7 @@ export default {
 
   data () {
     return {
-      domain: 'http://127.0.0.1:5001',
+      domain: process.env.VUE_APP_WHITEBOARD,
       boardName: '',
       boardExists: false,
       link: ''

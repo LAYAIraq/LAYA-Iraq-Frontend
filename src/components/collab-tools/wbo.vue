@@ -31,13 +31,13 @@ export default {
     },
     domain: {
       type: String,
-      default: 'http://127.0.0.1:5001'
+      default: process.env.VUE_APP_WHITEBOARD
     }
   },
 
   data () {
     return {
-      link: 'http://127.0.0.1:5001/boards/laya-iraq'
+      link: process.env.VUE_APP_WHITEBOARD + '/boards/laya-iraq'
     }
   },
 

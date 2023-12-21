@@ -24,7 +24,7 @@ export default {
     },
     domain: {
       type: String,
-      default: 'jitsi1.geeksec.de'
+      default: process.env.VUE_APP_CHAT
     }
   },
 
