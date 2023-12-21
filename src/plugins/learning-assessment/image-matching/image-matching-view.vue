@@ -42,7 +42,7 @@
       </div>
       <div
         :id="task.id"
-        class="row"
+        class="row task-label"
       >
         <div
           id="task"
@@ -297,6 +297,10 @@ img {
 }
 .form-group.row:nth-child(2) {
   background-color: #ebece7;
+}
+
+.task-label {
+  font-size: 18pt;
 }
 
 </style>
