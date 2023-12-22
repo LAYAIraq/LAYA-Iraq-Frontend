@@ -53,6 +53,16 @@ Dependencies:
               ></i>
               {{ y18n('header.courses') }}
             </b-nav-item>
+            <b-nav-item
+              v-if="userOnline"
+              to="/collaboration"
+            >
+              <i
+                class="fas fa-users"
+                aria-hidden="true"
+              ></i>
+              {{ y18n('collaboration') }}
+            </b-nav-item>
             <li v-else>
               <!-- dummy to keep header layout intact when user is not logged on -->
             </li>

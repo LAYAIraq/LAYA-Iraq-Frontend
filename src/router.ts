@@ -10,6 +10,8 @@ import Router from 'vue-router'
 
 /* dynamic imports for lazy loading */
 const AdminPanel = () => import('@/components/user-views/admin-panel.vue')
+const Chat = () => import('@/components/collab-tools/chat.vue')
+const CollabTools = () => import('@/components/collab-tools/collab-tools.vue')
 const Course = () => import('./components/course/course.vue')
 const CourseContent = () => import('./components/course/course-edit/course-content.vue')
 const CourseNav = () => import('./components/course/course-nav/course-nav.vue')
@@ -27,6 +29,7 @@ const Profile = () => import('./components/user-views/profile.vue')
 const Register = () => import('./components/general/register.vue')
 const LandingPage = () => import('./components/general/landing-page.vue')
 const Verify = () => import('./components/helpers/verify.vue')
+const Whiteboard = () => import('@/components/collab-tools/whiteboard.vue')
 
 Vue.use(Router)
 export default new Router({
@@ -74,6 +77,21 @@ export default new Router({
       path: '/profile',
       name: 'profile',
       component: Profile
+    },
+    {
+      path: '/collaboration',
+      name: 'collaboration',
+      component: CollabTools
+    },
+    {
+      path: '/chat',
+      name: 'chat',
+      component: Chat
+    },
+    {
+      path: '/whiteboard',
+      name: 'whiteboard',
+      component: Whiteboard
     },
     {
       path: '/courses',
