@@ -15,6 +15,8 @@
 </template>
 
 <script>
+require('dotenv').config()
+
 export default {
   name: 'JitsiMeet',
   props: {
