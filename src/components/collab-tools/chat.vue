@@ -158,7 +158,7 @@ export default {
      * Since: v1.3.0
      */
     roomEnter (link) {
-      const linkArray = link.split('/')
+      const linkArray = link.toString().split('/')
       console.log(linkArray)
       if (linkArray.length === 2) {
         this.domain = linkArray[0]
