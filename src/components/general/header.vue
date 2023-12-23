@@ -93,7 +93,7 @@ Dependencies:
 
               <!-- Links for authorized users -->
               <b-nav-item
-                v-if="userOnline && isAdmin"
+                v-if="userOnline && (isAdmin || isSuperAdmin)"
                 to="/admin"
               >
                 <i
@@ -103,7 +103,7 @@ Dependencies:
                 {{ y18n('adminPanel.title') }}
               </b-nav-item>
               <b-nav-item
-                v-if="userOnline && isEditor"
+                v-if="userOnline && (isEditor | isAdmin || isSuperAdmin)"
                 to="/editor"
               >
                 <i
