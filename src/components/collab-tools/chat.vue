@@ -104,6 +104,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { locale } from '@/mixins'
 import Jitsi from '@/components/collab-tools/jitsi'
 
+require('dotenv').config()
+
 export default {
   name: 'Chat',
 
