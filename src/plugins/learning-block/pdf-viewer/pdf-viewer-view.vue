@@ -30,12 +30,14 @@ Since: v1.3.0
         ></flag-icon>
       </a>
     </div>
-    <div class="pdf-viewer-style">
+    <div class=pdf-box">
+      <div class="pdf-viewer-style">
       <pdf-viewer
         v-if="url !== null && url !== ''"
         :url="url"
       >
       </pdf-viewer>
+      </div>
     </div>
     <div class="centering">
       <b-button
@@ -105,6 +107,9 @@ export default {
   height:500px;
   width:100%;
   overflow-y:auto;
+}
+.pdf-box {
+  border-style: solid;
 }
 .centering {
   display: flex;
