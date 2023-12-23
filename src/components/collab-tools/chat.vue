@@ -166,6 +166,10 @@ export default {
         this.domain = linkArray[0]
         this.roomName = linkArray[1]
         this.roomExists = true
+      } if (linkArray.length === 4) {
+        this.domain = linkArray[2]
+        this.roomName = linkArray[3]
+        this.roomExists = true
       } else {
         this.$bvToast.show('error-toast')
       }
