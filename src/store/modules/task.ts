@@ -18,12 +18,14 @@ export default {
       freetextGrade: 0,
       assessmentId: '',
       current: false
-    }
+    },
+    textList: []
   },
   getters: {
     created: (state: { created: string}) => state.created,
     freetext: (state: { freetext: object }) => state.freetext,
-    freetextGrade: (state: { freetextGrade: number }) => state.freetextGrade
+    freetextGrade: (state: { freetextGrade: number }) => state.freetextGrade,
+    textList: (state: { textList: Array<object> }) => state.textList
   },
   mutations: {
 
@@ -48,6 +50,22 @@ export default {
       console.log(state.task)
       console.log(state)
       state.task.freetext = freetextData
+    },
+
+    /**
+     * Author: akokay
+     */
+    freetextListAdd (
+      state: {
+        textList: Array<object>
+      },
+      tasksObject: { subs: Array<object> }
+    ) {
+      console.log('freetextListAdd')
+      console.log(tasksObject.subs)
+      console.log(...tasksObject.subs)
+      // state.enrollmentList.push(...tasksObject.subs)
+      state.textList = tasksObject.subs
     }
   },
   actions: {
@@ -112,7 +130,7 @@ export default {
             if (resp.data.subs === undefined) { // check if task exists
               http.post('tasks/create', data)
                 .then(resp => {
-                  console.log('+created new Task respoonse+++++++++++++++++++++++++++++++++++++++++++++')
+                  console.log('created new Task response')
                   resolve(resp.data.subs)
                 })
                 .catch(err => reject(err))
@@ -145,6 +163,32 @@ export default {
             .catch(err => reject(err))
         })
         : Promise.reject(new Error('No task found!'))
+    },
+
+    /**
+     */
+    getCourseFreeTexts (
+      { state, commit },
+      data:{courseId:string, assessmentId:string}
+    ) {
+      const courseId = data.courseId
+      const assessmentId = data.assessmentId
+      return new Promise((resolve, reject) => {
+        http.get('tasks/getAllByCourseId')
+          .then(({ data }) => {
+            // console.log('Enrollment exists!')
+            console.log(data)
+            console.log('data')
+            commit('freetextListAdd', data)
+            console.log('after data')
+            console.log(state)
+            console.log(state.textList)
+            resolve('freetextList exists!')
+          })
+          .catch(err => reject(err))
+          .finally(() => commit('setBusy', false))
+      }
+      )
     },
 
     /**

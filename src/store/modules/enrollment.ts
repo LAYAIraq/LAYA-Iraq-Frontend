@@ -148,6 +148,7 @@ export default {
     ) {
       console.log('enrollmentsAdd')
       console.log(...enrollmentsObject.subs)
+      console.log(enrollmentsObject)
       // state.enrollmentList.push(...enrollmentsObject.subs)
       state.enrollmentList = enrollmentsObject.subs
     }

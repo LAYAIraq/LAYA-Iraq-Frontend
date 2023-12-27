@@ -11,10 +11,10 @@
       <h3>Selected Content:</h3>
       <p>{{ selectedContent.title.id }}</p>
     </div>
-    <div v-if="enrollmentList && enrollmentList.length && selectedContent">
+    <div v-if="textList && textList.length && selectedContent">
       {{ users }}
       <hr>
-      <div v-for="(item, index) in enrollmentList" :key="index">
+      <div v-for="(item, index) in textList" :key="index">
         {{ item.studentId }}<br>
         <div :id="'user-' + index"></div>
         <div :id="'quill-' + index" class="quill-content"></div><br>
@@ -25,7 +25,7 @@
           @click="addGrade(item.inputValue, item)"
         >Grade
         </button>
-        <hr v-if="index !== enrollmentList.length - 1" />
+        <hr v-if="index !== textList.length - 1" />
       </div>
     </div>
     <div v-else>
@@ -62,6 +62,14 @@ export default {
   },
 
   watch: {
+    selectedContent: {
+      handler (newVal) {
+        if (newVal) {
+          this.$store.dispatch('getCourseFreeTexts', this.$store.getters.course.courseId, newVal.title.id)
+        }
+      },
+      immediate: true // To trigger the handler immediately upon component creation
+    },
     enrollmentList: {
       handler (newVal, oldVal) {
         console.log('enrollmentList watch')
@@ -79,6 +87,8 @@ export default {
         console.log(newVal !== oldVal, this.textList, this.textList.length > 0)
         if (newVal.length !== oldVal.length && this.textList && this.textList.length > 0) {
           console.log('llllllllllllllllllllllll')
+          console.log(this.textList)
+          this.initializeUsers()
           this.initializeQuillEditors()
         }
       },
@@ -87,8 +97,10 @@ export default {
     users: {
       handler (newVal, oldVal) {
         console.log('users watch')
-        console.log(newVal.length > 0, this.enrollmentList, this.enrollmentList.length > 0, this.users.length > 0)
-        if (newVal.length > 0 && this.enrollmentList && this.enrollmentList.length > 0 && this.users.length > 0) {
+        console.log(oldVal.length)
+        console.log(newVal.length)
+        console.log(this.users.length)
+        if (newVal.length > 0 && this.textList && this.users.length > 0) {
           console.log('++++++++++++++')
           this.initializeUsers()
         }
@@ -116,7 +128,6 @@ export default {
   created () {
     this.getUserList()
     this.$store.dispatch('getCourseEnrollments', this.$store.getters.course.courseId)
-    this.$store.dispatch('getTexts', this.$store.getters.course.courseId)
     // console.log('enrollments!')
     // console.log(this.enrollmentList)
     // console.log(this.users)
@@ -133,11 +144,12 @@ export default {
 
     setSelectedContent () {
       if (this.selectedContent) {
+        console.log('BUTTON')
         console.log(this.selectedContent)
-        // Perform any actions with the selected content here
-        // For example, setting it as a variable or dispatching an action
-        // this.$store.dispatch('setSelectedContent', this.selectedContent);
-        // Replace 'setSelectedContent' with an actual Vuex action name if needed
+        console.log(this.$store.state)
+        console.log(this.$store.state.task)
+        console.log(this.textList)
+        console.log(this.textList.length)
       }
     },
 
@@ -152,12 +164,12 @@ export default {
 
     async initializeQuillEditors () {
       await this.$nextTick()
-      console.log('tried to load enrollmentList')
-      if (this.enrollmentList) {
+      console.log('tried to load textList')
+      if (this.textList) {
         if (this.quillInstances) {
           this.destroyQuillInstances()
         }
-        this.enrollmentList.forEach((item, index) => {
+        this.textList.forEach((item, index) => {
           console.log(`#quill-${index}`)
           const quill = new Quill(`#quill-${index}`, {
             theme: 'snow',
@@ -182,13 +194,14 @@ export default {
     async initializeUsers () {
       await this.$nextTick()
       console.log('tried to load users')
-      if (this.enrollmentList && this.users) {
-        for (let index = 0; index < this.enrollmentList.length; index++) {
-          const user = this.getUserById(this.enrollmentList[index].studentId)
+      if (this.textList && this.users) {
+        console.log('tried to actually load users')
+        for (let index = 0; index < this.textList.length; index++) {
+          const user = this.getUserById(this.textList[index].studentId)
           const divElement = document.getElementById(`user-${index}`)
           // await this.$store.dispatch('getCourseEnrollments', this.$store.getters.course.courseId)
           if (divElement) {
-            divElement.innerHTML = `${this.enrollmentList[index].freetextGrade}- ${user.username}`
+            divElement.innerHTML = `${this.textList[index].freetextGrade}- ${user.username}`
           } else {
             console.error('Element with id "myDiv" not found.')
           }
