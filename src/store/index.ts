@@ -25,6 +25,7 @@ import profile from './modules/profile'
 import register from './modules/register'
 import role from './modules/role'
 import users from './modules/users'
+import task from './modules/task'
 
 Vue.use(Vuex)
 
@@ -44,6 +45,7 @@ export default new Vuex.Store({
     enrollment,
     flags,
     mutex,
+    task,
     notifications,
     password,
     profile,

@@ -1,6 +1,17 @@
 <template>
   <div>
-    <div v-if="enrollmentList && enrollmentList.length">
+    <label for="courseContentSelect">Select Course Content:</label>
+    <select id="courseContentSelect" v-model="selectedContent">
+      <option v-for="content in courseContents" :key="content.id" :value="content">
+        {{ content.title.text }}
+      </option>
+    </select>
+    <button @click="setSelectedContent">Set Selected Content</button>
+    <div v-if="selectedContent">
+      <h3>Selected Content:</h3>
+      <p>{{ selectedContent.title.id }}</p>
+    </div>
+    <div v-if="enrollmentList && enrollmentList.length && selectedContent">
       {{ users }}
       <hr>
       <div v-for="(item, index) in enrollmentList" :key="index">
@@ -30,7 +41,7 @@ import Quill from 'quill'
 export default {
   data () {
     return {
-      FilteredList: [],
+      selectedContent: null,
       quillInstances: []
     }
   },
@@ -38,8 +49,16 @@ export default {
   computed: {
     ...mapGetters([
       'users',
-      'enrollmentList'
-    ])
+      'enrollmentList',
+      'textList'
+    ]),
+    courseContents () {
+      const List = this.$store.getters.course.courseContent
+      const freeTextQuestions = Object.keys(List)
+        .filter(contentId => List[contentId].name === 'free-text-question')
+        .map(contentId => List[contentId])
+      return freeTextQuestions
+    }
   },
 
   watch: {
@@ -48,6 +67,17 @@ export default {
         console.log('enrollmentList watch')
         console.log(newVal !== oldVal, this.enrollmentList, this.enrollmentList.length > 0)
         if (newVal.length !== oldVal.length && this.enrollmentList && this.enrollmentList.length > 0) {
+          // console.log('llllllllllllllllllllllll')
+          // this.initializeQuillEditors()
+        }
+      },
+      deep: true
+    },
+    textList: {
+      handler (newVal, oldVal) {
+        console.log('textList watch')
+        console.log(newVal !== oldVal, this.textList, this.textList.length > 0)
+        if (newVal.length !== oldVal.length && this.textList && this.textList.length > 0) {
           console.log('llllllllllllllllllllllll')
           this.initializeQuillEditors()
         }
@@ -70,12 +100,23 @@ export default {
     this.$nextTick(() => {
       this.initializeQuillEditors()
       this.initializeUsers()
+      console.log('-------              ---###')
+      const freeTextQuestions = Object.keys(this.courseContents)
+        .filter(contentId => this.courseContents[contentId].name === 'free-text-question')
+        .map(contentId => this.courseContents[contentId])
+
+      console.log(freeTextQuestions)
+
+      console.log(this.courseContent)
+      console.log(this.$store.getters.course.courseContent)
+      console.log(freeTextQuestions)
     })
   },
 
   created () {
     this.getUserList()
     this.$store.dispatch('getCourseEnrollments', this.$store.getters.course.courseId)
+    this.$store.dispatch('getTexts', this.$store.getters.course.courseId)
     // console.log('enrollments!')
     // console.log(this.enrollmentList)
     // console.log(this.users)
@@ -89,6 +130,16 @@ export default {
   },
 
   methods: {
+
+    setSelectedContent () {
+      if (this.selectedContent) {
+        console.log(this.selectedContent)
+        // Perform any actions with the selected content here
+        // For example, setting it as a variable or dispatching an action
+        // this.$store.dispatch('setSelectedContent', this.selectedContent);
+        // Replace 'setSelectedContent' with an actual Vuex action name if needed
+      }
+    },
 
     addGrade (grade, item) {
       console.log(item)

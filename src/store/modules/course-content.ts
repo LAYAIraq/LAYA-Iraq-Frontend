@@ -111,6 +111,11 @@ export default {
         courseChapters: any[]
       },
       content: ContentBlock) {
+      // noch nicht getestet
+      console.log('ContentBlock')
+      if (content.id === 'free-text-question') {
+        console.log('new free-text-question')
+      }
       state.courseContent[content.id] = content
     },
     /**
@@ -138,8 +143,13 @@ export default {
         courseContent: { [id: string]: ContentBlock }
       },
       { id, property, value }: { id: string, property: string, value: any }) {
+      console.log('something')
+      console.log(state.courseContent[id])
+      console.log(property)
+      console.log(value)
       if (state.courseContent[id] && property && value) { // only update if content block exists and property and value are defined
         Vue.set(state.courseContent[id], property, value)
+        console.log('update something')
         if (property === 'title') { // trigger slug changes for corresponding navItem
           chapterSlugUpdate(state.courseChapters, id, value.text, state.courseContent[id].type)
         }

@@ -124,19 +124,6 @@ export default {
     /**
      * Author: akokay
      */
-    freetextAdd (
-      state: {
-        enrollment: {
-          freetext: object
-        }
-      },
-      freetextData: object
-    ) {
-      state.enrollment.freetext = freetextData
-    },
-    /**
-     * Author: akokay
-     */
     freetextGradeAdd (
       state: {
         enrollment: {
@@ -332,6 +319,8 @@ export default {
         http.get(`enrollments/getAllByCourseId?courseId=${courseId}`)
           .then(({ data }) => {
             // console.log('Enrollment exists!')
+            console.log(data)
+            console.log('data')
             commit('enrollmentsAdd', data)
             resolve('Enrollment exists!')
           })

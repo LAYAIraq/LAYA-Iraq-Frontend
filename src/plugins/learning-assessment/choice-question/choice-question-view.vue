@@ -168,6 +168,7 @@ export default {
   data () {
     console.log(` ...this.viewData: ${this.viewData}`)
     console.log(this.viewData)
+    console.log(this)
     return {
       answers: [],
       checked: [],
@@ -182,7 +183,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['courseSimple']),
+    ...mapGetters(['courseSimple', 'courseContent']),
 
     /**
      * feedbackId: creates an identifier string
@@ -213,6 +214,11 @@ export default {
 
   created () {
     this.populateShowSolutions()
+  },
+
+  mounted () {
+    console.log('---------------------------------------------')
+    console.log(this)
   },
 
   methods: {

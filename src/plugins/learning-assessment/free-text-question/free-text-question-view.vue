@@ -19,14 +19,18 @@ Since: v1.0.0
         @flagged="title.flagged = true"
       ></flag-icon>
     </div>
-    <div class="free-text-edit bg-light" :class="langIsAr ? 'text-right' : 'text-left'">
+    <div
+      class="free-text-edit bg-light"
+      :class="langIsAr ? 'text-right' : 'text-left'"
+    >
       <span class="p-3"> {{ y18n('content') }} </span> <!-- unnötig -->
       <div id="free-text-editor"></div>
     </div>
     <button
       type="button"
       @click="commit"
-    >Save
+    >
+      Save
     </button>
   </div>
 </template>
@@ -47,11 +51,17 @@ export default {
   ],
 
   data () {
+    console.log(` ...this.viewData: ${this.viewData}`)
+    console.log(this.viewData)
+    console.log(this)
     return { ...this.viewData }
   },
 
   computed: {
     ...mapGetters(['courseContent', 'courseSimple', 'content', 'courseCreator', 'courseFlags', 'userId'])
+  },
+
+  watch: {
   },
 
   created () {
@@ -60,7 +70,9 @@ export default {
     }
   },
 
-  mounted () {
+  async mounted () {
+    await this.$store.dispatch('taskFetch', { studentId: this.$store.state.profile.id, assessmentId: this.viewData.id })
+    await this.$store.dispatch('taskUpdate')
     this.initQuill()
   },
 
@@ -72,16 +84,35 @@ export default {
       console.log(`this.contents -- ${JSON.stringify(this.contents)}`) // content des freitexts
       // console.log(this.contents) // content object des freitexts
       console.log('---------------------')
+      
+      const x = await this.$store.dispatch('getSpecificTask', { studentId: this.$store.state.profile.id, assessmentId: this.viewData.id })
+      console.log('#')
+      console.log(this.$store.state.profile.id)
+      console.log(x)
+
+      // console.log(this.courseContent[this.viewData.id])
+      // await this.$store.commit('courseContentSetProperty', { id: this.viewData.id, property: 'contents', value: this.contents })
+      // console.log(this.viewData)
       // console.log(this.courseContent[this.pathId]) // dieses Assignment
       // console.log(this.$store.getters.course.courseId)
       // console.log(this.$store.getters) // funktionen zum callen
       // console.log(await this.$store.dispatch('enrollmentFetch', this.$store.getters.course.courseId)) //check for enrollement
-      console.log('----++++++++++++++++')
+      
       console.log(this.$store.state.enrollment) // getEnrolement
-      this.$store.commit('freetextAdd', this.contents)
+      console.log('#2')
+      console.log(this.$store.state.task)
+      console.log(this.contents)
+      await this.$store.commit('freetextAdd', this.contents)
       // this.$forceUpdate()
+      console.log('----++++++++++++++++')
       this.$store.dispatch('enrollmentUpdate')
+      this.$store.dispatch('taskUpdate')
       // console.log(this.enrollmentFetch())
+      // const x = await this.$store.dispatch('taskCreate', { freetext: this.contents, freetextGrade: 0 })
+      console.log('#')
+      await this.$store.dispatch('taskFetch', { studentId: this.$store.state.profile.id, assessmentId: this.viewData.id })
+      console.log('#')
+      // console.log(x)
       console.log('---------------------')
       // console.log(await this.courseFetch(this.name)) // g et course
       // this.$store.commit('FreetextAdd', { freetext: this.contents, id: 4285762394 })
@@ -91,9 +122,6 @@ export default {
     /**
      * Function fetchData: fetch data from vuex and make data property
      *
-     * Author: cmc
-     *
-     * Last Updated: March 20, 2021
      */
     fetchData () {
     },
@@ -101,11 +129,8 @@ export default {
     /**
      * Function initQuill: initialize wysiwyg editor
      *
-     * Author: core
-     *
-     * Last Updated: March 20, 2021
      */
-    initQuill () {
+    async initQuill () {
       const quill = new Quill('#free-text-editor', {
         theme: 'snow',
         placeholder: this.y18n('freeText.placeholder'),
@@ -123,11 +148,14 @@ export default {
       })
       quill.on('text-change', (delta, oldDelta, source) => {
         if (source === 'user') { this.contents = quill.getContents() }
-        console.log(this.contents)
         this.$forceUpdate()
       })
-      if (this.$store.state.enrollment['free-text']) {
-        quill.setContents(this.$store.state.enrollment['free-text'])
+      //await this.$store.commit('taskSet', this.$store.state.task)
+      if (this.$store.state.task.task) {
+        console.log('set freetext')
+        console.log(this.$store.state.task)
+        quill.setContents(this.$store.state.task.task.freetext)
+        this.$forceUpdate()
       }
     }
 
