@@ -17,10 +17,11 @@
         <div :id="'user-' + index"></div>
         <div :id="'quill-' + index" class="quill-content"></div><br>
         <!-- {{ item.freetext }} -->
-        <input v-model="item.inputValue" type="number" :placeholder="'Input ' + (index + 1)" />
+        <input v-model="item.inputGrade" type="number" :placeholder="'Input ' + (index + 1) "/>
+        <input v-model="item.inputFeedback" type="text" placeholder="Enter new value" />
         <button
           type="button"
-          @click="addGrade(item.inputValue, item)"
+          @click="addGrade(item,{grade:item.inputGrade,feedback:item.inputFeedback})"
         >Grade
         </button>
         <hr v-if="index !== textList.length - 1" />
@@ -84,7 +85,7 @@ export default {
         console.log('textList watch')
         console.log(newVal !== oldVal, this.textList, this.textList.length > 0)
         if (newVal.length !== oldVal.length && this.textList && this.textList.length > 0) {
-          console.log('llllllllllllllllllllllll')
+          console.log('llllllllllllllllllllllll änderung lsite')
           console.log(this.textList)
           this.initializeUsers()
           this.initializeQuillEditors()
@@ -151,11 +152,13 @@ export default {
       }
     },
 
-    addGrade (grade, item) {
+    async addGrade (item, { grade, feedback }) {
       console.log(item)
       console.log(`add Grade ${grade}`)
-      this.$store.commit('freetextGradeAdd', { enrollment: item, grade: grade })
-      this.$store.dispatch('enrollmentUpdate', item)
+      console.log(`add feedback ${feedback}`)
+      await this.$store.commit('freetextGradeAdd', { task: item, grade: grade })
+      await this.$store.commit('freetextFeedbackAdd', { task: item, feedback: feedback })
+      await this.$store.dispatch('taskUpdate', item)
       this.initializeUsers()
       // this.$store.commit('freetextGradeAdd', grade)
     },
@@ -196,10 +199,11 @@ export default {
         console.log('tried to actually load users')
         for (let index = 0; index < this.textList.length; index++) {
           const user = this.getUserById(this.textList[index].studentId)
+          console.log(user)
           const divElement = document.getElementById(`user-${index}`)
           // await this.$store.dispatch('getCourseEnrollments', this.$store.getters.course.courseId)
           if (divElement) {
-            divElement.innerHTML = `${this.textList[index].freetextGrade}- ${user.username}`
+            divElement.innerHTML = `${this.textList[index].rated} ${user.username} - ${this.textList[index].freetextGrade} - ${this.textList[index].feedback}`
           } else {
             console.error('Element with id "myDiv" not found.')
           }

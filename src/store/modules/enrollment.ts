@@ -124,24 +124,6 @@ export default {
     /**
      * Author: akokay
      */
-    freetextGradeAdd (
-      state: {
-        enrollment: {
-          freetext: object,
-          freetextGrade: number
-        }
-      },
-      data: {enrollment: {
-          freetext: object,
-          freetextGrade: number
-        },
-      grade:number}
-    ) {
-      data.enrollment.freetextGrade = data.grade
-    },
-    /**
-     * Author: akokay
-     */
     enrollmentsAdd (
       state: { enrollmentList: Array<object> },
       enrollmentsObject: { subs: Array<object> }

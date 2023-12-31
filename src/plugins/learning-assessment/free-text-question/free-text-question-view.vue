@@ -71,6 +71,7 @@ export default {
   },
 
   async mounted () {
+    //@TODO check if user isAdmin if yes dont create a task
     await this.$store.dispatch('taskFetch', { studentId: this.$store.state.profile.id, assessmentId: this.viewData.id })
     await this.$store.dispatch('taskUpdate')
     this.initQuill()

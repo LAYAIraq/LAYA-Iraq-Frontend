@@ -17,7 +17,9 @@ export default {
       freetext: {},
       freetextGrade: 0,
       assessmentId: '',
-      current: false
+      feedback: '',
+      current: false,
+      rated: false
     },
     textList: []
   },
@@ -26,6 +28,8 @@ export default {
     freetext: (state: { freetext: object }) => state.freetext,
     freetextGrade: (state: { freetextGrade: number }) => state.freetextGrade,
     task: (state: { task: Array<object> }) => state.task,
+    feedback: (state: { feedback: string }) => state.feedback,
+    rated: (state: { rated: Boolean }) => state.rated,
     textList: (state: { textList: Array<object> }) => state.textList
   },
   mutations: {
@@ -67,16 +71,42 @@ export default {
       console.log(...tasksObject.subs)
       // state.enrollmentList.push(...tasksObject.subs)
       state.textList = tasksObject.subs
+    },
+    /**
+     * Author: akokay
+     */
+    freetextGradeAdd ({ state },
+      data: {task: {
+          freetextGrade: number
+        },
+      grade:number}
+    ) {
+      data.task.freetextGrade = data.grade
+    },
+    /**
+     * Author: akokay
+     */
+    freetextFeedbackAdd ({ state },
+      data: {task: {
+          feedback: string
+        },
+        feedback:string}
+    ) {
+      data.task.feedback = data.feedback
+    },
+    /**
+     * Author: akokay
+     */
+    setRating ({ state },
+      data: {task: {
+          rated:Boolean
+        },
+        rated:Boolean}
+    ) {
+      data.task.rated = data.rated
     }
   },
   actions: {
-    /**
-     * TODO:
-     *  add create Task
-     *  Add get Task
-     *  Update
-     */
-
     /**
      * taskCreate
      * @param state
@@ -110,7 +140,7 @@ export default {
         http.get('tasks/getSpecificTask', data)
           .then(resp => {
             console.log('getSpecificTask respoonse')
-            resolve(resp.data.task)
+            resolve(resp.data.subs)
           })
           .catch(err => reject(err))
       })
@@ -144,12 +174,22 @@ export default {
     },
 
     /**
+     * function enrollmentUpdate: update enrollment object
+     *
+     * Author: cmc
+     *
+     * Last Updated: December 15, 2023
      *
      * @param param0 state variables
      */
-    taskUpdate ({ state, commit }) {
-      const task = state.task
-      console.log('Task Update')
+    taskUpdate ({ state, commit }, other:{id:string, grade:number, feedback:string}) {
+      console.log(other)
+      const task = other || state.task
+      if (task.grade !== null && task.feedback.trim() !== '') {
+        console.log('es exitiert feedback')
+        commit('setRating', { task: task, rated: true })
+      }
+      console.log(`Grade: ${task.freetextGrade}`)
       return task
         ? new Promise((resolve, reject) => {
           http.patch(
@@ -163,14 +203,14 @@ export default {
             })
             .catch(err => reject(err))
         })
-        : Promise.reject(new Error('No task found!'))
+        : Promise.reject(new Error('No enrollment found!'))
     },
 
     /**
      */
     getCourseFreeTexts (
       { state, commit },
-      data:{courseId:string, assessmentId:string}
+      data:{courseId:string, assessmentId:string,filterAdmin:Boolean}
     ) {
       const courseId = data.courseId
       const assessmentId = data.assessmentId
