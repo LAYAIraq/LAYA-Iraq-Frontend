@@ -12,13 +12,11 @@
       <p>{{ selectedContent.title.id }}</p>
     </div>
     <div v-if="textList && textList.length && selectedContent">
-      {{ users }}
-      <hr>
       <div v-for="(item, index) in textList" :key="index">
         {{ item.studentId }}<br>
         <div :id="'user-' + index"></div>
         <div :id="'quill-' + index" class="quill-content"></div><br>
-        {{ item.freetext }}<br>
+        <!-- {{ item.freetext }} -->
         <input v-model="item.inputValue" type="number" :placeholder="'Input ' + (index + 1)" />
         <button
           type="button"

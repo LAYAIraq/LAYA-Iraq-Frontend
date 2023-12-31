@@ -25,6 +25,7 @@ export default {
     created: (state: { created: string}) => state.created,
     freetext: (state: { freetext: object }) => state.freetext,
     freetextGrade: (state: { freetextGrade: number }) => state.freetextGrade,
+    task: (state: { task: Array<object> }) => state.task,
     textList: (state: { textList: Array<object> }) => state.textList
   },
   mutations: {
