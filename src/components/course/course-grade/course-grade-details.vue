@@ -6,7 +6,6 @@
         {{ content.title.text }}
       </option>
     </select>
-    <button @click="setSelectedContent">Set Selected Content</button>
     <div v-if="selectedContent">
       <h3>Selected Content:</h3>
       <p>{{ selectedContent.title.id }}</p>
@@ -28,7 +27,7 @@
       </div>
     </div>
     <div v-else>
-      No enrollment data available.
+      No freetex task selected.
     </div>
   </div>
 </template>
@@ -64,29 +63,14 @@ export default {
     selectedContent: {
       handler (newVal) {
         if (newVal) {
-          this.$store.dispatch('getCourseFreeTexts', this.$store.getters.course.courseId, newVal.title.id)
+          this.$store.dispatch('getCourseFreeTexts', this.$store.getters.course.courseId, newVal.title.id, true)
         }
       },
       immediate: true // To trigger the handler immediately upon component creation
     },
-    enrollmentList: {
-      handler (newVal, oldVal) {
-        console.log('enrollmentList watch')
-        console.log(newVal !== oldVal, this.enrollmentList, this.enrollmentList.length > 0)
-        if (newVal.length !== oldVal.length && this.enrollmentList && this.enrollmentList.length > 0) {
-          // console.log('llllllllllllllllllllllll')
-          // this.initializeQuillEditors()
-        }
-      },
-      deep: true
-    },
     textList: {
       handler (newVal, oldVal) {
-        console.log('textList watch')
-        console.log(newVal !== oldVal, this.textList, this.textList.length > 0)
         if (newVal.length !== oldVal.length && this.textList && this.textList.length > 0) {
-          console.log('llllllllllllllllllllllll änderung lsite')
-          console.log(this.textList)
           this.initializeUsers()
           this.initializeQuillEditors()
         }
@@ -95,12 +79,7 @@ export default {
     },
     users: {
       handler (newVal, oldVal) {
-        console.log('users watch')
-        console.log(oldVal.length)
-        console.log(newVal.length)
-        console.log(this.users.length)
         if (newVal.length > 0 && this.textList && this.users.length > 0) {
-          console.log('++++++++++++++')
           this.initializeUsers()
         }
       }
@@ -111,67 +90,35 @@ export default {
     this.$nextTick(() => {
       this.initializeQuillEditors()
       this.initializeUsers()
-      console.log('-------              ---###')
       const freeTextQuestions = Object.keys(this.courseContents)
         .filter(contentId => this.courseContents[contentId].name === 'free-text-question')
         .map(contentId => this.courseContents[contentId])
-
-      console.log(freeTextQuestions)
-
-      console.log(this.courseContent)
-      console.log(this.$store.getters.course.courseContent)
-      console.log(freeTextQuestions)
+      //console.log(this.$store.getters.course.courseContent)
+      //console.log(freeTextQuestions)
     })
   },
 
   created () {
     this.getUserList()
     this.$store.dispatch('getCourseEnrollments', this.$store.getters.course.courseId)
-    // console.log('enrollments!')
-    // console.log(this.enrollmentList)
-    // console.log(this.users)
-    // console.log('säää')
-    // const listOfIdsToMatch = [3, 4]
-    // this.filteredList = this.users.filter(obj => listOfIdsToMatch.includes(obj.id))
-    // console.log('FilteredListss:', this.users.filter(obj => listOfIdsToMatch.includes(obj.id)))
-    // console.log('FilteredList:', this.filteredList)
-    // console.log(this.users)
-    // console.log(this.getUserById(3))
   },
 
   methods: {
 
-    setSelectedContent () {
-      if (this.selectedContent) {
-        console.log('BUTTON')
-        console.log(this.selectedContent)
-        console.log(this.$store.state)
-        console.log(this.$store.state.task)
-        console.log(this.textList)
-        console.log(this.textList.length)
-      }
-    },
-
     async addGrade (item, { grade, feedback }) {
-      console.log(item)
-      console.log(`add Grade ${grade}`)
-      console.log(`add feedback ${feedback}`)
       await this.$store.commit('freetextGradeAdd', { task: item, grade: grade })
       await this.$store.commit('freetextFeedbackAdd', { task: item, feedback: feedback })
       await this.$store.dispatch('taskUpdate', item)
       this.initializeUsers()
-      // this.$store.commit('freetextGradeAdd', grade)
     },
 
     async initializeQuillEditors () {
       await this.$nextTick()
-      console.log('tried to load textList')
       if (this.textList) {
         if (this.quillInstances) {
           this.destroyQuillInstances()
         }
         this.textList.forEach((item, index) => {
-          console.log(`#quill-${index}`)
           const quill = new Quill(`#quill-${index}`, {
             theme: 'snow',
             readOnly: true
@@ -194,38 +141,20 @@ export default {
 
     async initializeUsers () {
       await this.$nextTick()
-      console.log('tried to load users')
       if (this.textList && this.users) {
-        console.log('tried to actually load users')
         for (let index = 0; index < this.textList.length; index++) {
           const user = this.getUserById(this.textList[index].studentId)
-          console.log(user)
           const divElement = document.getElementById(`user-${index}`)
-          // await this.$store.dispatch('getCourseEnrollments', this.$store.getters.course.courseId)
           if (divElement) {
             divElement.innerHTML = `${this.textList[index].rated} ${user.username} - ${this.textList[index].freetextGrade} - ${this.textList[index].feedback}`
           } else {
-            console.error('Element with id "myDiv" not found.')
+            console.error('Element with id not found.')
           }
         }
-        // this.enrollmentList.forEach((item, index) => {
-        //   const user = this.getUserById(item.studentId)
-        //   const divElement = document.getElementById(`user-${index}`)
-        //   await this.$store.dispatch('enrollmentUpdate', this.enrollmentList[index])
-        //   this.$store.dispatch('getCourseEnrollments', this.$store.getters.course.courseId)
-        //   console.log(`${this.enrollmentList[index].freetextGrade} - ${user.username}`)
-        //   console.log(this.enrollmentList[index])
-        //   if (divElement) {
-        //     divElement.innerHTML = `- ${user.username}`
-        //   } else {
-        //     console.error('Element with id "myDiv" not found.')
-        //   }
-        // })
       }
     },
 
     addQuill (index, content) {
-      console.log(`${index}- loading ${content}`)
       const quill = new Quill(`#quill-${index}`, {
         theme: 'snow',
         readOnly: true

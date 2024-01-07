@@ -121,16 +121,20 @@ export default {
       }
       state.enrollment.feedback[id] = stripKey('id', feedbackData)
     },
+
     /**
+     * Function enrollmentsAdd: Sets enrollments of the course to enrollmentList
+     *
      * Author: akokay
+     *
+     * Last Updated: January 7, 2024
+     * @param state contains freetext
+     * @param freetextData contains freetextData to be stored in freetext
      */
     enrollmentsAdd (
       state: { enrollmentList: Array<object> },
       enrollmentsObject: { subs: Array<object> }
     ) {
-      console.log('enrollmentsAdd')
-      console.log(...enrollmentsObject.subs)
-      console.log(enrollmentsObject)
       // state.enrollmentList.push(...enrollmentsObject.subs)
       state.enrollmentList = enrollmentsObject.subs
     }
@@ -293,6 +297,13 @@ export default {
     },
 
     /**
+     * function getCourseEnrollments: fetch all enrollment objects of course
+     *
+     * Author: akokay
+     *
+     * Last Updated: January 7, 2024
+     * @param param0 state variables
+     * @param courseId course id
      */
     getCourseEnrollments (
       { commit, rootState },

@@ -7,7 +7,6 @@
 
 <template>
   <div>
-    <p>Ttsd</p>
     <div class="container">
       <div class="row">
         <div class="col">

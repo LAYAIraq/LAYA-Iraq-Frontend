@@ -1,13 +1,11 @@
 /**
  * Filename: task.ts
- * Use: settings for logged users
- * Creator: core
- * Since: v1.0.0
+ * Use: organize tasks
+ * Creator: akokay
+ * Since:
  */
 
 import http from 'axios'
-import { ids as supportedLangs } from '@/options/langs.js'
-import { stripKey } from '@/mixins/general/helpers'
 
 export default {
   state: {
@@ -34,6 +32,16 @@ export default {
   },
   mutations: {
 
+    /**
+     * Function taskSet: set a task for current state
+     *
+     * Author: akokay
+     *
+     * Last Updated: January 7, 2024
+     *
+     * @param state contains task
+     * @param taskData task object
+     */
     taskSet (
       state: {task: {id: number}},
       taskData: {id: number}
@@ -41,8 +49,15 @@ export default {
       state.task = taskData
       console.log(state.task)
     },
+
     /**
+     * Function freetextAdd: Add new free-text to free-text object or update existing free-text
+     *
      * Author: akokay
+     *
+     * Last Updated: January 7, 2024
+     * @param state contains free-text
+     * @param freetextData contains freetextData to be stored in freetext
      */
     freetextAdd (
       state: {
@@ -58,7 +73,13 @@ export default {
     },
 
     /**
+     * Function freetextListAdd: Sets freetexts to textList
+     *
      * Author: akokay
+     *
+     * Last Updated: January 7, 2024
+     * @param state contains textList
+     * @param freetextData contains tasksObject to be stored in textList
      */
     freetextListAdd (
       state: {
@@ -66,14 +87,18 @@ export default {
       },
       tasksObject: { subs: Array<object> }
     ) {
-      console.log('freetextListAdd')
-      console.log(tasksObject.subs)
-      console.log(...tasksObject.subs)
       // state.enrollmentList.push(...tasksObject.subs)
       state.textList = tasksObject.subs
     },
+
     /**
+     * Function freetextGradeAdd: set grade of freetext
+     *
      * Author: akokay
+     *
+     * Last Updated: January 7, 2024
+     *
+     * @param data contains freetext
      */
     freetextGradeAdd ({ state },
       data: {task: {
@@ -83,8 +108,15 @@ export default {
     ) {
       data.task.freetextGrade = data.grade
     },
+
     /**
+     * Function freetextFeedbackAdd: set feedback of freetext
+     *
      * Author: akokay
+     *
+     * Last Updated: January 7, 2024
+     *
+     * @param data contains freetext
      */
     freetextFeedbackAdd ({ state },
       data: {task: {
@@ -94,8 +126,15 @@ export default {
     ) {
       data.task.feedback = data.feedback
     },
+
     /**
+     * Function setRating: set rated of freetext
+     *
      * Author: akokay
+     *
+     * Last Updated: January 7, 2024
+     *
+     * @param data contains freetext
      */
     setRating ({ state },
       data: {task: {
@@ -109,6 +148,10 @@ export default {
   actions: {
     /**
      * taskCreate
+     *
+     * Author: akokay
+     *
+     * Last Updated: January 7, 2024
      * @param state
      * @param data
      */
@@ -119,8 +162,6 @@ export default {
         console.log('taskCreate')
         http.post('tasks/create', data)
           .then(resp => {
-            console.log('taskCreate respoonse')
-            console.log(resp.data.task)
             resolve(resp.data.task)
           })
           .catch(err => reject(err))
@@ -128,7 +169,11 @@ export default {
     },
 
     /**
-     * taskCreate
+     * getSpecificTask: fetch specific Task based on sutendID and assementID
+     *
+     * Author: akokay
+     *
+     * Last Updated: January 7, 2024
      * @param state
      * @param data
      */
@@ -136,10 +181,8 @@ export default {
       data: object
     ) {
       return new Promise((resolve, reject) => {
-        console.log('getSpecificTask')
         http.get('tasks/getSpecificTask', data)
           .then(resp => {
-            console.log('getSpecificTask respoonse')
             resolve(resp.data.subs)
           })
           .catch(err => reject(err))
@@ -147,15 +190,18 @@ export default {
     },
 
     /**
-     * taskCreate
-     * @param { rootstate,state, commit }
+     * taskFetch: fetch specific Task based on sutendID and assementID
+     *
+     * Author: akokay
+     *
+     * Last Updated: January 7, 2024
+     * @param state
      * @param data
      */
     taskFetch ({ state, commit },
       data: object
     ) {
       return new Promise((resolve, reject) => {
-        console.log('taskFetch')
         http.get('tasks/getSpecificTask', data)
           .then(resp => {
             if (resp.data.subs === undefined) { // check if task exists
@@ -174,13 +220,13 @@ export default {
     },
 
     /**
-     * function enrollmentUpdate: update enrollment object
+     * function taskUpdate: update task object
      *
-     * Author: cmc
+     * Author: akokay
      *
-     * Last Updated: December 15, 2023
-     *
+     * Last Updated: January 7, 2024
      * @param param0 state variables
+     * @param param1 optional task object
      */
     taskUpdate ({ state, commit }, other:{id:string, grade:number, feedback:string}) {
       console.log(other)
@@ -207,50 +253,30 @@ export default {
     },
 
     /**
+     * function getCourseFreeTexts: fetch all task objects of assesment
+     *
+     * Author: akokay
+     *
+     * Last Updated: January 7, 2024
+     * @param param0 state variables
+     * @param data optional task object
      */
     getCourseFreeTexts (
       { state, commit },
-      data:{courseId:string, assessmentId:string,filterAdmin:Boolean}
+      data:{courseId:string, assessmentId:string, filterAdmin:Boolean}
     ) {
       const courseId = data.courseId
       const assessmentId = data.assessmentId
       return new Promise((resolve, reject) => {
         http.get('tasks/getAllByCourseId')
           .then(({ data }) => {
-            // console.log('Enrollment exists!')
-            console.log(data)
-            console.log('data')
             commit('freetextListAdd', data)
-            console.log('after data')
-            console.log(state)
-            console.log(state.textList)
             resolve('freetextList exists!')
           })
           .catch(err => reject(err))
           .finally(() => commit('setBusy', false))
       }
       )
-    },
-
-    /**
-     *
-     * @param param0 state variables
-     */
-    deleteAll ({ state, commit }) {
-      const task = state.task
-      console.log('DELETE ALL')
-      return task
-        ? new Promise((resolve, reject) => {
-          http.post(
-            'deleteAll',
-            task
-          )
-            .then(() => {
-              resolve('Task updated!')
-            })
-            .catch(err => reject(err))
-        })
-        : Promise.reject(new Error('No task found!'))
     }
   }
 }

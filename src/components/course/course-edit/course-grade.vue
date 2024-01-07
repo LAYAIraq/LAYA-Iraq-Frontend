@@ -12,12 +12,12 @@ Dependencies:
   <div v-if="Object.keys(courseContent).length > 0" class="row mb-2">
     <div class="col">
       <b-button block variant="primary" append :to="{ path: 'grade' }">
-        <p>BUTTON</p>
+        <p>Kursinhalte bewerten</p>
       </b-button>
     </div>
 
     <div class="col text-dark">
-      <p>TEXT</p>
+      <p>Kursinhalte bewerten</p>
     </div>
   </div>
 </template>

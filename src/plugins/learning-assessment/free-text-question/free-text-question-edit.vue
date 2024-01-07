@@ -9,7 +9,6 @@ Since: v1.0.0
   <div
     :class="langIsAr? 'text-right' : 'text-left'"
   >
-    <p>Vor dem Freitexttitel Frage</p>
     <form>
       <div class="form-group">
         <div class="row">
@@ -28,20 +27,6 @@ Since: v1.0.0
               class="form-control"
               :placeholder="y18n('titlePlaceholder')"
             >
-          </div>
-          <!-- show title button -->
-          <div class="form-group col">
-            <label
-              for="show-title-tick"
-              class="col-form-label"
-            >
-              {{ y18n('showTitle') }}
-              <input
-                id="show-title-tick"
-                v-model="title.show"
-                type="checkbox"
-              >
-            </label>
           </div>
         </div>
         <div
@@ -122,6 +107,7 @@ export default {
       const preData = JSON.parse(JSON.stringify(this.courseContent[this.pathId]))
       this.contents = preData.contents
       this.title = preData.title
+      this.title.show = true
     },
 
     /**

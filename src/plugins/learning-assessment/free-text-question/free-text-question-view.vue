@@ -26,12 +26,9 @@ Since: v1.0.0
       <span class="p-3"> {{ y18n('content') }} </span> <!-- unnötig -->
       <div id="free-text-editor"></div>
     </div>
-    <button
-      type="button"
-      @click="commit"
-    >
-      Save
-    </button>
+    <b-button block variant="primary" @click="commit">
+      <p>Save</p>
+    </b-button>
   </div>
 </template>
 
@@ -51,9 +48,6 @@ export default {
   ],
 
   data () {
-    console.log(` ...this.viewData: ${this.viewData}`)
-    console.log(this.viewData)
-    console.log(this)
     return { ...this.viewData }
   },
 
@@ -71,7 +65,6 @@ export default {
   },
 
   async mounted () {
-    //@TODO check if user isAdmin if yes dont create a task
     await this.$store.dispatch('taskFetch', { studentId: this.$store.state.profile.id, assessmentId: this.viewData.id })
     await this.$store.dispatch('taskUpdate')
     this.initQuill()
@@ -82,42 +75,11 @@ export default {
     /**
      */
     async commit () {
-      console.log(`this.contents -- ${JSON.stringify(this.contents)}`) // content des freitexts
-      // console.log(this.contents) // content object des freitexts
-      console.log('---------------------')
-      
-      const x = await this.$store.dispatch('getSpecificTask', { studentId: this.$store.state.profile.id, assessmentId: this.viewData.id })
-      console.log('#')
-      console.log(this.$store.state.profile.id)
-      console.log(x)
-
-      // console.log(this.courseContent[this.viewData.id])
-      // await this.$store.commit('courseContentSetProperty', { id: this.viewData.id, property: 'contents', value: this.contents })
-      // console.log(this.viewData)
-      // console.log(this.courseContent[this.pathId]) // dieses Assignment
-      // console.log(this.$store.getters.course.courseId)
-      // console.log(this.$store.getters) // funktionen zum callen
-      // console.log(await this.$store.dispatch('enrollmentFetch', this.$store.getters.course.courseId)) //check for enrollement
-      
-      console.log(this.$store.state.enrollment) // getEnrolement
-      console.log('#2')
-      console.log(this.$store.state.task)
-      console.log(this.contents)
+      await this.$store.dispatch('getSpecificTask', { studentId: this.$store.state.profile.id, assessmentId: this.viewData.id })
       await this.$store.commit('freetextAdd', this.contents)
-      // this.$forceUpdate()
-      console.log('----++++++++++++++++')
       this.$store.dispatch('enrollmentUpdate')
       this.$store.dispatch('taskUpdate')
-      // console.log(this.enrollmentFetch())
-      // const x = await this.$store.dispatch('taskCreate', { freetext: this.contents, freetextGrade: 0 })
-      console.log('#')
       await this.$store.dispatch('taskFetch', { studentId: this.$store.state.profile.id, assessmentId: this.viewData.id })
-      console.log('#')
-      // console.log(x)
-      console.log('---------------------')
-      // console.log(await this.courseFetch(this.name)) // g et course
-      // this.$store.commit('FreetextAdd', { freetext: this.contents, id: 4285762394 })
-      // this.$forceUpdate()
     },
 
     /**
@@ -138,10 +100,8 @@ export default {
         modules: {
           toolbar: [
             ['bold', 'italic', 'underline'],
-            ['blockquote', 'link', 'image'],
-            [{ list: 'ordered' }, { list: 'bullet' }],
             [{ size: ['small', false, 'large', 'huge'] }],
-            [{ color: [] }, { background: [] }],
+            [{ color: [] }],
             [{ align: [] }],
             ['clean']
           ]
@@ -151,10 +111,8 @@ export default {
         if (source === 'user') { this.contents = quill.getContents() }
         this.$forceUpdate()
       })
-      //await this.$store.commit('taskSet', this.$store.state.task)
+      // await this.$store.commit('taskSet', this.$store.state.task)
       if (this.$store.state.task.task) {
-        console.log('set freetext')
-        console.log(this.$store.state.task)
         quill.setContents(this.$store.state.task.task.freetext)
         this.$forceUpdate()
       }
